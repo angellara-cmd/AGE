@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Completo - Oposición Administrativo del Estado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .option-label { transition: all 0.2s ease-in-out; }
+        input[type="radio"]:checked + .custom-radio {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+        }
+        input[type="radio"]:checked + .custom-radio::after {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            margin: 3px auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen p-2 md:p-6">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Cabecera (Ya NO es sticky) -->
+        <header class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 mb-6 text-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-indigo-900 mb-2">Examen Oficial Completo</h1>
+            <p class="text-slate-600 font-medium text-sm md:text-base">Cuerpo General Administrativo de la Administración del Estado</p>
+            <div class="mt-4 flex flex-wrap justify-center gap-2 text-xs font-semibold">
+                <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200">110 Preguntas</span>
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full border border-green-200">+1 Acierto</span>
+                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full border border-red-200">-0.333 Fallo</span>
+            </div>
+        </header>
+
+        <!-- Contenedor del Cuestionario -->
+        <main id="quiz-container" class="space-y-8">
+            <!-- Renderizado por JS -->
+        </main>
+
+        <!-- Botón de corrección -->
+        <div class="mt-8 flex justify-center pb-24">
+            <button id="btn-corregir" onclick="corregirEjercicio()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-12 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                Corregir Ejercicio
+            </button>
+        </div>
+
+        <!-- Panel de Resultados (Total) -->
+        <div id="resultados-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.15)] border-t border-slate-200 z-50 p-4 md:p-6 transition-transform">
+            <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex-1 text-center md:text-left">
+                    <h2 class="text-xl md:text-2xl font-bold text-slate-800">Resultado Final</h2>
+                    <div id="desglose-resultados" class="flex flex-wrap justify-center md:justify-start gap-3 mt-2 text-sm md:text-base"></div>
+                </div>
+                <div class="bg-indigo-50 border-2 border-indigo-100 rounded-lg p-3 text-center min-w-[150px] shadow-inner">
+                    <p class="text-xs text-indigo-600 font-bold uppercase tracking-wider mb-1">Nota Total</p>
+                    <p id="puntuacion-final" class="text-3xl font-black text-indigo-900"></p>
+                </div>
+                <button onclick="reiniciarTest()" class="text-slate-500 hover:text-indigo-600 font-medium underline underline-offset-4 text-sm px-4 py-2 hover:bg-slate-50 rounded-lg transition-colors">
+                    Repetir Examen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array de 110 preguntas con las respuestas adaptadas a la plantilla proporcionada
+        const examData = [
+            {
+                section: "PRIMERA PARTE",
+                context: "",
+                questions: [
+                    { id: 1, q: "De acuerdo con el artículo 167 de la Constitución Española de 1978, los proyectos de reforma constitucional deberán ser aprobados:", o: { a: "Por mayoría de tres quintos del Congreso.", b: "Por mayoría absoluta del Congreso.", c: "Por mayoría absoluta de cada una de las Cámaras.", d: "Por mayoría de tres quintos de cada una de las Cámaras." }, ans: "d" },
+                    { id: 2, q: "Corresponde al Rey, conforme al artículo 62 de la Constitución Española de 1978:", o: { a: "Aprobar los Decretos Leyes.", b: "Aprobar los Reglamentos.", c: "Aprobar las Leyes.", d: "Sancionar y promulgar las leyes." }, ans: "d" },
+                    { id: 3, q: "De acuerdo con el artículo 67 de la Constitución Española de 1978:", o: { a: "Nadie podrá ser miembro de las dos Cámaras simultáneamente.", b: "Nadie podrá ser miembro de las dos Cámaras simultáneamente, salvo el Presidente del Gobierno y los Ministros.", c: "Nadie podrá ser miembro de las dos Cámaras simultáneamente, salvo el Presidente del Gobierno.", d: "Nadie podrá ser miembro de las dos Cámaras simultáneamente, pero se podrá acumular el acta de una Asamblea de Comunidad Autónoma con la de Diputado al Congreso." }, ans: "a" },
+                    { id: 4, q: "¿Quién nombrará al Presidente del Tribunal Supremo de acuerdo con lo previsto en el artículo 123 de la Constitución Española de 1978?", o: { a: "El Rey, a propuesta del Presidente del Gobierno, en la forma que determine la ley.", b: "El Presidente del Gobierno, a propuesta del Rey, en la forma que determine la ley.", c: "El Consejo General del Poder Judicial, a propuesta del Rey, en la forma que determine la ley.", d: "El Rey, a propuesta del Consejo del Poder Judicial, en la forma que determine la ley." }, ans: "c" },
+                    { id: 5, q: "De acuerdo con el artículo 112 de la Constitución Española de 1978, la cuestión de confianza planteada por el Presidente de Gobierno se entenderá otorgada cuando vote a favor de la misma:", o: { a: "La mayoría simple del Congreso de los Diputados.", b: "La mayoría simple del Congreso de los Diputados y del Senado.", c: "La mayoría absoluta del Congreso de los Diputados.", d: "La mayoría absoluta del Congreso de los Diputados y del Senado." }, ans: "a" },
+                    { id: 6, q: "¿Cuántos objetivos de desarrollo sostenible contiene la Agenda 2030?", o: { a: "Diecisiete objetivos.", b: "Veinte objetivos.", c: "Diecinueve objetivos.", d: "Dieciocho objetivos." }, ans: "a" },
+                    { id: 7, q: "De acuerdo con el artículo 14 de la Ley 19/2013, de 9 de diciembre, de transparencia, acceso a la información pública y buen gobierno, el derecho de acceso a la información pública podrá ser limitado cuando acceder a la información suponga un perjuicio para:", o: { a: "La seguridad nacional.", b: "La seguridad e higiene en el trabajo.", c: "La protección del anonimato de los empleados públicos.", d: "La protección de datos de carácter profesional." }, ans: "a" },
+                    { id: 8, q: "Según la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público, ¿a quién de los siguientes órganos le corresponde la competencia de desempeñar la jefatura superior de todo el personal del Departamento?", o: { a: "Los Secretarios de Estado.", b: "Los Subsecretarios.", c: "Los Directores Generales.", d: "Los Subdirectores Generales." }, ans: "b" },
+                    { id: 9, q: "¿A quién le corresponde la representación ordinaria del Estado en la Comunidad Autónoma conforme a lo dispuesto en el artículo 152 de la Constitución Española de 1978?", o: { a: "Al Delegado del Gobierno.", b: "Al Presidente del Gobierno.", c: "Al Presidente de la Comunidad Autónoma.", d: "Al Ministro de Política Territorial y Memoria Democrática." }, ans: "c" },
+                    { id: 10, q: "De conformidad con el artículo 121 de la Ley 7/1985, de 2 de abril, Reguladora de las Bases del Régimen Local, ¿a qué municipios se les aplicará el régimen de organización de los municipios de gran población?", o: { a: "A los municipios cuya población supere los 100.000 habitantes.", b: "A los municipios capitales de provincia cuya población sea superior a los 75.000 habitantes.", c: "A los municipios que sean capitales de provincia, capitales autonómicas o sedes de las instituciones autonómicas cuando así lo decidan las Asambleas Legislativas correspondientes a iniciativa de los respectivos ayuntamientos.", d: "A los municipios cuya población sea inferior a los 75.000 habitantes, que presenten circunstancias económicas, sociales, históricas o culturales especiales cuando así lo decidan las Asambleas Legislativas correspondientes a iniciativa de los respectivos ayuntamientos." }, ans: "c" },
+                    { id: 11, q: "De acuerdo con el artículo 16 del Tratado de la Unión Europea, señale la respuesta correcta respecto del Consejo de la Unión Europea:", o: { a: "Supervisará la aplicación del Derecho de la Unión bajo el control del Tribunal de Justicia de la Unión Europea.", b: "Es el órgano ejecutivo de la Unión Europea y tiene su sede en Bruselas.", c: "Ejerce conjuntamente con el Parlamento Europeo la función legislativa y la función presupuestaria.", d: "Ejerce conjuntamente con la Comisión Europea la función legislativa y la función presupuestaria." }, ans: "c" },
+                    { id: 12, q: "Las cartas de servicios, reguladas en el artículo 10.4 del Real Decreto 951/2005, de 29 de julio, por el que se establece el marco general para la mejora de la calidad en la Administración General del Estado, se actualizarán periódicamente en función de las circunstancias y, en cualquier caso, al menos:", o: { a: "Anualmente.", b: "Cada dos años.", c: "Cada tres años.", d: "Cada cuatro años." }, ans: "c" },
+                    { id: 13, q: "Según el artículo 16 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, señale la respuesta correcta en materia de registros:", o: { a: "Los Organismos públicos vinculados o dependientes de cada Administración deberán disponer de su propio registro electrónico plenamente interoperable e interconectado con el Registro Electrónico General de la Administración de la que depende.", b: "Cada Administración dispondrá de un Registro Electrónico General donde se deberá anotar la salida de los documentos oficiales provenientes de otros órganos o particulares.", c: "Las disposiciones de creación de registros electrónicos especificarán el órgano o unidad responsable de su gestión, así como la fecha y hora oficial y los días declarados como hábiles.", d: "Los Organismos públicos vinculados o dependientes de cada Administración podrán disponer de su propio registro electrónico plenamente interoperable e interconectado con el Registro Electrónico General de la Administración de la que depende." }, ans: "d" },
+                    { id: 14, q: "Según el artículo 40 de la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público, las Administraciones Públicas, en relación con sus sistemas de identificación:", o: { a: "Podrán hacer pública la relación de certificados electrónicos utilizados, incluyendo las características de los sellos electrónicos y los prestadores que los expiden.", b: "Podrán identificarse mediante el uso de un certificado electrónico reconocido o cualificado.", c: "Deberán identificarse mediante el uso de un sello electrónico basado en una firma electrónica reconocida o cualificada que reúna los requisitos exigidos por la legislación de certificado electrónico.", d: "Podrán identificarse mediante el uso de un sello electrónico basado en un certificado electrónico reconocido o cualificado que reúna los requisitos exigidos por la legislación de firma electrónica." }, ans: "d" },
+                    { id: 15, q: "Conforme al artículo 5 de la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales, ¿quiénes están sujetos al deber de confidencialidad?", o: { a: "Todos los ciudadanos.", b: "Los funcionarios públicos en ejercicio de sus funciones.", c: "Los delegados de prevención de riesgos laborales.", d: "Los responsables y encargados del tratamiento de datos, así como todas las personas que intervengan en cualquier fase de este." }, ans: "d" },
+                    { id: 16, q: "Señale la respuesta correcta en relación con el artículo 2 del Código Civil:", o: { a: "Las leyes entrarán en vigor a los quince días de su completa publicación en el Boletín Oficial del Estado, si en ellas no se dispone otra cosa.", b: "Las leyes entrarán en vigor a los veinte días de su completa publicación en el Boletín Oficial del Estado, si en ellas no se dispone otra cosa.", c: "Las leyes entrarán en vigor a los treinta días de su completa publicación en el Boletín Oficial del Estado, si en ellas no se dispone otra cosa.", d: "Las leyes entrarán en vigor al día siguiente de su completa publicación en el Boletín Oficial del Estado, si en ellas no se dispone otra cosa." }, ans: "b" },
+                    { id: 17, q: "Conforme al artículo 48 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, son anulables los actos de la Administración:", o: { a: "Contrarios al ordenamiento jurídico por los que se adquieren facultades o derechos cuando se carezca de los requisitos esenciales para su adquisición.", b: "Los dictados por órgano manifiestamente incompetente por razón de la materia o del territorio.", c: "Que incurran en cualquier infracción del ordenamiento jurídico, incluso la desviación de poder.", d: "Los dictados prescindiendo total y absolutamente del procedimiento legalmente establecido." }, ans: "c" },
+                    { id: 18, q: "Conforme al artículo 114 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, ponen fin a la vía administrativa:", o: { a: "Las resoluciones que acuerden la aplicación de medidas provisionales.", b: "Los actos emanados de los órganos directivos con nivel de Subdirector General, en relación con las competencias que tengan atribuidas en materia de personal.", c: "Las resoluciones de órganos administrativos, salvo que una disposición legal o reglamentaria disponga lo contrario.", d: "Los acuerdos, pactos, convenios o contratos que tengan la consideración de finalizadores del procedimiento." }, ans: "d" },
+                    { id: 19, q: "De acuerdo con el artículo 87 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, antes de dictar resolución, el órgano competente para resolver podrá decidir, mediante acuerdo motivado, la realización de actuaciones complementarias indispensables para resolver el procedimiento. Dichas actuaciones complementarias deberán practicarse en un plazo:", o: { a: "De siete días.", b: "De veinte días.", c: "No inferior a diez días ni superior a quince días.", d: "No superior a quince días." }, ans: "d" },
+                    { id: 20, q: "Según el artículo 102 de la Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público en relación con la revisión de precios en los contratos celebrados con precios provisionales:", o: { a: "Podrá admitirse la revisión de precios siempre que el período de recuperación de la inversión sea inferior a cinco años.", b: "Podrá admitirse la revisión de precios siempre que el período de recuperación de la inversión sea igual o superior a cinco años.", c: "Podrá admitirse la revisión de precios cuando el contrato se hubiese ejecutado, al menos, en el 20 por ciento de su importe y hubiese transcurrido un año desde su formalización.", d: "No cabrá la revisión de precios." }, ans: "d" },
+                    { id: 21, q: "Según el artículo 2.4 de la Ley 38/2003, de 17 de noviembre, General de Subvenciones, no tienen carácter de subvenciones:", o: { a: "Las otorgadas como consecuencia de la Política Agrícola Común.", b: "Las que financien proyectos relacionados con la ciencia y la tecnología.", c: "Los beneficios fiscales y beneficios en la cotización a la Seguridad Social.", d: "Las destinadas a fomentar actividades de interés social." }, ans: "c" },
+                    { id: 22, q: "Conforme al artículo 32.8 de la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público, ¿a quién le corresponde fijar el importe de las indemnizaciones que proceda abonar cuando el Tribunal Constitucional haya declarado, a instancia de parte interesada, la existencia de un funcionamiento anormal en la tramitación de los recursos de amparo o de las cuestiones de inconstitucionalidad?", o: { a: "Al Ministerio de Justicia.", b: "Al Consejo de Ministros.", c: "Al Consejo de Estado.", d: "Al Tribunal Constitucional." }, ans: "b" },
+                    { id: 23, q: "Según el artículo 5 de la Ley 4/2023, de 28 de febrero, para la igualdad real y efectiva de las personas trans y para la garantía de los derechos de las personas LGTBI, los poderes públicos:", o: { a: "Fomentarán el reconocimiento institucional y la participación en los actos conmemorativos de la lucha por la igualdad real y efectiva de las personas LGTBI.", b: "Podrán adoptar las medidas necesarias para limitar la diversidad en materia de orientación sexual de las personas LGTBI.", c: "Podrán adoptar las medidas necesarias para poner en valor la identidad cultural y religiosa de las personas LGTBI.", d: "Podrán adoptar las medidas necesarias para poner en valor la identidad racial y cultural de las personas LGTBI." }, ans: "a" },
+                    { id: 24, q: "En lo referente al personal laboral, ¿qué es preceptivo de anotación en el Registro Central de Personal conforme al Real Decreto 1405/1986, de 6 de junio?", o: { a: "Tomas de posesión del primer puesto de trabajo y de los sucesivos.", b: "Bajas temporales y definitivas.", c: "Adquisición del grado personal y sus modificaciones.", d: "Reconocimiento de trienios." }, ans: "b" },
+                    { id: 25, q: "De acuerdo con el artículo 56 del Real Decreto Legislativo 5/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley del Estatuto Básico del Empleado Público, para poder participar en los procesos selectivos será necesario:", o: { a: "Poseer nacionalidad española en todo caso.", b: "Conocimiento de la lengua oficial y cooficial del territorio en el que se encuentre la Administración convocante.", c: "Tener cumplidos dieciséis años y no exceder, en su caso, de la edad máxima de jubilación forzosa.", d: "Tener cumplidos dieciocho años y no exceder, en su caso, de la edad máxima de jubilación forzosa." }, ans: "c" },
+                    { id: 26, q: "De acuerdo con el artículo 62 del Real Decreto Legislativo 5/2015, de 30 de octubre, la condición de funcionario de carrera se adquiere, además de por la superación del proceso selectivo, por el cumplimiento del siguiente requisito:", o: { a: "No se exige ningún requisito adicional.", b: "Superar un reconocimiento médico que excluya padecer una enfermedad infectocontagiosa.", c: "Presentar el certificado de penales.", d: "La toma de posesión dentro del plazo señalado." }, ans: "d" },
+                    { id: 27, q: "De conformidad con el artículo 10 del Real Decreto Legislativo 5/2015, de 30 de octubre, se podrá nombrar personal funcionario interino cuando se dé alguna de las siguientes circunstancias:", o: { a: "La ejecución de programas de carácter temporal, que no podrán tener una duración superior a dos años...", b: "El exceso o acumulación de tareas por plazo máximo de doce meses, dentro de un periodo de dieciocho meses.", c: "La sustitución transitoria de los titulares, durante el tiempo estrictamente necesario.", d: "La existencia de plazas vacantes, cuando no sea posible su cobertura por funcionarios de carrera, por un máximo de cuatro años." }, ans: "d" },
+                    { id: 28, q: "De acuerdo con el artículo 3 del Real Decreto 365/1995, de 10 de marzo, los funcionarios de carrera se hallan en situación de servicio activo:", o: { a: "Cuando acceden a la condición de Diputado o Senador.", b: "Cuando se encuentren en comisión de servicios.", c: "Cuando sean transferidos a una comunidad autónoma.", d: "Cuando estén en expectativa de destino." }, ans: "b" },
+                    { id: 29, q: "De acuerdo con el artículo 122 del Real Decreto-ley 6/2023, de 19 de diciembre, la carrera profesional horizontal:", o: { a: "La carrera profesional horizontal tendrá carácter voluntario. En cada grupo o subgrupo de personal funcionario existirán cuatro tramos.", b: "La carrera profesional horizontal tendrá carácter voluntario. En cada grupo o subgrupo de personal funcionario existirán cinco tramos.", c: "La carrera profesional horizontal tendrá carácter obligatorio. En cada grupo o subgrupo de personal funcionario existirán cuatro tramos.", d: "La carrera profesional horizontal tendrá carácter obligatorio. En cada grupo o subgrupo de personal funcionario existirán cinco tramos." }, ans: "a" },
+                    { id: 30, q: "¿Qué actividades están exceptuadas del régimen de incompatibilidades de la Ley 53/1984, de 26 de diciembre?", o: { a: "La participación en Tribunales calificadores de pruebas selectivas para ingreso en las Administraciones Públicas.", b: "El desempeño de un puesto de trabajo en la esfera docente como profesor universitario asociado...", c: "La participación superior al 10 por 100 en el capital de las empresas o sociedades.", d: "El desempeño de cargos de todo orden en empresas concesionarias del sector público..." }, ans: "a" },
+                    { id: 31, q: "De acuerdo con el artículo 5 del Real Decreto Legislativo 4/2000, de 23 de junio, la Mutualidad General de Funcionarios Civiles del Estado (MUFACE) se integra en el Sector Público Institucional Estatal como:", o: { a: "Sociedad Mercantil Estatal.", b: "Consorcio.", c: "Organismo público.", d: "Fundación del Sector Público." }, ans: "c" },
+                    { id: 32, q: "Conforme al artículo 2 del IV Convenio Único para el personal laboral de la Administración General del Estado, quedan excluidos del ámbito de aplicación del Convenio el personal laboral que preste servicios en:", o: { a: "La Agencia Española de Protección de Datos.", b: "El Museo Nacional Centro de Arte Reina Sofía.", c: "La Agencia de Información y Control Alimentarios.", d: "El personal laboral que presta servicios en el exterior." }, ans: "d" },
+                    { id: 33, q: "De acuerdo con lo dispuesto en el artículo 215 del Real Decreto Legislativo 8/2015, de 30 de octubre, en el supuesto de jubilación parcial del personal laboral sujeto al IV Convenio único que tenga reconocida una discapacidad en grado igual o superior al 33 por ciento, ¿qué período de cotización mínimo se deberá acreditar para acceder a la prestación?", o: { a: "Treinta y tres años.", b: "Treinta años.", c: "Veinticinco años.", d: "Veinte años." }, ans: "c" },
+                    { id: 34, q: "Según el artículo 37 de la Ley 47/2003, de 26 de noviembre, General Presupuestaria, señale la respuesta correcta en relación con el proyecto de Ley de los Presupuestos Generales del Estado:", o: { a: "El Gobierno deberá presentar ante el Congreso de los Diputados los Presupuestos... seis meses antes.", b: "Corresponderá al Ministro de la Presidencia elevar al acuerdo del Gobierno...", c: "Será remitido a las Cortes Generales antes del día 1 de octubre del año anterior al que se refiera.", d: "Corresponderá al Ministro de Hacienda aprobar el anteproyecto..." }, ans: "c" },
+                    { id: 35, q: "De conformidad con el artículo 58 de la Ley 47/2003, de 26 de noviembre, General Presupuestaria, ¿mediante qué se financiarán las incorporaciones de crédito que afecten al presupuesto del Estado?", o: { a: "Baja en el Fondo de Contingencia o baja en otros créditos de operaciones no financieras.", b: "Baja en el Fondo de Contingencia o baja en otros créditos de operaciones no financieras o remanente de tesorería...", c: "Baja en el Fondo de Contingencia o remanente de tesorería al fin del ejercicio anterior, o con mayores ingresos...", d: "Baja en el Fondo de Contingencia, o con mayores ingresos sobre los previstos inicialmente." }, ans: "a" },
+                    { id: 36, q: "De conformidad con el artículo 2 de la Ley Orgánica 2/1982, de 12 de mayo, del Tribunal de Cuentas, ¿cuál de las siguientes funciones le corresponde al Tribunal de Cuentas?", o: { a: "El control financiero permanente.", b: "La fiscalización externa, permanente y consuntiva de la actividad económico-financiera del sector público.", c: "La función interventora.", d: "La auditoria pública." }, ans: "b" },
+                    { id: 37, q: "Según el artículo 23 de la Ley 30/1984, de 2 de agosto, de medidas para la reforma de la Función Pública, señale la respuesta correcta en relación con los conceptos retributivos:", o: { a: "En el caso de que un funcionario preste sus servicios sucesivamente en diferentes Cuerpos... tendrá derecho a seguir percibiendo los trienios devengados en los grupos anteriores.", b: "Las pagas extraordinarias... se devengarán los meses de junio y diciembre.", c: "Cuando un funcionario cambie de adscripción a grupo antes de completar un trienio, la fracción de tiempo transcurrido se considerará como tiempo de servicios prestados en el anterior grupo.", d: "El complemento específico está destinado a retribuir el especial rendimiento, la actividad extraordinaria y el interés o iniciativa con que el funcionario desempeñe su trabajo." }, ans: "a" },
+                    { id: 38, q: "Según el artículo 10 del Real Decreto 640/1987, de 8 de mayo, sobre pagos librados «a justificar», ¿cuándo deberán justificar los Cajeros pagadores la aplicación de las cantidades recibidas?", o: { a: "Dentro del mes siguiente a la inversión de las mismas y en todo caso en el plazo de tres meses desde la percepción de los correspondientes fondos.", b: "Como mínimo en las primeras quincenas de los meses de enero, abril, julio y octubre.", c: "Dentro del mes siguiente a la inversión de las mismas y en todo caso en el plazo de seis meses desde la percepción de los correspondientes fondos.", d: "Dentro de los tres meses siguientes a la inversión de las mismas y en todo caso en el plazo de seis meses desde la percepción de los correspondientes fondos." }, ans: "a" },
+                    { id: 39, q: "De acuerdo con la regla 42 de la Orden del Ministerio de Economía y Hacienda, de 1 de febrero de 1996, en la tramitación anticipada de expedientes de contratación:", o: { a: "El Servicio gestor... expedirá un documento RC de 'ejercicio corriente' y un RC de 'ejercicios posteriores'...", b: "El Servicio gestor... expedirá un documento RC de 'ejercicios posteriores'...", c: "El Servicio gestor... expedirá un documento RC de 'tramitación anticipada' detallando el importe que del gasto en cuestión corresponde a cada uno de los ejercicios posteriores afectados.", d: "El Servicio gestor... expedirá un documento RC de 'ejercicio corriente' y un RC de 'tramitación anticipada'..." }, ans: "c" },
+                    { id: 40, q: "De acuerdo con el artículo 10 de la Ley 38/2003, de 17 de noviembre, General de Subvenciones, ¿quién tiene la competencia para la concesión de una subvención de cuantía de 10 millones de euros en un Organismo Autónomo?", o: { a: "El Presidente o Director del Organismo Autónomo, sin que esta competencia pueda ser objeto de desconcentración.", b: "El Presidente o Director del Organismo Autónomo previa autorización del Consejo de Ministros, sin que esta competencia pueda ser objeto de desconcentración.", c: "El Presidente o Director del Organismo Autónomo; esta competencia podrá ser objeto de desconcentración.", d: "El Presidente o Director del Organismo Autónomo previa autorización del Consejo de Ministros; esta competencia podrá ser objeto de desconcentración." }, ans: "c" },
+                    { id: 41, q: "¿Cuál de las siguientes definiciones corresponde a un procesador?", o: { a: "Unidad funcional de una computadora u otro dispositivo electrónico que se encarga de la búsqueda, interpretación y ejecución de instrucciones.", b: "Unidad de información compuesta generalmente de ocho bits.", c: "Conjunto unitario de instrucciones que permite a una computadora realizar funciones diversas...", d: "Dispositivo de memoria de gran capacidad integrado en la computadora..." }, ans: "a" },
+                    { id: 42, q: "¿Cuál de los siguientes sistemas de seguridad tiene como función específica detectar y eliminar software de tipo malware?", o: { a: "Gestor de contraseñas.", b: "Firewall.", c: "Antivirus.", d: "VPN (Red Privada Virtual)." }, ans: "c" },
+                    { id: 43, q: "¿Cuál de los siguientes elementos realiza la función de guardar de forma temporal todos los programas y sus procesos de ejecución?", o: { a: "Disipador.", b: "CPU.", c: "Tarjeta gráfica.", d: "Memoria RAM." }, ans: "d" },
+                    { id: 44, q: "Si un programa está utilizando 30 GB, ¿cuántos KB está utilizando?", o: { a: "300.000 KB.", b: "3.000 KB.", c: "3.000.000 KB.", d: "30.000.000 KB." }, ans: "d" },
+                    { id: 45, q: "¿Cuál de las siguientes opciones permite acceder a las notificaciones de Windows 11?", o: { a: "Las notificaciones están en la sección Accesibilidad de la Configuración...", b: "Las notificaciones están en el Centro de actividades, al que se acceden haciendo clic en el icono del Área de calendario y notificación en la esquina inferior derecha de la barra de tareas.", c: "Las notificaciones están disponibles en el accesorio Noticias...", d: "Las notificaciones están en el Menú de Windows, al que se accede en el icono de la barra de tareas..." }, ans: "b" },
+                    { id: 46, q: "¿Cuál es la función principal de Microsoft 365 Copilot en el entorno laboral?", o: { a: "Funcionar como una herramienta con tecnología de inteligencia artificial que genera respuestas en tiempo real basadas en datos de la organización e Internet.", b: "Gestionar de forma autónoma la seguridad de la red sin intervención del administrador de tecnología de la información.", c: "Servir como un sistema de almacenamiento de archivos en la nube con funciones de autoguardado.", d: "Proveer un catálogo de aplicaciones centralizado..." }, ans: "a" },
+                    { id: 47, q: "Señale cuál de las siguientes afirmaciones referidas a la búsqueda de Windows 11 es correcta:", o: { a: "Windows Search busca en la web y los archivos, pero no busca en la configuración...", b: "Windows Search busca en la web, las aplicaciones, la configuración y los archivos, pero no incluye OneDrive, SharePoint o Outlook.", c: "Windows Search busca en la web las aplicaciones, la configuración y los archivos y también puede incluir contenido de OneDrive, SharePoint, Outlook, Bing y otros servicios y aplicaciones si se autoriza por el usuario.", d: "Windows Search solo busca en la web y los archivos almacenados en el dispositivo..." }, ans: "c" },
+                    { id: 48, q: "¿Cuál de los siguientes grupos de diseños de vista del Explorador de archivos de Windows 11 tiene todos los elementos correctos?", o: { a: "Iconos muy grandes - Contenido - Iconos muy pequeños.", b: "Lista - Detalles - Iconos medianos.", c: "Iconos muy pequeños - Extendido - Mosaico.", d: "Mosaico - Iconos medianos - Extendido." }, ans: "b" },
+                    { id: 49, q: "Hacemos un clic derecho de ratón sobre 'Este equipo' en el Panel de navegación del Explorador de archivos de Windows 11 y seleccionamos la opción Propiedades. ¿Cuál de las siguientes opciones es la que se abre con esta acción?", o: { a: "La ventana Propiedades del disco local C:", b: "La Configuración de Windows en el apartado de Sistema.", c: "La ventana de Administración de equipos.", d: "El asistente para agregar una ubicación de red." }, ans: "b" },
+                    { id: 50, q: "¿Cuál es la funcionalidad del Accesorio de Windows 11 'Asistencia rápida'?", o: { a: "Abrir una incidencia en el servicio de Soporte Técnico de Microsoft.", b: "Acceder al sitio web que aloja la base de conocimientos de Windows...", c: "Permitir el acceso remoto y toma de control de nuestro dispositivo a otra persona, así como solicitar a otra persona que comparta su pantalla con nosotros.", d: "Acceder a la configuración de la cuenta de Windows registrada en el sistema operativo..." }, ans: "c" },
+                    { id: 51, q: "En Word 365, a la siguiente línea de texto 'El río Ebro.' se le han aplicado varios formatos. ¿Cuál de las siguientes respuestas indicadas recoge de forma correcta estos formatos aplicados?", o: { a: "Fuente en cursiva y con espaciado extendido.", b: "Fuente en cursiva y superíndice.", c: "Fuente doble tachado y con espaciado extendido.", d: "Fuente con espaciado comprimido y versalitas." }, ans: "a" },
+                    { id: 52, q: "En Word 365, se han insertado notas al final en las siguientes palabras: Tajo y Duero. ¿Cuál de los siguientes es el comportamiento resultante de situar el ratón sobre los símbolos que referencian las notas junto a las palabras?", o: { a: "Dirige el cursor de texto a la posición donde está la nota.", b: "Aparece un cuadro emergente con el texto añadido a la nota.", c: "No ocurre nada, es necesario hacer clic con el ratón para disparar cualquier evento.", d: "Se sustituye temporalmente el texto de la palabra reseñada por el texto de la nota." }, ans: "b" },
+                    { id: 53, q: "Señale la respuesta correcta sobre la función Transcribir de Word 365:", o: { a: "Los usuarios con una suscripción a Microsoft 365 pueden transcribir un máximo de 600 minutos de audio cargado al mes.", b: "Las grabaciones se almacenarán en la carpeta Archivos transcritos en Google Drive.", c: "Se puede transcribir la voz grabando directamente en Word o cargando un archivo de audio.", d: "Convierte la voz en una transcripción de texto sin distinguir ni separar a los diferentes oradores." }, ans: "c" },
+                    { id: 54, q: "Se necesita imprimir un documento Word 365 pero sin incluir las marcas de revisión. ¿Qué ajuste se debe realizar para poder imprimir sin necesidad de aceptar todos los cambios?", o: { a: "Cambiar la orientación de la página de Vertical a Horizontal para que los comentarios se desplacen fuera del área de impresión.", b: "Cambiar la vista del documento a Modo de lectura antes imprimir.", c: "En la pestaña Revisar y seleccionar 'Aceptar todos los cambios'...", d: "En el menú de Configuración de impresión, desmarcar la casilla 'Imprimir documento con revisiones'." }, ans: "d" },
+                    { id: 55, q: "En una celda de Excel 365 tenemos la siguiente fórmula: FILAS(Registros[Fecha]). Si el resultado que muestra es 5, indique cuál es el funcionamiento de la fórmula:", o: { a: "Establece para las filas seleccionadas de la tabla Registros el formato de fecha.", b: "Devuelve la diferencia de días en las fechas de la columna Registros.", c: "Establece un máximo de filas, en este caso 5, admisibles en la columna Fecha.", d: "Devuelve el número de filas de la columna Fecha en la tabla Registros." }, ans: "d" },
+                    { id: 56, q: "En Excel 365, ¿cuál de los siguientes valores es correcto si aplicamos el siguiente formato de fecha a una celda: dd/mmm/aa?", o: { a: "11/agosto/24", b: "11/agosto/2024", c: "Once de agosto del año 2024", d: "11/ago/24" }, ans: "d" },
+                    { id: 57, q: "En Excel 365, al trabajar con rangos, ¿cuál de las siguientes opciones describe correctamente un rango discontinuo?", o: { a: "B2:B2", b: "$B$2:$C$4", c: "B2:C4", d: "B2:C2;B4:C4" }, ans: "d" },
+                    { id: 58, q: "¿Qué función de Excel 365 se encarga de invertir el valor lógico de su argumento?", o: { a: "NO", b: "CAMBIAR", c: "ESLOGICO", d: "MINVERSA" }, ans: "a" },
+                    { id: 59, q: "Vemos el siguiente número en un campo de Access 365 2.345,68. ¿Cuál de los siguientes formatos de campo se ha utilizado?", o: { a: "Numero general.", b: "Moneda.", c: "Estándar.", d: "Porcentaje." }, ans: "c" },
+                    { id: 60, q: "En la vista de Diseño de consultas en Access 365 hemos seleccionado el campo llamado 'Fecha Alta' e incluimos como criterio para el campo el texto: [Fecha de Alta], ¿cuál de las siguientes opciones describe correctamente el efecto que produce esta acción al ejecutar la consulta?", o: { a: "Filtra la consulta por los registros que tienen algún dato en el campo 'Fecha Alta'.", b: "En el resultado de la consulta sustituye el valor del campo 'Fecha Alta' por el texto 'Fecha de Alta' en todos los registros.", c: "Aparecerá la ventana 'Introduzca el valor del parámetro', con el texto 'Fecha de Alta', solicitando una fecha para filtrar el resultado de la consulta por el campo 'Fecha Alta'.", d: "No producirá ninguna acción ya que el nombre del campo y el texto incluido en el criterio son diferentes." }, ans: "c" },
+                    { id: 61, q: "En el diseño del formulario de Access 365 podemos seleccionar el Orden automático para definir el orden de desplazamiento entre los campos. ¿Cuál será ese orden?", o: { a: "De derecha a izquierda y de arriba hacia abajo.", b: "De izquierda a derecha y de arriba hacia abajo.", c: "De derecha a izquierda y de abajo hacia arriba.", d: "De izquierda a derecha y de abajo hacia arriba." }, ans: "b" },
+                    { id: 62, q: "En Access 365, ¿cuál es el tamaño máximo que puede almacenar un campo de tipo 'Datos adjuntos' en una tabla?", o: { a: "Hasta 2 GB.", b: "Solo lo limita el espacio disponible en el disco duro.", c: "255 caracteres.", d: "64 bytes." }, ans: "a" },
+                    { id: 63, q: "¿Cuál de las siguientes afirmaciones es la correcta con respecto a los correos electrónicos?", o: { a: "No se pueden enviar mensajes de correo electrónico entre dos PCs sin la intervención de un servidor de correo.", b: "Una dirección de correo electrónico podría no hacer uso de la arroba (@).", c: "Es posible enviar correos electrónicos entre dos terminales de una computadora central, sin la participación de esta.", d: "El envío de un correo electrónico no requiere del uso de un protocolo de comunicaciones." }, ans: "a" },
+                    { id: 64, q: "Queremos dar permiso a otro usuario sobre una carpeta en particular de Outlook 365 clásico. ¿Qué nivel de permisos debemos darle si queremos que pueda crear nuevos elementos, pero no pueda leer ni editar los elementos ya creados en la carpeta?", o: { a: "Autor de publicación.", b: "Revisor.", c: "Colaborador.", d: "Editor." }, ans: "c" },
+                    { id: 65, q: "En Outlook 365, en la barra de búsqueda escribimos el texto: cc:\"Ana Muñoz\", ¿cuál de las siguientes opciones indica de forma correcta qué mensajes devolverá la búsqueda de Outlook?", o: { a: "Devolverá los elementos en los que la dirección de correo electrónico tenga como nombre anamunoz...", b: "No devolverá ningún elemento ya que buscará aquellos que en la línea cc...", c: "Devolverá los elementos en los que Ana Muñoz está en la línea cc... solo si tenemos este nombre entre nuestros contactos...", d: "Devolverá los elementos en los que el nombre Ana Muñoz esté en la línea cc (con copia)." }, ans: "d" },
+                    { id: 66, q: "En Outlook 365 creamos un grupo para un equipo de trabajo de varios integrantes, ¿cuál de las siguientes opciones es correcta con respecto a la recepción de mensajes de correo?", o: { a: "No se genera ninguna dirección de correo específica...", b: "El correo del integrante que ha creado el grupo queda como correo del grupo...", c: "Al crear el grupo se genera una dirección de correo... No importa si el grupo es público o privado, cualquiera puede enviar mensajes...", d: "Al crear el grupo se genera una dirección de correo del grupo habilitado para recibir mensajes. Si el grupo es público, cualquiera puede enviar mensajes al correo del grupo, que serán distribuidos a todos sus integrantes." }, ans: "d" },
+                    { id: 67, q: "¿Es posible anclar un sitio web al menú Inicio utilizando Microsoft Edge de Windows 11?", o: { a: "No es posible, ya que en el menú Inicio sólo se pueden anclar aplicaciones de productividad.", b: "No es posible, ya que los sitios web solo pueden guardarse como marcadores o favoritos en el navegador.", c: "Sí es posible, haciendo clic en Configuración y más, luego Favoritos, y por último Anclar a Inicio.", d: "Sí es posible, haciendo clic en Configuración y más, luego Más herramientas, y por último Anclar a Inicio." }, ans: "d" },
+                    { id: 68, q: "¿En cuál de los siguientes tipos de web se da por supuesto el uso de Inteligencia Artificial?", o: { a: "Página web dinámica.", b: "Página de Inicio.", c: "Web 4.0.", d: "World Wide Web." }, ans: "c" },
+                    { id: 69, q: "¿Cuál de los siguientes términos hace referencia a una práctica ilegal en la mayoría de los sistemas legales e implica enviar comunicaciones masivas no solicitadas...?", o: { a: "Dumping.", b: "Spamming.", c: "Streaming.", d: "Malware." }, ans: "b" },
+                    { id: 70, q: "Cuál de los siguientes términos corresponde a la siguiente descripción: 'Estación de trabajo existente en forma virtual que está separada de los dispositivos físicos que la utilizan. Se puede acceder, por ejemplo, a través de conexiones WiFi'.", o: { a: "Servicio web.", b: "Escritorio virtual.", c: "Sistema de detección de intrusiones.", d: "Web semántica." }, ans: "b" }
+                ]
+            },
+            {
+                section: "SUPUESTO I",
+                context: "Doña Clara Hevia presenta ante la Confederación Hidrográfica del Duero una solicitud de autorización de obras en un terreno de su propiedad situado en zona de policía de cauces, y en septiembre de 2025, la Confederación Hidrográfica resuelve autorizar... Tras recibir el informe, la Confederación Hidrográfica inicia un procedimiento para dejar sin efecto la autorización otorgada... (Se inician expedientes de contratación, y un funcionario, Don Eduardo Merino aprueba promoción interna...).",
+                questions: [
+                    { id: 1, q: "La Confederación Hidrográfica realiza una notificación a Doña Clara Hevia indicándole la falta de firma en la solicitud y requiriéndole que aporte la firma, con indicación de que, si así no lo hiciera:", o: { a: "Se considerará que renuncia a su derecho.", b: "Se la tendrá por desistida de su petición.", c: "Procederá la caducidad del expediente.", d: "Se procederá a la suspensión del procedimiento." }, ans: "b" },
+                    { id: 2, q: "Doña Clara Hevia recibe la notificación de subsanación el martes, 3 de junio de 2025. Teniendo en cuenta el plazo previsto en el artículo 68 de la Ley 39/2015 y que no hay días festivos en el mes de junio, ¿cuál sería el último día del plazo para poder presentar la documentación?", o: { a: "Lunes, 16 de junio.", b: "Martes, 17 de junio.", c: "Lunes, 23 de junio.", d: "Martes, 24 de junio." }, ans: "b" },
+                    { id: 3, q: "Comprobado el riesgo de inundación de los terrenos, ¿qué vía tiene la Confederación Hidrográfica para dejar sin efecto la resolución de autorización de construcción de la vivienda otorgada a favor de Doña Clara Hevia?", o: { a: "La declaración de oficio de la anulabilidad de la autorización.", b: "La revocación de la autorización.", c: "La rectificación de errores.", d: "La declaración de lesividad de la autorización." }, ans: "a" },
+                    { id: 4, q: "Doña Clara Hevia recibe la notificación de la Confederación para dejar sin efecto la autorización, a la vez que abre un trámite de audiencia para que pueda alegar. ¿Cuál es el plazo mínimo que se le puede otorgar para realizar dicho trámite?", o: { a: "Cinco días.", b: "Diez días.", c: "Quince días.", d: "Veinte días." }, ans: "b" },
+                    { id: 5, q: "Si transcurridos seis meses desde el inicio del procedimiento el Organismo no le notifica resolución alguna, ¿qué puede entender Doña Clara Hevia?", o: { a: "Que el procedimiento ha caducado.", b: "Que la Administración desiste del procedimiento.", c: "Que se produce la prescripción de la autorización.", d: "Que se desestima su solicitud de autorización." }, ans: "a" },
+                    { id: 6, q: "Doña Clara Hevia decide formular su queja por falta de accesibilidad por correo electrónico. ¿Qué exigirá la Confederación Hidrográfica para la validez de esa queja, conforme al Real Decreto 951/2005?", o: { a: "Que adjunte una copia de la documentación que acredite su identidad.", b: "Que la haya presentado previamente en portal de quejas de la Administración General del Estado.", c: "Las quejas recibidas por correo electrónico carecen de validez...", d: "Que esté suscrita con la firma electrónica de Doña Clara Hevia." }, ans: "d" },
+                    { id: 7, q: "El órgano de contratación fija el valor estimado del contrato de mejora de accesibilidad en 143.000 euros. ¿Debe el Organismo entender que es un contrato sujeto a regulación armonizada?", o: { a: "No, porque su valor estimado es inferior a 5.404.000 euros.", b: "No, porque el valor estimado no supera el importe de 216.000 euros.", c: "Sí, porque su valor estimado es superior a 140.000 euros.", d: "Sí, porque, aunque no supera el umbral del valor estimado, es adjudicado por un Organismo Autónomo..." }, ans: "a" },
+                    { id: 8, q: "Conforme a lo dispuesto en la Resolución de 20 de enero de 2014, de la Dirección General de Presupuestos, ¿con cargo a qué capítulo, artículo, concepto y subconcepto, en su caso, se abonará la ejecución del contrato de mejora de accesibilidad?", o: { a: "162.00", b: "226.02", c: "450", d: "630" }, ans: "d" },
+                    { id: 9, q: "La Confederación Hidrográfica decide adjudicar el contrato mediante un procedimiento abierto simplificado. ¿Dónde se debe publicar el anuncio de licitación, según el articulo 159 de la LCSP?", o: { a: "En el DOUE, BOE y en el de la provincia de Valladolid.", b: "En el BOE y en el Boletín Oficial de Castilla y León.", c: "En el BOE y en el perfil del contratante de la Confederación Hidrográfica del Duero.", d: "Únicamente en el perfil del contratante de la Confederación Hidrográfica del Duero." }, ans: "c" },
+                    { id: 10, q: "Finalmente el contrato de mejora de accesibilidad se adjudica a la empresa 'Soluciones ADAPTA, S.L.' por importe de 120.000 euros (IVA excluido). ¿Cuál será la cuantía de la garantía definitiva del contrato?", o: { a: "7.250 euros.", b: "7.150 euros.", c: "6.000 euros.", d: "3.600 euros." }, ans: "c" },
+                    { id: 11, q: "¿Quién tendrá la competencia para autorizar el suplemento de crédito de 15.000 € para hacer frente a la insuficiencia del crédito debido a la contratación del mantenimiento de los ascensores?", o: { a: "La Presidenta de la Confederación Hidrográfica.", b: "El Ministro de Hacienda.", c: "El Consejo de Ministros.", d: "Las Cortes Generales." }, ans: "c" },
+                    { id: 12, q: "¿Cómo se financiará dicho suplemento?", o: { a: "Con el remanente de tesorería al fin del ejercicio anterior que no haya sido aplicado... o con baja en otros créditos...", b: "Con el remanente de tesorería al fin del ejercicio anterior que no haya sido aplicado en el presupuesto del organismo, o con mayores ingresos...", c: "Con el Fondo de Contingencia o con mayores ingresos sobre los previstos.", d: "Con el Fondo de Contingencia o con baja en otros créditos de operaciones no financieras." }, ans: "c" },
+                    { id: 13, q: "¿Qué documento expedirá la Dirección General de Presupuestos con la aprobación de la Modificación presupuestaria de conformidad con la Orden de 1 de febrero de 1996?", o: { a: "Documento MC.", b: "Documento I.", c: "Documento OK.", d: "Documento PMP." }, ans: "a" },
+                    { id: 14, q: "Don Eduardo Merino quiere saber qué grado tiene consolidado antes de ser nombrado funcionario en prácticas del Cuerpo de Gestión. Si tomó posesión de su primer destino como nivel 16 el 12 de marzo de 2021 y el 1 de abril de 2023 pasa a ocupar un puesto nivel 20 en comisión de servicios, ¿qué grado personal tendrá consolidado en enero de 2026, si aún continúa en comisión de servicios?", o: { a: "El grado 16.", b: "El grado 18.", c: "El grado 20.", d: "No ha consolidado el grado." }, ans: "a" },
+                    { id: 15, q: "Don Eduardo Merino superó con éxito el proceso selectivo en el Cuerpo de Gestión, por el turno de promoción interna. El día de la toma de posesión, ¿qué tipo excedencia deberá solicitar en el Cuerpo General Administrativo?", o: { a: "Una excedencia incentivada.", b: "Una excedencia voluntaria por interés particular.", c: "Una excedencia voluntaria por prestación de servicios en el sector público.", d: "Una excedencia forzosa." }, ans: "c" },
+                    { id: 16, q: "El 9 marzo de 2026 se publica el nombramiento de Don Eduardo Merino como funcionario de carrera del Cuerpo de Gestión. ¿De qué plazo dispondrá para tomar posesión si no cambia de lugar de residencia?", o: { a: "10 días hábiles.", b: "Un mes.", c: "15 días hábiles.", d: "15 días naturales." }, ans: "b" },
+                    { id: 17, q: "Don Eduardo Merino decide disfrutar del permiso por nacimiento de su hijo de forma interrumpida. ¿Con cuánto tiempo deberá preavisar a la Confederación?", o: { a: "El mismo día del nacimiento del hijo o hija.", b: "Al menos 10 días.", c: "Al menos 15 días.", d: "No se requerirá preaviso." }, ans: "c" },
+                    { id: 18, q: "¿Cuántas semanas del total del permiso por el nacimiento de su hijo puede Don Eduardo Merino disfrutar a tiempo parcial?", o: { a: "Seis semanas.", b: "Diez semanas.", c: "Trece semanas.", d: "Diecinueve semanas." }, ans: "c" },
+                    { id: 19, q: "La Secretaria General de la Confederación Hidrográfica acaba de resultar adjudicataria, en un procedimiento de libre designación, del puesto de Subdirectora General en el Ministerio de Agricultura. ¿En qué situación administrativa se encontrará tras tomar posesión del puesto?", o: { a: "Excedencia por incompatibilidad.", b: "Servicio en otras Administraciones Públicas.", c: "Servicios especiales.", d: "Servicio activo." }, ans: "d" },
+                    { id: 20, q: "¿Hasta qué fecha tendrá la Secretaria General para tomar posesión en su nuevo puesto si el cese se produce el lunes, 3 de marzo de 2025, y le supondrá un cambio de residencia de Valladolid a Madrid?", o: { a: "Hasta el martes, 4 de marzo de 2025.", b: "Hasta el miércoles, 5 de marzo de 2025.", c: "Hasta el jueves, 3 de abril de 2025.", d: "Hasta el viernes, 4 de abril de 2025." }, ans: "c" }
+                ]
+            },
+            {
+                section: "SUPUESTO II",
+                context: "El Ministerio para la Transformación Digital y de la Función Pública quiere realizar un contrato de servicios cuyo objeto sería el reconocimiento médico de su personal por un valor estimado de 90.000 € por un año con prórroga. Debido al incremento de los salarios públicos, existe una insuficiencia de crédito en el capítulo 1. El INAP quiere realizar un gasto... Carmen Pérez (INAP) quiere participar en concurso y está embarazada.",
+                questions: [
+                    { id: 1, q: "Sabiendo el tipo y el importe del contrato del reconocimiento médico, ¿cuál sería el procedimiento de licitación más adecuado y ágil para este tipo de contrato?", o: { a: "Procedimiento negociado.", b: "Procedimiento abierto simplificado.", c: "Procedimiento abierto simplificado abreviado del artículo 159.6 de la LCSP.", d: "Procedimiento restringido." }, ans: "c" },
+                    { id: 2, q: "¿Qué se ha tenido en cuenta para el cálculo del valor estimado de 90.000 euros en el contrato del reconocimiento médico considerando que la duración es de un año prorrogable por otro?", o: { a: "El importe total sin el Impuesto sobre el Valor Añadido, sin prórrogas.", b: "El importe total con el Impuesto sobre el Valor Añadido, con prórrogas.", c: "El importe total con el Impuesto sobre el Valor Añadido, sin prórrogas.", d: "El importe total sin el Impuesto sobre el Valor Añadido, con prórrogas." }, ans: "d" },
+                    { id: 3, q: "¿A qué capítulo presupuestario de gastos se debe imputar el gasto de contratación del reconocimiento médico?", o: { a: "Al Capítulo 1.", b: "Al Capítulo 2.", c: "Al Capítulo 4.", d: "Al Capítulo 6." }, ans: "a" },
+                    { id: 4, q: "La empresa 'RECONOCIMIENTOS RÁPIDOS S.L.' está interesada en saber quiénes pueden ser adjudicatarios en la licitación del reconocimiento médico. Señale la respuesta correcta:", o: { a: "Las personas jurídicas solo podrán ser adjudicatarias de contratos cuyas prestaciones estén comprendidas dentro de los fines, objeto o ámbito de actividad que les sean propios.", b: "Las personas naturales solo podrán ser adjudicatarias de contratos cuyas prestaciones estén comprendidas dentro de los fines, objeto o ámbito de actividad que les sean propios.", c: "Solo pueden ser adjudicatarios públicos las personas naturales o jurídicas españolas.", d: "No puede ser adjudicatario quién hubiera participado previamente en la elaboración de las especificaciones técnicas..." }, ans: "a" },
+                    { id: 5, q: "¿Qué duración máxima podría tener el contrato de servicios como el de reconocimiento médico del enunciado?", o: { a: "Cuatro años, incluyendo las posibles prórrogas.", b: "Cinco años, incluyendo las posibles prórrogas.", c: "Cuatro años, excluyendo las posibles prórrogas.", d: "Cinco años, excluyendo las posibles prórrogas." }, ans: "b" },
+                    { id: 6, q: "¿Cuál sería el plazo máximo de adjudicación del contrato de reconocimiento médico si el único criterio fuese el precio?", o: { a: "Quince días a contar desde el siguiente al de apertura de las proposiciones.", b: "Cinco días a contar desde el siguiente al de apertura de las proposiciones.", c: "Diez días a contar desde el siguiente al de apertura de las proposiciones.", d: "Treinta días a contar desde el siguiente al de apertura de las proposiciones." }, ans: "a" },
+                    { id: 7, q: "Por causa imputable a la empresa 'RECONOCIMIENTOS RÁPIDOS S.L.', adjudicataria del contrato, no se formaliza el contrato, ¿qué importe se exigirá a la empresa en concepto de penalidad?", o: { a: "Cinco por ciento del presupuesto base de licitación, IVA excluido, que se hará efectivo en primer lugar contra la garantía provisional...", b: "Tres por ciento del presupuesto base de licitación, IVA excluido, que se hará efectivo en primer lugar contra la garantía provisional...", c: "Cinco por ciento del presupuesto base de licitación, IVA excluido, que se hará efectivo en primer lugar contra la garantía definitiva...", d: "Tres por ciento del presupuesto base de licitación, IVA excluido, que se hará efectivo en primer lugar contra la garantía definitiva, si se hubiera constituido." }, ans: "d" },
+                    { id: 8, q: "Finalmente, el contrato se formaliza con la empresa 'SIENDO SALUDABLE S.L.', y comienza su ejecución. En diciembre de 2025 se reconoció una obligación económica, el ejercicio donde comprometió el gasto y el pago material se realizó en 2026, ¿a qué ejercicio se imputó contablemente y qué documento contable se expidió con el reconocimiento de la obligación?", o: { a: "2025 Documento OK.", b: "2026 Documento D.", c: "2025 Documento D.", d: "2026 Documento OK." }, ans: "a" },
+                    { id: 9, q: "El Ministerio quiere que se ejecute la prórroga del contrato en 2026, ¿qué actuación tendrá que realizar?", o: { a: "Ninguna, porque puede producirse la prórroga por el consentimiento tácito de las partes.", b: "Se tendrá que acordar por el órgano de contratación y será obligatoria para el empresario, siempre que su preaviso se produzca al menos con dos meses de antelación según lo indicado en los pliegos.", c: "Se tendrá que acordar por el órgano de contratación y será potestativa para el empresario, sin obligación de realizar ningún preaviso.", d: "Se tendrá que acordar por el órgano de contratación y será potestativa para el empresario, siempre que su preaviso se produzca al menos con dos meses..." }, ans: "b" },
+                    { id: 10, q: "El crédito consignado en el capítulo 1 es insuficiente, por lo que se realiza una transferencia de créditos del capítulo 2 al capitulo 1. ¿Quién es el competente para autorizar la anterior transferencia según la Ley 47/2003 General Presupuestaria?", o: { a: "El Ministro para la Transformación Digital y de la Función Pública sin necesidad de previo informe...", b: "El Ministro para la Transformación Digital y de la Función Pública previo informe favorable...", c: "El Ministro de Hacienda.", d: "No se puede realizar esta transferencia de crédito." }, ans: "c" },
+                    { id: 11, q: "¿Qué modificación presupuestaria le corresponde realizar al INAP que incrementa los créditos como consecuencia de la realización de determinados ingresos superiores a los contemplados en el presupuesto inicial por la aportación realizada del Ministerio?", o: { a: "Crédito extraordinario.", b: "Ampliación de crédito.", c: "Generación de crédito.", d: "Suplemento de crédito." }, ans: "c" },
+                    { id: 12, q: "¿Quién es competente para aprobar la anterior modificación presupuestaria?", o: { a: "El Gobierno.", b: "El Ministro de Hacienda.", c: "El Presidente del Organismo Autónomo pudiendo ser avocada la competencia por el Ministro para la Transformación Digital y de la Función Pública.", d: "El Presidente del Organismo Autónomo sin que pueda ser avocada la competencia por el Ministro..." }, ans: "c" },
+                    { id: 13, q: "¿Qué duración máxima puede tener el convenio entre el INAP y la Universidad Complutense de Madrid?", o: { a: "Puede tener duración indeterminada.", b: "No podrá ser superior a cuatro años, salvo que normativamente se prevea un plazo superior y no podrá ser objeto de prórroga.", c: "No podrá ser superior a cuatro años, salvo que normativamente se prevea un plazo superior, y se podrá acordar unánimemente su prórroga por un periodo de hasta cuatro años adicionales.", d: "No podrá ser superior a dos años, salvo que normativamente se prevea un plazo superior..." }, ans: "c" },
+                    { id: 14, q: "Posteriormente al proceso selectivo el INAP quiere extinguir el convenio, ¿cuál de las siguientes respuestas NO se contempla en la normativa como causa de extinción de los convenios?", o: { a: "El incumplimiento de las obligaciones y compromisos asumidos por parte de alguno de los firmantes.", b: "El acuerdo unilateral por parte Administración General del Estado.", c: "El transcurso del plazo de vigencia del convenio sin haberse acordado la prórroga del mismo.", d: "Cumplimiento de las actuaciones que constituyen su objeto." }, ans: "b" },
+                    { id: 15, q: "El proceso selectivo que se va a celebrar en el INAEM es para el grupo profesional E2, ¿qué titulación será exigida para el ingreso en dicho grupo?", o: { a: "Título de Graduado en Educación Secundaria Obligatoria.", b: "Título de Bachiller o Técnico o equivalentes.", c: "Titulo Profesional Básico o equivalentes.", d: "Sin titulación prevista en el sistema educativo." }, ans: "a" },
+                    { id: 16, q: "Para participar en el concurso del Ministerio para la Transformación Digital y de la Función Pública, ¿cuánto debe haber permanecido en el puesto de trabajo obtenido con carácter definitivo la señora Carmen Pérez?", o: { a: "Un mínimo de dos años desde la fecha en la que termine el plazo de presentación de las solicitudes de participación.", b: "Un mínimo de dos años desde la fecha de la publicación de la convocatoria.", c: "Sin ninguna limitación por razón de la Secretaría de Estado en donde presta servicio.", d: "Un mínimo de un año desde la fecha en la que termine el plazo de presentación..." }, ans: "c" },
+                    { id: 17, q: "La composición de la Comisión de Valoración que valore los méritos alegados por los solicitantes del concurso deberá ajustarse al siguiente principio:", o: { a: "Principio de composición equilibrada... que se entenderá cumplido siempre que ambos sexos estén representados al 50%.", b: "Principio de composición equilibrada... que se entenderá cumplido siempre que ninguno de los sexos supere el 60% ni sea inferior al 40%.", c: "Principio de representatividad, que implica que el número de los representantes de las organizaciones sindicales tendrá que ser igual o superior...", d: "Principio de representatividad, que implica que el número de los representantes de las organizaciones sindicales tendrá que ser superior..." }, ans: "b" },
+                    { id: 18, q: "¿En qué plazo máximo se deberá resolver el concurso al que se quiere presentar la señora Carmen Pérez?", o: { a: "Tres meses contados desde el día siguiente al de la iniciación de la presentación de solicitudes...", b: "Tres meses contados desde el día siguiente al de la finalización del de la presentación de solicitudes...", c: "Dos meses contados desde el día siguiente al de la iniciación de la presentación de solicitudes...", d: "Dos meses contados desde el día siguiente al de la finalización del de la presentación de solicitudes, salvo que la propia convocatoria establezca otro distinto." }, ans: "d" },
+                    { id: 19, q: "Finalmente se publica en BOE la Resolución de la Subsecretaría por la que se resuelve el concurso y Carmen Pérez no resulta adjudicataria de ningún puesto. ¿Podría interponer algún recurso contra esta Resolución?", o: { a: "Sí, podrá interponer, con carácter potestativo, recurso de reposición ante la Subsecretaria, en el plazo de un mes desde su publicación, o bien, recurso contencioso-administrativo, en el plazo de dos meses desde su publicación.", b: "Únicamente podrá interponer recurso contencioso-administrativo, en el plazo de dos meses desde su publicación.", c: "Sí, podrá interponer recurso de alzada ante el titular del Ministerio para la Transformación Digital y de la Función Pública en el plazo de un mes.", d: "No, no cabe recurso alguno." }, ans: "a" },
+                    { id: 20, q: "¿Qué duración máxima tendrá el permiso por nacimiento al que podrá acceder Carmen Pérez tras el nacimiento de su hijo o hija?", o: { a: "Diecinueve semanas...", b: "Diecisiete semanas...", c: "Dieciséis semanas (opción inferida según plantilla original).", d: "Diecisiete semanas, de las cuales dos semanas pueden disfrutarse hasta que el hijo o la hija cumpla los ocho años." }, ans: "c" }
+                ]
+            }
+        ];
+
+        let globalIndex = 0;
+
+        function renderizarTest() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            globalIndex = 0;
+
+            examData.forEach((sectionData, sIndex) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'bg-white p-4 md:p-8 rounded-xl shadow-sm border border-slate-200 mb-6';
+
+                const sectionTitle = document.createElement('h2');
+                sectionTitle.className = 'text-xl font-bold text-slate-800 mb-4 uppercase tracking-wide border-b border-slate-200 pb-3';
+                sectionTitle.innerText = sectionData.section;
+                sectionDiv.appendChild(sectionTitle);
+
+                if (sectionData.context) {
+                    const contextDiv = document.createElement('div');
+                    contextDiv.className = 'bg-slate-50 p-4 rounded-lg border border-slate-200 text-slate-700 italic mb-6 text-sm';
+                    contextDiv.innerHTML = `<p class="leading-relaxed"><strong class="not-italic text-indigo-700 block mb-1 font-semibold">Contexto:</strong> ${sectionData.context}</p>`;
+                    sectionDiv.appendChild(contextDiv);
+                }
+
+                sectionData.questions.forEach((qItem) => {
+                    globalIndex++;
+
+                    const questionBlock = document.createElement('div');
+                    questionBlock.className = 'mb-6 last:mb-0';
+                    
+                    const questionTitle = document.createElement('h3');
+                    questionTitle.className = 'text-sm font-semibold text-slate-800 mb-2 leading-snug';
+                    questionTitle.innerHTML = `<span class="text-indigo-600 mr-1 font-bold">${qItem.id}.</span> ${qItem.q}`;
+                    questionBlock.appendChild(questionTitle);
+
+                    const optionsGrid = document.createElement('div');
+                    optionsGrid.className = 'space-y-2';
+
+                    for (const [key, text] of Object.entries(qItem.o)) {
+                        const label = document.createElement('label');
+                        label.className = `option-label flex items-start p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 relative group bg-white shadow-sm`;
+                        label.id = `label-g${globalIndex}-${key}`;
+
+                        const inputWrapper = document.createElement('div');
+                        inputWrapper.className = 'flex-shrink-0 mt-0.5 mr-3 relative';
+
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `q_global_${globalIndex}`;
+                        input.value = key;
+                        input.dataset.correct = qItem.ans;
+                        input.dataset.sectionIndex = sIndex;
+                        input.className = 'opacity-0 absolute inset-0 w-full h-full cursor-pointer z-10';
+
+                        const customRadio = document.createElement('div');
+                        customRadio.className = 'custom-radio w-3.5 h-3.5 border border-slate-400 rounded-full group-hover:border-indigo-500 transition-colors';
+
+                        inputWrapper.appendChild(input);
+                        inputWrapper.appendChild(customRadio);
+
+                        const textSpan = document.createElement('span');
+                        textSpan.className = 'text-slate-700 text-sm leading-tight';
+                        textSpan.innerHTML = `<strong class="uppercase mr-1.5 font-semibold text-slate-500">${key})</strong> ${text}`;
+
+                        label.appendChild(inputWrapper);
+                        label.appendChild(textSpan);
+                        optionsGrid.appendChild(label);
+                    }
+
+                    questionBlock.appendChild(optionsGrid);
+                    sectionDiv.appendChild(questionBlock);
+                });
+
+                // Panel de Resultados Parciales por Sección (Oculto inicialmente)
+                const partialResultsDiv = document.createElement('div');
+                partialResultsDiv.id = `partial-results-${sIndex}`;
+                partialResultsDiv.className = 'hidden mt-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center';
+                partialResultsDiv.innerHTML = `
+                    <h4 class="font-bold text-slate-700 mb-3 uppercase text-sm tracking-wider border-b border-slate-200 pb-2 inline-block">Resultados: ${sectionData.section}</h4>
+                    <div class="flex flex-wrap justify-center gap-4 text-sm font-medium">
+                        <span class="text-green-700 bg-green-50 px-3 py-1 rounded-md border border-green-200"><span id="partial-aciertos-${sIndex}" class="font-bold">0</span> Aciertos</span>
+                        <span class="text-red-700 bg-red-50 px-3 py-1 rounded-md border border-red-200"><span id="partial-fallos-${sIndex}" class="font-bold">0</span> Fallos</span>
+                        <span class="text-slate-600 bg-slate-100 px-3 py-1 rounded-md border border-slate-300"><span id="partial-blancos-${sIndex}" class="font-bold">0</span> Blancos</span>
+                        <span class="text-indigo-800 bg-indigo-50 px-4 py-1 rounded-md border border-indigo-200 font-bold ml-2">Nota: <span id="partial-nota-${sIndex}">0</span></span>
+                    </div>
+                `;
+                sectionDiv.appendChild(partialResultsDiv);
+
+                container.appendChild(sectionDiv);
+            });
+        }
+
+        function corregirEjercicio() {
+            // Arrays para conteo por bloques
+            let aciertosPorSeccion = [0, 0, 0];
+            let fallosPorSeccion = [0, 0, 0];
+            let blancosPorSeccion = [0, 0, 0];
+
+            let currentIndex = 1;
+
+            const btnCorregir = document.getElementById('btn-corregir');
+            btnCorregir.disabled = true;
+            btnCorregir.classList.add('opacity-50', 'cursor-not-allowed');
+            btnCorregir.innerText = 'Examen Corregido';
+
+            examData.forEach((sectionData, sIndex) => {
+                sectionData.questions.forEach((qItem) => {
+                    const opcionesInputs = document.querySelectorAll(`input[name="q_global_${currentIndex}"]`);
+                    let respondida = false;
+                    let seleccionadaKey = null;
+
+                    opcionesInputs.forEach(input => {
+                        input.disabled = true;
+                        input.classList.remove('cursor-pointer');
+                        input.parentElement.parentElement.classList.remove('cursor-pointer', 'hover:bg-slate-50', 'hover:shadow');
+                        if(input.checked) {
+                            respondida = true;
+                            seleccionadaKey = input.value;
+                        }
+                    });
+
+                    const labelCorrecta = document.getElementById(`label-g${currentIndex}-${qItem.ans}`);
+
+                    if (respondida) {
+                        const labelSeleccionada = document.getElementById(`label-g${currentIndex}-${seleccionadaKey}`);
+                        
+                        if (seleccionadaKey === qItem.ans) {
+                            // Acierto
+                            aciertosPorSeccion[sIndex]++;
+                            labelSeleccionada.className = "option-label flex items-start p-3 border-2 border-green-500 bg-green-50 rounded-lg relative";
+                            labelSeleccionada.querySelector('span').classList.add('text-green-900', 'font-medium');
+                            labelSeleccionada.querySelector('.custom-radio').classList.add('border-green-500', 'bg-green-500');
+                        } else {
+                            // Fallo
+                            fallosPorSeccion[sIndex]++;
+                            labelSeleccionada.className = "option-label flex items-start p-3 border-2 border-red-500 bg-red-50 rounded-lg relative";
+                            labelSeleccionada.querySelector('span').classList.add('text-red-900', 'font-medium');
+                            labelSeleccionada.querySelector('.custom-radio').classList.add('border-red-500', 'bg-red-500');
+                            
+                            // Marcar correcta
+                            if(labelCorrecta) {
+                                labelCorrecta.className = "option-label flex items-start p-3 border border-blue-400 bg-blue-50 rounded-lg relative shadow-inner";
+                                labelCorrecta.querySelector('span').classList.add('text-blue-900', 'font-bold');
+                            }
+                        }
+                    } else {
+                        // En blanco
+                        blancosPorSeccion[sIndex]++;
+                        if(labelCorrecta) {
+                            labelCorrecta.className = "option-label flex items-start p-3 border border-blue-400 bg-blue-50 rounded-lg relative shadow-inner";
+                            labelCorrecta.querySelector('span').classList.add('text-blue-900', 'font-bold');
+                        }
+                    }
+
+                    currentIndex++;
+                });
+
+                // Calcular e inyectar nota de la sección
+                const pAciertos = aciertosPorSeccion[sIndex];
+                const pFallos = fallosPorSeccion[sIndex];
+                const pBlancos = blancosPorSeccion[sIndex];
+                let pNota = pAciertos - (pFallos * 0.333);
+                if(pNota < 0) pNota = 0;
+
+                document.getElementById(`partial-aciertos-${sIndex}`).innerText = pAciertos;
+                document.getElementById(`partial-fallos-${sIndex}`).innerText = pFallos;
+                document.getElementById(`partial-blancos-${sIndex}`).innerText = pBlancos;
+                document.getElementById(`partial-nota-${sIndex}`).innerText = pNota.toFixed(3);
+
+                // Mostrar el panel parcial
+                document.getElementById(`partial-results-${sIndex}`).classList.remove('hidden');
+            });
+
+            // Totales
+            const totalAciertos = aciertosPorSeccion.reduce((a, b) => a + b, 0);
+            const totalFallos = fallosPorSeccion.reduce((a, b) => a + b, 0);
+            const totalBlancos = blancosPorSeccion.reduce((a, b) => a + b, 0);
+            
+            let puntuacionTotal = totalAciertos - (totalFallos * 0.333);
+            if (puntuacionTotal < 0) puntuacionTotal = 0;
+
+            document.getElementById('desglose-resultados').innerHTML = `
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-green-500 rounded-full"></span> <span class="text-green-700 font-semibold">${totalAciertos} Aciertos</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-red-500 rounded-full"></span> <span class="text-red-700 font-semibold">${totalFallos} Fallos</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-slate-400 rounded-full"></span> <span class="text-slate-600 font-medium">${totalBlancos} En blanco</span></div>
+            `;
+            document.getElementById('puntuacion-final').innerText = `${puntuacionTotal.toFixed(3)} / 110`;
+            
+            // Mostrar panel total
+            const panel = document.getElementById('resultados-panel');
+            panel.classList.remove('hidden');
+            
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 100);
+        }
+
+        function reiniciarTest() {
+            const panel = document.getElementById('resultados-panel');
+            panel.classList.add('hidden');
+            
+            const btnCorregir = document.getElementById('btn-corregir');
+            btnCorregir.disabled = false;
+            btnCorregir.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnCorregir.innerText = 'Corregir Ejercicio';
+
+            renderizarTest();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderizarTest;
+
+    </script>
+</body>
+</html>
