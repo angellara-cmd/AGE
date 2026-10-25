@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Autoevaluable - Oposiciones AGE (Supuesto Práctico 1)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .intro {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .question-block {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        label {
+            cursor: pointer;
+            display: flex;
+            align-items: baseline;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .btn-restart {
+            background-color: #7f8c8d;
+        }
+        .btn-restart:hover {
+            background-color: #616a6b;
+        }
+        #results-summary {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #eafaf1;
+            border: 2px solid #2ecc71;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        /* Clases de corrección visual */
+        .correct-green {
+            color: #27ae60;
+            font-weight: bold;
+            background-color: #eafaf1;
+        }
+        .incorrect-red {
+            color: #e74c3c;
+            text-decoration: line-through;
+            background-color: #fceceb;
+        }
+        .correct-blue {
+            color: #2980b9;
+            font-weight: bold;
+            background-color: #ebf5fb;
+        }
+        .explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff9e6;
+            border-left: 4px solid #f1c40f;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Test Autoevaluable: Supuesto Práctico 1 (AGE)</h1>
+    <div class="intro">
+        <p><strong>Contexto del supuesto:</strong> Antonio Grao Cabrejas es el nuevo Jefe de Servicio de una oficina de la Administración del Estado en Valladolid. La oficina ha sido designada como oficina de asistencia al registro y también, al tratarse de una oficina en la que se están realizando reformas, se comenta sobre la posibilidad, ahora que se puede, de adaptarla a lo previsto en Real Decreto 366/2007, de 16 de marzo, por el que se establecen las condiciones de accesibilidad y no discriminación de las personas con discapacidad en sus relaciones con la Administración General del Estado[cite: 11].</p>
+    </div>
+
+    <form id="quiz-form">
+        <div id="questions-container"></div>
+        
+        <div class="btn-container">
+            <button type="button" id="btn-submit" onclick="calculateResults()">Calcular resultado</button>
+            <button type="button" id="btn-restart" class="btn-restart" onclick="restartTest()">Reiniciar test</button>
+        </div>
+    </form>
+
+    <div id="results-summary"></div>
+</div>
+
+<script>
+    const questionsData = [
+        {
+            id: 1,
+            text: "1. Antonio comienza su trabajo revisando las reformas y verificando que se cumplan las condiciones del Real Decreto 366/2007. Antes de nada, ¿es siempre obligatoria la aplicación del Real Decreto en cualquier oficina de la Administración General del Estado?:[cite: 11]",
+            options: {
+                a: "Sí, siempre en cualquier oficina.[cite: 11]",
+                b: "Sí, siempre en las Oficinas de Atención al Ciudadano.[cite: 11]",
+                c: "No, es obligatorio para las Oficinas de Atención al Ciudadano, aunque en estas también existen excepciones si el edificio en el que se ubica la oficina, o en su entorno, concurren circunstancias de infraestructura o protección del patrimonio que hagan su aplicación imposible material o económicamente.[cite: 11]",
+                d: "Ninguna es correcta.[cite: 11]"
+            },
+            correct: "c",
+            explanation: "Explicación motivada: Tal como marca la solución oficial, la aplicación normativa contempla excepciones por circunstancias materiales insalvables relativas a la infraestructura o patrimonio.[cite: 75]"
+        },
+        {
+            id: 2,
+            text: "2. Si tenemos en cuenta que la Oficina de la que es Jefe de Servicio Antonio es una dependencia que la Administración General del Estado dedica exclusiva o prioritariamente al contacto directo con los ciudadanos y sus representantes a los efectos de obtención de información, orientación y asesoramiento sobre las prestaciones, servicios y procedimientos; la recepción de documentación, solicitudes y comunicaciones; la práctica de comparecencias personales de las personas interesadas o, por último, la realización de gestiones directamente relacionadas con las competencias o servicios de la Administración, estamos ante el caso de una:[cite: 11]",
+            options: {
+                a: "Oficina de Atención Personalizada.[cite: 11]",
+                b: "Una VUE.[cite: 11]",
+                c: "Una Oficina de Atención al Ciudadano.[cite: 11]",
+                d: "Una Oficina 160.[cite: 11]"
+            },
+            correct: "c",
+            explanation: "Explicación motivada: La definición ofrecida en el enunciado corresponde normativamente a una Oficina de Atención al Ciudadano.[cite: 75]"
+        },
+        {
+            id: 3,
+            text: "3. Independientemente de la respuesta a la pregunta anterior, Antonio se cura en salud y decide aplicar los criterios del Real Decreto a su oficina. Sobre la ubicación de la oficina Antonio tiene poco que hacer, ahora bien, hay alguna cosa que no es correcta sobre las condiciones que le han comentado que ha de tener dicha ubicación, ¿qué afirmación es incorrecta en relación a la ubicación de la oficina, según el Real Decreto 366/2007?:[cite: 12]",
+            options: {
+                a: "La oficina se ubicará siempre en planta a nivel de la vía pública. No se deben utilizar rampas de acceso o ascensores para acceder a la oficina.[cite: 12]",
+                b: "La oficina debe estar correctamente señalizada visualmente desde el exterior, de tal forma que sea fácilmente identificable.[cite: 12]",
+                c: "Al menos uno de los itinerarios que una los accesos de la oficina con la vía pública, con los servicios o edificaciones anexas y con los aparcamientos, deberá ser accesible.[cite: 12]",
+                d: "La señalización deberá ser diseñada de modo que resulte inteligible y comprensible por parte de las personas con discapacidad intelectual.[cite: 12]"
+            },
+            correct: "a",
+            explanation: "Explicación motivada: Esta afirmación es incorrecta porque la normativa sí contempla el uso de rampas o ascensores accesibles cuando no es posible ubicar la oficina a nivel de calle.[cite: 75]"
+        },
+        {
+            id: 4,
+            text: "4. Ahora ya más fácilmente, ¿dónde colocará el cartel de acceso a la oficina?:[cite: 12]",
+            options: {
+                a: "Junto a la entrada principal, preferiblemente sobre la puerta, el cartel indicará, en su caso, el número y letra del portal, además del uso, en casos de edificios de interés general.[cite: 12]",
+                b: "Junto a la entrada principal, preferiblemente a la derecha de la puerta, el cartel indicará, en su caso, el número y letra del portal, además del uso, en casos de edificios de interés general.[cite: 12]",
+                c: "Junto a la entrada principal, preferiblemente a la izquierda de la puerta, el cartel indicará, en su caso, el número y letra del portal, además del uso, en casos de edificios de interés general.[cite: 12]",
+                d: "Ninguna es correcta.[cite: 12]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: La norma de accesibilidad determina la colocación del cartel preferiblemente a la derecha de la puerta de entrada principal.[cite: 75]"
+        },
+        {
+            id: 5,
+            text: "5. El edificio tiene varias puertas acristaladas, ¿cómo se señalizarán?:[cite: 12]",
+            options: {
+                a: "Mediante dos bandas horizontales de 10 centímetros de ancho, de contraste cromático con el resto de la superficie, colocada, la primera, a una altura entre 80 y 100 centímetros, y la segunda entre 150 y 170 centímetros.[cite: 12]",
+                b: "Mediante una banda horizontal de 20 centímetros de ancho, de contraste cromático con el resto de la superficie, colocada entre 150 y 170 centímetros.[cite: 12]",
+                c: "Mediante dos bandas horizontales de 20 centímetros de ancho, de contraste cromático con el resto de la superficie, colocada, la primera, a una altura entre 100 y 120 centímetros, y la segunda entre 150 y 170 centímetros.[cite: 12]",
+                d: "Mediante una banda horizontal de 10 centímetros de ancho, de contraste cromático con el resto de la superficie, colocada entre 170 y 180 centímetros.[cite: 12]"
+            },
+            correct: "c",
+            explanation: "Explicación motivada: El estándar para evitar colisiones exige dos bandas de 20 cm en las alturas indicadas de 100-120 cm y 150-170 cm.[cite: 75]"
+        },
+        {
+            id: 6,
+            text: "6. El vestíbulo de recepción se ha de organizar de manera que facilite la orientación a los usuarios. A estos efectos, Antonio se ha de asegurar que se señalicen los recorridos de forma:[cite: 13]",
+            options: {
+                a: "Únicamente visual.[cite: 13]",
+                b: "Visualmente y opcionalmente de forma táctil.[cite: 13]",
+                c: "Unicamente de forma táctil.[cite: 13]",
+                d: "Visual y de forma táctil.[cite: 13]"
+            },
+            correct: "d",
+            explanation: "Explicación motivada: Las normativas de accesibilidad universal obligan a utilizar una aproximación multi-sensorial, combinando sistemas visuales y táctiles.[cite: 75]"
+        },
+        {
+            id: 7,
+            text: "7. ¿Qué afirmación es correcta en relación a la señalización interior?:[cite: 13]",
+            options: {
+                a: "Los paneles de información gráfica, permanente o temporal, estarán situados paralelamente a la dirección de la marcha y siempre que sea posible, adyacentes a alguna pared o superficie, de tal forma que no queden ocultos por ningún obstáculo, ya sea concurrencia de personas, puertas abiertas o mobiliario o elementos ornamentales o decorativos.[cite: 13]",
+                b: "Los paneles de información gráfica, permanente o temporal se protegerán con cristales y no permitirán el acercamiento para poder interactuar con los mismos.[cite: 13]",
+                c: "Los paneles de información gráfica, permanente o temporal, estarán situados perpendicularmente a la dirección de la marcha y siempre que sea posible, adyacentes a alguna pared o superficie, de tal forma que no queden ocultos por ningún obstáculo, ya sea concurrencia de personas, puertas abiertas o mobiliario o elementos ornamentales o decorativos.[cite: 13]",
+                d: "Todas son correctas.[cite: 13]"
+            },
+            correct: "a",
+            explanation: "Explicación motivada: Se exige ubicarlos paralelamente a la marcha y adyacentes a la pared para evitar que se conviertan en obstáculos físicos o queden ocultos.[cite: 75]"
+        },
+        {
+            id: 8,
+            text: "8. Antonio supervisa la instalación de la megafonía con el Real Decreto en la mano, ¿qué ha de cumplir esta megafonía?:[cite: 13]",
+            options: {
+                a: "El nivel de presión sonora de los mensajes audibles debe superar al menos al nivel sonoro de fondo.[cite: 13]",
+                b: "En la megafonía, se intentará conseguir un bajo nivel sonoro, pero bien distribuido en la estancia o edificio a través de numerosos altavoces de banda ancha, y bien distribuidos.[cite: 13]",
+                c: "Se utilizará una señal de atención previa al mensaje.[cite: 13]",
+                d: "Todas son correctas.[cite: 13]"
+            },
+            correct: "d",
+            explanation: "Explicación motivada: Según las características técnicas exigibles a la megafonía, deben cumplirse todos estos requisitos para garantizar la accesibilidad auditiva.[cite: 75]"
+        },
+        {
+            id: 9,
+            text: "9. Pero, además, la megafonía ha de estar acondicionada con:[cite: 13]",
+            options: {
+                a: "Bucles de inducción magnética y amplificadores de campo magnético necesarios para posibilitar la mejor audición a personas usuarias de audífonos.[cite: 13]",
+                b: "Sistema dolby surround para posibilitar la mejor audición a personas usuarias de audífonos.[cite: 13]",
+                c: "Sistema ETRS89 para posibilitar la mejor audición a personas usuarias de audífonos.[cite: 13]",
+                d: "Todas son correctas.[cite: 13]"
+            },
+            correct: "a",
+            explanation: "Explicación motivada: Los bucles de inducción magnética son el requerimiento técnico oficial de accesibilidad para la atención de usuarios con audífonos.[cite: 75]"
+        },
+        {
+            id: 10,
+            text: "10. Cuando un ciudadano llega a la oficina, en el momento inicial de su visita se encuentra en la entrada con un funcionario que ante la consulta del ciudadano básicamente localiza dependencias y funcionarios. Este funcionario está ejerciendo las funciones de:[cite: 14]",
+            options: {
+                a: "Orientación e información.[cite: 14]",
+                b: "Recepción y acogida.[cite: 14]",
+                c: "Gestión.[cite: 14]",
+                d: "Ninguna es correcta.[cite: 14]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: Según el RD 208/1996, el momento inicial de localización básica se encuadra en las funciones de Recepción y acogida.[cite: 75]"
+        },
+        {
+            id: 11,
+            text: "11. A continuación, el ciudadano se dirige a un funcionario que ofrece las aclaraciones y ayudas de índole práctica que se le requieren sobre procedimientos, trámites, requisitos y documentación para los proyectos, actuaciones o solicitudes que se propongan realizar, o para acceder al disfrute de un servicio público o beneficiarse de una prestación. Este funcionario está ejerciendo las funciones de:[cite: 14]",
+            options: {
+                a: "Orientación e información.[cite: 14]",
+                b: "Recepción y acogida.[cite: 14]",
+                c: "Gestión.[cite: 14]",
+                d: "Ninguna es correcta.[cite: 14]"
+            },
+            correct: "a",
+            explanation: "Explicación motivada: Ofrecer aclaraciones sobre procedimientos y trámites corresponde legalmente a las funciones de Orientación e información.[cite: 75]"
+        },
+        {
+            id: 12,
+            text: "12. Un ciudadano dirigiéndose a este último funcionario le formula la siguiente pregunta: \"¿qué es lo que haría usted si fuese yo?\". ¿Cuál cree que debería ser la respuesta del funcionario?:[cite: 14]",
+            options: {
+                a: "Dar su opinión personal y que el ciudadano decida.[cite: 14]",
+                b: "Pedirle al ciudadano que formule esa pregunta a su superior.[cite: 14]",
+                c: "Explicarle al ciudadano que no le puede responder porque la información que se proporciona en la administración solo podrá entrañar una interpretación normativa o una simple determinación de conceptos.[cite: 14]",
+                d: "Explicarle al ciudadano que no le puede responder porque la información que se proporciona en la administración en ningún caso podrá entrañar una interpretación normativa, ni consideración jurídica o económica, sino una simple determinación de conceptos, información de opciones legales.[cite: 14]"
+            },
+            correct: "d",
+            explanation: "Explicación motivada: La función informadora es neutral y objetiva; la normativa prohíbe que el personal vierta interpretaciones normativas o apreciaciones económico-jurídicas personales.[cite: 75]"
+        },
+        {
+            id: 13,
+            text: "13. Ante la petición de otro ciudadano a este mismo funcionario de que le cumplimente los impresos porque él está nervioso y no puede hacerlo, ¿cuál cree que debería ser la respuesta del funcionario?:[cite: 15]",
+            options: {
+                a: "Cumplimentar los impresos solo si el ciudadano no sabe leer ni escribir.[cite: 15]",
+                b: "Colaborará en la cumplimentación de los impresos, lo cual no implica necesariamente que sea el funcionario el que los tenga que cumplimentar.[cite: 15]",
+                c: "Cumplimentar los impresos siempre que el ciudadano lo solicite.[cite: 15]",
+                d: "Limitarse a entregarle los impresos y el ciudadano tendrá que buscar la colaboración de un familiar.[cite: 15]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: El deber de asistencia implica colaboración y facilitación, pero no sustitución automática de la actuación del ciudadano salvo imposibilidad de éste.[cite: 75]"
+        },
+        {
+            id: 14,
+            text: "14. Si la información que se proporciona es relativa a la identificación, fines, competencia, estructura, funcionamiento y localización de organismos y unidades administrativas; la referida a los requisitos jurídicos o técnicos que las disposiciones impongan a los proyectos, actuaciones o solicitudes que los ciudadanos se propongan realizar; la referente a la tramitación de procedimientos, a los servicios públicos y prestaciones, así como a cualesquiera otros datos que aquellos tengan necesidad de conocer en sus relaciones con las Administraciones Públicas, en su conjunto, o con alguno de sus ámbitos de actuación. Estamos hablando de información:[cite: 15]",
+            options: {
+                a: "Particular.[cite: 15]",
+                b: "General.[cite: 15]",
+                c: "Privada.[cite: 15]",
+                d: "Ninguna es correcta.[cite: 15]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: Todos los supuestos mencionados tienen un carácter estructural, de acceso público universal y no están vinculados al estado personal de un expediente, por lo que es Información General.[cite: 75]"
+        },
+        {
+            id: 15,
+            text: "15. La información de la pregunta anterior se la podemos proporcionar:[cite: 15]",
+            options: {
+                a: "A todo el mundo, previa identificación.[cite: 15]",
+                b: "A todo el mundo, sin exigir para ello la acreditación de legitimación alguna.[cite: 15]",
+                c: "Solo a los que acrediten la condición de interesados.[cite: 15]",
+                d: "A todo el mundo sin exigir para ello la acreditación de legitimación alguna, pero solo por medios presenciales, nunca por teléfono.[cite: 15]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: Al ser Información General, su provisión es universal, abierta y no requiere acreditar interés legítimo ni identificación previa.[cite: 75]"
+        },
+        {
+            id: 16,
+            text: "16. Si la información que se proporciona es relativa al estado o contenido de los procedimientos en tramitación, y a la identificación de las autoridades y personal al servicio de la Administración General del Estado y de las entidades de Derecho público vinculadas o dependientes de la misma bajo cuya responsabilidad se tramiten aquellos procedimientos. O es relativa a los datos de carácter personal que afecten de alguna forma a la intimidad o privacidad de las personas físicas. Estamos hablando de información:[cite: 16]",
+            options: {
+                a: "Particular.[cite: 16]",
+                b: "General.[cite: 16]",
+                c: "Privada.[cite: 16]",
+                d: "Ninguna es correcta.[cite: 16]"
+            },
+            correct: "a",
+            explanation: "Explicación motivada: La información sujeta al estado de un trámite concreto y que afecta a datos personales se clasifica legalmente como Información Particular.[cite: 75]"
+        },
+        {
+            id: 17,
+            text: "17. Ante posibles problemas con los ciudadanos hay funcionarios que han decidido no identificarse, ¿es correcto?:[cite: 16]",
+            options: {
+                a: "Sí, para velar por su intimidad tal como se establece en la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantías de los derechos digitales, y en el Reglamento Europeo de protección de datos.[cite: 16]",
+                b: "Sí, la Ley 39/2015 solo obliga a identificarse a los cargos electos o al personal eventual.[cite: 16]",
+                c: "No, entendiendo que la Ley 39/2015 establece que el ciudadano tiene derecho a identificar a las autoridades y al personal al servicio de las Administraciones Públicas bajo cuya responsabilidad se tramiten los procedimientos.[cite: 16]",
+                d: "No, en cualquier circunstancia y ocasión el funcionario ha de ir debidamente identificado con un cartel en donde aparezca su nombre y DNI.[cite: 16]"
+            },
+            correct: "c",
+            explanation: "Explicación motivada: El artículo 13 y 53 de la Ley 39/2015 consagran como derecho de los interesados la identificación de los responsables de la tramitación de los procedimientos.[cite: 76]"
+        },
+        {
+            id: 18,
+            text: "18. Antonio ha instalado a la entrada de la oficina un buzón para recoger iniciativas, reclamaciones y quejas. Recibida la queja o sugerencia, la unidad responsable de la gestión de quejas y sugerencias informará al interesado de las actuaciones realizadas en el plazo de:[cite: 16]",
+            options: {
+                a: "10 días hábiles.[cite: 16]",
+                b: "20 días hábiles.[cite: 16]",
+                c: "30 días hábiles.[cite: 16]",
+                d: "3 meses.[cite: 16]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: La normativa vigente para el programa de quejas y sugerencias establece el plazo de 20 días hábiles para dar contestación de las actuaciones practicadas.[cite: 76]"
+        },
+        {
+            id: 19,
+            text: "19. Hay algunos ciudadanos, sobre todo de fuera de la Unión Europea que se dirigen a la oficina de Antonio para presentar solicitudes, como por ejemplo un puesto de trabajo fijo en la administración, ¿sería esa estrictamente una petición? Señale qué afirmación es incorrecta en relación al derecho de petición:[cite: 17]",
+            options: {
+                a: "No sería una petición. El derecho de petición está regulado por la Ley Orgánica 4/2001, de 12 de noviembre, que desarrolla el artículo 29 de la Constitución española.[cite: 17]",
+                b: "Solo pueden ejercer el derecho de petición los ciudadanos con nacionalidad española.[cite: 17]",
+                c: "No son objeto de petición aquellas solicitudes para las que ya exista un procedimiento específico.[cite: 17]",
+                d: "Tampoco se admitirán aquellas peticiones sobre cuyo objeto exista un procedimiento parlamentario, administrativo o un proceso judicial ya iniciado, en tanto sobre los mismos no haya recaído acuerdo o resolución firme.[cite: 17]"
+            },
+            correct: "b",
+            explanation: "Explicación motivada: Esta afirmación es incorrecta. El Derecho de Petición puede ser ejercido por cualquier persona física o jurídica independientemente de su nacionalidad.[cite: 76]"
+        },
+        {
+            id: 20,
+            text: "20. Una vez admitida a trámite una petición, la autoridad u órgano competente está obligado a contestar y a notificar la contestación a la petición en el plazo máximo de:[cite: 17]",
+            options: {
+                a: "20 días hábiles a contar desde la fecha de su presentación.[cite: 17]",
+                b: "30 días hábiles a contar desde la fecha de su presentación.[cite: 17]",
+                c: "45 días hábiles a contar desde la fecha de su presentación.[cite: 17]",
+                d: "3 meses a contar desde la fecha de su presentación.[cite: 17]"
+            },
+            correct: "d",
+            explanation: "Explicación motivada: El desarrollo reglamentario de este derecho dicta un plazo máximo de resolución y notificación de 3 meses.[cite: 76]"
+        }
+    ];
+
+    const container = document.getElementById('questions-container');
+
+    // Cargar preguntas dinámicamente
+    questionsData.forEach((q, index) => {
+        const qBlock = document.createElement('div');
+        qBlock.className = 'question-block';
+        qBlock.id = 'qblock-' + q.id;
+        
+        let optionsHTML = '';
+        for (const [key, value] of Object.entries(q.options)) {
+            optionsHTML += `
+                <li id="li-${q.id}-${key}">
+                    <label>
+                        <input type="radio" name="q${q.id}" value="${key}">
+                        <span class="option-text">${key}) ${value}</span>
+                    </label>
+                </li>
+            `;
+        }
+
+        qBlock.innerHTML = `
+            <div class="question-text">${q.text}</div>
+            <ul class="options">
+                ${optionsHTML}
+            </ul>
+            <div class="explanation" id="expl-${q.id}">${q.explanation}</div>
+        `;
+        
+        container.appendChild(qBlock);
+    });
+
+    function calculateResults() {
+        let score = 0;
+        let errors = 0;
+        let unanswered = 0;
+
+        questionsData.forEach(q => {
+            const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            const explanationBlock = document.getElementById(`expl-${q.id}`);
+            
+            // Limpiar estilos previos si el usuario hace recálculos sin reiniciar
+            Object.keys(q.options).forEach(k => {
+                const li = document.getElementById(`li-${q.id}-${k}`);
+                li.classList.remove('correct-green', 'incorrect-red', 'correct-blue');
+            });
+
+            if (selected) {
+                const answer = selected.value;
+                if (answer === q.correct) {
+                    score++;
+                    document.getElementById(`li-${q.id}-${answer}`).classList.add('correct-green');
+                } else {
+                    errors++;
+                    // Fallo: Opcion elegida en rojo, opcion correcta en azul
+                    document.getElementById(`li-${q.id}-${answer}`).classList.add('incorrect-red');
+                    document.getElementById(`li-${q.id}-${q.correct}`).classList.add('correct-blue');
+                }
+            } else {
+                unanswered++;
+                // Si no responde, simplemente mostrar la correcta en azul
+                document.getElementById(`li-${q.id}-${q.correct}`).classList.add('correct-blue');
+            }
+            
+            // Mostrar siempre la explicación motivada una vez corregido
+            explanationBlock.style.display = 'block';
+        });
+
+        // Mostrar resumen final
+        const summary = document.getElementById('results-summary');
+        summary.style.display = 'block';
+        summary.innerHTML = `Resultado final del test:<br>
+                             Aciertos: <span style="color:#27ae60">${score}</span> | 
+                             Errores: <span style="color:#e74c3c">${errors}</span> | 
+                             Sin responder: ${unanswered}`;
+        
+        // Bloquear envíos múltiples y desplazar la vista al resumen
+        document.getElementById('btn-submit').disabled = true;
+        summary.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function restartTest() {
+        document.getElementById('quiz-form').reset();
+        document.getElementById('btn-submit').disabled = false;
+        document.getElementById('results-summary').style.display = 'none';
+        
+        questionsData.forEach(q => {
+            document.getElementById(`expl-${q.id}`).style.display = 'none';
+            Object.keys(q.options).forEach(k => {
+                const li = document.getElementById(`li-${q.id}-${k}`);
+                li.classList.remove('correct-green', 'incorrect-red', 'correct-blue');
+            });
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>

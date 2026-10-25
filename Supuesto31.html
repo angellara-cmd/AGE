@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario - Administración General del Estado</title>
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --bg-color: #f4f6f7;
+            --text-color: #333;
+            --correct-bg: #d5f5e3;
+            --correct-border: #28b463;
+            --incorrect-bg: #fadbd8;
+            --incorrect-border: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #f0f3f4;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        /* Clases para la corrección */
+        .correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: #196f3d;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #943126;
+            font-weight: bold;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background-color: #154360;
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        #results {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .results-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .stat-correct {
+            background-color: var(--correct-bg);
+            color: var(--correct-border);
+            border: 2px solid var(--correct-border);
+        }
+
+        .stat-incorrect {
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-border);
+            border: 2px solid var(--incorrect-border);
+        }
+        
+        .stat-unanswered {
+            background-color: #fef9e7;
+            color: #f1c40f;
+            border: 2px solid #f1c40f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Supuesto Práctico Nº 31 - Gestión Financiera</h1>
+    
+    <div style="background-color: #eaf2f8; padding: 20px; border-left: 5px solid var(--primary-color); margin-bottom: 25px; border-radius: 4px; font-size: 0.95em;">
+        <h3 style="margin-top: 0; color: var(--primary-color);">Enunciado del caso práctico:</h3>
+        <p>El Ministerio de de Inclusión, Seguridad Social y Migraciones y para Sede de su Centro de Proceso de Datos, actualmente ubicado en un edificio en alquiler, ha contratado con fecha de 15 de junio del año 2025, previa tramitación reglamentaria, la ejecución de las correspondientes obras de construcción de un edificio, de acuerdo con el proyecto que fue supervisado y aprobado en su día.</p>
+        <p>El presupuesto de ejecución material de dichas obras, según el presupuesto de proyecto aprobado, era de 12.000.000 de euros.</p>
+        <p>Las obras fueron adjudicadas con una baja del 10% sobre el precio de ejecución por contrata.</p>
+        <p>El plazo de ejecución de dichas obras se fijó en 42 meses.</p>
+        <p>La anualidad fijada para 2025 en el expediente de gasto previo a la licitación, fue de 2.000.000 euros, con aplicación al concepto correspondiente del Servicio 03, del programa 311A del Presupuesto del Ministerio de Inclusión, Seguridad Social y Migraciones para el ejercicio económico del año 2025.</p>
+        <p>Para gastos generales de la empresa, gastos financieros, cargas fiscales, tasas de la Administración, y demás conceptos que inciden en el coste de las obras que se proyectan por encargo del Ministerio de Inclusión, Seguridad Social y Migraciones, se ha establecido un porcentaje del 13%.</p>
+        <p>El tipo de IVA aplicable a la operación es el 10%.</p>
+        <p>El beneficio industrial del contratista está fijado en el 6%.</p>
+        <p>En el presupuesto del Ministerio de Inclusión, Seguridad Social y Migraciones para el ejercicio económico del año 2025 figuran, entre otras, las siguientes dotaciones presupuestarias en el Servicio 03 Programa 311A:</p>
+        <p>Concepto 212. Edificios y otras Construcciones, 4.000.000 euros.</p>
+        <p>Concepto 227. Trabajos realizados por otras empresas, 2.000.000 euros.</p>
+        <p>Concepto 620. Inversión nueva asociada al funcionamiento operativo de los servicios, 3.600.000 euros.</p>
+        <p>Durante la ejecución de la obra, el día 17 de agosto de 2025, un rayo produce un incendio que ocasiona daños en las obras por valor de 18.030 euros.</p>
+        <p>Por otra parte, Don Florencio Almansa, funcionario del Cuerpo de Administradores Superiores del Estado, es destinado como jefe de la oficina presupuestaria de este Ministerio.</p>
+        <p>Nada más comenzar su trabajo se encuentra con una propuesta de expediente de modificación presupuestaria que plantea la necesidad de un mayor crédito con objeto de pagar las cuotas de previsión social de varios funcionarios que han planteado reclamaciones por los conceptos que consideran debidos, y que tienen destino en el Centro Gestor correspondiente de este Ministerio.</p>
+    </div>
+
+    <p style="text-align: center; color: #555;">Selecciona la respuesta correcta para cada pregunta y pulsa "Corregir Cuestionario" al finalizar.</p>
+    
+    <form id="quiz-form">
+        <div id="questions-container">
+            <!-- Las preguntas se inyectarán aquí mediante JavaScript -->
+        </div>
+
+        <div class="btn-container">
+            <button type="button" id="submit-btn" onclick="corregirCuestionario()">Corregir Cuestionario</button>
+            <button type="button" id="reset-btn" onclick="reiniciarCuestionario()" style="display: none; margin-left: 15px; background-color: #7f8c8d;">Hacer de nuevo</button>
+        </div>
+    </form>
+
+    <div id="results">
+        <h2>Resultados de la Evaluación</h2>
+        <div class="results-summary">
+            <div class="stat-box stat-correct" id="score-correct">Aciertos: 0</div>
+            <div class="stat-box stat-incorrect" id="score-incorrect">Errores: 0</div>
+            <div class="stat-box stat-unanswered" id="score-unanswered">Sin contestar: 0</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const baseDeDatosPreguntas = [
+        {
+            pregunta: "¿A quién corresponde autorizar previamente a la aprobación del expediente la contratación de las obras del centro de proceso de datos del Ministerio de Inclusión, Seguridad Social y Migraciones?",
+            opciones: [
+                "a) Al Ministro de Inclusión, Seguridad Social y Migraciones, como jefe del Departamento.",
+                "b) Al Subsecretario de Seguridad Social.",
+                "c) Al Director General de Servicios del Ministerio de Inclusión, Seguridad Social y Migraciones.",
+                "d) Al Consejo de Ministros."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "El gasto para la ejecución de las referidas obras, ¿a qué concepto presupuestario de los indicados deberá ser imputado?",
+            opciones: [
+                "a) 212. Edificios y otras construcciones.",
+                "b) 227. Trabajos realizados por otras empresas.",
+                "c) 620. Inversión nueva asociada al funcionamiento operativo de los servicios.",
+                "d) Ninguna es correcta."
+            ],
+            respuestaCorrecta: 2
+        },
+        {
+            pregunta: "¿Cuál será el importe por el que se aprueba el gasto?",
+            opciones: [
+                "a) 12.000.000 euros.",
+                "b) 12.860.000 euros.",
+                "c) 15.279.000 euros.",
+                "d) 15.708.000 euros."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "El expediente de gasto de las citadas obras tendrá como soporte contable un documento:",
+            opciones: [
+                "a) ADOK, por tratarse de un pago en firme.",
+                "b) AD, para así acortar la tramitación, ya que simultáneamente se produce una aprobación y un compromiso de un gasto.",
+                "c) D, ya que el expediente de gasto cifró exactamente el importe de las obras.",
+                "d) A, ya que el expediente de gasto tramitado supone la aprobación de la realización de un gasto calculado de forma aproximada."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Dado el plazo de ejecución de las obras, 42 meses a partir de la firma del contrato, es evidente que nos encontramos ante un caso de gasto de carácter plurianual. Teniendo en cuenta la dotación económica del concepto presupuestario al que deberá imputarse el expediente de gasto, ¿cuál será el máximo compromiso de gasto que podrá adquirirse para el ejercicio económico de 2028?",
+            opciones: [
+                "a) 2.100.000 euros.",
+                "b) 1.800.000 euros.",
+                "c) 2.700.000 euros.",
+                "d) 1.350.000 euros."
+            ],
+            respuestaCorrecta: 1
+        },
+        {
+            pregunta: "En su momento, la empresa contratista solicitó que el contrato de dichas obras se formalizase en escritura pública, ¿a quién corresponde el abono de los gastos derivados de dicha formalización?",
+            opciones: [
+                "a) A nadie, ya que los contratos se formalizan obligatoriamente en documento administrativo.",
+                "b) Al 50% entre el Ministerio de Inclusión, Seguridad Social y Migraciones y la empresa contratista.",
+                "c) A nadie, ya que por tratarse de un contrato administrativo su elevación a escritura pública es gratuita.",
+                "d) A la empresa contratista."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Para el abono de las certificaciones ordinarias de obra se expide y tramita normalmente por el órgano gestor correspondiente, como soporte contable, un documento:",
+            opciones: [
+                "a) ADOK, por ser un pago en firme.",
+                "b) OK, ya que de esta forma se reconoce la obligación.",
+                "c) AD, por el que se aprueba y compromete el gasto al mismo tiempo.",
+                "d) K, por el que se ordena el pago, ya que la obligación fue contraída al aprobarse el expediente de gasto."
+            ],
+            respuestaCorrecta: 1
+        },
+        {
+            pregunta: "¿Tiene derecho el contratista a la indemnización por los daños causados por el incendio ocurrido en las obras a consecuencia de la caída de un rayo eléctrico?",
+            opciones: [
+                "a) No, ya que los contratos con la Administración son a riesgo y ventura del contratista.",
+                "b) No, ya que esos conceptos aparecen valorados en el presupuesto de ejecución bajo la rúbrica de \"imprevistos\".",
+                "c) Podrá el contratista detraer el importe de los daños de la fianza definitiva.",
+                "d) Sí, ya que se trata de un caso de fuerza mayor."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "¿Quién ordenará los pagos de las distintas certificaciones?",
+            opciones: [
+                "a) El Director General de Presupuestos.",
+                "b) El Ministro del Departamento.",
+                "c) El Director General del Tesoro y Política Financiera.",
+                "d) El Ministro de Hacienda."
+            ],
+            respuestaCorrecta: 2
+        },
+        {
+            pregunta: "Como el presupuesto de ejecución material es de 12.000.000 euros, ¿quién aprueba el gasto?",
+            opciones: [
+                "a) Consejo de Ministros.",
+                "b) Jefe del Departamento.",
+                "c) Director General de Presupuestos.",
+                "d) Director General del Patrimonio del Estado."
+            ],
+            respuestaCorrecta: 1
+        },
+        {
+            pregunta: "Si el órgano de contratación así lo decide podrá solicitarse una garantía complementaria, que sobre el presupuesto de licitación no podrá exceder de:",
+            opciones: [
+                "a) 6%.",
+                "b) 5%.",
+                "c) 4%.",
+                "d) Ninguna es correcta."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Si se diese la resolución del contrato, ¿quién habría de autorizarla?",
+            opciones: [
+                "a) Ministro de Inclusión, Seguridad Social y Migraciones.",
+                "b) Consejo de Ministros.",
+                "c) Ministro de Economía, Comercio y Empresa.",
+                "d) Órgano de contratación."
+            ],
+            respuestaCorrecta: 1
+        },
+        {
+            pregunta: "D. Florencio Almansa como jefe de la oficina presupuestaria puede decidir el tipo de modificación presupuestaria que debe pedir en este caso, con independencia de la modificación propuesta. De ser así ¿cuál sería esta?",
+            opciones: [
+                "a) Una ampliación de crédito.",
+                "b) Un suplemento de crédito.",
+                "c) Una transferencia de crédito.",
+                "d) Un crédito extraordinario."
+            ],
+            respuestaCorrecta: 0
+        },
+        {
+            pregunta: "El crédito que ha resultado insuficiente para realizar el gasto, pertenece en función de la clasificación económica al:",
+            opciones: [
+                "a) Capítulo II de gastos.",
+                "b) Capítulo III de gastos.",
+                "c) Capítulo IV de gastos.",
+                "d) Capítulo I de gastos."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Sería posible hacer compatible la modificación presupuestaria tramitada con:",
+            opciones: [
+                "a) Un suplemento de crédito.",
+                "b) Un crédito extraordinario.",
+                "c) Es posible la compatibilidad con cualquier modificación presupuestaria.",
+                "d) No es posible la compatibilidad ni con el suplemento de crédito, ni con las transferencias de crédito, minorando este crédito ampliado."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Indique en qué caso de los enumerados habría que pedir la misma modificación presupuestaria, si el crédito fuera insuficiente:",
+            opciones: [
+                "a) En créditos para pago de alquileres.",
+                "b) Los créditos destinados a satisfacer obligaciones derivadas de la Deuda Pública.",
+                "c) Los créditos para compra de inmuebles.",
+                "d) Los créditos destinados al pago de trienios en el Estado."
+            ],
+            respuestaCorrecta: 1
+        },
+        {
+            pregunta: "¿En cuál de los siguientes casos no podría solicitarse la misma modificación presupuestaria?",
+            opciones: [
+                "a) Cuotas de Seguridad Social.",
+                "b) Intereses de la Deuda Pública.",
+                "c) Amortización de la Deuda Pública.",
+                "d) Arrendamiento de edificios."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Don Florencio Almansa considera que la necesidad de crédito en la modificación que se plantea es evidente y, por ello, no cree necesario incluir la razón que justifica la modificación en la memoria correspondiente:",
+            opciones: [
+                "a) Actúa correctamente.",
+                "b) Actúa según el principio de eficacia.",
+                "c) Actúa de manera adecuada, pero solo en este caso concreto.",
+                "d) El expediente no será correcto, ya que en toda modificación presupuestaria se debe especificar la razón."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Determine si los créditos destinados al pago de retribuciones básicas pueden ser objeto de la misma modificación presupuestaria, en el caso de insuficiencia, que los créditos destinados al pago del régimen de previsión social de los funcionarios públicos:",
+            opciones: [
+                "a) Sí, ya que ambos son gastos de personal.",
+                "b) Sí, ya que ambos son créditos que pertenecen al mismo capítulo.",
+                "c) No, ya que son créditos de distinto capítulo de gastos.",
+                "d) No, ya que esos créditos no se relacionan en la Ley de Presupuestos Generales del Estado como ampliables."
+            ],
+            respuestaCorrecta: 3
+        },
+        {
+            pregunta: "Don Florencio Almansa considera urgente el pago de las cuantías de previsión social adeudadas y por ello no espera a que se instrumente la modificación presupuestaria solicitada para proceder a su pago. Determine:",
+            opciones: [
+                "a) Es acertada su actuación.",
+                "b) No sería acertada su actuación, en general, pero lo es tratándose de la modificación pedida, en el caso concreto.",
+                "c) Es obligatorio en todo caso, que se instrumenten las modificaciones presupuestarias, una vez que son concedidas.",
+                "d) Si ya se conoce la concesión de la modificación no es necesario esperar la instrumentalización por el órgano competente."
+            ],
+            respuestaCorrecta: 2
+        }
+    ];
+
+    const container = document.getElementById('questions-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsDiv = document.getElementById('results');
+
+    // Generar el cuestionario en el HTML
+    function inicializarCuestionario() {
+        baseDeDatosPreguntas.forEach((item, index) => {
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'question-block';
+            questionBlock.id = `q-block-${index}`;
+
+            const questionText = document.createElement('div');
+            questionText.className = 'question-text';
+            questionText.textContent = `${index + 1}. ${item.pregunta}`;
+            questionBlock.appendChild(questionText);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options-list';
+
+            item.opciones.forEach((opcion, opIndex) => {
+                const li = document.createElement('li');
+                li.className = 'option-item';
+
+                const label = document.createElement('label');
+                label.className = 'option-label';
+                label.id = `label-q${index}-o${opIndex}`;
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `question${index}`;
+                radio.value = opIndex;
+
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(opcion));
+                li.appendChild(label);
+                optionsList.appendChild(li);
+            });
+
+            questionBlock.appendChild(optionsList);
+            container.appendChild(questionBlock);
+        });
+    }
+
+    // Corregir el cuestionario
+    function corregirCuestionario() {
+        let aciertos = 0;
+        let errores = 0;
+        let sinContestar = 0;
+
+        baseDeDatosPreguntas.forEach((item, index) => {
+            const opcionesElementos = document.getElementsByName(`question${index}`);
+            let respondida = false;
+            let valorSeleccionado = null;
+
+            // Bloquear inputs para que no se pueda cambiar la respuesta después de corregir
+            opcionesElementos.forEach(radio => {
+                radio.disabled = true;
+                if (radio.checked) {
+                    respondida = true;
+                    valorSeleccionado = parseInt(radio.value);
+                }
+            });
+
+            const labelCorrecta = document.getElementById(`label-q${index}-o${item.respuestaCorrecta}`);
+
+            if (!respondida) {
+                sinContestar++;
+                // Opcional: mostrar cuál era la correcta si no contestó
+                labelCorrecta.classList.add('correct');
+            } else {
+                const labelSeleccionada = document.getElementById(`label-q${index}-o${valorSeleccionado}`);
+
+                if (valorSeleccionado === item.respuestaCorrecta) {
+                    aciertos++;
+                    labelSeleccionada.classList.add('correct');
+                } else {
+                    errores++;
+                    // Poner en rojo la fallada
+                    labelSeleccionada.classList.add('incorrect');
+                    // Poner en verde la correcta
+                    labelCorrecta.classList.add('correct');
+                }
+            }
+        });
+
+        // Mostrar resultados
+        document.getElementById('score-correct').textContent = `Aciertos: ${aciertos}`;
+        document.getElementById('score-incorrect').textContent = `Errores: ${errores}`;
+        document.getElementById('score-unanswered').textContent = `Sin contestar: ${sinContestar}`;
+        
+        resultsDiv.style.display = 'block';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Cuestionario Corregido';
+        document.getElementById('reset-btn').style.display = 'inline-block';
+        
+        // Hacer scroll hasta los resultados
+        resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Reiniciar el cuestionario
+    function reiniciarCuestionario() {
+        baseDeDatosPreguntas.forEach((item, index) => {
+            const opcionesElementos = document.getElementsByName(`question${index}`);
+            
+            // Habilitar y desmarcar inputs
+            opcionesElementos.forEach(radio => {
+                radio.disabled = false;
+                radio.checked = false;
+            });
+
+            // Quitar clases de correcto/incorrecto de todas las etiquetas
+            item.opciones.forEach((_, opIndex) => {
+                const label = document.getElementById(`label-q${index}-o${opIndex}`);
+                label.classList.remove('correct', 'incorrect');
+            });
+        });
+
+        // Ocultar resultados y botón de reinicio
+        resultsDiv.style.display = 'none';
+        document.getElementById('reset-btn').style.display = 'none';
+
+        // Restaurar botón principal
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Corregir Cuestionario';
+
+        // Volver arriba de la página
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Arrancar la app
+    inicializarCuestionario();
+</script>
+
+</body>
+</html>
