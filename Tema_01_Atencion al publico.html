@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquemas y Test - Oposiciones AGE (Atención al Público)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos para la corrección de respuestas */
+        .option-label {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option-label:hover {
+            background-color: #f3f4f6;
+        }
+
+        .correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            font-weight: 600;
+        }
+
+        .incorrect-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <header class="bg-blue-800 text-white shadow-md py-6 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold">Oposiciones AGE</h1>
+                <p class="text-blue-200 mt-1">Tema 1: Atención al Público y Servicios de Información</p>
+            </div>
+            <div class="text-sm bg-blue-700 py-2 px-4 rounded-lg shadow-inner">
+                <p class="font-semibold">Basado estrictamente en documentación oficial</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+        
+        <!-- Navegación de Pestañas -->
+        <aside class="md:w-1/4 lg:w-1/5 flex-shrink-0">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-6">
+                <div class="p-4 bg-gray-50 border-b border-gray-200">
+                    <h2 class="font-bold text-gray-700">Secciones</h2>
+                </div>
+                <nav id="tabs-nav" class="flex flex-col p-2 gap-1">
+                    <button class="tab-btn w-full text-left px-4 py-3 rounded-lg font-medium bg-blue-100 text-blue-800 transition-colors" data-target="tab-esquema">Esquema Principal</button>
+                    <!-- Los botones de los test se generarán dinámicamente -->
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Contenedores de Contenido -->
+        <section class="md:w-3/4 lg:w-4/5 bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 min-h-[500px]">
+            
+            <!-- Pestaña: Esquema Principal -->
+            <div id="tab-esquema" class="tab-content active">
+                <div class="mb-8 border-b pb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Esquema de Preguntas Probables</h2>
+                    <p class="text-gray-600">40 preguntas con respuestas detalladas basadas única y exclusivamente en el documento adjunto. Toca cada pregunta para revelar la respuesta.</p>
+                </div>
+                <div id="esquema-container" class="space-y-4">
+                    <!-- El esquema se genera con JS -->
+                </div>
+            </div>
+
+            <!-- Contenedor dinámico para los Test -->
+            <div id="tests-container">
+                <!-- Los tests se generarán con JS -->
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 text-center py-6 mt-auto">
+        <p>Herramienta de estudio para Oposiciones AGE - Generado conforme a restricciones estrictas.</p>
+    </footer>
+
+    <script>
+        // DATOS DEL ESQUEMA (40 PREGUNTAS)
+        const esquemaData = [
+            { q: "¿Qué es la 'receptividad administrativa' según el Informe sobre la Administración al Servicio del Público (1987) de la OCDE?", a: "Es el derecho del ciudadano a que la Administración sea comprensible (organización clara), accesible en el plano espacial, temporal y material, y que facilite el acceso a las prestaciones que el ciudadano tiene derecho a esperar." },
+            { q: "¿Cuáles son las tres razones principales por las que la OCDE reivindica el término 'cliente' frente a 'ciudadano'?", a: "1) Abarca mayor número de categorías (en particular las empresas). 2) Resalta el hecho de que este es un contribuyente que paga a través de los impuestos. 3) Sugiere una actitud más activa y exigente hacia el servicio público." },
+            { q: "¿Qué dos actitudes principales exige del funcionario el proceso de 'acogida'?", a: "Exige escucha activa e implicarse en la situación de necesidad del ciudadano, ponerse en su lugar (actitud denominada 'empatía')." },
+            { q: "¿Qué principios deben respetar las Administraciones Públicas en su actuación según la Ley 40/2015 de Régimen Jurídico del Sector Público?", a: "Servicio efectivo a los ciudadanos; simplicidad, claridad y proximidad a los ciudadanos; y participación, objetividad y transparencia de la actuación administrativa." },
+            { q: "¿Tienen todas las personas físicas la obligación de comunicarse con la Administración por medios electrónicos según el art. 14 de la Ley 39/2015?", a: "No. Las personas físicas podrán elegir en todo momento si se comunican a través de medios electrónicos o no, salvo que estén obligadas reglamentariamente por razón de su capacidad económica, técnica, etc." },
+            { q: "¿A través de qué medios se realiza la 'Información al Administrado' según el esquema del documento?", a: "Oficinas de Información, publicaciones ilustrativas sobre tramitación, diagramas de procedimiento, organigramas, indicación sobre localización de dependencias/horarios y mediante cualquier otro medio adecuado." },
+            { q: "¿Qué funciones comprende la 'atención personalizada al ciudadano' según el Real Decreto 208/1996?", a: "Recepción y acogida, orientación e información, gestión, recepción de iniciativas o sugerencias, recepción de quejas y reclamaciones, y asistencia a los ciudadanos en el ejercicio del derecho de petición." },
+            { q: "Dentro de la atención personalizada, ¿qué limites tiene la función de 'orientación e información'?", a: "En ningún caso podrá entrañar una interpretación normativa, ni consideración jurídica o económica, sino una simple determinación de conceptos, información de opciones legales o colaboración en cumplimentación de impresos." },
+            { q: "¿Cuál es el sueldo o la retribución económica de un funcionario dedicado a la atención al público?", a: "El dato solicitado no se encuentra en la documentación adjunta." },
+            { q: "¿Qué factores valorará la Administración para exigir responsabilidad (por dolo, culpa o negligencia grave) al funcionario tras indemnizar a un lesionado?", a: "1. El resultado dañoso producido. 2. La existencia o no de intencionalidad. 3. La responsabilidad profesional del personal al servicio de las Administraciones Públicas. 4. La relación con la producción de resultado dañoso." },
+            { q: "¿Cuándo es obligatoria la comparecencia de las personas ante las oficinas públicas (ya sea presencialmente o por medios electrónicos)?", a: "Solo será obligatoria cuando así esté previsto en una norma con rango de ley." },
+            { q: "¿Qué datos permite identificar el documento original utilizado para formular este tema?", a: "El dato solicitado no se encuentra en la documentación adjunta." },
+            { q: "Según el RD 366/2007, ¿qué son las Oficinas de Atención al Ciudadano?", a: "Dependencias o espacios físicos que la AGE dedica exclusiva o prioritariamente al contacto directo con los ciudadanos para obtención de información, recepción de documentación, comparecencias o realización de gestiones relacionadas con sus competencias." },
+            { q: "¿Cuáles son las recomendaciones específicas sobre los accesos y puertas de entrada a las Oficinas de Atención (RD 366/2007)?", a: "El espacio adyacente no debe presentar obstáculos, el suelo será continuo y enrasado. Las puertas deben ser accesibles (sistema de apertura, hueco de paso libre, fuerzas de maniobra cumpliendo la Norma UNE-EN 17210:2021). Si son automáticas, deben eliminar riesgos de atrapamiento. Si son acristaladas, se señalizarán con dos bandas horizontales." },
+            { q: "¿A qué altura deben colocarse exactamente las bandas horizontales en puertas acristaladas para evitar roturas por impacto?", a: "La primera banda se colocará a una altura entre 100 y 120 centímetros, y la segunda banda entre 150 y 170 centímetros, ambas con un ancho de 20 centímetros y contraste cromático." },
+            { q: "¿Qué tres modalidades sensoriales mínimas se exigen para la información relevante en la señalización interior de las oficinas?", a: "Al menos en dos de las tres modalidades: visual, acústica y táctil (altorrelieve o braille)." },
+            { q: "¿Cómo deben estar configurados los mostradores en los puestos de atención?", a: "La altura debe ser adecuada (al menos una parte a la altura de una mesa de trabajo). El espacio inmediato libre de obstáculos. No dispondrán de vidrios u otros obstáculos que dificulten la transmisión del sonido/comunicación visual, y deberán contar con sistemas de bucle de inducción magnética." },
+            { q: "¿Qué características especiales deben tener las pantallas táctiles no atendidas por personal?", a: "Tendrán un sistema alternativo de acceder a la información basado en verbalización, activado mediante la pulsación de un área sensible al tacto en la parte inferior izquierda etiquetado con la expresión 'uso fácil'." },
+            { q: "¿Cuándo se pueden establecer excepciones a las condiciones de accesibilidad del RD 366/2007?", a: "Cuando en el edificio concurran circunstancias de infraestructura o protección del patrimonio que hagan su aplicación imposible material o económicamente (ajuste razonable y carga desproporcionada)." },
+            { q: "¿Qué misión principal tiene el Real Patronato sobre Discapacidad?", a: "Promover la prevención de deficiencias, rehabilitación e inserción social; facilitar el intercambio/colaboración entre Administraciones y sector privado; prestar apoyos en investigación/formación; y emitir dictámenes técnicos." },
+            { q: "¿Qué funciones tienen las Unidades Departamentales de Información Administrativa?", a: "Dirigir las oficinas de información del Departamento, crear/mantener actualizada la base de datos de información, aportar apoyo documental/técnico, impulsar intercambio de material, participar en publicaciones y representar al Departamento ante órganos colegiados." },
+            { q: "¿Qué es el Centro de Información Administrativa y dónde está adscrito?", a: "Es el órgano equivalente a las unidades departamentales en el Ministerio para la Transformación Digital y de la Función Pública, adscrito a la Secretaría de Estado de Función Pública, a través de la Dirección General de Gobernanza Pública." },
+            { q: "¿Qué entidad asume las funciones de coordinación, apoyo y tutela en los órganos territoriales de la Administración General del Estado?", a: "Las oficinas centrales de información y atención al ciudadano dependientes de las Delegaciones del Gobierno en las CCAA, de las Subdelegaciones en provincias y de las Direcciones Insulares." },
+            { q: "¿Cuál es el concepto exacto de 'Información general' según el texto?", a: "Información relativa a identificación, fines, competencia, estructura, funcionamiento y localización de organismos; requisitos jurídicos o técnicos de proyectos; tramitación de procedimientos, servicios públicos y prestaciones aplicables a la Administración en su conjunto o un ámbito de actuación." },
+            { q: "¿Quiénes son los destinatarios legítimos de la 'Información particular'?", a: "Esta información solo podrá ser facilitada a las personas que tengan la condición de interesados en cada procedimiento o a sus representantes legales." },
+            { q: "¿Cuántos días naturales tiene el ciudadano para presentar una sugerencia según el texto?", a: "El dato solicitado no se encuentra en la documentación adjunta (el texto solo habla del plazo de contestación, no de presentación)." },
+            { q: "Según el RD 951/2005, ¿cómo pueden formular los usuarios sus quejas o sugerencias?", a: "Presencialmente (cumplimentando y firmando un formulario), por correo postal y por medios telemáticos (correo electrónico o Internet, requiriendo firma electrónica)." },
+            { q: "¿Cuál es el plazo para informar al interesado sobre las actuaciones realizadas tras una queja y en qué caso se suspende?", a: "El plazo es de 20 días hábiles. Se puede suspender si debe requerirse al interesado para que, en un plazo de 10 días hábiles, formule aclaraciones necesarias." },
+            { q: "¿Qué acciones puede tomar el ciudadano si no obtiene respuesta a su queja en el plazo establecido?", a: "Podrá dirigirse a la Inspección General de Servicios del departamento correspondiente para conocer los motivos de la falta de contestación y para que esta proponga la adopción de medidas oportunas." },
+            { q: "¿La presentación de una queja interrumpe los plazos establecidos en la normativa vigente?", a: "No, las quejas no tendrán en ningún caso la calificación de recurso administrativo, ni su presentación interrumpirá los plazos vigentes, ni condicionan el ejercicio de otras acciones o derechos." },
+            { q: "¿Quién puede ejercer el derecho de petición regulado en la Ley Orgánica 4/2001?", a: "Toda persona natural o jurídica, prescindiendo de su nacionalidad, individual o colectivamente." },
+            { q: "¿Qué requisito específico de firmas requiere una petición colectiva frente a una individual?", a: "Deben ser firmadas por todos los peticionarios, debiendo figurar, junto a la firma de cada uno de ellos, su nombre y apellidos." },
+            { q: "¿Tienen derecho los peticionarios a recibir respuesta en lenguas cooficiales al dirigirse a la AGE?", a: "Sí, en el ámbito territorial de las CCAA con Estatutos que establezcan la cooficialidad lingüística, tienen derecho a formular peticiones en cualquiera de las lenguas oficiales y obtener respuesta en la lengua de su elección." },
+            { q: "¿Cuál es el plazo para que la Administración acuse recibo de una petición?", a: "Dentro de los diez días siguientes a su recepción." },
+            { q: "¿Qué ocurre si una petición adolece de defectos formales (no reúne requisitos)?", a: "Se requerirá al peticionario para que subsane los defectos en el plazo de quince días con el apercibimiento de que, si no lo hace, se le tendrá por desistido." },
+            { q: "Si la autoridad que recibe una petición es incompetente, ¿qué debe hacer?", a: "No la admitirá y la remitirá a la institución competente en el plazo de diez días, comunicándolo así al peticionario." },
+            { q: "¿Cuál es el plazo máximo de la autoridad u órgano competente para declarar la inadmisibilidad de una petición?", a: "Deberá acordarse y notificarse en los cuarenta y cinco días hábiles siguientes al de presentación del escrito de petición. Si transcurre ese plazo sin resolver, se entenderá admitida a trámite." },
+            { q: "¿Qué plazo máximo tiene la autoridad para contestar y notificar una petición una vez admitida a trámite?", a: "El plazo máximo es de tres meses a contar desde la fecha de su presentación." },
+            { q: "¿Qué debe incluir mínimamente la contestación a una petición fundada?", a: "Los términos en los que ha sido tomada en consideración, las razones y motivos por los que se accede (o no), y si se ha adoptado cualquier acuerdo, medida o resolución específica, se agregará a la contestación." },
+            { q: "¿Por qué vías se puede obtener protección jurisdiccional del derecho de petición?", a: "Mediante recurso de amparo ante el Tribunal Constitucional y recurso contencioso-administrativo (procedimiento de protección de derechos fundamentales) contra inadmisiones, falta de respuesta o ausencia de requisitos mínimos en la contestación." }
+        ];
+
+        const testsData = [
+            // TEST 1: Consideraciones Previas y Acogida
+            [
+                { q: "Según la Constitución (art. 103.1), la Administración Pública sirve los intereses generales con:", o: ["Eficacia y eficiencia", "Sometimiento a la ley", "Objetividad", "Transparencia plena"], a: 2 },
+                { q: "¿Qué organización acuñó el principio de 'receptividad administrativa' en su informe de 1987?", o: ["ONU", "Unión Europea", "OCDE", "FMI"], a: 2 },
+                { q: "El término 'cliente', defendido por la OCDE, busca resaltar el hecho de que este es un:", o: ["Administrado neutral", "Sujeto pasivo de derecho", "Contribuyente que paga mediante impuestos", "Usuario esporádico"], a: 2 },
+                { q: "La 'acogida' en la Administración exige del funcionario:", o: ["Conocimiento exhaustivo de leyes", "Resolución inmediata de expedientes", "Escucha activa y empatía", "Uso de herramientas informáticas avanzadas"], a: 2 },
+                { q: "La información facilitada al ciudadano debe huir de:", o: ["El uso de medios electrónicos", "Tecnicismos innecesarios", "La orientación práctica", "La sencillez en el lenguaje"], a: 1 },
+                { q: "¿Qué ley actual rige el Régimen Jurídico del Sector Público mencionada en el texto?", o: ["Ley 30/1992", "Ley 11/2007", "Ley 39/2015", "Ley 40/2015"], a: 3 },
+                { q: "Según la Ley 40/2015, las Administraciones deben asegurar sistemas que garanticen:", o: ["La interoperabilidad y seguridad", "El abaratamiento de costes", "El anonimato absoluto del cliente", "El uso de inteligencia artificial"], a: 0 },
+                { q: "¿Qué artículo de la Ley 39/2015 recoge el derecho a relacionarse por medios electrónicos?", o: ["Art. 3.2", "Art. 13", "Art. 14", "Art. 53"], a: 2 },
+                { q: "¿Pueden las personas físicas modificar el medio elegido (electrónico o no) para comunicarse con la Administración?", o: ["No, es irrevocable", "Sí, pero solo a inicio de año", "Sí, en cualquier momento", "Solo si pagan una tasa"], a: 2 },
+                { q: "Según el texto, ¿a través de qué medio NO se indica expresamente que se realice la información al administrado?", o: ["Diagramas de procedimiento", "Redes sociales corporativas", "Organigramas", "Oficinas de Información"], a: 1 },
+                { q: "¿En qué dependencias periféricas se realiza de manera explícita la información al administrado (según el gráfico)?", o: ["Embajadas", "Ayuntamientos", "Subdelegaciones del Gobierno", "Juzgados de Paz"], a: 2 },
+                { q: "La Ley 11/2007 de Acceso Electrónico de los Ciudadanos...", o: ["Es la norma suprema vigente", "Se encuentra hoy derogada", "Fue promulgada en 2021", "Regula el derecho de petición"], a: 1 },
+                { q: "¿Quiénes están obligados siempre a relacionarse electrónicamente según las ideas clave?", o: ["Las personas jurídicas", "Todas las personas físicas", "Los menores de edad", "Los extranjeros"], a: 0 },
+                { q: "El término 'receptividad administrativa' implica que la Administración sea accesible en el plano:", o: ["Estatal y local", "Espacial, temporal y material", "Político y económico", "Jurídico y procesal"], a: 1 },
+                { q: "El principio que consiste en 'implicarse en la situación de necesidad del ciudadano, ponerse en su lugar' se llama:", o: ["Asertividad", "Sinergia", "Empatía", "Eficiencia"], a: 2 },
+                { q: "¿El término 'ciudadano' abarca a las empresas según la justificación de la OCDE?", o: ["Sí, completamente", "No, el término 'cliente' abarca más categorías, incluidas las empresas", "Ambos términos son legalmente idénticos", "El dato solicitado no se encuentra en la documentación adjunta"], a: 1 },
+                { q: "¿Puede la Administración obligar reglamentariamente a un colectivo de personas físicas a usar medios electrónicos?", o: ["No, nunca", "Sí, si queda acreditado que tienen acceso y disponibilidad (por capacidad económica, técnica, etc.)", "Sí, a voluntad exclusiva del funcionario", "Solo si lo aprueba el Defensor del Pueblo"], a: 1 },
+                { q: "El Real Decreto que aprueba el Reglamento de actuación por medios electrónicos es del año:", o: ["1996", "2007", "2015", "2021"], a: 3 },
+                { q: "La información ha de ser 'fiable' para:", o: ["Ahorrar papel", "Evitar recursos judiciales", "Orientar adecuadamente al ciudadano con vistas a la solución de su caso", "Reducir la plantilla pública"], a: 2 },
+                { q: "¿Qué ley del Procedimiento Administrativo Común cita el texto?", o: ["Ley 30/1992", "Ley 39/2015", "Ley 40/2015", "Ley Orgánica 4/2001"], a: 1 }
+            ],
+            // TEST 2: RD 208/1996 y Funciones Administrativas
+            [
+                { q: "El RD que regula los Servicios de Información Administrativa es el:", o: ["RD 366/2007", "RD 208/1996", "RD 951/2005", "RD 203/2021"], a: 1 },
+                { q: "¿Qué incluye la función de 'recepción y acogida'?", o: ["Tramitar multas", "Facilitar orientación y ayuda en el momento inicial, y localizar dependencias", "Emitir sentencias", "Redactar normativas"], a: 1 },
+                { q: "La función de orientación e información en NINGÚN CASO podrá entrañar:", o: ["Consideración jurídica o económica, ni interpretación normativa", "Colaboración en cumplimentación de impresos", "Información de opciones legales", "Determinación de conceptos"], a: 0 },
+                { q: "La función de 'gestión' administrativa incluye:", o: ["Diseñar ministerios", "Recepcionar la documentación inicial de un expediente y actuaciones de trámite urgentes", "Archivar expedientes de otros países", "Juzgar delitos"], a: 1 },
+                { q: "La asistencia a los ciudadanos en el derecho de petición está amparada constitucionalmente en los arts.:", o: ["9 y 10", "14 y 24", "29 y 77", "103 y 106"], a: 2 },
+                { q: "Entre los deberes genéricos de los funcionarios frente a la sociedad figura el deber de fidelidad a:", o: ["El Gobierno de turno", "La Constitución", "El partido gobernante", "La OCDE"], a: 1 },
+                { q: "El deber de guardar secreto sobre los asuntos que conozcan por razón de su cargo se define como:", o: ["Sigilo riguroso", "Transparencia ciega", "Silencio administrativo", "Reserva de dominio"], a: 0 },
+                { q: "¿En qué artículos de la Ley 39/2015 se recogen deberes frente a los ciudadanos?", o: ["Arts. 1 y 2", "Arts. 13 y 53", "Arts. 100 y 101", "Arts. 29 y 77"], a: 1 },
+                { q: "Un ciudadano tiene derecho a conocer el estado de tramitación de:", o: ["Cualquier procedimiento del Estado", "Solo procedimientos tributarios", "Los procedimientos en los que tenga la condición de interesado", "Procedimientos de terceros"], a: 2 },
+                { q: "La Administración resolverá los asuntos respetando:", o: ["El orden de complejidad", "El orden de presentación, salvo decisión motivada en contra", "El alfabeto", "El deseo del funcionario"], a: 1 },
+                { q: "Si la Administración indemniza a un particular por daños causados por un funcionario por negligencia grave, ¿qué debe hacer después?", o: ["Archivar el caso", "Repercutir de oficio dicha exigencia al funcionario responsable", "Despedir al funcionario automáticamente", "Aumentar los impuestos"], a: 1 },
+                { q: "¿Qué ley regula el blanqueo de capitales mencionado como excepción en el deber de colaboración?", o: ["Ley 39/2015", "Ley 40/2015", "El dato solicitado no se encuentra en la documentación adjunta", "RD 208/1996"], a: 2 },
+                { q: "Cuando las inspecciones requieran entrada en un domicilio, se estará a lo dispuesto en:", o: ["El artículo 18 LPA", "El artículo 19 LPA", "El artículo 100 de la norma correspondiente", "La orden del juez de paz"], a: 2 },
+                { q: "La citación para una comparecencia obligatoria debe hacer constar expresamente:", o: ["El salario del funcionario que atiende", "Lugar, fecha, hora, medios disponibles, objeto y efectos de no atenderla", "Solo la fecha y el lugar", "Las penas de prisión aplicables"], a: 1 },
+                { q: "¿Puede exigir un ciudadano una certificación acreditativa de su comparecencia?", o: ["Sí, cuando así lo solicite", "No, nunca se expiden", "Solo si hubo sentencia judicial", "Solo si la comparecencia fue telemática"], a: 0 },
+                { q: "Si un interesado conoce datos que identifican a otros interesados que no han comparecido, tiene el deber de:", o: ["Ocultarlos", "Proporcionárselos a la Administración actuante", "Venderlos a la Administración", "Publicarlos en la prensa"], a: 1 },
+                { q: "¿Qué revelación exime al ciudadano de facilitar informes a la Administración?", o: ["Si afecta a su estatus social", "Si atenta contra el honor, intimidad o son datos confidenciales profesionales", "Si no tiene tiempo libre", "Cualquier solicitud de información económica"], a: 1 },
+                { q: "¿Cuál de estos NO es un deber del funcionario según el texto?", o: ["Asistencia puntual", "Tratar con esmerada corrección al público", "Aportar su material informático propio", "Colaboración leal con los jefes"], a: 2 },
+                { q: "Las iniciativas o sugerencias ciudadanas pueden servir para:", o: ["Nombrar ministros", "Mejorar la calidad, incrementar el rendimiento o simplificar trámites", "Modificar la Constitución", "Cerrar juzgados"], a: 1 },
+                { q: "Si una petición carece de destinatario o consta erróneamente:", o: ["Se tira a la papelera", "Las unidades de información deberán elevarla a los órganos competentes", "Se devuelve inmediatamente con multa", "El dato solicitado no se encuentra en la documentación adjunta"], a: 1 }
+            ],
+            // TEST 3: Discapacidad (RD 366/2007) - Parte 1
+            [
+                { q: "El RD que establece condiciones de accesibilidad y no discriminación es el:", o: ["RD 208/1996", "RD 366/2007", "RD 951/2005", "RD 1/2013"], a: 1 },
+                { q: "El mandato constitucional para la política de integración de personas con discapacidad está en el:", o: ["Art. 9.2", "Art. 14", "Art. 49", "Art. 103"], a: 2 },
+                { q: "¿Qué norma refunde actualmente los derechos de personas con discapacidad derogando las Leyes 13/1982 y 51/2003?", o: ["Real Decreto 208/1996", "RD Legislativo 1/2013", "Ley Orgánica 4/2001", "Ley 6/1997"], a: 1 },
+                { q: "Los 'Modelos normalizados' sujetos a accesibilidad son:", o: ["Oficinas físicas", "Empleados públicos capacitados", "Impresos puestos a disposición para formular solicitudes, declaraciones, etc.", "Programas informáticos de cálculo"], a: 2 },
+                { q: "Con carácter preferente, la Oficina de Atención al Ciudadano se ubicará:", o: ["En la última planta del edificio", "En planta a nivel de la vía pública", "En sótanos aislados del ruido", "Cerca de estaciones de tren"], a: 1 },
+                { q: "Para considerar un itinerario urbano accesible en la comunicación horizontal, el texto refiere la Norma:", o: ["UNE 41510:2002 (actual UNE-EN 17210:2021)", "ISO 9001", "ISO 14001", "UNE 10001"], a: 0 },
+                { q: "¿Cómo deben estar diseñadas las dimensiones de las plazas de aparcamiento reservadas?", o: ["Estrechas para caber más coches", "Adecuadas para el acceso lateral y posterior a los vehículos", "De tamaño estándar sin variaciones", "Solo para motocicletas adaptadas"], a: 1 },
+                { q: "Cualquier canaleta de recogida de agua en el suelo del acceso debe estar:", o: ["Elevada 5 centímetros", "Enrasada con el pavimento", "Pintada de color rojo", "Cubierta con alfombras gruesas"], a: 1 },
+                { q: "La señalización que indica el número y letra del portal debe situarse preferiblemente:", o: ["A la izquierda de la puerta", "A la derecha de la puerta", "En el centro exacto de la puerta", "A nivel del suelo"], a: 1 },
+                { q: "Los intercomunicadores en las oficinas deben ser accesibles en su localización y modalidad de uso, que incluye:", o: ["Texto y voz", "Hologramas", "Solo lectura braille", "Solo sonido de alta frecuencia"], a: 0 },
+                { q: "Para evaluar la accesibilidad de comunicación vertical y puertas se cita la Norma:", o: ["UNE 41510", "UNE 41520 (actual UNE-EN 17210:2021)", "ISO 27001", "UNE 41530"], a: 1 },
+                { q: "Las puertas acristaladas se protegerán con bandas cromáticas de ancho:", o: ["10 centímetros", "20 centímetros", "30 centímetros", "5 centímetros"], a: 1 },
+                { q: "Si existen puertas cortavientos, el espacio debe permitir a todos los usuarios:", o: ["La maniobrabilidad, aproximación y apertura", "Evitar el pago del IBI", "Sentarse a descansar", "Solo el paso con bastón, no con silla de ruedas"], a: 0 },
+                { q: "Los sistemas de control de acceso (seguridad) no deben interferir con:", o: ["Teléfonos móviles", "Relojes inteligentes", "Dispositivos electromagnéticos como marcapasos y prótesis auditivas", "Llaves magnéticas del edificio"], a: 2 },
+                { q: "Si el arco de seguridad no permite el paso a sillas de ruedas, la Oficina debe:", o: ["Denegar la entrada al usuario", "Tener previstas medidas/medios alternativos para pasar el control con su ayuda técnica", "Obligar a desmontar la silla", "Mandar la documentación por correo"], a: 1 },
+                { q: "El vestíbulo de recepción se organizará señalizando visual y táctilmente:", o: ["Solo la cafetería", "Los recorridos de acceso a zonas, núcleos verticales y accesos/salidas", "Los nombres de todos los funcionarios", "Las salidas de humos de la azotea"], a: 1 },
+                { q: "¿En qué año se aprobó la Ley de Igualdad de Oportunidades, no Discriminación y Accesibilidad Universal?", o: ["1982", "1997", "2003", "2013"], a: 2 },
+                { q: "Las oficinas itinerantes o habilitadas provisionalmente:", o: ["Están exentas de toda accesibilidad", "Se les aplican singularidades/excepciones que no menoscaben derechos", "Están prohibidas por ley", "Deben ser exclusivas para personas con discapacidad"], a: 1 },
+                { q: "El Real Decreto Legislativo 1/2013 deroga explícitamente:", o: ["El RD 208/1996 y RD 951/2005", "La Ley 13/1982 y Ley 51/2003", "La Ley 39/2015", "La Constitución"], a: 1 },
+                { q: "La acción positiva de la Administración tiene como finalidad:", o: ["Discriminar a los ciudadanos sin discapacidad", "Compensar las desventajas de los ciudadanos con discapacidad", "Ahorrar presupuesto", "Disminuir los tiempos de espera del funcionario"], a: 1 }
+            ],
+            // TEST 4: Discapacidad (RD 366/2007) - Parte 2
+            [
+                { q: "La señalización táctil en interiores se proporcionará mediante:", o: ["Pantallas LED", "Texturas lisas exclusivas", "Texturas rugosas y caracteres/símbolos en altorrelieve y braille", "Altavoces de gran tamaño"], a: 2 },
+                { q: "Los paneles de información gráfica en pasillos no deben:", o: ["Estar adyacentes a la pared", "Estar protegidos con cristales", "Ser paralelos a la marcha", "Tener buen contraste"], a: 1 },
+                { q: "Para facilitar la discriminación visual, las letras o números:", o: ["Se imprimirán en cursiva siempre", "No deberán situarse sobre ilustraciones o fotografías", "Se pintarán con colores fluorescentes", "Serán siempre de color gris oscuro"], a: 1 },
+                { q: "La señalización acústica, para usuarios de prótesis auditivas, incluirá antes del mensaje:", o: ["Una música clásica de 2 minutos", "Una señal de atención, visual y acústica previa", "Un código Morse", "Nada, se emite directamente"], a: 1 },
+                { q: "La megafonía en la estancia debe conseguir un sonido a través de:", o: ["Un único altavoz central a máximo volumen", "Numerosos altavoces de banda ancha bien distribuidos con bajo nivel sonoro", "Bocinas de emergencia continuas", "Solo auriculares inalámbricos"], a: 1 },
+                { q: "Toda la información emitida por megafonía debe mostrarse también en:", o: ["Boletines en papel", "Paneles textuales bien visibles", "Mensajes SMS al ciudadano", "Redes sociales"], a: 1 },
+                { q: "Los sistemas de turnos (recogida de número) deben contar con medios informativos:", o: ["Exclusivamente visuales", "Exclusivamente sonoros", "Visuales y sonoros", "Solo táctiles"], a: 2 },
+                { q: "En los mostradores, al menos una parte ha de estar a la altura de:", o: ["Una mesa de trabajo", "Un cajero automático", "La cintura de una persona de pie de 1.80m", "Un metro y medio"], a: 0 },
+                { q: "Los mostradores de atención NO dispondrán de:", o: ["Iluminación propia", "Sistemas informáticos", "Vidrios u otros obstáculos que dificulten el sonido o visión", "Asientos cómodos"], a: 2 },
+                { q: "Los servicios de atención telefónica al ciudadano, para facilitar la lectura labial, estarán dotados técnicamente de:", o: ["Videotelefonía", "Telégrafos", "Buzón de voz", "Sistemas analógicos antiguos"], a: 0 },
+                { q: "En los sistemas interactivos de información, las pantallas táctiles deben disponer de la opción 'uso fácil' situada en:", o: ["La parte superior derecha", "El centro de la pantalla", "La parte inferior izquierda", "La esquina superior izquierda"], a: 2 },
+                { q: "En los cajeros o sistemas interactivos, la información sonora debe estar:", o: ["Suprimida para no molestar", "Transcrita en formato texto", "Solo en idioma inglés", "Modulada a 120 decibelios"], a: 1 },
+                { q: "Las pantallas de información deben tener la característica técnica de ser:", o: ["Reflectantes como un espejo", "Antirreflectantes y con buen contraste", "En blanco y negro obligatoriamente", "Táctiles térmicas"], a: 1 },
+                { q: "Toda Oficina de Atención deberá contar al menos con:", o: ["Una cafetería accesible", "Un área higiénico-sanitaria accesible", "Un aparcamiento subterráneo", "Un cajero automático propio"], a: 1 },
+                { q: "El concepto de excepción por imposibilidad material se rige por los límites de:", o: ["Inversión a fondo perdido", "Ajuste razonable y carga desproporcionada (art. 66.2 RD Leg. 1/2013)", "Fuerza mayor por clima", "Decisión discrecional del funcionario"], a: 1 },
+                { q: "En los impresos destinados a cumplimentación, se debe evitar:", o: ["Usar tamaño de letra 12", "Fondos con dibujos y tintas con poco contraste", "Acompañarlos de instrucciones", "Dejar espacios en blanco"], a: 1 },
+                { q: "El RD 1494/2007 regula las condiciones básicas para el acceso a:", o: ["Tecnologías, productos y servicios de la sociedad de la información", "El empleo público", "La educación universitaria", "El transporte ferroviario"], a: 0 },
+                { q: "A requerimiento del ciudadano con discapacidad, los impresos se ofrecerán en formatos alternativos como:", o: ["Tipografías ampliadas o braille", "Solo discos de vinilo", "Audio casetes", "Solo en lengua de signos extranjera"], a: 0 },
+                { q: "Los documentos básicos de uso habitual deberán contar con versiones simplificadas destinadas a:", o: ["Extranjeros sin papeles", "Personas con discapacidades intelectuales o problemas de comprensión escrita", "Niños menores de 12 años", "Empresas multinacionales"], a: 1 },
+                { q: "En caso de que el edificio sea protegido (patrimonio) y la accesibilidad sea imposible económicamente, se dictará excepción mediante resolución de:", o: ["El Rey", "La Secretaría de Estado competente en materia de Función Pública", "El Alcalde", "El Ministerio de Sanidad"], a: 1 }
+            ],
+            // TEST 5: Información Administrativa (Organización)
+            [
+                { q: "Las Unidades Departamentales de Información Administrativa existen en:", o: ["Todas las Subdelegaciones", "Todos los Ministerios", "Todos los Ayuntamientos", "Todas las Comunidades Autónomas"], a: 1 },
+                { q: "La jefatura de la Unidad Departamental de Información Administrativa la ostenta un titular de nivel:", o: ["Dirección General", "Subdirección General", "Secretaría de Estado", "Jefatura de Negociado"], a: 1 },
+                { q: "El Centro de Información Administrativa está adscrito a:", o: ["El Ministerio del Interior", "La Secretaría de Estado de Función Pública, a través de la D.G. de Gobernanza Pública", "La Casa Real", "El Defensor del Pueblo"], a: 1 },
+                { q: "Una de las funciones del Centro de Información Administrativa es sostener un sistema de información eminentemente:", o: ["Telefónico", "Postal", "Basado en palomas mensajeras", "Televisivo"], a: 0 },
+                { q: "Las oficinas centrales de información y atención al ciudadano radicarán, salvo circunstancias singulares, en:", o: ["La sede de cada Ayuntamiento", "La sede de cada Departamento ministerial", "En los Juzgados", "En las Cámaras de Comercio"], a: 1 },
+                { q: "En el ámbito territorial, las oficinas de información centrales dependen obligatoriamente de:", o: ["Las Comisarías", "Delegaciones, Subdelegaciones del Gobierno y Direcciones Insulares", "Las Diputaciones Provinciales", "El Gobierno Militar"], a: 1 },
+                { q: "¿La existencia de Oficinas Sectoriales en servicios provinciales es obligatoria o potestativa?", o: ["Es obligatoria en toda provincia", "Es potestativa, cuando volumen y especialidad lo justifiquen", "Está expresamente prohibida", "Solo es posible en islas"], a: 1 },
+                { q: "El coordinador territorial de la información administrativa es:", o: ["El Rey", "El Centro de Información Administrativa", "El Delegado del Gobierno", "El Ministro del Interior"], a: 1 },
+                { q: "¿Es posible crear oficinas integradas de información con participación de varias Administraciones Públicas?", o: ["No, es inconstitucional", "Sí, mediante convenio de colaboración", "Solo con la Unión Europea", "Solo si pagan un alquiler conjunto"], a: 1 },
+                { q: "La información que se refiere a los requisitos jurídicos o técnicos de proyectos, sin distinción de destinatario, se denomina:", o: ["Información privada", "Información particular", "Información general", "Información privilegiada"], a: 2 },
+                { q: "Para facilitar obligatoriamente información general a un ciudadano, se requiere acreditar:", o: ["El DNI original", "La condición de interesado", "No se exige acreditación de legitimación alguna", "El pago de la tasa correspondiente"], a: 2 },
+                { q: "La información que se refiere al estado de tramitación de un expediente concreto se llama:", o: ["Información particular", "Información de oficio", "Información estadística", "Información generalizada"], a: 0 },
+                { q: "¿Quién aporta la información particular en los procedimientos en tramitación?", o: ["El Defensor del Pueblo", "Las unidades de gestión de la AGE, apoyadas por las unidades de información", "El Registro Civil", "El Presidente del Gobierno"], a: 1 },
+                { q: "La función de 'recepción de quejas y reclamaciones' atiende situaciones por:", o: ["Discrepancia política", "Tardanzas, desatenciones o cualquier actuación irregular observada", "Enfermedades profesionales del empleado", "Retrasos en los vuelos internacionales"], a: 1 },
+                { q: "¿Puede el Centro de Información Administrativa promover cursos de capacitación?", o: ["No, esa función es exclusiva del INAP", "Sí, en colaboración con el INAP", "Solo si cobra matrícula", "El dato solicitado no se encuentra en la documentación adjunta"], a: 1 },
+                { q: "Las quejas y sugerencias formuladas por propios empleados públicos tienen cabida para:", o: ["Pedir aumento de sueldo", "Mejorar la calidad de servicios, incrementar el rendimiento o ahorrar gasto público", "Solicitar vacaciones extras", "Denunciar a compañeros en lo penal"], a: 1 },
+                { q: "¿En qué texto legal derogado (con efectos 2016) se cita el art. 4 sobre efectividad de derechos y mejora continua?", o: ["Ley 40/2015", "Ley 39/2015", "Ley 6/1997 (LOFAGE)", "Constitución de 1978"], a: 2 },
+                { q: "La información general debe ofrecerse a grupos sociales o instituciones cuando:", o: ["Paguen una cuota", "Resulte conveniente una mayor difusión", "Se encuentren en periodo electoral", "Lo pida un juez"], a: 1 },
+                { q: "La identificación de las autoridades y personal responsable de un trámite es información:", o: ["Top Secret", "General", "Particular", "Restringida a nivel ministerial"], a: 2 },
+                { q: "Las Oficinas Sectoriales de los órganos territoriales, funcionalmente se comunican con:", o: ["Su propio Ministerio y la oficina central de la Delegación", "Únicamente con el público extranjero", "Nadie, operan en aislamiento", "Solo con ayuntamientos"], a: 0 }
+            ],
+            // TEST 6: Quejas y Sugerencias (RD 951/2005)
+            [
+                { q: "El marco general para la mejora de la calidad en la AGE se establece en el RD:", o: ["951/2005", "208/1996", "366/2007", "11/2007"], a: 0 },
+                { q: "Según el RD 951/2005, la unidad responsable de la gestión de quejas tiene la ubicación señalizada de forma visible y:", o: ["Oculta para evitar saturación", "La más accesible para su localización y utilización", "A las afueras de la ciudad", "En la primera planta exclusivamente"], a: 1 },
+                { q: "Las sugerencias o quejas presentadas por Internet deberán:", o: ["Ser anónimas", "Estar suscritas con la firma electrónica del interesado", "No superar los 100 caracteres", "Ir acompañadas de un aval bancario"], a: 1 },
+                { q: "Si la queja se formula presencialmente, ¿quién puede auxiliar al ciudadano en su formulación?", o: ["El guardia de seguridad", "Los funcionarios responsables, si el ciudadano así lo desea", "Cualquier persona en la fila", "Debe traerla redactada por un abogado"], a: 1 },
+                { q: "¿Quién define el contenido mínimo que debe constar en los formularios de quejas presenciales?", o: ["La Secretaría de Estado de Función Pública", "El Ministro respectivo", "El interesado", "La OCDE"], a: 0 },
+                { q: "Para suministrar información relevante, las quejas y sugerencias se clasificarán adaptándose a:", o: ["El criterio de cada funcionario", "Una estructura básica de códigos que se determine al efecto", "El abecedario exclusivamente", "El color de la carpeta"], a: 1 },
+                { q: "El plazo máximo que tiene la unidad responsable para informar al interesado de las actuaciones es de:", o: ["15 días hábiles", "30 días naturales", "20 días hábiles", "3 meses"], a: 2 },
+                { q: "El plazo de respuesta a una queja puede suspenderse si:", o: ["El funcionario está de vacaciones", "Debe requerirse al interesado para que formule aclaraciones en un plazo de 10 días", "Hay una huelga", "El volumen de quejas es alto"], a: 1 },
+                { q: "Si tras los plazos establecidos la Administración no responde a la queja, el ciudadano puede dirigirse a:", o: ["La Inspección General de Servicios (IGS) del departamento", "El Tribunal Supremo", "La Fiscalía Anticorrupción", "La Policía Nacional"], a: 0 },
+                { q: "El seguimiento de las quejas relativas a las Delegaciones del Gobierno corresponde a:", o: ["La IGS del Ministerio de Defensa", "La IGS del Ministerio competente en materia de Función Pública", "El Presidente autonómico", "La Dirección General de Tráfico"], a: 1 },
+                { q: "¿Con qué periodicidad remite la unidad responsable a la IGS el informe global de quejas recibidas?", o: ["Semestralmente", "Mensualmente", "En el mes de enero de cada año (referido al año anterior)", "Cada 5 años"], a: 2 },
+                { q: "¿Tienen las quejas del RD 951/2005 calificación de recurso administrativo?", o: ["Sí, de recurso de alzada", "Sí, de recurso potestativo de reposición", "En ningún caso tendrán tal calificación", "Sí, pero solo si se presentan telemáticamente"], a: 2 },
+                { q: "La presentación de una queja, respecto a los plazos normativos vigentes:", o: ["Los interrumpe automáticamente", "Los paraliza hasta resolución", "No interrumpe los plazos establecidos", "Los acorta a la mitad"], a: 2 },
+                { q: "¿Qué Real Decreto derogó en materia de quejas el RD 951/2005?", o: ["El capítulo III del RD 208/1996", "La Constitución", "La Ley 30/1992", "Ninguno"], a: 0 },
+                { q: "La información del seguimiento de quejas se incorporará a un informe conjunto remitido a la SE de Función Pública en:", o: ["El primer semestre de cada año", "Diciembre", "Octubre", "No se remite nada"], a: 0 },
+                { q: "Si un interesado recibe constancia de la presentación de su queja, se hará a través de:", o: ["El Boletín Oficial del Estado", "El medio que indique", "Llamada telefónica a cobro revertido", "Un edicto en el ayuntamiento"], a: 1 },
+                { q: "La unidad responsable ofrece al ciudadano respuesta informando de:", o: ["El currículum del funcionario", "Las actuaciones realizadas y, en su caso, las medidas adoptadas", "El saldo de las arcas públicas", "La fecha de las próximas elecciones"], a: 1 },
+                { q: "¿Pueden las quejas condicionar el ejercicio de otras acciones o derechos del interesado?", o: ["Sí, impiden ir a juicio", "Sí, anulan el derecho de petición", "No condicionan en modo alguno", "Solo si lo autoriza el juez"], a: 2 },
+                { q: "Las directrices de programas del marco general (desarrollo del RD 951/2005) se aprobaron por Resolución en:", o: ["Febrero de 2006", "Enero de 2005", "Marzo de 2007", "Diciembre de 2013"], a: 0 },
+                { q: "El informe conjunto de las quejas y sugerencias se remite a la Secretaría de Estado por parte de:", o: ["Los propios ciudadanos", "Las autoridades responsables", "Los sindicatos", "El Defensor del Pueblo"], a: 1 }
+            ],
+            // TEST 7: Derecho de Petición (LO 4/2001) - Parte 1
+            [
+                { q: "El derecho de petición se regula jurídicamente mediante:", o: ["Real Decreto", "Ley Ordinaria", "Ley Orgánica 4/2001", "Reglamento Europeo"], a: 2 },
+                { q: "El derecho de petición desarrolla el artículo de la Constitución número:", o: ["Art. 14", "Art. 29", "Art. 103", "Art. 105"], a: 1 },
+                { q: "¿La nacionalidad es un límite para ejercer el derecho de petición?", o: ["Sí, solo para españoles", "Sí, solo ciudadanos de la UE", "No, prescinde de su nacionalidad", "Solo si son residentes documentados"], a: 2 },
+                { q: "Si un ciudadano comete un delito o falta con ocasión del ejercicio del derecho de petición:", o: ["Queda exento de responsabilidad penal", "No resultará exento de responsabilidad", "Se le multa administrativamente, no penalmente", "Recibe amnistía automática"], a: 1 },
+                { q: "¿Pueden los peticionarios exigir la confidencialidad de sus datos?", o: ["Sí, en todos los casos", "No, las peticiones son públicas", "Solo en peticiones al Rey", "Solo si pagan por el secreto"], a: 0 },
+                { q: "Una solicitud para cuya satisfacción el ordenamiento jurídico establezca un procedimiento específico distinto (ej. un recurso):", o: ["Es objeto del derecho de petición prioritario", "No es objeto de este derecho", "Se tramita por doble vía simultánea", "Depende del funcionario que lo reciba"], a: 1 },
+                { q: "Una petición individual DEBE incluir necesariamente:", o: ["Identidad, objeto y destinatario", "Solo el objeto", "Identidad, nacionalidad (si la tuviere), lugar/medio de notificaciones, objeto y destinatario", "Una fotocopia compulsada del pasaporte"], a: 2 },
+                { q: "¿Puede utilizarse un medio electrónico para formalizar una petición?", o: ["No, debe ser hológrafo", "Sí, cualquier medio que permita acreditar su autenticidad", "Solo si la administración receptora es local", "Sí, pero sin validez jurídica"], a: 1 },
+                { q: "En el caso de peticiones colectivas, estas deben estar firmadas por:", o: ["Al menos el representante del grupo", "El 50% más uno de los miembros", "Todos los peticionarios, con nombre y apellidos junto a la firma", "Un notario"], a: 2 },
+                { q: "¿Qué efecto tiene enviar copia del escrito de petición a otro órgano distinto al destinatario?", o: ["Inicia dos procedimientos paralelos", "Ningún efecto más que el de su simple conocimiento", "Anula la petición original", "Bloquea administrativamente al destinatario"], a: 1 },
+                { q: "En CCAA con cooficialidad lingüística, las peticiones a la AGE se formulan en:", o: ["Solo en castellano", "Solo en la lengua cooficial", "Cualquiera de las lenguas oficiales, obteniendo respuesta en la de su elección", "Inglés o francés"], a: 2 },
+                { q: "Si un documento de petición debe surtir efectos FUERA de la Comunidad Autónoma con lengua propia cooficial, la Administración debe:", o: ["Destruirlo", "Traducirlo al castellano", "Pedir al ciudadano que pague un traductor jurado", "Remitirlo sin traducir bajo apercibimiento"], a: 1 },
+                { q: "¿Es precisa la traducción al castellano si el documento surtirá efectos en otra CCAA donde es cooficial ESA MISMA lengua?", o: ["Sí, es obligatorio", "No, no será precisa su traducción", "Solo si lo autoriza el juez", "El dato solicitado no se encuentra en la documentación adjunta"], a: 1 },
+                { q: "¿Dónde se puede presentar el escrito de petición?", o: ["Solo en Correos", "Solo presencialmente en Madrid", "Ante cualquier registro o dependencia admitida por la legislación del Procedimiento Admin. Común", "En la comisaría más cercana"], a: 2 },
+                { q: "¿Pueden las peticiones versar sobre un asunto de interés colectivo o general?", o: ["No, solo sobre interés exclusivo del peticionario", "Sí, con independencia de que afecten al peticionario o sean de interés colectivo", "Solo si la firman más de 500.000 ciudadanos", "Solo pueden versar sobre quejas"], a: 1 },
+                { q: "¿A qué poderes públicos se puede dirigir una petición?", o: ["Solo al Ejecutivo Central", "Cualquier institución pública, administración, autoridad u órganos directivos vinculados", "Solo a los Tribunales", "Solo al Defensor del Pueblo"], a: 1 },
+                { q: "Si la petición versa sobre materias penitenciarias, ¿se rige por la LO 4/2001 general?", o: ["Sí, es supletoria principal", "No, se rigen por su propia normativa específica", "Está prohibido hacer peticiones penitenciarias", "El dato solicitado no se encuentra en la documentación adjunta"], a: 1 },
+                { q: "El derecho de petición regulado en el art. 29 CE es un:", o: ["Deber constitucional", "Derecho fundamental (al que le aplica recurso de amparo)", "Principio rector", "Privilegio de la nobleza"], a: 1 },
+                { q: "¿Debe constar la nacionalidad del solicitante en la petición individual?", o: ["Nunca", "Siempre, bajo pena de inadmisión automática", "Sí, la nacionalidad si la tuviere", "Solo si es extracomunitario"], a: 2 },
+                { q: "La actuación de acusar recibo se llevará a efecto de acuerdo con:", o: ["La norma organizativa de cada entidad", "La Ley de Bases de Régimen Local obligatoriamente", "El Código Civil", "El Código Penal"], a: 0 }
+            ],
+            // TEST 8: Derecho de Petición (LO 4/2001) - Parte 2 (Plazos y Trámites)
+            [
+                { q: "El plazo que tiene la Administración para acusar recibo de la petición es de:", o: ["5 días", "10 días siguientes a su recepción", "15 días hábiles", "1 mes"], a: 1 },
+                { q: "Si el escrito no reúne los requisitos, el plazo otorgado para subsanar los defectos es de:", o: ["10 días", "15 días", "20 días", "30 días"], a: 1 },
+                { q: "Si transcurre el plazo de subsanación sin que el peticionario la realice:", o: ["Se suspende el trámite 3 meses", "Se le tendrá por desistido, notificándose el archivo con la causa", "Se tramita igualmente", "Se sanciona al peticionario con una multa"], a: 1 },
+                { q: "La no aportación de documentos complementarios requeridos que estén al alcance del peticionario:", o: ["Determina la inadmisibilidad automática", "No determina por sí sola la inadmisibilidad (sin perjuicio de sus efectos en la contestación)", "Es un delito de desobediencia", "Interrumpe los plazos definitivamente"], a: 1 },
+                { q: "Si la Administración destinataria de la petición es manifiestamente incompetente, el plazo para remitirla al órgano competente es de:", o: ["10 días", "15 días", "20 días", "45 días"], a: 0 },
+                { q: "Si el órgano incompetente pertenece a la MISMA institución u organismo que el competente, debe:", o: ["Remitirla en 10 días e informar", "Remitir directamente las actuaciones al órgano competente", "Archivar el caso", "Rechazarla de plano sin notificar"], a: 1 },
+                { q: "¿Se admite una petición sobre la que exista un proceso judicial ya iniciado no firme?", o: ["Sí, para presionar al juez", "No, no se admiten en tanto no recaiga resolución firme", "Solo si el juez autoriza el derecho de petición", "Sí, si el peticionario es el demandado"], a: 1 },
+                { q: "El plazo máximo para declarar y notificar la INADMISIBILIDAD de una petición es:", o: ["10 días", "15 días", "30 días naturales", "45 días hábiles siguientes a la presentación"], a: 3 },
+                { q: "Si transcurre el plazo de inadmisibilidad sin que se haya notificado nada, se entiende que:", o: ["Está archivada definitivamente", "La petición ha sido admitida a trámite", "El funcionario ha cometido prevaricación", "El peticionario debe volver a presentarla"], a: 1 },
+                { q: "Una vez admitida a trámite, el plazo máximo para CONTESTAR y notificar es de:", o: ["45 días hábiles", "3 meses a contar desde su presentación", "6 meses", "1 año"], a: 1 },
+                { q: "¿Puede el órgano competente convocar a los peticionarios en audiencia especial?", o: ["No, el trámite es estrictamente documental", "Sí, si así lo considera necesario", "Solo en peticiones referidas a CCAA", "Solo en peticiones penales"], a: 1 },
+                { q: "La inserción de la contestación en un diario oficial por parte del órgano competente:", o: ["Sustituye por completo a la notificación", "No le exime de la obligación de notificar anterior", "Es obligatoria en todos los casos", "Está prohibida por la Ley de Protección de Datos"], a: 1 },
+                { q: "Si la petición se estima fundada, la autoridad adoptará las medidas oportunas, incluyendo:", o: ["El encarcelamiento de los culpables", "El impulso de procedimientos necesarios para adoptar una disposición de carácter general", "El pago de indemnizaciones millonarias", "El despido del Defensor del Pueblo"], a: 1 },
+                { q: "El recurso contencioso-administrativo por vulneración del derecho de petición se basa en el procedimiento de:", o: ["Procedimiento ordinario administrativo", "Protección jurisdiccional de los derechos fundamentales de la persona", "Recurso de alzada perentorio", "Juicio rápido penal"], a: 1 },
+                { q: "¿Qué ley regula el recurso contencioso-administrativo mencionado en la LO 4/2001?", o: ["Ley 29/1998", "Ley 30/1992", "Ley 39/2015", "RD 208/1996"], a: 0 },
+                { q: "¿A partir de qué artículo de la Ley 29/1998 se establece el procedimiento de protección de derechos fundamentales citado?", o: ["Arts. 10 y siguientes", "Arts. 114 y siguientes", "Arts. 50 y siguientes", "Arts. 200 y siguientes"], a: 1 },
+                { q: "De las siguientes opciones, ¿cuál es causa válida de inadmisión de una petición?", o: ["Falta de competencia", "Estar pendiente de resolución firme en proceso judicial", "Existir un procedimiento específico para satisfacerla", "Todas son correctas"], a: 3 },
+                { q: "Si la inadmisión se debe a que existe otro procedimiento específico para lo pedido, la declaración debe indicar expresamente:", o: ["El costo económico del otro procedimiento", "Las disposiciones a cuyo amparo deba sustanciarse y el órgano competente", "El teléfono particular del instructor", "La nacionalidad del funcionario"], a: 1 },
+                { q: "Las peticiones dirigidas al Defensor del Pueblo se rigen por:", o: ["La LO 4/2001 exclusivamente", "Su propia normativa específica", "La Constitución Americana", "El Estatuto de Autonomía de Madrid"], a: 1 },
+                { q: "¿La declaración de inadmisibilidad requiere motivación?", o: ["No, es un acto de trámite simple", "Sí, será siempre motivada", "Solo si el ciudadano la exige previamente", "Solo para extranjeros"], a: 1 }
+            ],
+            // TEST 9: Repaso Mixto - Parte 1
+            [
+                { q: "El Informe sobre la Administración al Servicio del Público que reivindica el concepto 'cliente' es de:", o: ["1978", "1987", "1996", "2007"], a: 1 },
+                { q: "Un ciudadano que quiere saber las opciones legales sin que ello suponga consideración jurídica, recibe del funcionario una:", o: ["Interpretación normativa", "Sentencia", "Orientación e información", "Petición admitida"], a: 2 },
+                { q: "¿Qué norma menciona los principios de simplicidad, claridad, y proximidad a los ciudadanos?", o: ["RD 366/2007", "Ley 40/2015", "Ley Orgánica 4/2001", "Constitución Española"], a: 1 },
+                { q: "Las Administraciones facilitarán PREFERENTEMENTE:", o: ["La prestación conjunta de servicios a los interesados", "El uso de papel reciclado", "La comparecencia física a las 8:00 AM", "Trámites sin registro de entrada"], a: 0 },
+                { q: "¿Quién elabora y distribuye las publicaciones informativas del Ministerio y mantiene su catálogo?", o: ["El Ministro exclusivamente", "La Unidad Departamental de Información Administrativa", "El Defensor del Pueblo", "La Delegación de Gobierno"], a: 1 },
+                { q: "El órgano ejecutivo permanente de la (antigua) Comisión Interministerial de Información Administrativa es:", o: ["El Rey", "El Centro de Información Administrativa", "El Juez de Primera Instancia", "La Subdirección General pertinente"], a: 1 },
+                { q: "El mantenimiento del catálogo de unidades del Departamento y sus órganos periféricos corresponde a:", o: ["Unidades Departamentales de Información Administrativa", "El Ciudadano", "La OCDE", "Inspección General de Servicios"], a: 0 },
+                { q: "La información que puede afectar a la intimidad o privacidad es:", o: ["Información pública accesible por web", "Información general obligatoria", "Información particular reservada a las personas a que se refieran", "Información nula de pleno derecho"], a: 2 },
+                { q: "¿Tienen todas las personas físicas la obligación de usar el certificado digital para trámites según el art 14 LPA?", o: ["Sí, es un deber general ineludible", "No, salvo que estén obligadas reglamentariamente por ciertos motivos", "Solo en los ayuntamientos pequeños", "El dato solicitado no se encuentra en la documentación adjunta"], a: 1 },
+                { q: "Según la norma de accesibilidad, las puertas de los accesos principales a la Oficina:", o: ["Pueden ser correderas o abatibles cumpliendo la norma UNE", "Deben ser giratorias manuales obligatoriamente", "No pueden tener cristales", "Solo pueden abrirse hacia afuera y ser de madera maciza"], a: 0 },
+                { q: "El contraste cromático en las bandas de las puertas acristaladas se hace respecto a:", o: ["El marco de la puerta", "El resto de la superficie acristalada", "El techo del edificio", "El color del mostrador"], a: 1 },
+                { q: "En la recepción a los ciudadanos, si el espacio es un vestíbulo, este se organizará de forma que:", o: ["Impida ver los despachos cerrados", "Facilite la orientación a los usuarios (señalizando recorridos)", "Disponga de sillas no ergonómicas", "Tenga una temperatura exacta de 21 grados"], a: 1 },
+                { q: "Si la Oficina de Atención dispone de zona de espera, el mobiliario debe ser concebido con arreglo a:", o: ["Criterios estéticos de vanguardia", "Criterios de diseño para todos", "Criterios de abaratamiento de costes", "Criterios de reciclaje extremo"], a: 1 },
+                { q: "La unidad responsable del RD 951/2005 puede contestar una queja informando sobre:", o: ["Soluciones para problemas de aparcamiento ajenos", "Las medidas adoptadas", "El salario de los directores", "Sentencias penales no relacionadas"], a: 1 },
+                { q: "Para suspender el plazo de respuesta de quejas (por 10 días), el motivo debe ser:", o: ["Exceso de trabajo del Ministerio", "Formulación de aclaraciones necesarias por parte del interesado", "Días festivos locales", "Caída del sistema informático general"], a: 1 },
+                { q: "¿En qué texto se recoge explícitamente el 'deber de identificarse' por parte del funcionario?", o: ["Ley 39/2015 (arts. 13 y 53)", "Ley 13/1982", "Ley 6/1997", "Ley Orgánica 4/2001"], a: 0 },
+                { q: "La atención de personas con discapacidad en su trato verbal requiere seguir las especificaciones que adoptarán los Ministros competentes en materia de Función Pública y en materia de:", o: ["Obras Públicas", "Hacienda", "Derechos Sociales", "Justicia"], a: 2 },
+                { q: "En la formación del personal encargado de la atención al público se atenderá especialmente al conocimiento de:", o: ["Informática avanzada en la nube", "Las distintas discapacidades y el trato/interacción con estas personas", "Lenguas asiáticas", "Herramientas de diseño gráfico"], a: 1 },
+                { q: "El Real Patronato sobre Discapacidad se configuró de forma actual en la Ley 14/2000, definiéndolo como:", o: ["Sociedad Anónima Estatal", "Empresa Pública", "Organismo Autónomo", "Asociación sin ánimo de lucro"], a: 2 },
+                { q: "Si un ciudadano ejerce su derecho de petición enviando una queja cuya satisfacción tiene un cauce específico ya regulado, ¿qué ocurre?", o: ["Se tramita como petición por ser más beneficioso", "No es objeto de este derecho (se inadmite por esa vía)", "Se archiva todo sin decir nada", "Se sanciona al ciudadano"], a: 1 }
+            ],
+            // TEST 10: Repaso Mixto - Parte 2
+            [
+                { q: "¿En qué casos procede exigir responsabilidad patrimonial al funcionario una vez indemnizado el particular?", o: ["Solo en caso de dolo probado en juicio penal", "Por dolo, culpa o negligencia grave", "Por cualquier mínimo error material", "Nunca se le repercute al funcionario"], a: 1 },
+                { q: "En las Unidades de Información, si la cuestión demandada destaca por su urgencia y simplicidad, el servicio puede:", o: ["Emitir actuaciones de trámite y resolución inmediata", "Bloquear el expediente 3 meses", "Elevarla al Consejo de Ministros", "Rechazar atenderla presencialmente"], a: 0 },
+                { q: "El Real Decreto 366/2007 se aprobó el:", o: ["16 de marzo", "29 de julio", "9 de febrero", "12 de noviembre"], a: 0 },
+                { q: "Para que un itinerario exterior sea accesible y llegue hasta los aparcamientos, debe cumplir las condiciones de un:", o: ["Itinerario metropolitano rápido", "Itinerario urbano accesible", "Paseo ajardinado protegido", "Corredor interurbano básico"], a: 1 },
+                { q: "Si la señalización es táctil, se deben usar:", o: ["Alfombras de plástico", "Caracteres o símbolos en altorrelieve y en braille", "Fotografías en blanco y negro", "Pinturas brillantes reflectantes"], a: 1 },
+                { q: "Al interactuar con puntos de información no atendidos que tengan teclado o mandos, estos deberán estar:", o: ["Ocultos a la vista", "Protegidos por una caja de seguridad", "Adaptados con etiquetas o iconos de alto contraste, letras grandes, en altorrelieve y braille", "Funcionando únicamente con comandos de voz"], a: 2 },
+                { q: "La información dispuesta en paneles debe tener un contenido:", o: ["Profundo, jurídico y exhaustivo", "Conciso, básico, símbolos sencillos, sin información superflua", "Codificado en colores sin texto", "Traducido obligatoriamente a 5 idiomas extranjeros"], a: 1 },
+                { q: "El nivel de presión sonora de los mensajes audibles emitidos (p. ej. alarmas o avisos) debe:", o: ["Ser inaudible a menos de un metro", "Superar al menos al nivel sonoro de fondo", "Causar molestias leves en el oído para alertar", "Silenciarse en horas de trabajo"], a: 1 },
+                { q: "Si el ciudadano no sabe a quién dirigir exactamente su petición...", o: ["No se le permite registrar el papel", "Las unidades de información deben elevar a los órganos competentes las recibidas en las que no figure destinatario", "La policía confisca la instancia", "Pierde el derecho por caducidad"], a: 1 },
+                { q: "¿A qué organismo hay que dirigirse si pasan 20 días hábiles sin que contesten mi queja presentada en una Delegación de Gobierno?", o: ["Al Tribunal Constitucional", "Al Defensor del Pueblo de forma inexcusable", "A la Inspección General de Servicios del Ministerio competente en Función Pública", "Al Ayuntamiento local"], a: 2 },
+                { q: "El art. 19 de la Ley 39/2015 regula de manera principal:", o: ["La comparecencia de las personas ante las oficinas públicas", "El blanqueo de capitales", "Las sanciones penales a funcionarios", "El organigrama del Ministerio"], a: 0 },
+                { q: "En el procedimiento de peticiones, ¿cuándo prescribe el plazo para resolver si el órgano competente está de baja médica?", o: ["A los 4 años", "A los 3 meses (el texto no cita la baja médica como excepción al plazo máximo legal de resolución de 3 meses)", "El dato solicitado no se encuentra en la documentación adjunta", "Se detiene el reloj hasta su alta"], a: 1 },
+                { q: "¿Qué sucede con los documentos redactados en catalán dirigidos al Ministerio de Defensa en Madrid mediante el derecho de petición?", o: ["Al surtir efectos fuera del territorio de origen, el órgano instructor deberá traducir al castellano el documento", "El ciudadano debe enviar una traducción certificada pagada por él", "No son admisibles bajo ningún concepto", "El dato solicitado no se encuentra en la documentación adjunta (pero la regla de la Ley 4/2001 lo prevé)"], a: 0 },
+                { q: "¿Qué exime al peticionario del archivo si no aporta datos complementarios requeridos que NO sean imprescindibles o que NO estén en su poder?", o: ["Nada, se archiva de forma automática inexcusable", "La no aportación no determinará por sí sola la inadmisibilidad", "Es necesario enviar una excusa notarial", "Depende del capricho de la Administración"], a: 1 },
+                { q: "Para exigir confidencialidad en una petición amparada por la LO 4/2001, ¿hay que pagar tasas?", o: ["Sí, la tasa de confidencialidad", "No (el ejercicio del derecho no depara perjuicio y permite exigir confidencialidad sin referir coste)", "Solo las personas jurídicas", "El dato solicitado no se encuentra en la documentación adjunta"], a: 3 },
+                { q: "¿Cuál es el tiempo de espera recomendado frente a la pantalla de un sistema interactivo de información antes de que se reinicie?", o: ["15 segundos", "1 minuto", "Debe permitir un dilatado tiempo de respuesta", "Infinito"], a: 2 },
+                { q: "Las sugerencias persiguen, entre otros fines, la adopción de medidas que supongan:", o: ["Mayor burocracia para proteger el empleo público", "Mayor grado de satisfacción de la sociedad en sus relaciones con la AGE", "Mayor rentabilidad económica en Bolsa para la AGE", "Cambiar el régimen político vigente"], a: 1 },
+                { q: "El acceso a Registros y estado de tramitación están recogidos en los arts. de la Ley 39/2015:", o: ["13 y 53", "14 y 15", "18 y 19", "29 y 77"], a: 0 },
+                { q: "Cuando un funcionario toma posesión, según el texto jura o promete, lo que le obliga a un fiel desempeño con el deber previo de:", o: ["Sumisión a su jefe de sección", "Fidelidad a la Constitución", "Colaboración con la prensa local", "Productividad constante"], a: 1 },
+                { q: "¿Pueden las quejas presentadas por la vía del RD 951/2005 paralizar la resolución de un expediente sancionador en curso?", o: ["Sí, paraliza todo el procedimiento", "Sí, solo si el Inspector lo ordena", "No, no interrumpirán los plazos establecidos en la normativa vigente", "El dato solicitado no se encuentra en la documentación adjunta"], a: 2 }
+            ]
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Referencias DOM
+            const tabsNav = document.getElementById('tabs-nav');
+            const testsContainer = document.getElementById('tests-container');
+            const esquemaContainer = document.getElementById('esquema-container');
+
+            // 1. Renderizar Esquema
+            esquemaData.forEach((item, index) => {
+                const details = document.createElement('details');
+                details.className = 'bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden';
+                details.innerHTML = `
+                    <summary class="bg-gray-50 px-5 py-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-100 transition-colors list-none flex items-center justify-between">
+                        <div class="flex items-start gap-3">
+                            <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0 text-sm">${index + 1}</span>
+                            <span class="mt-0.5">${item.q}</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+                    <div class="px-5 py-4 bg-white text-gray-700 border-t border-gray-200">
+                        <p class="pl-10 leading-relaxed"><span class="font-bold text-green-700 block mb-1">Respuesta:</span> ${item.a}</p>
+                    </div>
+                `;
+                // Añadir rotación al icono al abrir
+                details.addEventListener('toggle', function() {
+                    const icon = this.querySelector('svg');
+                    if(this.open) {
+                        icon.classList.add('rotate-180');
+                    } else {
+                        icon.classList.remove('rotate-180');
+                    }
+                });
+                esquemaContainer.appendChild(details);
+            });
+
+            // 2. Renderizar Tests Dinámicamente
+            testsData.forEach((test, testIndex) => {
+                const tabId = `tab-test-${testIndex + 1}`;
+                
+                // Botón de navegación
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn w-full text-left px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-100 transition-colors';
+                btn.textContent = `Examen Test ${testIndex + 1}`;
+                btn.dataset.target = tabId;
+                tabsNav.appendChild(btn);
+
+                // Contenedor del Test
+                const testDiv = document.createElement('div');
+                testDiv.id = tabId;
+                testDiv.className = 'tab-content';
+                
+                let htmlQuestions = `<div class="mb-6 border-b pb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Examen Test ${testIndex + 1}</h2>
+                    <p class="text-gray-600">20 preguntas de autoevaluación con única respuesta válida basada en el temario.</p>
+                </div>
+                <form id="form-test-${testIndex}" class="space-y-8" onsubmit="evaluateTest(event, ${testIndex})">`;
+
+                test.forEach((q, qIndex) => {
+                    htmlQuestions += `
+                        <div class="question-block bg-white p-5 rounded-lg border border-gray-100 shadow-sm" id="qblock-${testIndex}-${qIndex}">
+                            <p class="font-bold text-gray-800 mb-4"><span class="text-blue-600 mr-2">${qIndex + 1}.</span>${q.q}</p>
+                            <div class="space-y-2 pl-6">
+                    `;
+                    
+                    q.o.forEach((opt, optIndex) => {
+                        htmlQuestions += `
+                            <label class="option-label flex items-start gap-3 p-3 rounded-lg border border-gray-200" id="label-${testIndex}-${qIndex}-${optIndex}">
+                                <input type="radio" name="q-${testIndex}-${qIndex}" value="${optIndex}" class="mt-1 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="text-gray-700">${opt}</span>
+                            </label>
+                        `;
+                    });
+
+                    htmlQuestions += `</div></div>`;
+                });
+
+                htmlQuestions += `
+                    <div class="sticky bottom-0 bg-white border-t p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] rounded-b-xl z-10 mt-8">
+                        <div id="results-${testIndex}" class="text-lg font-bold"></div>
+                        <div class="flex gap-3 w-full md:w-auto">
+                            <button type="button" onclick="resetTest(${testIndex})" class="px-6 py-2 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 w-full md:w-auto transition-colors">Reiniciar Test</button>
+                            <button type="submit" class="px-8 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 w-full md:w-auto shadow-md transition-colors">Calcular Resultado</button>
+                        </div>
+                    </div>
+                </form>`;
+
+                testDiv.innerHTML = htmlQuestions;
+                testsContainer.appendChild(testDiv);
+            });
+
+            // 3. Lógica de Navegación de Pestañas
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Quitar active a todos los botones
+                    tabButtons.forEach(b => {
+                        b.classList.remove('bg-blue-100', 'text-blue-800');
+                        b.classList.add('text-gray-600', 'hover:bg-gray-100');
+                    });
+                    // Poner active al actual
+                    btn.classList.add('bg-blue-100', 'text-blue-800');
+                    btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+
+                    // Ocultar todos los contenidos
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+
+                    // Mostrar el target
+                    const targetId = btn.dataset.target;
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // Hacer scroll hacia arriba
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        });
+
+        function evaluateTest(event, testIndex) {
+            event.preventDefault();
+            
+            const form = document.getElementById(`form-test-${testIndex}`);
+            const testData = testsData[testIndex];
+            let aciertos = 0;
+            let fallos = 0;
+            let enBlanco = 0;
+
+            // Bloquear los inputs para no cambiar respuestas tras corregir
+            const allInputs = form.querySelectorAll('input[type="radio"]');
+            allInputs.forEach(input => input.disabled = true);
+
+            testData.forEach((q, qIndex) => {
+                const selectedValue = form.elements[`q-${testIndex}-${qIndex}`].value;
+                const correctValue = q.a;
+
+                // Limpiar clases previas (por si acaso)
+                q.o.forEach((_, optIndex) => {
+                    const label = document.getElementById(`label-${testIndex}-${qIndex}-${optIndex}`);
+                    label.classList.remove('correct-answer', 'incorrect-answer');
+                });
+
+                if (selectedValue === "") {
+                    enBlanco++;
+                    // Si está en blanco, marcamos la correcta en verde sutilmente o normal.
+                    const correctLabel = document.getElementById(`label-${testIndex}-${qIndex}-${correctValue}`);
+                    correctLabel.classList.add('correct-answer');
+                } else if (parseInt(selectedValue) === correctValue) {
+                    aciertos++;
+                    // Marcar en verde
+                    const selectedLabel = document.getElementById(`label-${testIndex}-${qIndex}-${selectedValue}`);
+                    selectedLabel.classList.add('correct-answer');
+                } else {
+                    fallos++;
+                    // Marcar la incorrecta elegida en rojo
+                    const selectedLabel = document.getElementById(`label-${testIndex}-${qIndex}-${selectedValue}`);
+                    selectedLabel.classList.add('incorrect-answer');
+                    // Marcar la correcta en verde
+                    const correctLabel = document.getElementById(`label-${testIndex}-${qIndex}-${correctValue}`);
+                    correctLabel.classList.add('correct-answer');
+                }
+            });
+
+            // Mostrar resumen
+            const resultsDiv = document.getElementById(`results-${testIndex}`);
+            let textColor = aciertos >= 10 ? 'text-green-600' : 'text-red-600';
+            resultsDiv.innerHTML = `
+                <span class="${textColor}">Puntuación: ${aciertos} de 20</span> 
+                <span class="text-sm text-gray-500 font-normal ml-2">(${fallos} fallos, ${enBlanco} en blanco)</span>
+            `;
+        }
+
+        function resetTest(testIndex) {
+            const form = document.getElementById(`form-test-${testIndex}`);
+            form.reset();
+            
+            // Reactivar inputs y quitar clases de corrección
+            const allInputs = form.querySelectorAll('input[type="radio"]');
+            allInputs.forEach(input => {
+                input.disabled = false;
+                const label = input.closest('label');
+                label.classList.remove('correct-answer', 'incorrect-answer');
+            });
+
+            // Limpiar texto de resultados
+            document.getElementById(`results-${testIndex}`).innerHTML = '';
+            
+            // Scroll hacia el inicio del formulario
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
