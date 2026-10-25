@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Supuestos - 5 Bloques</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Garantizar que ocupa toda la pantalla sin scroll */
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* Animación suave para el fondo de malla */
+        @keyframes mesh-animation {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* Fondo de malla moderna animada */
+        .mesh-background {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 15% 25%, hsla(350, 80%, 75%, 0.15) 0%, transparent 40%), /* Rojo/Rosa */
+                radial-gradient(circle at 85% 15%, hsla(30, 90%, 65%, 0.15) 0%, transparent 40%),  /* Naranja */
+                radial-gradient(circle at 10% 85%, hsla(280, 80%, 75%, 0.15) 0%, transparent 40%), /* Morado */
+                radial-gradient(circle at 85% 85%, hsla(160, 80%, 65%, 0.15) 0%, transparent 40%), /* Esmeralda */
+                radial-gradient(circle at 50% 50%, hsla(220, 80%, 75%, 0.15) 0%, transparent 50%); /* Azul */
+            background-size: 150% 150%;
+            animation: mesh-animation 25s ease-in-out infinite;
+        }
+
+        /* Utilidad para asegurar que los enlaces ocupen el espacio equitativamente */
+        .links-grid {
+            display: grid;
+            grid-auto-rows: minmax(0, 1fr);
+            gap: 0.5rem;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="flex flex-col text-slate-800 mesh-background">
+
+    <!-- Cabecera Principal -->
+    <header class="h-14 md:h-16 flex-none bg-white/50 backdrop-blur-xl border-b border-white/60 shadow-sm flex items-center justify-center z-10 px-6 relative">
+        <div class="absolute left-4 md:left-8 flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-lg md:rounded-xl shadow-lg shadow-slate-900/20 text-white transform -rotate-3">
+            <i class="fa-solid fa-graduation-cap text-sm md:text-lg"></i>
+        </div>
+        <h1 class="text-lg md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-500 tracking-tight">
+            Preparación de Supuestos
+        </h1>
+    </header>
+
+    <!-- Contenedor Principal (Grid de 12 columnas x 2 filas) -->
+    <main class="flex-1 min-h-0 p-3 md:p-5 lg:p-6">
+        <!-- Dashboard Grid: 2 arriba, 3 abajo -->
+        <div id="dashboard-grid" class="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-3 md:gap-5 h-full">
+            <!-- El contenido se inyecta por JavaScript -->
+        </div>
+    </main>
+
+    <script>
+        // Configuración de los 5 Bloques requeridos
+        const categories = [
+            {
+                id: 1,
+                title: "Organización del Estado y Admon. Pública",
+                count: 11,
+                icon: "fa-solid fa-landmark",
+                headerClasses: "bg-gradient-to-r from-rose-500 to-red-600",
+                slotInactiveClasses: "bg-rose-50/40 border-rose-300 text-rose-600 text-opacity-50",
+                gridClass: "md:col-span-6" // Arriba (mitad)
+            },
+            {
+                id: 2,
+                title: "Organización de oficinas públicas",
+                count: 4,
+                icon: "fa-solid fa-building",
+                headerClasses: "bg-gradient-to-r from-orange-500 to-amber-500",
+                slotInactiveClasses: "bg-orange-50/40 border-orange-300 text-orange-600 text-opacity-50",
+                gridClass: "md:col-span-6" // Arriba (mitad)
+            },
+            {
+                id: 3,
+                title: "Derecho administrativo general",
+                count: 7,
+                icon: "fa-solid fa-scale-balanced",
+                headerClasses: "bg-gradient-to-r from-purple-500 to-fuchsia-600",
+                slotInactiveClasses: "bg-purple-50/40 border-purple-300 text-purple-600 text-opacity-50",
+                gridClass: "md:col-span-4" // Abajo (1/3)
+            },
+            {
+                id: 4,
+                title: "Gestión financiera",
+                count: 6,
+                icon: "fa-solid fa-chart-line",
+                headerClasses: "bg-gradient-to-r from-emerald-500 to-teal-500",
+                slotInactiveClasses: "bg-emerald-50/40 border-emerald-300 text-emerald-600 text-opacity-50",
+                gridClass: "md:col-span-4" // Abajo (1/3)
+            },
+            {
+                id: 5,
+                title: "Gestión de personal",
+                count: 9,
+                icon: "fa-solid fa-users-gear",
+                headerClasses: "bg-gradient-to-r from-blue-500 to-indigo-600",
+                slotInactiveClasses: "bg-blue-50/40 border-blue-300 text-blue-600 text-opacity-50",
+                gridClass: "md:col-span-4" // Abajo (1/3)
+            }
+        ];
+
+        function renderDashboard() {
+            const gridContainer = document.getElementById('dashboard-grid');
+            let htmlContent = '';
+
+            categories.forEach((cat) => {
+                // Configurar columnas internas en base a la cantidad de huecos para que ajusten bien
+                // Si son muchos huecos (11), necesitamos más columnas.
+                let innerGridCols = 'grid-cols-2 md:grid-cols-3';
+                if (cat.count > 8) innerGridCols = 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+                else if (cat.count <= 4) innerGridCols = 'grid-cols-2';
+
+                // Iniciar la tarjeta Glassmorphism
+                let cardHtml = `
+                    <section class="${cat.gridClass} bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl shadow-slate-200/50 border border-white flex flex-col overflow-hidden h-full transition duration-300 hover:shadow-2xl hover:bg-white/80">
+                        
+                        <!-- Cabecera Temática -->
+                        <header class="${cat.headerClasses} p-2 md:p-3 lg:p-4 flex items-center justify-between text-white shrink-0">
+                            <div class="flex items-center gap-2 md:gap-3 w-full pr-2">
+                                <div class="bg-white/25 w-7 h-7 md:w-9 md:h-9 rounded-lg flex items-center justify-center backdrop-blur-sm shadow-inner shrink-0">
+                                    <i class="${cat.icon} text-xs md:text-sm"></i>
+                                </div>
+                                <h2 class="font-bold text-xs md:text-sm lg:text-base tracking-wide truncate w-full" title="${cat.title}">
+                                    ${cat.title}
+                                </h2>
+                            </div>
+                            <span class="text-[10px] md:text-xs bg-white/20 px-2 py-1 rounded-full font-semibold backdrop-blur-sm border border-white/20 shadow-sm shrink-0 whitespace-nowrap">
+                                0 / ${cat.count}
+                            </span>
+                        </header>
+                        
+                        <!-- Contenedor de Huecos (Slots) -->
+                        <div class="flex-1 min-h-0 p-2 md:p-3 bg-transparent">
+                            <div class="links-grid ${innerGridCols}">
+                `;
+
+                // Generar los huecos inactivos dinámicamente según la cantidad especificada
+                for(let i = 1; i <= cat.count; i++) {
+                    cardHtml += `
+                        <div class="flex items-center justify-center border-2 border-dashed rounded-full text-sm font-semibold cursor-not-allowed select-none transition-all duration-300 ${cat.slotInactiveClasses}">
+                            <span>Hueco ${i}</span>
+                        </div>
+                    `;
+                }
+
+                // Cerrar la Tarjeta
+                cardHtml += `
+                            </div>
+                        </div>
+                    </section>
+                `;
+                
+                htmlContent += cardHtml;
+            });
+
+            gridContainer.innerHTML = htmlContent;
+        }
+
+        renderDashboard();
+    </script>
+</body>
+</html>
