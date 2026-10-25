@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario Informático Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Glassmorphism Classes */
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease-in-out;
+        }
+        .glass-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .glass-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .glass-item {
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .glass-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.01);
+        }
+        .selected-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #6366f1; /* Indigo 500 */
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* Game 1 SVG */
+        #svg-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Game 2 Blanks */
+        .letter-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 44px;
+            margin: 2px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            border-bottom: 4px solid #3730a3;
+            color: #1e1b4b;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 6px 6px 0 0;
+        }
+        .space-box {
+            display: inline-block;
+            width: 16px;
+        }
+
+        /* Message Toast */
+        #toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+            transform: translateX(150%);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col bg-gradient-to-br from-cyan-200 via-indigo-200 to-purple-300 text-gray-800">
+
+    <!-- Header / Navbar (Fixed Height) -->
+    <header class="h-16 flex-shrink-0 glass z-20 flex items-center justify-between px-6 border-b border-white/50">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">🧩</span>
+            <h1 class="text-xl font-bold text-indigo-900 tracking-wide">IT Glossary</h1>
+        </div>
+        <div class="flex gap-2 bg-white/30 p-1 rounded-xl">
+            <button onclick="switchTab('game1')" id="tab-game1" class="px-5 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-700 shadow transition-all">Flechas</button>
+            <button onclick="switchTab('game2')" id="tab-game2" class="px-5 py-1.5 rounded-lg text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all">Tarjetas</button>
+        </div>
+    </header>
+
+    <!-- Main Content Area (Calculated remaining height) -->
+    <main class="flex-grow p-4 md:p-6 w-full max-w-6xl mx-auto h-[calc(100vh-4rem)] flex flex-col relative">
+        
+        <!-- ==================== GAME 1: FLECHAS ==================== -->
+        <div id="game1-view" class="glass rounded-3xl w-full h-full flex flex-col p-4 sm:p-6 relative">
+            
+            <!-- Controles superiores Game 1 -->
+            <div class="flex-shrink-0 flex justify-between items-center mb-4 z-20">
+                <h2 class="text-xl font-bold text-indigo-900">Une el concepto con su definición</h2>
+                <div class="flex gap-3">
+                    <button onclick="checkGame1()" class="glass-btn bg-emerald-100/80 text-emerald-800 border-emerald-300 px-6 py-2 rounded-xl font-bold shadow-sm">
+                        Corregir
+                    </button>
+                    <button onclick="initGame1()" class="glass-btn px-6 py-2 rounded-xl font-bold text-indigo-800 shadow-sm">
+                        Reiniciar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Área de juego Game 1 (Ocupa el resto del espacio) -->
+            <div id="game1-area" class="flex-grow flex gap-4 md:gap-10 relative z-10 w-full h-full min-h-0">
+                <svg id="svg-lines"></svg>
+                
+                <!-- Columna Palabras -->
+                <div id="col-words" class="w-1/3 flex flex-col gap-3 h-full justify-between pb-2">
+                    <!-- Dinámico -->
+                </div>
+                
+                <!-- Columna Definiciones -->
+                <div id="col-defs" class="w-2/3 flex flex-col gap-3 h-full justify-between pb-2">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== GAME 2: TARJETAS ==================== -->
+        <div id="game2-view" class="hidden glass rounded-3xl w-full h-full flex flex-col p-6 items-center justify-center relative">
+            <h2 class="text-2xl font-bold text-indigo-900 absolute top-6">Adivina la Palabra</h2>
+
+            <div class="w-full max-w-3xl flex flex-col items-center gap-6 mt-8">
+                
+                <!-- Definition Box -->
+                <div class="glass-btn w-full p-6 md:p-8 rounded-2xl text-center shadow-inner relative">
+                    <span class="absolute top-2 left-4 text-4xl opacity-20">❝</span>
+                    <p id="g2-def" class="text-lg md:text-xl font-medium text-indigo-950 relative z-10">Cargando...</p>
+                    <span class="absolute bottom-[-10px] right-4 text-4xl opacity-20 rotate-180">❝</span>
+                </div>
+
+                <!-- Word Blanks -->
+                <div id="g2-blanks" class="flex flex-wrap justify-center min-h-[50px]">
+                    <!-- Dinámico -->
+                </div>
+
+                <!-- Input & Action -->
+                <div class="flex w-full max-w-md gap-2">
+                    <input type="text" id="g2-input" placeholder="Escribe tu respuesta..." class="flex-grow glass-btn rounded-xl px-4 py-3 text-center uppercase font-bold text-indigo-900 placeholder-indigo-900/40 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button onclick="checkGame2()" class="glass-btn bg-indigo-500/20 hover:bg-indigo-500/40 border-indigo-400 text-indigo-900 px-6 py-3 rounded-xl font-bold">
+                        Validar
+                    </button>
+                </div>
+
+                <!-- Hints Row -->
+                <div class="flex flex-wrap justify-center gap-3 w-full mt-4">
+                    <button id="btn-hint1" onclick="useHint(1)" class="glass-btn text-amber-800 bg-amber-500/20 border-amber-300 px-4 py-2 rounded-xl font-medium text-sm">
+                        💡 Pista 1
+                    </button>
+                    <button id="btn-hint2" onclick="useHint(2)" class="glass-btn text-amber-800 bg-amber-500/20 border-amber-300 px-4 py-2 rounded-xl font-medium text-sm">
+                        💡 Pista 2
+                    </button>
+                    <button id="btn-show" onclick="showAnswer()" class="glass-btn text-rose-800 bg-rose-500/20 border-rose-300 px-4 py-2 rounded-xl font-medium text-sm">
+                        👀 Mostrar respuesta
+                    </button>
+                    <div class="flex-grow"></div>
+                    <button onclick="initGame2()" class="glass-btn text-slate-800 bg-slate-900/10 border-slate-400 px-6 py-2 rounded-xl font-bold text-sm">
+                        Siguiente ⏭
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Component -->
+    <div id="toast" class="glass rounded-2xl p-4 flex items-center border-l-4">
+        <div id="toast-icon" class="mr-3 text-2xl"></div>
+        <div>
+            <h4 id="toast-title" class="font-bold text-gray-900"></h4>
+            <p id="toast-text" class="text-sm text-gray-700"></p>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================
+        // DATA
+        // ====================================================
+        const glossary = [
+            { word: "Ancho de banda", def: "Cantidad de información que se puede enviar a través de una conexión." },
+            { word: "Backup", def: "Copia de respaldo o seguridad." },
+            { word: "Browser", def: "Programa cliente que se utiliza para buscar diferentes recursos de Internet." },
+            { word: "Cloud computing", def: "Paradigma que permite ofrecer servicios de computación a través de Internet." },
+            { word: "Cookie", def: "Mecanismo usado para almacenar y recuperar información en el cliente." },
+            { word: "Ethernet", def: "Método muy común de comunicar ordenadores en una red LAN." },
+            { word: "Firewall", def: "Combinación de hardware y software que separa una red local por seguridad." },
+            { word: "Malware", def: "Programa cuyo objetivo es causar daños a computadoras." },
+            { word: "Phishing", def: "Técnica para captar información bancaria usando la imagen de una entidad." },
+            { word: "Spyware", def: "Programa que manda información del uso de internet del usuario." },
+            { word: "Píxel", def: "El componente más pequeño y discreto de una imagen en pantalla." },
+            { word: "Router", def: "Ordenador que maneja la conexión entre dos o más redes." },
+            { word: "URL", def: "Localizador de recursos uniforme, la dirección de un recurso en Internet." },
+            { word: "Freeware", def: "Aplicaciones que pueden obtenerse sin pagar por su utilización." },
+            { word: "MAC OS", def: "Sistema operativo de Apple." },
+            { word: "Spam", def: "Correo electrónico no deseado." }
+        ];
+
+        // ====================================================
+        // UTILS
+        // ====================================================
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function removeAccents(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        }
+
+        function showToast(title, text, type) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-text').innerText = text;
+            
+            toast.className = 'glass rounded-2xl p-4 flex items-center border-l-4';
+            if (type === 'success') {
+                toast.classList.add('border-emerald-500');
+                document.getElementById('toast-icon').innerText = '✅';
+            } else if (type === 'error') {
+                toast.classList.add('border-rose-500');
+                document.getElementById('toast-icon').innerText = '❌';
+            } else {
+                toast.classList.add('border-indigo-500');
+                document.getElementById('toast-icon').innerText = 'ℹ️';
+            }
+
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function switchTab(tabId) {
+            document.getElementById('game1-view').classList.add('hidden');
+            document.getElementById('game2-view').classList.add('hidden');
+            
+            document.getElementById('tab-game1').className = "px-5 py-1.5 rounded-lg text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all";
+            document.getElementById('tab-game2').className = "px-5 py-1.5 rounded-lg text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all";
+
+            if (tabId === 'game1') {
+                document.getElementById('game1-view').classList.remove('hidden');
+                document.getElementById('game1-view').classList.add('flex');
+                document.getElementById('tab-game1').className = "px-5 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-700 shadow transition-all";
+                setTimeout(drawLines, 50);
+            } else {
+                document.getElementById('game2-view').classList.remove('hidden');
+                document.getElementById('game2-view').classList.add('flex');
+                document.getElementById('tab-game2').className = "px-5 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-700 shadow transition-all";
+            }
+        }
+
+        // ====================================================
+        // GAME 1: FLECHAS
+        // ====================================================
+        let g1Words = [];
+        let g1Defs = [];
+        let connections = [];
+        let selection = { type: null, el: null };
+        let isEvaluated = false;
+
+        function initGame1() {
+            isEvaluated = false;
+            connections = [];
+            selection = { type: null, el: null };
+            document.getElementById('svg-lines').innerHTML = '';
+
+            const items = shuffle(glossary).slice(0, 5);
+            
+            g1Words = items.map(item => ({ id: item.word, text: item.word }));
+            g1Defs = shuffle(items.map(item => ({ id: item.word, text: item.def })));
+
+            renderGame1();
+        }
+
+        function renderGame1() {
+            const colW = document.getElementById('col-words');
+            const colD = document.getElementById('col-defs');
+            colW.innerHTML = '';
+            colD.innerHTML = '';
+
+            g1Words.forEach(w => {
+                const el = document.createElement('div');
+                el.className = 'glass-item rounded-xl p-3 text-sm md:text-base font-bold text-center h-full flex items-center justify-center flex-1 shadow-sm';
+                el.innerText = w.text;
+                el.dataset.id = w.id;
+                el.dataset.type = 'word';
+                el.onclick = () => selectItem(el, 'word');
+                colW.appendChild(el);
+            });
+
+            g1Defs.forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'glass-item rounded-xl p-2 md:p-3 text-xs md:text-sm h-full flex items-center flex-1 shadow-sm';
+                el.innerText = d.text;
+                el.dataset.id = d.id;
+                el.dataset.type = 'def';
+                el.onclick = () => selectItem(el, 'def');
+                colD.appendChild(el);
+            });
+        }
+
+        function selectItem(el, type) {
+            if (isEvaluated) return;
+
+            if (selection.el) selection.el.classList.remove('selected-item');
+
+            if (selection.type && selection.type !== type) {
+                // Remove existing connection for either side
+                const wordEl = type === 'word' ? el : selection.el;
+                const defEl = type === 'def' ? el : selection.el;
+                
+                connections = connections.filter(c => c.wordEl !== wordEl && c.defEl !== defEl);
+                connections.push({ wordEl, defEl, color: 'rgba(99, 102, 241, 0.7)' }); // Indigo line
+                
+                selection = { type: null, el: null };
+                drawLines();
+            } else {
+                if (selection.el === el) {
+                    selection = { type: null, el: null };
+                } else {
+                    selection = { type, el };
+                    el.classList.add('selected-item');
+                }
+            }
+        }
+
+        function drawLines() {
+            const svg = document.getElementById('svg-lines');
+            svg.innerHTML = '';
+            const container = document.getElementById('game1-area').getBoundingClientRect();
+
+            connections.forEach(conn => {
+                const r1 = conn.wordEl.getBoundingClientRect();
+                const r2 = conn.defEl.getBoundingClientRect();
+
+                const x1 = r1.right - container.left;
+                const y1 = r1.top + (r1.height / 2) - container.top;
+                const x2 = r2.left - container.left;
+                const y2 = r2.top + (r2.height / 2) - container.top;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.setAttribute('stroke', conn.color);
+                line.setAttribute('stroke-width', conn.width || '4');
+                line.setAttribute('stroke-linecap', 'round');
+                if (conn.dashed) line.setAttribute('stroke-dasharray', '8,8');
+                
+                svg.appendChild(line);
+            });
+        }
+
+        function checkGame1() {
+            if (isEvaluated || connections.length === 0) return;
+            isEvaluated = true;
+            
+            let corrects = 0;
+            const newConns = [];
+
+            // Reset borders manually
+            document.querySelectorAll('.glass-item').forEach(el => el.style.borderColor = 'transparent');
+
+            connections.forEach(conn => {
+                const isCorrect = conn.wordEl.dataset.id === conn.defEl.dataset.id;
+                
+                if (isCorrect) {
+                    corrects++;
+                    conn.color = '#10b981'; // Green
+                    conn.wordEl.style.borderColor = '#10b981';
+                    conn.defEl.style.borderColor = '#10b981';
+                    newConns.push(conn);
+                } else {
+                    conn.color = '#f43f5e'; // Red
+                    conn.wordEl.style.borderColor = '#f43f5e';
+                    newConns.push(conn);
+
+                    // Show correct answer in blue (dashed)
+                    const correctDefId = conn.wordEl.dataset.id;
+                    const correctDefEl = document.querySelector(`.glass-item[data-type="def"][data-id="${correctDefId}"]`);
+                    if (correctDefEl) {
+                        newConns.push({
+                            wordEl: conn.wordEl,
+                            defEl: correctDefEl,
+                            color: '#3b82f6', // Blue
+                            width: '3',
+                            dashed: true
+                        });
+                    }
+                }
+            });
+
+            connections = newConns;
+            drawLines();
+
+            if (corrects === 5) showToast("¡Excelente!", "Todas las uniones son correctas.", "success");
+            else showToast("Resultados", `Acertaste ${corrects} de 5.`, "info");
+        }
+
+        // Redraw lines on window resize
+        window.addEventListener('resize', () => {
+            if (!document.getElementById('game1-view').classList.contains('hidden')) drawLines();
+        });
+
+
+        // ====================================================
+        // GAME 2: TARJETAS
+        // ====================================================
+        let g2Word = "";
+        let g2Revealed = [];
+
+        function initGame2() {
+            const item = glossary[Math.floor(Math.random() * glossary.length)];
+            g2Word = item.word;
+            g2Revealed = new Array(g2Word.length).fill(false);
+            
+            for (let i = 0; i < g2Word.length; i++) {
+                if (g2Word[i] === ' ') g2Revealed[i] = true;
+            }
+
+            document.getElementById('g2-def').innerText = item.def;
+            document.getElementById('g2-input').value = '';
+            
+            // Reset buttons
+            document.getElementById('btn-hint1').disabled = false;
+            document.getElementById('btn-hint2').disabled = false;
+            document.getElementById('btn-show').disabled = false;
+
+            renderBlanks();
+        }
+
+        function renderBlanks() {
+            const container = document.getElementById('g2-blanks');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < g2Word.length; i++) {
+                if (g2Word[i] === ' ') {
+                    const sp = document.createElement('span');
+                    sp.className = 'space-box';
+                    container.appendChild(sp);
+                } else {
+                    const box = document.createElement('span');
+                    box.className = 'letter-box shadow-sm';
+                    box.innerText = g2Revealed[i] ? g2Word[i] : '';
+                    container.appendChild(box);
+                }
+            }
+        }
+
+        function useHint(num) {
+            const btn = document.getElementById(`btn-hint${num}`);
+            btn.disabled = true;
+
+            const hiddenIndexes = [];
+            for (let i = 0; i < g2Word.length; i++) {
+                if (!g2Revealed[i] && g2Word[i] !== ' ') hiddenIndexes.push(i);
+            }
+
+            if (hiddenIndexes.length > 0) {
+                const rnd = hiddenIndexes[Math.floor(Math.random() * hiddenIndexes.length)];
+                g2Revealed[rnd] = true;
+                renderBlanks();
+            }
+        }
+
+        function showAnswer() {
+            g2Revealed.fill(true);
+            renderBlanks();
+            document.getElementById('g2-input').value = g2Word;
+            document.getElementById('btn-hint1').disabled = true;
+            document.getElementById('btn-hint2').disabled = true;
+            document.getElementById('btn-show').disabled = true;
+            showToast("Respuesta", "Se ha revelado la palabra.", "info");
+        }
+
+        function checkGame2() {
+            const input = removeAccents(document.getElementById('g2-input').value.trim());
+            const target = removeAccents(g2Word);
+
+            if (input === target) {
+                g2Revealed.fill(true);
+                renderBlanks();
+                showToast("¡Correcto!", `La palabra era ${g2Word}`, "success");
+                document.getElementById('btn-hint1').disabled = true;
+                document.getElementById('btn-hint2').disabled = true;
+                document.getElementById('btn-show').disabled = true;
+            } else {
+                showToast("Incorrecto", "Sigue intentando o usa una pista.", "error");
+            }
+        }
+
+        document.getElementById('g2-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') checkGame2();
+        });
+
+        // ====================================================
+        // BOOTSTRAP
+        // ====================================================
+        window.onload = () => {
+            initGame1();
+            initGame2();
+        };
+
+    </script>
+</body>
+</html>
