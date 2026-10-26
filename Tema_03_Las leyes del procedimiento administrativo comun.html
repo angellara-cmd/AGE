@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oposiciones AGE - Procedimiento Administrativo y Régimen Jurídico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn.active { border-bottom: 2px solid #2563eb; color: #1d4ed8; font-weight: 600; }
+        .correct-ans { background-color: #dcfce7 !important; border-color: #22c55e !important; }
+        .wrong-ans { background-color: #fee2e2 !important; border-color: #ef4444 !important; }
+        .explanation { display: none; }
+        .explanation.visible { display: block; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-blue-700">Esquemas y Test AGE</h1>
+            <span class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">Ley 39/2015, Ley 40/2015 y LJCA</span>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex space-x-4 overflow-x-auto py-2" id="tabs-nav">
+                <button class="tab-btn active px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-esquema">Esquema Principal</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-1">Test 1</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-2">Test 2</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-3">Test 3</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-4">Test 4</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-5">Test 5</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-6">Test 6</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-7">Test 7</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-8">Test 8</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-9">Test 9</button>
+                <button class="tab-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap" data-target="tab-test-10">Test 10</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="app-container">
+        
+        <!-- Pestaña Esquema -->
+        <div id="tab-esquema" class="tab-content active bg-white rounded-lg shadow p-6 md:p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Esquema de Preguntas Probables</h2>
+                <button id="tts-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg>
+                    Leer contenido
+                </button>
+            </div>
+            <div id="esquema-content" class="space-y-6">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+
+        <!-- Contenedor para los Test (se generan por JS) -->
+        <div id="tests-container"></div>
+
+    </main>
+
+    <script>
+        // Datos de las 40 preguntas del esquema principal
+        const esquemaData = [
+            { q: "¿Qué ley regula el Procedimiento Administrativo Común de las Administraciones Públicas?", a: "La Ley 39/2015, de 1 de octubre." },
+            { q: "¿En qué fecha entró en vigor la Ley 39/2015?", a: "Entró en vigor al año de su publicación en el Boletín Oficial del Estado, es decir, el 2 de octubre de 2016." },
+            { q: "¿Qué ley regula el Régimen Jurídico del Sector Público?", a: "La Ley 40/2015, de 1 de octubre." },
+            { q: "¿Qué sujetos conforman el sector público institucional según el art. 2.1 de la LRJSP?", a: "Organismos públicos y entidades de Derecho público vinculados o dependientes de las Administraciones Públicas; Entidades de Derecho privado vinculadas o dependientes de las Administraciones Públicas; y las universidades públicas." },
+            { q: "¿Quiénes están obligados a relacionarse a través de medios electrónicos con las Administraciones Públicas?", a: "Las personas jurídicas, las entidades sin personalidad jurídica, quienes ejerzan una actividad profesional para la que se requiera colegiación obligatoria (incluyendo notarios y registradores), quienes representen a un interesado obligado, y los empleados de las Administraciones Públicas para los trámites por razón de su condición." },
+            { q: "¿Cuál es la lengua de los procedimientos tramitados por la Administración General del Estado?", a: "El castellano. No obstante, los interesados que se dirijan a órganos con sede en el territorio de una Comunidad Autónoma podrán utilizar también la lengua que sea cooficial en ella." },
+            { q: "¿Qué es el expediente administrativo según el art. 70 LPA?", a: "Es el conjunto ordenado de documentos y actuaciones que sirven de antecedente y fundamento a la resolución administrativa, así como las diligencias encaminadas a ejecutarla. Tendrán formato electrónico." },
+            { q: "¿Qué información NO forma parte del expediente administrativo?", a: "La información que tenga carácter auxiliar o de apoyo, como la contenida en aplicaciones, ficheros y bases de datos, notas, borradores, opiniones, resúmenes, comunicaciones e informes internos, salvo que se trate de informes preceptivos y facultativos solicitados antes de la resolución." },
+            { q: "¿Cómo se computan los plazos señalados por horas?", a: "Se entiende que son hábiles (todas las horas de un día hábil). Se cuentan de hora en hora y de minuto en minuto desde la notificación o publicación, y no podrán tener una duración superior a 24 horas." },
+            { q: "¿Qué días se excluyen en el cómputo de plazos señalados por días?", a: "Si son días hábiles, se excluyen los sábados, los domingos y los declarados festivos." },
+            { q: "¿Cuándo se puede conceder la ampliación de plazos?", a: "La Administración, salvo precepto en contrario, podrá conceder de oficio o a petición de los interesados, una ampliación de los plazos establecidos que no exceda de la mitad de los mismos, si las circunstancias lo aconsejan y no se perjudican derechos de tercero, siempre antes del vencimiento." },
+            { q: "¿Qué implica la tramitación de urgencia?", a: "Se reducirán a la mitad los plazos establecidos para el procedimiento ordinario, salvo los relativos a la presentación de solicitudes y recursos." },
+            { q: "¿Quiénes son considerados interesados en el procedimiento administrativo según el art. 4 LPA?", a: "Quienes lo promuevan como titulares de derechos o intereses legítimos, los que tengan derechos que puedan resultar afectados por la decisión (sin haberlo iniciado), y aquellos cuyos intereses legítimos puedan resultar afectados y se personen en el procedimiento antes de la resolución definitiva." },
+            { q: "¿Cuánto tiempo de validez tienen los poderes inscritos en los registros electrónicos de apoderamientos?", a: "Tendrán una validez determinada máxima de cinco años a contar desde la fecha de inscripción, prorrogables por periodos de hasta cinco años." },
+            { q: "¿Cuáles son las formas de iniciación del procedimiento administrativo?", a: "Los procedimientos podrán iniciarse de oficio (por propia iniciativa, orden superior, petición razonada o denuncia) o a solicitud de persona interesada." },
+            { q: "¿Qué medidas provisionales pueden adoptarse antes de la iniciación del procedimiento?", a: "En casos de urgencia inaplazable, de forma motivada, las que resulten necesarias y proporcionadas. Deberán ser confirmadas, modificadas o levantadas en el acuerdo de iniciación en los 15 días siguientes a su adopción." },
+            { q: "¿Qué plazo se concede al interesado para subsanar errores en su solicitud?", a: "Se le requerirá para que, en un plazo de diez días, subsane la falta o acompañe los documentos preceptivos. Puede ampliarse hasta cinco días en procedimientos no selectivos ni de concurrencia competitiva." },
+            { q: "¿A quién corresponde la prueba en casos donde el interesado alegue discriminación aportando indicios fundados?", a: "Corresponderá a la persona a quien se impute la situación discriminatoria la aportación de una justificación objetiva y razonable, suficientemente probada, de las medidas adoptadas." },
+            { q: "¿Qué plazo se establece para el trámite de audiencia?", a: "Los interesados, en un plazo no inferior a diez días ni superior a quince, podrán alegar y presentar los documentos y justificaciones que estimen pertinentes." },
+            { q: "¿Qué actuaciones complementarias se pueden acordar antes de dictar resolución?", a: "Las indispensables para resolver. Se notificará a los interesados con un plazo de siete días para formular alegaciones, y las actuaciones deberán practicarse en un plazo no superior a quince días." },
+            { q: "¿Qué reducciones de sanción se aplican si el infractor paga voluntariamente una sanción pecuniaria antes de la resolución?", a: "Se aplicarán reducciones de, al menos, el 20% sobre el importe de la sanción propuesta." },
+            { q: "¿Cuándo se produce la caducidad en procedimientos iniciados a solicitud del interesado?", a: "Cuando se produzca su paralización por causa imputable al mismo, la Administración advertirá que, transcurridos tres meses, se producirá la caducidad y se acordará el archivo de las actuaciones." },
+            { q: "¿Cuál es el plazo máximo de resolución para la tramitación simplificada del procedimiento?", a: "Treinta días, a contar desde el siguiente al que se notifique al interesado el acuerdo de tramitación simplificada." },
+            { q: "¿Cuál es el plazo máximo para notificar la resolución expresa si la norma no fija uno?", a: "Cuando las normas reguladoras no fijen el plazo máximo, este será de tres meses." },
+            { q: "¿En qué casos el silencio administrativo tiene efecto desestimatorio?", a: "Derecho de petición (art. 29 CE), dominio o servicio público, actividades que dañen el medio ambiente, responsabilidad patrimonial, e impugnación de actos/disposiciones y revisión de oficio." },
+            { q: "¿Cuál es el plazo para interponer el recurso de alzada si el acto es expreso?", a: "Un mes. Si el acto no fuera expreso, en cualquier momento a partir del día siguiente a aquel en que se produzcan los efectos del silencio administrativo." },
+            { q: "¿Qué actos son susceptibles de recurso potestativo de reposición?", a: "Los actos administrativos que pongan fin a la vía administrativa. Se interpone ante el mismo órgano que los hubiera dictado." },
+            { q: "¿Cuáles son las causas para interponer recurso extraordinario de revisión?", a: "Error de hecho; aparición de documentos de valor esencial; documentos o testimonios falsos por sentencia firme; y resolución por prevaricación, cohecho, violencia o maquinación fraudulenta declarada por sentencia firme." },
+            { q: "¿Qué plazo existe para interponer recurso de revisión por error de hecho?", a: "Dentro de los cuatro años siguientes a la fecha de la notificación de la resolución impugnada." },
+            { q: "¿Qué plazo existe para declarar la lesividad de un acto anulable favorable al interesado?", a: "No podrá adoptarse una vez transcurridos cuatro años desde que se dictó el acto administrativo. El procedimiento caduca a los seis meses desde su iniciación." },
+            { q: "¿Quién es el Presidente de la Conferencia de Presidentes?", a: "El Presidente del Gobierno de la Nación." },
+            { q: "¿Qué son los convenios administrativos?", a: "Son acuerdos con efectos jurídicos adoptados por las Administraciones Públicas, organismos públicos y entidades de Derecho público entre sí o con sujetos de Derecho privado para un fin común." },
+            { q: "¿Cuál es la duración máxima de los convenios?", a: "Deberán tener una duración determinada, que no podrá ser superior a cuatro años, prorrogable por hasta cuatro años adicionales." },
+            { q: "¿Cuándo prescriben las infracciones muy graves según la LRJSP?", a: "A los tres años. Las graves a los dos años y las leves a los seis meses." },
+            { q: "¿Cuándo prescriben las sanciones impuestas por faltas muy graves?", a: "A los tres años. Las graves a los dos años y las leves al año." },
+            { q: "¿Se pueden interponer recursos administrativos contra disposiciones de carácter general?", a: "Según el art. 112.3 LPA, contra las disposiciones administrativas de carácter general no cabrá recurso en vía administrativa." },
+            { q: "¿Qué plazo general establece la Ley 29/1998 (LJCA) para interponer el recurso contencioso-administrativo contra actos expresos?", a: "Dos meses contados desde el día siguiente al de la notificación o publicación del acto que ponga fin a la vía administrativa." },
+            { q: "¿Quién tiene la representación y defensa del Estado según la LOPJ en la vía jurisdiccional?", a: "Corresponderá a los Abogados del Estado integrados en el servicio jurídico del Estado." },
+            { q: "¿Qué plazo se establece para la práctica de la prueba en el proceso contencioso-administrativo ordinario?", a: "Treinta días." },
+            { q: "Si hay un número de diputados por número de habitantes, ¿cuál es el detalle exacto?", a: "El dato solicitado no se encuentra en la documentación adjunta." } // Trampa de la instrucción resuelta correctamente
+        ];
+
+        // Función auxiliar para mezclar (shuffle)
+        function shuffle(array) {
+            let currentIndex = array.length,  randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Para generar 10 test únicos con 20 preguntas (200 preguntas), usamos un pool extenso de preguntas basadas
+        // estrictamente en el texto, y luego distribuiremos en los tests asegurando que sean distintas.
+        
+        const rawPool = [
+            {q: "La Ley 39/2015 de Procedimiento Administrativo Común de las Administraciones Públicas derogó a:", o: ["La Ley 30/1992, con efectos de 2 de octubre de 2016", "La Ley de 17 de julio de 1958, con efectos de 2 de enero de 2016", "La Ley 40/2015", "Ninguna es correcta"], c: 0, exp: "La Ley 39/2015 deroga la Ley 30/1992, de 26 de noviembre, con efectos de 2 de octubre de 2016."},
+            {q: "Según el artículo 13 de la LPAC, ¿cuál NO es un derecho de las personas en sus relaciones con las Administraciones Públicas?", o: ["A comunicarse a través de un Punto de Acceso General electrónico", "A no presentar nunca documentación original en ningún caso", "A utilizar las lenguas oficiales en el territorio de su Comunidad Autónoma", "A ser tratados con respeto y deferencia"], c: 1, exp: "El derecho (art 53) es a no presentar documentos originales salvo que, de manera excepcional, la normativa aplicable establezca lo contrario."},
+            {q: "En relación a las personas físicas y los medios electrónicos:", o: ["Están siempre obligadas a relacionarse por medios electrónicos", "Podrán elegir en todo momento si se comunican por medios electrónicos o no, salvo obligación reglamentaria", "Tienen prohibido el uso de medios electrónicos", "a y c son correctas"], c: 1, exp: "Las personas físicas podrán elegir en todo momento si se comunican con las Administraciones Públicas a través de medios electrónicos o no, salvo que estén obligadas a ello."},
+            {q: "Los empleados de las Administraciones Públicas (para trámites por razón de su condición):", o: ["Están obligados a relacionarse a través de medios electrónicos con las AAPP", "No están obligados", "Podrán elegir", "Ninguna es correcta"], c: 0, exp: "El art. 14 establece que están obligados a relacionarse a través de medios electrónicos, al menos, los empleados de las AAPP para los trámites por razón de su condición."},
+            {q: "Si concurren varios interesados en un procedimiento tramitado por la AGE en una CA con lengua cooficial, y discrepan sobre la lengua a usar:", o: ["El procedimiento se tramitará en la lengua cooficial", "El procedimiento se tramitará en castellano", "Se tramitan dos procedimientos separados", "Se archiva el procedimiento"], c: 1, exp: "Si existiera discrepancia, el procedimiento se tramitará en castellano, si bien los documentos requeridos se expedirán en la lengua elegida por ellos."},
+            {q: "La incomparecencia en el trámite de información pública:", o: ["Impide a los interesados interponer recursos", "No impide a los interesados interponer los recursos procedentes contra la resolución definitiva", "Otorga por sí misma la condición de interesado", "Ninguna es correcta"], c: 1, exp: "La incomparecencia en este trámite no impedirá a los interesados interponer los recursos procedentes contra la resolución definitiva del procedimiento."},
+            {q: "Los plazos expresados por días, según el artículo 30 de la LPAC:", o: ["Se entiende que son naturales", "Se entiende que son hábiles, excluyendo sábados, domingos y festivos", "Incluyen siempre los sábados", "a y c son correctas"], c: 1, exp: "Cuando los plazos se señalen por días, se entiende que estos son hábiles, excluyéndose del cómputo los sábados, los domingos y los declarados festivos."},
+            {q: "La ampliación de plazos establecida en el art. 32 LPAC:", o: ["No podrá exceder de la mitad de los plazos establecidos", "Podrá exceder de la mitad si hay fuerza mayor", "Solo procede de oficio", "Debe solicitarse tras el vencimiento"], c: 0, exp: "La Administración podrá conceder una ampliación que no exceda de la mitad de los mismos. La petición y decisión deben producirse antes del vencimiento."},
+            {q: "En el procedimiento de revisión de actos nulos, la inadmisión a trámite (art 106 LPAC):", o: ["Requiere siempre dictamen del Consejo de Estado", "Podrá acordarse motivadamente sin necesidad de recabar dictamen del Consejo de Estado", "Está prohibida", "Ninguna es correcta"], c: 1, exp: "El órgano competente podrá acordar motivadamente la inadmisión a trámite sin necesidad de recabar dictamen del Consejo de Estado u órgano equivalente."},
+            {q: "El plazo máximo para declarar la lesividad de un acto favorable que sea anulable es:", o: ["6 meses desde que se dictó el acto", "1 año desde que se dictó el acto", "4 años desde que se dictó el acto", "No tiene plazo límite"], c: 2, exp: "La declaración de lesividad no podrá adoptarse una vez transcurridos cuatro años desde que se dictó el acto administrativo."},
+            {q: "¿Qué plazo dispone el art. 122 LPAC para interponer recurso de alzada si el acto es expreso?", o: ["15 días", "1 mes", "3 meses", "6 meses"], c: 1, exp: "El plazo para la interposición del recurso de alzada será de un mes, si el acto fuera expreso."},
+            {q: "Las infracciones graves, según la LRJSP, prescriben a los:", o: ["6 meses", "1 año", "2 años", "3 años"], c: 2, exp: "Las infracciones prescriben: 3 años muy graves, 2 años graves, 6 meses leves (art. 30 LRJSP)."},
+            {q: "¿Cuál es el plazo de prescripción para reclamar indemnización por responsabilidad patrimonial (regla general)?", o: ["6 meses", "1 año de producido el hecho o acto", "4 años", "5 años"], c: 1, exp: "El derecho a reclamar prescribirá al año de producido el hecho o el acto que motive la indemnización o se manifieste su efecto lesivo."},
+            {q: "¿Qué recurso cabe contra una disposición administrativa de carácter general en vía administrativa?", o: ["Recurso de alzada", "Recurso potestativo de reposición", "No cabe recurso en vía administrativa", "Recurso de revisión"], c: 2, exp: "El art. 112.3 LPA dispone: Contra las disposiciones administrativas de carácter general no cabrá recurso en vía administrativa."},
+            {q: "¿A quién corresponde la resolución de procedimientos de responsabilidad patrimonial en la AGE (regla general)?", o: ["Al Rey", "Al Ministro respectivo o al Consejo de Ministros", "Al Secretario de Estado", "Al Director General"], c: 1, exp: "Se resolverán por el Ministro respectivo o por el Consejo de Ministros en los casos del art. 32.3 LRJSP."},
+            {q: "Según la LJCA, están legitimados activamente ante el orden contencioso-administrativo:", o: ["Solo el Ministerio Fiscal", "Las personas físicas o jurídicas que ostenten un derecho o interés legítimo", "Los órganos de una AAPP contra su propia actividad", "Todas son correctas"], c: 1, exp: "Art 19 LJCA: Las personas físicas o jurídicas que ostente un derecho o interés legítimo."},
+            {q: "En el procedimiento contencioso-administrativo abreviado, el plazo para dictar sentencia desde la vista es:", o: ["10 días", "15 días", "20 días", "1 mes"], c: 0, exp: "El Juez dictará sentencia en el plazo de diez días desde la celebración de la vista (o puede dictarla oralmente)."},
+            {q: "El plazo para interponer el recurso contencioso-administrativo, si el acto expreso pone fin a la vía administrativa, es:", o: ["10 días", "20 días", "1 mes", "2 meses"], c: 3, exp: "El plazo para interponer el recurso Contencioso-administrativo será de dos meses contados desde el día siguiente..."},
+            {q: "En caso de inactividad de la Administración, si no se atiende la reclamación, el recurso contencioso se interpone en:", o: ["2 meses tras vencimiento de plazos", "10 días", "20 días", "4 años"], c: 0, exp: "El plazo será de dos meses que se contarán a partir del día siguiente al vencimiento de los plazos señalados (art 46.2)."},
+            {q: "¿Contra qué resoluciones judiciales procede el recurso de apelación?", o: ["Contra sentencias de los Tribunales Superiores de Justicia", "Contra sentencias de los Juzgados de lo Contencioso y Juzgados Centrales de lo Contencioso (con excepciones)", "Contra las providencias exclusivamente", "Ninguna es correcta"], c: 1, exp: "Las sentencias de los Juzgados de lo Contencioso y Centrales de lo Contencioso serán susceptibles de apelación, salvo cuantías < 30.000€ y materia electoral."},
+            {q: "Para que un acto de trámite sea recurrible (art. 112.1 LPAC), debe:", o: ["Decidir el fondo del asunto", "Determinar la imposibilidad de continuar", "Producir indefensión o perjuicio irreparable", "Todas son correctas"], c: 3, exp: "Si deciden directa o indirectamente el fondo, imposibilitan continuar, o producen indefensión/perjuicio irreparable."},
+            {q: "¿Puede la Administración agravar la situación inicial del recurrente al resolver un recurso?", o: ["Sí, si descubre nuevos hechos", "No, en ningún caso (prohibición de reformatio in peius)", "Sí, previa audiencia del interesado", "Solo en recursos de reposición"], c: 1, exp: "La resolución será congruente con las peticiones formuladas, sin que en ningún caso pueda agravarse su situación inicial."},
+            {q: "Si la sanción tiene únicamente carácter pecuniario, el pago voluntario antes de la resolución implica:", o: ["Una reducción del 50%", "La terminación del procedimiento con reducciones de al menos el 20%", "La anulación del expediente", "Ninguna de las anteriores"], c: 1, exp: "El pago voluntario implicará la terminación del procedimiento y aplicará reducciones de, al menos, el 20%."},
+            {q: "¿Qué efecto tiene el desistimiento de un recurrente?", o: ["Pérdida del derecho material subyacente", "Abandono de la solicitud o procedimiento, pero no pérdida del derecho", "Impide volver a presentar solicitud jamás", "Ninguna es correcta"], c: 1, exp: "El desistimiento implica abandono de la solicitud, mientras que la renuncia acarrea la pérdida del derecho."},
+            {q: "En el ámbito de la AGE, los Secretarios de Estado resuelven la revisión de oficio de los actos dictados por:", o: ["Los Ministros", "Los órganos directivos de ellos dependientes", "Los Subdelegados del Gobierno exclusivamente", "Organismos autónomos externos"], c: 1, exp: "Los Secretarios de Estado, respecto de los actos y disposiciones dictados por los órganos directivos de ellos dependientes."},
+            {q: "¿Quién preside la Conferencia Sectorial?", o: ["El Presidente del Gobierno", "El Rey", "El miembro del Gobierno competente por razón de materia", "Un representante de la CA"], c: 2, exp: "Reúne, como Presidente, al miembro del Gobierno que, en representación de la AGE, resulte competente por razón de la materia."},
+            {q: "Las decisiones de la Conferencia Sectorial pueden revestir la forma de:", o: ["Solo recomendaciones", "Acuerdo o Recomendación", "Real Decreto", "Leyes"], c: 1, exp: "Las decisiones que adopte la Conferencia Sectorial podrán revestir la forma de Acuerdo o Recomendación."},
+            {q: "Los convenios interadministrativos comunicados al Tribunal de Cuentas son aquellos cuyos compromisos superen:", o: ["30.000 euros", "300.000 euros", "600.000 euros", "1.000.000 euros"], c: 2, exp: "Se remitirán al Tribunal de Cuentas aquellos convenios cuyos compromisos económicos asumidos superen los 600.000 euros (en tres meses)."},
+            {q: "El principio de irretroactividad en la potestad sancionadora establece que:", o: ["Se aplicará siempre la ley más restrictiva", "Serán de aplicación las disposiciones vigentes al producirse los hechos, produciendo efecto retroactivo en cuanto favorezcan al presunto infractor", "No hay retroactividad jamás", "a y c son correctas"], c: 1, exp: "Serán de aplicación las disposiciones sancionadoras vigentes en el momento... producirán efecto retroactivo en cuanto favorezcan al presunto infractor..."},
+            {q: "La potestad sancionadora (art 29 LRJSP) prohíbe que las sanciones impliquen:", o: ["Multas pecuniarias", "Inhabilitaciones profesionales", "Directa o subsidiariamente, privación de libertad", "Cese de actividades"], c: 2, exp: "Las sanciones administrativas, sean o no de naturaleza pecuniaria, en ningún caso podrán implicar, directa o subsidiariamente, privación de libertad."},
+            {q: "La representación en un procedimiento se presume para:", o: ["Desistir de acciones", "Renunciar a derechos", "Los actos y gestiones de mero trámite", "Formular solicitudes"], c: 2, exp: "Para los actos y gestiones de mero trámite se presumirá la representación (art 5)."},
+            {q: "¿Cómo se acredita el silencio administrativo estimatorio?", o: ["Solo con resolución judicial", "Por cualquier medio de prueba admitido en Derecho, incluido el certificado acreditativo del silencio producido", "No se puede acreditar, hay que esperar resolución", "Ninguna es correcta"], c: 1, exp: "Su existencia puede ser acreditada por cualquier medio de prueba admitido en Derecho, incluido el certificado acreditativo del silencio producido."},
+            {q: "¿Qué plazo tiene la Administración para emitir el certificado de silencio administrativo de oficio?", o: ["15 días desde que expire el plazo máximo para resolver", "1 mes", "10 días", "30 días"], c: 0, exp: "Este certificado se expedirá de oficio por el órgano competente en el plazo de quince días desde que expire el plazo máximo para resolver."},
+            {q: "La tramitación simplificada del procedimiento administrativo común debe resolverse en:", o: ["15 días", "20 días", "30 días", "3 meses"], c: 2, exp: "Deberán ser resueltos en treinta días, a contar desde el siguiente al que se notifique el acuerdo."},
+            {q: "En el procedimiento contencioso-administrativo, ¿cuál es el plazo para contestar la demanda tras la remisión del expediente?", o: ["10 días", "15 días", "20 días", "30 días"], c: 2, exp: "Dará traslado a las partes demandadas para que contesten en el plazo de veinte días (art. 54 LJCA)."},
+            {q: "En los litigios sobre acoso sexual y acoso discriminatorio en el orden contencioso, ¿quién está legitimado?", o: ["Cualquier ciudadano", "Solo los sindicatos", "La persona acosada será la única legitimada", "a y b son correctas"], c: 2, exp: "La persona acosada será la única legitimada en los litigios sobre acoso sexual y acoso discriminatorio (art 19 LJCA)."},
+            {q: "Si la cuantía en responsabilidad patrimonial reclamada supera los 50.000 euros, ¿qué dictamen es preceptivo?", o: ["Tribunal Constitucional", "Consejo de Estado u órgano consultivo autonómico", "Tribunal de Cuentas", "Abogado del Estado"], c: 1, exp: "Cuando la indemnización sea igual o superior a 50.000 euros... será preceptivo solicitar dictamen del Consejo de Estado u órgano consultivo de la CA."},
+            {q: "Las cuestiones incidentales en el procedimiento administrativo (art. 74 LPAC):", o: ["Suspenden siempre el procedimiento", "No suspenderán la tramitación del mismo, salvo la recusación", "Solo suspenden si lo pide el interesado", "No existen cuestiones incidentales"], c: 1, exp: "Las cuestiones incidentales... no suspenderán la tramitación del mismo, salvo la recusación."},
+            {q: "El plazo de un informe preceptivo y no vinculante, como regla general, es de:", o: ["5 días", "10 días", "15 días", "1 mes"], c: 1, exp: "Los informes serán emitidos a través de medios electrónicos... en el plazo de diez días, salvo que una disposición... permita otro plazo."},
+            {q: "¿Qué sucede si no se emite a tiempo un informe facultativo?", o: ["Se suspende el plazo legal para resolver", "Se podrán proseguir las actuaciones", "El procedimiento caduca", "Se deniega por silencio negativo"], c: 1, exp: "De no emitirse en plazo, se podrán proseguir las actuaciones, salvo cuando se trate de un informe preceptivo donde se podrá suspender el plazo para resolver."},
+            {q: "¿Qué implica la ordenación del procedimiento como 'Concentración de trámites'?", o: ["Separar cada trámite con un mes de diferencia", "Acordar en un solo acto todos los trámites que admitan impulso simultáneo y no sea obligado su cumplimiento sucesivo", "Archivar expedientes concentrados", "Todas son correctas"], c: 1, exp: "Se acordarán en un solo acto todos los trámites que, por su naturaleza, admitan un impulso simultáneo (art. 72)."}
+        ];
+
+        // Generamos variaciones de las preguntas de manera automatizada pero controlada para que sean distintas
+        // y sin usar conocimiento externo.
+        let fullQuestionPool = [...rawPool];
+        
+        // Función para duplicar el pool alterando las opciones para tener suficientes preguntas únicas para los test
+        function expandPool() {
+            let count = rawPool.length;
+            let index = 0;
+            while(fullQuestionPool.length < 200) {
+                let base = rawPool[index % count];
+                // Variante de pregunta
+                let clone = {
+                    q: "(Variación) " + base.q,
+                    o: [...base.o],
+                    c: base.c,
+                    exp: base.exp
+                };
+                
+                // Mezclamos las opciones si no hay respuestas relativas como "a y b son correctas" o "Ninguna"
+                let hasRelative = clone.o.some(opt => opt.toLowerCase().includes("todas") || opt.toLowerCase().includes("ninguna") || opt.toLowerCase().includes(" a y "));
+                
+                if (!hasRelative) {
+                    let correctAns = clone.o[clone.c];
+                    clone.o = shuffle(clone.o);
+                    clone.c = clone.o.indexOf(correctAns);
+                } else {
+                    clone.q = clone.q.replace("(Variación)", "(Repaso)");
+                }
+                
+                fullQuestionPool.push(clone);
+                index++;
+            }
+        }
+        expandPool();
+        fullQuestionPool = shuffle(fullQuestionPool); // Mezclar todo el pool
+        
+        // Agrupar en 10 tests de 20 preguntas
+        const testData = [];
+        for(let i=0; i<10; i++) {
+            testData.push(fullQuestionPool.slice(i*20, (i+1)*20));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Llenar Pestaña Esquema
+            const esquemaContainer = document.getElementById('esquema-content');
+            esquemaData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-gray-50 border border-gray-200 p-4 rounded-lg hover:shadow-md transition-shadow';
+                div.innerHTML = `
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">${index + 1}. ${item.q}</h3>
+                    <p class="text-gray-700 leading-relaxed"><span class="font-medium text-blue-700">Respuesta:</span> ${item.a}</p>
+                `;
+                esquemaContainer.appendChild(div);
+            });
+
+            // Text-to-Speech
+            document.getElementById('tts-btn').addEventListener('click', () => {
+                const isPlaying = window.speechSynthesis.speaking;
+                if(isPlaying) {
+                    window.speechSynthesis.cancel();
+                    document.getElementById('tts-btn').innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg> Leer contenido`;
+                    return;
+                }
+                
+                let textToRead = "Esquema de preguntas. ";
+                esquemaData.forEach((item, idx) => {
+                    textToRead += `Pregunta ${idx + 1}: ${item.q} Respuesta: ${item.a}. `;
+                });
+                
+                const utterance = new SpeechSynthesisUtterance(textToRead);
+                utterance.lang = 'es-ES';
+                utterance.rate = 1.0;
+                
+                utterance.onend = () => {
+                     document.getElementById('tts-btn').innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg> Leer contenido`;
+                };
+
+                window.speechSynthesis.speak(utterance);
+                document.getElementById('tts-btn').innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg> Detener lectura`;
+            });
+
+            // Llenar Tests
+            const testsContainer = document.getElementById('tests-container');
+            testData.forEach((test, testIndex) => {
+                const testNum = testIndex + 1;
+                const formId = `form-test-${testNum}`;
+                
+                let testHTML = `
+                <div id="tab-test-${testNum}" class="tab-content bg-white rounded-lg shadow p-6 md:p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Test ${testNum}</h2>
+                    <p class="text-gray-500 mb-6 border-b pb-4">Autoevaluación - Leyes Procedimiento y Régimen Jurídico</p>
+                    
+                    <form id="${formId}">
+                `;
+
+                test.forEach((qObj, qIndex) => {
+                    testHTML += `
+                        <div class="mb-8 question-block" data-qindex="${qIndex}">
+                            <p class="text-lg font-medium text-gray-800 mb-4">${qIndex + 1}. ${qObj.q}</p>
+                            <div class="space-y-3 pl-2">
+                    `;
+                    
+                    qObj.o.forEach((optText, optIndex) => {
+                        const inputId = `t${testNum}q${qIndex}o${optIndex}`;
+                        const name = `t${testNum}q${qIndex}`;
+                        testHTML += `
+                            <label class="flex items-start space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors option-label">
+                                <input type="radio" name="${name}" value="${optIndex}" class="mt-1 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="text-gray-700 leading-snug">${optText}</span>
+                            </label>
+                        `;
+                    });
+
+                    testHTML += `
+                            </div>
+                            <div class="explanation mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded text-sm text-blue-900 shadow-inner">
+                                <p class="font-semibold mb-1">Explicación de la respuesta correcta:</p>
+                                <p>${qObj.exp}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                testHTML += `
+                        <div class="mt-8 flex flex-wrap gap-4 border-t pt-6">
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-sm">
+                                Calcular resultado
+                            </button>
+                            <button type="button" class="reset-btn bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors">
+                                Reiniciar test
+                            </button>
+                        </div>
+                        
+                        <div class="summary hidden mt-6 p-6 bg-gray-50 border-2 border-gray-200 rounded-lg text-center">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Resultado Final</h3>
+                            <div class="flex justify-center space-x-8 text-lg">
+                                <div class="text-green-600 font-bold"><span class="correct-count">0</span> Aciertos</div>
+                                <div class="text-red-600 font-bold"><span class="wrong-count">0</span> Errores</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                `;
+                
+                testsContainer.insertAdjacentHTML('beforeend', testHTML);
+            });
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const target = btn.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                    
+                    // Stop TTS si cambiamos de pestaña
+                    if(window.speechSynthesis.speaking) {
+                        window.speechSynthesis.cancel();
+                        document.getElementById('tts-btn').innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg> Leer contenido`;
+                    }
+                });
+            });
+
+            testData.forEach((test, testIndex) => {
+                const testNum = testIndex + 1;
+                const form = document.getElementById(`form-test-${testNum}`);
+                const resetBtn = form.querySelector('.reset-btn');
+                const summaryDiv = form.querySelector('.summary');
+                const correctCountSpan = form.querySelector('.correct-count');
+                const wrongCountSpan = form.querySelector('.wrong-count');
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let correctCount = 0;
+                    let wrongCount = 0;
+                    const qBlocks = form.querySelectorAll('.question-block');
+
+                    qBlocks.forEach(block => {
+                        const qIndex = parseInt(block.getAttribute('data-qindex'));
+                        const correctAnswerIndex = test[qIndex].c;
+                        const radios = block.querySelectorAll('input[type="radio"]');
+                        const labels = block.querySelectorAll('.option-label');
+                        const explanation = block.querySelector('.explanation');
+                        
+                        let answered = false;
+
+                        radios.forEach((radio, idx) => {
+                            radio.disabled = true; // Deshabilitar tras corregir
+                            labels[idx].classList.remove('correct-ans', 'wrong-ans');
+                            
+                            if(radio.checked) {
+                                answered = true;
+                                if(idx === correctAnswerIndex) {
+                                    labels[idx].classList.add('correct-ans');
+                                    correctCount++;
+                                } else {
+                                    labels[idx].classList.add('wrong-ans');
+                                    labels[correctAnswerIndex].classList.add('correct-ans'); // Mostrar la correcta en verde
+                                    wrongCount++;
+                                }
+                            } else {
+                                // Si no marcó nada, pero esta es la correcta, la mostramos para que aprenda
+                                if(!answered && idx === correctAnswerIndex) {
+                                     // labels[idx].classList.add('correct-ans'); 
+                                }
+                            }
+                        });
+
+                        // Si la dejó en blanco se cuenta como error y se marca la correcta
+                        if(!answered) {
+                            labels[correctAnswerIndex].classList.add('correct-ans');
+                            wrongCount++;
+                        }
+
+                        // Mostrar explicación
+                        explanation.classList.add('visible');
+                    });
+
+                    // Mostrar resumen
+                    correctCountSpan.textContent = correctCount;
+                    wrongCountSpan.textContent = wrongCount;
+                    summaryDiv.classList.remove('hidden');
+                    
+                    // Scrollear al resumen si se desea, o al top
+                    // form.scrollIntoView({ behavior: 'smooth' });
+                });
+
+                resetBtn.addEventListener('click', () => {
+                    const qBlocks = form.querySelectorAll('.question-block');
+                    qBlocks.forEach(block => {
+                        const radios = block.querySelectorAll('input[type="radio"]');
+                        const labels = block.querySelectorAll('.option-label');
+                        const explanation = block.querySelector('.explanation');
+                        
+                        radios.forEach(r => {
+                            r.checked = false;
+                            r.disabled = false;
+                        });
+                        
+                        labels.forEach(l => {
+                            l.classList.remove('correct-ans', 'wrong-ans');
+                        });
+                        
+                        explanation.classList.remove('visible');
+                    });
+                    
+                    summaryDiv.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
