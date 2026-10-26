@@ -29,27 +29,30 @@
         .glass-btn:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.6);
             transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         .glass-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .glass-item {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.65);
             border: 2px solid transparent;
             transition: all 0.2s ease;
             cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         .glass-item:hover {
             background: rgba(255, 255, 255, 0.9);
             transform: scale(1.01);
         }
         .selected-item {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 1);
             border-color: #6366f1; /* Indigo 500 */
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
             transform: scale(1.02);
         }
 
@@ -69,16 +72,24 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 44px;
+            width: 32px;
+            height: 40px;
             margin: 2px;
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             border-bottom: 4px solid #3730a3;
             color: #1e1b4b;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 6px 6px 0 0;
+        }
+        @media (min-width: 768px) {
+            .letter-box {
+                width: 40px;
+                height: 48px;
+                font-size: 1.25rem;
+                margin: 3px;
+            }
         }
         .space-box {
             display: inline-block;
@@ -92,57 +103,75 @@
             right: 20px;
             z-index: 50;
             transform: translateX(150%);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         #toast.show {
             transform: translateX(0);
         }
+
+        /* Scrollbars para items largos si hiciese falta */
+        .text-overflow-auto {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(99, 102, 241, 0.5) transparent;
+        }
+        .text-overflow-auto::-webkit-scrollbar {
+            width: 4px;
+        }
+        .text-overflow-auto::-webkit-scrollbar-thumb {
+            background-color: rgba(99, 102, 241, 0.5);
+            border-radius: 10px;
+        }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex flex-col bg-gradient-to-br from-cyan-200 via-indigo-200 to-purple-300 text-gray-800">
+<body class="h-screen w-screen overflow-hidden flex flex-col bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-300 text-gray-800">
 
-    <!-- Header / Navbar (Fixed Height) -->
-    <header class="h-16 flex-shrink-0 glass z-20 flex items-center justify-between px-6 border-b border-white/50">
-        <div class="flex items-center gap-3">
-            <span class="text-2xl">🧩</span>
-            <h1 class="text-xl font-bold text-indigo-900 tracking-wide">IT Glossary</h1>
+    <!-- Header / Navbar -->
+    <header class="h-16 flex-shrink-0 glass z-20 flex items-center justify-between px-4 md:px-8 border-b border-white/40">
+        <div class="flex items-center gap-2 md:gap-3">
+            <span class="text-2xl">🎓</span>
+            <h1 class="text-lg md:text-xl font-bold text-indigo-900 tracking-wide">Glosario IT</h1>
         </div>
-        <div class="flex gap-2 bg-white/30 p-1 rounded-xl">
-            <button onclick="switchTab('game1')" id="tab-game1" class="px-5 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-700 shadow transition-all">Flechas</button>
-            <button onclick="switchTab('game2')" id="tab-game2" class="px-5 py-1.5 rounded-lg text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all">Tarjetas</button>
+        <div class="flex gap-1 md:gap-2 bg-white/30 p-1 rounded-xl">
+            <button onclick="switchTab('game1')" id="tab-game1" class="px-3 md:px-5 py-1.5 rounded-lg text-xs md:text-sm font-semibold bg-white text-indigo-700 shadow transition-all">Flechas</button>
+            <button onclick="switchTab('game2')" id="tab-game2" class="px-3 md:px-5 py-1.5 rounded-lg text-xs md:text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all">Tarjetas</button>
         </div>
     </header>
 
-    <!-- Main Content Area (Calculated remaining height) -->
-    <main class="flex-grow p-4 md:p-6 w-full max-w-6xl mx-auto h-[calc(100vh-4rem)] flex flex-col relative">
+    <!-- Main Content Area -->
+    <main class="flex-grow p-3 md:p-6 w-full max-w-6xl mx-auto h-[calc(100vh-4rem)] flex flex-col relative">
         
         <!-- ==================== GAME 1: FLECHAS ==================== -->
-        <div id="game1-view" class="glass rounded-3xl w-full h-full flex flex-col p-4 sm:p-6 relative">
+        <div id="game1-view" class="glass rounded-3xl w-full h-full flex flex-col p-4 md:p-6 relative">
             
             <!-- Controles superiores Game 1 -->
             <div class="flex-shrink-0 flex justify-between items-center mb-4 z-20">
-                <h2 class="text-xl font-bold text-indigo-900">Une el concepto con su definición</h2>
-                <div class="flex gap-3">
-                    <button onclick="checkGame1()" class="glass-btn bg-emerald-100/80 text-emerald-800 border-emerald-300 px-6 py-2 rounded-xl font-bold shadow-sm">
+                <h2 class="text-lg md:text-xl font-bold text-indigo-900 drop-shadow-sm">Une palabra y definición</h2>
+                <div class="flex gap-2 md:gap-3">
+                    <button onclick="checkGame1()" class="glass-btn bg-emerald-200/60 hover:bg-emerald-300/80 text-emerald-900 border-emerald-400 px-4 md:px-6 py-1.5 md:py-2 rounded-xl font-bold text-sm md:text-base">
                         Corregir
                     </button>
-                    <button onclick="initGame1()" class="glass-btn px-6 py-2 rounded-xl font-bold text-indigo-800 shadow-sm">
-                        Reiniciar
+                    <button onclick="initGame1()" class="glass-btn bg-white/40 text-indigo-900 border-indigo-200 px-4 md:px-6 py-1.5 md:py-2 rounded-xl font-bold text-sm md:text-base">
+                        Siguientes 5
                     </button>
                 </div>
             </div>
 
-            <!-- Área de juego Game 1 (Ocupa el resto del espacio) -->
-            <div id="game1-area" class="flex-grow flex gap-4 md:gap-10 relative z-10 w-full h-full min-h-0">
+            <div class="text-xs text-indigo-800/70 text-right mb-2 pr-2 font-medium" id="g1-counter">
+                Bolsa: --/120
+            </div>
+
+            <!-- Área de juego Game 1 -->
+            <div id="game1-area" class="flex-grow flex gap-6 md:gap-12 relative z-10 w-full h-full min-h-0">
                 <svg id="svg-lines"></svg>
                 
                 <!-- Columna Palabras -->
-                <div id="col-words" class="w-1/3 flex flex-col gap-3 h-full justify-between pb-2">
+                <div id="col-words" class="w-2/5 flex flex-col gap-2 md:gap-4 h-full justify-between pb-2">
                     <!-- Dinámico -->
                 </div>
                 
                 <!-- Columna Definiciones -->
-                <div id="col-defs" class="w-2/3 flex flex-col gap-3 h-full justify-between pb-2">
+                <div id="col-defs" class="w-3/5 flex flex-col gap-2 md:gap-4 h-full justify-between pb-2">
                     <!-- Dinámico -->
                 </div>
             </div>
@@ -150,44 +179,44 @@
 
 
         <!-- ==================== GAME 2: TARJETAS ==================== -->
-        <div id="game2-view" class="hidden glass rounded-3xl w-full h-full flex flex-col p-6 items-center justify-center relative">
-            <h2 class="text-2xl font-bold text-indigo-900 absolute top-6">Adivina la Palabra</h2>
+        <div id="game2-view" class="hidden glass rounded-3xl w-full h-full flex flex-col p-4 md:p-6 items-center justify-center relative">
+            <h2 class="text-xl md:text-2xl font-bold text-indigo-900 absolute top-6">Adivina el Concepto</h2>
 
-            <div class="w-full max-w-3xl flex flex-col items-center gap-6 mt-8">
+            <div class="w-full max-w-4xl flex flex-col items-center gap-6 mt-8">
                 
                 <!-- Definition Box -->
-                <div class="glass-btn w-full p-6 md:p-8 rounded-2xl text-center shadow-inner relative">
-                    <span class="absolute top-2 left-4 text-4xl opacity-20">❝</span>
-                    <p id="g2-def" class="text-lg md:text-xl font-medium text-indigo-950 relative z-10">Cargando...</p>
-                    <span class="absolute bottom-[-10px] right-4 text-4xl opacity-20 rotate-180">❝</span>
+                <div class="glass-btn w-full p-6 md:p-8 rounded-2xl text-center shadow-md relative border-indigo-200">
+                    <span class="absolute top-2 left-4 text-4xl opacity-20 text-indigo-900">❝</span>
+                    <p id="g2-def" class="text-base md:text-xl font-medium text-indigo-950 relative z-10 text-overflow-auto max-h-32">Cargando...</p>
+                    <span class="absolute bottom-[-10px] right-4 text-4xl opacity-20 rotate-180 text-indigo-900">❝</span>
                 </div>
 
                 <!-- Word Blanks -->
-                <div id="g2-blanks" class="flex flex-wrap justify-center min-h-[50px]">
+                <div id="g2-blanks" class="flex flex-wrap justify-center min-h-[50px] px-2">
                     <!-- Dinámico -->
                 </div>
 
                 <!-- Input & Action -->
-                <div class="flex w-full max-w-md gap-2">
-                    <input type="text" id="g2-input" placeholder="Escribe tu respuesta..." class="flex-grow glass-btn rounded-xl px-4 py-3 text-center uppercase font-bold text-indigo-900 placeholder-indigo-900/40 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button onclick="checkGame2()" class="glass-btn bg-indigo-500/20 hover:bg-indigo-500/40 border-indigo-400 text-indigo-900 px-6 py-3 rounded-xl font-bold">
+                <div class="flex w-full max-w-lg gap-2 mt-2">
+                    <input type="text" id="g2-input" autocomplete="off" placeholder="Escribe tu respuesta..." class="flex-grow glass-btn bg-white/50 rounded-xl px-4 py-3 text-center uppercase font-bold text-indigo-900 placeholder-indigo-900/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-indigo-300 shadow-inner text-sm md:text-base">
+                    <button onclick="checkGame2()" class="glass-btn bg-indigo-500/30 hover:bg-indigo-500/50 border-indigo-400 text-indigo-950 px-6 py-3 rounded-xl font-bold transition-colors">
                         Validar
                     </button>
                 </div>
 
                 <!-- Hints Row -->
-                <div class="flex flex-wrap justify-center gap-3 w-full mt-4">
-                    <button id="btn-hint1" onclick="useHint(1)" class="glass-btn text-amber-800 bg-amber-500/20 border-amber-300 px-4 py-2 rounded-xl font-medium text-sm">
-                        💡 Pista 1
+                <div class="flex flex-wrap justify-center items-center gap-2 md:gap-3 w-full mt-2">
+                    <button id="btn-hint1" onclick="useHint(1)" class="glass-btn text-amber-900 bg-amber-400/30 border-amber-400 px-3 py-2 rounded-xl font-semibold text-xs md:text-sm">
+                        💡 Pista 1 (+2 letras)
                     </button>
-                    <button id="btn-hint2" onclick="useHint(2)" class="glass-btn text-amber-800 bg-amber-500/20 border-amber-300 px-4 py-2 rounded-xl font-medium text-sm">
-                        💡 Pista 2
+                    <button id="btn-hint2" onclick="useHint(2)" class="glass-btn text-amber-900 bg-amber-400/30 border-amber-400 px-3 py-2 rounded-xl font-semibold text-xs md:text-sm">
+                        💡 Pista 2 (+2 letras)
                     </button>
-                    <button id="btn-show" onclick="showAnswer()" class="glass-btn text-rose-800 bg-rose-500/20 border-rose-300 px-4 py-2 rounded-xl font-medium text-sm">
-                        👀 Mostrar respuesta
+                    <button id="btn-show" onclick="showAnswer()" class="glass-btn text-rose-900 bg-rose-400/30 border-rose-400 px-3 py-2 rounded-xl font-semibold text-xs md:text-sm">
+                        👀 Mostrar
                     </button>
-                    <div class="flex-grow"></div>
-                    <button onclick="initGame2()" class="glass-btn text-slate-800 bg-slate-900/10 border-slate-400 px-6 py-2 rounded-xl font-bold text-sm">
+                    <div class="w-full md:w-auto flex-grow hidden md:block"></div>
+                    <button onclick="initGame2()" class="glass-btn text-slate-800 bg-slate-900/10 hover:bg-slate-900/20 border-slate-400 px-5 md:px-6 py-2 rounded-xl font-bold text-sm w-full md:w-auto mt-2 md:mt-0">
                         Siguiente ⏭
                     </button>
                 </div>
@@ -197,56 +226,19 @@
     </main>
 
     <!-- Toast Component -->
-    <div id="toast" class="glass rounded-2xl p-4 flex items-center border-l-4">
+    <div id="toast" class="glass rounded-2xl p-4 flex items-center border-l-4 shadow-lg backdrop-blur-xl bg-white/70">
         <div id="toast-icon" class="mr-3 text-2xl"></div>
         <div>
-            <h4 id="toast-title" class="font-bold text-gray-900"></h4>
-            <p id="toast-text" class="text-sm text-gray-700"></p>
+            <h4 id="toast-title" class="font-bold text-gray-900 leading-tight"></h4>
+            <p id="toast-text" class="text-sm text-gray-700 leading-tight mt-1"></p>
         </div>
     </div>
 
     <script>
         // ====================================================
-        // DATA
+        // DATA (Exactamente las 120 palabras indicadas)
         // ====================================================
-        const glossary = [
-            { word: "Ancho de banda", def: "Cantidad de información que se puede enviar a través de una conexión." },
-            { word: "Applet", def: "Inserción de una aplicación realizada en Java para ser ejecutada en el navegador." },
-            { word: "ARPANet", def: "El precursor de la red Internet desarrollado por el Departamento de Defensa americano." },
-            { word: "ASCII", def: "Código estándar para el intercambio de información usado para representar letras, números, etc." },
-            { word: "Backbone", def: "Línea o serie de conexiones de alta velocidad que forman una ruta dentro de una red." },
-            { word: "Backup", def: "Copia de respaldo o seguridad." },
-            { word: "BIOS", def: "Programa pre-instalado que la computadora usa para iniciar (Sistema Básico de Entrada/Salida)." },
-            { word: "Browser", def: "Programa cliente que se utiliza para buscar diferentes recursos de Internet." },
-            { word: "Caché", def: "Almacenamiento local y temporal de un programa para reducir el tiempo de respuesta." },
-            { word: "Chipset", def: "Intermediario entre el microprocesador y los distintos dispositivos." },
-            { word: "Cloud computing", def: "Paradigma que permite ofrecer servicios de computación a través de Internet." },
-            { word: "Cookie", def: "Mecanismo usado para almacenar y recuperar información en el cliente." },
-            { word: "DNS", def: "Sistema para traducir los nombres de los ordenadores en direcciones IP numéricas." },
-            { word: "Ethernet", def: "Método muy común de comunicar ordenadores en una red LAN." },
-            { word: "Firewall", def: "Combinación de hardware y software que separa una red local por seguridad." },
-            { word: "FTP", def: "Protocolo de transferencia de archivos entre un cliente y un servidor." },
-            { word: "GUI", def: "Interfaz Gráfica de Usuario formada por ventanas, botones, menús, etc." },
-            { word: "IP", def: "Representación numérica de la localización de un ordenador dentro de una red." },
-            { word: "Java", def: "Lenguaje de programación orientado a objetos para el desarrollo de aplicaciones multiplataforma." },
-            { word: "Kernel", def: "El núcleo que proporciona servicios básicos para todas las partes del sistema operativo." },
-            { word: "LAN", def: "Red de ordenadores limitada a un área cercana, como un edificio." },
-            { word: "Malware", def: "Programa cuyo objetivo es causar daños a computadoras." },
-            { word: "Módem", def: "Dispositivo que modula y demodula permitiendo conectar ordenadores por línea telefónica." },
-            { word: "P2P", def: "Comunicación bilateral exclusiva entre dos personas a través de Internet (Peer-to-Peer)." },
-            { word: "Phishing", def: "Técnica para captar información bancaria usando la imagen de una entidad." },
-            { word: "Proxy", def: "Programa intermediario que actúa a la vez como servidor y cliente." },
-            { word: "Píxel", def: "El componente más pequeño y discreto de una imagen en pantalla." },
-            { word: "Router", def: "Ordenador que maneja la conexión entre dos o más redes." },
-            { word: "Spyware", def: "Programa que manda información del uso de internet del usuario." },
-            { word: "TCP/IP", def: "El tipo de protocolos de control de transmisión y de red que definen Internet." },
-            { word: "URL", def: "Localizador de recursos uniforme, la dirección de un recurso en Internet." },
-            { word: "WWW", def: "El universo de servidores HTTP que permiten mezclar texto, gráficos, etc. (World Wide Web)." },
-            { word: "WiFi", def: "Un tipo de red inalámbrica que transmite datos en banda ancha." },
-            { word: "Freeware", def: "Aplicaciones que pueden obtenerse sin pagar por su utilización." },
-            { word: "MAC OS", def: "Sistema operativo de Apple." },
-            { word: "Spam", def: "Correo electrónico no deseado." }
-        ];
+        const glossary = [{"w":"Address","d":"Término que se puede referir a la dirección IP o a una dirección de correo electrónico."},{"w":"Ancho de banda","d":"Cantidad de información que se puede enviar a través de una conexión (bps)."},{"w":"Ancla","d":"Marcador insertado en una web que refiere a una URL particular."},{"w":"Applet","d":"Aplicación realizada en Java para ser ejecutada en el navegador."},{"w":"Archie","d":"Herramienta para encontrar archivos localizados en FTP anónimos."},{"w":"ARPANet","d":"Precursor de Internet desarrollado por el Departamento de Defensa americano."},{"w":"ASCII","d":"Código estándar americano para el intercambio de información."},{"w":"ATA","d":"Interface para conectar disco duro o cdroms (también conocido como IDE)."},{"w":"Backbone","d":"Línea de conexiones de alta velocidad que forman una ruta en una red."},{"w":"Backup","d":"Copia de respaldo o seguridad para evitar la pérdida de los originales."},{"w":"BBS","d":"Sistema para discusiones y carga de archivos sin conexión simultánea."},{"w":"BIOS","d":"Programa pre-instalado que la computadora usa para iniciar."},{"w":"Blu-ray","d":"Formato de disco óptico para vídeo de alta definición y gran almacenamiento."},{"w":"Bookmark","d":"Característica de navegadores de archivar la URL de una página web."},{"w":"bps","d":"Medida estándar de la velocidad de transmisión (bits por segundo)."},{"w":"Browser","d":"Programa cliente para buscar recursos de Internet (navegador)."},{"w":"Buffer","d":"Contiene datos almacenados por un corto periodo de tiempo."},{"w":"Cabecera","d":"Información al principio de un documento web o correo (autor, etc.)."},{"w":"Caché","d":"Almacenamiento local temporal para reducir tiempo de respuesta y consumo."},{"w":"Cadena","d":"Secuencia de caracteres (palabra o frase)."},{"w":"Chipset","d":"Intermediario entre el microprocesador y los distintos dispositivos."},{"w":"Ciberespacio","d":"Variedad de recursos de información disponibles a través de redes."},{"w":"Cliente","d":"Programa que obtiene datos de un programa de servidor en otro ordenador."},{"w":"Cloud computing","d":"Servicios de computación ofrecidos a través de Internet (nube)."},{"w":"Contraseña","d":"Palabra secreta para acceder a través de una barrera."},{"w":"Cookies","d":"Mecanismo para almacenar y recuperar información en el cliente."},{"w":"Correo electrónico","d":"Mensajes enviados de una persona a otra sobre un tema a través del ordenador."},{"w":"Cracker","d":"Persona que entra en redes de forma no autorizada e ilegal con fines destructivos."},{"w":"Cyberbullying","d":"Acto de atormentar a otra persona usando medios electrónicos."},{"w":"Dirección IP","d":"Representación numérica de la localización de un ordenador en red."},{"w":"Download","d":"Acción de importar archivos de un ordenador remoto a otro local."},{"w":"DNS","d":"Sistema para traducir nombres de ordenadores en direcciones IP numéricas."},{"w":"Encabezamiento","d":"Marcas HTML que describen el tipo y tamaño de letra de los títulos."},{"w":"Encriptación","d":"Cifrado de datos para impedir su lectura por parte de extraños."},{"w":"Enlace","d":"Conexión a otro documento web por medio de la dirección URL."},{"w":"Entidad","d":"Representación de recursos de datos incluida en un mensaje."},{"w":"Ethernet","d":"Método común de comunicar ordenadores en una red LAN."},{"w":"Extensión","d":"Cadena de caracteres al final del nombre de un archivo (.DOC, .EXE)."},{"w":"Firewall","d":"Combinación de hardware y software que separa una red local por seguridad."},{"w":"Flash","d":"Tecnología para crear animaciones ocupando menos ancho de banda."},{"w":"Freeware","d":"Programas de dominio público gratuitos obtenidos de Internet."},{"w":"FTP","d":"Protocolo que permite cargar y descargar archivos entre cliente y servidor."},{"w":"GUI","d":"Interfaz Gráfica de Usuario (ventanas, botones, menús, iconos)."},{"w":"Interfaz","d":"Punto de conexión de hardware, programas o usuario y programa."},{"w":"Java","d":"Lenguaje orientado a objetos multiplataforma de Sun Microsystems."},{"w":"JavaScript","d":"Lenguaje derivado de Java con instrucciones mucho más simples."},{"w":"Jpeg","d":"Formato con pérdida para archivos gráficos y estándar web."},{"w":"Kernel","d":"Centro esencial o núcleo de un sistema operativo."},{"w":"LAN","d":"Red de ordenadores limitada a un área cercana (edificio)."},{"w":"Login","d":"Nombre para acceder a un sistema (no secreto) o la acción de entrar."},{"w":"Mac OS","d":"Sistema operativo desarrollado por Apple para la Macintosh."},{"w":"Macintosh","d":"Serie de ordenadores de Apple Computer."},{"w":"Malware","d":"Programa que causa daños a computadoras, sistemas o redes."},{"w":"Marca","d":"Cadena que indica al navegador cómo formatear el texto HTML."},{"w":"Mensaje","d":"Unidad básica de comunicación HTTP."},{"w":"Mensajería instantánea","d":"Intercambio de mensajes en tiempo real (IM)."},{"w":"MIME","d":"Estándar para adjuntar archivos multimedia a mensajes de correo."},{"w":"Módem","d":"Dispositivo que conecta el ordenador a la línea telefónica."},{"w":"NetBEUI","d":"Controlador de transporte y protocolo de comunicación LAN de Microsoft."},{"w":"Netiqueta","d":"Normas de comportamiento general en Internet."},{"w":"Nodo","d":"Cualquier ordenador conectado a una red."},{"w":"Nombre de dominio","d":"Nombre que identifica el punto de Internet (separado por puntos)."},{"w":"Nombre de usuario","d":"Nombre que utiliza el usuario cuando accede a otro ordenador."},{"w":"NTFS","d":"Sistema de archivos que el sistema operativo Windows NT utiliza."},{"w":"OCR","d":"Reconocimiento Óptico de Caracteres."},{"w":"Open source","d":"Programa cuyo código fuente está disponible gratis para usar y modificar."},{"w":"Operadores lógicos","d":"Operadores (AND, NOT, OR) usados para restringir una búsqueda."},{"w":"Página de inicio","d":"Primera página que aparece al acceder a un servidor web."},{"w":"Página web","d":"Documento completo editado en la World Wide Web."},{"w":"P2P","d":"Comunicación bilateral exclusiva para intercambio de archivos."},{"w":"PGP","d":"Programa para asegurar la privacidad del correo (Pretty Good Privacy)."},{"w":"Phising","d":"Técnica para captar información bancaria suplantando identidad."},{"w":"Phreaker","d":"Persona que hackea redes telefónicas para no pagar llamadas."},{"w":"Píxel","d":"Componente más pequeño de una imagen en monitor."},{"w":"POP","d":"Protocolo para almacenar y recibir correo electrónico."},{"w":"PPP","d":"Protocolo que permite conexión TCP/IP por módem y línea telefónica."},{"w":"Protocolo","d":"Lista de comandos estandarizada a la que responde un servidor."},{"w":"Proveedor de servicio","d":"Empresa que proporciona acceso a Internet por tarifa mensual."},{"w":"Proxy","d":"Programa intermediario entre cliente y servidor."},{"w":"Puerto","d":"Lugar físico o número de red donde la información entra/sale."},{"w":"Raid","d":"Combinación de discos duros para formar una unidad lógica redundante."},{"w":"RDSI","d":"Red Digital de Servicios Integrados para manejar video, voz y datos."},{"w":"Recurso","d":"Objeto de datos o información en Internet identificable por una URL."},{"w":"Red","d":"Grupo de ordenadores y periféricos conectados entre sí."},{"w":"Redes sociales","d":"Sitios web que permiten interacción digital entre personas."},{"w":"RJ45","d":"Conector de cable de red similar al telefónico."},{"w":"Router","d":"Ordenador que maneja la conexión y rutas entre dos o más redes."},{"w":"SCSI","d":"Interfaz estándar para comunicación de alta velocidad en ordenadores."},{"w":"Search Engine","d":"Herramienta o buscador de bases de datos desde el cliente."},{"w":"Servidor","d":"Computadora que maneja peticiones de datos de otras."},{"w":"SGML","d":"Conjunto de estándares padre de HTML para documentos electrónicos."},{"w":"Shareware","d":"Programas en evaluación que solicitan su pago posterior."},{"w":"SLIP","d":"Estándar antiguo para usar módem y línea telefónica."},{"w":"Smileys","d":"Caritas que expresan el sentimiento del autor en la red."},{"w":"SMTP","d":"Protocolo simple de transferencia de correo."},{"w":"Socket","d":"Número compuesto por dirección IP y puerto TCP."},{"w":"Spoofing","d":"Engaño adoptando otra identidad de remitente en la red."},{"w":"Spyware","d":"Programas espía que mandan información del usuario sin conocimiento."},{"w":"T1","d":"Conexión telefónica de datos de hasta 1.544.000 bps."},{"w":"T3","d":"Conexión telefónica de datos a 45.000.000 bps."},{"w":"TCP/IP","d":"Familia de protocolos que definen Internet."},{"w":"TELNET","d":"Comando y programa para conexión remota a otros ordenadores."},{"w":"Terminal","d":"Dispositivo de visualización y teclado para enviar comandos."},{"w":"Trojan Horse","d":"Programa informático que accede de manera oculta al sistema."},{"w":"UDP","d":"Protocolo de datagrama a nivel de usuario (menos fiable que TCP)."},{"w":"Unix","d":"Sistema operativo multiusuario común para servidores de Internet."},{"w":"URI","d":"Identificador de Recursos Uniforme."},{"w":"URL","d":"Localizador de Recursos Uniforme (modo estándar de dirección web)."},{"w":"Usenet","d":"Sistema mundial descentralizado de grupos de discusión."},{"w":"VRML","d":"Lenguaje de Modelado de la Realidad Virtual para mundos 3D."},{"w":"Warez","d":"Software pirateado o copiado ilegalmente."},{"w":"WAIS","d":"Servidores para indexar y buscar información extensa en Internet."},{"w":"Webmaster","d":"Persona responsable técnica del servidor web."},{"w":"WiFi","d":"Red inalámbrica de alcance limitado."},{"w":"Worm","d":"Programa que se reduplica llenando la memoria."},{"w":"WWW","d":"Universo de recursos en Internet (World Wide Web)."},{"w":"W3C","d":"Consorcio internacional que desarrolla estándares WWW."},{"w":"XMODEM","d":"Protocolo antiguo para transferir archivos comprobando errores."},{"w":"YMODEM","d":"Extensión de XModem para transferencia de múltiples archivos."},{"w":"ZMODEM","d":"Protocolo de transferencia de alta velocidad desarrollado en los 80."}];
 
         // ====================================================
         // UTILS
@@ -269,7 +261,7 @@
             document.getElementById('toast-title').innerText = title;
             document.getElementById('toast-text').innerText = text;
             
-            toast.className = 'glass rounded-2xl p-4 flex items-center border-l-4';
+            toast.className = 'glass rounded-2xl p-4 flex items-center border-l-4 shadow-lg backdrop-blur-xl bg-white/80';
             if (type === 'success') {
                 toast.classList.add('border-emerald-500');
                 document.getElementById('toast-icon').innerText = '✅';
@@ -289,23 +281,23 @@
             document.getElementById('game1-view').classList.add('hidden');
             document.getElementById('game2-view').classList.add('hidden');
             
-            document.getElementById('tab-game1').className = "px-5 py-1.5 rounded-lg text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all";
-            document.getElementById('tab-game2').className = "px-5 py-1.5 rounded-lg text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all";
+            document.getElementById('tab-game1').className = "px-3 md:px-5 py-1.5 rounded-lg text-xs md:text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all";
+            document.getElementById('tab-game2').className = "px-3 md:px-5 py-1.5 rounded-lg text-xs md:text-sm font-semibold text-gray-600 hover:text-indigo-700 transition-all";
 
             if (tabId === 'game1') {
                 document.getElementById('game1-view').classList.remove('hidden');
                 document.getElementById('game1-view').classList.add('flex');
-                document.getElementById('tab-game1').className = "px-5 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-700 shadow transition-all";
+                document.getElementById('tab-game1').className = "px-3 md:px-5 py-1.5 rounded-lg text-xs md:text-sm font-semibold bg-white text-indigo-700 shadow transition-all";
                 setTimeout(drawLines, 50);
             } else {
                 document.getElementById('game2-view').classList.remove('hidden');
                 document.getElementById('game2-view').classList.add('flex');
-                document.getElementById('tab-game2').className = "px-5 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-700 shadow transition-all";
+                document.getElementById('tab-game2').className = "px-3 md:px-5 py-1.5 rounded-lg text-xs md:text-sm font-semibold bg-white text-indigo-700 shadow transition-all";
             }
         }
 
         // ====================================================
-        // GAME 1: FLECHAS
+        // GAME 1: FLECHAS (SHUFFLE BAG)
         // ====================================================
         let game1Bag = [];
         let g1Words = [];
@@ -314,21 +306,30 @@
         let selection = { type: null, el: null };
         let isEvaluated = false;
 
+        function getNext5() {
+            let selected = [];
+            while(selected.length < 5) {
+                if (game1Bag.length === 0) {
+                    game1Bag = shuffle([...glossary]);
+                    showToast("Bolsa reiniciada", "Se han mezclado las 120 palabras nuevamente.", "info");
+                }
+                selected.push(game1Bag.pop());
+            }
+            return selected;
+        }
+
         function initGame1() {
             isEvaluated = false;
             connections = [];
             selection = { type: null, el: null };
             document.getElementById('svg-lines').innerHTML = '';
+            
+            const items = getNext5();
+            
+            document.getElementById('g1-counter').innerText = `Restantes en bolsa: ${game1Bag.length}/120`;
 
-            // Lógica de "bolsa" (shuffle bag) para no repetir palabras hasta que salgan todas
-            if (game1Bag.length < 5) {
-                game1Bag = shuffle([...glossary]);
-            }
-            
-            const items = game1Bag.splice(0, 5);
-            
-            g1Words = items.map(item => ({ id: item.word, text: item.word }));
-            g1Defs = shuffle(items.map(item => ({ id: item.word, text: item.def })));
+            g1Words = items.map(item => ({ id: item.w, text: item.w }));
+            g1Defs = shuffle(items.map(item => ({ id: item.w, text: item.d })));
 
             renderGame1();
         }
@@ -341,7 +342,7 @@
 
             g1Words.forEach(w => {
                 const el = document.createElement('div');
-                el.className = 'glass-item rounded-xl p-3 text-sm md:text-base font-bold text-center h-full flex items-center justify-center flex-1 shadow-sm';
+                el.className = 'glass-item rounded-xl p-2 md:p-3 text-xs md:text-sm font-bold text-center h-full flex items-center justify-center flex-1 text-overflow-auto';
                 el.innerText = w.text;
                 el.dataset.id = w.id;
                 el.dataset.type = 'word';
@@ -351,7 +352,7 @@
 
             g1Defs.forEach(d => {
                 const el = document.createElement('div');
-                el.className = 'glass-item rounded-xl p-2 md:p-3 text-xs md:text-sm h-full flex items-center flex-1 shadow-sm';
+                el.className = 'glass-item rounded-xl p-2 md:p-3 text-[11px] md:text-sm h-full flex items-center flex-1 text-overflow-auto leading-snug';
                 el.innerText = d.text;
                 el.dataset.id = d.id;
                 el.dataset.type = 'def';
@@ -366,12 +367,11 @@
             if (selection.el) selection.el.classList.remove('selected-item');
 
             if (selection.type && selection.type !== type) {
-                // Remove existing connection for either side
                 const wordEl = type === 'word' ? el : selection.el;
                 const defEl = type === 'def' ? el : selection.el;
                 
                 connections = connections.filter(c => c.wordEl !== wordEl && c.defEl !== defEl);
-                connections.push({ wordEl, defEl, color: 'rgba(99, 102, 241, 0.7)' }); // Indigo line
+                connections.push({ wordEl, defEl, color: 'rgba(99, 102, 241, 0.8)' }); 
                 
                 selection = { type: null, el: null };
                 drawLines();
@@ -405,7 +405,7 @@
                 line.setAttribute('x2', x2);
                 line.setAttribute('y2', y2);
                 line.setAttribute('stroke', conn.color);
-                line.setAttribute('stroke-width', conn.width || '4');
+                line.setAttribute('stroke-width', conn.width || (window.innerWidth < 768 ? '3' : '4'));
                 line.setAttribute('stroke-linecap', 'round');
                 if (conn.dashed) line.setAttribute('stroke-dasharray', '8,8');
                 
@@ -420,7 +420,6 @@
             let corrects = 0;
             const newConns = [];
 
-            // Reset borders manually
             document.querySelectorAll('.glass-item').forEach(el => el.style.borderColor = 'transparent');
 
             connections.forEach(conn => {
@@ -437,7 +436,6 @@
                     conn.wordEl.style.borderColor = '#f43f5e';
                     newConns.push(conn);
 
-                    // Show correct answer in blue (dashed)
                     const correctDefId = conn.wordEl.dataset.id;
                     const correctDefEl = document.querySelector(`.glass-item[data-type="def"][data-id="${correctDefId}"]`);
                     if (correctDefEl) {
@@ -455,13 +453,14 @@
             connections = newConns;
             drawLines();
 
-            if (corrects === 5) showToast("¡Excelente!", "Todas las uniones son correctas.", "success");
+            if (corrects === 5) showToast("¡Perfecto!", "Has unido todas correctamente.", "success");
             else showToast("Resultados", `Acertaste ${corrects} de 5.`, "info");
         }
 
-        // Redraw lines on window resize
         window.addEventListener('resize', () => {
-            if (!document.getElementById('game1-view').classList.contains('hidden')) drawLines();
+            if (!document.getElementById('game1-view').classList.contains('hidden')) {
+                requestAnimationFrame(drawLines);
+            }
         });
 
 
@@ -473,22 +472,24 @@
 
         function initGame2() {
             const item = glossary[Math.floor(Math.random() * glossary.length)];
-            g2Word = item.word;
+            g2Word = item.w;
             g2Revealed = new Array(g2Word.length).fill(false);
             
             for (let i = 0; i < g2Word.length; i++) {
-                if (g2Word[i] === ' ') g2Revealed[i] = true;
+                if (g2Word[i] === ' ' || g2Word[i] === '-' || g2Word[i] === '/') {
+                    g2Revealed[i] = true;
+                }
             }
 
-            document.getElementById('g2-def').innerText = item.def;
+            document.getElementById('g2-def').innerText = item.d;
             document.getElementById('g2-input').value = '';
             
-            // Reset buttons
             document.getElementById('btn-hint1').disabled = false;
             document.getElementById('btn-hint2').disabled = false;
             document.getElementById('btn-show').disabled = false;
 
             renderBlanks();
+            document.getElementById('g2-input').focus();
         }
 
         function renderBlanks() {
@@ -500,6 +501,11 @@
                     const sp = document.createElement('span');
                     sp.className = 'space-box';
                     container.appendChild(sp);
+                } else if (g2Word[i] === '-' || g2Word[i] === '/') {
+                    const box = document.createElement('span');
+                    box.className = 'inline-flex items-center justify-center font-bold text-xl px-1 text-indigo-900/60';
+                    box.innerText = g2Word[i];
+                    container.appendChild(box);
                 } else {
                     const box = document.createElement('span');
                     box.className = 'letter-box shadow-sm';
@@ -513,11 +519,12 @@
             const btn = document.getElementById(`btn-hint${num}`);
             btn.disabled = true;
 
-            // Bucle para revelar 2 letras por pista en lugar de 1
             for (let k = 0; k < 2; k++) {
                 const hiddenIndexes = [];
                 for (let i = 0; i < g2Word.length; i++) {
-                    if (!g2Revealed[i] && g2Word[i] !== ' ') hiddenIndexes.push(i);
+                    if (!g2Revealed[i] && g2Word[i] !== ' ' && g2Word[i] !== '-' && g2Word[i] !== '/') {
+                        hiddenIndexes.push(i);
+                    }
                 }
 
                 if (hiddenIndexes.length > 0) {
@@ -527,31 +534,47 @@
             }
             
             renderBlanks();
+            
+            // Check if totally revealed by hints
+            if(g2Revealed.every(val => val === true)) {
+                 document.getElementById('g2-input').value = g2Word;
+                 disableG2Actions();
+            }
         }
 
         function showAnswer() {
             g2Revealed.fill(true);
             renderBlanks();
             document.getElementById('g2-input').value = g2Word;
+            disableG2Actions();
+            showToast("Respuesta revelada", "Aquí tienes la solución.", "info");
+        }
+        
+        function disableG2Actions() {
             document.getElementById('btn-hint1').disabled = true;
             document.getElementById('btn-hint2').disabled = true;
             document.getElementById('btn-show').disabled = true;
-            showToast("Respuesta", "Se ha revelado la palabra.", "info");
         }
 
         function checkGame2() {
-            const input = removeAccents(document.getElementById('g2-input').value.trim());
+            if(document.getElementById('btn-show').disabled && g2Revealed.every(v => v)) {
+                // Ya resuelto, pasar al siguiente
+                initGame2();
+                return;
+            }
+
+            const inputRaw = document.getElementById('g2-input').value.trim();
+            const input = removeAccents(inputRaw);
             const target = removeAccents(g2Word);
 
             if (input === target) {
                 g2Revealed.fill(true);
                 renderBlanks();
-                showToast("¡Correcto!", `La palabra era ${g2Word}`, "success");
-                document.getElementById('btn-hint1').disabled = true;
-                document.getElementById('btn-hint2').disabled = true;
-                document.getElementById('btn-show').disabled = true;
+                document.getElementById('g2-input').value = g2Word; // Poner la palabra original con mayúsculas/tildes
+                showToast("¡Correcto!", `La palabra era: ${g2Word}`, "success");
+                disableG2Actions();
             } else {
-                showToast("Incorrecto", "Sigue intentando o usa una pista.", "error");
+                showToast("Incorrecto", "Prueba otra vez o utiliza las pistas.", "error");
             }
         }
 
