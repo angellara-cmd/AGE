@@ -211,18 +211,38 @@
         // ====================================================
         const glossary = [
             { word: "Ancho de banda", def: "Cantidad de información que se puede enviar a través de una conexión." },
+            { word: "Applet", def: "Inserción de una aplicación realizada en Java para ser ejecutada en el navegador." },
+            { word: "ARPANet", def: "El precursor de la red Internet desarrollado por el Departamento de Defensa americano." },
+            { word: "ASCII", def: "Código estándar para el intercambio de información usado para representar letras, números, etc." },
+            { word: "Backbone", def: "Línea o serie de conexiones de alta velocidad que forman una ruta dentro de una red." },
             { word: "Backup", def: "Copia de respaldo o seguridad." },
+            { word: "BIOS", def: "Programa pre-instalado que la computadora usa para iniciar (Sistema Básico de Entrada/Salida)." },
             { word: "Browser", def: "Programa cliente que se utiliza para buscar diferentes recursos de Internet." },
+            { word: "Caché", def: "Almacenamiento local y temporal de un programa para reducir el tiempo de respuesta." },
+            { word: "Chipset", def: "Intermediario entre el microprocesador y los distintos dispositivos." },
             { word: "Cloud computing", def: "Paradigma que permite ofrecer servicios de computación a través de Internet." },
             { word: "Cookie", def: "Mecanismo usado para almacenar y recuperar información en el cliente." },
+            { word: "DNS", def: "Sistema para traducir los nombres de los ordenadores en direcciones IP numéricas." },
             { word: "Ethernet", def: "Método muy común de comunicar ordenadores en una red LAN." },
             { word: "Firewall", def: "Combinación de hardware y software que separa una red local por seguridad." },
+            { word: "FTP", def: "Protocolo de transferencia de archivos entre un cliente y un servidor." },
+            { word: "GUI", def: "Interfaz Gráfica de Usuario formada por ventanas, botones, menús, etc." },
+            { word: "IP", def: "Representación numérica de la localización de un ordenador dentro de una red." },
+            { word: "Java", def: "Lenguaje de programación orientado a objetos para el desarrollo de aplicaciones multiplataforma." },
+            { word: "Kernel", def: "El núcleo que proporciona servicios básicos para todas las partes del sistema operativo." },
+            { word: "LAN", def: "Red de ordenadores limitada a un área cercana, como un edificio." },
             { word: "Malware", def: "Programa cuyo objetivo es causar daños a computadoras." },
+            { word: "Módem", def: "Dispositivo que modula y demodula permitiendo conectar ordenadores por línea telefónica." },
+            { word: "P2P", def: "Comunicación bilateral exclusiva entre dos personas a través de Internet (Peer-to-Peer)." },
             { word: "Phishing", def: "Técnica para captar información bancaria usando la imagen de una entidad." },
-            { word: "Spyware", def: "Programa que manda información del uso de internet del usuario." },
+            { word: "Proxy", def: "Programa intermediario que actúa a la vez como servidor y cliente." },
             { word: "Píxel", def: "El componente más pequeño y discreto de una imagen en pantalla." },
             { word: "Router", def: "Ordenador que maneja la conexión entre dos o más redes." },
+            { word: "Spyware", def: "Programa que manda información del uso de internet del usuario." },
+            { word: "TCP/IP", def: "El tipo de protocolos de control de transmisión y de red que definen Internet." },
             { word: "URL", def: "Localizador de recursos uniforme, la dirección de un recurso en Internet." },
+            { word: "WWW", def: "El universo de servidores HTTP que permiten mezclar texto, gráficos, etc. (World Wide Web)." },
+            { word: "WiFi", def: "Un tipo de red inalámbrica que transmite datos en banda ancha." },
             { word: "Freeware", def: "Aplicaciones que pueden obtenerse sin pagar por su utilización." },
             { word: "MAC OS", def: "Sistema operativo de Apple." },
             { word: "Spam", def: "Correo electrónico no deseado." }
@@ -287,6 +307,7 @@
         // ====================================================
         // GAME 1: FLECHAS
         // ====================================================
+        let game1Bag = [];
         let g1Words = [];
         let g1Defs = [];
         let connections = [];
@@ -299,7 +320,12 @@
             selection = { type: null, el: null };
             document.getElementById('svg-lines').innerHTML = '';
 
-            const items = shuffle(glossary).slice(0, 5);
+            // Lógica de "bolsa" (shuffle bag) para no repetir palabras hasta que salgan todas
+            if (game1Bag.length < 5) {
+                game1Bag = shuffle([...glossary]);
+            }
+            
+            const items = game1Bag.splice(0, 5);
             
             g1Words = items.map(item => ({ id: item.word, text: item.word }));
             g1Defs = shuffle(items.map(item => ({ id: item.word, text: item.def })));
@@ -487,16 +513,20 @@
             const btn = document.getElementById(`btn-hint${num}`);
             btn.disabled = true;
 
-            const hiddenIndexes = [];
-            for (let i = 0; i < g2Word.length; i++) {
-                if (!g2Revealed[i] && g2Word[i] !== ' ') hiddenIndexes.push(i);
-            }
+            // Bucle para revelar 2 letras por pista en lugar de 1
+            for (let k = 0; k < 2; k++) {
+                const hiddenIndexes = [];
+                for (let i = 0; i < g2Word.length; i++) {
+                    if (!g2Revealed[i] && g2Word[i] !== ' ') hiddenIndexes.push(i);
+                }
 
-            if (hiddenIndexes.length > 0) {
-                const rnd = hiddenIndexes[Math.floor(Math.random() * hiddenIndexes.length)];
-                g2Revealed[rnd] = true;
-                renderBlanks();
+                if (hiddenIndexes.length > 0) {
+                    const rnd = hiddenIndexes[Math.floor(Math.random() * hiddenIndexes.length)];
+                    g2Revealed[rnd] = true;
+                }
             }
+            
+            renderBlanks();
         }
 
         function showAnswer() {
