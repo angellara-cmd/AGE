@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquemas y Test - Oposiciones AGE (Tema 2: La Corona)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .opt-label { 
+            display: block; 
+            padding: 0.75rem; 
+            margin-bottom: 0.5rem; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 0.5rem; 
+            cursor: pointer; 
+            transition: all 0.2s ease-in-out;
+        }
+        .opt-label:hover { background-color: #f3f4f6; }
+        
+        /* Clases aplicadas por JS durante la corrección */
+        .correct-answer {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+            font-weight: 600;
+        }
+        .incorrect-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .disabled-opt { pointer-events: none; opacity: 0.8; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+    <header class="bg-blue-800 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold">AGE: Tema 2 - La Jefatura del Estado. La Corona</h1>
+                <p class="text-sm text-blue-200">Basado estrictamente en la documentación oficial adjunta</p>
+            </div>
+        </div>
+        <!-- Navegación de Pestañas -->
+        <div class="bg-blue-900 overflow-x-auto">
+            <div class="max-w-6xl mx-auto px-4 flex whitespace-nowrap" id="tab-buttons">
+                <!-- Botones generados por JS -->
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8" id="main-content">
+        
+        <!-- Contenedor del Esquema (Pestaña 1) -->
+        <div id="tab-esquema" class="tab-content active bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6 border-b-2 border-blue-200 pb-2">Esquema de Preguntas de Desarrollo</h2>
+            <div id="esquema-container" class="space-y-6"></div>
+        </div>
+
+        <!-- Contenedor para Anexo Imagen (Pestaña 12) -->
+        <div id="tab-anexo" class="tab-content bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold text-blue-800 mb-6 border-b-2 border-blue-200 pb-2">Anexo: Esquema Sucesión de la Corona</h2>
+            <div class="bg-gray-100 border-4 border-dashed border-gray-300 rounded-lg p-10 text-center">
+                <p class="text-gray-600 mb-4">Tal como solicitaste, aquí se ha preparado el espacio para incluir el segundo documento como una imagen literal sin interpretaciones.</p>
+                <p class="text-sm text-gray-500 mb-6">Guarda el archivo PDF secundario como una imagen (por ejemplo, <code class="bg-gray-200 px-1 rounded">Tema_02_DC_Corona_sucesion.jpg</code>) en la misma carpeta que este archivo HTML, y se visualizará a continuación. Por defecto muestra un espacio reservado.</p>
+                <img src="Tema_02_DC_Corona_sucesion.jpg" alt="Esquema Sucesión de la Corona" onerror="this.src='https://placehold.co/800x600/e2e8f0/475569?text=Inserta+aquí+la+imagen\nTema_02_DC_Corona_sucesion.jpg'" class="mx-auto max-w-full h-auto shadow-md rounded border border-gray-200">
+            </div>
+        </div>
+
+        <!-- Los test se generarán dinámicamente aquí -->
+    </main>
+
+    <script>
+        // ESQUEMA: 40 Preguntas explicadas
+        const esquemaData = [
+            { q: "¿Qué alude el término 'forma de Estado' por un lado y por otro, según la doctrina española?", a: "Por un lado, alude a la organización territorial del Estado (Estado unitario vs. Estado federal). Por otro, alude a los principios esenciales que definen su naturaleza (Estados absolutos, democrático-liberales y socialistas)." },
+            { q: "¿Qué dos realidades distintas abarca el término 'forma de Gobierno'?", a: "Se refiere, en primer lugar, al régimen de relación entre los poderes del Estado (presidencialismo, parlamentarismo, régimen de asamblea, etc.). En segundo lugar, al modo en que se halla organizada la suprema magistratura del país (la Jefatura del Estado)." },
+            { q: "¿Cómo define Hegel la necesidad de la Jefatura del Estado?", a: "Hegel afirma que 'en todo tiempo se ha reconocido la necesidad de una magistratura suprema que represente con su personalidad la unidad absoluta del Estado'." },
+            { q: "¿Cuál es la característica moderna de la configuración de la Jefatura de Estado en cuanto a su poder?", a: "Se caracteriza por una ausencia de auténtico poder de decisión dentro del Ejecutivo. El poder legal recae en el Jefe de Estado, pero los Ministros asumen de hecho el disfrute efectivo de las facultades." },
+            { q: "¿Cuál es la principal diferencia entre Monarquía y República respecto a la designación del Jefe de Estado?", a: "En la Monarquía, la titularidad se atribuye por derecho sucesorio a un miembro de una determinada dinastía. En la República, adquiere carácter representativo a través de distintos procedimientos de elección." },
+            { q: "¿Cómo se diferencia la duración de la función entre el monarca y el presidente de una República?", a: "Característica esencial de la Monarquía es la continuidad de la función (dura toda la vida del monarca y se perpetúa en la familia/dinastía). En la República, la magistratura suprema es temporal." },
+            { q: "¿Qué tipos de Repúblicas democráticas existen según su relación con los poderes?", a: "Existen las repúblicas presidencialistas, donde el presidente es director efectivo del Poder Ejecutivo (ej. EE.UU.), y las repúblicas parlamentarias, donde el Ejecutivo está desdoblado entre el presidente de la República y el Gobierno (ej. Francia o Italia)." },
+            { q: "¿Qué diferencia existe entre monarquía hereditaria cognaticia y agnaticia?", a: "La monarquía hereditaria es cognaticia cuando se prefiere el sexo a la línea de parentesco, y agnaticia cuando sucede lo contrario." },
+            { q: "¿Qué implica una monarquía limitada o constitucional?", a: "Supone que el monarca se desprende de poderes asumidos por otros órganos, pero conserva los no atribuidos expresamente. Sigue teniendo una preeminencia en la formación de la voluntad estatal y un poder discrecional o prerrogativa." },
+            { q: "¿En qué consiste una monarquía parlamentaria?", a: "Es el último estadio de evolución; el Rey ya no conserva poder de decisión (que pasa al Parlamento y Gobierno). El monarca se constituye como un poder neutro, al margen de los tres poderes clásicos, con poder moderador o arbitral." },
+            { q: "¿Qué establece el artículo 1.3 de la Constitución española?", a: "Establece textualmente que: 'La forma política del Estado español es la Monarquía parlamentaria'." },
+            { q: "¿Qué novedad introdujo la Constitución de 1978 en el Derecho comparado respecto a la forma de gobierno?", a: "Nuestra Constitución es la primera vez en el Derecho comparado que recoge el término 'monarquía parlamentaria' y la regula de manera detallada." },
+            { q: "¿Qué artículos y rúbrica comprende la regulación de la Corona en la Constitución?", a: "Se regula en el Título II, bajo la rúbrica 'De la Corona', comprendiendo los artículos 56 a 65 ambos inclusive." },
+            { q: "¿En quiénes recae concretamente el carácter hereditario de la Corona española según el artículo 57.1?", a: "El artículo 57.1 establece que es hereditaria en los sucesores de Su Majestad D. Juan Carlos I de Borbón, legítimo heredero de la dinastía histórica." },
+            { q: "Enumera las características del Rey según el artículo 56 de la Constitución.", a: "Es el Jefe del Estado, símbolo de su unidad y permanencia, arbitra y modera el funcionamiento regular de las instituciones, asume la más alta representación del Estado en relaciones internacionales, es inviolable, no sujeto a responsabilidad, y ejerce las funciones que expresamente le atribuyen la CE y las Leyes." },
+            { q: "¿Qué tratamientos reciben el consorte del Rey y el consorte de la Reina?", a: "La consorte del Rey recibe la denominación de Reina y el tratamiento de Majestad. El consorte de la Reina recibe la denominación de Príncipe y el tratamiento de Alteza Real." },
+            { q: "¿Qué jura el Rey al ser proclamado ante las Cortes Generales?", a: "Jura 'desempeñar fielmente sus funciones, guardar y hacer guardar la Constitución y las Leyes, y respetar los derechos de los ciudadanos y de las Comunidades Autónomas' (Art. 61.1)." },
+            { q: "¿Pueden las personas consortes asumir funciones constitucionales?", a: "Según el art. 58 de la CE, ni la Reina consorte ni el consorte de la Reina podrán asumir funciones constitucionales, salvo lo dispuesto para la Regencia." },
+            { q: "Explica los supuestos en los que se puede cesar en el cargo de Rey.", a: "Dado que es vitalicio, cesa por fallecimiento. También por inhabilitación para el ejercicio de su autoridad (entrando la Regencia, Art. 59.2), y por abdicación o renuncia resuelta mediante ley orgánica (Art. 57.5), como ocurrió con la LO 3/2014." },
+            { q: "¿Cuáles son las funciones del Rey en relación con el poder legislativo?", a: "Sanciona (en 15 días) y promulga las leyes; convoca y disuelve las Cortes; convoca elecciones (entre 30 y 60 días tras finalizar el mandato); y convoca referéndum en los casos previstos en la Constitución." },
+            { q: "¿De quién es competencia la elección efectiva de la persona para un empleo civil o militar conferido por el Rey?", a: "La elección es siempre competencia de otros; el Rey se limita a firmar el decreto. La única excepción es el nombramiento de miembros civiles y militares de la Casa del Rey, a los que nombra y releva libremente." },
+            { q: "¿Cuáles son las funciones del Rey en relación con el poder judicial?", a: "Ejerce el derecho de gracia con arreglo a la ley (sin autorizar indultos generales), nombra al Presidente del TS a propuesta del CGPJ, nombra al Fiscal General del Estado a propuesta del Gobierno y oído el CGPJ, y nombra a los 12 miembros del TC." },
+            { q: "¿Qué actos realiza el Rey en materia de relaciones internacionales (actos de Estado)?", a: "Acredita a embajadores y representantes diplomáticos, recibe las cartas credenciales de los extranjeros, manifiesta el consentimiento del Estado para obligarse por Tratados Internacionales, y declara la guerra y hace la paz previa autorización de las Cortes." },
+            { q: "Detalla el orden estricto de sucesión en el trono (Art. 57 CE).", a: "Sigue el orden regular de primogenitura y representación, prefiriendo: 1) Línea anterior a las posteriores. 2) En la misma línea, grado más próximo al más remoto. 3) En el mismo grado, el varón a la mujer. 4) En el mismo sexo, la persona de más edad a la de menos." },
+            { q: "¿Qué ocurre si se extinguen todas las líneas llamadas en derecho a la sucesión?", a: "Las Cortes Generales proveerán a la sucesión en la Corona en la forma que más convenga a los intereses de España (Art. 57.3)." },
+            { q: "¿Cuál es el único supuesto de exclusión del orden sucesorio previsto en la Constitución?", a: "Afecta a aquellas personas con derecho a sucesión que contrajesen matrimonio contra la expresa prohibición del Rey y de las Cortes Generales. La exclusión se aplica también a todos sus sucesores (Art. 57.4)." },
+            { q: "¿Cómo se resuelven las dudas de hecho o de derecho en el orden de sucesión a la Corona?", a: "Se resolverán mediante Ley Orgánica (Art. 57.5). Es una de las únicas decisiones relacionadas con la Corona que las Cortes no adoptan en sesión conjunta." },
+            { q: "¿Qué es la Regencia y en nombre de quién se ejerce?", a: "Es una figura de derecho monárquico donde el Regente es el representante público del Rey, haciendo sus funciones mientras él no puede. Se ejerce por mandato constitucional y siempre en nombre del Rey." },
+            { q: "¿Cuál es el orden de llamada para ejercer la Regencia por minoría de edad del Rey?", a: "1) El padre o la madre del Rey. 2) El pariente mayor de edad más próximo a suceder. 3) Una, tres o cinco personas nombradas por las Cortes Generales." },
+            { q: "¿Quién ejerce la regencia en caso de inhabilitación del Rey reconocida por las Cortes?", a: "Será ejercida en primer lugar por el Príncipe Heredero si fuera mayor de edad. Si es menor, se acudirá al orden de la minoría de edad (padre/madre del Rey o pariente mayor próximo, o designación de Cortes)." },
+            { q: "¿Qué requisitos se exigen para ejercer la regencia (Art. 59.4)?", a: "Se precisa ser español y mayor de edad." },
+            { q: "¿Qué es la tutela del Rey y qué la diferencia de la regencia?", a: "La tutela es una función de derecho civil para ostentar la representación privada del Rey menor, velando por su educación y patrimonio. La regencia es la representación pública para las funciones de Estado." },
+            { q: "¿Cuál es el orden para nombrar al tutor del Rey menor (Art. 60)?", a: "1) Persona nombrada en testamento por el Rey difunto (debe ser mayor de edad y español de nacimiento). 2) El padre o la madre (mientras permanezcan viudos). 3) En su defecto, lo nombrarán las Cortes Generales." },
+            { q: "¿Qué incompatibilidades existen para el ejercicio de la tutela regia?", a: "No pueden acumularse los cargos de Regente y Tutor salvo en el padre, madre o ascendientes directos del Rey. Además, el ejercicio de la tutela es incompatible con todo cargo o representación política." },
+            { q: "¿Qué efectos produce la figura jurídica del refrendo sobre los actos del Rey?", a: "Produce dos efectos: confiere validez al acto refrendado y traslada la responsabilidad legal que pudiera derivarse del Rey a la persona que ha puesto su firma (Presidente, Ministros o Presidente del Congreso)." },
+            { q: "¿Quiénes son los sujetos legitimados como norma general para refrendar los actos del Rey?", a: "Como norma general, refrendan el Presidente del Gobierno o los Ministros competentes (Art. 64)." },
+            { q: "¿En qué casos exactos debe refrendar el Presidente del Congreso?", a: "1) Propuesta y nombramiento del Presidente del Gobierno (Art. 99). 2) Disolución de Cámaras y convocatoria de nuevas elecciones cuando un candidato no obtiene la confianza en dos meses desde la primera votación." },
+            { q: "¿Existen excepciones donde el Rey no necesite refrendo? ¿Cuáles?", a: "Sí (Art. 65). No necesitan refrendo: 1) El nombramiento y relevo de los miembros civiles y militares de su Casa. 2) La distribución de la cantidad global que los Presupuestos le asignan para el sostenimiento de familia y Casa." },
+            { q: "¿Cuál es el plazo del Rey para sancionar las leyes aprobadas por las Cortes Generales?", a: "El Rey debe sancionarlas en el plazo de quince días (Art. 91)." },
+            { q: "¿Quién autoriza y quién propone la convocatoria de un referéndum consultivo?", a: "La convocatoria se producirá a propuesta del Presidente del Gobierno, previamente autorizada por el Congreso de los Diputados (Art. 92), para luego ser formalmente convocado por el Rey." }
+        ];
+
+        // Cada test tiene 20 preguntas generadas estrictamente de la teoría.
+        const testsData = [
+            // TEST 1: Teoría del Estado y Formas de Gobierno (Pág 3 y 4)
+            [
+                { q: "Según la doctrina española desde Posada, la 'forma de Estado' como organización territorial distingue entre:", opts: ["Estado absoluto y Estado socialista.", "Monarquía y República.", "Estado unitario y Estado federal.", "Presidencialismo y parlamentarismo."], ans: 2 },
+                { q: "Los principios esenciales que definen la naturaleza del Estado lo clasifican en:", opts: ["Unitarios y federales.", "Absolutos, democrático-liberales y socialistas.", "Agnaticios y cognaticios.", "Repúblicas puras y mixtas."], ans: 1 },
+                { q: "El modo en que se halla organizada la suprema magistratura del país se refiere al término:", opts: ["Régimen de asamblea.", "Forma de Gobierno (en su segunda acepción).", "Estructura territorial.", "Ninguna es correcta."], ans: 1 },
+                { q: "El concepto que se utiliza para indicar globalmente tanto la forma de Estado como la forma de Gobierno es:", opts: ["Forma política.", "Constitución material.", "Monarquía parlamentaria.", "Régimen directorial."], ans: 0 },
+                { q: "¿A quién pertenece la frase: 'en todo tiempo se ha reconocido la necesidad de una magistratura suprema que represente con su personalidad la unidad absoluta del Estado'?", opts: ["Jellinek.", "García Pelayo.", "Pérez Serrano.", "Hegel."], ans: 3 },
+                { q: "Son ejemplos de órganos unipersonales en la Jefatura del Estado:", opts: ["Monarquías y Repúblicas.", "Solo las Monarquías.", "El Presidium.", "El ejecutivo directorial suizo."], ans: 0 },
+                { q: "El Presidium, surgido de la Asamblea en países socialistas, es un ejemplo de Jefatura de Estado:", opts: ["Unipersonal.", "Vitalicia.", "Pluripersonal o colegiada.", "Hereditaria."], ans: 2 },
+                { q: "El ejemplo más clásico de ejecutivo directorial se encuentra en:", opts: ["Inglaterra.", "Holanda.", "Suiza.", "Francia."], ans: 2 },
+                { q: "Una característica de la moderna configuración de la Jefatura de Estado es:", opts: ["La asunción de todos los poderes legislativos.", "La ausencia de auténtico poder de decisión dentro del Ejecutivo.", "La responsabilidad jurídica directa del monarca.", "La desaparición de la figura de los Ministros."], ans: 1 },
+                { q: "En la evolución de la Monarquía, ¿a qué poder van perdiendo atribuciones y cediendo terreno?", opts: ["A Parlamentos y Tribunales.", "Únicamente a los Tribunales.", "Exclusivamente al Ejército.", "A la Iglesia."], ans: 0 },
+                { q: "Para mantener la irresponsabilidad monárquica y conjugarla con la responsabilidad de los gobernantes, se impone un:", opts: ["Modelo unitario.", "Sistema agnaticio.", "Dualismo (Rey legal vs. Ministros efectivos).", "Refrendo nulo."], ans: 2 },
+                { q: "¿Quién afirma que la República parlamentaria no es sino la republicanización de la Monarquía constitucional?", opts: ["Hegel.", "Jellinek.", "Pérez Serrano.", "García Pelayo."], ans: 2 },
+                { q: "En Estados Unidos, el Ejecutivo se manifiesta unido porque:", opts: ["Es una República aristocrática.", "El Presidente es también el efectivo Jefe del Gobierno.", "Está dividido en cantones.", "Carece de Constitución escrita."], ans: 1 },
+                { q: "¿Cuál es la diferencia esencial entre Monarquía y República respecto a la designación?", opts: ["En la República es por derecho sucesorio.", "En la Monarquía se atribuye a un miembro de una dinastía y en la República tiene carácter representativo.", "Ambas se eligen democráticamente pero con distinto nombre.", "Ninguna es correcta."], ans: 1 },
+                { q: "El carácter temporal de la suprema magistratura es propio de:", opts: ["La Monarquía absolutista.", "La Monarquía electiva.", "La República.", "Todas son correctas."], ans: 2 },
+                { q: "La situación de irresponsabilidad jurídica es consustancial, por su naturaleza, a:", opts: ["El monarca.", "El presidente de la República.", "El Jefe de Gobierno republicano.", "A y B son correctas."], ans: 0 },
+                { q: "El alejamiento de la legitimidad democrática en los reyes modernos lleva a:", opts: ["Un ejercicio de facultades formales, habiendo perdido potestas.", "Un aumento de su influencia en la orientación política.", "La elección de los ministros sin referendo.", "El absolutismo judicial."], ans: 0 },
+                { q: "Los derechos honoríficos, mayestáticos y de protocolo:", opts: ["Se dan igual en una República sencilla.", "Nunca se dan en una República por mucho que se aparte de la sencillez igualitaria.", "Son exclusivos del Ejecutivo directorial.", "Fueron abolidos en 1978."], ans: 1 },
+                { q: "La 'auctoritas' del Jefe del Estado proviene de distintos orígenes:", opts: ["En la monarquía del voto, en la república de la tradición.", "En ambos de la tradición.", "En la monarquía de la tradición, en la república del voto popular.", "Únicamente del ordenamiento internacional."], ans: 2 },
+                { q: "¿Qué doctrina defiende la existencia de esferas propias e independientes para Gobierno y Jefe del Estado?", opts: ["El absolutismo.", "El racionalismo y la propensión jurídica a delimitar competencias.", "El teocratismo.", "Todas son correctas."], ans: 1 }
+            ],
+            // TEST 2: Evolución, Monarquías y Repúblicas (Pág 5 a 7)
+            [
+                { q: "Definió a la República en sentido negativo como 'lo que no es Monarquía':", opts: ["Hegel.", "Pérez Serrano.", "García Pelayo.", "Jellinek."], ans: 3 },
+                { q: "En la República, la presunción de competencia a favor del Presidente:", opts: ["Es absoluta.", "Se da en las repúblicas aristocráticas.", "No existe en ningún caso.", "Solo opera en estado de guerra."], ans: 2 },
+                { q: "La república de la Grecia y Roma clásicas y las Ciudades-Estado italianas son ejemplos de:", opts: ["Repúblicas democráticas presidenciales.", "Repúblicas parlamentarias.", "Repúblicas aristocráticas.", "Ejecutivo directorial."], ans: 2 },
+                { q: "La nota dominante de las repúblicas democráticas es:", opts: ["La negación del privilegio y la igualdad de derechos ante el gobierno.", "El mantenimiento del Presidium.", "El gobierno de la nobleza local.", "La preferencia del sexo masculino."], ans: 0 },
+                { q: "En las repúblicas presidencialistas:", opts: ["El presidente tiene un rol meramente simbólico.", "El Ejecutivo permanece desdoblado.", "El presidente es de forma efectiva el director del Poder Ejecutivo.", "No existe Jefatura de Estado."], ans: 2 },
+                { q: "Francia e Italia se citan como ejemplos cercanos de:", opts: ["Repúblicas parlamentarias.", "Repúblicas presidencialistas.", "Monarquías limitadas.", "Repúblicas aristocráticas."], ans: 0 },
+                { q: "La monarquía que supone la elección del monarca, quien luego adquiere relieve jurídico propio perpetuándose, se llama:", opts: ["Monarquía agnaticia.", "Monarquía electiva.", "República democrática pura.", "Monarquía constitucional."], ans: 1 },
+                { q: "La monarquía hereditaria donde se prefiere el sexo a la línea de parentesco se denomina:", opts: ["Agnaticia.", "Aristocrática.", "Cognaticia.", "Patrimonial."], ans: 2 },
+                { q: "En la monarquía absoluta:", opts: ["El monarca se identifica con el Estado y tiene todo el poder.", "El monarca pierde poder frente a los tribunales.", "Hay desdoblamiento del ejecutivo.", "Se rige por el referendo."], ans: 0 },
+                { q: "La fase histórica que conduciría a la formación de los Estados nacionales modernos en Europa por concentración de poder es:", opts: ["Monarquía parlamentaria.", "República aristocrática.", "Monarquía absoluta.", "Régimen directorial."], ans: 2 },
+                { q: "En la monarquía limitada o constitucional, el monarca:", opts: ["Pierde todos sus poderes.", "Conservaba preeminencia y una presunción de competencia o prerrogativa.", "Se asimila a una república parlamentaria.", "Delega el trono mediante sufragio universal."], ans: 1 },
+                { q: "La monarquía clásica del siglo XIX conforme al modelo doctrinario exige:", opts: ["La confianza exclusiva de la Corona.", "La doble confianza del Parlamento y de la Corona.", "El fin de la irresponsabilidad del Rey.", "El referéndum de las Cortes."], ans: 1 },
+                { q: "García Pelayo señala en la monarquía inglesa una tradición que lleva a distinguir entre:", opts: ["Monarquía electiva y hereditaria.", "Rey como persona física titular de la Corona y el Rey-institución.", "Agnaticia y cognaticia.", "Presidente y Rey."], ans: 1 },
+                { q: "En las monarquías parlamentarias actuales:", opts: ["El Rey conserva el poder de veto legislativo.", "El Rey concentra la decisión estatal.", "El centro de disección estatal ha pasado al Parlamento y al Gobierno.", "El Rey es responsable jurídicamente."], ans: 2 },
+                { q: "Son monarquías parlamentarias en nuestro entorno:", opts: ["Inglaterra, Holanda, Bélgica, Dinamarca o Suecia.", "Francia, Italia, Bélgica y Holanda.", "Dinamarca, Suecia, EE.UU. e Inglaterra.", "Ninguna es correcta."], ans: 0 },
+                { q: "El primer texto constitucional en el Derecho comparado que recoge el término 'monarquía parlamentaria' es:", opts: ["La Constitución de 1812.", "La Constitución inglesa del siglo XIX.", "La Constitución española de 1978.", "La Constitución de Weimar."], ans: 2 },
+                { q: "El artículo 1.3 de la CE consagra la tercera restauración borbónica estableciendo la forma:", opts: ["Política del Estado español.", "Jurídica de la Corona.", "Estructural del Ejecutivo.", "De la Jefatura exclusiva."], ans: 0 },
+                { q: "Según la historia constitucional en España, la Constitución de 1812 pretendía una monarquía:", opts: ["Absoluta.", "Parlamentaria.", "Moderada (art. 14).", "Doctrinaria pura."], ans: 2 },
+                { q: "En el siglo XIX y principios del XX, en España la monarquía ha sido:", opts: ["Presidencialista.", "Constitucional (con más o menos atribuciones regias).", "Teocrática.", "Electiva."], ans: 1 },
+                { q: "Sobre las formas arcaicas de la monarquía citadas, se las denomina:", opts: ["Cognaticias y agnaticias.", "Teocráticas y patrimoniales.", "Puras y representativas.", "Unitarias y absolutas."], ans: 1 }
+            ],
+            // TEST 3: La Corona, El Rey, Títulos y Proclamación (Págs 7 a 9)
+            [
+                { q: "El Título de la Constitución dedicado a 'De la Corona' es el:", opts: ["Título I.", "Título II.", "Título III.", "Título Preliminar."], ans: 1 },
+                { q: "El Título de la Corona comprende los artículos:", opts: ["55 a 65.", "56 a 66.", "56 a 65, ambos inclusive.", "57 a 65, ambos inclusive."], ans: 2 },
+                { q: "Según el art. 57.1 CE, la Corona de España es hereditaria en los sucesores de:", opts: ["Felipe VI.", "Juan Carlos I de Borbón, legítimo heredero de la dinastía histórica.", "Alfonso XIII.", "La dinastía reinante aprobada por referéndum."], ans: 1 },
+                { q: "Actualmente, ostenta el carácter hereditario de la Corona española:", opts: ["S.M. D. Juan Carlos I.", "S.M. D. Felipe VI.", "El Príncipe de Asturias.", "Las Cortes Generales."], ans: 1 },
+                { q: "Según el art. 56 de la CE, el Rey:", opts: ["Es el Jefe del Estado.", "Es el símbolo de la unidad y permanencia del Estado.", "Arbitra y modera el funcionamiento regular de las instituciones.", "Todas son correctas."], ans: 3 },
+                { q: "La persona del Rey es inviolable y no está sujeta a:", opts: ["Referendo.", "Responsabilidad.", "Veto judicial.", "A y B son correctas."], ans: 1 },
+                { q: "El Rey asume la más alta representación del Estado español en las relaciones internacionales, especialmente:", opts: ["Con los países europeos.", "Con los países vecinos.", "Con las naciones de su comunidad histórica.", "Con todos los Estados miembros de la ONU."], ans: 2 },
+                { q: "El artículo 56.2 de la CE establece que el título del Rey es el de Rey de España y:", opts: ["Solo podrá usar ese título.", "Podrá utilizar los demás que correspondan a la Corona.", "Deberá usar también el de Emperador.", "No prevé el uso de otros títulos."], ans: 1 },
+                { q: "El tratamiento que corresponde al Rey de España es:", opts: ["Alteza Real.", "Excelencia.", "Majestad.", "Soberano."], ans: 2 },
+                { q: "La consorte del Rey, mientras lo sea o permanezca viuda, recibe:", opts: ["El título de Reina de España.", "La denominación de Reina y el tratamiento de Majestad.", "La denominación de Princesa Consorte.", "Ningún título formal constitucional."], ans: 1 },
+                { q: "El consorte de la Reina de España recibe:", opts: ["La denominación de Rey consorte.", "El tratamiento de Majestad consorte.", "La denominación de Príncipe y el tratamiento de Alteza Real.", "El grado de Infante."], ans: 2 },
+                { q: "Al iniciar el ejercicio de sus funciones, el Rey es proclamado ante:", opts: ["El Gobierno.", "El Tribunal Constitucional.", "Las Cortes Generales.", "El Consejo de Estado."], ans: 2 },
+                { q: "Durante la proclamación, el Rey presta juramento de:", opts: ["Acatar los dictados del Gobierno.", "Respetar los derechos de los ciudadanos y de las Comunidades Autónomas.", "Ser católico, apostólico y romano.", "Defender únicamente los territorios forales."], ans: 1 },
+                { q: "El artículo 58 establece que el consorte de la Reina y la Reina consorte:", opts: ["Pueden asumir funciones diplomáticas plenas.", "No podrán asumir funciones constitucionales, salvo lo dispuesto para la Regencia.", "Tienen veto en asuntos familiares del Estado.", "Solo tienen responsabilidades de protocolo."], ans: 1 },
+                { q: "El cargo de Rey es de carácter vitalicio, por lo que su cese natural es:", opts: ["A los 75 años.", "Por el fallecimiento.", "Al alcanzar la mayoría de edad el sucesor.", "Tras 40 años de reinado."], ans: 1 },
+                { q: "El ejercicio efectivo de la dignidad de Rey solo puede realizarse cuando:", opts: ["Se le nombra heredero.", "Alcanza la mayoría de edad y presta el juramento.", "El Gobierno lo autoriza.", "Las Cortes lo eligen."], ans: 1 },
+                { q: "Se puede cesar en el ejercicio de cargo de Rey por inhabilitación (art. 59.2), supuesto en el cual:", opts: ["Se proclama la República.", "Se disuelven las Cortes.", "Entra en funciones la Regencia.", "Asume el poder el Presidente del Gobierno."], ans: 2 },
+                { q: "La abdicación o renuncia del Rey se resuelve mediante:", opts: ["Decreto-Ley.", "Real Decreto.", "Resolución conjunta de las Cámaras.", "Ley orgánica (art. 57.5)."], ans: 3 },
+                { q: "La Ley Orgánica por la que se hizo efectiva la abdicación de Don Juan Carlos I en su hijo Don Felipe VI fue la:", opts: ["Ley Orgánica 1/2014.", "Ley Orgánica 2/2014.", "Ley Orgánica 3/2014, de 18 de junio.", "Ley Orgánica 4/2015."], ans: 2 },
+                { q: "Respecto a los poderes del Rey, se dice que más que verdaderos poderes, implican:", opts: ["Obligaciones regias, dado el tono imperativo en la CE.", "Competencias residuales exclusivas.", "Facultades discrecionales absolutas.", "Derechos inalienables y renunciables."], ans: 0 }
+            ],
+            // TEST 4: Funciones I (Legislativo y Ejecutivo) (Págs 9 y 10)
+            [
+                { q: "El Rey sanciona las leyes aprobadas por las Cortes Generales en el plazo de:", opts: ["10 días.", "15 días (art. 91).", "20 días.", "30 días."], ans: 1 },
+                { q: "En relación con las Cortes, el Rey:", opts: ["Nombra a sus presidentes.", "Convoca y disuelve las Cortes.", "Fija el orden del día de las sesiones.", "Las convoca pero no puede disolverlas."], ans: 1 },
+                { q: "La convocatoria de elecciones por parte del Rey tendrá lugar tras finalizar el mandato parlamentario en:", opts: ["Menos de 30 días.", "Entre 30 y 60 días.", "Entre 60 y 90 días.", "Un plazo máximo de 45 días."], ans: 1 },
+                { q: "El referéndum consultivo del art. 92 es convocado por el Rey a propuesta de:", opts: ["Las Cortes Generales.", "El Rey mismo.", "El Presidente del Gobierno (previa autorización del Congreso).", "El Consejo de Estado."], ans: 2 },
+                { q: "En caso de menor edad del sucesor, el Rey puede nombrar en su testamento a:", opts: ["El Regente.", "El Presidente del Gobierno interino.", "Al tutor de su sucesor.", "A los miembros del Tribunal Constitucional."], ans: 2 },
+                { q: "Según el art. 61, en relación con el poder ejecutivo, el Rey:", opts: ["Legisla por decreto.", "Guarda y hace guardar la Constitución y las leyes.", "Aprueba los presupuestos de la Casa Real.", "Nombra directamente a todos los embajadores sin propuesta."], ans: 1 },
+                { q: "El Rey propone y nombra, en su caso, al candidato a:", opts: ["Presidente del Tribunal Supremo.", "Presidente del Tribunal Constitucional.", "Presidente del Gobierno y pone fin a sus funciones.", "Defensor del Pueblo."], ans: 2 },
+                { q: "El nombramiento y separación de los miembros del Gobierno por el Rey se realiza:", opts: ["Libremente.", "A propuesta de las Cortes.", "A propuesta del Presidente del Gobierno.", "Tras consultar al CGPJ."], ans: 2 },
+                { q: "Los decretos acordados en el Consejo de Ministros son:", opts: ["Vetados por el Rey.", "Sancionados por las Cortes.", "Expedidos por el Rey.", "Votados por referéndum."], ans: 2 },
+                { q: "En cuanto a los empleos civiles y militares, el Rey:", opts: ["Los elige y nombra libremente.", "No nombra a nadie.", "Los confiere; nombra, pero no elige (salvo los de su Casa).", "Solo interviene en nombramientos militares."], ans: 2 },
+                { q: "El incumplimiento de la norma 'el Rey nombra pero no elige' se da legalmente en:", opts: ["Los nombramientos de ministros.", "Los altos cargos diplomáticos.", "El nombramiento y relevo de los miembros civiles y militares de la Casa del Rey.", "El Presidente del Tribunal Supremo."], ans: 2 },
+                { q: "El Rey tiene derecho a ser informado de los asuntos de Estado y presidir el Consejo de Ministros cuando lo estime oportuno, a petición de:", opts: ["El Congreso de los Diputados.", "Los propios Ministros.", "El Presidente del Gobierno.", "Voluntad propia sin petición alguna."], ans: 2 },
+                { q: "El mando supremo de las Fuerzas Armadas corresponde a:", opts: ["El Presidente del Gobierno.", "El Ministro de Defensa.", "El Jefe del Estado Mayor.", "El Rey."], ans: 3 },
+                { q: "El Rey ostenta respecto de las Reales Academias:", opts: ["Su dirección ejecutiva.", "El alto patronazgo.", "La presidencia de sus sesiones.", "El veto de nombramientos."], ans: 1 },
+                { q: "A cuál de los poderes clásicos pertenece la función de 'convocar y disolver las Cortes':", opts: ["Poder Legislativo.", "Poder Ejecutivo.", "Poder Judicial.", "Relaciones internacionales."], ans: 0 },
+                { q: "Identifica una función regia relacionada con el Poder Legislativo:", opts: ["Mando supremo de Fuerzas Armadas.", "Promulgar las leyes.", "Nombrar al Fiscal General.", "Expedir decretos ministeriales."], ans: 1 },
+                { q: "Identifica una función regia relacionada con el Poder Ejecutivo:", opts: ["Sancionar leyes.", "Conferir empleos civiles y militares.", "Ejercer derecho de gracia.", "Acreditar embajadores."], ans: 1 },
+                { q: "En la convocatoria de elecciones, los 30 a 60 días se cuentan después de:", opts: ["La promulgación de la última ley.", "La disolución de la Casa del Rey.", "La finalización del mandato parlamentario.", "El inicio de la legislatura."], ans: 2 },
+                { q: "La propuesta para nombrar Ministros viene originada por:", opts: ["El Rey.", "El Presidente del Congreso.", "El Presidente del Gobierno.", "El Consejo de Ministros en pleno."], ans: 2 },
+                { q: "El alto patronazgo es una función del Rey sobre:", opts: ["Las Universidades Públicas.", "Las Reales Academias.", "El Consejo Superior de Deportes.", "El Tribunal de Cuentas."], ans: 1 }
+            ],
+            // TEST 5: Funciones II (Judicial e Internacional y CCAA) (Págs 10 y 11)
+            [
+                { q: "El Rey ejerce el derecho de gracia con arreglo a la ley, pero:", opts: ["No puede autorizar indultos particulares.", "No podrá autorizar indultos generales.", "Debe ser aprobado en referéndum.", "Solo afecta a delitos militares."], ans: 1 },
+                { q: "El Presidente del Tribunal Supremo es nombrado por el Rey a propuesta de:", opts: ["El Ministerio de Justicia.", "El Tribunal Constitucional.", "El Consejo General del Poder Judicial (CGPJ).", "El Congreso de los Diputados."], ans: 2 },
+                { q: "El Presidente del Tribunal Supremo también ocupa simultáneamente el cargo de:", opts: ["Fiscal General del Estado.", "Presidente del Consejo de Estado.", "Presidente del CGPJ.", "Magistrado Mayor del TC."], ans: 2 },
+                { q: "Los 20 vocales del CGPJ que nombra el Rey son a propuesta de:", opts: ["El Gobierno.", "El Parlamento (10 Congreso, 10 Senado).", "Las Asociaciones de Jueces y Magistrados exclusivamente.", "Las Asambleas Autonómicas."], ans: 1 },
+                { q: "El Fiscal General del Estado es nombrado por el Rey a propuesta de:", opts: ["El Congreso de los Diputados.", "El Rey libremente.", "El Gobierno, oído el CGPJ.", "El Ministro de Justicia únicamente."], ans: 2 },
+                { q: "El Tribunal Constitucional se compone de un total de:", opts: ["10 miembros.", "12 miembros.", "15 miembros.", "20 miembros."], ans: 1 },
+                { q: "De los miembros del Tribunal Constitucional, ¿cuántos propone el Gobierno para ser nombrados por el Rey?", opts: ["4", "2", "6", "Ninguno"], ans: 1 },
+                { q: "La distribución de propuestas para los 12 miembros del TC nombrados por el Rey es:", opts: ["4 Congreso, 4 Senado, 2 Gobierno, 2 CGPJ.", "6 Congreso, 6 Senado.", "4 Congreso, 4 Gobierno, 4 CGPJ.", "3 Congreso, 3 Senado, 3 Gobierno, 3 CGPJ."], ans: 0 },
+                { q: "Los actos por los que el Rey desarrolla la función de representar internacionalmente a España se denominan en la doctrina constitucional:", opts: ["Actos personales.", "Actos de cortesía.", "Actos de Estado.", "Actos imperativos."], ans: 2 },
+                { q: "En relaciones internacionales, ¿quién recibe las cartas credenciales de los representantes extranjeros en España?", opts: ["El Ministro de Asuntos Exteriores.", "El Presidente del Gobierno.", "Las Cortes Generales.", "El Rey."], ans: 3 },
+                { q: "El consentimiento del Estado para obligarse por medio de Tratados Internacionales es manifestado por:", opts: ["El Congreso.", "El Senado.", "El Rey, de conformidad con la CE y leyes.", "El Tribunal Supremo."], ans: 2 },
+                { q: "La declaración de guerra y la firma de la paz por el Rey precisan:", opts: ["Consulta al Consejo de Estado.", "Previa autorización de las Cortes.", "Aprobación del TC.", "Solo refrendo militar."], ans: 1 },
+                { q: "Respecto a las Comunidades Autónomas, el Rey ha de:", opts: ["Gobernarlas mediante delegados.", "Suspender sus derechos si hay rebelión.", "Respetar sus derechos.", "Disolver sus Asambleas unilateralmente."], ans: 2 },
+                { q: "El nombramiento del Presidente de una Comunidad Autónoma lo realiza el Rey, pero requiere el refrendo de:", opts: ["El Ministro de Política Territorial.", "El Presidente del Gobierno.", "El Presidente de la Asamblea autonómica.", "El Rey lo hace sin refrendo."], ans: 1 },
+                { q: "En relación con los Estatutos de Autonomía, el Rey los:", opts: ["Redacta.", "Impugna.", "Sanciona.", "Disuelve."], ans: 2 },
+                { q: "Los referéndum autonómicos son convocados por:", opts: ["El Presidente de la CCAA.", "El Ministro del Interior.", "El Rey.", "El Congreso."], ans: 2 },
+                { q: "El indulto general:", opts: ["Lo autoriza el Rey solo en Navidad.", "Está prohibido constitucionalmente que lo autorice el Rey.", "Lo propone el Congreso y lo firma el TC.", "Afecta solo a presos preventivos."], ans: 1 },
+                { q: "La función de acreditar a los embajadores recae en:", opts: ["El Rey.", "El Poder Legislativo.", "Las Comunidades Autónomas.", "El CGPJ."], ans: 0 },
+                { q: "¿En qué ámbito se incluye la función de nombrar al Fiscal General del Estado?", opts: ["Poder Legislativo.", "Poder Ejecutivo.", "Poder Judicial.", "Comunidades Autónomas."], ans: 2 },
+                { q: "¿En qué ámbito se incluye sancionar los Estatutos de Autonomía?", opts: ["Poder Judicial.", "Comunidades Autónomas.", "Relaciones internacionales.", "Cortes Generales."], ans: 1 }
+            ],
+            // TEST 6: Sucesión de la Corona (Págs 11 y 12)
+            [
+                { q: "El modo de acceder al trono en España es mediante:", opts: ["Elección del Rey anterior.", "Herencia, no por elección ni libre designación.", "Decisión del Tribunal Constitucional.", "Votación de las Cortes Generales."], ans: 1 },
+                { q: "La Constitución hace confluir en Don Juan Carlos I y sus sucesores (art. 57.1):", opts: ["Legitimidad legal y democrática exclusivamente.", "Legitimidad popular y militar.", "Legitimidad legal, democrática, histórica y dinástica.", "Solo legitimidad dinástica."], ans: 2 },
+                { q: "El heredero del trono de España recibe, desde su nacimiento o llamamiento, el título de:", opts: ["Infante Heredero.", "Príncipe de España.", "Príncipe/Princesa de Asturias.", "Regente de Asturias."], ans: 2 },
+                { q: "La sucesión en el trono sigue, según el art. 57 CE, el orden regular de:", opts: ["Primogenitura y representación.", "Elección parlamentaria.", "Cognaticio absoluto.", "Edad inversa."], ans: 0 },
+                { q: "En el orden de sucesión de la Corona se prefiere siempre (regla general):", opts: ["La línea posterior a la anterior.", "La línea anterior a las posteriores.", "La edad al sexo.", "La línea agnaticia estricta."], ans: 1 },
+                { q: "Dentro de la misma línea, tiene preferencia:", opts: ["El grado más remoto al más próximo.", "El grado más próximo al más remoto.", "El grado lateral al directo.", "No se distinguen grados."], ans: 1 },
+                { q: "En el mismo grado, el orden de sucesión prefiere:", opts: ["La mujer al varón.", "A los gemelos conjuntamente.", "El varón a la mujer.", "Indistintamente, decide el Rey."], ans: 2 },
+                { q: "Si los sucesores están en el mismo sexo y grado, se prefiere:", opts: ["La persona de menos edad a la de más.", "La persona de más edad a la de menos.", "Sorteo parlamentario.", "Designación por testamento."], ans: 1 },
+                { q: "Si se extinguen todas las líneas llamadas en derecho a la sucesión, ¿quién proveerá a la sucesión?", opts: ["El Consejo de Estado.", "Las Cortes Generales.", "El Tribunal Supremo.", "Un referéndum de autodeterminación."], ans: 1 },
+                { q: "En el caso de que las Cortes deban proveer a la sucesión, lo harán:", opts: ["Reinstaurando la República.", "Buscando dinastías europeas exclusivamente.", "En la forma que más convenga a los intereses de España.", "Nombrando un Rey temporal por 4 años."], ans: 2 },
+                { q: "El único supuesto de exclusión del orden sucesorio previsto afecta a:", opts: ["Los inhabilitados físicamente.", "Quienes contraigan matrimonio contra la prohibición expresa del Rey y de las Cortes Generales.", "Quienes se exilien voluntariamente.", "Quienes renuncien al catolicismo."], ans: 1 },
+                { q: "La prohibición de matrimonio que excluye de la sucesión debe ser dictada por:", opts: ["Solo el Rey.", "Solo las Cortes Generales.", "El Rey y las Cortes Generales simultáneamente.", "La Casa del Rey y la Iglesia."], ans: 2 },
+                { q: "La exclusión por matrimonio contra la prohibición afecta a:", opts: ["Solamente a la persona que contrae el matrimonio.", "La persona y a todos sus sucesores (art. 57.4).", "La persona pero salva a los hijos de esta.", "Nadie, es solo protocolaria."], ans: 1 },
+                { q: "Las abdicaciones, renuncias y cualquier duda de hecho o derecho sobre la sucesión se resolverán por:", opts: ["Real Decreto del Consejo de Ministros.", "Ley Ordinaria.", "Ley Orgánica.", "Sentencia del TC."], ans: 2 },
+                { q: "Las decisiones que se resuelven por ley orgánica respecto a la sucesión son un caso excepcional porque:", opts: ["Requieren referéndum.", "Son las únicas decisiones de la Corona que las Cortes no adoptan en sesión conjunta.", "Deben ser firmadas por la UE.", "No pueden ser vetadas."], ans: 1 },
+                { q: "Los demás títulos tradicionalmente vinculados al sucesor de la Corona de España (además de Príncipe de Asturias) se asumen:", opts: ["Tras cumplir 18 años.", "Desde el nacimiento o llamamiento.", "Por decreto gubernamental exclusivo.", "Al casarse."], ans: 1 },
+                { q: "Si un hijo varón nace después de una hermana mayor en la actual configuración:", opts: ["La hermana mayor hereda obligatoriamente.", "El varón desplaza a la mujer en el mismo grado.", "Ambos reinan conjuntamente.", "Depende de la voluntad de las Cortes."], ans: 1 },
+                { q: "Si el grado es nieto vs hijo, gana en preferencia:", opts: ["El nieto por juventud.", "El hijo por ser grado más próximo.", "El varón siempre aunque sea grado distinto.", "Es igual."], ans: 1 },
+                { q: "La regla de exclusión de sucesión tiene carácter:", opts: ["Opcional.", "Sancionatorio e irrevocable según CE.", "Temporal (5 años).", "Ninguna es correcta."], ans: 1 },
+                { q: "A nivel sucesorio, la Constitución recoge el modelo histórico basado en la primogenitura que es:", opts: ["Innovación de 1978.", "Regularización estricta alemana.", "El orden regular histórico.", "Regla puramente salica."], ans: 2 }
+            ],
+            // TEST 7: Regencia y Tutela (Págs 12 y 13)
+            [
+                { q: "La Regencia se concibe como una figura de:", opts: ["Derecho civil.", "Derecho monárquico.", "Derecho procesal.", "Derecho eclesiástico."], ans: 1 },
+                { q: "La principal misión del Regente es:", opts: ["Velar por el patrimonio del Rey.", "Ser el representante público del Rey y llevar a cabo sus funciones.", "Legislar en lugar de las Cortes.", "Educar al sucesor."], ans: 1 },
+                { q: "Los dos supuestos constitucionales previstos para la Regencia (art. 59) son:", opts: ["Ausencia temporal y abdicación.", "Minoría de edad del Rey y su inhabilitación.", "Enfermedad y viaje oficial.", "Renuncia y matrimonio prohibido."], ans: 1 },
+                { q: "En caso de minoría de edad del Rey, la primera persona en ser llamada a la regencia es:", opts: ["El pariente mayor de edad más próximo a suceder.", "Personas nombradas por las Cortes.", "El padre o la madre del Rey.", "El Presidente del Gobierno."], ans: 2 },
+                { q: "Si no puede ejercer la regencia el padre o la madre del Rey menor, el siguiente en la línea es:", opts: ["Un consejo de 3 personas de las Cortes.", "El pariente mayor de edad más próximo a suceder, según orden constitucional.", "El Presidente del TC.", "Un tutor legal."], ans: 1 },
+                { q: "Si no existen familiares previstos que asuman la regencia por minoría, las Cortes nombrarán a:", opts: ["Dos o cuatro personas.", "Una, tres o cinco personas.", "Siete personas.", "Una comisión de diputados."], ans: 1 },
+                { q: "La inhabilitación del Rey para activar la regencia debe ser reconocida por:", opts: ["El Tribunal Constitucional.", "Los médicos de la Casa Real.", "Las Cortes Generales.", "El Gobierno en pleno."], ans: 2 },
+                { q: "En caso de inhabilitación del Rey, la regencia será ejercida en primer lugar por:", opts: ["Su cónyuge.", "El Príncipe Heredero si fuera mayor de edad.", "Las Cortes Generales.", "El Presidente del Gobierno."], ans: 1 },
+                { q: "Si al inhabilitarse al Rey, el Príncipe Heredero fuese menor de edad, ¿qué sucede?", opts: ["Se invalida la inhabilitación.", "Se nombra al Presidente de forma interina.", "Se procede de la manera prevista para la minoría de edad (padre/madre...).", "La asume el Congreso."], ans: 2 },
+                { q: "Las condiciones constitucionales exigidas para ejercer la regencia (art. 59.4) son:", opts: ["Ser mayor de edad.", "Ser español.", "A y B son correctas.", "Ser miembro de la Familia Real exclusivamente."], ans: 2 },
+                { q: "La Regencia se ejerce por mandato constitucional y siempre en nombre de:", opts: ["El Pueblo Español.", "El Rey.", "Las Cortes Generales.", "La Corona Institucional impersonal."], ans: 1 },
+                { q: "La tutela es una función de derecho:", opts: ["Penal.", "Público.", "Civil.", "Militar."], ans: 2 },
+                { q: "El objetivo de la figura del tutor del Rey es ostentar la:", opts: ["Representación pública del Rey.", "Sustitución en el Gobierno.", "Representación privada, velando por su educación y patrimonio.", "Funciones internacionales exclusivas."], ans: 2 },
+                { q: "El primer llamado por orden de la Constitución (art. 60) para ser tutor del Rey menor es:", opts: ["El padre o la madre.", "La persona que en testamento hubiere nombrado el Rey difunto.", "El designado por las Cortes.", "El pariente consanguíneo mayor de edad."], ans: 1 },
+                { q: "El tutor testamentario debe cumplir los requisitos de:", opts: ["Mayor de edad y español de nacimiento.", "Ser miembro del clero o militar.", "Tener más de 40 años.", "Ser estrictamente de linaje Borbón."], ans: 0 },
+                { q: "Si no hubiese tutor testamentario, ocupará el cargo:", opts: ["Las Cortes directamente.", "El Presidente del Senado.", "El padre o la madre (mientras permanezcan viudos).", "La persona designada por el Gobierno."], ans: 2 },
+                { q: "Respecto a la acumulación de los cargos de Regente y Tutor:", opts: ["Está totalmente prohibida sin excepciones.", "No pueden acumularse, salvo en el padre, madre o ascendientes directos del Rey.", "Siempre van unidos en la misma persona.", "Solo pueden acumularse si lo aprueba el TC."], ans: 1 },
+                { q: "El ejercicio de la tutela del Rey menor es incompatible con:", opts: ["El título de nobleza.", "El estado civil de soltería.", "Todo cargo o representación política.", "El ejercicio militar como general."], ans: 2 },
+                { q: "Si el tutor designado fuese el padre o madre del Rey menor, pero este volviese a contraer matrimonio (deja de ser viudo), según las reglas generales:", opts: ["Pierde la condición de tutor.", "No afecta a la tutela.", "Mantiene la tutela pero pierde asignación económica.", "Delega la tutela en el nuevo consorte."], ans: 0 },
+                { q: "En caso de fallecimiento del Rey sin dejar testamento con nombramiento de tutor, y sin tener padre o madre vivos:", opts: ["Queda sin tutor.", "El tutor lo nombrará el Gobierno.", "Lo nombrarán las Cortes Generales.", "Asume la tutela el Tribunal Supremo."], ans: 2 }
+            ],
+            // TEST 8: El Refrendo y Resumen (Págs 14 y 15)
+            [
+                { q: "El art. 56.3 CE establece que la persona del Rey es inviolable y no está sujeta a:", opts: ["Crítica pública.", "Veto legislativo.", "Responsabilidad.", "Juramento material."], ans: 2 },
+                { q: "La institución del refrendo existe para evitar la contradicción democrática de:", opts: ["Que nadie puede mandar en España.", "Que todos deben responder de sus decisiones salvo el monarca no electo.", "Que las leyes tarden 15 días en sancionarse.", "Que el Rey modere y arbitre."], ans: 1 },
+                { q: "Todos los actos del Rey deben ir refrendados, lo cual significa avalados por la firma de:", opts: ["El Notario Mayor del Reino.", "Otros órganos constitucionales.", "Cualquier juez español.", "Miembros del TC."], ans: 1 },
+                { q: "Uno de los efectos principales del refrendo es:", opts: ["Anular el acto si no gusta a las Cortes.", "Incapacitar al Rey de forma parcial.", "Conferir validez al acto refrendado.", "Garantizar que no es un acto judicial."], ans: 2 },
+                { q: "El refrendo produce el efecto jurídico de trasladar la responsabilidad derivada del acto refrendado:", opts: ["De las Cortes al Rey.", "De la persona del Rey a la persona que ha puesto la firma de refrendo.", "Del Rey al Tribunal Constitucional.", "De los Ministros a los Jueces."], ans: 1 },
+                { q: "Como norma general (art. 64), los sujetos legitimados para refrendar son:", opts: ["Presidente del Gobierno y Ministros competentes.", "Solo el Presidente del Congreso.", "Presidente del Congreso y Senado conjuntamente.", "El Consejo General del Poder Judicial."], ans: 0 },
+                { q: "El Presidente del Congreso tiene legitimidad para refrendar en el siguiente caso específico:", opts: ["Aprobación de una Ley Orgánica.", "Firma de un Tratado Internacional de gran relevancia.", "Propuesta y nombramiento del Presidente del Gobierno (art. 99).", "Indultos concedidos por el Rey."], ans: 2 },
+                { q: "El Presidente del Congreso refrenda la disolución de las Cámaras y convocatoria de elecciones cuando:", opts: ["Hay crisis económica grave.", "El Rey así lo desea sin causa justificada.", "El candidato a Presidente no obtiene confianza en dos meses desde la primera votación de investidura.", "Terminan los 4 años de legislatura ordinaria."], ans: 2 },
+                { q: "El artículo 65 prevé excepciones a la regla general del refrendo, implicando que:", opts: ["Algunos actos del Rey son inválidos.", "Determinados actos del monarca adquieren validez y producen efectos sin necesidad de refrendo.", "El Congreso puede vetar al Rey.", "Los ministros pueden rechazar firmar."], ans: 1 },
+                { q: "Uno de los actos exentos de refrendo es:", opts: ["La promulgación de Decretos Leyes.", "El nombramiento de vocales del CGPJ.", "El nombramiento de los miembros civiles y militares de su Casa.", "La declaración de estado de sitio."], ans: 2 },
+                { q: "La cantidad global que los Presupuestos del Estado asignan a la Corona para sostenimiento de familia y Casa es:", opts: ["Refrendada por el Ministro de Hacienda.", "Distribuida libremente por el Rey, sin refrendo.", "Aprobada anualmente en referéndum.", "Sujeta a justificación en la Asamblea."], ans: 1 },
+                { q: "En la excepción a que el Rey no elige sino que nombra, se encuentra su capacidad de nombrar y relevar libremente a:", opts: ["Los Presidentes de CCAA.", "Los miembros civiles y militares de su Casa.", "Los Secretarios de Estado.", "El Fiscal General."], ans: 1 },
+                { q: "Según las Ideas Clave de la unidad teórica, las funciones del Rey se encuentran principalmente en el artículo:", opts: ["56", "57", "62", "64"], ans: 2 },
+                { q: "En cuanto al orden de sucesión (Ideas clave), se indica que es el orden regular de:", opts: ["Primogenitura y representación.", "Solo representación.", "Salico excluyente.", "Meritocracia histórica."], ans: 0 },
+                { q: "La incapacitación del titular de la Corona (inhabilitación) supone un caso de:", opts: ["Sucesión automática irreversible.", "Regencia.", "Tutela parlamentaria.", "Celebración de elecciones generales."], ans: 1 },
+                { q: "Si el nombramiento del Presidente del Gobierno lo refrenda el Presidente del Congreso, ¿quién refrenda el nombramiento de los Ministros?", opts: ["El Rey por sí mismo.", "El Presidente del Senado.", "El Presidente del Gobierno.", "El Presidente del Congreso."], ans: 2 },
+                { q: "El traslado de responsabilidad propio del refrendo exime al Rey, haciéndolo jurídicamente:", opts: ["Imputable.", "Vulnerable.", "Inviolable.", "Condenable en el TC."], ans: 2 },
+                { q: "Los refrendos ministeriales suelen ser aplicados por:", opts: ["Cualquier Ministro al azar.", "El Ministro competente por razón de la materia.", "Solo el Ministro de la Presidencia.", "Únicamente el Vicepresidente primero."], ans: 1 },
+                { q: "La sanción real de las leyes (art. 91) va refrendada habitualmente por:", opts: ["El Presidente del Gobierno.", "El Presidente del Tribunal Constitucional.", "El Presidente del Senado.", "El Defensor del Pueblo."], ans: 0 },
+                { q: "La responsabilidad asumida por el órgano que refrenda incluye responsabilidades de índole:", opts: ["Solo políticas.", "Solo penales.", "Políticas y jurídicas, ya que asume todas las responsabilidades derivadas del acto.", "Ninguna, es simbólico."], ans: 2 }
+            ],
+            // TEST 9: Mezcla de articulado específico
+            [
+                { q: "¿Qué artículo indica que la forma política del Estado español es la Monarquía parlamentaria?", opts: ["Art. 1.1", "Art. 1.2", "Art. 1.3", "Art. 1.4"], ans: 2 },
+                { q: "¿En qué artículos se encuentra el Título 'De la Corona'?", opts: ["Art. 56 a 65.", "Art. 53 a 63.", "Art. 55 a 66.", "Art. 60 a 70."], ans: 0 },
+                { q: "¿Qué artículo aborda las características y el Título del Rey?", opts: ["Art. 56.", "Art. 58.", "Art. 60.", "Art. 62."], ans: 0 },
+                { q: "¿Qué artículo regula el orden de sucesión a la Corona?", opts: ["Art. 56.", "Art. 57.", "Art. 58.", "Art. 61."], ans: 1 },
+                { q: "¿Qué artículo restringe las funciones constitucionales a la Reina consorte?", opts: ["Art. 57.4.", "Art. 58.", "Art. 60.1.", "Art. 65."], ans: 1 },
+                { q: "Las figuras de la Regencia se encuentran tipificadas en el artículo:", opts: ["Art. 58.", "Art. 59.", "Art. 60.", "Art. 61."], ans: 1 },
+                { q: "Las normas sobre la Tutela del Rey menor están en el artículo:", opts: ["Art. 59.", "Art. 60.", "Art. 61.", "Art. 64."], ans: 1 },
+                { q: "El juramento prestado durante la proclamación está recogido en el artículo:", opts: ["Art. 56.", "Art. 59.", "Art. 60.", "Art. 61."], ans: 3 },
+                { q: "El listado principal de las funciones constitucionales regias se enumera ampliamente en el artículo:", opts: ["Art. 56.", "Art. 62.", "Art. 64.", "Art. 65."], ans: 1 },
+                { q: "Las excepciones a la necesidad de refrendo de los actos del Rey están reguladas en el artículo:", opts: ["Art. 63.", "Art. 64.", "Art. 65.", "Art. 56."], ans: 2 },
+                { q: "El plazo de 15 días para sancionar las leyes se halla en el artículo:", opts: ["Art. 62.", "Art. 80.", "Art. 91.", "Art. 99."], ans: 2 },
+                { q: "La propuesta del candidato a Presidente de Gobierno tras consultar a los grupos y con refrendo del Presidente del Congreso remite al:", opts: ["Art. 62.", "Art. 92.", "Art. 99.", "Art. 115."], ans: 2 },
+                { q: "En caso de inhabilitación por causa física o mental, entra el art. 59.2. Dicha inhabilitación debe constatarla:", opts: ["Médicos forenses.", "El Gobierno.", "Las Cortes Generales.", "El Rey mismo."], ans: 2 },
+                { q: "El art. 64 indica quiénes refrendan. De los siguientes, ¿cuál NO figura en dicho artículo como refrendante general?", opts: ["El Presidente del Gobierno.", "El Presidente del Senado.", "El Presidente del Congreso (en ciertos casos).", "Los Ministros competentes."], ans: 1 },
+                { q: "¿Cómo proveerán las Cortes la sucesión si se extinguen las líneas (art. 57.3)?", opts: ["Por mayoría absoluta simple.", "En la forma que más convenga a los intereses de España.", "Buscando al heredero de la rama francesa.", "Decretando el fin de la Monarquía."], ans: 1 },
+                { q: "Según el art. 59.4, ¿puede ser regente un extranjero naturalizado?", opts: ["Sí, pues solo dice 'español'.", "No, debe ser 'español de nacimiento'.", "Depende de las Cortes.", "La CE no lo permite, es solo para nacidos en España."], ans: 0 },
+                { q: "Según el art. 60, ¿puede ser tutor del Rey menor un español no de nacimiento?", opts: ["Sí.", "No, el tutor nombrado en testamento exige ser español de nacimiento.", "El artículo no dice nada del origen.", "Solo exige que sea noble."], ans: 1 },
+                { q: "¿En qué año se firmó la Ley Orgánica de abdicación de Juan Carlos I?", opts: ["1978.", "1982.", "2010.", "2014."], ans: 3 },
+                { q: "El art. 61 especifica que el Rey debe respetar los derechos de:", opts: ["Los diputados y senadores.", "Solo de los nacionales.", "Los ciudadanos y de las Comunidades Autónomas.", "Los ministerios."], ans: 2 },
+                { q: "Si la consorte queda viuda (art. 58), su tratamiento será:", opts: ["Reina madre, Alteza.", "Reina y el tratamiento de Majestad.", "Princesa viuda.", "Se la excluye de tratamientos."], ans: 1 }
+            ],
+            // TEST 10: Formatos "Todas/Ninguna" y repaso profundo
+            [
+                { q: "¿Qué requiere el Rey para manifestar el consentimiento para obligarse por Tratados Internacionales?", opts: ["Aprobación de la ONU.", "De conformidad con la CE y las Leyes.", "El referéndum vinculante obligatorio en todos los casos.", "A y B son correctas."], ans: 1 },
+                { q: "Respecto a la Jefatura del Estado moderno según la teoría expuesta:", opts: ["A) Hay ausencia de auténtico poder de decisión dentro del Ejecutivo.", "B) El poder efectivo lo asumen los Ministros.", "C) A y B son correctas.", "D) Ninguna es correcta."], ans: 2 },
+                { q: "En el orden para ser Regente ante minoría de edad del Rey, están incluidos:", opts: ["A) El padre o la madre del Rey.", "B) El pariente mayor de edad más próximo a suceder.", "C) Personas nombradas por las Cortes.", "D) Todas son correctas."], ans: 3 },
+                { q: "El nombramiento del Fiscal General del Estado:", opts: ["A) Lo realiza el Rey.", "B) Requiere propuesta del Gobierno.", "C) Se hace oído el CGPJ.", "D) Todas son correctas."], ans: 3 },
+                { q: "Acerca de la figura de la Reina Consorte:", opts: ["A) Puede asumir funciones constitucionales legislativas si el Rey está enfermo.", "B) Recibe el tratamiento de Majestad.", "C) Recibe la denominación de Princesa.", "D) Ninguna es correcta."], ans: 1 },
+                { q: "¿Cuál de las siguientes afirmaciones sobre la Tutela es falsa?", opts: ["A) Es una función de derecho civil.", "B) Representa la función privada y el patrimonio del Rey menor.", "C) Es compatible con todo cargo de representación política.", "D) A y B son ciertas y C es falsa."], ans: 3 },
+                { q: "Para que opere la exclusión de sucesión a la Corona por matrimonio, debe darse:", opts: ["A) Oposición de la Iglesia.", "B) Prohibición expresa conjunta del Rey y de las Cortes Generales.", "C) Solo prohibición del Rey.", "D) A y C son correctas."], ans: 1 },
+                { q: "Respecto a los 12 miembros del TC nombrados por el Rey:", opts: ["A) 4 a propuesta del Congreso.", "B) 4 a propuesta del Senado.", "C) 2 del Gobierno y 2 del CGPJ.", "D) Todas son correctas."], ans: 3 },
+                { q: "En caso de inhabilitación del Rey reconocida por las Cortes, ejerce la Regencia:", opts: ["A) El Príncipe Heredero si fuera mayor de edad.", "B) El tutor si fuese menor de edad.", "C) El Presidente del Gobierno provisional.", "D) A y B son correctas."], ans: 0 },
+                { q: "Características que diferencian Monarquía de República según el documento:", opts: ["A) Designación (dinastía vs elección).", "B) Tiempo (continuidad vs temporal).", "C) Responsabilidad jurídica (irresponsabilidad regia vs responsabilidad republicana).", "D) Todas son correctas."], ans: 3 },
+                { q: "La monarquía absoluta se distingue porque:", opts: ["A) Es la forma histórica inicial que llevó a Estados modernos europeos.", "B) El Rey realiza todas las funciones públicas principales.", "C) Mantiene dependencia y sumisión jerárquica frente a él.", "D) Todas son correctas."], ans: 3 },
+                { q: "Actos exentos de refrendo regio (Art. 65):", opts: ["A) Nombrar miembros civiles y militares de su Casa.", "B) Sancionar los Estatutos de Autonomía.", "C) Distribuir la cantidad global presupuestada para su familia y Casa.", "D) A y C son correctas."], ans: 3 },
+                { q: "La regencia se ejerce por minoría de edad o inhabilitación, ¿requiere refrendo la decisión del Rey estando inhabilitado?", opts: ["A) El inhabilitado no firma, los actos los ejerce el Regente en nombre del Rey.", "B) El Rey inhabilitado refrenda todo.", "C) El TC exime de refrendo.", "D) Ninguna es correcta."], ans: 0 },
+                { q: "En caso de abdicación de un Rey, de acuerdo a la normativa:", opts: ["A) Se decide libremente sin pasar por Cortes.", "B) Se resolverá obligatoriamente por Ley Orgánica.", "C) Se asimila a inhabilitación.", "D) A y C son correctas."], ans: 1 },
+                { q: "El juramento del Rey al ser proclamado ante Cortes incluye:", opts: ["A) Desempeñar fielmente sus funciones.", "B) Guardar y hacer guardar la Constitución.", "C) Respetar los derechos de ciudadanos y CC.AA.", "D) Todas son correctas."], ans: 3 },
+                { q: "¿Quién propone al candidato a Presidente del Gobierno (art. 99)?", opts: ["A) El Congreso.", "B) El Presidente saliente.", "C) El Rey (tras las consultas pertinentes).", "D) El Rey, pero solo si es de la lista más votada."], ans: 2 },
+                { q: "¿Cuáles son efectos del refrendo?", opts: ["A) Conferir validez al acto.", "B) Trasladar la responsabilidad.", "C) Eximir a los ministros.", "D) A y B son correctas."], ans: 3 },
+                { q: "Sobre la sucesión de la Corona (orden):", opts: ["A) Grado más remoto al más próximo.", "B) Varón a mujer en distinto grado.", "C) Persona de más edad a la de menos en mismo sexo.", "D) Ninguna es correcta."], ans: 2 },
+                { q: "Respecto a la convocatoria de elecciones por finalización del mandato parlamentario:", opts: ["A) Las convoca el Rey.", "B) Tendrán lugar entre los 30 y 60 días tras la finalización.", "C) Son refrendadas por el Presidente del Gobierno en su decreto de convocatoria ordinario.", "D) Todas son correctas."], ans: 3 },
+                { q: "Si Juan Carlos I abdicó en su hijo Felipe VI, la Ley que lo reguló fue:", opts: ["A) Ley Ordinaria 3/2014.", "B) Ley Orgánica 3/2014, de 18 de junio.", "C) Real Decreto-Ley 3/2014.", "D) Ninguna es correcta."], ans: 1 }
+            ]
+        ];
+
+        let currentTabId = 'tab-esquema';
+
+        function init() {
+            renderTabButtons();
+            renderEsquema();
+            renderTests();
+        }
+
+        function renderTabButtons() {
+            const container = document.getElementById('tab-buttons');
+            // Botón Esquema
+            const btnEsq = document.createElement('button');
+            btnEsq.className = 'px-4 py-3 font-semibold text-blue-100 hover:text-white hover:bg-blue-800 focus:outline-none transition-colors tab-button bg-blue-800 text-white rounded-t-md';
+            btnEsq.innerText = 'Esquema de Preguntas';
+            btnEsq.onclick = () => switchTab('tab-esquema', btnEsq);
+            container.appendChild(btnEsq);
+
+            // Botones Tests
+            for(let i=0; i<10; i++){
+                const btn = document.createElement('button');
+                btn.className = 'px-4 py-3 font-semibold text-blue-200 hover:text-white hover:bg-blue-800 focus:outline-none transition-colors tab-button rounded-t-md ml-1';
+                btn.innerText = `Test ${i+1}`;
+                btn.onclick = () => switchTab(`tab-test-${i}`, btn);
+                container.appendChild(btn);
+            }
+
+            // Botón Anexo
+            const btnAnexo = document.createElement('button');
+            btnAnexo.className = 'px-4 py-3 font-semibold text-blue-200 hover:text-white hover:bg-blue-800 focus:outline-none transition-colors tab-button rounded-t-md ml-1';
+            btnAnexo.innerText = 'Anexo: Sucesión';
+            btnAnexo.onclick = () => switchTab('tab-anexo', btnAnexo);
+            container.appendChild(btnAnexo);
+        }
+
+        function switchTab(tabId, btnElement) {
+            // Ocultar todos los tab-content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            // Quitar estilos activos de todos los botones
+            document.querySelectorAll('.tab-button').forEach(el => {
+                el.classList.remove('bg-blue-800', 'text-white');
+                el.classList.add('text-blue-200');
+            });
+            // Activar tab
+            document.getElementById(tabId).classList.add('active');
+            // Activar botón
+            btnElement.classList.remove('text-blue-200');
+            btnElement.classList.add('bg-blue-800', 'text-white');
+            window.scrollTo(0, 0);
+        }
+
+        function renderEsquema() {
+            const container = document.getElementById('esquema-container');
+            esquemaData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-blue-50 p-4 rounded border-l-4 border-blue-500 shadow-sm';
+                div.innerHTML = `
+                    <h3 class="font-bold text-gray-800 text-lg mb-2"><span class="text-blue-600 mr-2">Q${index+1}.</span>${item.q}</h3>
+                    <p class="text-gray-700 leading-relaxed"><span class="font-semibold mr-1">Respuesta:</span>${item.a}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderTests() {
+            const mainContent = document.getElementById('main-content');
+            
+            testsData.forEach((test, tIndex) => {
+                const testDiv = document.createElement('div');
+                testDiv.id = `tab-test-${tIndex}`;
+                testDiv.className = 'tab-content bg-white p-6 rounded-lg shadow-lg';
+                
+                let html = `<h2 class="text-2xl font-bold text-blue-800 mb-6 border-b-2 border-blue-200 pb-2">Test Independiente ${tIndex+1} (20 preguntas)</h2>`;
+                html += `<div class="mb-4 p-4 bg-gray-100 rounded text-sm text-gray-600">Lee detenidamente cada pregunta y selecciona una única respuesta. Al finalizar, pulsa 'Calcular Resultado'.</div>`;
+                html += `<form id="form-test-${tIndex}" class="space-y-8">`;
+                
+                test.forEach((qObj, qIndex) => {
+                    html += `<div class="p-4 border rounded shadow-sm bg-gray-50" id="qblock-${tIndex}-${qIndex}">`;
+                    html += `<p class="font-bold text-lg mb-3 text-gray-800">${qIndex+1}. ${qObj.q}</p>`;
+                    html += `<div class="space-y-2">`;
+                    
+                    qObj.opts.forEach((opt, optIndex) => {
+                        html += `
+                            <label class="opt-label" id="label-${tIndex}-${qIndex}-${optIndex}">
+                                <input type="radio" name="q-${tIndex}-${qIndex}" value="${optIndex}" class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+                    });
+                    
+                    html += `</div></div>`;
+                });
+                
+                html += `
+                    <div class="mt-8 flex items-center justify-between border-t pt-4">
+                        <button type="button" onclick="evaluateTest(${tIndex})" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700 transition shadow">Calcular Resultado</button>
+                        <button type="button" onclick="resetTest(${tIndex})" class="bg-gray-500 text-white px-4 py-2 rounded font-bold hover:bg-gray-600 transition shadow hidden" id="btn-reset-${tIndex}">Reiniciar Test</button>
+                    </div>
+                    <div id="result-${tIndex}" class="mt-4 p-4 text-center text-xl font-bold rounded hidden"></div>
+                `;
+                html += `</form>`;
+                testDiv.innerHTML = html;
+                mainContent.appendChild(testDiv);
+            });
+        }
+
+        function evaluateTest(tIndex) {
+            const test = testsData[tIndex];
+            let aciertos = 0;
+            let errores = 0;
+            let sinContestar = 0;
+
+            test.forEach((qObj, qIndex) => {
+                const correctOptIndex = qObj.ans;
+                const radios = document.getElementsByName(`q-${tIndex}-${qIndex}`);
+                let userSelected = -1;
+                
+                // Deshabilitar e identificar selección
+                for(let i=0; i<radios.length; i++){
+                    radios[i].disabled = true;
+                    document.getElementById(`label-${tIndex}-${qIndex}-${i}`).classList.add('disabled-opt');
+                    if(radios[i].checked) {
+                        userSelected = parseInt(radios[i].value);
+                    }
+                }
+
+                // Lógica de coloreo (Verde/Rojo)
+                if (userSelected === correctOptIndex) {
+                    aciertos++;
+                    document.getElementById(`label-${tIndex}-${qIndex}-${correctOptIndex}`).classList.add('correct-answer');
+                } else if (userSelected !== -1) {
+                    errores++;
+                    document.getElementById(`label-${tIndex}-${qIndex}-${userSelected}`).classList.add('incorrect-answer');
+                    // Marcar la correcta en verde
+                    document.getElementById(`label-${tIndex}-${qIndex}-${correctOptIndex}`).classList.add('correct-answer');
+                } else {
+                    sinContestar++;
+                    // Mostrar correcta si no se ha contestado
+                    document.getElementById(`label-${tIndex}-${qIndex}-${correctOptIndex}`).classList.add('correct-answer');
+                }
+            });
+
+            // Resumen de puntuación
+            const resDiv = document.getElementById(`result-${tIndex}`);
+            resDiv.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-yellow-100', 'text-yellow-800');
+            
+            let colorClass = 'bg-yellow-100';
+            let textColorClass = 'text-yellow-800';
+            if(aciertos >= 10) { colorClass = 'bg-green-100'; textColorClass = 'text-green-800'; }
+            if(aciertos < 10) { colorClass = 'bg-red-100'; textColorClass = 'text-red-800'; }
+            
+            resDiv.classList.add(colorClass, textColorClass);
+            resDiv.innerHTML = `Resultado final: ${aciertos} Aciertos | ${errores} Errores | ${sinContestar} Sin Contestar<br><span class="text-sm font-normal mt-1 block">La puntuación es ${aciertos} sobre 20.</span>`;
+            
+            // Mostrar botón reiniciar
+            document.getElementById(`btn-reset-${tIndex}`).classList.remove('hidden');
+        }
+
+        function resetTest(tIndex) {
+            const test = testsData[tIndex];
+            
+            test.forEach((qObj, qIndex) => {
+                const radios = document.getElementsByName(`q-${tIndex}-${qIndex}`);
+                for(let i=0; i<radios.length; i++){
+                    radios[i].disabled = false;
+                    radios[i].checked = false;
+                    const label = document.getElementById(`label-${tIndex}-${qIndex}-${i}`);
+                    label.classList.remove('disabled-opt', 'correct-answer', 'incorrect-answer');
+                }
+            });
+
+            document.getElementById(`result-${tIndex}`).classList.add('hidden');
+            document.getElementById(`btn-reset-${tIndex}`).classList.add('hidden');
+            
+            // Hacer scroll suave hacia arriba dentro del test
+            document.getElementById(`tab-test-${tIndex}`).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
