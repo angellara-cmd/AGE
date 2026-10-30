@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquemas y Test AGE - Tema 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos personalizados y variables */
+        body { font-family: system-ui, -apple-system, Roboto, 'Segoe UI', sans-serif; background-color: #f8fafc; color: #334155; line-height: 1.6; }
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active { background-color: #3b82f6; color: white; border-bottom: 2px solid #2563eb; }
+        .tab-btn:hover:not(.active) { background-color: #e2e8f0; }
+        
+        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); transition: transform 0.2s; margin-bottom: 1.5rem; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        .radio-label { display: flex; align-items: flex-start; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s; }
+        .radio-label:hover { background-color: #f1f5f9; }
+        .radio-input { margin-top: 0.3rem; margin-right: 0.75rem; transform: scale(1.2); }
+        
+        /* Correcciones visuales */
+        .correct-ans { background-color: #ecfdf5 !important; border-color: #10b981 !important; color: #065f46; font-weight: 600; }
+        .wrong-ans { background-color: #fef2f2 !important; border-color: #ef4444 !important; color: #991b1b; }
+        .pastel-box { background-color: #fef9c3; border-left: 4px solid #facc15; padding: 1rem; border-radius: 0.375rem; margin-top: 1rem; display: none; color: #854d0e; font-size: 0.95rem; }
+        
+        .floating-summary { position: sticky; bottom: 1rem; left: 0; right: 0; background-color: white; padding: 1rem; border-radius: 0.75rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border: 2px solid #e2e8f0; z-index: 50; text-align: center; display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 h-screen flex flex-col">
+
+    <!-- Header y Navegación Fija -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 py-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 text-center mb-2">Preparación Oposiciones AGE</h1>
+            <p class="text-sm text-center text-slate-500 mb-4">Fuente oficial: <a href="tema03_adenda.pdf" target="_blank" class="text-blue-600 hover:underline font-semibold">pdf gem (tema03_adenda.pdf)</a></p>
+            
+            <!-- Menú de pestañas -->
+            <nav class="flex overflow-x-auto pb-2 gap-2 hide-scrollbar rounded-lg bg-slate-100 p-1" id="tab-nav">
+                <!-- Se inyectarán los botones dinámicamente -->
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="flex-grow overflow-y-auto p-4 md:p-6 lg:p-8">
+        <div class="max-w-5xl mx-auto" id="content-area">
+            <!-- El contenido dinámico se carga aquí -->
+        </div>
+    </main>
+
+    <!-- Datos y Lógica JavaScript -->
+    <script>
+        // DATOS EXTRAÍDOS EXCLUSIVAMENTE DEL PDF (Sin deducciones ni datos externos)
+        const schemaData = [
+            { q: "¿Qué es un sistema de archivos?", a: "Es la estructura subyacente que su equipo usa para organizar datos en un disco duro o partición." },
+            { q: "¿Cuál es el sistema de archivos preferido o por defecto en Windows 11?", a: "NTFS (New Technology File System)." },
+            { q: "¿Qué otros sistemas de archivos admite Windows 11 además de NTFS?", a: "FAT, FAT32, exFAT y ReFS." },
+            { q: "¿Cuáles son las ventajas del sistema NTFS sobre el anterior FAT32?", a: "Habilidad de recuperarse de algunos errores relacionados con los discos automáticamente, soporte mejorado para discos duros más grandes (hasta 16 EB, actualmente 256 TB), y mayor seguridad mediante permisos y cifrados." },
+            { q: "¿Cuál es el límite máximo del tamaño de un archivo en NTFS actualmente?", a: "Archivos de hasta 16 TB actualmente, aunque podría llegar a 16 EB." },
+            { q: "¿En qué se basa el sistema de archivos de Windows y cómo se estructura?", a: "Está basado en carpetas que contienen archivos y otras carpetas, de modo que el sistema es jerárquico o estructurado en árbol." },
+            { q: "¿Cuántos caracteres puede contener como máximo un nombre de archivo o carpeta?", a: "Puede contener un máximo de 255 caracteres, incluyendo espacios en blanco." },
+            { q: "¿Qué caracteres están prohibidos al nombrar un archivo o carpeta?", a: "No puede contener los siguientes caracteres: \\ / : * ? \" < > |" },
+            { q: "¿Cuál es el límite de caracteres al crear nombres de archivo desde la línea de comandos en la actualidad?", a: "Solo se pueden crear nombres de archivo de un máximo de 253 caracteres." },
+            { q: "¿Qué otros sistemas de archivos diferentes utiliza el sistema operativo LINUX?", a: "ext2, ext3, swap, ReiserFS, XFS, JFS, UFS, ISO9660 (aunque también soportan los de Microsoft como NTFS, FAT32 o FAT)." },
+            { q: "¿Qué es el Explorador de archivos?", a: "Es el administrador de archivos oficial del sistema operativo Windows 11, herramienta fundamental para la gestión, organización y administración de archivos y carpetas." },
+            { q: "¿Desde dónde se puede abrir el Explorador de Archivos?", a: "Desde el icono anclado en la barra de tareas, menú Inicio, acceso directo, teclas Windows + E, o ejecutando el comando desde Ejecutar o una consola." },
+            { q: "¿Qué función tienen las pestañas en la barra de título del Explorador?", a: "Permiten abrir varias carpetas dentro de una misma ventana y alternar entre ellas, facilitando el trabajo simultáneo sin abrir múltiples ventanas independientes." },
+            { q: "¿Qué tipos de rutas se pueden introducir en la barra de direcciones?", a: "Rutas locales absolutas (ej. C:\\Usuarios\\...) y Rutas de red mediante nombre de equipo (UNC) (ej. \\\\Servidor\\Compartido)." },
+            { q: "¿Qué ha sustituido a la cinta de opciones clásica en Windows 11?", a: "Una barra de comandos simplificada, que agrupa las funciones más habituales y se adapta en función del elemento seleccionado." },
+            { q: "¿Cómo se representa la jerarquía en el Panel de Navegación de Windows 11?", a: "Se representa mediante la sangría visual de las subcarpetas respecto a la carpeta principal, sin el uso de líneas de conexión entre carpetas." },
+            { q: "¿Qué información muestra la Barra de estado del Explorador de archivos?", a: "Número total de elementos, número de elementos seleccionados, tamaño conjunto de archivos seleccionados y el estado de sincronización (si está vinculada con OneDrive)." },
+            { q: "¿Qué acción realiza la tecla F2 sobre un objeto seleccionado?", a: "Cambiar nombre del objeto." },
+            { q: "¿Qué atajo de teclado elimina la selección inmediatamente sin enviarla a la Papelera de reciclaje?", a: "MAYÚS + SUPR (o Shift + Suprimir)." },
+            { q: "¿Cómo se crea un acceso directo arrastrando el archivo?", a: "Presionando y manteniendo presionada CTRL+MAYÚS (o ALT) mientras se arrastra un archivo al escritorio o a una carpeta." },
+            { q: "¿Qué efecto tiene pulsar el '*' del teclado numérico en el explorador?", a: "Expande todo lo que hay bajo la selección actual." },
+            { q: "¿Qué ocurre al usar la técnica de 'arrastrar y soltar' entre discos distintos por defecto?", a: "La opción por defecto es copiar (aparece un signo +). Para mover hay que mantener pulsada la tecla Shift o Mayúsculas." },
+            { q: "¿Cómo se elimina de forma permanente usando la Papelera de reciclaje?", a: "Puedes configurar la Papelera de reciclaje para que no almacene los archivos eliminados, haciendo que se eliminen permanentemente." },
+            { q: "¿Qué opciones de visualización (tipo de vista) ofrece Windows 11?", a: "Lista, Detalles, Mosaicos, Contenido, Iconos muy grandes, Iconos grandes, Iconos medianos e Iconos pequeños." },
+            { q: "¿Para qué sirve el comodín asterisco (*) en las operaciones de búsqueda?", a: "Se utiliza para representar cualquier número de caracteres en una búsqueda." },
+            { q: "¿Qué busca el operador booleano 'NOT' (en mayúsculas) en una búsqueda?", a: "Se utiliza para excluir términos de búsqueda (ej. 'informe NOT preliminar')." },
+            { q: "¿Qué visualiza principalmente la herramienta 'Este equipo'?", a: "Los dispositivos de almacenamiento del sistema (unidades del sistema, discos duros internos, unidades externas, unidades de red)." },
+            { q: "¿Qué es el 'Modo Dios' (God Mode) y cómo se activa?", a: "Es una vista especial con múltiples opciones de configuración. Se activa creando una carpeta y asignándole el nombre: GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}." },
+            { q: "¿Qué atajo de teclado abre la aplicación Configuración en Windows 11?", a: "La tecla Windows + I." },
+            { q: "¿Qué opciones se muestran en el bloque 'Personalizar el dispositivo' del panel de Inicio de Configuración?", a: "Permite cambiar rápidamente el fondo de escritorio, el tema y el modo de color (claro u oscuro)." },
+            { q: "¿Qué herramientas incluye la categoría 'Accesibilidad' en la Configuración?", a: "Narrador, Lupa, subtítulos, alto contraste, filtros de color, opciones de teclado, ratón y entrada táctil, así como Subtítulos en directo y Acceso por voz." },
+            { q: "¿Qué comando abre el Administrador de tareas desde 'Ejecutar'?", a: "Taskmgr." },
+            { q: "¿Qué lenguaje de scripting utiliza PowerShell?", a: "Un lenguaje de scripting avanzado basado en .NET." },
+            { q: "¿Qué asume el papel de 'Acceso rápido' por defecto en el Explorador de Windows 11?", a: "La vista 'Inicio', que muestra carpetas frecuentes, archivos recientes y elementos favoritos." },
+            { q: "¿Qué es el Modo de eficiencia en el Administrador de tareas?", a: "Una funcionalidad introducida en Windows 11 que reduce el impacto de determinados procesos sobre el rendimiento y el consumo energético del sistema." },
+            { q: "¿Qué atajos de teclado abren el Administrador de tareas directamente?", a: "Pulsando Ctrl + Shift + Esc, o Ctrl + Alt + Supr y seleccionando Administrador de tareas." },
+            { q: "¿Qué información ofrece la sección 'Rendimiento' del Administrador de tareas?", a: "Gráficos en tiempo real del uso global de los recursos del sistema, incluyendo CPU, memoria, discos, red y GPU." },
+            { q: "¿Existe el grupo 'Accesorios de Windows' en el menú Inicio de Windows 11?", a: "No existe como bloque organizado, pero las aplicaciones (Bloc de notas, Paint, Calculadora, etc.) siguen existiendo como aplicaciones individuales." },
+            { q: "¿Para qué sirve el Diagnóstico de memoria de Windows?", a: "Para comprobar el estado de la memoria RAM del equipo y detectar errores que provoquen fallos, bloqueos o reinicios inesperados." },
+            { q: "¿Qué herramienta documenta incidencias grabando clics y pulsaciones del usuario?", a: "Grabación de acciones de usuario." }
+        ];
+
+        // 10 TEST (20 preguntas x test = 200 preguntas total). Basado 100% en el PDF.
+        const testData = [
+            // TEST 1: Sistemas de Archivos y Conceptos (Tema 1.1)
+            [
+                { q: "El sistema de archivos que viene configurado por defecto en Windows 11 es:", o: ["FAT32", "exFAT", "NTFS", "ReFS"], c: 2, e: "El sistema de archivos por defecto es NTFS (New Technology File System)." },
+                { q: "Además de NTFS, ¿qué otros sistemas de archivos puede admitir Windows 11?", o: ["Sólo FAT y FAT32", "FAT, FAT32, exFAT y ReFS", "ext2, ext3 y XFS", "Ninguno, Windows 11 sólo admite NTFS"], c: 1, e: "Windows 11 puede admitir otros sistemas de archivos como FAT, FAT32, exFAT y ReFS." },
+                { q: "Respecto al tamaño máximo de disco duro soportado por NTFS, señale la correcta:", o: ["Hasta 16 TB por limitaciones de hardware", "Hasta 256 GB actualmente", "Soporte mejorado hasta 16 EB (actualmente 256 TB por hardware)", "Soporta discos de tamaño ilimitado"], c: 2, e: "Un soporte mejorado para discos duros más grandes, hasta 16 EB (exabytes), actualmente 256 TB, debido a limitaciones de hardware." },
+                { q: "Actualmente, en NTFS un archivo individual puede alcanzar un tamaño de:", o: ["16 EB", "16 TB", "256 TB", "No hay límite"], c: 1, e: "Archivos de hasta 16 TB actualmente, aunque podría llegar a 16 EB." },
+                { q: "Una de las ventajas de NTFS respecto a FAT32 mencionada en el texto es:", o: ["Uso exclusivo desde la línea de comandos", "La habilidad de recuperarse de algunos errores automáticamente", "No utiliza estructura en árbol", "Mayor límite de caracteres (más de 255)"], c: 1, e: "NTFS tiene la habilidad de recuperarse de algunos errores relacionados con los discos automáticamente." },
+                { q: "El sistema de archivos de Windows es:", o: ["Lineal", "Aleatorio", "Jerárquico o estructurado en árbol", "Basado únicamente en etiquetas y no en carpetas"], c: 2, e: "El sistema de archivos está basado en carpetas... de modo que el sistema es jerárquico o estructurado en árbol." },
+                { q: "El límite máximo de caracteres para el nombre de un archivo o carpeta en Windows es:", o: ["255, excluyendo espacios", "255, incluyendo espacios en blanco", "253 caracteres siempre", "256 caracteres"], c: 1, e: "Un nombre de archivo o carpeta puede contener un máximo de 255 caracteres, incluyendo espacios en blanco." },
+                { q: "¿Cuál de los siguientes grupos de caracteres NO se puede usar en el nombre de un archivo?", o: ["@, #, $", "\\, /, :, *, ?, \", <, >, |", "%, &, =+", "Todas son correctas"], c: 1, e: "No puede contener los caracteres siguientes: \\ / : * ? \" < > |" },
+                { q: "Desde la línea de comandos, ¿cuál es el tamaño máximo para crear un nombre de archivo?", o: ["255 caracteres", "256 caracteres", "253 caracteres", "260 caracteres"], c: 2, e: "En la actualidad, desde la línea de comandos solo se pueden crear nombres de archivo de un máximo de 253 caracteres." },
+                { q: "Un sistema de archivos utilizado por el sistema operativo LINUX es:", o: ["ReiserFS", "NTFS", "FAT32", "Todos son utilizados como propios por LINUX"], c: 0, e: "LINUX dispone de un sistema de archivos diferente a Windows, por ejemplo: ext2, ext3, swap, ReiserFS, XFS..." },
+                { q: "De los siguientes sistemas, ¿cuál NO es un sistema de archivos de LINUX mencionado en el temario?", o: ["ext2", "JFS", "UFS", "ReFS"], c: 3, e: "ReFS es un sistema de archivos admitido por Windows 11. Los de LINUX mencionados son ext2, ext3, swap, ReiserFS, XFS, JFS, UFS, ISO9660." },
+                { q: "¿Puede el sistema operativo LINUX soportar sistemas de archivos de Microsoft?", o: ["No, son incompatibles", "Sí, soporta NTFS, FAT32 o FAT", "Solo soporta NTFS, pero no FAT32", "Solo soporta FAT, pero no NTFS"], c: 1, e: "LINUX dispone de un sistema diferente... aunque también soportan los sistemas de Microsoft (NTFS, FAT32 O FAT)." },
+                { q: "¿Qué ofrece la mayor seguridad en el sistema NTFS?", o: ["Que se oculta por defecto el contenido", "La encriptación completa del disco obligatoria", "Usa permisos y cifrados para restringir acceso", "No tiene mayor seguridad que FAT32"], c: 2, e: "Una mayor seguridad, ya que puede usar permisos y cifrados para restringir el acceso a archivos específicos." },
+                { q: "Para organizar datos en un disco duro nuevo, antes de usarlo se necesita:", o: ["Comprimirlo", "Formatearlo con un sistema de archivos", "Asignarle la letra C:", "Crear la carpeta GodMode"], c: 1, e: "Si instala un nuevo disco duro en el equipo, necesita formatearlo con un sistema de archivos antes de usarlo." },
+                { q: "¿Es posible convertir una partición a NTFS desde un tipo diferente de sistema de archivos?", o: ["No, hay que borrar los datos obligatoriamente", "Por lo general puede convertir una partición a NTFS desde un tipo diferente", "Solo se puede hacer usando PowerShell", "Sí, pero solo si es de LINUX"], c: 1, e: "Por lo general puede convertir una partición a NTFS desde un tipo diferente de sistema de archivos." },
+                { q: "¿Qué estructura tiene el Panel de navegación de Windows?", o: ["Jerárquica en forma de árbol", "Lineal basada en la fecha", "Estructura plana sin subordinación", "Circular"], c: 0, e: "El Panel de navegación presenta una estructura jerárquica en forma de árbol." },
+                { q: "¿Cuál es el administrador de archivos oficial de Windows 11?", o: ["PowerShell", "Panel de Control", "Explorador de Archivos", "Símbolo del sistema"], c: 2, e: "El Explorador de Archivos es el administrador de archivos oficial del sistema operativo Windows 11." },
+                { q: "El Explorador de Archivos se usa principalmente para:", o: ["Configurar el hardware del equipo", "Gestión, organización de archivos y carpetas", "Programar scripts avanzados", "Limpiar registros automáticamente"], c: 1, e: "Constituye la herramienta fundamental para la gestión, organización y administración de archivos y carpetas." },
+                { q: "¿Qué nivel de almacenamiento gestiona el Explorador de Archivos?", o: ["Dispositivos de almacenamiento locales", "Dispositivos externos", "Recursos de red", "Todas son correctas"], c: 3, e: "Permite acceso a dispositivos de almacenamiento locales, externos y recursos de red." },
+                { q: "¿Qué atajo de teclado abre el Explorador de Archivos de forma directa?", o: ["Windows + X", "Windows + R", "Windows + E", "Windows + I"], c: 2, e: "El Explorador de Archivos puede abrirse desde... la combinación de teclas Windows + E." }
+            ],
+            // TEST 2: Interfaz del Explorador y Navegación (Tema 1.1.1)
+            [
+                { q: "En la barra de título del Explorador de W11, ¿qué elemento facilita el trabajo simultáneo?", o: ["El cuadro de búsqueda", "La cinta de opciones", "Las pestañas", "La vista compacta"], c: 2, e: "La barra de título incorpora pestañas, que permiten abrir varias carpetas dentro de una misma ventana..." },
+                { q: "Los botones de navegación del Explorador permiten:", o: ["Desplazarse atrás, adelante y al nivel superior", "Copiar y pegar archivos con un clic", "Borrar el historial de navegación", "Modificar la fecha de creación"], c: 0, e: "Permiten desplazarse hacia atrás, hacia adelante y al nivel superior dentro de la jerarquía de carpetas." },
+                { q: "El botón 'Actualizar' del Explorador sirve para:", o: ["Descargar actualizaciones de Windows", "Volver a cargar el contenido de la carpeta actual", "Actualizar el sistema de archivos de FAT a NTFS", "Ninguna es correcta"], c: 1, e: "El botón Actualizar sirve para volver a cargar el contenido de la carpeta actual." },
+                { q: "El formato de ruta Universal Naming Convention (UNC) se utiliza para:", o: ["Rutas locales absolutas", "Rutas de red mediante nombre de equipo", "Acceder a la Papelera de reciclaje", "Configurar el servidor DNS"], c: 1, e: "Rutas de red mediante nombre de equipo (UNC): permiten acceder a carpetas compartidas utilizando el formato Universal Naming Convention." },
+                { q: "Un ejemplo correcto de ruta de red (UNC) es:", o: ["C:\\Servidor\\Compartido", "http://192.168.1.10", "\\\\Servidor\\Compartido", "//Servidor/Compartido"], c: 2, e: "Ejemplo: \\\\Servidor\\Compartido o \\\\192.168.1.10\\Datos" },
+                { q: "El cuadro de búsqueda situado a la derecha en el Explorador:", o: ["Busca en todo Internet", "Realiza búsquedas en la ubicación actual y sus subcarpetas", "Solo busca archivos del sistema ocultos", "Solo busca texto dentro de imágenes"], c: 1, e: "Permite realizar búsquedas dentro de la ubicación actual y sus subcarpetas, conservando un historial." },
+                { q: "¿Qué elemento sustituye a la cinta de opciones clásica en Windows 11?", o: ["El menú Archivo", "La barra de direcciones", "El Panel de navegación", "La barra de comandos simplificada"], c: 3, e: "En Windows 11, la cinta de opciones clásica se sustituye por una barra de comandos simplificada." },
+                { q: "En la barra de comandos simplificada NO se encuentra de forma predeterminada la opción de:", o: ["Cortar, copiar y pegar", "Formatear el disco duro en formato ReFS", "Compartir archivos", "Cambiar nombre"], c: 1, e: "Entre las opciones disponibles se encuentran: Crear nuevos elementos, Cortar/copiar/pegar, Cambiar nombre, Compartir, Eliminar, Ordenar/agrupar, opciones de Ver..." },
+                { q: "Para visualizar subcarpetas ocultas en el Panel de navegación, se utiliza:", o: ["El icono de contraer (flecha abajo)", "El icono de expandir (flecha derecha >)", "El símbolo '+' obligatoriamente con el ratón", "Doble clic en la barra de estado"], c: 1, e: "Se utiliza el icono de expandir, representado por una flecha orientada hacia la derecha (>)." },
+                { q: "Cuando una carpeta en el Panel de Navegación está completamente expandida:", o: ["La flecha aparece orientada hacia la izquierda", "La flecha aparece orientada hacia abajo (↓)", "Aparece un símbolo '-'", "Desaparece cualquier icono a su izquierda"], c: 1, e: "Cuando una carpeta se encuentra completamente expandida, la flecha aparece orientada hacia abajo (↓)." },
+                { q: "¿Qué representan las sangrías visuales en el Panel de navegación de Windows 11?", o: ["Archivos ocultos", "Errores de disco", "Su nivel jerárquico y relación de subordinación", "Accesos directos rotos"], c: 2, e: "Las subcarpetas se muestran sangradas... lo que permite identificar claramente su nivel jerárquico y su relación de subordinación." },
+                { q: "¿Usa Windows 11 líneas de conexión entre carpetas en el panel de navegación?", o: ["Sí, de forma predeterminada", "No, esta jerarquía se representa mediante la sangría visual", "Solo si se activa el God Mode", "Sí, pero de color rojo"], c: 1, e: "En Windows 11, esta jerarquía se representa mediante la sangría visual, sin el uso de líneas de conexión entre carpetas." },
+                { q: "¿Dónde está situada la Barra de estado del Explorador de archivos?", o: ["En la parte superior de la ventana", "A la derecha del cuadro de búsqueda", "En el Panel de navegación", "En la parte inferior de la ventana"], c: 3, e: "La Barra de estado se encuentra en la parte inferior de la ventana del Explorador de archivos." },
+                { q: "La barra de estado del Explorador puede mostrar la siguiente información:", o: ["Número total de elementos en la carpeta", "El tamaño conjunto de archivos seleccionados", "Estado de sincronización (vinculada con OneDrive)", "Todas son correctas"], c: 3, e: "Entre los datos que puede mostrar se incluyen: Número total de elementos, elementos seleccionados, tamaño conjunto, estado de sincronización." },
+                { q: "Desde el Panel de navegación de W11, NO se accede habitualmente a:", o: ["Inicio", "Este equipo", "Configuración de la BIOS", "Red"], c: 2, e: "Desde este panel se puede navegar por: Inicio, OneDrive, Carpetas del perfil, Este equipo, Red. (La BIOS es previa al sistema operativo)." },
+                { q: "La zona que ocupa la parte central de la ventana del Explorador se denomina:", o: ["Barra de estado", "Área de contenido", "Panel de detalles", "Barra de direcciones"], c: 1, e: "El Área de contenido ocupa la parte central de la ventana del Explorador y muestra los archivos y carpetas." },
+                { q: "Una ruta local absoluta tiene este formato:", o: ["C:\\Usuarios\\NombreUsuario\\Documentos", "\\\\Servidor\\Compartido", "C:Usuarios.NombreUsuario", "Ninguna es correcta"], c: 0, e: "Rutas locales absolutas... Ejemplo: C:\\Usuarios\\NombreUsuario\\Documentos." },
+                { q: "Al seleccionar un archivo y mirar la barra de estado, esta nos muestra:", o: ["Su fecha de creación y autor", "El número de elementos seleccionados y su tamaño conjunto", "Los atributos de solo lectura", "La ruta UNC"], c: 1, e: "Entre los datos... Número de elementos seleccionados. Tamaño conjunto de los archivos seleccionados." },
+                { q: "En el Panel de Navegación, ¿qué encontramos bajo la opción de 'Red'?", o: ["Archivos recientes", "Equipos y recursos compartidos disponibles", "El menú Inicio completo", "Las unidades de disco duro locales C:"], c: 1, e: "Red (equipos y recursos compartidos disponibles)." },
+                { q: "En Windows 11, las carpetas del perfil de usuario (Escritorio, Descargas, etc.) se acceden en el panel desde:", o: ["Ejecutar", "Carpetas del perfil de usuario (directamente listadas)", "Solo desde la Unidad C:", "El menú Archivo"], c: 1, e: "Desde este panel se puede navegar por... Carpetas del perfil de usuario (Escritorio, Documentos, Descargas, Imágenes, etc.)." }
+            ],
+            // TEST 3: Atajos y Control de Árboles (Tema 1.1.2 y 1.1.3)
+            [
+                { q: "Si seleccionamos un archivo y pulsamos la tecla F2, el resultado será:", o: ["Eliminar el archivo", "Copiar el archivo", "Cambiar nombre del objeto", "Abrir la hoja de propiedades"], c: 2, e: "F2: Cambiar nombre del objeto." },
+                { q: "La tecla F3 en el Explorador activa:", o: ["Herramienta de Búsqueda", "La vista de mosaicos", "El Administrador de tareas", "El modo de eficiencia"], c: 0, e: "F3: Herramienta de Búsqueda." },
+                { q: "La combinación de teclas CTRL+X se utiliza para:", o: ["Copiar", "Pegar", "Cortar", "Rehacer"], c: 2, e: "CTRL+X: Cortar." },
+                { q: "Si deseo eliminar una selección inmediatamente, sin enviarla a la Papelera de reciclaje, usaré:", o: ["SUPR o Suprimir", "MAYÚS+SUPR", "CTRL+SUPR", "ALT+SUPR"], c: 1, e: "MAYÚS+SUPR: Eliminar la selección inmediatamente, sin enviar el elemento a la Papelera de reciclaje." },
+                { q: "La combinación de teclas ALT+ENTRAR sirve para:", o: ["Abrir la ventana de Ejecutar", "Abrir la hoja de propiedades del objeto seleccionado", "Cambiar a pantalla completa", "Crear una nueva carpeta"], c: 1, e: "ALT+ENTRAR: Abrir la hoja de propiedades del objeto seleccionado." },
+                { q: "Para copiar un archivo usando el ratón hacia otra carpeta dentro de la misma unidad, se debe:", o: ["Mantener pulsada la tecla MAYÚS mientras se arrastra", "Mantener pulsada la tecla ALT mientras se arrastra", "Mantener pulsada la tecla CTRL mientras se arrastra", "Arrastrar sin pulsar nada"], c: 2, e: "Presione y mantenga presionada la tecla CTRL mientras arrastra el archivo a otra carpeta." },
+                { q: "Para crear un acceso directo utilizando el ratón y el teclado, se debe arrastrar el archivo mientras se pulsa:", o: ["Solo CTRL", "CTRL+MAYÚS", "ALT", "La b y la c son correctas"], c: 3, e: "Presione y mantenga presionada CTRL+MAYÚS mientras arrastra... También puede utilizar la tecla ALT mientras arrastra." },
+                { q: "En el control de árboles del teclado numérico, la tecla '*' realiza la función de:", o: ["Contraer la selección actual", "Expande todo lo que hay bajo la selección actual", "Cambiar de vista", "Eliminar todo el árbol"], c: 1, e: "El '*' del teclado numérico: Expande todo lo que hay bajo la selección actual." },
+                { q: "La tecla '+' del teclado numérico sirve para:", o: ["Expandir todo", "Expande la selección actual", "Contraer la selección actual", "Crear una nueva subcarpeta"], c: 1, e: "'+' del teclado numérico: Expande la selección actual." },
+                { q: "Si pulsamos la tecla Flecha a la derecha sobre una carpeta en el panel de navegación y NO está expandida:", o: ["Se contrae", "Expande la selección actual", "Elimina la carpeta", "Va a la carpeta principal"], c: 1, e: "Flecha a la derecha: Expande la selección actual si no está ya expandida." },
+                { q: "Si pulsamos la tecla Flecha a la derecha sobre una carpeta que YA está expandida:", o: ["La contrae", "Va a la carpeta principal", "Va a la primera carpeta secundaria", "No ocurre absolutamente nada"], c: 2, e: "Flecha a la derecha: Expande... de lo contrario, va a la primera carpeta secundaria." },
+                { q: "Al pulsar la tecla Flecha a la izquierda sobre una carpeta expandida:", o: ["Se expande aún más", "Contrae la selección actual", "Se cierra el Explorador", "Pasa a la pestaña anterior"], c: 1, e: "Flecha a la izquierda: Contrae la selección actual si está expandida." },
+                { q: "Si pulsamos la tecla Flecha a la izquierda sobre una carpeta que NO está expandida:", o: ["Va a la carpeta principal", "Expande la selección", "Va a la primera carpeta secundaria", "Activa el nombre para modificarlo"], c: 0, e: "Flecha a la izquierda: Contrae... de lo contrario, va a la carpeta principal." },
+                { q: "El método abreviado CTRL+C corresponde a la acción:", o: ["Cortar", "Pegar", "Copiar", "Cerrar"], c: 2, e: "CTRL+C: Copiar." },
+                { q: "El método abreviado CTRL+V corresponde a la acción:", o: ["Pegar", "Ver detalles", "Volver al nivel superior", "Vaciar papelera"], c: 0, e: "CTRL+V: Pegar." },
+                { q: "¿Es posible crear un acceso directo manteniendo presionada únicamente la tecla ALT y arrastrando el archivo?", o: ["No, siempre requiere CTRL+MAYÚS", "Sí, es una de las formas permitidas", "Sí, pero solo para archivos ejecutables (.exe)", "No, ALT borra el archivo"], c: 1, e: "También puede utilizar la tecla ALT mientras arrastra un archivo al escritorio o a una carpeta (para crear un acceso directo)." },
+                { q: "Para acceder al panel de búsqueda directamente mediante teclado, además del ratón, se usa:", o: ["F2", "F5", "F3", "F4"], c: 2, e: "F3: Herramienta de Búsqueda." },
+                { q: "Al usar la tecla '-' del teclado numérico sobre una carpeta seleccionada, se:", o: ["Contrae la selección actual", "Elimina la carpeta seleccionada", "Corta la carpeta seleccionada", "Oculta el Panel de Navegación"], c: 0, e: "'-' del teclado numérico: Contrae la selección actual." },
+                { q: "¿Qué sucede al mantener la tecla 'Shift' (Mayúsculas) pulsada mientras se arrastra un archivo entre discos distintos?", o: ["Se copia", "Se crea un acceso directo", "Se mueve a la nueva ubicación", "Se comprime en ZIP"], c: 2, e: "Entre discos distintos la opción por defecto es copiar (para mover hay que mantener pulsada la tecla Shift o Mayúsculas)." },
+                { q: "La combinación CTRL+MAYÚS+N en el Explorador de archivos (aunque general) se menciona indirectamente relacionada con:", o: ["Cerrar sesión", "Crear una nueva carpeta", "Nombrar un archivo", "Limpiar la navegación"], c: 1, e: "...también puedes utilizar el atajo de teclado Ctrl + Mayús + N ... para crear una nueva carpeta." }
+            ],
+            // TEST 4: Arrastrar y Soltar, Operaciones Básicas (Tema 1.2 y 2.1)
+            [
+                { q: "La forma más sencilla de mover un fichero de una carpeta a otra en Windows es:", o: ["Usar la Consola de comandos", "La técnica de 'arrastrar y soltar'", "Escribir el código hexadecimal", "Desconectar la unidad C:"], c: 1, e: "La forma más sencilla de mover un fichero de una carpeta a otra en Windows es usar la técnica de 'arrastrar y soltar'." },
+                { q: "Al seleccionar un fichero en Windows, observamos que:", o: ["Cambia de tamaño al doble", "Cambia de color, mostrando que se encuentra seleccionado", "Suena un pitido del sistema", "Desaparece temporalmente"], c: 1, e: "Seleccionemos el fichero haciendo clic sobre él (observamos entonces que cambia de color, mostrando que se encuentra seleccionado)." },
+                { q: "Si arrastro y suelto un archivo dentro de la MISMA unidad o disco, la opción por defecto es:", o: ["Copiar", "Mover", "Crear acceso directo", "Comprimir"], c: 1, e: "Dentro de una misma unidad o disco, la opción por defecto es mover." },
+                { q: "Si arrastro y suelto un archivo a un DISCO DISTINTO, la opción por defecto del sistema es:", o: ["Mover", "Copiar", "Bloquear la operación", "Formatear el destino"], c: 1, e: "Entre discos distintos la opción por defecto es copiar." },
+                { q: "Al realizar una operación de copiado con arrastrar y soltar, ¿qué indicador visual aparece junto al ratón?", o: ["Un pequeño signo -", "Un pequeño signo + con el texto 'Copiar a...'", "Una flecha curvada", "Un escudo amarillo"], c: 1, e: "Aparece un pequeño signo + con el texto 'Copiar a (nombre de carpeta)' que indica que el archivo va a ser copiado." },
+                { q: "¿En qué consiste la operación de 'mover' un archivo?", o: ["El archivo se traslada a la posición destino y desaparece de la original", "Se crea una copia en destino y permanece el original", "Se envía a la nube", "Se cambia el nombre pero no la ubicación"], c: 0, e: "Con la opción mover, el archivo se traslada a la posición de destino, desapareciendo de su posición original." },
+                { q: "¿En qué consiste la operación de 'copiar' un archivo?", o: ["Se borra el original y se crea uno nuevo", "El archivo permanece donde estaba y se crea una copia en la posición de destino", "Se traslada ocultando el original", "Se manda a la Papelera"], c: 1, e: "Con copiar, el archivo permanece donde estaba y se crea una copia en la posición de destino." },
+                { q: "Al usar el botón derecho del ratón en un espacio vacío para crear una carpeta, la ruta en el menú contextual es:", o: ["Archivo > Nueva carpeta", "Nuevo > Carpeta", "Ver > Crear Carpeta", "Opciones > Nueva > Carpeta"], c: 1, e: "Haz clic derecho en un espacio vacío... y selecciona 'Nuevo' > 'Carpeta' para crear una nueva carpeta." },
+                { q: "Además de hacer clic derecho y seleccionar Eliminar o presionar Suprimir, los archivos pueden eliminarse a través de:", o: ["El comando de la cinta de opciones en la pestaña Inicio", "La barra de búsqueda", "El botón de Vista previa", "Panel de control"], c: 0, e: "También podemos hacerlo a través del comando de la cinta de opciones en la pestaña Inicio." },
+                { q: "¿Dónde se envían normalmente los archivos eliminados mediante la tecla Suprimir?", o: ["Se destruyen al instante", "A la carpeta System32", "A la Papelera de reciclaje", "A OneDrive exclusivamente"], c: 2, e: "Los archivos eliminados se envían a la Papelera de reciclaje." },
+                { q: "Si abro la Papelera de reciclaje y deseo recuperar un archivo a su ubicación original, usaré la opción:", o: ["Rescatar", "Volver", "Restaurar", "Mover a Inicio"], c: 2, e: "Encuentra el archivo... haz clic derecho y selecciona 'Restaurar', el archivo o carpeta será restaurado en su ubicación original." },
+                { q: "¿Desde qué pestaña de la cinta de opciones se pueden comprimir y descomprimir archivos en formato ZIP según el temario?", o: ["Pestaña Inicio", "Pestaña Ver", "Pestaña Compartir", "Pestaña Configuración"], c: 2, e: "Puedes comprimir... o descomprimir archivos ZIP... desde la cinta de opciones, pestaña Compartir." },
+                { q: "La opción 'Compartir' de un archivo, además del clic derecho, se encuentra disponible en la cinta de opciones en la pestaña:", o: ["Inicio", "Compartir", "Ver", "Red"], c: 1, e: "...también puedes hacerlo desde la cinta de opciones, pestaña Compartir." },
+                { q: "Para renombrar un archivo con el ratón se puede:", o: ["Hacer triple clic en el archivo", "Hacer 2 clics pausados en el nombre del archivo", "Doble clic rápido", "Arrastrar el ratón sobre el nombre"], c: 1, e: "Renombrar archivos y carpetas. 2 clics pausados en el nombre del archivo o carpeta para resaltarlo." },
+                { q: "El atajo de teclado para la opción 'Copiar' (Ctrl+C) se corresponde en la cinta de opciones con la pestaña y grupo:", o: ["Inicio / Grupo Portapapeles", "Ver / Grupo Archivos", "Compartir / Grupo Enviar", "Inicio / Grupo Organizar"], c: 0, e: "Los comandos para copiar y cortar los tenemos disponibles en la cinta de opciones, en la pestaña Inicio / Grupo Portapapeles." },
+                { q: "El atajo de teclado F2 para renombrar tiene su comando correspondiente en la cinta de opciones en:", o: ["Pestaña Ver / Grupo Paneles", "Pestaña Inicio / Grupo Organizar", "Pestaña Inicio / Grupo Portapapeles", "Pestaña Opciones"], c: 1, e: "...o bien el comando correspondiente de la cinta de opciones en la pestaña Inicio / Grupo Organizar." },
+                { q: "Acceder a las Propiedades de un archivo permite ver detalles como:", o: ["El código fuente HTML", "Tamaño, fecha de creación, atributos y permisos", "El historial web del usuario", "Las contraseñas de red guardadas"], c: 1, e: "Accede a las propiedades... para ver información detallada, como tamaño, fecha de creación, atributos y permisos." },
+                { q: "¿Cuál de los siguientes no es un método mencionado para eliminar archivos permanentemente?", o: ["Usar la tecla Shift + Suprimir", "Configurar la Papelera para que no almacene eliminados", "Desenchufar el disco duro", "La a y la b son los métodos correctos"], c: 3, e: "Métodos para eliminar de forma permanente: Usar la tecla Shift + Suprimir. Usar la Papelera de reciclaje... configurarla para que no almacene." },
+                { q: "¿Se puede configurar la Papelera de reciclaje para que no almacene los archivos eliminados?", o: ["No, Microsoft lo impide por seguridad", "Sí, esto hará que los archivos se eliminen permanentemente", "Solo en la versión Enterprise", "Sí, pero se enviarán a OneDrive"], c: 1, e: "Puedes configurar la Papelera de reciclaje para que no almacene los archivos eliminados. Esto hará que los archivos se eliminen permanentemente." },
+                { q: "La restauración por defecto de un elemento de la papelera se realiza:", o: ["En el Escritorio", "En la carpeta Documentos", "En la ubicación original de dicho elemento", "En C:\\Recovery"], c: 2, e: "Por defecto, la restauración de un elemento de la papelera se realiza en la ubicación original de dicho elemento (Idea Clave 10)." }
+            ],
+            // TEST 5: Visualización y Operaciones de Búsqueda (Tema 2.2 y 3)
+            [
+                { q: "Desde el apartado 'Ver' del Explorador NO se puede realizar la siguiente acción:", o: ["Mostrar u ocultar el panel de detalles", "Mostrar u ocultar las extensiones de nombre", "Modificar el tamaño de los iconos", "Formatear el disco en FAT32"], c: 3, e: "Formatear un disco no es una opción de visualización del apartado Ver." },
+                { q: "Las vistas de tamaño de iconos disponibles en el menú 'Ver' son:", o: ["Sólo Iconos grandes y pequeños", "Iconos muy grandes, grandes, medianos y pequeños", "Iconos gigantes, medianos y diminutos", "Iconos normales y especiales"], c: 1, e: "Modificar el tamaño de los iconos (Muy grandes, Grandes, Medianos, Pequeños - como se ve en la captura adjunta al texto)." },
+                { q: "¿Es posible cambiar a la 'vista compacta' desde el apartado Ver?", o: ["Sí, se puede activar la vista compacta", "No, esa opción fue retirada en W11", "Solo si se activa el modo de eficiencia", "Sí, pero solo para unidades de red"], c: 0, e: "Desde el apartado Ver, el usuario puede... Activar la vista compacta." },
+                { q: "En el menú Mostrar del apartado Ver, ¿es posible visualizar los archivos ocultos?", o: ["Sí, marcando 'Elementos ocultos'", "No, para eso hay que usar el CMD", "Sí, pero requiere contraseña", "Solo es posible con el 'Modo Dios'"], c: 0, e: "Desde el apartado Ver, el usuario puede... Visualizar elementos ocultos." },
+                { q: "El sistema de Windows conserva un historial de búsquedas recientes para:", o: ["Enviar datos de marketing", "Facilitar la reutilización de consultas anteriores y agilizar el acceso", "Comprimir los archivos de registro", "Cifrar la carpeta actual"], c: 1, e: "El sistema conserva un historial de búsquedas recientes, facilitando la reutilización de consultas anteriores y agilizando el acceso a la información." },
+                { q: "Si la búsqueda habilita una nueva barra de herramientas, ésta se ubica en:", o: ["La barra de direcciones", "El panel de detalles", "La cinta de opciones, Herramientas de búsqueda", "La Papelera"], c: 2, e: "...se habilitará una nueva barra de herramientas en la cinta de opciones, Herramientas de búsqueda." },
+                { q: "En la búsqueda avanzada, ¿cómo indicamos que queremos buscar una fecha anterior o igual a hoy?", o: ["Podemos usar comodines de texto como 'ayer' (ej. fecha:ayer) o expresiones (ej. fecha:>01/01/2025)", "No se pueden buscar fechas, solo tamaños", "Con el operador @fecha", "Usando corchetes [fecha]"], c: 0, e: "Búsqueda por fecha: puedes buscar archivos por fecha... utilizando términos como 'fecha:ayer' o 'fecha:>01/01/2025'." },
+                { q: "Para buscar archivos que tengan un tamaño superior a 10 megabytes, escribiría:", o: ["peso_mayor: 10M", "tamaño:>10MB", "mayor_a:10megas", "size+10"], c: 1, e: "Búsqueda por tamaño: ...puedes usar términos como 'tamaño:>10MB' o 'tamaño:<1GB'." },
+                { q: "Para limitar la búsqueda a una ubicación específica desde la barra, se debe:", o: ["Escribir la ubicación seguida de una barra diagonal invertida (ej. C:\\Carpeta)", "Elegir el filtro 'Local'", "Usar el comodín de disco '%'", "No es posible limitar desde la barra directamente"], c: 0, e: "Simplemente escribe la ubicación seguida de una barra diagonal invertida (por ejemplo, 'C:\\Carpeta')." },
+                { q: "¿Dónde se almacenan las búsquedas anteriores cuando se realiza una búsqueda?", o: ["En el bloc de notas", "En el Menú Inicio", "En la sección 'Resultados de búsqueda' en la parte superior del Explorador", "En el Registro de Windows"], c: 2, e: "Búsqueda en resultados anteriores: ...los resultados se almacenan en la sección 'Resultados de búsqueda' en la parte superior del Explorador de archivos." },
+                { q: "¿Se pueden guardar las búsquedas frecuentes en Windows?", o: ["No, es temporal", "Sí, puedes guardar búsquedas frecuentes como 'archivos recientes' o 'música'", "Solo mediante un script de PowerShell", "Sí, pero hay límite de 3"], c: 1, e: "Guardar búsquedas: puedes guardar búsquedas frecuentes como 'archivos recientes' o 'archivos de música' para acceder a ellas fácilmente." },
+                { q: "¿Qué operador usaría para encontrar archivos que comiencen con la palabra 'archi'?", o: ["archi#", "archi?", "archi*", "archi%"], c: 2, e: "El asterisco se utiliza para representar cualquier número de caracteres. Por ejemplo, 'archi*' buscará archivos que comiencen con 'archi'." },
+                { q: "El comodín signo de interrogación (?) se utiliza en la búsqueda para representar:", o: ["Cualquier cantidad de caracteres", "Un solo carácter", "Un espacio en blanco estrictamente", "Un número del 0 al 9"], c: 1, e: "Interrogación (?): el signo de interrogación se utiliza para representar un solo carácter en una búsqueda." },
+                { q: "Si uso el operador booleano AND en la búsqueda (ej. 'proyecto AND informe'):", o: ["Buscará archivos con alguna de las palabras", "Buscará archivos con ambas palabras", "Es la función que hace por defecto el buscador", "La b y c son correctas"], c: 3, e: "Utiliza 'AND' en mayúsculas... buscará archivos que contengan ambas palabras. Además, es la función que hace por defecto el buscador." },
+                { q: "El operador 'OR' en mayúsculas buscará:", o: ["Archivos que contengan al menos uno de los términos", "Archivos que excluyan esos términos", "Únicamente archivos que tengan ambas palabras juntas", "Archivos originarios de la red"], c: 0, e: "OR. Utiliza 'OR' en mayúsculas para buscar archivos que contengan al menos uno de los términos." },
+                { q: "Para buscar archivos que contengan 'informe' pero NO la palabra 'preliminar', el término correcto es:", o: ["informe EXCEPTO preliminar", "informe - preliminar", "informe NOT preliminar", "informe \ preliminar"], c: 2, e: "NOT. Utiliza 'NOT' en mayúsculas para excluir términos... Por ejemplo, 'informe NOT preliminar'." },
+                { q: "Si buscamos archivos según tipo de archivo específico, usaríamos el operador:", o: ["extension:.pdf", "tipo:.pdf", "formato=.pdf", "filetype:pdf"], c: 1, e: "Búsqueda avanzada... usar 'tipo:.pdf' para buscar archivos de un tipo de archivo específico." },
+                { q: "En la búsqueda 'nombre:archivo', el término 'nombre' funciona como:", o: ["Comodín", "Operador booleano", "Operador de búsqueda avanzada por parámetro", "Etiqueta de red"], c: 2, e: "Búsqueda avanzada: puedes realizar búsquedas avanzadas utilizando operadores de búsqueda. Por ejemplo, 'nombre:archivo'." },
+                { q: "Los operadores booleanos AND, OR y NOT en el Explorador:", o: ["Se deben escribir en mayúsculas para funcionar como tales", "Funcionan igual en minúsculas (and, or, not)", "Solo sirven en Windows 10, no en 11", "Requieren pulsar Ctrl al escribirse"], c: 0, e: "Operadores booleanos: Utiliza 'AND' en mayúsculas... Utiliza 'OR' en mayúsculas... Utiliza 'NOT' en mayúsculas." },
+                { q: "¿En qué vista se puede organizar la información utilizando columnas como nombre, fecha y tamaño?", o: ["Vista Detalles", "Vista Iconos grandes", "Vista Lista", "Vista Mosaicos"], c: 0, e: "Aunque implícito por la imagen, la vista Detalles y la cita: 'También puedes ordenar los archivos por nombre, fecha, tipo y otros criterios' es propia de la vista Detalles (se ve en las capturas del PDF)." }
+            ],
+            // TEST 6: Este Equipo, Configuración e Inicio (Temas 4, 4.1 y 5)
+            [
+                { q: "En Windows 11, la herramienta 'Este equipo' se orienta principalmente a la visualización y gestión de:", o: ["Las carpetas de usuario recientes", "Los dispositivos de almacenamiento del sistema", "La conexión a Internet y redes Wi-Fi", "Los accesorios de Windows"], c: 1, e: "En Windows 11, la herramienta Este equipo se orienta principalmente a la visualización y gestión de los dispositivos de almacenamiento del sistema." },
+                { q: "¿Aparecen las carpetas del perfil de usuario como elemento principal dentro de la vista 'Este equipo' de Windows 11?", o: ["Sí, están en primer plano", "No, su acceso se prioriza desde la vista Inicio o rutas específicas", "Sí, pero ocultas por defecto", "Solo si se activa OneDrive"], c: 1, e: "Las carpetas del perfil de usuario no se presentan como elemento principal dentro de «Este equipo», ya que su acceso se prioriza desde la vista Inicio..." },
+                { q: "El 'Modo Dios' (God Mode) es una característica que:", o: ["Permite ser administrador de la red local", "Agrupa en una única carpeta un gran número de opciones avanzadas de configuración", "Instala juegos gratis de Xbox", "Se eliminó en Windows 11"], c: 1, e: "Se trata de una vista especial que agrupa en una única carpeta un gran número de opciones avanzadas de configuración del sistema." },
+                { q: "¿Cómo se identifica la carpeta creada para el 'Modo Dios' (God Mode) al cambiar su nombre correctamente?", o: ["Adopta el icono de un escudo rojo", "Adopta el icono del Panel de control", "Se vuelve invisible en el Escritorio", "Adopta el icono de la consola CMD"], c: 1, e: "Al hacerlo, la carpeta adopta el icono del Panel de control y permite acceder de forma centralizada a múltiples herramientas administrativas." },
+                { q: "¿Qué aplicación es recomendada y constituye el eje central de administración del sistema en Windows 11?", o: ["La aplicación Configuración", "El Panel de Control tradicional", "El Editor de Registro", "El Administrador de tareas"], c: 0, e: "La aplicación Configuración de Windows es la herramienta principal y recomendada en Windows 11 para personalizar y administrar el sistema operativo." },
+                { q: "Se puede acceder a la aplicación Configuración mediante el atajo de teclado:", o: ["Windows + C", "Windows + I", "Windows + U", "Windows + R"], c: 1, e: "Utilizando el atajo de teclado Windows + I." },
+                { q: "El Panel de control tradicional en Windows 11:", o: ["Ha sido completamente borrado", "Sigue disponible para tareas de administración que aún no han sido migradas completamente a la aplicación Configuración", "Sólo se puede acceder con el Símbolo del Sistema", "Se llama ahora 'Configuración Antigua'"], c: 1, e: "El Panel de control... continúa estando disponible en Windows 11... para tareas y opciones que aún no han sido migradas completamente a la aplicación Configuración." },
+                { q: "¿Qué información se muestra en la parte superior del panel Inicio de la aplicación Configuración?", o: ["Solo el reloj del sistema", "La información de la cuenta de usuario (nombre, imagen, correo asociado)", "Un listado de los discos duros", "El estado del Firewall de Windows"], c: 1, e: "En la parte superior del panel se muestra la información de la cuenta de usuario con la que se ha iniciado sesión, incluyendo el nombre, la imagen..." },
+                { q: "En el panel Inicio de Configuración de W11, el apartado 'Configuración recomendada' incluye:", o: ["Solo enlaces a la tienda de Microsoft", "Accesos directos dinámicos a opciones utilizadas recientemente (Almacenamiento, Inicio, etc.)", "Opciones exclusivas de desarrollador", "El God Mode activado"], c: 1, e: "...el apartado Configuración recomendada, que ofrece accesos directos dinámicos a opciones utilizadas recientemente... como Almacenamiento, Inicio y apagado..." },
+                { q: "Desde el bloque 'Personalizar el dispositivo' en el panel Inicio de Configuración se permite cambiar rápidamente:", o: ["El fondo de escritorio, el tema y el modo de color (claro u oscuro)", "La contraseña del usuario", "La configuración del router Wi-Fi", "El idioma del sistema"], c: 0, e: "Aparece el bloque Personalizar el dispositivo, que permite cambiar rápidamente el fondo de escritorio, el tema y el modo de color (claro u oscuro)." },
+                { q: "En Windows 11, ¿qué vista se abre por defecto al abrir el Explorador de Archivos?", o: ["Este equipo", "Vista de Red", "La vista Inicio", "Acceso Público"], c: 2, e: "En Windows 11, el Explorador de Archivos se abre por defecto en la vista Inicio, que asume el papel que tradicionalmente desempeñaba Acceso rápido." },
+                { q: "El antiguo 'Acceso rápido' ha sido sustituido en funcionalidad principal por:", o: ["OneDrive", "La vista 'Inicio'", "God Mode", "Panel de navegación secundario"], c: 1, e: "...la vista Inicio, que asume el papel que tradicionalmente desempeñaba Acceso rápido." },
+                { q: "¿Qué contenido se muestra principalmente en la vista 'Inicio' del Explorador?", o: ["Las herramientas administrativas de Windows", "Solo los discos duros locales", "Carpetas del perfil frecuentes, archivos recientes y favoritos", "La configuración del panel de control"], c: 2, e: "Desde esta vista se accede principalmente a: Carpetas del perfil de usuario utilizadas con mayor frecuencia... Archivos recientes... Elementos marcados como favoritos." },
+                { q: "¿Es posible anclar elementos manualmente a la vista Inicio/Acceso rápido?", o: ["Sí, se pueden tener accesos anclados manualmente", "No, lo decide el sistema automáticamente", "Solo se pueden anclar archivos, no carpetas", "Solo si eres administrador del dominio"], c: 0, e: "Desde esta vista se accede principalmente a... Accesos anclados manualmente." },
+                { q: "¿Qué elemento no pertenece a la vista 'Este equipo'?", o: ["Unidades externas conectadas", "Discos duros internos", "Dispositivos y unidades", "Historial de archivos recientes"], c: 3, e: "Este equipo gestiona dispositivos de almacenamiento (Unidades del sistema, discos, unidades externas, redes). Los archivos recientes están en la vista Inicio." },
+                { q: "Se puede acceder a la configuración del equipo desde el menú contextual del botón Inicio, que se abre pulsando:", o: ["Win+C", "Win+X", "Win+R", "Win+E"], c: 1, e: "Desde el menú contextual del botón Inicio (Win+X)." },
+                { q: "La nueva interfaz de Configuración de Windows 11, en su lado izquierdo, presenta:", o: ["El panel de control clásico", "El menú principal de categorías de Configuración", "La papelera de reciclaje", "El administrador de discos"], c: 1, e: "En el panel lateral izquierdo se encuentra el menú principal de categorías de Configuración, que sustituye al modelo clásico del Panel de control." },
+                { q: "¿Qué se muestra junto a los datos de usuario en la pantalla principal de Configuración para comprobaciones inmediatas?", o: ["Accesos rápidos al estado de la red y a Windows Update", "Un escaneo del antivirus Defender", "Los procesos activos del sistema", "El espacio libre de la unidad D:"], c: 0, e: "El panel Inicio muestra accesos rápidos al estado de la red y a Windows Update, permitiendo comprobar de forma inmediata si el sistema está actualizado." },
+                { q: "¿Para qué sirve el menú 'Win+X'?", o: ["Para bloquear el equipo", "Para abrir un menú contextual en el botón Inicio con accesos como Administrador de tareas o Configuración", "Para buscar archivos", "Para cerrar la sesión"], c: 1, e: "Haciendo clic con el botón derecho del ratón sobre el botón Inicio (menú Win+X) y eligiendo..." },
+                { q: "¿Qué característica especial tienen las tarjetas informativas a la derecha del panel de Inicio en Configuración?", o: ["Están relacionadas con servicios integrados como OneDrive para la nube", "Muestran las noticias de MSN", "Muestran ofertas de la Microsoft Store", "Ninguna es correcta"], c: 0, e: "A la derecha se muestran tarjetas informativas, como Almacenamiento en la nube, relacionadas con servicios integrados como OneDrive." }
+            ],
+            // TEST 7: Categorías de Configuración de Windows 11 (Tema 4.1.2)
+            [
+                { q: "En Configuración, ¿qué categoría gestiona opciones como la pantalla, sonido, energía, suspensión y almacenamiento?", o: ["Sistema", "Personalización", "Cuentas", "Aplicaciones"], c: 0, e: "Sistema. Permite configurar... pantalla, sonido, notificaciones, energía y suspensión, almacenamiento, multitarea..." },
+                { q: "Para conectar una impresora, un escáner o emparejar un ratón, debo entrar en la categoría:", o: ["Red e Internet", "Aplicaciones", "Bluetooth y dispositivos", "Accesibilidad"], c: 2, e: "Bluetooth y dispositivos... Desde esta categoría se pueden añadir y configurar dispositivos Bluetooth, impresoras, escáneres, cámaras, ratones..." },
+                { q: "La categoría 'Red e Internet' permite administrar:", o: ["El fondo del escritorio", "El modo avión, redes Wi-Fi, Ethernet y configuración proxy/DNS", "Las actualizaciones de Windows", "Las cuentas de Microsoft"], c: 1, e: "Red e Internet... Permite administrar redes Wi-Fi y Ethernet... el modo avión, la configuración de proxy, DNS..." },
+                { q: "¿Desde qué categoría se personaliza la pantalla de bloqueo y la barra de tareas?", o: ["Sistema", "Personalización", "Accesibilidad", "Cuentas"], c: 1, e: "Personalización. Ofrece las opciones para... fondo de escritorio, colores, temas, pantalla de bloqueo, fuentes, barra de tareas y Menú Inicio." },
+                { q: "La instalación, desinstalación y gestión de aplicaciones predeterminadas se realiza en:", o: ["Configuración > Sistema", "Configuración > Herramientas", "Configuración > Aplicaciones", "Configuración > Privacidad"], c: 2, e: "Aplicaciones. Permite gestionar las aplicaciones instaladas... establecer aplicaciones predeterminadas, gestionar aplicaciones de inicio." },
+                { q: "¿Dónde configurarías Windows Hello (PIN, contraseña, reconocimiento facial)?", o: ["Privacidad y seguridad", "Cuentas", "Sistema", "Windows Update"], c: 1, e: "Cuentas. Administra las cuentas... opciones de inicio de sesión (PIN, contraseña, huella dactilar o reconocimiento facial mediante Windows Hello)." },
+                { q: "Para cambiar el formato de moneda o instalar un nuevo idioma para el teclado, debo ir a:", o: ["Personalización", "Red e Internet", "Hora e idioma", "Accesibilidad"], c: 2, e: "Hora e idioma. Permite configurar... idioma del sistema, formato de hora, moneda y teclado, así como la instalación de nuevos idiomas." },
+                { q: "¿Cuál de estas herramientas NO está incluida en la categoría Accesibilidad?", o: ["Lupa", "Narrador", "Filtros de color", "Gestión de impresoras 3D"], c: 3, e: "Accesibilidad... Incluye herramientas como Narrador, Lupa, subtítulos, alto contraste, filtros de color... Las impresoras están en Bluetooth y dispositivos." },
+                { q: "La protección contra virus y amenazas y el control de permisos de la cámara y micrófono se ubican en:", o: ["Red e Internet", "Sistema", "Privacidad y seguridad", "Windows Update"], c: 2, e: "Privacidad y seguridad... Permite controlar el acceso... a datos sensibles (ubicación, cámara, micrófono)... protección contra virus y amenazas, firewall." },
+                { q: "¿Qué sección gestiona las horas activas y el historial de descargas del sistema operativo?", o: ["Sistema", "Windows Update", "Personalización", "Herramientas Administrativas"], c: 1, e: "Windows Update... buscar, descargar e instalar actualizaciones... controlar el historial de actualizaciones, configurar horas activas." },
+                { q: "La categoría Sistema también da acceso a:", o: ["Las especificaciones de hardware y la versión de Windows instalada (información del sistema)", "Solo a la hora del ordenador", "Los permisos de micrófono por aplicación", "La cámara web"], c: 0, e: "Sistema... y acceso a la información del sistema, como las especificaciones del hardware y la versión de Windows instalada." },
+                { q: "Las opciones de entrada y reproducción automática ('AutoPlay') de dispositivos (ej. pendrives) se controlan en:", o: ["Personalización", "Bluetooth y dispositivos", "Aplicaciones", "Cuentas"], c: 1, e: "Bluetooth y dispositivos... así como definir opciones de entrada y reproducción automática." },
+                { q: "El control del 'consumo de datos' de nuestra conexión se supervisa en:", o: ["Sistema", "Almacenamiento", "Red e Internet", "Aplicaciones"], c: 2, e: "Red e Internet... Permite administrar... el estado de la conexión, el consumo de datos..." },
+                { q: "¿En qué apartado se configuran las fuentes (tipografías) en Configuración?", o: ["Accesibilidad", "Personalización", "Aplicaciones", "Sistema"], c: 1, e: "Personalización. Incluye la configuración del... temas, pantalla de bloqueo, fuentes..." },
+                { q: "Si deseo configurar qué aplicaciones arrancan automáticamente al iniciar Windows desde Configuración, iré a:", o: ["Arranque del sistema (Sistema)", "Aplicaciones (Aplicaciones de inicio)", "Cuentas (Login)", "Windows Update"], c: 1, e: "Aplicaciones... gestionar aplicaciones de inicio y configurar características opcionales del sistema." },
+                { q: "La sincronización de configuraciones entre dispositivos se administra en la categoría:", o: ["Red e Internet", "Sistema", "Cuentas", "Windows Update"], c: 2, e: "Cuentas... cuentas Microsoft... sincronización de configuraciones..." },
+                { q: "Si necesito subtítulos, alto contraste o configuraciones para discapacidades motoras, debo acceder a:", o: ["Personalización", "Accesibilidad", "Pantalla", "Privacidad y seguridad"], c: 1, e: "Accesibilidad. Reúne las opciones diseñadas para facilitar el uso del sistema a personas con necesidades especiales." },
+                { q: "Las funciones de recuperación del sistema (restablecer el PC) dentro de Configuración se encuentran asociadas a:", o: ["Privacidad y seguridad", "Windows Update", "Almacenamiento", "Redes"], c: 1, e: "Windows Update... y acceder a funciones de recuperación del sistema." },
+                { q: "Los escritorios remotos y la proyección en este equipo son configuraciones de:", o: ["Red e Internet", "Sistema", "Cuentas", "Aplicaciones"], c: 1, e: "Sistema. Permite configurar... proyección en este equipo, escritorio remoto..." },
+                { q: "¿Cómo se llama la categoría que administra el acceso al trabajo o a centros educativos?", o: ["Red e Internet", "Cuentas", "Privacidad y seguridad", "Microsoft Office"], c: 1, e: "Cuentas... cuentas de correo y acceso al trabajo o a centros educativos." }
+            ],
+            // TEST 8: Ejecutar, Consolas y PowerShell (Tema 4.2)
+            [
+                { q: "Para abrir la herramienta Ejecutar utilizando el teclado se debe pulsar:", o: ["Windows + X", "Windows + R", "Windows + E", "Alt + F4"], c: 1, e: "Atajo de teclado: presiona las teclas 'Windows' + 'R' en tu teclado al mismo tiempo." },
+                { q: "¿Qué hace el comando 'cmd' desde la ventana Ejecutar?", o: ["Abre la configuración del sistema", "Abre el Símbolo del sistema", "Abre el explorador de Windows", "Apaga el ordenador"], c: 1, e: "cmd: abre el símbolo del sistema." },
+                { q: "El comando 'msconfig' introducido en Ejecutar sirve para abrir:", o: ["La configuración del sistema", "El administrador de tareas", "El desfragmentador de discos", "Las conexiones de red"], c: 0, e: "Msconfig: abre la configuración del sistema." },
+                { q: "Si escribimos 'taskmgr' en Ejecutar, ¿qué herramienta se abrirá?", o: ["El Registro de Windows", "El administrador de tareas", "El administrador de discos", "El visor de eventos"], c: 1, e: "Taskmgr: abre el administrador de tareas." },
+                { q: "Para realizar un análisis de la partición del disco desde línea de comandos o ejecutar, el comando es:", o: ["scandisk", "chkdsk", "diskcheck", "defrag"], c: 1, e: "Chkdsk: realiza un análisis de la partición del disco." },
+                { q: "El comando que verifica la conectividad de red entre dispositivos enviando paquetes es:", o: ["ipconfig", "netstat", "ping", "traceroute"], c: 2, e: "Ping: verifica la conectividad de red entre dispositivos." },
+                { q: "¿Qué hace el comando 'ipconfig'?", o: ["Modifica la IP automáticamente", "Muestra la configuración de red", "Abre el panel de control de redes", "Bloquea las conexiones entrantes"], c: 1, e: "Ipconfig: muestra la configuración de red." },
+                { q: "El gestor o consola 'devmgmt.msc' permite acceder a:", o: ["Administración de discos", "Monitor de rendimiento", "Configuración de dispositivos y hardware (Administrador de dispositivos)", "Visor de eventos"], c: 2, e: "devmgmt.msc: configurar dispositivos y hardware." },
+                { q: "Si se necesita administrar volúmenes de disco y crear particiones, se ejecutará el comando:", o: ["diskpart.msc", "diskmgmt.msc", "compmgmt.msc", "voldesk.msc"], c: 1, e: "diskmgmt.msc: administrar volúmenes de disco y crear particiones." },
+                { q: "El comando 'services.msc' tiene la función de:", o: ["Abrir el centro de servicios técnicos de Microsoft", "Configurar los servicios del sistema", "Monitorear el rendimiento de la RAM", "Abrir la administración de equipos"], c: 1, e: "services.msc: configurar los servicios del sistema." },
+                { q: "Para acceder al 'Visor de eventos' de Windows rápidamente, podemos ejecutar:", o: ["eventvwr.msc", "events.exe", "logview.msc", "systemlogs.msc"], c: 0, e: "eventvwr.msc: Abre el 'Visor de eventos'." },
+                { q: "La consola 'compmgmt.msc' abre específicamente:", o: ["La 'Administración de equipos'", "Los Componentes de Gestión", "El panel de cuentas", "El Administrador de certificados"], c: 0, e: "compmgmt.msc: Abre la 'Administración de equipos'." },
+                { q: "¿Qué diferencia principal hay entre CMD y PowerShell respecto a su base tecnológica?", o: ["CMD está basado en .NET y PowerShell en MS-DOS", "PowerShell utiliza un lenguaje basado en .NET y cmdlets, mientras CMD se basa en comandos heredados de MS-DOS", "Ambos son idénticos tecnológicamente, solo cambia el color", "PowerShell solo funciona en Windows Server"], c: 1, e: "PowerShell... utiliza un lenguaje de scripting avanzado basado en .NET y ofrece... cmdlets. El CMD... se basa principalmente en comandos heredados de MS-DOS." },
+                { q: "La interfaz principal recomendada actualmente para abrir PowerShell, CMD y otros entornos en Windows 11 es:", o: ["PowerShell ISE", "Windows Terminal", "Panel de Control", "Ejecutar antiguo"], c: 1, e: "...el entorno moderno de administración por línea de comandos está centrado en Windows PowerShell y su integración dentro de Windows Terminal..." },
+                { q: "El Administrador de certificados en Windows se puede abrir ejecutando el comando:", o: ["certs.exe", "certmgr.msc", "certificates.msc", "ssl.msc"], c: 1, e: "certmgr.msc: abre el 'Administrador de certificados' en Windows." },
+                { q: "El comando 'perfmon.msc' es utilizado para:", o: ["Ver los certificados personales", "Acceder al monitor del rendimiento del sistema", "Desfragmentar discos SSD", "Gestionar dispositivos externos"], c: 1, e: "perfmon.msc: acceder al monitor del rendimiento del sistema." },
+                { q: "¿Cómo se llama la pequeña pieza de script o comando avanzado utilizado específicamente en PowerShell?", o: ["Applet", "Cmdlet", "Scriptlet", "Macro"], c: 1, e: "PowerShell... ofrece una amplia gama de comandos y cmdlets (pequeños scripts de comandos) que pueden realizar tareas más complejas..." },
+                { q: "Según el temario, la herramienta Ejecutar permite:", o: ["Solo abrir archivos PDF", "Abrir programas, gestores, archivos, carpetas o recurso de Internet mediante texto", "Navegar visualmente por directorios", "Formatear el equipo automáticamente"], c: 1, e: "Ejecutar es una herramienta que permite a los usuarios abrir programas, gestores, archivos, carpetas o recurso de Internet, utilizando comandos de texto." },
+                { q: "Si necesito abrir la herramienta de desfragmentación de discos por comandos, escribo:", o: ["optidisk", "defrag", "chkdsk", "diskopt"], c: 1, e: "Defrag: abre la herramienta de desfragmentación de discos." },
+                { q: "Respecto a las capacidades de CMD frente a PowerShell, el texto afirma que:", o: ["CMD es más poderoso", "Son exactamente iguales en poder", "PowerShell es mucho más poderoso y versátil en comparación con CMD", "CMD se usa para entornos .NET"], c: 2, e: "[PowerShell] Es mucho más poderoso y versátil en comparación con CMD." }
+            ],
+            // TEST 9: El Administrador de Tareas (Tema 6)
+            [
+                { q: "El Administrador de tareas de Windows 11 permite:", o: ["Solo ver la hora del sistema", "Supervisar y gestionar programas, procesos y servicios, y analizar el rendimiento en tiempo real", "Modificar el registro base automáticamente", "Crear particiones en el disco duro"], c: 1, e: "El Administrador de tareas... permite supervisar y gestionar los programas, procesos y servicios que se ejecutan... así como analizar el rendimiento y el consumo de recursos." },
+                { q: "¿Qué indica un porcentaje elevado de utilización de la CPU en el Administrador de tareas?", o: ["Que el equipo funciona muy bien", "Mayor carga de trabajo del procesador, mayor consumo de recursos y de energía", "Que la memoria RAM está llena", "Que el disco duro está fragmentado"], c: 1, e: "El porcentaje de utilización de la CPU indica la carga de trabajo... cuanto mayor sea dicho porcentaje, mayor será el consumo de recursos y energía del sistema." },
+                { q: "¿Cuál de estos métodos abre directamente el Administrador de tareas de un solo paso?", o: ["Pulsando Ctrl + Shift + Esc", "Pulsando Alt + Tab", "Pulsando Windows + L", "Pulsando F1"], c: 0, e: "El Administrador de tareas puede abrirse mediante... Pulsando Ctrl + Shift + Esc." },
+                { q: "Al pulsar Ctrl + Alt + Supr para abrir el Administrador de tareas, el usuario debe:", o: ["Pulsarlo dos veces", "Seleccionar 'Administrador de tareas' en la pantalla de seguridad", "Mantener pulsado Enter", "Hacerlo con el equipo apagado"], c: 1, e: "Pulsando Ctrl + Alt + Supr y seleccionando Administrador de tareas." },
+                { q: "¿Es posible abrir el Administrador de tareas desde el botón Inicio?", o: ["Sí, haciendo clic con el botón derecho del ratón (Win+X) y eligiéndolo", "No, solo con el teclado", "Solo si es cuenta de Administrador", "Sí, pero requiere God Mode"], c: 0, e: "Haciendo clic con el botón derecho del ratón sobre el botón Inicio (menú Win+X) y eligiendo Administrador de tareas." },
+                { q: "En la interfaz renovada del Administrador de tareas de W11, las pestañas clásicas han sido sustituidas por:", o: ["Una barra superior flotante", "Un panel lateral izquierdo", "Un menú desplegable", "Se eliminaron las clasificaciones"], c: 1, e: "En Windows 11, el Administrador de tareas presenta una interfaz renovada, organizada mediante un panel lateral izquierdo que sustituye a las pestañas clásicas..." },
+                { q: "¿Qué funcionalidad novedosa de Windows 11 en el Administrador reduce el impacto de procesos sobre el rendimiento y consumo energético?", o: ["Modo reposo profundo", "Modo de eficiencia", "Task Killer", "Gestión de energía térmica"], c: 1, e: "...aplicar el Modo de eficiencia, una funcionalidad introducida en Windows 11 que reduce el impacto de determinados procesos sobre el rendimiento y el consumo energético..." },
+                { q: "La sección 'Rendimiento' del Administrador de tareas muestra gráficos en tiempo real de:", o: ["Temperaturas de los ventiladores", "CPU, memoria, discos, red y GPU", "Los usuarios conectados por RDP", "Historial de navegadores web"], c: 1, e: "Rendimiento: presenta gráficos en tiempo real del uso global de los recursos del sistema, incluyendo CPU, memoria, discos, red y GPU." },
+                { q: "La sección que muestra información del consumo de CPU y red de las aplicaciones de Microsoft Store de la cuenta actual es:", o: ["Procesos", "Usuarios", "Detalles", "Historial de aplicaciones"], c: 3, e: "Historial de aplicaciones: ofrece información sobre el consumo de CPU y red de las aplicaciones... principalmente aplicaciones de Microsoft Store." },
+                { q: "Para habilitar o deshabilitar programas que se inician automáticamente al arrancar Windows para mejorar el inicio, usaremos la sección:", o: ["Servicios", "Arranque veloz", "Aplicaciones de arranque", "Procesos del sistema"], c: 2, e: "Aplicaciones de arranque: permite gestionar los programas que se inician automáticamente al arrancar Windows, pudiendo habilitarlos o deshabilitarlos para mejorar el tiempo de inicio." },
+                { q: "La sección 'Procesos' muestra información dividida habitualmente en:", o: ["Solo las aplicaciones activas", "Aplicaciones, procesos en segundo plano y procesos del sistema", "Procesos locales y de red remota", "Servicios detenidos"], c: 1, e: "Procesos: muestra la lista de aplicaciones en ejecución, procesos en segundo plano y procesos del sistema..." },
+                { q: "¿En qué sección se puede ver el Identificador de Proceso (PID), estado y prioridad exacta de ejecución?", o: ["Procesos básicos", "Detalles", "Usuarios", "Rendimiento"], c: 1, e: "Detalles: proporciona información avanzada y detallada sobre todos los procesos en ejecución, incluyendo el nombre del proceso, identificador (PID), estado y prioridad." },
+                { q: "La sección 'Usuarios' del Administrador de tareas se usa para:", o: ["Crear nuevos usuarios locales", "Cambiar la contraseña de la cuenta", "Mostrar las cuentas con sesión iniciada y los recursos/aplicaciones que utilizan", "Borrar perfiles antiguos"], c: 2, e: "Usuarios: muestra las cuentas de usuario que tienen sesión iniciada en el equipo, los recursos que están utilizando y las aplicaciones asociadas a cada usuario." },
+                { q: "La sección 'Servicios' del Administrador de tareas indica:", o: ["Su estado actual (en ejecución o detenidos) y permite su administración", "Únicamente los servicios de terceros, no los de Windows", "El coste energético del servicio", "La versión de PowerShell necesaria"], c: 0, e: "Servicios: muestra la lista de servicios de Windows, indicando su estado actual (en ejecución o detenidos) y permitiendo acceder a su administración." },
+                { q: "Aparte de usar Ejecutar (taskmgr), ¿se puede acceder al Administrador desde una carpeta?", o: ["Sí, desde la carpeta Herramientas de Windows en el Menú Inicio", "No, esa carpeta no existe en W11", "Sí, pero desde la carpeta de Red", "Solo desde el Explorador de archivos (C:)"], c: 0, e: "Desde la carpeta Herramientas de Windows, accesible desde el Menú Inicio." },
+                { q: "¿Es posible finalizar una tarea bloqueada (que no responde) desde el Administrador de tareas?", o: ["No, solo reiniciando el PC", "Sí, desde la sección Procesos u otras opciones del administrador", "Solo si está en Modo Seguro", "Solo con PowerShell"], c: 1, e: "Procesos... Desde aquí se pueden finalizar tareas o activar el modo de eficiencia." },
+                { q: "En la sección de rendimiento, el término GPU hace referencia a la supervisión de:", o: ["Procesador Central", "Tarjeta Gráfica (Unidad de Procesamiento Gráfico)", "Memoria virtual", "Adaptador de red"], c: 1, e: "GPU es el procesador gráfico. El texto lista 'CPU, memoria, discos, red y GPU' como los componentes de hardware (Idea general explícita en acrónimos de hardware)." },
+                { q: "Según la imagen y el texto del temario, los recursos consumidos visualizados en la pestaña de procesos incluyen:", o: ["Solo Memoria y CPU", "CPU, Memoria, Disco y Red", "CPU, Memoria y Voltaje", "Tiempo de ejecución exclusivamente"], c: 1, e: "Procesos... junto con su consumo de CPU, memoria, disco, red y GPU. (En la imagen se ve CPU, Memoria, Disco, Red)." },
+                { q: "El modo de eficiencia, si se aplica a una aplicación:", o: ["Cierra la aplicación al instante", "Reduce su impacto sobre el rendimiento y consumo energético", "Aumenta la prioridad del proceso al máximo", "La desinstala del disco"], c: 1, e: "Modo de eficiencia... reduce el impacto de determinados procesos sobre el rendimiento y el consumo energético del sistema." },
+                { q: "Para acceder al 'Historial de aplicaciones', ¿qué requisito o enfoque específico destaca W11?", o: ["No se puede en W11", "Es principalmente para las aplicaciones de Microsoft Store de la cuenta de usuario actual", "Debe instalarse un plugin de terceros", "Muestra aplicaciones de todas las sesiones pasadas"], c: 1, e: "Historial de aplicaciones: ofrece información sobre el consumo... para la cuenta de usuario actual, principalmente aplicaciones de Microsoft Store." }
+            ],
+            // TEST 10: Herramientas del Sistema y Accesorios (Temas 7 y 8)
+            [
+                { q: "¿Existe el grupo 'Accesorios de Windows' como carpeta organizadora en el menú Inicio de Windows 11?", o: ["Sí, exactamente igual que en Windows 10", "No existe como bloque organizado, se presentan como aplicaciones individuales", "Sí, pero se llama 'Extras de Windows'", "No, todas las aplicaciones fueron borradas"], c: 1, e: "En Windows 11 no existe un grupo denominado «Accesorios de Windows» como bloque organizado... se presentan como aplicaciones individuales." },
+                { q: "¿Cuál de las siguientes aplicaciones está tradicionalmente considerada como 'Accesorio' en el texto?", o: ["Desfragmentador de discos", "Bloc de notas", "Editor del Registro", "Monitor de recursos"], c: 1, e: "Entre estas aplicaciones [Accesorios] se incluyen: Bloc de notas, Paint, Calculadora, Herramienta Recortes..." },
+                { q: "La utilidad 'Conexión a Escritorio remoto' se considera:", o: ["Un Accesorio (según edición) y una Herramienta del sistema", "Un virus del sistema", "Una característica exclusiva de LINUX", "Un juego nativo"], c: 0, e: "Aparece en Accesorios ('Conexión a Escritorio remoto (según edición)') y también en las Herramientas de Windows." },
+                { q: "Bajo qué denominación se agrupan las utilidades administrativas del sistema en Windows 11?", o: ["Herramientas de Windows", "Herramientas Administrativas clásicas", "Ajustes de Sistema", "Panel de Control Avanzado"], c: 0, e: "En Windows 11, las utilidades administrativas del sistema se agrupan bajo la denominación Herramientas de Windows." },
+                { q: "¿Cuál es la ruta desde el Menú Inicio para acceder a las Herramientas del sistema?", o: ["Menú Inicio > Configuración > Extras", "Menú Inicio > Todas las aplicaciones > Herramientas de Windows", "Menú Inicio > Panel de control", "Menú Inicio > Ejecutar CMD"], c: 1, e: "Las Herramientas de Windows pueden localizarse mediante: Menú Inicio > Todas las aplicaciones > Herramientas de Windows." },
+                { q: "La consola centralizada que integra 'Administración de discos, Visor de eventos, Servicios, etc.' se denomina:", o: ["Administración de equipos", "Consola del Sistema", "Gestión Integral", "Monitor de rendimiento"], c: 0, e: "Administración de equipos: Consola centralizada que integra varias herramientas administrativas del sistema..." },
+                { q: "¿Qué utilidad analizaría la RAM del equipo para detectar fallos o reinicios inesperados?", o: ["Desfragmentador", "Monitor de recursos", "Diagnóstico de memoria de Windows", "Visor de Eventos"], c: 2, e: "Diagnóstico de memoria de Windows: Comprueba el estado de la memoria RAM del equipo para detectar errores..." },
+                { q: "La herramienta que permite realizar capturas de pantalla parciales o de ventanas se llama:", o: ["Grabadora de voz", "ScreenCapture.exe", "Herramienta Recortes", "Captura Total"], c: 2, e: "Herramienta Recortes: Permite realizar capturas de pantalla completas, parciales o de ventanas concretas..." },
+                { q: "Para eliminar archivos temporales y elementos innecesarios liberando espacio se usa:", o: ["Optimizador de RAM", "Liberador de espacio en disco", "Recuperación de sistema", "Defrag"], c: 1, e: "Liberador de espacio en disco: Permite eliminar archivos temporales, archivos del sistema y otros elementos innecesarios..." },
+                { q: "¿Dónde podemos visualizar y modificar donde se almacenan las configuraciones más profundas de W11 y las apps (destinado a usuarios avanzados)?", o: ["En el Archivo HOSTS", "En el Editor del Registro", "En el Panel de Control Básico", "En el Mapa de caracteres"], c: 1, e: "Editor del Registro: Permite visualizar y modificar el Registro de Windows, donde se almacenan configuraciones del sistema y de las aplicaciones." },
+                { q: "El 'Mapa de caracteres' es útil para:", o: ["Trazar mapas de red local", "Ver las letras de unidades disponibles", "Mostrar y copiar caracteres especiales disponibles en fuentes instaladas", "Modificar las contraseñas"], c: 2, e: "Mapa de caracteres: Muestra los caracteres especiales disponibles en las fuentes instaladas y permite copiarlos..." },
+                { q: "Para automatizar la ejecución de programas en momentos concretos o bajo condiciones se usa el:", o: ["Automatizador básico", "Power Automate y Programador de tareas", "Gestor de Eventos", "Windows Defender"], c: 1, e: "Programador de tareas: Permite automatizar la ejecución de programas, scripts... Power Automate: Herramienta orientada a la automatización de tareas y flujos..." },
+                { q: "¿Qué herramienta es orientada a entornos profesionales para la gestión centralizada de impresoras, colas y controladores?", o: ["Gestor de colas clásico", "Administración de impresión", "Dispositivos e impresoras basic", "Spooler Service"], c: 1, e: "Administración de impresión: Permite administrar impresoras locales y de red, colas de impresión..." },
+                { q: "Para ver información detallada del hardware y entorno del software usamos:", o: ["Información del sistema", "Editor de texto", "Panel de visualización", "Herramienta Recortes"], c: 0, e: "Información del sistema: Muestra información detallada sobre el hardware, los componentes del sistema, los recursos..." },
+                { q: "La herramienta 'Desfragmentar y optimizar unidades' realiza optimizaciones específicas para mantener el rendimiento en qué tipo de discos?", o: ["Solo en Floppy disks", "En discos duros magnéticos y unidades SSD", "Solo en CD-ROMs", "En redes de área local"], c: 1, e: "Desfragmentar y optimizar unidades... En discos duros realiza la desfragmentación y en unidades SSD aplica optimizaciones específicas..." },
+                { q: "¿Qué herramienta de soporte técnico documenta incidencias grabando los clics del usuario?", o: ["Keylogger oficial", "Grabación de acciones de usuario", "Soporte Remoto Microsoft", "Historial de Windows"], c: 1, e: "Grabación de acciones de usuario: Herramienta de soporte técnico que registra las acciones realizadas por el usuario (clics, pulsaciones y capturas)..." },
+                { q: "El reproductor clásico para reproducir audio y vídeo incluido en Herramientas de W11 se llama:", o: ["Groove Music", "Windows Media Player Legacy", "Películas y TV", "VLC Media Player"], c: 1, e: "Windows Media Player Legacy: Reproductor multimedia clásico de Windows que permite reproducir archivos..." },
+                { q: "¿Qué utilidad controla el tráfico de red entrante y saliente y define reglas de seguridad?", o: ["Windows Defender Firewall", "Monitor de recursos", "Conexiones ODBC", "Servicios de red"], c: 0, e: "Windows Defender Firewall: Herramienta para administrar el cortafuegos de Windows, controlando el tráfico de red entrante y saliente..." },
+                { q: "¿Qué herramienta permite diagnosticar problemas de arranque gestionando servicios y opciones de arranque del sistema?", o: ["Opciones de Internet", "Configuración del sistema (msconfig)", "Administración de equipos", "Recuperación"], c: 1, e: "Configuración del sistema: Herramienta avanzada utilizada para diagnosticar y solucionar problemas de arranque... Permite gestionar servicios, programas de inicio..." },
+                { q: "¿Qué es el 'Windows PowerShell ISE' según el temario?", o: ["Un navegador web de texto", "Un entorno gráfico para la creación, edición y ejecución de scripts de PowerShell", "Una base de datos ODBC", "Un emulador de LINUX"], c: 1, e: "Windows PowerShell ISE: Entorno gráfico para la creación, edición y ejecución de scripts de PowerShell, destinado a tareas avanzadas." }
+            ]
+        ];
+
+        // LÓGICA DE APLICACIÓN
+        let currentActiveTab = 'schema'; // Inicialmente mostramos el esquema
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTabs();
+            renderSchema();
+        });
+
+        function renderTabs() {
+            const nav = document.getElementById('tab-nav');
+            
+            // Botón de Esquema
+            const schemaBtn = document.createElement('button');
+            schemaBtn.className = `tab-btn active whitespace-nowrap px-4 py-2 font-medium text-sm rounded-md`;
+            schemaBtn.innerText = `Esquema de Preguntas`;
+            schemaBtn.onclick = () => switchTab('schema', schemaBtn);
+            nav.appendChild(schemaBtn);
+
+            // Botones de los 10 test
+            testData.forEach((test, index) => {
+                const testBtn = document.createElement('button');
+                testBtn.className = `tab-btn whitespace-nowrap px-4 py-2 font-medium text-sm rounded-md text-slate-600 hover:text-slate-800`;
+                testBtn.innerText = `Test ${index + 1}`;
+                testBtn.onclick = () => switchTab(`test-${index}`, testBtn);
+                nav.appendChild(testBtn);
+            });
+        }
+
+        function switchTab(tabId, btnElement) {
+            currentActiveTab = tabId;
+            // Detener el audio si está sonando al cambiar de pestaña
+            if(window.speechSynthesis) window.speechSynthesis.cancel();
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-500', 'text-white');
+                btn.classList.add('text-slate-600');
+            });
+            btnElement.classList.remove('text-slate-600');
+            btnElement.classList.add('active', 'bg-blue-500', 'text-white');
+
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = '';
+
+            if (tabId === 'schema') {
+                renderSchema();
+            } else {
+                const testIndex = parseInt(tabId.split('-')[1]);
+                renderTest(testIndex);
+            }
+        }
+
+        function renderSchema() {
+            const contentArea = document.getElementById('content-area');
+            
+            // Controles Text-to-Speech
+            const ttsContainer = document.createElement('div');
+            ttsContainer.className = "flex flex-wrap gap-2 mb-6 justify-center md:justify-end";
+            
+            const btnTts = document.createElement('button');
+            btnTts.className = "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center gap-2";
+            btnTts.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
+                </svg> Escuchar Esquema Completo`;
+            btnTts.onclick = () => readTextTTS();
+            
+            const btnStopTts = document.createElement('button');
+            btnStopTts.className = "bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center gap-2";
+            btnStopTts.innerHTML = `Detener`;
+            btnStopTts.onclick = () => { if(window.speechSynthesis) window.speechSynthesis.cancel(); };
+
+            ttsContainer.appendChild(btnTts);
+            ttsContainer.appendChild(btnStopTts);
+            contentArea.appendChild(ttsContainer);
+
+            const title = document.createElement('h2');
+            title.className = "text-xl font-bold mb-4 text-slate-800 border-b pb-2";
+            title.innerText = "Esquema Principal de Estudio (40 Preguntas y Respuestas)";
+            contentArea.appendChild(title);
+
+            schemaData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "card p-4 md:p-6";
+                card.innerHTML = `
+                    <h3 class="font-bold text-lg text-blue-700 mb-2">${index + 1}. ${item.q}</h3>
+                    <p class="text-slate-700 bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-md">${item.a}</p>
+                `;
+                contentArea.appendChild(card);
+            });
+        }
+
+        function readTextTTS() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta Text-to-Speech.");
+                return;
+            }
+            window.speechSynthesis.cancel(); // Stop any ongoing speech
+            
+            let fullText = "Esquema de estudio. Tema 3. ";
+            schemaData.forEach((item, index) => {
+                fullText += `Pregunta ${index + 1}. ${item.q} Respuesta: ${item.a}. `;
+            });
+
+            const utterance = new SpeechSynthesisUtterance(fullText);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.0; 
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function renderTest(testIndex) {
+            const contentArea = document.getElementById('content-area');
+            const data = testData[testIndex];
+
+            const title = document.createElement('h2');
+            title.className = "text-xl font-bold mb-6 text-slate-800 border-b pb-2";
+            title.innerText = `Test ${testIndex + 1} (20 Preguntas)`;
+            contentArea.appendChild(title);
+
+            const form = document.createElement('div');
+            form.id = `test-form-${testIndex}`;
+
+            const qLetters = ['A', 'B', 'C', 'D'];
+
+            data.forEach((qObj, qIndex) => {
+                const card = document.createElement('div');
+                card.className = "card p-4 md:p-6 mb-6";
+                card.id = `qcard-${testIndex}-${qIndex}`;
+                
+                let html = `<h3 class="font-bold text-lg text-slate-800 mb-4">${qIndex + 1}. ${qObj.q}</h3>`;
+                html += `<div class="flex flex-col gap-2">`;
+                
+                qObj.o.forEach((optText, oIndex) => {
+                    const idStr = `q_${testIndex}_${qIndex}_opt_${oIndex}`;
+                    const groupStr = `q_${testIndex}_${qIndex}`;
+                    html += `
+                        <label class="radio-label" id="label-${idStr}">
+                            <input type="radio" name="${groupStr}" value="${oIndex}" id="${idStr}" class="radio-input">
+                            <span class="font-medium text-slate-700"><span class="font-bold text-blue-600 w-6 inline-block">${qLetters[oIndex]})</span> ${optText}</span>
+                        </label>
+                    `;
+                });
+                html += `</div>`;
+
+                // Div para la explicación (oculto por defecto)
+                html += `
+                    <div id="exp-${testIndex}-${qIndex}" class="pastel-box flex flex-col gap-1 mt-4">
+                        <span class="font-bold uppercase text-xs tracking-wider opacity-80">Explicación motivada (del documento oficial):</span>
+                        <span>${qObj.e}</span>
+                    </div>
+                `;
+
+                card.innerHTML = html;
+                form.appendChild(card);
+            });
+
+            // Botones de acción
+            const actionDiv = document.createElement('div');
+            actionDiv.className = "flex flex-col sm:flex-row gap-4 justify-center mt-8 pb-20";
+            
+            const btnSubmit = document.createElement('button');
+            btnSubmit.className = "bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-all text-lg w-full sm:w-auto";
+            btnSubmit.innerText = "Calcular resultado";
+            btnSubmit.onclick = () => correctTest(testIndex);
+            
+            const btnReset = document.createElement('button');
+            btnReset.className = "bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 px-8 rounded-lg shadow-sm transition-all text-lg w-full sm:w-auto hidden";
+            btnReset.id = `btn-reset-${testIndex}`;
+            btnReset.innerText = "Reiniciar test";
+            btnReset.onclick = () => resetTest(testIndex);
+
+            actionDiv.appendChild(btnSubmit);
+            actionDiv.appendChild(btnReset);
+            form.appendChild(actionDiv);
+
+            // Div de resumen flotante
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = "floating-summary";
+            summaryDiv.id = `summary-${testIndex}`;
+            summaryDiv.innerHTML = `<h3 class="text-xl font-bold mb-1" id="summary-title-${testIndex}"></h3><p id="summary-text-${testIndex}" class="text-slate-600 font-medium"></p>`;
+
+            contentArea.appendChild(form);
+            document.body.appendChild(summaryDiv); // Al final del body para el sticky inferior
+        }
+
+        function correctTest(testIndex) {
+            const data = testData[testIndex];
+            let hits = 0;
+            let misses = 0;
+            let unanswered = 0;
+
+            data.forEach((qObj, qIndex) => {
+                const groupStr = `q_${testIndex}_${qIndex}`;
+                const radios = document.getElementsByName(groupStr);
+                let selectedValue = null;
+                let selectedRadioId = null;
+
+                radios.forEach(radio => {
+                    radio.disabled = true; // Desactivar opciones
+                    if (radio.checked) {
+                        selectedValue = parseInt(radio.value);
+                        selectedRadioId = radio.id;
+                    }
+                });
+
+                const correctRadioId = `q_${testIndex}_${qIndex}_opt_${qObj.c}`;
+                const correctLabel = document.getElementById(`label-${correctRadioId}`);
+                const expDiv = document.getElementById(`exp-${testIndex}-${qIndex}`);
+
+                // Mostrar explicación en todos
+                expDiv.style.display = 'block';
+
+                if (selectedValue === null) {
+                    unanswered++;
+                    // Mostrar cuál era la correcta aunque no haya respondido
+                    correctLabel.classList.add('correct-ans');
+                } else if (selectedValue === qObj.c) {
+                    hits++;
+                    document.getElementById(`label-${selectedRadioId}`).classList.add('correct-ans');
+                } else {
+                    misses++;
+                    document.getElementById(`label-${selectedRadioId}`).classList.add('wrong-ans');
+                    // Marcar la correcta en verde para que sepa cuál era
+                    correctLabel.classList.add('correct-ans');
+                }
+            });
+
+            // Actualizar resumen flotante
+            const summaryDiv = document.getElementById(`summary-${testIndex}`);
+            const titleRes = document.getElementById(`summary-title-${testIndex}`);
+            const textRes = document.getElementById(`summary-text-${testIndex}`);
+            
+            const totalScore = (hits / data.length) * 10;
+            titleRes.innerText = `Nota: ${totalScore.toFixed(1)} / 10`;
+            titleRes.style.color = totalScore >= 5 ? '#10b981' : '#ef4444';
+            textRes.innerText = `Aciertos: ${hits} | Errores: ${misses} | En blanco: ${unanswered}`;
+            
+            summaryDiv.style.display = 'block';
+
+            // Mostrar el botón de reinicio y ocultar el botón submit si se quiere (o dejar ambos)
+            document.getElementById(`btn-reset-${testIndex}`).classList.remove('hidden');
+        }
+
+        function resetTest(testIndex) {
+            const data = testData[testIndex];
+            
+            data.forEach((qObj, qIndex) => {
+                const groupStr = `q_${testIndex}_${qIndex}`;
+                const radios = document.getElementsByName(groupStr);
+                
+                radios.forEach(radio => {
+                    radio.disabled = false;
+                    radio.checked = false;
+                });
+
+                // Limpiar clases
+                for (let i = 0; i < 4; i++) {
+                    const label = document.getElementById(`label-q_${testIndex}_${qIndex}_opt_${i}`);
+                    if(label){
+                        label.classList.remove('correct-ans', 'wrong-ans');
+                    }
+                }
+
+                // Ocultar explicaciones
+                const expDiv = document.getElementById(`exp-${testIndex}-${qIndex}`);
+                expDiv.style.display = 'none';
+            });
+
+            // Ocultar resumen
+            const summaryDiv = document.getElementById(`summary-${testIndex}`);
+            summaryDiv.style.display = 'none';
+
+            // Ocultar botón reinicio
+            document.getElementById(`btn-reset-${testIndex}`).classList.add('hidden');
+            
+            // Scroll arriba suave
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

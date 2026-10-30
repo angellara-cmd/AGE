@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquemas y Test - Oposiciones AGE (Tema 1)</title>
+    <style>
+        /* Estilos Base y Variables (Mobile-First) */
+        :root {
+            --bg-color: #f7f9fa;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --primary-color: #0056b3;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --success-bg: #d4edda;
+            --danger-bg: #f8d7da;
+            --pastel-box: #fff8e1; /* Amarillo pastel muy claro para explicaciones */
+            --border-radius: 12px;
+            --font-family: system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Encabezado y Navegación */
+        header {
+            background-color: var(--card-bg);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .pdf-link {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .pdf-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tabs-container {
+            position: sticky;
+            top: 0;
+            background-color: var(--card-bg);
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            padding: 0 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* Contenedor Principal */
+        main {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tarjetas de Preguntas */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        /* Esquema (Pestaña 1) */
+        .answer-text {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            color: #444;
+        }
+
+        /* Test (Pestañas 2-11) */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        /* Estados de Corrección */
+        .option-label.correct {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success-color) !important;
+            color: #155724;
+            font-weight: 600;
+        }
+
+        .option-label.incorrect {
+            background-color: var(--danger-bg) !important;
+            border-color: var(--danger-color) !important;
+            color: #721c24;
+        }
+
+        /* Explicación Motivada */
+        .explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--pastel-box);
+            border-left: 4px solid #ffc107;
+            border-radius: 0 8px 8px 0;
+            color: #5a4a00;
+            font-size: 0.95rem;
+        }
+
+        /* Botones de Acción */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s, box-shadow 0.3s;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #004494;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-tts {
+            background-color: #17a2b8;
+            color: white;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-tts:hover {
+            background-color: #138496;
+        }
+
+        /* Resultados */
+        .results-summary {
+            display: none;
+            background-color: #e2e3e5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid #adb5bd;
+        }
+
+        /* Media Queries (Escritorio) */
+        @media (min-width: 768px) {
+            h1 { font-size: 2rem; }
+            .tabs-container { justify-content: center; }
+            .action-buttons { flex-wrap: nowrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Esquemas y Test AGE - Informática Básica</h1>
+        <p>Material basado exclusivamente en el documento adjunto.</p>
+        <a href="tema01.pdf" target="_blank" class="pdf-link">📄 Ver pdf gem (tema01.pdf)</a>
+    </header>
+
+    <div class="tabs-container" id="tabs-menu">
+        <button class="tab-btn active" data-target="tab-esquema">Esquema (40 Preguntas)</button>
+        <!-- Los botones de los test se generarán con JS -->
+    </div>
+
+    <main id="main-content">
+        <!-- Pestaña 1: Esquema -->
+        <section id="tab-esquema" class="tab-content active">
+            <button id="tts-btn" class="btn btn-tts">🔊 Escuchar / Detener Lectura del Esquema</button>
+            <div id="esquema-container"></div>
+        </section>
+
+        <!-- Contenedores para los 10 Test (se generarán con JS) -->
+    </main>
+
+    <script>
+        // ==========================================
+        // BASE DE DATOS DE PREGUNTAS (Extraídas 100% de tema01.pdf)
+        // ==========================================
+
+        // --- PESTAÑA PRINCIPAL (40 PREGUNTAS) ---
+        const esquemaQuestions = [
+            { q: "1. ¿De dónde nace la palabra informática y quién la inventó?", a: "Nace de la contracción de las palabras 'información' y 'automática'. El término fue inventado por Phillippe Dreyfus en 1962." },
+            { q: "2. ¿Cómo se define la informática según el temario?", a: "Se puede definir como el 'tratamiento o procesamiento automático de la información mediante una máquina denominada computador'." },
+            { q: "3. ¿Cuál es la diferencia entre información y dato?", a: "La información es un término genérico que representa ideas, hechos, relaciones y propiedades. Un dato es un concepto mucho más preciso; se considera una información concreta y no demasiado extensa (ej. una fecha de nacimiento)." },
+            { q: "4. ¿Cuáles son los tres bloques en los que se estructura un ordenador?", a: "1) Bloque de entrada (Periféricos de entrada). 2) Bloque de proceso (CPU y Memoria Principal). 3) Bloque de salida (Periféricos de salida)." },
+            { q: "5. ¿Qué es un algoritmo y qué es un ordinograma?", a: "Un algoritmo es el conjunto de pasos que hay que realizar para solucionar un problema (descripción textual). Un ordinograma es lo mismo que el algoritmo pero representado gráficamente." },
+            { q: "6. Define Hardware, Software y Firmware.", a: "Hardware (equipo físico): parte material o tangible del sistema informático. Software (equipo lógico): programas que indican a la máquina los pasos a realizar. Firmware: software que viene grabado de fábrica en memorias ROM o EEPROM." },
+            { q: "7. ¿Qué funciones clave realiza la BIOS?", a: "Inicialización del hardware, detección de dispositivos, configuración de parámetros del sistema (fecha y hora) y la carga del sistema operativo desde el dispositivo de arranque." },
+            { q: "8. ¿Por qué el ordenador utiliza el sistema binario (0 y 1)?", a: "Porque es un sistema digital compuesto por circuitos electrónicos que permiten detectar fácilmente si existe paso (estado lógico 1) o no paso de corriente (estado lógico 0)." },
+            { q: "9. ¿Qué es un bit y qué es un byte (octeto)?", a: "Un bit es la unidad mínima de información que puede tratar el ordenador (un 0 o un 1). Un byte, formado por 8 bits, es la unidad mínima de información que necesita un ordenador para almacenar algo." },
+            { q: "10. ¿Qué es el Código ASCII y cuántos caracteres representa?", a: "Es el American Standard Code for Information Interchange. Utiliza 8 bits (1 byte) para poder representar un total de 256 caracteres (2 elevado a 8)." },
+            { q: "11. ¿Qué es la palabra, longitud o tamaño de palabra?", a: "Es el número de bits que un ordenador puede procesar en una única operación. Las habituales son de 32 y 64 bits (4 y 8 bytes respectivamente)." },
+            { q: "12. ¿Cómo se clasifican los ordenadores atendiendo a su tamaño?", a: "Supercomputadoras, Mainframes, Miniordenadores, Ordenadores personales (sobremesa, portátiles, tablets/smartphones/PDA, wearables) y Nanoordenadores." },
+            { q: "13. ¿Qué diferencia a un ordenador cuántico de uno digital clásico?", a: "El cuántico utiliza el 'qubit' o cúbit en lugar del bit. Mientras el bit clásico analiza una posibilidad y la contraria, el qubit puede tener en cuenta más datos y probabilidades, logrando mayor rapidez y precisión." },
+            { q: "14. Define la Placa Base (motherboard) y un factor de forma común.", a: "Es el circuito principal que conecta y comunica todos los componentes del ordenador. El factor de forma más común para PC de escritorio es el ATX." },
+            { q: "15. ¿Qué son los buses y cuáles son sus tres tipos?", a: "Son un conjunto de cables y circuitos para transferir información. Existen de Datos (bidireccionales), de Dirección (unidireccionales) y de Control (bidireccionales)." },
+            { q: "16. ¿Qué funciones tienen el Northbridge y el Southbridge del Chipset?", a: "El Northbridge controla el acceso desde y hasta el microprocesador, memoria RAM, AGP/PCI-Express y Southbridge. El Southbridge coordina dispositivos de entrada/salida y funcionalidades de baja velocidad; se conecta al Northbridge, no al procesador." },
+            { q: "17. ¿Qué función tiene el VRM en la placa base?", a: "Adapta el voltaje de la fuente de alimentación a los componentes para que no sea insuficiente ni demasiado alto." },
+            { q: "18. ¿Qué es la CPU y qué unidades la conforman?", a: "Es el cerebro del ordenador (coordina, supervisa y procesa instrucciones). Se estructura en: Registros de acceso rápido, Memoria caché, Unidad de control y Unidad aritmético lógica (ALU)." },
+            { q: "19. Define la Velocidad de reloj y el Zócalo (socket) del microprocesador.", a: "Velocidad de reloj (MHz/GHz) indica cuántas operaciones realiza por segundo. El zócalo es la interfaz física que conecta el microprocesador a la placa base." },
+            { q: "20. ¿Cuáles son los elementos principales de la Unidad de Control?", a: "Registro de instrucción (RI), registro contador del programa (CP), decodificador, secuenciador y reloj." },
+            { q: "21. ¿Qué es la ALU y de qué dispone?", a: "Es la Unidad Aritmético-Lógica. Realiza operaciones aritméticas (sumas, restas) y lógicas. Dispone de registros (operandos/entrada, acumulador, estado) y circuitos operacionales." },
+            { q: "22. Indica el valor aproximado de 1 Megabyte y 1 Gigabyte en bytes.", a: "1 Megabyte (1 MB) es aproximadamente un millón de bytes. 1 Gigabyte (1 GB) es aproximadamente mil millones de bytes." },
+            { q: "23. Enumera los múltiplos del byte mencionados hasta el Yottabyte.", a: "Kilobyte (KB), Megabyte (MB), Gigabyte (GB), Terabyte (TB), Petabyte (PB), Exabyte (EB), Zettabyte (ZB), Yottabyte (YB). Posteriormente Brontobyte, Geopbyte, Saganbyte y Jotabyte." },
+            { q: "24. ¿Cuáles son las características principales de la memoria RAM?", a: "Es volátil (se borra al apagar), permite lectura y escritura, y almacena datos y programas que la CPU necesita en tiempo real." },
+            { q: "25. Diferencia entre DRAM y SRAM.", a: "DRAM es económica pero necesita actualizarse constantemente. SRAM es más rápida, más cara, no requiere actualización constante y se usa en cachés y registros." },
+            { q: "26. ¿Qué significa ROM y cuáles son sus características?", a: "Read-Only Memory (Memoria de Solo Lectura). Es no volátil, capacidad limitada, solo permite lectura y almacena información esencial como la BIOS/UEFI." },
+            { q: "27. Define EPROM, EEPROM y Flash ROM.", a: "EPROM se borra con luz ultravioleta. EEPROM se borra eléctricamente. Flash ROM es una EEPROM que permite reescribir datos múltiples veces y retenerlos a largo plazo (USB, SSD)." },
+            { q: "28. Menciona la jerarquía de memoria desde la más rápida.", a: "1) Registros del microprocesador. 2) Memoria caché (L1, L2, L3). 3) RAM/ROM. 4) Memoria virtual. 5) SSD. 6) Discos duros (HDD). 7) Memorias ópticas. 8) Nube." },
+            { q: "29. ¿Qué es la memoria Caché y cuáles son sus niveles?", a: "Es una memoria SRAM de alta velocidad y volátil para datos inmediatos de la CPU. Nivel L1 (más cerca, rápida y pequeña), L2 (más grande, más lenta) y L3 (si está, es la más grande y lenta)." },
+            { q: "30. ¿Qué significa Plug and Play (PnP)?", a: "Es una tecnología que permite a un dispositivo ser conectado al ordenador sin tener que configurar drivers manualmente." },
+            { q: "31. ¿Qué es un periférico y qué tipos hay según su sentido?", a: "Elemento capaz de intercambiar información entre la CPU y un soporte. Tipos: Entrada, Salida y Entrada/Salida." },
+            { q: "32. Diferencia entre puertos HDMI y VGA.", a: "HDMI transmite video y audio de alta calidad y resolución para pantallas de alta definición. VGA es más antiguo, transmite solo video analógico y de menor calidad." },
+            { q: "33. Nombra 5 ejemplos de periféricos de entrada.", a: "Teclado, Ratón (mouse), Trackball, Touchpad, Escáner." },
+            { q: "34. ¿Qué es el 'Dot pitch' y la 'Tasa de refresco' en un monitor?", a: "Dot pitch es la separación entre puntos del mismo color. Tasa de refresco es el número de veces que se redibuja la pantalla por segundo." },
+            { q: "35. ¿Cómo se clasifican las impresoras y cómo se mide su velocidad?", a: "En impresoras de impacto y no impacto. Su velocidad se mide en caracteres por segundo (CPS) en impacto, y páginas por minuto (PPM) en no impacto." },
+            { q: "36. Define DAS, NAS y SAN en almacenamiento.", a: "DAS: almacenamiento conectado directamente. NAS: almacenamiento conectado a red, comparte archivos en red local. SAN: red de área de almacenamiento de alta velocidad." },
+            { q: "37. ¿Cuáles son las tres categorías principales del software?", a: "Software base o de Sistema (ej. SO, controladores), Software de Aplicación (ej. procesadores de texto, juegos) y Software de Programación (ej. compiladores, depuradores)." },
+            { q: "38. ¿Qué es la Confidencialidad y la Integridad en seguridad?", a: "Confidencialidad: garantizar que solo personas autorizadas accedan a la información. Integridad: precisión y fiabilidad, previniendo cambios no autorizados." },
+            { q: "39. Define Vulnerabilidad, Amenaza y Ataque.", a: "Vulnerabilidad: debilidad en el sistema. Amenaza: causa potencial que aprovecha la vulnerabilidad. Ataque: el acto real de aprovechar la vulnerabilidad para causar daño." },
+            { q: "40. Diferencia entre respaldo Diferencial e Incremental.", a: "Diferencial: copia los datos que han cambiado desde el último respaldo COMPLETO. Incremental: copia los archivos modificados desde el último respaldo completo, diferencial o incremental." }
+        ];
+
+        // --- EXÁMENES TIPO TEST (10 Test x 20 Preguntas) ---
+        // Extraído TODO estrictamente de tema01.pdf
+        const testData = [
+            // TEST 1: Conceptos Básicos e Historia
+            [
+                { q: "¿Quién inventó el término informática y en qué año?", opts: ["Alan Turing en 1950", "Phillippe Dreyfus en 1962", "Charles Babbage en 1962", "Ninguna es correcta"], ans: 1, exp: "El término informática fue inventado por Phillippe Dreyfus en 1962." },
+                { q: "De qué palabras nace el término 'informática'?", opts: ["Información y automática", "Información y matemática", "Informática y tecnología", "Información y analítica"], ans: 0, exp: "Nace de la contracción de las palabras 'información' y 'automática'." },
+                { q: "¿Cuál es la unidad mínima de información que puede tratar el ordenador?", opts: ["Byte", "Octeto", "Bit", "Palabra"], ans: 2, exp: "Un bit se puede definir como la unidad mínima de información que puede tratar el ordenador (un cero o un uno)." },
+                { q: "¿Cuántos bits forman un byte u octeto?", opts: ["16 bits", "4 bits", "8 bits", "32 bits"], ans: 2, exp: "Para poder representar todos los caracteres se necesitan 8 bits, estos bits forman 1 byte u octeto." },
+                { q: "Según el esquema básico, ¿cuáles son los tres bloques de un ordenador?", opts: ["Placa base, CPU y RAM", "Bloque de entrada, Bloque de proceso y Bloque de salida", "Hardware, Software y Firmware", "A y B son correctas"], ans: 1, exp: "El ordenador se estructura en: Bloque de entrada, Bloque de proceso (CPU y M. Principal) y Bloque de salida." },
+                { q: "¿Qué nombre recibe el paso del lenguaje natural al lenguaje binario (0 y 1)?", opts: ["Decodificación", "Compilación", "Codificación", "Procesamiento"], ans: 2, exp: "Hay que traducirla a 0 y 1 (lenguaje binario), proceso denominado codificación." },
+                { q: "¿Qué es el Firmware?", opts: ["El software de aplicación gratuito", "El equipo físico del ordenador", "El software que viene grabado de fábrica en memorias ROM o EEPROM", "La memoria virtual del equipo"], ans: 2, exp: "El FIRMWARE es el 'software que viene grabado de fábrica'. Programas grabados en memorias ROM o EEPROM." },
+                { q: "¿A qué se refiere el término 'Shareware'?", opts: ["Programas gratuitos", "Programas de evaluación", "Programas para el trabajo en grupo", "Programas grabados en la BIOS"], ans: 1, exp: "Software especial: freeware (gratuitos), shareware (programas de evaluación) o groupware (trabajo en grupo)." },
+                { q: "¿Qué código utiliza 8 bits para representar un total de 256 caracteres?", opts: ["Código Binario Puro", "Código Morse", "Código ASCII", "Código UEFI"], ans: 2, exp: "El código más utilizado es el Código ASCII que utiliza 8 bits para representar 256 caracteres." },
+                { q: "El estado lógico '0' se asocia en el ordenador a:", opts: ["Interruptor cerrado y presencia de tensión", "Interruptor abierto y ausencia de tensión, falso", "Interruptor cerrado, falso", "Todas son correctas"], ans: 1, exp: "Estado lógico 0: interruptor abierto, ausencia de tensión, falso." },
+                { q: "Un algoritmo es:", opts: ["Un conjunto de pasos para solucionar un problema en forma gráfica", "Un circuito electrónico", "El conjunto de pasos que hay que realizar para solucionar un problema (descripción textual)", "Ninguna de las anteriores"], ans: 2, exp: "Se puede crear un algoritmo, conjunto de pasos que hay que realizar para solucionar un problema (descripción en forma textual)." },
+                { q: "¿Qué sistema representa gráficamente al algoritmo?", opts: ["El diagrama de bloques", "El ordinograma", "El diagrama lógico", "El hardware"], ans: 1, exp: "Un ordinograma que, en principio, es lo mismo que el algoritmo pero representado gráficamente." },
+                { q: "Los periféricos de entrada se engloban dentro del:", opts: ["Bloque de salida", "Bloque de proceso", "Bloque de almacenamiento", "Bloque de entrada"], ans: 3, exp: "El primer bloque es el bloque de entrada, compuesto por los periféricos de entrada." },
+                { q: "Las siglas BIOS significan:", opts: ["Basic Internal Operating System", "Basic Input Output System", "Binary Input Output System", "Basic Information Output System"], ans: 1, exp: "BIOS (Basic Input Output System) Sistema básico de entrada y salida." },
+                { q: "La interfaz de firmware que ha reemplazado a la BIOS en sistemas modernos es:", opts: ["UEFI", "PROM", "CMOS", "EPROM"], ans: 0, exp: "El BIOS ha evolucionado y en sistemas más modernos, ha sido reemplazado por el UEFI." },
+                { q: "¿Qué se entiende por 'longitud de palabra'?", opts: ["El número máximo de caracteres en pantalla", "El tamaño del disco duro", "El número de bits que un ordenador puede procesar en una única operación", "La velocidad en GHz del procesador"], ans: 2, exp: "La palabra es el número de bits que un ordenador puede procesar en una única operación (32 y 64 bits habitualmente)." },
+                { q: "Respecto al Hardware y Software, es correcto afirmar:", opts: ["Hardware es inmaterial", "Software es la parte tangible", "Hardware es el equipo físico y Software el equipo lógico", "A y B son correctas"], ans: 2, exp: "HARDWARE (equipo físico, parte tangible), SOFTWARE (equipo lógico o inmaterial)." },
+                { q: "¿Dónde ocurren los procesos que 'dicen al computador qué hacer'?", opts: ["Bloque de entrada", "Bloque de proceso", "Bloque de salida", "En los periféricos"], ans: 1, exp: "En el bloque de proceso es donde los programas le dirán al computador qué tiene que hacer." },
+                { q: "La CPU (UCP) forma parte de:", opts: ["Bloque de entrada", "Bloque de proceso", "Bloque de salida", "Memorias secundarias"], ans: 1, exp: "Los componentes principales del bloque de proceso son la CPU y las memorias principales." },
+                { q: "¿Cuál es el lenguaje natural en informática?", opts: ["El código binario", "El uso de símbolos alfabéticos y numéricos convencionales", "El código ASCII", "Todas son correctas"], ans: 1, exp: "Los datos pueden introducirse utilizando los símbolos alfabéticos y numéricos convencionales (denominado 'Lenguaje natural')." }
+            ],
+            // TEST 2: Unidades, Hardware, Clasificación de Ordenadores
+            [
+                { q: "¿Cuál es la clasificación de ordenadores más específicos y pequeños usados en medicina?", opts: ["Wearables", "Nanoordenadores", "Miniordenadores", "Mainframes"], ans: 1, exp: "Nanoordenadores: ordenadores más específicos y pequeños, utilizados principalmente en medicina." },
+                { q: "¿Cómo se denominan las mini computadoras incorporadas en relojes, pulseras o gafas?", opts: ["Tablets", "Wearables", "PDA", "Microordenadores"], ans: 1, exp: "Wearables: mini computadoras de uso personal que se incorporan en relojes, pulseras, gafas." },
+                { q: "Un Gigabyte equivale exactamente a:", opts: ["2^20 bytes", "2^30 bytes", "2^40 bytes", "Ninguna es correcta"], ans: 1, exp: "1 Gigabyte (1 GB) = 2^30 bytes (aproximadamente mil millones de bytes)." },
+                { q: "Los ordenadores que trabajan con señales eléctricas (1 o 0) son:", opts: ["Ordenadores analógicos", "Ordenadores digitales", "Ordenadores cuánticos", "Ordenadores híbridos"], ans: 1, exp: "Ordenadores digitales: trabajan con señales eléctricas, lo que es lo mismo, 1 o 0." },
+                { q: "¿Qué ordenador utiliza dispositivos físicos/mecánicos para modelar un problema usando magnitudes físicas?", opts: ["Digital", "Cuántico", "Analógico", "Nanoordenador"], ans: 2, exp: "Ordenadores analógicos: utilizan dispositivos electrónicos o mecánicos usando representación de magnitud física." },
+                { q: "El ordenador cuántico saca conclusiones más rápido usando:", opts: ["El bit cuántico o qubit", "Bits convencionales", "Únicamente transistores", "El bloque de entrada"], ans: 0, exp: "Ordenadores cuánticos: utilizan como unidad básica de computación el bit cuántico, qubit o cúbit." },
+                { q: "Señala la equivalencia correcta de un Yottabyte (1 YB):", opts: ["2^10 PB", "2^10 EB", "2^10 ZB", "2^10 TB"], ans: 2, exp: "1 Yottabyte (1 YB) = 2^10 ZB." },
+                { q: "Los ordenadores que funcionan como servidores centrales y soportan muchos usuarios a la vez son:", opts: ["Supercomputadoras", "Wearables", "Mainframes", "Ordenadores personales"], ans: 2, exp: "Mainframes: equipos que funcionan como servidores (ordenadores centrales) y soportan la comunicación de muchos usuarios." },
+                { q: "Las Supercomputadoras:", opts: ["Suelen utilizarse para investigación", "Se componen de varios procesadores trabajando en paralelo", "Son ordenadores multiusuario", "Todas las anteriores son correctas"], ans: 3, exp: "Supercomputadoras: gran capacidad de cálculo, para investigación, procesadores en paralelo, multiusuario." },
+                { q: "¿Qué es un Jotabyte (1 JB)?", opts: ["1024 Yottabytes", "2^10 SB (Saganbyte)", "2^10 GeB", "Ninguna es correcta"], ans: 1, exp: "1 Jotabyte (1 JB) = 2^10 SB." },
+                { q: "La unidad Exabyte (1 EB) equivale a:", opts: ["2^10 PB", "2^20 TB", "Ambas (A y B) son correctas", "Solo A es correcta"], ans: 2, exp: "1 EB = 2^10 PB = 2^20 TB (puesto que PB = 2^10 TB). El temario cita explícitamente 1 EB = 2^10 PB." },
+                { q: "¿A qué clasificación pertenecen los Tablets y Smartphones?", opts: ["Miniordenadores", "Ordenadores analógicos", "Ordenadores personales", "Supercomputadoras"], ans: 2, exp: "Tablets, smartphone... pertenecen a los ordenadores personales (monousuario)." },
+                { q: "¿Qué ordenador centralizan las pequeñas empresas habitualmente?", opts: ["Mainframes", "Miniordenadores", "Wearables", "Ordenador cuántico"], ans: 1, exp: "Miniordenadores: similar a los mainframes pero a baja escala, ordenadores centrales de pequeñas empresas." },
+                { q: "¿Qué significa que un ordenador personal sea 'monousuario'?", opts: ["Que solo tiene un núcleo", "Que solo admite a un usuario en un momento dado", "Que solo puede tener instalado un programa", "Que no se conecta a Internet"], ans: 1, exp: "Ordenadores personales: son equipos que se caracterizan por ser monousuario." },
+                { q: "¿Cuántos bytes son aproximadamente 1 Terabyte?", opts: ["Un millón de bytes", "Mil millones de bytes", "Un billón de bytes", "Mil billones de bytes"], ans: 2, exp: "1 Terabyte (1 TB) = 2^40 bytes (aproximadamente un billón de bytes)." },
+                { q: "¿Qué ordenador puede tener en cuenta múltiples probabilidades de forma simultánea?", opts: ["Digital", "Analógico", "Híbrido", "Cuántico"], ans: 3, exp: "El qubit puede tener en cuenta más datos y probabilidades, analizando más que una posibilidad y la contraria." },
+                { q: "1 Petabyte (1 PB) es igual a:", opts: ["2^10 TB", "2^20 GB", "2^30 MB", "Todas son correctas"], ans: 3, exp: "1 PB = 2^10 TB = 2^20 GB = 2^30 MB = 2^40 KB = 2^50 bytes." },
+                { q: "¿Qué significa PDA?", opts: ["Personal Digital Analyser", "PalmTop o Pocket PC", "Processing Data Array", "Personal Disk Access"], ans: 1, exp: "PDA (PalmTop o Pocket PC): dispositivos del tamaño de un teléfono móvil." },
+                { q: "Una característica común de los portátiles es:", opts: ["No incluir teclado", "Incluir todos los componentes dentro de la misma estructura", "Ser multiusuario", "Trabajar con qubits"], ans: 1, exp: "Portátiles: similares a los de sobremesa pero incluyen todos los componentes dentro de la misma estructura." },
+                { q: "¿Qué clasificación agrupa equipos por su forma de procesar la información?", opts: ["Supercomputadoras, Mainframes y Miniordenadores", "Sobremesa, portátil, PDA", "Analógicos, Digitales, Híbridos y Cuánticos", "Ninguna de las anteriores"], ans: 2, exp: "Por forma de procesamiento: analógicos, digitales, híbridos y cuánticos." }
+            ],
+            // TEST 3: Placa Base
+            [
+                { q: "¿Con qué otro nombre se conoce a la placa base?", opts: ["Motherboard", "Placa madre", "Ambas son correctas", "Ninguna es correcta"], ans: 2, exp: "La placa base (también conocida con el nombre de motherboard o placa madre)..." },
+                { q: "¿Qué es ATX?", opts: ["Un tipo de procesador", "Un factor de forma para placas base de PC", "Una ranura de expansión", "Un puerto de video"], ans: 1, exp: "Uno de los más comunes para placas base de PC de escritorio es ATX (Advanced Technology Extended)." },
+                { q: "¿Qué bus es un direccional (unidireccional)?", opts: ["Bus de datos", "Bus de control", "Bus de dirección", "Todos son bidireccionales"], ans: 2, exp: "Bus de dirección: encargados de llevar las direcciones... Son buses unidireccionales." },
+                { q: "¿Qué bus lleva y trae información desde la memoria a la unidad de control?", opts: ["Bus de datos", "Bus de dirección", "Bus de control", "Bus PCI"], ans: 0, exp: "Bus de datos: se encargan de llevar y traer la información... Son buses bidireccionales." },
+                { q: "¿Qué elemento no pertenece al Northbridge?", opts: ["Memoria RAM", "AGP o PCI-Express", "Gestión de entrada/salida de baja velocidad", "Microprocesador"], ans: 2, exp: "El Northbridge controla el acceso del microprocesador, AGP, RAM y Southbridge. La entrada/salida de baja velocidad es del Southbridge." },
+                { q: "El Southbridge (Puente Sur) se encarga de:", opts: ["Coordinar dispositivos de entrada y salida", "Controlar la memoria RAM", "Proporcionar vídeo integrado", "Conectarse directamente al procesador"], ans: 0, exp: "Southbridge: se encarga de coordinar diferentes dispositivos de entrada/salida. No está conectado al procesador." },
+                { q: "¿Qué son los 'Slots' en la placa base?", opts: ["Puertos para discos duros", "Cables del bus", "Ranuras de expansión para insertar tarjetas", "La memoria ROM"], ans: 2, exp: "Slots o ranuras de expansión: lugar donde vamos a insertar las tarjetas que necesitemos." },
+                { q: "¿Cuáles son ejemplos de slots o ranuras de expansión mencionados?", opts: ["PCI", "AGP", "PCI EXPRESS", "Todas las anteriores"], ans: 3, exp: "Existen varios tipos (de slots)... cabe destacar: PCI, AGP (tarjeta gráfica), PCI EXPRESS." },
+                { q: "¿Para qué sirve el VRM en la placa base?", opts: ["Regular la memoria virtual", "Adaptar el voltaje de la fuente de alimentación", "Refrigerar el procesador", "Conectar el disco duro"], ans: 1, exp: "VRM (Voltage Regulator Module): adaptan el voltaje de la fuente de alimentación a los componentes." },
+                { q: "¿Qué puertos se usan habitualmente para conectar discos duros SSD o DVD a la placa base?", opts: ["Puertos AGP", "Puertos SATA", "Puertos VRM", "Puertos de red"], ans: 1, exp: "Puertos SATA: interfaz de bus para transferir datos... uso para conectar unidades de almacenamiento (SSD, BlueRay, DVD)." },
+                { q: "¿Qué elementos ayudan a evacuar el calor de los componentes de la placa base?", opts: ["Disipadores", "Puertos USB", "Buses", "Zócalos"], ans: 0, exp: "Disipadores: ayudan a evacuar el calor producido por los componentes o circuitos." },
+                { q: "¿Dónde se inserta habitualmente el procesador en la placa base?", opts: ["En el puerto SATA", "En el slot PCI", "En el zócalo (socket)", "En el Northbridge físicamente"], ans: 2, exp: "Zócalos: lugares sobre la placa base en los que se insertan elementos. Zócalo del procesador." },
+                { q: "¿Qué elemento se coloca PRIMERO sobre el microprocesador para enfriarlo?", opts: ["El ventilador", "El disipador", "El VRM", "El chipset"], ans: 1, exp: "Disipador y ventilador... Primero se coloca el disipador y a continuación el ventilador." },
+                { q: "¿Qué es el Chipset?", opts: ["Un conjunto de chips que controlan la información que fluye en la placa base", "Una memoria externa", "El cableado del ordenador", "El conector de alimentación"], ans: 0, exp: "Chipset: es un conjunto de chips que se encargan de controlar la información que fluye a través de la placa." },
+                { q: "El Bus de Control es:", opts: ["Unidireccional", "Bidireccional", "Virtual", "No se conecta a la placa base"], ans: 1, exp: "Control: se encargan de llevar señales... al igual que los de datos, son bidireccionales." },
+                { q: "¿Qué ocurre si el voltaje adaptado por el VRM es insuficiente o demasiado alto?", opts: ["Se borra la ROM", "Se fuerza la refrigeración o compromete la salud del componente", "El ordenador corre más rápido", "Ninguna es correcta"], ans: 1, exp: "De manera que no sea insuficiente para funcionar correctamente y no sea demasiado alto para forzar el sistema de refrigeración o comprometer la salud del componente." },
+                { q: "¿Con qué siglas se conoce a la Tarjeta Gráfica en los tipos de slots?", opts: ["USB", "SATA", "AGP", "VRM"], ans: 2, exp: "AGP (tarjeta gráfica)." },
+                { q: "¿El Southbridge se conecta directamente al procesador?", opts: ["Sí", "No, se conecta al Northbridge", "No, se conecta directamente a la RAM", "No tiene conexión en la placa"], ans: 1, exp: "Southbridge... No está conectado al procesador pero sí al Northbridge." },
+                { q: "Los tres tipos de Buses en la placa base son:", opts: ["Datos, Dirección y Control", "SATA, IDE, USB", "Norte, Sur, Este", "RAM, ROM, Caché"], ans: 0, exp: "Existen tres tipos diferentes: Datos, Dirección y Control." },
+                { q: "¿Qué módulo adapta la energía procedente de la fuente para que llegue segura a los chips?", opts: ["SATA", "Chipset", "VRM", "Disipador"], ans: 2, exp: "VRM (Voltage Regulator Module): adaptan el voltaje de la fuente." }
+            ],
+            // TEST 4: CPU - Elementos y Control
+            [
+                { q: "La CPU o UCP está formada actualmente por un conglomerado de circuitos llamado:", opts: ["Zócalo", "Microprocesador", "Placa Base", "Memoria ROM"], ans: 1, exp: "La CPU está formada por un conglomerado de circuitos integrados en un chip denominado microprocesador." },
+                { q: "¿Cuál de estos NO es una parte principal de la estructura del microprocesador?", opts: ["Unidad de Control", "Unidad Aritmético Lógica", "Memoria RAM", "Memoria Caché"], ans: 2, exp: "Se estructura en: Registros, Memoria caché, Unidad de control, Unidad aritmético lógica. La RAM está fuera (memoria principal)." },
+                { q: "¿Cuál es el componente de la CPU donde toda información entra, es analizada y se concluye qué hacer?", opts: ["La Unidad de Control", "El Bus de datos", "La ALU", "Los registros"], ans: 0, exp: "La unidad de control es el elemento principal... toda la información entra, es analizada y donde se llega a la conclusión de qué es lo que se tiene que hacer." },
+                { q: "¿Cuál es un elemento de la Unidad de Control?", opts: ["Acumulador", "Secuenciador", "Circuito Operacional", "Todas son correctas"], ans: 1, exp: "Elementos de la unidad de control: registro de instrucción, registro contador del programa, decodificador, secuenciador y reloj." },
+                { q: "¿Qué siglas se usan para referirse a la Unidad Aritmético-Lógica?", opts: ["ALU", "UAL", "Ambas (A y B) son correctas", "Ninguna es correcta"], ans: 2, exp: "También se le conoce con el nombre ALU (Arithmetic Logic Unit) o UAL." },
+                { q: "La ALU NO contiene:", opts: ["Registros de operandos (entrada)", "Acumulador", "Secuenciador", "Registro de estado"], ans: 2, exp: "La ALU dispone de registros de operandos, acumulador, registro de estado y circuitos operacionales. El secuenciador es de la Unidad de Control." },
+                { q: "¿A través de qué bus se comunica la ALU con el resto del sistema?", opts: ["Bus de datos", "Bus de dirección", "Bus de video", "Bus SATA"], ans: 0, exp: "La ALU se comunica con el sistema mediante el bus de datos." },
+                { q: "En la Unidad de Control, ¿qué siglas identifican al Registro de Instrucción?", opts: ["CP", "RI", "ALU", "REN"], ans: 1, exp: "RI (Registro de instrucción) aparece en los elementos principales de la unidad de control y en su esquema." },
+                { q: "Según el esquema de la Unidad de Control, el Decodificador se alimenta de:", opts: ["Del Reloj", "Del RI (Registro de Instrucción)", "Del BUS directamente", "Del Secuenciador"], ans: 1, exp: "En el esquema básico de la UC, hay una flecha desde el RI hacia el Decodificador." },
+                { q: "¿Qué unidad realiza desplazamientos y comparaciones?", opts: ["La Unidad de Control", "La Memoria RAM", "La ALU (Unidad aritmético-lógica)", "Los periféricos"], ans: 2, exp: "La ALU realiza operaciones... además de otras de tipo lógico (comparaciones, desplazamientos, etc.)." },
+                { q: "¿Qué elemento genera las señales temporales en la Unidad de Control?", opts: ["Reloj", "Decodificador", "CP", "VRM"], ans: 0, exp: "Reloj (es parte de la UC, marca las señales para el Secuenciador)." },
+                { q: "¿Quién se considera el 'verdadero cerebro' del ordenador?", opts: ["La memoria caché", "La CPU", "La placa base", "El disco duro"], ans: 1, exp: "CPU: Es el verdadero cerebro del ordenador, ya que coordina y supervisa." },
+                { q: "Dentro de la ALU, ¿dónde se realizan físicamente las operaciones matemáticas?", opts: ["Circuito operacional", "Registro de estado", "REN 1 y REN 2", "Reloj"], ans: 0, exp: "La ALU... contiene los circuitos operacionales." },
+                { q: "Las operaciones de multiplicaciones y divisiones las realiza:", opts: ["La UC", "El Secuenciador", "La ALU", "El Northbridge"], ans: 2, exp: "La ALU realiza todas las operaciones elementales de tipo aritmético: sumas, restas, multiplicaciones y divisiones." },
+                { q: "¿Cuántos transistores puede integrar un microprocesador moderno?", opts: ["Unos cientos", "Varios millones", "Sólo dos", "Ninguno, usa tubos de vacío"], ans: 1, exp: "Los modernos microprocesadores llegan a integrar hasta varios millones de transistores en varios centímetros cuadrados." },
+                { q: "¿Dónde almacena temporalmente la información la ALU?", opts: ["En el disco duro", "En sus registros (memoria interna)", "En el DVD", "En la nube"], ans: 1, exp: "La ALU dispone de una serie de registros, unidades de memoria interna para almacenar información temporalmente." },
+                { q: "En la estructura de la ALU, el registro que guarda el resultado final o intermedio habitualmente se denomina:", opts: ["Acumulador", "Secuenciador", "Zócalo", "Bus de Control"], ans: 0, exp: "En el esquema de la ALU aparece el 'Acumulador' a la salida del Circuito Operacional." },
+                { q: "¿Cuál es la función del registro CP en la Unidad de Control?", opts: ["Registro Controlador del Procesador", "Registro Contador del Programa", "Computador Principal", "Calculador de Proceso"], ans: 1, exp: "registro contador del programa (CP)." },
+                { q: "¿Qué microórdenes recibe el circuito operacional de la ALU?", opts: ["Instrucciones del disco duro", "Señales microórdenes desde el Registro de Estado / UC", "Datos de la red", "Ninguna es correcta"], ans: 1, exp: "En el gráfico de la ALU, las 'Microórdenes' entran al circuito operacional." },
+                { q: "Tanto la Unidad de Control como la ALU están físicamente dentro de:", opts: ["El Southbridge", "La memoria RAM", "El microprocesador", "La ranura AGP"], ans: 2, exp: "Tanto la UC como la ALU estructuran la gran complejidad del microprocesador (CPU)." }
+            ],
+            // TEST 5: Características de la CPU
+            [
+                { q: "¿En qué unidades se mide habitualmente la velocidad de reloj del procesador?", opts: ["Megabytes (MB)", "Megahercios (MHz) o Gigahercios (GHz)", "Kilobits (Kbps)", "Píxeles"], ans: 1, exp: "Velocidad de reloj: medida en megahercios (MHz) o gigahercios (GHz)." },
+                { q: "¿Qué permite a un procesador realizar tareas de manera independiente mejorando la multitarea?", opts: ["Mayor capacidad del disco", "Tener múltiples núcleos (Quad-core, octa-core...)", "Su conexión SATA", "Usar cable Ethernet"], ans: 1, exp: "Núcleos: cada núcleo es capaz de realizar tareas de manera independiente, permitiendo multitarea más eficiente." },
+                { q: "La arquitectura más utilizada en ordenadores de sobremesa y portátiles es:", opts: ["ARM", "RISC-V", "x86", "SPARC"], ans: 2, exp: "Arquitecturas comunes incluyen x86 (utilizada en la mayoría de computadoras de escritorio y portátiles)." },
+                { q: "¿Qué arquitectura se menciona en el texto como común en dispositivos móviles?", opts: ["x86", "ARM", "RISC-V", "x64"], ans: 1, exp: "ARM (común en dispositivos móviles y embebidos)." },
+                { q: "¿Qué determina la cantidad de datos que el microprocesador maneja a la vez (ej. 32 o 64 bits)?", opts: ["El tamaño de la caché", "El fabricante", "El tamaño de la arquitectura", "La velocidad de reloj"], ans: 2, exp: "Tamaño de la arquitectura: expresado en bits, determina la cantidad de datos que maneja a la vez." },
+                { q: "Los niveles de memoria caché que suele incorporar el microprocesador son:", opts: ["L1, L2 y L3", "RAM, ROM y EEPROM", "SATA 1, SATA 2", "Solo L1"], ans: 0, exp: "Los niveles de caché incluyen L1, L2 y, en algunos casos, L3." },
+                { q: "¿Quién fue el primer fabricante de microprocesadores de la historia según el texto?", opts: ["AMD", "Qualcomm", "NVIDIA", "Intel"], ans: 3, exp: "Intel (primer fabricante de microprocesadores de la historia)." },
+                { q: "¿Qué son los 'Hilos' en un microprocesador?", opts: ["Los cables externos", "Buses físicos de la placa", "Permiten manejar cargas de trabajo paralelas, cada uno procesa un programa o instrucción", "Unidades de almacenamiento"], ans: 2, exp: "Hilos: permiten manejar cargas de trabajo paralelas. Cada hilo procesa un programa." },
+                { q: "¿Qué microprocesadores pueden direccionar y procesar más memoria?", opts: ["Los de 32 bits", "Los de 64 bits", "Son iguales", "Los de 16 bits"], ans: 1, exp: "Los procesadores de 64 bits pueden direccionar y procesar más memoria y datos que los de 32 bits." },
+                { q: "¿Qué es RISC-V según el texto?", opts: ["Una arquitectura de código abierto", "Un procesador de NVIDIA", "Un sistema de refrigeración", "Un zócalo"], ans: 0, exp: "RISC-V (una arquitectura de código abierto)." },
+                { q: "La interfaz física que conecta el microprocesador a la placa base es:", opts: ["El hilo", "La caché", "El socket (zócalo)", "La ALU"], ans: 2, exp: "Socket: el zócalo del procesador o socket es la interfaz física que conecta el microprocesador a la placa base." },
+                { q: "Si la caché es más grande y rápida:", opts: ["Peor será el rendimiento", "Mejor será el rendimiento", "El ordenador se calienta y apaga", "No afecta al rendimiento"], ans: 1, exp: "Cuanto más grande y rápida sea la caché, mejor será el rendimiento." },
+                { q: "¿Cuántas operaciones puede realizar un procesador por segundo si tiene mayor velocidad de reloj?", opts: ["Menos", "Más", "Depende del disco duro", "Igual"], ans: 1, exp: "Una mayor velocidad de reloj generalmente se traduce en un mejor rendimiento en tareas (más operaciones)." },
+                { q: "¿Qué es un microprocesador hexa-core?", opts: ["Procesador con dos núcleos", "Procesador con cuatro núcleos", "Procesador con seis núcleos", "Procesador de 64 hilos"], ans: 2, exp: "Núcleos: múltiple, como doble núcleo, quad-core, hexa-core (seis), octa-core." },
+                { q: "AMD es mencionado en el texto como:", opts: ["Un tipo de memoria", "Un fabricante de microprocesadores", "Un tipo de monitor", "Un puerto USB"], ans: 1, exp: "Fabricante: principales fabricantes... Intel, AMD, ARM, Qualcomm, NVIDIA." },
+                { q: "¿Es compatible cualquier microprocesador con cualquier zócalo?", opts: ["Sí, todos son estándar", "No, requieren zócalos específicos de placa base", "Solo si es Intel", "Solo si es de 32 bits"], ans: 1, exp: "Los diferentes microprocesadores requieren zócalos específicos, asegúrate que sea compatible." },
+                { q: "¿Qué capacidad de hilo se indica en el temario?", opts: ["Almacenar 1GB", "Procesar un programa o conjunto de instrucciones", "Enfriar la CPU", "Medir la resolución"], ans: 1, exp: "Cada hilo tiene la capacidad de procesar un programa o conjunto de instrucciones." },
+                { q: "Qualcomm y NVIDIA son conocidos en el texto como:", opts: ["Puertos de red", "Memorias RAM", "Fabricantes de microprocesadores", "Sistemas operativos"], ans: 2, exp: "Fabricante: principales fabricantes... Intel, AMD, ARM, Qualcomm, NVIDIA." },
+                { q: "El tamaño de arquitectura de 32 y 64 bits de un microprocesador coincide conceptualmente con:", opts: ["La capacidad del disco duro", "La tasa de refresco del monitor", "La longitud de palabra (tamaño de palabra)", "El número de pines del USB"], ans: 2, exp: "Se relaciona con 'la palabra' vista en el tema: número de bits que procesa (32 y 64 bits)." },
+                { q: "¿Qué elemento acelera el acceso a datos comunes directamente en el microprocesador?", opts: ["El disco duro", "El CD-ROM", "La memoria caché incorporada", "La impresora"], ans: 2, exp: "Caché: los microprocesadores tienen memoria caché incorporada para acelerar el acceso a datos comunes." }
+            ],
+            // TEST 6: Memoria RAM y ROM
+            [
+                { q: "¿Qué significa RAM?", opts: ["Read Access Memory", "Random Access Memory", "Rapid Access Memory", "Real Access Module"], ans: 1, exp: "Las siglas de RAM (Random Access Memory) significan memoria de acceso aleatorio." },
+                { q: "¿Qué significa que la RAM sea volátil?", opts: ["Que evapora calor rápido", "Que su contenido se borra cuando el ordenador se apaga o reinicia", "Que no se puede escribir en ella", "Que es muy resistente a golpes"], ans: 1, exp: "Volátil: significa que su contenido se borra cuando el ordenador se apaga o reinicia." },
+                { q: "¿Para qué se utiliza principalmente la RAM?", opts: ["Para almacenar la BIOS", "Para guardar archivos permanentemente", "Para almacenar datos y programas que la CPU necesita en tiempo real", "Para enfriar el sistema"], ans: 2, exp: "La RAM se utiliza para almacenar datos y programas que la CPU necesita para realizar tareas en tiempo real." },
+                { q: "Señala la memoria RAM que es económica de fabricar pero necesita actualizarse constantemente:", opts: ["SRAM", "VRAM", "DRAM", "ROM"], ans: 2, exp: "DRAM: económica de fabricar, pero necesita actualizarse constantemente debido a la pérdida gradual de datos." },
+                { q: "¿Cuál de estas memorias RAM no requiere actualización constante de datos y se usa en cachés?", opts: ["DRAM", "SDRAM", "SRAM", "VRAM"], ans: 2, exp: "SRAM: más rápida y cara... no requiere actualización constante y se utiliza en cachés de alta velocidad." },
+                { q: "¿Qué memoria RAM se especializa en tarjetas gráficas para imágenes y texturas?", opts: ["DRAM", "SRAM", "SDRAM", "VRAM"], ans: 3, exp: "VRAM (Video RAM): tipo de RAM especializada utilizada en tarjetas gráficas." },
+                { q: "La SDRAM funciona en sincronía con:", opts: ["El disco duro", "La impresora", "El procesador (señal de reloj)", "La memoria ROM"], ans: 2, exp: "SDRAM: funciona en sincronía con el procesador, ya que espera a la señal de reloj." },
+                { q: "Una mejora de SDRAM que es capaz de realizar dos instrucciones de lectura y dos de escritura por ciclo de reloj es:", opts: ["SDR SDRAM", "DDR SDRAM", "VRAM", "SRAM"], ans: 1, exp: "DDR SDRAM: versión mejorada... doble de rápida, capaz de realizar dos instrucciones de lectura y dos de escritura por ciclo." },
+                { q: "¿Qué significa ROM?", opts: ["Random Only Memory", "Read-Only Memory", "Record Only Memory", "Random Operator Module"], ans: 1, exp: "Las siglas 'ROM' significan 'Read-Only Memory', Memoria de Solo Lectura." },
+                { q: "A diferencia de la RAM, la ROM es:", opts: ["Volátil", "No volátil", "Más grande en capacidad", "De acceso secuencial"], ans: 1, exp: "ROM: es una memoria no volátil, su contenido es permanente." },
+                { q: "¿Qué información suele almacenar la ROM?", opts: ["Tus documentos de Word", "Los vídeos descargados", "La BIOS / UEFI (firmware)", "El historial web"], ans: 2, exp: "Se utiliza para almacenar información esencial del sistema, como la BIOS / UEFI." },
+                { q: "¿Qué tipo de memoria ROM se puede borrar y reprogramar usando LUZ ULTRAVIOLETA?", opts: ["PROM", "EEPROM", "Flash ROM", "EPROM"], ans: 3, exp: "EPROM: permite borrar y reprogramar su contenido utilizando luz ultravioleta." },
+                { q: "¿Qué memoria ROM se programa una sola vez (es permanente) y no se puede modificar?", opts: ["EEPROM", "EPROM", "PROM", "Flash ROM"], ans: 2, exp: "PROM: programable una sola vez. La información es permanente y no se puede modificar." },
+                { q: "La memoria EEPROM se borra de manera:", opts: ["Ultravioleta", "Magnética", "Eléctrica", "Mecánica"], ans: 2, exp: "EEPROM: se puede borrar y reprogramar eléctricamente, sin luz UV." },
+                { q: "¿Qué tecnología es una forma de EEPROM que reescribe datos múltiples veces (usada en USB y SSD)?", opts: ["Memoria Flash (Flash ROM)", "EPROM", "SRAM", "PROM"], ans: 0, exp: "Flash ROM: la memoria Flash es una forma de EEPROM que permite reprogramación eléctrica... común en unidades USB, SSD." },
+                { q: "¿La memoria RAM permite lectura y escritura?", opts: ["Solo lectura", "Solo escritura", "Permite tanto la lectura como la escritura de datos", "Ninguna de las anteriores"], ans: 2, exp: "La RAM permite tanto la lectura como la escritura de datos." },
+                { q: "Si apagamos el ordenador repentinamente, ¿qué ocurre con un documento no guardado que estaba abierto (en RAM)?", opts: ["Se guarda en la ROM automáticamente", "Se pierde, al ser la RAM volátil", "Pasa a la memoria EPROM", "Queda intacto al reiniciar"], ans: 1, exp: "La RAM es volátil, su contenido se borra cuando se apaga." },
+                { q: "¿A partir de qué año se estandarizó la memoria DDR SDRAM?", opts: ["1980", "1990", "2000", "2010"], ans: 2, exp: "DDR SDRAM: se estandarizó a partir del año 2000." },
+                { q: "¿La memoria SRAM requiere refresco o actualización constante para no perder los datos mientras haya energía?", opts: ["Sí, como la DRAM", "No, por eso es Estática (Static)", "A veces", "Sí, mediante software"], ans: 1, exp: "SRAM (Static RAM)... no requiere una actualización constante de los datos." },
+                { q: "En el ordenador, el firmware de dispositivos móviles también suele utilizar memoria de tipo:", opts: ["DRAM", "Flash ROM", "Cinta magnética", "Disquetes"], ans: 1, exp: "Flash ROM: muy común en... firmware de dispositivos móviles." }
+            ],
+            // TEST 7: Jerarquía de Memoria y Puertos
+            [
+                { q: "¿Cuál es el nivel más alto (más rápido) en la jerarquía de memoria?", opts: ["Memoria RAM", "Registros del microprocesador", "Memoria Caché", "Disco Duro"], ans: 1, exp: "1. Registros del microprocesador: las memorias más rápidas y directamente dentro de la CPU." },
+                { q: "¿Qué nivel de memoria caché es el más cercano a la CPU y el más rápido, pero más pequeño?", opts: ["L1", "L2", "L3", "L4"], ans: 0, exp: "Nivel L1 es el más cercano a la CPU y el más rápido, pero el más pequeño." },
+                { q: "La Memoria Virtual es:", opts: ["Un chip físico en la placa", "Parte del sistema operativo que usa espacio del disco duro como memoria adicional", "Memoria óptica", "Memoria de solo lectura"], ans: 1, exp: "Memoria virtual: no es física separada, es parte de gestión de memoria del SO, usa el disco duro para ampliar RAM." },
+                { q: "¿Qué tecnología es más rápida en términos de velocidad de acceso?", opts: ["Disco duro (HDD)", "Almacenamiento de estado sólido (SSD)", "Memorias ópticas", "Son exactamente iguales"], ans: 1, exp: "SSD ofrecen velocidad de acceso más rápida que los discos duros tradicionales (HDD)." },
+                { q: "¿Qué lugar ocupa el Almacenamiento en la nube en la jerarquía de velocidad de acceso del texto?", opts: ["El más rápido", "Intermedio (Nivel 3)", "El último (Nivel 8), su velocidad depende de Internet", "No aparece en la jerarquía"], ans: 2, exp: "8. Almacenamiento en la nube... La velocidad de acceso depende de la conexión a Internet." },
+                { q: "Señala qué puerto se utiliza para conectar el ordenador a pantallas, televisores y proyectores de ALTA definición transmitiendo video y audio:", opts: ["VGA", "PS/2", "HDMI", "SATA"], ans: 2, exp: "HDMI: para conectar a pantallas, TV... alta definición. Transmite video y audio." },
+                { q: "El puerto VGA:", opts: ["Es moderno y sustituye al HDMI", "Transmite audio pero no video", "Es antiguo, conecta monitores, y su calidad de vídeo es menor que HDMI", "Se utiliza para conectar teclados"], ans: 2, exp: "Puerto VGA: el más antiguo y se utiliza para conexión de monitores... calidad de vídeo menor que HDMI." },
+                { q: "El puerto Ethernet usa la clavija o conector:", opts: ["RJ-11", "RJ-45", "USB-C", "Jack"], ans: 1, exp: "Puerto Ethernet (RJ-45): conexión por cable a redes locales." },
+                { q: "Los puertos PS/2 se utilizaban para conectar:", opts: ["Auriculares y micrófonos", "Tarjetas de expansión", "Teclados y ratones más antiguos", "Discos externos"], ans: 2, exp: "Puertos PS/2: se utilizaban para conectar teclados y ratones más antiguos." },
+                { q: "¿Qué puerto está pensado para poder conectar varias pantallas en su estándar más que el HDMI?", opts: ["FireWire", "DisplayPort", "USB-A", "VGA"], ans: 1, exp: "DisplayPort: está más pensado que HDMI... soporta mayor cantidad de resoluciones y pensado para uso con varias pantallas." },
+                { q: "¿Qué puerto sirve tanto para carga, como transferencia de datos y conexión de pantallas externas, común en laptops y móviles?", opts: ["USB-C", "RJ-45", "Thunderbolt", "A y C son usos de conectores avanzados similares (Thunderbolt y USB-C)"], ans: 3, exp: "El temario cita puertos de carga USB-C (carga, datos, pantallas) y Thunderbolt (alto rendimiento). A y C aplican, pero literalmente pregunta por carga en laptops y móviles -> USB-C." },
+                { q: "Para una cámara de vídeo antigua o unidad de disco duro de alta velocidad, se utilizaban los puertos:", opts: ["VGA", "FireWire (IEEE 1394)", "Jack de audio", "DisplayPort"], ans: 1, exp: "Puertos FireWire (IEEE 1394): menos comunes en la actualidad, para cámaras de video o discos externos de alta velocidad." },
+                { q: "¿Qué son los puertos de tarjeta de expansión?", opts: ["Puertos como PCIe o PCI para conectar tarjetas gráficas, de red...", "Conectores de corriente", "Solo conectores USB", "Lectores de tarjetas SD"], ans: 0, exp: "Puertos de tarjeta de expansión... pueden tener puertos PCIe o PCI para tarjetas gráficas, red, sonido." },
+                { q: "La jerarquía coloca a la RAM en qué posición respecto a la Caché:", opts: ["Más rápida y encima de la caché", "Más lenta y debajo de la caché", "Ambas están en el mismo nivel", "La RAM no está en la jerarquía"], ans: 1, exp: "1. Registros, 2. Caché, 3. RAM/ROM." },
+                { q: "Un Minijack es:", opts: ["Un pequeño disco duro", "Un puerto de audio (auriculares/micrófono)", "Un tipo de USB", "Un chip de la placa"], ans: 1, exp: "Puerto de audio (minijack): incluyen tomas para auriculares y micrófonos." },
+                { q: "¿Qué componente proporciona memoria de almacenamiento no volátil electromecánica con partes móviles?", opts: ["SSD", "HDD (Disco duro)", "SRAM", "Flash USB"], ans: 1, exp: "HDD (discos duros): almacenamiento magnético, con partes móviles, más lentos que SSD." },
+                { q: "Los CD-ROMs, DVDs y Blu-ray son clasificados como:", opts: ["Almacenamiento magnético", "Memorias principales", "Memorias ópticas", "Estado sólido"], ans: 2, exp: "7. Memorias ópticas: incluye CD-ROMs, DVDs, Blu-ray." },
+                { q: "¿Para qué sirve el puerto (AC/DC)?", opts: ["Para enchufar ratones", "Para suministrar energía al sistema desde la fuente de alimentación", "Para redes de alta velocidad", "Para tarjetas gráficas externas"], ans: 1, exp: "Puerto de alimentación (AC/DC): suministra energía al sistema." },
+                { q: "La memoria caché es de tipo:", opts: ["DRAM", "Flash", "SRAM", "Óptica"], ans: 2, exp: "La memoria caché es una memoria estática de acceso aleatorio (SRAM)." },
+                { q: "¿Qué conector se usa para leer tarjetas de memoria de cámaras y teléfonos?", opts: ["Puerto HDMI", "Puerto Ethernet", "Puerto de tarjeta SD", "Puerto FireWire"], ans: 2, exp: "Puertos de tarjeta SD: leer tarjetas de memoria SD comunes en cámaras y teléfonos." }
+            ],
+            // TEST 8: Periféricos Entrada/Salida
+            [
+                { q: "¿Qué son los periféricos?", opts: ["Programas que procesan datos", "Elementos capaces de intercambiar información entre la CPU y un soporte", "Solo el teclado y el ratón", "Los componentes internos de la CPU"], ans: 1, exp: "Definimos los periféricos como elementos capaces de intercambiar información entre la CPU y un soporte." },
+                { q: "El software que permite al SO reconocer y utilizar los periféricos se llama:", opts: ["Drivers o controladores", "Firmware", "Plug and Play", "TWAIN"], ans: 0, exp: "Necesita instalar sus drivers o controladores (software que permite al SO reconocer y utilizar periféricos)." },
+                { q: "¿Qué significa Plug and Play (PnP)?", opts: ["Jugar juegos de internet", "Conectar un dispositivo informático sin tener que configurar drivers manualmente", "Tocar el teclado", "Un tipo de memoria USB"], ans: 1, exp: "Plug and Play (PnP) permite a un dispositivo ser conectado sin tener que configurar drivers." },
+                { q: "Periféricos remotos son aquellos que:", opts: ["Están físicamente cerca", "No usan cables", "Se conectan a través de redes de comunicación, como Internet (ej. servidores, cámaras de vigilancia)", "Son obsoletos"], ans: 2, exp: "Remotos: a distancia mayor, se conectan a través de redes de comunicación como internet." },
+                { q: "El teclado, ratón y escáner son:", opts: ["Periféricos de salida", "Periféricos de almacenamiento", "Periféricos de entrada", "Periféricos híbridos"], ans: 2, exp: "Están en la tabla de Periféricos de Entrada." },
+                { q: "¿Qué término se relaciona con el escáner (digitalizador)?", opts: ["OCR y TWAIN", "LED y CRT", "PPM y CPS", "ALU y UC"], ans: 0, exp: "Escáner... Términos relacionados OCR (reconocimiento óptico de caracteres) y estándar TWAIN." },
+                { q: "¿Qué periférico, similar a un ratón invertido, tiene una bola superior para mover el cursor?", opts: ["Trackball", "Touchpad", "Joystick", "Webcam"], ans: 0, exp: "Trackball (ver imagen en temario)." },
+                { q: "¿Qué periférico requiere una tarjeta de sonido para la entrada de audio?", opts: ["Altavoces", "Micrófono", "Impresora", "Monitor"], ans: 1, exp: "Micrófono: Necesita tarjeta de sonido. (En entrada)." },
+                { q: "En pantallas, ¿qué significa CRT?", opts: ["Cristal líquido", "Tubo de Rayos Catódicos", "Resolución de color", "Tipo de panel moderno"], ans: 1, exp: "CRT (Tubo de Rayos Catódicos): tecnología obsoleta, pantallas de tubo." },
+                { q: "¿Qué tecnología en pantallas permite que los propios diodos emisores de luz sean los píxeles (actuando de forma independiente)?", opts: ["LCD", "OLED", "TFT", "CRT"], ans: 1, exp: "OLED: los diodos emisores de luz son los propios píxeles... cada uno actúa de forma independiente." },
+                { q: "¿Qué características corresponden al monitor/pantalla?", opts: ["CPS y PPM", "Tamaño (pulgadas), Resolución, Dot pitch y Tasa de refresco", "Alimentación por fricción", "Buffers e interfaz paralelo"], ans: 1, exp: "Características de pantalla: Tamaño, Resolución, Dot pitch, Tasa de refresco." },
+                { q: "La resolución de una pantalla es:", opts: ["La separación entre puntos", "El número de veces que se redibuja la pantalla", "El número de puntos luminosos (píxel) de los que consta la pantalla", "El color máximo que soporta"], ans: 2, exp: "Resolución: número de puntos luminosos (píxel) de los que consta la pantalla." },
+                { q: "Las impresoras de clasifican principalmente en:", opts: ["De impacto y no impacto", "Laser y de inyección", "A color y blanco/negro", "Matriciales y térmicas"], ans: 0, exp: "Las impresoras se clasifican principalmente en dos grandes grupos: Impresoras de impacto y de no impacto." },
+                { q: "¿Cómo se mide la velocidad de una impresora de no impacto (ej. láser)?", opts: ["En hercios (Hz)", "Caracteres por segundo (CPS)", "Páginas por minuto (PPM)", "Píxeles por pulgada"], ans: 2, exp: "PPM en las de no impacto (Páginas por minuto)." },
+                { q: "¿Qué periférico permite trabajar con papel de gran formato?", opts: ["Impresora de tickets", "Escáner", "Plóter (trazador gráfico)", "Monitor panorámico"], ans: 2, exp: "Plóter: También denominado trazador gráfico. Permite trabajar con papel de gran formato." },
+                { q: "Un sistema de altavoces Dolby Digital de 6 canales tendrá:", opts: ["2 altavoces", "6 altavoces", "1 altavoz", "Ninguno de los anteriores"], ans: 1, exp: "Dolby Digital (6 canales de audio - 6 altavoces)." },
+                { q: "¿Qué es un periférico de Entrada/Salida?", opts: ["Solo introduce información", "Solo saca información", "Permite introducir y sacar información de forma bidireccional", "Es un dispositivo que solo guarda datos temporalmente"], ans: 2, exp: "Bidireccional, permite que sea ingresada información... como emitir información." },
+                { q: "El módem y la pantalla táctil son ejemplos de:", opts: ["Periféricos de solo entrada", "Periféricos de solo salida", "Periféricos de entrada y salida", "Memorias secundarias"], ans: 2, exp: "Están en la lista de periféricos de entrada y salida (Pantalla táctil, Módem, Tarjeta de red...)." },
+                { q: "¿Qué dispositivo recibe la señal de vídeo y la muestra sobre una superficie mediante un sistema de lentes?", opts: ["Plóter", "Proyector", "Escáner", "Webcam"], ans: 1, exp: "Proyector: Dispositivo que recibe señal de vídeo y la proyecta sobre una superficie (sistema de lentes)." },
+                { q: "Unidad que almacena memoria temporalmente en la impresora, llamada memoria:", opts: ["Cache", "BUFFER", "ROM", "RAM"], ans: 1, exp: "En las características de la impresora: Memoria: BUFFER." }
+            ],
+            // TEST 9: Almacenamiento Secundario
+            [
+                { q: "¿Por qué necesitamos memorias secundarias o almacenamiento masivo?", opts: ["Porque la RAM es muy grande", "Porque la CPU es lenta", "Porque la memoria RAM es volátil y necesitamos soportes donde guardar la información permanente", "Para enfriar el equipo"], ans: 2, exp: "Al ser la memoria RAM volátil, necesitamos otros soportes donde guardar la información." },
+                { q: "¿Puede la CPU acceder directamente a los datos en el almacenamiento masivo para procesarlos?", opts: ["Sí, directamente mediante el bus de control", "No, es necesario que la información se transfiera a la memoria RAM primero", "Sí, si están en formato ASCII", "No se explica en el temario"], ans: 1, exp: "La CPU no puede acceder directamente... es necesario que la información sea transferida a la memoria RAM." },
+                { q: "Los discos duros tradicionales y cintas magnéticas son dispositivos de almacenamiento de medio:", opts: ["Óptico", "Electrónico", "Magnético", "Cuántico"], ans: 2, exp: "Dispositivos de almacenamiento por medio magnético: discos duros, disquetes, cintas." },
+                { q: "¿Cómo se llama el dispositivo utilizado para realizar copias de seguridad en cintas magnéticas?", opts: ["Plóter", "Router", "Streamer", "Scanner"], ans: 2, exp: "El dispositivo utilizado para realizar copias de seguridad y almacenar datos en cintas magnéticas se denomina Streamer." },
+                { q: "El CD-ROM, DVD-ROM y Blu-ray utilizan tecnología:", opts: ["Electromagnética", "Láser (Óptica)", "Estado sólido", "Perforada"], ans: 1, exp: "Medio óptico... discos ópticos que utilizan tecnología láser para leer y escribir datos." },
+                { q: "Una Unidad de Estado Sólido (SSD) es mejor que un HDD en que:", opts: ["Son más baratas", "Son más rápidas, confiables y no tienen partes móviles (resistentes a golpes)", "Almacenan los datos de manera volátil", "Usa cintas magnéticas"], ans: 1, exp: "Las SSD son más rápidas y confiables y no tienen partes móviles, lo que las hace más resistentes a golpes y vibraciones." },
+                { q: "¿Qué significa DAS (Direct-Attached Storage)?", opts: ["Almacenamiento en la nube", "Almacenamiento compartido por red LAN", "Unidades de almacenamiento directamente conectadas a un ordenador o servidor", "Disco duro virtual"], ans: 2, exp: "DAS: se refiere a unidades de almacenamiento que están directamente conectadas a un ordenador." },
+                { q: "Un dispositivo conectado a la red local (LAN) que comparte archivos y realiza copias de seguridad de múltiples dispositivos se conoce como:", opts: ["SAN", "NAS", "DAS", "Streamer"], ans: 1, exp: "Unidades de Red (NAS - Network Attached Storage): dispositivo conectado a la red local... almacenamiento compartido y copias." },
+                { q: "¿Qué es una red SAN?", opts: ["Storage Area Network, red especializada que conecta múltiples dispositivos de almacenamiento y servidores en red de alta velocidad", "Servidor de Almacenamiento Natural", "System Area Node", "Ninguna es correcta"], ans: 0, exp: "SAN (Storage Area Network), es una red de almacenamiento especializada... de alta velocidad." },
+                { q: "Google Drive y Dropbox son ejemplos de:", opts: ["DAS", "Almacenamiento óptico", "Almacenamiento en la nube", "Memoria RAM"], ans: 2, exp: "Almacenamiento en la nube... Ejemplos incluyen Google Drive, Dropbox." },
+                { q: "¿Qué almacenamiento emplea chips de memoria flash?", opts: ["SSD, USB y tarjetas SD", "Cintas magnéticas y Disquetes", "CD y DVD", "Streamer"], ans: 0, exp: "Dispositivos de almacenamiento electrónico (flash): SSD, Memoria Flash USB, Memoria Flash SD." },
+                { q: "Si la CPU procesa datos, el flujo de transferencia con la memoria masiva es:", opts: ["Bidireccional (de memoria masiva a RAM, y de RAM a memoria masiva)", "Solo de memoria masiva a RAM", "Solo de RAM a memoria masiva", "Unidireccional exclusivo"], ans: 0, exp: "La transferencia de información se realiza en los dos sentidos... por eso se engloban en periféricos E/S." },
+                { q: "Los Disquetes y unidades Zip (ya en desuso) eran de tecnología:", opts: ["Óptica", "Magnética", "Electrónica", "Láser"], ans: 1, exp: "Están listados bajo 'Dispositivos de almacenamiento por medio magnético'." },
+                { q: "La tarjeta de red se considera un periférico de:", opts: ["Solo entrada", "Solo salida", "Entrada y salida", "No es un periférico"], ans: 2, exp: "Aparece en la lista de periféricos de entrada y salida." },
+                { q: "Un dispositivo que crea, graba, reproduce o transmite texto, imagen, audio y vídeo es un:", opts: ["Dispositivo multimedia", "Zócalo", "Bus de datos", "Software de programación"], ans: 0, exp: "Un dispositivo multimedia es un hardware diseñado para crear... texto, imágenes, audio y video." },
+                { q: "¿Qué tecnología usa láser?", opts: ["Medio magnético", "Medio electrónico", "Medio óptico (CD/DVD)", "Memoria caché"], ans: 2, exp: "Medio óptico: ...utilizan tecnología láser." },
+                { q: "¿El almacenamiento en la nube está en un servidor local?", opts: ["Sí, en tu NAS", "No, en servidores remotos a través de Internet", "En un USB conectado", "En el móvil"], ans: 1, exp: "Almacenamiento en la nube permite a los usuarios almacenar datos de manera remota en servidores en línea." },
+                { q: "¿Qué diferencia principal hay entre SSD y HDD según su mecánica?", opts: ["HDD no tiene partes móviles, SSD sí", "SSD no tiene partes móviles, HDD es electromecánico con discos", "Ambos usan láser", "Ambos son volátiles"], ans: 1, exp: "Discos duros son electromecánicos (discos magnéticos). SSD usan chips, no tienen partes móviles." },
+                { q: "La lectura de un CD, ¿en qué bloque se situaría para la transferencia de información?", opts: ["Bloque de proceso", "Bloque de almacenamiento", "Se actúa como bloque de Entrada/Salida (memoria secundaria)", "Solo salida"], ans: 2, exp: "Las memorias secundarias... se engloban dentro de los periféricos de entrada y salida." },
+                { q: "El Streamer actúa sobre:", opts: ["Cintas magnéticas", "Chips SSD", "Memorias RAM", "Plóter"], ans: 0, exp: "El dispositivo... en cintas magnéticas se denomina Streamer." }
+            ],
+            // TEST 10: Software y Seguridad Informática
+            [
+                { q: "¿Cuáles son las 3 categorías principales del software?", opts: ["Hardware, Firmware, Malware", "Sistema, Aplicación, Programación", "Local, Remoto, Híbrido", "Analógico, Digital, Cuántico"], ans: 1, exp: "El software se puede dividir en tres categorías principales: base o de Sistema, de Aplicación, de Programación." },
+                { q: "¿A qué categoría pertenece un Sistema Operativo (Windows, Linux)?", opts: ["Software de Programación", "Software de Aplicación", "Software de Sistema (Base)", "Freeware"], ans: 2, exp: "Software base o de Sistema: incluye el sistema operativo y los controladores." },
+                { q: "Procesadores de texto, hojas de cálculo y navegadores son ejemplos de:", opts: ["Software de Sistema", "Software de Aplicación", "Software de Programación", "Firmware"], ans: 1, exp: "Software de Aplicación: ejemplos comunes incluyen procesadores de texto, hojas de cálculo..." },
+                { q: "Ubuntu, Debian, Fedora son distribuciones de qué Sistema Operativo?", opts: ["Windows", "macOS", "Linux", "Chrome OS"], ans: 2, exp: "Linux... Algunas de las más populares son Ubuntu, Debian, Linux Mint y Fedora." },
+                { q: "Los 4 pilares fundamentales de la seguridad informática son:", opts: ["Windows, macOS, Linux, Android", "Confidencialidad, Integridad, Disponibilidad, Autenticidad", "Antivirus, Firewall, Proxy, VPN", "Amenaza, Ataque, Vulnerabilidad, Exploit"], ans: 1, exp: "Aspectos fundamentales: Confidencialidad, Integridad, Disponibilidad, Autenticidad." },
+                { q: "¿Qué pilar asegura que los datos sean precisos, fiables y sin cambios no autorizados?", opts: ["Confidencialidad", "Disponibilidad", "Integridad", "Autenticidad"], ans: 2, exp: "Integridad: precisión y fiabilidad... prevenir cambios no autorizados." },
+                { q: "Un programa malicioso que 'secuestra' cifrando datos y exige rescate es:", opts: ["Troyano", "Ransomware", "Gusano (Worm)", "Keylogger"], ans: 1, exp: "Ransomware: cifra los datos de la víctima y exige un rescate." },
+                { q: "¿Qué técnica persigue el engaño suplantando la identidad de un tercero de confianza para robar datos o contraseñas?", opts: ["Phishing", "Adware", "Denegación de servicio (DoS)", "Scam"], ans: 0, exp: "Phishing: conjunto de técnicas que persiguen el engaño... suplantación de identidad." },
+                { q: "¿Qué son los 'Keyloggers'?", opts: ["Redes de dispositivos infectados", "Programas espía que roban anuncios", "Programas que registran las pulsaciones de teclas del usuario para robar contraseñas", "Dispositivos de hardware para guardar llaves"], ans: 2, exp: "Keyloggers: registran las pulsaciones de teclas del usuario." },
+                { q: "¿Qué mecanismo de seguridad controla el tráfico de red, bloqueando o permitiendo comunicaciones según reglas (evitando accesos no autorizados)?", opts: ["Antivirus", "Proxy", "Firewall (Cortafuegos)", "Respaldo"], ans: 2, exp: "Firewalls: controlan el tráfico de red, permitiendo o bloqueando... base en reglas." },
+                { q: "¿Qué es una VPN?", opts: ["Un virus peligroso nuevo", "Una copia de seguridad", "Una Red Privada Virtual que proporciona un túnel seguro y cifra el tráfico de datos", "Un ataque de denegación de servicio"], ans: 2, exp: "VPN proporciona un túnel seguro a través de Internet que cifra el tráfico de datos." },
+                { q: "En el Cifrado Asimétrico se utilizan:", opts: ["Una sola clave compartida", "Una clave pública y una clave privada", "No se usan claves, solo contraseñas", "El cifrado AES-256"], ans: 1, exp: "Cifrado Asimétrico: se utilizan dos claves diferentes: pública y privada." },
+                { q: "El Respaldo (Backup) que copia TODOS los datos y archivos seleccionados en su totalidad es el:", opts: ["Respaldo Completo", "Respaldo Diferencial", "Respaldo Incremental", "Respaldo en Espejo"], ans: 0, exp: "Respaldo Completo: se copian todos los datos y archivos en su totalidad." },
+                { q: "¿Cuál es la última versión de macOS listada en el temario?", opts: ["Sonoma", "Catalina", "Sequoia", "Windows 11"], ans: 2, exp: "macOS: la última versión es macOS Sequoia, sucesora de Sonoma." },
+                { q: "¿Qué es un Exploit?", opts: ["Un antivirus", "Un programa que aprovecha una vulnerabilidad del sistema para atacarlo", "Una botnet", "Un correo fraudulento"], ans: 1, exp: "Exploits: son los programas que aprovechan una vulnerabilidad del sistema." },
+                { q: "Un ataque DoS (Denegación de Servicio) persigue:", opts: ["Robar contraseñas", "Inhabilitar el uso de un sistema bloqueando el servicio", "Cifrar el disco", "Mostrar anuncios"], ans: 1, exp: "Ataque DoS: inhabilitar el uso de un sistema, aplicación o dispositivo, bloqueando el servicio." },
+                { q: "¿Cómo se llama el software malicioso que se propaga automáticamente en la red, sin intervención humana?", opts: ["Virus", "Troyano", "Spyware", "Gusano (Worm)"], ans: 3, exp: "Gusanos (Worms): se propagan automáticamente sin necesidad de intervención humana." },
+                { q: "¿Qué tipo de software son los Compiladores, Editores y Depuradores?", opts: ["Software de Aplicación", "Software Base", "Software de Programación", "Malware"], ans: 2, exp: "Software de Programación... (editores, compiladores, intérpretes, depuradores)." },
+                { q: "¿Cuál es la diferencia entre vulnerabilidad y amenaza?", opts: ["Son lo mismo", "La amenaza es la debilidad, la vulnerabilidad ataca", "La vulnerabilidad es la debilidad en el sistema; la amenaza es la causa potencial que la aprovecha", "Ninguna es correcta"], ans: 2, exp: "Vulnerabilidad es debilidad, amenaza es la causa potencial de incidente que aprovecha la vulnerabilidad." },
+                { q: "El mecanismo de 'Pentesting' (IDS/IPS) se refiere a:", opts: ["Actualizaciones de software", "Cifrado de datos en la nube", "Sistemas de detección y prevención de intrusiones en tiempo real", "Respaldos en espejo"], ans: 2, exp: "Detección y Prevención de Intrusiones (Pentesting): identifican y bloquean actividades sospechosas en tiempo real." }
+            ]
+        ];
+
+        // ==========================================
+        // LÓGICA DE INTERFAZ Y GENERACIÓN DINÁMICA
+        // ==========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generarEsquema();
+            generarBotonesTestYContenedores();
+            inicializarPestanas();
+            inicializarTTS();
+        });
+
+        // Genera la vista del Esquema
+        function generarEsquema() {
+            const container = document.getElementById('esquema-container');
+            esquemaQuestions.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${item.q}</h3>
+                    <div class="answer-text"><strong>Respuesta:</strong> ${item.a}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Genera botones de tabs y los contenedores de los test
+        function generarBotonesTestYContenedores() {
+            const tabsMenu = document.getElementById('tabs-menu');
+            const mainContent = document.getElementById('main-content');
+
+            testData.forEach((test, index) => {
+                const testNum = index + 1;
+                
+                // Botón
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn';
+                btn.dataset.target = `tab-test-${testNum}`;
+                btn.textContent = `Test ${testNum}`;
+                tabsMenu.appendChild(btn);
+
+                // Contenedor del Test
+                const section = document.createElement('section');
+                section.id = `tab-test-${testNum}`;
+                section.className = 'tab-content';
+                
+                // Renderizar preguntas del test
+                let testHTML = `<h2>Examen Test ${testNum}</h2><p style="margin-bottom: 20px; color:#555;">20 Preguntas. Selecciona una respuesta para cada una y pulsa "Corregir Test" al final.</p>`;
+                
+                test.forEach((q, qIndex) => {
+                    testHTML += `
+                    <div class="card question-card" id="q-${testNum}-${qIndex}">
+                        <h3>${qIndex + 1}. ${q.q}</h3>
+                        <div class="options-group">
+                            ${q.opts.map((opt, optIdx) => `
+                                <label class="option-label" data-q="${testNum}-${qIndex}" data-opt="${optIdx}">
+                                    <input type="radio" name="q-${testNum}-${qIndex}" value="${optIdx}">
+                                    ${String.fromCharCode(65 + optIdx)}) ${opt}
+                                </label>
+                            `).join('')}
+                        </div>
+                        <div class="explanation" id="exp-${testNum}-${qIndex}">
+                            <strong>Justificación:</strong> ${q.exp}
+                        </div>
+                    </div>`;
+                });
+
+                testHTML += `
+                    <div class="results-summary" id="results-${testNum}"></div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="corregirTest(${index})">Corregir Test</button>
+                        <button class="btn btn-secondary" onclick="reiniciarTest(${index})">Reiniciar Test</button>
+                    </div>
+                `;
+                
+                section.innerHTML = testHTML;
+                mainContent.appendChild(section);
+            });
+        }
+
+        // Cambio de Pestañas
+        function inicializarPestanas() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remover activos
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    // Añadir activo
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.target).classList.add('active');
+                    window.scrollTo(0, 0); // Scroll al inicio
+                });
+            });
+        }
+
+        // Text-To-Speech (Lectura del Esquema)
+        let isSpeaking = false;
+        function inicializarTTS() {
+            const ttsBtn = document.getElementById('tts-btn');
+            ttsBtn.addEventListener('click', () => {
+                if (isSpeaking) {
+                    window.speechSynthesis.cancel();
+                    isSpeaking = false;
+                    ttsBtn.textContent = '🔊 Escuchar Esquema (40 Preguntas)';
+                } else {
+                    leerEsquemaCompleto();
+                    isSpeaking = true;
+                    ttsBtn.textContent = '⏹ Detener Lectura';
+                }
+            });
+
+            // En caso de terminar de hablar por sí solo
+            window.speechSynthesis.onvoiceschanged = () => {};
+        }
+
+        function leerEsquemaCompleto() {
+            window.speechSynthesis.cancel(); // Limpiar colas previas
+            let textToRead = "Esquema de preguntas de examen. Tema 1: Informática Básica. ";
+            esquemaQuestions.forEach(item => {
+                textToRead += item.q + " Respuesta: " + item.a + ". ";
+            });
+            
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.0;
+            
+            utterance.onend = () => {
+                isSpeaking = false;
+                document.getElementById('tts-btn').textContent = '🔊 Escuchar Esquema (40 Preguntas)';
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Lógica de Autocorrección
+        window.corregirTest = function(testIndex) {
+            const testNum = testIndex + 1;
+            const data = testData[testIndex];
+            let aciertos = 0;
+            let fallos = 0;
+            let sinContestar = 0;
+
+            data.forEach((q, qIndex) => {
+                const radios = document.getElementsByName(`q-${testNum}-${qIndex}`);
+                let selectedVal = null;
+                radios.forEach(r => { 
+                    if (r.checked) selectedVal = parseInt(r.value); 
+                    r.disabled = true; // Bloquear opciones tras corrección
+                });
+
+                // Limpiar clases previas
+                const labels = document.querySelectorAll(`label[data-q="${testNum}-${qIndex}"]`);
+                labels.forEach(l => {
+                    l.classList.remove('correct', 'incorrect');
+                });
+
+                if (selectedVal === null) {
+                    sinContestar++;
+                    // Mostrar verde la correcta
+                    const correctLabel = document.querySelector(`label[data-q="${testNum}-${qIndex}"][data-opt="${q.ans}"]`);
+                    if(correctLabel) correctLabel.classList.add('correct');
+                } else if (selectedVal === q.ans) {
+                    aciertos++;
+                    const correctLabel = document.querySelector(`label[data-q="${testNum}-${qIndex}"][data-opt="${q.ans}"]`);
+                    correctLabel.classList.add('correct');
+                } else {
+                    fallos++;
+                    const wrongLabel = document.querySelector(`label[data-q="${testNum}-${qIndex}"][data-opt="${selectedVal}"]`);
+                    wrongLabel.classList.add('incorrect');
+                    const correctLabel = document.querySelector(`label[data-q="${testNum}-${qIndex}"][data-opt="${q.ans}"]`);
+                    correctLabel.classList.add('correct');
+                }
+
+                // Mostrar justificación
+                document.getElementById(`exp-${testNum}-${qIndex}`).style.display = 'block';
+            });
+
+            // Mostrar resultados
+            const resultsBox = document.getElementById(`results-${testNum}`);
+            resultsBox.style.display = 'block';
+            resultsBox.innerHTML = `
+                Resultado: <span style="color:var(--success-color)">${aciertos} Aciertos</span> | 
+                <span style="color:var(--danger-color)">${fallos} Errores</span> | 
+                <span style="color:#6c757d">${sinContestar} Sin contestar</span>
+                <br><br>Puntuación sobre 20: <strong>${aciertos}</strong>
+            `;
+        }
+
+        // Lógica de Reinicio
+        window.reiniciarTest = function(testIndex) {
+            const testNum = testIndex + 1;
+            const data = testData[testIndex];
+
+            data.forEach((q, qIndex) => {
+                const radios = document.getElementsByName(`q-${testNum}-${qIndex}`);
+                radios.forEach(r => { 
+                    r.checked = false; 
+                    r.disabled = false; // Desbloquear
+                });
+
+                const labels = document.querySelectorAll(`label[data-q="${testNum}-${qIndex}"]`);
+                labels.forEach(l => {
+                    l.classList.remove('correct', 'incorrect');
+                });
+
+                // Ocultar justificación
+                document.getElementById(`exp-${testNum}-${qIndex}`).style.display = 'none';
+            });
+
+            // Ocultar resultados
+            const resultsBox = document.getElementById(`results-${testNum}`);
+            resultsBox.style.display = 'none';
+            resultsBox.innerHTML = '';
+            
+            // Scroll arriba del test
+            document.getElementById(`tab-test-${testNum}`).scrollIntoView({behavior: "smooth"});
+        }
+    </script>
+</body>
+</html>
