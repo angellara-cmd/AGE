@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Oposiciones AGE - Tema 4</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary: #0056b3;
+            --primary-hover: #004494;
+            --correct-bg: #d4edda;
+            --incorrect-bg: #f8d7da;
+            --explanation-bg: #e6f2ff;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header a {
+            display: inline-block;
+            margin: 5px 10px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--card-bg);
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .tab-btn {
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-action:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .option-container {
+            display: block;
+            margin: 8px 0;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            background-color: var(--card-bg);
+            min-height: 44px; /* Touch target size */
+        }
+
+        .option-label:hover {
+            background-color: #f1f3f5;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .option-label.correct {
+            background-color: var(--correct-bg);
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-label.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .explanation-box {
+            display: none;
+            background-color: var(--explanation-bg);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            color: #004085;
+            font-size: 15px;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px;
+            margin: 15px 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .btn-action {
+                width: auto;
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulador AGE - Tema 4: Retribuciones y Nóminas</h1>
+        <p>Documentos de referencia obligatoria:</p>
+        <a href="Tema_04.pdf" target="_blank">📄 Tema_04.pdf</a>
+        <a href="Tema_04anexo.pdf" target="_blank">📄 Tema_04anexo.pdf</a>
+    </header>
+
+    <nav id="navbar"></nav>
+
+    <main id="main-content"></main>
+
+    <script>
+        // ==========================================
+        // 1. BASES DE DATOS (Extraídas EXCLUSIVAMENTE de los PDFs)
+        // ==========================================
+
+        const esquemaPreguntas = [
+            { pregunta: "¿Dónde debe reflejarse anualmente la cuantía de las retribuciones básicas de los funcionarios?", respuesta_detallada: "Deberán reflejarse para cada ejercicio presupuestario en la Ley de Presupuestos Generales del Estado (LPGE), debiendo figurar también en los presupuestos de las demás Administraciones Públicas." },
+            { pregunta: "¿Tienen carácter sancionador las deducciones de haberes por jornada no realizada o ejercicio del derecho de huelga?", respuesta_detallada: "No. La deducción proporcional de haberes por jornada no realizada no tendrá carácter sancionador, sin perjuicio de la sanción disciplinaria que pueda corresponder. Igualmente, la deducción por huelga no tiene carácter sancionador ni afecta al régimen de prestaciones sociales." },
+            { pregunta: "¿En qué dos grandes bloques se clasifican las retribuciones de los funcionarios de carrera?", respuesta_detallada: "En retribuciones básicas (sueldo, trienios y componentes de sueldo/trienios de pagas extra) y retribuciones complementarias (destino, específico, productividad, gratificaciones)." },
+            { pregunta: "¿Cuántas pagas extraordinarias se perciben al año y cuál es su importe general?", respuesta_detallada: "Serán dos al año (junio y diciembre). Cada una por el importe de una mensualidad de retribuciones básicas y de la totalidad de las retribuciones complementarias, excluyendo la productividad y las gratificaciones por servicios extraordinarios." },
+            { pregunta: "¿Qué retribuciones perciben los funcionarios interinos?", respuesta_detallada: "Percibirán las retribuciones básicas (incluidos trienios) correspondientes al grupo o subgrupo en el que estén nombrados y las complementarias que correspondan al puesto que desempeñen, excluidas las vinculadas a la condición de funcionario de carrera." },
+            { pregunta: "¿Qué retribuciones perciben los funcionarios en prácticas de nuevo ingreso?", respuesta_detallada: "Como mínimo, una retribución equivalente al sueldo y pagas extraordinarias del Subgrupo o Grupo en que aspiren a ingresar. Si desempeñan un puesto de trabajo, el importe se incrementará con las retribuciones complementarias de dicho puesto." },
+            { pregunta: "¿Qué ocurre si un funcionario en prácticas ya estaba prestando servicios remunerados en la Administración?", respuesta_detallada: "Deberá optar entre percibir la remuneración de su puesto de origen (más trienios reconocidos) o la que proceda como funcionario en prácticas (más trienios)." },
+            { pregunta: "¿Cuál es el Salario Mínimo Interprofesional fijado para 2025 (según RD 87/2025)?", respuesta_detallada: "Queda fijado en 39,47 euros/día o 1.184 euros/mes, sin distinción de sexo ni edad de los trabajadores." },
+            { pregunta: "¿Qué estructura retributiva establece el Convenio Colectivo Único para el personal laboral?", respuesta_detallada: "Salario base, Pagas extraordinarias, Otras retribuciones de carácter personal (antigüedad, CPT), Complementos salariales (puesto, cantidad/calidad, residencia), Percepciones no salariales (indemnizaciones/suplidos) y Retribución en especie." },
+            { pregunta: "¿Qué son las nóminas?", respuesta_detallada: "Son documentos extendidos según modelos oficiales en los que se incluyen de forma detallada las retribuciones de los funcionarios y demás personal al servicio de la Administración del Estado adscrito a la habilitación de un determinado Centro Oficial." },
+            { pregunta: "¿Qué es una nómina ordinaria y cuándo se cierra?", respuesta_detallada: "Es la nómina que comprende al menos las remuneraciones fijas en cuantía y periódicas en vencimiento, asignada con el número 01. Se cerrará el día 5 de cada mes." },
+            { pregunta: "¿Qué porcentaje de cotización se aplica a los mutualistas integrados en MUFACE?", respuesta_detallada: "Se fija en el 1,69% sobre los haberes reguladores, a efectos de cotización de Derechos Pasivos." },
+            { pregunta: "¿Qué tipo porcentual de cuota de derechos pasivos se aplica al personal incluido en Clases Pasivas del Estado?", respuesta_detallada: "Se determinará mediante la aplicación del tipo porcentual del 3,86% sobre los haberes reguladores." },
+            { pregunta: "¿Cómo se calcula el importe líquido de una nómina?", respuesta_detallada: "Es la cantidad resultante de restar al importe íntegro (suma de todas las retribuciones) la suma de los importes de todas las deducciones formalizables." },
+            { pregunta: "¿Cómo se justifica un alta en nómina por comisión de servicios?", respuesta_detallada: "Se unirá el acuerdo de nombramiento para puesto de trabajo, la formalización de la toma de posesión y el certificado de baja en nómina del centro de origen." },
+            { pregunta: "¿Qué retribuye el sueldo y cómo se clasifica a efectos de Grupos en el TREBEP?", respuesta_detallada: "Es el correspondiente al índice de proporcionalidad. Grupo A (Subgrupos A1 Grado universitario, A2 Grado universitario), Grupo B (Técnico Superior), Grupo C (C1 Bachiller/Técnico, C2 Graduado ESO) y Agrupaciones Profesionales." },
+            { pregunta: "¿Cómo se abonan los trienios cuando un funcionario cambia de Subgrupo antes de completarlo?", respuesta_detallada: "La fracción de tiempo transcurrido se considera como tiempo de servicios prestados en el nuevo Grupo o Subgrupo." },
+            { pregunta: "¿Cuál es el sueldo fijado para el Subgrupo A1 y Subgrupo C1 en doce mensualidades (2023 actualizado)?", respuesta_detallada: "Subgrupo A1: 15.922,80 euros. Subgrupo C1: 10.337,52 euros." },
+            { pregunta: "¿Cuál es el importe del trienio para el Subgrupo A1 y Subgrupo C1 en doce mensualidades (2023 actualizado)?", respuesta_detallada: "Subgrupo A1: 612,84 euros. Subgrupo C1: 378,36 euros." },
+            { pregunta: "¿Qué ocurre con la paga extraordinaria si se ha prestado jornada reducida en los 6 meses anteriores?", respuesta_detallada: "El importe de la paga extraordinaria experimentará la correspondiente reducción proporcional." },
+            { pregunta: "¿Cuántos niveles de complemento de destino existen y cuál es el importe del Nivel 30?", respuesta_detallada: "Existen 30 niveles. El importe mensual para el Nivel 30 referido a 12 mensualidades es de 13.908,72 euros anuales." },
+            { pregunta: "¿Se pueden asignar varios complementos específicos a un mismo puesto de trabajo?", respuesta_detallada: "En ningún caso podrá asignarse más de un complemento específico a cada puesto de trabajo, aunque al fijarlo puedan tomarse en consideración conjuntamente dos o más condiciones (especial dificultad, dedicación, incompatibilidad, peligrosidad)." },
+            { pregunta: "¿Es el complemento de productividad fijo y periódico?", respuesta_detallada: "No. Retribuye el especial rendimiento y en ningún caso originará derechos individuales respecto de valoraciones para periodos sucesivos." },
+            { pregunta: "¿Qué son las dietas y en qué componentes se dividen?", respuesta_detallada: "La dieta es la cantidad diaria para satisfacer gastos originados por estancias fuera de la residencia oficial. Se divide en gastos de alojamiento (requiere justificación, importe real hasta el tope) y manutención (importe fijo, no requiere justificación)." },
+            { pregunta: "¿Cuánto dura como máximo una comisión de servicios con derecho a indemnización en territorio nacional y en el extranjero?", respuesta_detallada: "Toda comisión, salvo excepciones, no durará más de un mes en territorio nacional y de tres meses en el extranjero." },
+            { pregunta: "¿A partir de qué momento una comisión de servicios pasa a considerarse indemnización por residencia eventual?", respuesta_detallada: "Cuando se prevea que dure excepcionalmente más de un mes en territorio nacional o más de tres meses en el extranjero, o cuando se asista a cursos selectivos para ingreso por promoción interna." },
+            { pregunta: "¿Cuál es la cuantía máxima de la indemnización por residencia eventual?", respuesta_detallada: "Será fijada por la autoridad que confiera la comisión dentro del límite máximo del 80% del importe de las dietas enteras, y no necesita justificación documental." },
+            { pregunta: "¿Cómo se indemniza el uso de vehículo particular en comisiones de servicio?", respuesta_detallada: "Se aplicarán los importes de 0,26 euros/km para automóviles y 0,106 euros/km para motocicletas." },
+            { pregunta: "¿Qué conceptos se indemnizan en un traslado forzoso de residencia en territorio nacional?", respuesta_detallada: "Gastos de viaje (incluida familia), transporte de mobiliario y enseres, y una indemnización equivalente a tres dietas para el titular y cada miembro de la familia que se traslade." },
+            { pregunta: "¿A qué familiares se indemniza en caso de traslados de residencia?", respuesta_detallada: "A los familiares que convivan y dependan económicamente del empleado. Se entiende que conviven y dependen en todo caso el cónyuge y los hijos menores de 21 años." },
+            { pregunta: "¿Cuál es el límite anual para la percepción de asistencias por participación en tribunales de oposiciones?", respuesta_detallada: "El importe total por año natural no podrá superar el 20% de las retribuciones anuales (excluidas las derivadas de antigüedad) del puesto de trabajo principal." },
+            { pregunta: "¿Cuál es el límite anual por asistencias a órganos colegiados y consejos de administración?", respuesta_detallada: "No se podrá percibir un importe anual superior al 40% de las retribuciones (excluida la antigüedad) que correspondan por el puesto de trabajo principal." },
+            { pregunta: "¿Cuál es el límite horario y retributivo por colaboración en actividades de formación y perfeccionamiento?", respuesta_detallada: "El máximo son 75 horas al año y no podrá superar el 25% de las retribuciones anuales del colaborador." },
+            { pregunta: "¿Cuál es el límite global máximo si se perciben conjuntamente los tres tipos de asistencias (tribunales, consejos y formación)?", respuesta_detallada: "En ningún caso totalizarán para el conjunto un importe por año natural superior al 50% de las retribuciones anuales, excluidas las de carácter personal por antigüedad." },
+            { pregunta: "¿Qué son los Complementos Personales y Transitorios (CPT)?", respuesta_detallada: "Son retribuciones absorbidas por las mejoras que puedan derivarse del cambio de puesto de trabajo. Para la absorción, el incremento de retribuciones generales (sueldo, destino, específico) solo se computará en el 50%." },
+            { pregunta: "¿Qué sucede en el mes en que un funcionario toma posesión de su primer destino?", respuesta_detallada: "Las retribuciones básicas y complementarias no se devengarán por mensualidad completa, sino que se liquidarán por días." },
+            { pregunta: "¿En qué casos se liquida la nómina por días en lugar de mensualidades completas?", respuesta_detallada: "Toma de posesión de primer destino, reingreso, inicio/fin de licencias sin sueldo, cambio a Administración distinta o cese en servicio activo (salvo jubilación o fallecimiento, donde se paga el mes completo)." },
+            { pregunta: "¿Cuáles son las fechas de devengo de las pagas extraordinarias?", respuesta_detallada: "Se devengarán el primer día hábil de los meses de junio y diciembre, con referencia a la situación y derechos del funcionario en dichas fechas." },
+            { pregunta: "¿Qué plazo hay para presentar las nóminas y los documentos contables 'OK' o 'ADOK'?", respuesta_detallada: "Deberán presentarse en las oficinas de contabilidad antes del día 7 de cada mes." },
+            { pregunta: "¿Cómo puede cobrar sus retribuciones el personal en activo de la Administración Civil del Estado?", respuesta_detallada: "A opción del interesado: mediante transferencia a cuentas abiertas en entidades de crédito o mediante entrega de cheques nominativos emitidos por dichas entidades." }
+        ];
+
+        const examenes = [
+            // TEST 1: Conceptos Generales y Básicas
+            [
+                { pregunta: "Según la Ley 30/1984, ¿dónde debe figurar la cuantía de las retribuciones básicas y complementarias?", opciones: ["En los Reglamentos de Personal", "En las Relaciones de Puestos de Trabajo exclusivas", "En la correspondiente Ley de Presupuestos Generales del Estado", "En el BOE del mes de enero exclusivamente"], respuesta_correcta: 2, explicacion: "La Ley 30/1984 prescribe su inclusión en la correspondiente Ley de Presupuestos Generales del Estado (LPGE)." },
+                { pregunta: "Las cantidades destinadas a financiar aportaciones a planes de pensiones para el personal tienen consideración de:", opciones: ["Retribución en especie obligatoria", "Retribución diferida", "Retribución complementaria variable", "Acción social indemnizatoria"], respuesta_correcta: 1, explicacion: "Tendrán a todos los efectos la consideración de retribución diferida." },
+                { pregunta: "Si un funcionario ejercita el derecho de huelga:", opciones: ["Se le aplicará una deducción que tendrá carácter de sanción", "No se deducirán haberes si se recuperan las horas", "Experimentará una deducción de haberes que no tendrá carácter de sanción", "Se le suspende de empleo y sueldo sin afectación a la nómina del mes"], respuesta_correcta: 2, explicacion: "La deducción de haberes que se efectúe no tendrá carácter de sanción ni afectará a sus prestaciones sociales." },
+                { pregunta: "En relación al TREBEP, ¿cómo se clasifican las retribuciones de los funcionarios de carrera?", opciones: ["Ordinarias y extraordinarias", "Básicas y complementarias", "Sueldos, trienios y pagas", "Salario base, complementos e indemnizaciones"], respuesta_correcta: 1, explicacion: "Las retribuciones de los funcionarios de carrera se clasifican en básicas y complementarias." },
+                { pregunta: "Dentro de las retribuciones básicas (art. 23 TREBEP), se integran:", opciones: ["Solo el sueldo", "Sueldo, trienios y complemento de destino", "El sueldo asignado a cada Subgrupo o Grupo y los trienios", "A y C son correctas"], respuesta_correcta: 2, explicacion: "Están integradas por el sueldo y los trienios. (El art. 22 añade componentes extra, pero la básica estricta del 23 es sueldo y trienios)." },
+                { pregunta: "El complemento de productividad atiende a:", opciones: ["La progresión en la carrera", "La especial dificultad técnica", "El especial rendimiento, actividad extraordinaria o interés", "La dedicación exclusiva"], respuesta_correcta: 2, explicacion: "Retribuye el especial rendimiento, actividad y dedicación extraordinarias y el interés." },
+                { pregunta: "Los funcionarios interinos perciben:", opciones: ["Solo retribuciones básicas", "Básicas (incluidos trienios) y complementarias correspondientes al puesto", "El 80% del sueldo del titular", "Básicas pero no trienios"], respuesta_correcta: 1, explicacion: "Perciben el 100% de las retribuciones básicas (incluidos trienios) y el 100% de las complementarias del puesto." },
+                { pregunta: "El personal eventual percibe las retribuciones básicas correspondientes a:", opciones: ["Su nivel de estudios reglado", "El grupo o subgrupo de asimilación de funciones", "Siempre el Subgrupo A1", "No perciben sueldo fijo, solo complementos"], respuesta_correcta: 1, explicacion: "Percibe sueldo y extras del grupo/subgrupo al que el Ministerio asimile sus funciones." },
+                { pregunta: "Un funcionario de carrera que pase a ocupar un puesto de personal eventual:", opciones: ["Pierde sus trienios", "Percibe sueldo básico de su grupo (con trienios) y los complementos del puesto eventual", "Solo percibe el complemento de destino", "Debe renunciar a su condición de funcionario"], respuesta_correcta: 1, explicacion: "Percibe retribuciones básicas de su grupo (incluidos trienios) y complementarias del puesto eventual." },
+                { pregunta: "Los funcionarios en prácticas:", opciones: ["Siempre cobran el SMI", "Percibirán el 50% de las básicas", "Percibirán como mínimo el sueldo y extra del Subgrupo/Grupo al que aspiran", "No perciben retribución alguna hasta la toma de posesión definitiva"], respuesta_correcta: 2, explicacion: "Percibirán una retribución equivalente al sueldo y pagas extraordinarias del Grupo al que aspiren." },
+                { pregunta: "Si las prácticas se realizan desempeñando un puesto de trabajo:", opciones: ["No hay incremento salarial", "Se abonarán los gastos de viaje y dietas exclusivamente", "El importe se incrementará con las retribuciones complementarias de dicho puesto", "Se abona el 100% de la productividad ministerial"], respuesta_correcta: 2, explicacion: "El importe (sueldo y extras) se incrementará en las retribuciones complementarias correspondientes a dicho puesto." },
+                { pregunta: "Para acceder a los cuerpos del Subgrupo A1 se exigirá el título de:", opciones: ["Técnico Superior", "Bachiller", "Grado Universitario", "Graduado en ESO"], respuesta_correcta: 2, explicacion: "Para el Subgrupo A1 se exige título universitario de Grado." },
+                { pregunta: "El Subgrupo C1 exige la titulación de:", opciones: ["Bachiller o técnico", "Graduado en ESO", "Técnico Superior", "Certificado de Escolaridad"], respuesta_correcta: 0, explicacion: "Subgrupo C1: título de bachiller o técnico." },
+                { pregunta: "Los servicios prestados como laboral antes de ser funcionario de carrera:", opciones: ["No computan para trienios", "Computan a efectos de trienios tras solicitar su reconocimiento (Ley 70/1978)", "Solo computan para complementos", "Computan solo si fueron en la misma Administración"], respuesta_correcta: 1, explicacion: "A efectos de trienios, se tendrán en cuenta todos los servicios previos prestados, incluso laborales (reconocidos por Ley 70/78)." },
+                { pregunta: "En 2023, la cuantía del sueldo base (12 meses) para el Subgrupo A1 es de:", opciones: ["10.337,52", "12.035,28", "13.768,20", "15.922,80"], respuesta_correcta: 3, explicacion: "Para el Subgrupo A1, el sueldo es de 15.922,80 euros." },
+                { pregunta: "En 2023, la cuantía del sueldo base (12 meses) para el Subgrupo C1 es de:", opciones: ["8.603,76", "10.337,52", "12.035,28", "15.922,80"], respuesta_correcta: 1, explicacion: "Para el Subgrupo C1 es de 10.337,52 euros." },
+                { pregunta: "El importe anual de un trienio para el Subgrupo C1 (2023) es:", opciones: ["378,36", "612,84", "257,52", "499,80"], respuesta_correcta: 0, explicacion: "Trienio C1: 378,36 euros." },
+                { pregunta: "El Grupo C Ley 30/1984 equivale actualmente en el TREBEP a:", opciones: ["Subgrupo C2", "Subgrupo C1", "Agrupaciones Profesionales", "Subgrupo A2"], respuesta_correcta: 1, explicacion: "Grupo C (antiguo) = Subgrupo C1 TREBEP." },
+                { pregunta: "Las retribuciones del sector público no podrán experimentar un incremento global superior en 2024 al:", opciones: ["1%", "2%", "5%", "Ningún incremento autorizado"], respuesta_correcta: 1, explicacion: "No podrán experimentar un incremento global superior al 2 por ciento respecto a 2023." },
+                { pregunta: "¿Cuántas pagas extraordinarias existen al año para los funcionarios?", opciones: ["Doce", "Catorce", "Dos (junio y diciembre)", "Tres (verano, navidad, semana santa)"], respuesta_correcta: 2, explicacion: "Serán dos al año, una en el mes de junio y otra en el mes de diciembre." }
+            ],
+            // TEST 2: Pagas extra y C. Destino
+            [
+                { pregunta: "La paga extra incluye:", opciones: ["Solo sueldo y trienios", "Solo complementos fijos", "Sueldo, trienios y el total de complementarias (salvo productividad y gratificaciones)", "Sueldo base exclusivamente"], respuesta_correcta: 2, explicacion: "Incluye mensualidad de básicas y de la totalidad de las complementarias (salvo productividad y servicios extra)." },
+                { pregunta: "Si se ha prestado jornada reducida en los seis meses anteriores al devengo de la extra:", opciones: ["Se cobra entera", "Experimentará la reducción proporcional", "Se pierde el derecho a la paga extra", "Solo se reduce la parte complementaria"], respuesta_correcta: 1, explicacion: "El importe de la paga extraordinaria experimentará la correspondiente reducción proporcional." },
+                { pregunta: "El Complemento de Destino correspondiente al nivel 30 (en 12 mensualidades) es:", opciones: ["4.701,36", "10.024,56", "13.908,72", "15.922,80"], respuesta_correcta: 2, explicacion: "Nivel 30: 13.908,72 euros." },
+                { pregunta: "El Complemento de Destino para el nivel 15 es:", opciones: ["2.283,84", "4.701,36", "3.734,28", "8.369,16"], respuesta_correcta: 1, explicacion: "Nivel 15: 4.701,36 euros." },
+                { pregunta: "Las cuantías del complemento de destino se abonan referidas a:", opciones: ["14 mensualidades", "12 mensualidades (aunque en las extras se abona la parte correspondiente)", "1 mensualidad única", "A convenir"], respuesta_correcta: 1, explicacion: "Las cuantías anuales mostradas se refieren a 12 mensualidades, incorporándose en extra el importe equivalente." },
+                { pregunta: "El complemento de destino retribuye:", opciones: ["El nivel del puesto que se desempeñe", "Las condiciones particulares de toxicidad", "Las horas extra", "La titulación de acceso"], respuesta_correcta: 0, explicacion: "Es el correspondiente al nivel del puesto que se desempeñe." },
+                { pregunta: "¿Cuántos niveles de complemento de destino especifica el sistema general mostrado?", opciones: ["De 1 a 20", "De 10 a 30", "De 1 a 30", "De 1 a 10"], respuesta_correcta: 2, explicacion: "Existen niveles retributivos de destino enumerados del 1 al 30." },
+                { pregunta: "El devengo de las pagas extra de junio y diciembre se fija en el día:", opciones: ["30 de los respectivos meses", "Primer día hábil de los meses de junio y diciembre", "15 de cada mes", "A la toma de posesión exclusivamente"], respuesta_correcta: 1, explicacion: "Se devengarán el primer día hábil de los meses de junio y diciembre." },
+                { pregunta: "Si el cese en el servicio activo se produce antes de devengar la extra completa:", opciones: ["La paga extra se reduce proporcionalmente", "No cobra nada", "Cobra la extra entera", "Se abonará al año siguiente"], respuesta_correcta: 0, explicacion: "La última paga extra se devengará el día del cese en cuantía proporcional al tiempo de servicios." },
+                { pregunta: "Cuando se devenga la paga extraordinaria, si se disfruta de licencia sin retribución:", opciones: ["Se cobra íntegra", "No se devenga", "Su cuantía experimentará reducción proporcional descontando los días de licencia", "Es causa de despido"], respuesta_correcta: 2, explicacion: "El tiempo de licencias sin sueldo no tiene consideración de servicios efectivamente prestados y reduce la extra." },
+                { pregunta: "A efectos de paga extraordinaria, ¿qué ocurre si la baja o cese es por jubilación o fallecimiento?", opciones: ["Se pagan solo los días del mes trabajados", "Los días del mes en que se produce el cese se computarán como un mes completo", "Se abonan tres nóminas de indemnización", "No afecta en absoluto al cálculo semestral"], respuesta_correcta: 1, explicacion: "En caso de jubilación o fallecimiento, los días del mes en que se produce el cese se computan como mes completo." },
+                { pregunta: "En caso de año bisiesto, para la liquidación proporcional de la extra de junio, se divide la paga entera entre:", opciones: ["180 días", "182 días (o 183 en bisiestos)", "365 días", "30 días"], respuesta_correcta: 1, explicacion: "Se divide entre 182 (183 en bisiestos)." },
+                { pregunta: "El devengo de las retribuciones básicas de periodicidad mensual es por:", opciones: ["Mensualidades completas (regla general)", "Días (siempre)", "Quincenas", "Semanas"], respuesta_correcta: 0, explicacion: "Se harán efectivas por mensualidades completas, salvo las excepciones tasadas (primer destino, reingresos...)." },
+                { pregunta: "¿En qué situación NO se liquida la nómina por días?", opciones: ["Alta por primer destino", "Cese en el mes por renuncia", "Mes normal de servicio activo sin incidencias", "Inicio de licencia sin derecho a retribución"], respuesta_correcta: 2, explicacion: "Mes normal de servicio activo se abona por mensualidades completas." },
+                { pregunta: "¿Qué sucede con la nómina en el mes que finaliza una licencia sin retribución?", opciones: ["Se paga mes completo", "Se liquida por días", "No se cobra ese mes", "Se le descuenta el mes siguiente"], respuesta_correcta: 1, explicacion: "En la reincorporación por conclusión de licencia sin retribución se liquida por días." },
+                { pregunta: "Si el devengo de la extra de diciembre no se cumple en 6 meses íntegros, se divide entre:", opciones: ["183 días", "182 días", "365 días", "180 días"], respuesta_correcta: 0, explicacion: "Para la extra de diciembre, el divisor fijo es 183 días." },
+                { pregunta: "El nivel 1 del complemento de destino tiene un importe de (12 mensualidades):", opciones: ["4.701,36", "1.800,96", "1.317,72", "2.042,16"], respuesta_correcta: 2, explicacion: "El Nivel 1 asciende a 1.317,72 euros." },
+                { pregunta: "El Nivel 20 del complemento de destino tiene un importe de:", opciones: ["6.796,32", "6.313,08", "5.990,88", "10.024,56"], respuesta_correcta: 1, explicacion: "El Nivel 20 asciende a 6.313,08 euros." },
+                { pregunta: "¿Cómo se abona la extra de junio según el anexo?", opciones: ["Junto con el mes de junio", "El 31 de mayo", "Junto a la de diciembre", "A mediados de julio"], respuesta_correcta: 0, explicacion: "Se harán efectivas la de junio junto con el mes de junio (y diciembre con el mes de diciembre a partir del 18)." },
+                { pregunta: "¿Qué sucede con las cuotas de derechos pasivos y MUFACE en las extras minoradas?", opciones: ["Son fijas", "No se aplican en la extra", "Se reducirán en la misma proporción en que se minoren estas pagas", "Se abonan dobles para compensar"], respuesta_correcta: 2, explicacion: "Se reducirán en la misma proporción en que se minoren dichas pagas." }
+            ],
+            // TEST 3: Resto de Complementarias
+            [
+                { pregunta: "¿En cuántas pagas se percibe el Complemento Específico anual?", opciones: ["12", "14 (12 mensuales y 2 adicionales)", "2 (junio y diciembre)", "En un pago único anual"], respuesta_correcta: 1, explicacion: "Se percibirá en catorce pagas iguales." },
+                { pregunta: "El complemento específico retribuye:", opciones: ["Solo la antigüedad", "El rendimiento excepcional", "Las condiciones particulares del puesto (especial dificultad, dedicación, incompatibilidad, etc.)", "La superación de pruebas internas"], respuesta_correcta: 2, explicacion: "Retribuye la especial dificultad, responsabilidad, dedicación o incompatibilidad." },
+                { pregunta: "¿Cuántos complementos específicos pueden asignarse a un puesto de trabajo?", opciones: ["Ninguno", "Uno solo por puesto", "Hasta dos", "Ilimitados"], respuesta_correcta: 1, explicacion: "En ningún caso podrá asignarse más de un complemento específico a cada puesto de trabajo." },
+                { pregunta: "¿Se pueden tomar en cuenta varias condiciones particulares para fijar la cuantía del complemento específico?", opciones: ["No, solo una", "Sí, pueden tomarse conjuntamente dos o más condiciones", "Únicamente la peligrosidad", "Únicamente la incompatibilidad"], respuesta_correcta: 1, explicacion: "Sí, aunque sea un solo complemento, al fijarlo pueden tomarse conjuntamente dos o más de las condiciones." },
+                { pregunta: "Para obtener compatibilidad para actividades privadas, la cuantía del complemento específico (o equiparable) no debe superar:", opciones: ["El 10% de la retribución básica", "El 30% de la retribución básica, excluyendo antigüedad", "El 50% de las complementarias totales", "No hay límite porcentual"], respuesta_correcta: 1, explicacion: "No debe superar el 30% de su retribución básica, excluidos los conceptos derivados de antigüedad." },
+                { pregunta: "El Complemento de Productividad:", opciones: ["Se consolida para el año siguiente", "No origina derechos individuales en períodos sucesivos", "Es fijo para todos los funcionarios de un mismo nivel", "A y C son correctas"], respuesta_correcta: 1, explicacion: "En ningún caso originarán derechos individuales respecto de valoraciones en períodos sucesivos." },
+                { pregunta: "¿Qué retribuyen las Gratificaciones por Servicios Extraordinarios?", opciones: ["Las horas trabajadas en festivos dentro de jornada ordinaria", "Los servicios extraordinarios prestados fuera de la jornada normal", "La incompatibilidad total", "El grado personal"], respuesta_correcta: 1, explicacion: "Por servicios extraordinarios prestados fuera de la jornada normal de trabajo." },
+                { pregunta: "Las Gratificaciones por Servicios Extraordinarios:", opciones: ["Pueden ser fijas en su cuantía", "Deben pagarse periódicamente", "En ningún caso pueden ser fijas ni periódicas en su devengo", "Consolidan grado"], respuesta_correcta: 2, explicacion: "En ningún caso pueden ser fijas en su cuantía ni periódicas en su devengo." },
+                { pregunta: "¿Quién determina las cuantías parciales asignadas y los criterios de distribución de la productividad?", opciones: ["El funcionario directamente", "Cada Departamento ministerial u organismo público", "Los Sindicatos", "El Presidente del Gobierno"], respuesta_correcta: 1, explicacion: "Cada Departamento ministerial u organismo público determinará las cuantías parciales y criterios." },
+                { pregunta: "La valoración de la productividad debe realizarse:", opciones: ["A criterio subjetivo del jefe directo sin más", "En función de circunstancias objetivas relacionadas con el puesto y desempeño", "Mediante sorteo", "Atendiendo solo a la antigüedad"], respuesta_correcta: 1, explicacion: "Deberá realizarse en función de circunstancias objetivas." },
+                { pregunta: "¿Qué son los Complementos Personales y Transitorios (CPT)?", opciones: ["Un pago por jubilación", "Cantidades absorbidas por las mejoras que se deriven del cambio de puesto", "Sueldo base congelado", "Dietas por traslado"], respuesta_correcta: 1, explicacion: "Se mantendrán en cuantía, siendo absorbidos por las mejoras que derivan del cambio de puesto de trabajo." },
+                { pregunta: "Al absorber los CPT, ¿en qué porcentaje se computa el incremento de retribuciones generales?", opciones: ["100%", "20%", "50%", "No se computa"], respuesta_correcta: 2, explicacion: "El incremento general (sueldo, destino, específico) solo se computará en el 50% de su importe." },
+                { pregunta: "Para la absorción de los CPT, ¿se tienen en cuenta los trienios?", opciones: ["Sí, al 100%", "Sí, al 50%", "En ningún caso se considerarán", "Solo a petición del interesado"], respuesta_correcta: 2, explicacion: "En ningún caso se considerarán trienios, productividad ni gratificaciones extra." },
+                { pregunta: "Si el cambio de puesto determina una disminución de retribuciones:", opciones: ["Se pierde el CPT", "Se mantiene el CPT fijado a cuya absorción se imputarán mejoras posteriores", "El funcionario puede negarse a ir al puesto", "Se paga el CPT duplicado"], respuesta_correcta: 1, explicacion: "Incluso en el caso de disminución, se mantendrá el complemento fijado." },
+                { pregunta: "El complemento específico se devenga:", opciones: ["Solo en días laborables", "Mensualmente junto con las retribuciones básicas (incluye 14 pagas anuales)", "Semestralmente", "Al cesar"], respuesta_correcta: 1, explicacion: "Se percibe en catorce pagas iguales." },
+                { pregunta: "¿Qué ocurre con los CPT del personal en el extranjero?", opciones: ["No se absorben nunca", "Se suprimen cuando el funcionario cambie de país de destino", "Son fijos a perpetuidad", "Se duplican al cambiar de país"], respuesta_correcta: 1, explicacion: "Se absorberán y podrán suprimirse cuando el funcionario afectado cambie de país." },
+                { pregunta: "Las retribuciones del sector público en el capítulo de complementarias (productividad y gratificaciones) limitan su incremento máximo anual respecto al:", opciones: ["IPC de los últimos 5 años", "Mismo porcentaje de aumento general que fije la LPGE (ej. 2% en 2024)", "5%", "10% fijo"], respuesta_correcta: 1, explicacion: "El crédito disponible experimentará el incremento máximo previsto en el art. 19.dos LPGE (ej. 2% en 2024)." },
+                { pregunta: "¿Se pueden asignar simultáneamente productividad y gratificaciones?", opciones: ["No, son incompatibles", "Sí, siempre que no superen el sueldo", "Sí, retribuyen conceptos distintos (rendimiento vs. fuera de jornada)", "Ambas están prohibidas"], respuesta_correcta: 2, explicacion: "Sí, retribuyen conceptos diferentes." },
+                { pregunta: "La justificación de la productividad en la nómina se hará mediante:", opciones: ["Declaración jurada del funcionario", "Certificación expedida por la autoridad competente / copia acuerdo Comisión", "Facturas", "El Jefe de Estado"], respuesta_correcta: 1, explicacion: "Certificación de la autoridad competente o acuerdo de la Comisión de Retribuciones." },
+                { pregunta: "¿Se publican en el centro de trabajo las cantidades asignadas de productividad?", opciones: ["Están amparadas por total confidencialidad", "Los complementos de productividad se harán públicos en los centros de trabajo", "Solo si el funcionario lo autoriza", "Solo al final del ejercicio fiscal"], respuesta_correcta: 1, explicacion: "Los complementos de productividad se harán públicos en los centros de trabajo." }
+            ],
+            // TEST 4: Personal Laboral, Interino y Prácticas
+            [
+                { pregunta: "Según el Acuerdo Marco, el personal laboral de la AGE no sujeto al extranjero regula sus condiciones por:", opciones: ["Las normas exclusivas de funcionarios", "Negociación colectiva (Convenio Colectivo Único)", "El Ministerio de Trabajo sin convenio", "Las RPT de la Administración de Justicia"], respuesta_correcta: 1, explicacion: "A través de negociación colectiva en el Convenio Colectivo Único." },
+                { pregunta: "El Salario Mínimo Interprofesional (SMI) de 2025 para el personal que preste servicios, según RD 87/2025, está fijado en:", opciones: ["1.000 €/mes", "1.080 €/mes", "1.184 €/mes (39,47 €/día)", "1.500 €/mes"], respuesta_correcta: 2, explicacion: "Fijado en 39,47 euros/día o 1.184 euros/mes." },
+                { pregunta: "Los eventuales o temporeros del SMI (servicios menores a 120 días) perciben como mínimo por jornada:", opciones: ["39,47 euros íntegros y sin prorratas", "56,08 euros (incluyendo parte proporcional de extras y domingos)", "30 euros", "10 euros/hora"], respuesta_correcta: 1, explicacion: "La cuantía del salario profesional no resultará inferior a 56,08 euros por jornada legal en la actividad." },
+                { pregunta: "En la estructura salarial del personal laboral, NO es un concepto retributivo:", opciones: ["Salario Base", "Complemento por dedicación exclusiva a la nación", "Antigüedad", "Pagas extraordinarias"], respuesta_correcta: 1, explicacion: "El complemento por 'dedicación a la nación' no existe. Son: Salario, pagas, antigüedad, complementos salariales y suplidos." },
+                { pregunta: "El complemento por nocturnidad o turnicidad en laborales se considera:", opciones: ["Retribución personal", "Percepción no salarial", "Complemento de puesto de trabajo (salarial)", "Gratificación extraordinaria"], respuesta_correcta: 2, explicacion: "Se enmarca dentro de complementos salariales (de puesto de trabajo)." },
+                { pregunta: "¿Tienen carácter consolidable los complementos de puesto del personal laboral (nocturnidad, turnicidad...)?", opciones: ["Sí", "No, dependen exclusivamente del ejercicio en ese puesto", "Solo si se cobra más de tres años", "Solo la turnicidad"], respuesta_correcta: 1, explicacion: "Son de índole funcional y su percepción depende de la actividad, por lo que no tendrán carácter consolidable." },
+                { pregunta: "La masa salarial del personal laboral está integrada por:", opciones: ["Solo el salario base", "Retribuciones salariales y extrasalariales devengadas en el año anterior", "Cotizaciones a la seguridad social patronal", "A y C son correctas"], respuesta_correcta: 1, explicacion: "Conjunto de retribuciones salariales y extrasalariales devengadas en el año anterior." },
+                { pregunta: "¿Qué concepto queda EXCEPTUADO de la masa salarial?", opciones: ["Prestaciones de Seguridad Social y Cotizaciones a cargo del empleador", "El salario base", "Las pagas extraordinarias", "La antigüedad"], respuesta_correcta: 0, explicacion: "Se exceptúan cotizaciones empleador, indemnizaciones y prestaciones SS, etc." },
+                { pregunta: "Las percepciones no salariales del personal laboral incluyen:", opciones: ["Nocturnidad", "Quebranto de moneda y gastos de locomoción", "Trienios", "Pagas extraordinarias"], respuesta_correcta: 1, explicacion: "Se entiende por tales quebranto de moneda, desgaste herramientas, transporte urbano, gastos locomoción." },
+                { pregunta: "Si el funcionario interino NO ocupa puesto (ej. asignado al Ministerio), ¿qué complementos percibe?", opciones: ["Ninguno", "Los aprobados por el Ministerio competente en materia de función pública", "Los del Secretario de Estado", "Un porcentaje fijo del 50%"], respuesta_correcta: 1, explicacion: "O bien los del puesto que desempeñe, o los aprobados por el Ministerio competente en caso de no ocupar puesto." },
+                { pregunta: "A los efectos de antigüedad en laborales (Convenio), se devenga el complemento cada:", opciones: ["Un año", "Dos años", "Tres años (o múltiplos) de servicios efectivos", "Cinco años (quinquenios)"], respuesta_correcta: 2, explicacion: "Se devenga a partir del día primero del mes en que se cumplan tres años (o múltiplos)." },
+                { pregunta: "El Complemento Personal de Unificación (laborales) se abona cuando:", opciones: ["El trabajador se jubila", "Se unifican turnos", "Venga percibiendo de salario base más de lo que marca el nuevo convenio", "Todos los trabajadores pasan a fijos"], respuesta_correcta: 2, explicacion: "Se reconoce por la diferencia a aquellos que venían percibiendo cuantía superior en salario base y es absorbible." },
+                { pregunta: "El funcionario en prácticas percibe:", opciones: ["Sueldo equivalente al Subgrupo al que aspira, y si ocupa puesto, los complementos de ese puesto", "No percibe retribución si las prácticas duran menos de un mes", "Percibe el Salario Mínimo exclusivamente", "Solo dietas y desplazamientos"], respuesta_correcta: 0, explicacion: "Sueldo y extras del Subgrupo al que aspira más retribuciones complementarias si desempeña puesto." },
+                { pregunta: "¿Un interino puede percibir el complemento de productividad?", opciones: ["Nunca", "Sí, si desempeña análogo puesto al de carrera y no está vinculado a la condición de carrera", "Solo los laborales", "Solo si lleva más de tres años"], respuesta_correcta: 1, explicacion: "Podrá asignarse si está autorizada su aplicación a funcionarios de carrera que desempeñen análogos puestos (y no sea inherente a la carrera)." },
+                { pregunta: "El personal directivo del sector público laboral:", opciones: ["Tendrá incremento de retribución libre", "Tampoco experimentará incremento superior al límite de masa salarial (ej. 2% LPGE)", "Se excluye de la LPGE", "No percibe pagas extras"], respuesta_correcta: 1, explicacion: "No experimentará incremento superior al establecido en la LPGE." },
+                { pregunta: "El límite de masa salarial se informará con carácter preceptivo y vinculante por:", opciones: ["Ministerio de Hacienda (a través de Secretaría Estado Presupuestos)", "Ministerio de Empleo", "Inspección de Trabajo", "Las Centrales Sindicales"], respuesta_correcta: 0, explicacion: "Ministerio de Hacienda, a través de la Secretaría de Estado de Presupuestos y Gastos." },
+                { pregunta: "Plazo del Ministerio de Hacienda para informar sobre la masa salarial:", opciones: ["3 meses", "1 mes desde su solicitud", "6 meses", "No hay plazo"], respuesta_correcta: 1, explicacion: "Plazo de un mes desde su solicitud." },
+                { pregunta: "La paga extra del personal laboral de junio retribuye el periodo de:", opciones: ["1 de enero a 30 de junio", "1 de diciembre a 31 de mayo", "1 de abril a 30 de septiembre", "Es pago por adelantado"], respuesta_correcta: 1, explicacion: "Junio retribuye 1 diciembre a 31 mayo. Diciembre retribuye 1 junio a 30 noviembre." },
+                { pregunta: "¿Tienen derecho a la indemnización por residencia el personal laboral?", opciones: ["No, solo los funcionarios", "Sí, con los mismos requisitos y cuantías que el funcionario (por grupos equivalentes)", "Sí, pero un 50% menos", "Solo si es directivo"], respuesta_correcta: 1, explicacion: "Percibirá un complemento de indemnización por residencia, con mismos requisitos y cuantías." },
+                { pregunta: "Si el funcionario eventual de carrera ocupa puesto eventual, ¿pierde los trienios?", opciones: ["Sí", "No, mantiene sus retribuciones básicas de origen, incluidos trienios", "Solo los pierde temporalmente", "Se los abona su propio Ministerio y no el de destino"], respuesta_correcta: 1, explicacion: "Percibirá retribuciones básicas de su grupo, incluidos trienios, y las complementarias del puesto reservado a eventual." }
+            ],
+            // TEST 5: Nóminas - Estructura y Normas
+            [
+                { pregunta: "¿Cuál es el orden en que deben figurar los perceptores en la nómina?", opciones: ["De mayor a menor sueldo", "Orden alfabético de apellidos y nombre", "Antigüedad en el servicio", "Por número de la seguridad social"], respuesta_correcta: 1, explicacion: "El alfabético de apellidos y nombre." },
+                { pregunta: "La 'clase de nómina' en la cabecera, clasifica a los perceptores con los literales:", opciones: ["1. Funcionarios, 2. Extranjero, 3. Laborales, 4. Laborales en extranjero", "Altas, Bajas, Modificaciones", "Grupo A, B, C, D, E", "Ministerio, Organismo, Servicio"], respuesta_correcta: 0, explicacion: "1. Funcionarios. 2. Funcionarios en el extranjero. 3. Contratados laborales. 4. Contratados laborales en extranjero." },
+                { pregunta: "¿Cuántos dígitos identifican la aplicación presupuestaria en el cuerpo de la nómina?", opciones: ["10 dígitos", "17 dígitos", "24 dígitos", "5 dígitos"], respuesta_correcta: 1, explicacion: "Mediante 17 dígitos." },
+                { pregunta: "La deducción por MUFACE tiene asignado el código:", opciones: ["01", "02", "03", "09"], respuesta_correcta: 2, explicacion: "03: MUFACE (01 IRPF, 02 Dchos Pasivos, 09 Seguridad Social)." },
+                { pregunta: "Las deducciones cuyo ingreso se realiza en formalización en el Tesoro Público se denominan:", opciones: ["Deducciones Formalizables", "Deducciones Externas", "Retenciones a cuenta", "Deducciones No Formalizables"], respuesta_correcta: 0, explicacion: "Son las deducciones formalizables." },
+                { pregunta: "Fórmula del Importe Líquido:", opciones: ["Suma de retribuciones", "Íntegro - Deducciones Formalizables", "Líquido - Deducciones No Formalizables", "Sueldo base + trienios"], respuesta_correcta: 1, explicacion: "Íntegro menos la suma de las deducciones formalizables." },
+                { pregunta: "Fórmula del Importe Neto:", opciones: ["Íntegro menos descuentos fijos", "Líquido menos deducciones no formalizables", "Suma de complementos", "Íntegro menos IRPF"], respuesta_correcta: 1, explicacion: "Líquido menos deducciones no formalizables." },
+                { pregunta: "¿Cuándo se cierran las nóminas ordinarias de cada mes?", opciones: ["El día 5", "El día 15", "El último día del mes", "El día 1"], respuesta_correcta: 0, explicacion: "Las nóminas ordinarias de cada mes se cerrarán el día 5 de dicho mes." },
+                { pregunta: "Una 'liquidación principal' en la nómina significa que:", opciones: ["Es del Director General", "El año-mes de liquidación/devengo es IGUAL al año-mes de emisión/pago", "Incluye las pagas extras", "Viene con retraso de 3 meses"], respuesta_correcta: 1, explicacion: "Año-mes de devengo es igual al año-mes de pago." },
+                { pregunta: "¿Puede figurar un mismo perceptor repetido en la misma nómina de un mes?", opciones: ["Sí, por cada liquidación complementaria que tenga", "No, en cada nómina el perceptor solo habrá de figurar una vez", "Sí, si tiene un segundo trabajo compatible", "Solo en el mes de las extras"], respuesta_correcta: 1, explicacion: "El perceptor solo figurará una vez como tal, independientemente de cuántas liquidaciones se le practiquen." },
+                { pregunta: "Para justificar el alta de un funcionario de nuevo ingreso en la nómina, se necesita:", opciones: ["Solo su DNI", "Copia del título administrativo, acuerdo nombramiento y formalización toma de posesión", "Certificado médico", "No hace falta justificación"], respuesta_correcta: 1, explicacion: "Se unirán título administrativo, acuerdo de nombramiento y toma de posesión." },
+                { pregunta: "Se considera 'Baja' en nómina a:", opciones: ["La exclusión de un perceptor que figuraba el mes anterior", "Cualquier disminución de sueldo", "Solo el fallecimiento", "La inclusión de un nuevo perceptor"], respuesta_correcta: 0, explicacion: "Exclusión de la nómina de un perceptor que figuraba en la del mes anterior." },
+                { pregunta: "Una reducción de jornada de trabajo produce en la nómina:", opciones: ["Baja definitiva", "Disminución definitiva", "Disminución transitoria (si es solo por huelga) o Definitiva (por reducción legal prolongada)", "Aumento transitorio"], respuesta_correcta: 2, explicacion: "En el manual se categoriza 'reducción de jornada' en disminuciones definitivas de nómina (sección 3.2.3.B)." },
+                { pregunta: "Los documentos 'ADOK' se expedirán:", opciones: ["En todas las nóminas ordinarias por norma estricta", "Cuando el habilitado lo decida sin justificación", "Excepcionalmente por razones justificadas para una más adecuada gestión", "Solo en indemnizaciones"], respuesta_correcta: 2, explicacion: "Cuando por razones justificadas... se podrá aceptar ADOK por nómina." },
+                { pregunta: "¿Hasta qué día se deben presentar las nóminas y documentos 'OK/ADOK' en las oficinas de contabilidad?", opciones: ["Antes del día 5", "Antes del día 7 de cada mes", "El día 20", "A final de mes"], respuesta_correcta: 1, explicacion: "Antes del día 7 de cada mes." },
+                { pregunta: "Las modificaciones que producen cambios que NO van a persistir en nóminas futuras se denominan:", opciones: ["Modificaciones definitivas", "Errores materiales", "Modificaciones transitorias", "Liquidaciones absolutas"], respuesta_correcta: 2, explicacion: "Son modificaciones transitorias." },
+                { pregunta: "¿Cómo se justifica en nómina la percepción del complemento familiar?", opciones: ["No se justifica", "Declaración jurada y certificado de empadronamiento", "Declaración del interesado y Libro de Familia", "Certificado médico"], respuesta_correcta: 2, explicacion: "Mediante declaración del interesado y Libro de Familia." },
+                { pregunta: "¿Qué documento expide la unidad de origen cuando hay un traslado que produce alta en la nómina del nuevo destino?", opciones: ["Nada, es automático", "Certificado de baja en nómina", "Solo el DNI", "Certificado de buena conducta"], respuesta_correcta: 1, explicacion: "En caso de traslado (altas), se acompaña acuerdo, toma de posesión y certificado de baja en nómina (baja de haberes)." },
+                { pregunta: "El número de nómina 01 corresponde a:", opciones: ["La nómina de incidencias", "La nómina ordinaria", "La paga extra de junio", "La nómina de atrasos"], respuesta_correcta: 1, explicacion: "Las nóminas ordinarias tendrán asignado 01 como número de nómina." },
+                { pregunta: "¿Cuál es la norma que regula las instrucciones para la confección de nóminas?", opciones: ["Orden de 30 de julio de 1992", "Ley 30/1984", "TREBEP 5/2015", "Ley de Función Pública de 2023"], respuesta_correcta: 0, explicacion: "La Orden del Ministerio de Relaciones con las Cortes de 30 de julio de 1992." }
+            ],
+            // TEST 6: Devengo, Liquidaciones y Cuotas
+            [
+                { pregunta: "¿Qué porcentaje se descuenta a los funcionarios de Clases Pasivas por cuota de derechos pasivos?", opciones: ["1,69%", "2,50%", "3,86%", "5,15%"], respuesta_correcta: 2, explicacion: "Se aplica el tipo porcentual del 3,86% sobre los haberes reguladores." },
+                { pregunta: "El porcentaje de cotización de MUFACE en activo es de:", opciones: ["1,69%", "3,86%", "10%", "No existe cotización fija"], respuesta_correcta: 0, explicacion: "Se fija en el 1,69% sobre los haberes reguladores." },
+                { pregunta: "Si el funcionario devenga un mes de trabajo ordinario, su nómina se liquida:", opciones: ["Por horas efectivas de presencia", "Por mensualidades completas", "Quincenalmente", "Anualmente"], respuesta_correcta: 1, explicacion: "Se harán efectivas por mensualidades completas con referencia al primer día hábil del mes." },
+                { pregunta: "Si el funcionario toma posesión en su primer destino a mediados de mes:", opciones: ["Ese mes se liquida por mensualidad completa", "Se liquida por días", "El salario pasa íntegro al mes siguiente sin cobrar este", "Cobra solo trienios"], respuesta_correcta: 1, explicacion: "Se liquidarán por días." },
+                { pregunta: "En caso de cese en el servicio activo por JUBILACIÓN:", opciones: ["Los días de ese mes se liquidan estrictamente", "Los días del mes en que se produce el cese se computarán como un mes completo", "No cobra el mes del cese", "Se le descuentan las vacaciones"], respuesta_correcta: 1, explicacion: "Salvo jubilación o fallecimiento, donde los días de ese mes se computan como un mes completo." },
+                { pregunta: "Para calcular el importe de la deducción por jornada NO realizada se utilizará la fórmula del:", opciones: ["Valor día", "Valor hora", "Prorrata trimestral", "SMI por horas"], respuesta_correcta: 1, explicacion: "Se calculará un 'valor hora', dividiendo retribuciones íntegras entre días del mes y entre las horas de obligación media diaria." },
+                { pregunta: "Los funcionarios en cualquier situación administrativa en la que tengan derecho a percibir trienios:", opciones: ["Percibirán solo la mensualidad", "Percibirán, además, el importe de la parte proporcional de pagas extraordinarias por trienios", "Solo los perciben si están en activo obligatorio", "Los pierden si están de excedencia"], respuesta_correcta: 1, explicacion: "Percibirán la parte proporcional de pagas extraordinarias correspondientes a dichos trienios." },
+                { pregunta: "Un cambio de adscripción a una Administración distinta (Autonómica a Estado, ej.), en el mes que ocurre:", opciones: ["Se liquida la nómina por días", "Se liquida mes completo", "Se pierde la antigüedad", "Es ilegal"], respuesta_correcta: 0, explicacion: "En el mes que se produzca cambio de adscripción a Admón distinta (aunque no cambie situación admva) se liquida por días." },
+                { pregunta: "La orden del Ministerio de Hacienda de 2 de noviembre de 1962 permitió:", opciones: ["Cobrar en criptomonedas", "El pago voluntario mediante transferencia bancaria a cuentas", "Retirar el sueldo en correos", "El pago exclusivo en billetes"], respuesta_correcta: 1, explicacion: "Estableció la posibilidad de solicitar pago mediante transferencia a cuentas." },
+                { pregunta: "¿Qué opciones de cobro de nómina tiene el personal activo del Estado según el Decreto 680/1974?", opciones: ["Transferencia bancaria o Cheque nominativo", "Efectivo exclusivamente", "Criptomoneda o Transferencia", "Letra de cambio o Efectivo"], respuesta_correcta: 0, explicacion: "Por transferencia o mediante la entrega de cheques nominativos." },
+                { pregunta: "¿Las entidades de crédito pueden cobrar comisión al perceptor por ingresar la transferencia de nómina del Estado?", opciones: ["Sí, un 1%", "No, los servicios serán gratuitos y no podrán exigir ni descontar cantidad", "Sí, pero la asume el Ministerio", "Solo en bancos extranjeros"], respuesta_correcta: 1, explicacion: "Los servicios prestados por entidades de crédito serán gratuitos (Decreto 680/1974)." },
+                { pregunta: "El día exacto en que se devenga la nómina mensual es:", opciones: ["El primer día hábil del mes a que correspondan", "El último día del mes", "El día 28 de cada mes", "Cuando toma posesión en cada año fiscal"], respuesta_correcta: 0, explicacion: "Con referencia a la situación y derechos del funcionario referidos al primer día hábil del mes." },
+                { pregunta: "La deducción para MUFACE en las pagas extraordinarias si la paga se ha reducido proporcionalmente:", opciones: ["Se aplica el 100% igual", "Se reducirá en la misma proporción en que se minore la paga", "No se descuenta MUFACE de la extra", "Solo se deduce Derechos Pasivos"], respuesta_correcta: 1, explicacion: "Las cuotas se reducirán en la misma proporción." },
+                { pregunta: "¿Pero qué ocurre con la deducción de MUFACE durante el tiempo que disfruta de licencia SIN derecho a retribución?", opciones: ["Se reduce a 0", "No experimentarán reducción en su cuantía", "El funcionario pierde su seguro", "Lo asume el Estado"], respuesta_correcta: 1, explicacion: "Las cuotas de los periodos de licencia sin sueldo no experimentarán reducción." },
+                { pregunta: "En el documento 'Estados Justificativos' (Altas), ¿qué se relaciona?", opciones: ["Perceptores que son alta en nómina y sus conceptos del mes anterior", "Solo bajas por defunción", "Los presupuestos anuales", "La cabecera de las deducciones"], respuesta_correcta: 0, explicacion: "Perceptores que sean alta, relacionando las retribuciones del mes anterior." },
+                { pregunta: "La fecha límite para enviar los libramientos de fondos a las Ordenaciones de Pagos es:", opciones: ["Con 15 días de antelación mínimo a la fecha de pago", "En el momento exacto", "A principios de año", "2 días antes"], respuesta_correcta: 0, explicacion: "Deberán encontrarse en las respectivas Ordenaciones de Pagos con 15 días de antelación." },
+                { pregunta: "El Documento contable 'AD' para retribuciones fijas se formula:", opciones: ["Al final de año", "Al inicio del ejercicio por el importe previsto a gastar todo el año", "Cada día 5 del mes", "Nunca para personal"], respuesta_correcta: 1, explicacion: "Al inicio del ejercicio, el servicio gestor formula el 'AD' por el importe que se prevea gastar en el año." },
+                { pregunta: "¿De qué mes se toma la nómina como base para la estimación del importe del documento 'AD' inicial?", opciones: ["Diciembre anterior", "Enero del citado ejercicio", "Julio del año en curso", "Febrero"], respuesta_correcta: 1, explicacion: "Podrá efectuarse a partir de las cantidades que se incluyan en la nómina del mes de enero." },
+                { pregunta: "Los reintegros practicados a perceptores en la nómina deben figurar en:", opciones: ["La hoja de cabecera", "El listado de reintegros, en el orden establecido en el cuerpo de la nómina", "El boletín del IRPF", "Cualquier anexo libre"], respuesta_correcta: 1, explicacion: "Figurarán en el orden establecido en el cuerpo de nómina." },
+                { pregunta: "¿Puede el interesado cambiar su opción de cobro (transferencia a cheque) tras haber elegido previamente?", opciones: ["No, es irrevocable", "Sí, solo a final de año", "En todo momento podrá el interesado optar por una u otra", "Sí, pagando tasa"], respuesta_correcta: 2, explicacion: "En todo momento podrá optar por una u otra forma de pago." }
+            ],
+            // TEST 7: Indemnizaciones (Dietas y Desplazamientos)
+            [
+                { pregunta: "¿Qué Real Decreto regula actualmente las indemnizaciones por razón del servicio?", opciones: ["RD 364/1995", "RD Legislativo 5/2015", "RD 462/2002, de 24 de mayo", "Ley 30/1984"], respuesta_correcta: 2, explicacion: "El Real Decreto 462/2002, de 24 de mayo, sobre indemnizaciones por razón del servicio." },
+                { pregunta: "¿Las comisiones de servicio generan derecho a indemnización si tienen lugar a iniciativa propia?", opciones: ["Siempre", "No, salvo decisiones obligadas de Altos Cargos o renuncia expresa de indemnización", "Solo si es fuera del territorio nacional", "Solo los fines de semana"], respuesta_correcta: 1, explicacion: "No darán lugar a indemnización si son a iniciativa propia, salvo altos cargos." },
+                { pregunta: "¿Cuál es el límite temporal general de una comisión de servicio en territorio nacional para no considerarse residencia eventual?", opciones: ["1 mes", "3 meses", "1 año", "15 días"], respuesta_correcta: 0, explicacion: "No durará más de un mes en territorio nacional (y de tres en extranjero)." },
+                { pregunta: "La dieta está compuesta por:", opciones: ["Sueldo extra y plus de peligrosidad", "Gastos de alojamiento (justificables) y de manutención (fijo no justificable)", "Comidas y cenas con facturas de todo", "Billetes de tren y mudanza"], respuesta_correcta: 1, explicacion: "El alojamiento es el gastado y justificado hasta el tope. Manutención es importe fijo no justificable." },
+                { pregunta: "¿Cuántos Grupos de dietas existen?", opciones: ["Dos", "Tres (Altos cargos, A1/A2 y C1/C2/Agr)", "Cinco (uno por cada grupo de funcionarios)", "Diez"], respuesta_correcta: 1, explicacion: "Grupo 1 (Altos Cargos), Grupo 2 (A1, A2), Grupo 3 (C1, C2, Agr)." },
+                { pregunta: "Si la comisión es de un solo día (menor o igual a 24h) pero no pernocta:", opciones: ["Cobra dieta completa", "En general no se percibe alojamiento ni manutención, salvo que dure mínimo 5 horas (inicie antes 14h y acabe tras 16h) donde percibe 50% manutención", "Cobra siempre alojamiento", "Cobra el 100% de la manutención"], respuesta_correcta: 1, explicacion: "Si dura min 5h (inicio <14h y fin >16h) percibe 50% manutención." },
+                { pregunta: "Comisión superior a 24 horas. El día de salida:", opciones: ["No se cobra nada", "Se cobra alojamiento. Manutención al 100% si sale antes de 14h, o al 50% si sale entre 14h y 22h", "Se cobra manutención entera salga a la hora que salga", "Solo alojamiento"], respuesta_correcta: 1, explicacion: "Se percibe 100% si hora de salida es <14h, y 50% si está entre 14h y 22h." },
+                { pregunta: "El día de regreso en una comisión superior a 24h:", opciones: ["Se cobra alojamiento siempre", "No hay alojamiento. Manutención al 50% solo si concluye después de las 14h", "Se abona el 100% siempre", "No hay derecho a nada"], respuesta_correcta: 1, explicacion: "No alojamiento ni manutención, salvo si concluye >14h, donde percibe 50% manutención." },
+                { pregunta: "¿Se abona el alojamiento del día de regreso (último día)?", opciones: ["Sí", "No, nunca se abona el alojamiento del día de regreso (salvo personal de vuelo alto cargo un día)", "A discreción del jefe", "Sí, pero al 50%"], respuesta_correcta: 1, explicacion: "En el día de regreso no se podrán percibir gastos de alojamiento." },
+                { pregunta: "¿Qué indemnización por kilómetro se abona al usar automóvil particular?", opciones: ["0,15 €/km", "0,19 €/km", "0,26 €/km", "0,106 €/km"], respuesta_correcta: 2, explicacion: "Se aplican 0,26 euros/km para automóviles." },
+                { pregunta: "¿Qué tarifa de avión se indemniza?", opciones: ["Primera clase siempre", "Clase Turista (o inferior)", "Business Class", "Vuelo Privado"], respuesta_correcta: 1, explicacion: "Avión: clase turista o inferior." },
+                { pregunta: "Para desplazamientos en tren AVE para el Grupo 3 (Subgrupo C1, C2):", opciones: ["Clase Club", "Clase Preferente", "Clase Turista", "Están prohibidos los AVE"], respuesta_correcta: 2, explicacion: "Grupo 1 preferente; segundo y tercer grupos, clase turista." },
+                { pregunta: "Gastos de peajes de autopista en viaje con vehículo particular:", opciones: ["No son indemnizables", "Son indemnizables previa justificación, si la orden de comisión lo preveía", "Se incluyen en los 0,26 €/km", "Son tarifa plana sin justificar"], respuesta_correcta: 1, explicacion: "Resultarán indemnizables, previa justificación, si lo considerara necesario el órgano y lo prevé la orden." },
+                { pregunta: "En desplazamientos dentro del término municipal por servicio (notificaciones, etc.):", opciones: ["El funcionario asume el gasto", "Se utiliza preferentemente transporte colectivo (bus/metro) resarciéndose el gasto", "Solo se puede usar vehículo oficial", "Tiene dieta de alojamiento"], respuesta_correcta: 1, explicacion: "Medios colectivos autorizados para cobro individual, salvo urgencia/autorización de taxi o particular." },
+                { pregunta: "Si la comisión es de corta duración (<24h), en vez del taxi al aeropuerto se puede indemnizar:", opciones: ["Un vuelo privado", "El aparcamiento del vehículo particular en el aeropuerto o estación (previa justificación)", "Una noche de hotel", "Dietas de familiar"], respuesta_correcta: 1, explicacion: "Se podrá autorizar que sea indemnizable el aparcamiento del vehículo particular." },
+                { pregunta: "¿El personal tiene derecho a pedir un adelanto (anticipo) para la comisión?", opciones: ["No, debe pagarlo de su bolsillo", "Sí, derecho a percibir por adelantado el importe aproximado (dietas, viaje), regularizando al volver", "Solo para billetes, no dieta", "Solo en el extranjero"], respuesta_correcta: 1, explicacion: "Tendrá derecho a percibir por adelantado el importe aproximado." },
+                { pregunta: "Comisiones de servicio indemnizables. El límite general de duración para evitar ser residencia eventual es:", opciones: ["2 semanas", "1 mes en España, 3 en el Extranjero", "1 año en España", "6 meses global"], respuesta_correcta: 1, explicacion: "1 mes en España y 3 en el extranjero." },
+                { pregunta: "La indemnización por kilómetro para motocicleta es de:", opciones: ["0,26 €/km", "0,19 €/km", "0,106 €/km", "0,05 €/km"], respuesta_correcta: 2, explicacion: "0,106 euros/km para motocicletas." },
+                { pregunta: "El componente de manutención de la dieta:", opciones: ["Se debe justificar con facturas de restaurantes", "Es una cuantía fija según grupo y no requiere justificación documental", "Se prorratea según el salario", "No existe"], respuesta_correcta: 1, explicacion: "Es importe fijo para cada grupo y no requiere justificación documental." },
+                { pregunta: "Los días intermedios (entre salida y regreso) en comisiones >24h:", opciones: ["No generan dieta", "Generan el 50% de manutención", "Se perciben dietas al 100% (alojamiento y manutención)", "Solo generan alojamiento"], respuesta_correcta: 2, explicacion: "En los días intermedios se perciben dietas al 100%." }
+            ],
+            // TEST 8: Residencia Eventual y Traslados
+            [
+                { pregunta: "La residencia eventual surge cuando la comisión:", opciones: ["Supera 1 mes en España o 3 en Extranjero, o es un curso selectivo por promoción interna", "Dura 3 días", "Implica desplazamiento en taxi", "Es a voluntad propia"], respuesta_correcta: 0, explicacion: "Superiores a 1 mes / 3 meses, o asistencia a cursos de formación o promoción interna." },
+                { pregunta: "La duración máxima absoluta de la residencia eventual (incluida prórroga) es:", opciones: ["1 mes", "1 año inicial + 1 año de prórroga (total máximo 2 años)", "Ilimitada", "5 años"], respuesta_correcta: 1, explicacion: "No podrá exceder de un año, prorrogable por otro máximo de un año." },
+                { pregunta: "El importe de la indemnización por residencia eventual será:", opciones: ["Igual a la dieta entera justificada", "Como máximo el 80% del importe de las dietas enteras (sin justificación documental)", "El 100% del sueldo base extra", "Fijo universal de 50€ al día"], respuesta_correcta: 1, explicacion: "Máximo del 80% de dietas enteras sin justificación." },
+                { pregunta: "Los cursos selectivos de ingreso por promoción interna indemnizan como:", opciones: ["Dieta entera", "Residencia eventual", "Gastos de viaje exclusivamente", "No se indemnizan"], respuesta_correcta: 1, explicacion: "Tendrá siempre la consideración de residencia eventual la asistencia a cursos selectivos de promoción." },
+                { pregunta: "En caso de traslado FORZOSO de residencia en territorio nacional, el empleado tiene derecho a:", opciones: ["Dietas ilimitadas durante 1 año", "Gastos de viaje (incluida familia), mudanza y 3 dietas por cada miembro trasladado", "Solo el billete de tren del funcionario", "Una paga extra doble"], respuesta_correcta: 1, explicacion: "Derecho a gastos de viaje familia, muebles/enseres, y 3 dietas titular/familia." },
+                { pregunta: "Si el traslado de residencia se debe a una sanción disciplinaria:", opciones: ["Tendrá derecho a indemnización estándar", "Tendrá derecho a la mitad de la indemnización", "No dará derecho a indemnización", "El Estado asume la mudanza pero no las dietas"], respuesta_correcta: 2, explicacion: "Los traslados que obedezcan a sanción no darán derecho a indemnización." },
+                { pregunta: "El derecho a gastos de instalación por traslado al extranjero existe si:", opciones: ["El destino es por 3 meses", "El destino se prevea por un periodo superior a 18 meses", "Es en la Unión Europea exclusivamente", "Solo en traslados voluntarios"], respuesta_correcta: 1, explicacion: "Tendrá derecho a gastos de instalación si se prevé por periodo superior a 18 meses." },
+                { pregunta: "En un traslado al extranjero (superior a 18 meses) con la unidad familiar de 3 o 4 miembros, la indemnización por gastos de instalación será como máximo del:", opciones: ["8% de las retribuciones anuales", "10% de las retribuciones anuales, excluyendo antigüedad", "12% de las retribuciones anuales", "15% del sueldo bruto global"], respuesta_correcta: 1, explicacion: "10% para familias de 3 o 4 miembros (8% para 1-2 miembros, 12% más de 4)." },
+                { pregunta: "Si el funcionario que fue destinado al extranjero cesa a petición propia antes de 18 meses (sin enfermedad grave):", opciones: ["Mantiene el derecho a todo", "Deberá reintegrar el importe de las indemnizaciones por pasajes familia y mudanza, y no le pagarán el regreso", "Solo reintegra el 50%", "Le despiden"], respuesta_correcta: 1, explicacion: "Deberá reintegrar el importe (pasajes familia, mudanza) y no se abona el regreso." },
+                { pregunta: "Para que un hijo mayor de 21 años dé derecho a indemnización en traslados, debe:", opciones: ["Ser funcionario", "Convivir y estar a expensas (ingresos propios inferiores al doble del SMI)", "Vivir en otra ciudad", "Tener más de 25 años"], respuesta_correcta: 1, explicacion: "Convivir y a sus expensas (no percibir renta superior al doble del SMI)." },
+                { pregunta: "En caso de fallecimiento del personal en activo que preste servicio en España, su familia tendrá derecho a:", opciones: ["Pensión vitalicia 100% del sueldo", "Gastos viaje a la población que señale, 3 dietas por miembro y mudanza (por una sola vez)", "Traslado de muebles solamente", "No tienen ningún derecho"], respuesta_correcta: 1, explicacion: "Tendrán derecho al abono viaje, 3 dietas por miembro y mudanza." },
+                { pregunta: "El plazo de caducidad para ejercer el derecho a las indemnizaciones por traslado es:", opciones: ["3 meses", "1 año (prorrogable por semestres, máximo otros dos años)", "5 años", "No caduca nunca"], respuesta_correcta: 1, explicacion: "Caducará al transcurrir un año desde que nazca, con posibles prórrogas semestrales (max 2 años más)." },
+                { pregunta: "¿Se pueden anticipar los importes de los traslados de residencia?", opciones: ["No, es contra factura pagada", "Sí, el importe de los derechos reconocidos podrá ser anticipado", "Solo el viaje, no las dietas", "Solo la mudanza"], respuesta_correcta: 1, explicacion: "El importe de los derechos reconocidos para los traslados podrá ser anticipado." },
+                { pregunta: "Para las mudanzas (transporte de mobiliario y enseres), la indemnización se otorgará:", opciones: ["Dando el funcionario el precio de palabra", "Previa aprobación del presupuesto de los mismos de conformidad a normativa", "Por tarifa plana de 2.000 euros", "Solo a altos cargos"], respuesta_correcta: 1, explicacion: "Previa aprobación del presupuesto." },
+                { pregunta: "Traslado voluntario en territorio nacional:", opciones: ["Genera derecho a indemnización igual que el forzoso", "No genera derecho a las indemnizaciones fijadas para traslados forzosos (no viene como supuesto de derecho)", "Genera dietas pero no mudanza", "Solo genera billete de tren"], respuesta_correcta: 1, explicacion: "La normativa destaca 'En caso de traslado forzoso...'. El traslado voluntario nacional general no lo ampara." },
+                { pregunta: "¿Tiene derecho el funcionario destinado en el extranjero a viaje de vacaciones pagado?", opciones: ["Sí, siempre está vigente", "La LPGE actualmente tiene suspendido este apartado", "Dos veces al año", "Sí, solo a la capital, Madrid"], respuesta_correcta: 1, explicacion: "El RD lo prevé (viaje ida y vuelta anual a España), pero la nota aclara que la LPGE mantiene su suspensión." },
+                { pregunta: "Indemnización de instalación tras regresar a España desde el extranjero:", opciones: ["No existe", "Se tiene derecho si ha superado un periodo mínimo en el extranjero de 4 años", "Se da siempre sin límite de años", "Es el 50% de su retribución anual"], respuesta_correcta: 1, explicacion: "Tendrá derecho si ha superado un período en el extranjero de un mínimo de 4 años." },
+                { pregunta: "Traslado de cadáver en caso de fallecimiento:", opciones: ["Solo en el extranjero", "El personal activo tiene derecho al traslado, hasta población señalada por cuenta del Estado del cadáver de familiares; y si él fallece en extranjero, al traslado de su cadáver", "La administración asume funeral completo en todos los casos", "A y B son correctas o aplicables según el caso"], respuesta_correcta: 3, explicacion: "La Adm asume traslado de cadáver del funcionario o familiar." },
+                { pregunta: "En caso de familia de 1 a 2 miembros, la indemnización por instalación en el extranjero será del:", opciones: ["15%", "8%", "10%", "12%"], respuesta_correcta: 1, explicacion: "8% para 1 o 2 miembros." },
+                { pregunta: "¿Cuántas dietas por miembro de la familia se indemnizan en el traslado forzoso nacional?", opciones: ["Una", "Dos", "Tres", "Diez"], respuesta_correcta: 2, explicacion: "Una indemnización equivalente a tres dietas por titular y miembro familiar." }
+            ],
+            // TEST 9: Asistencias
+            [
+                { pregunta: "El límite absoluto por año natural para la percepción CONJUNTA de asistencias (Tribunales, Formación y Consejos) es del:", opciones: ["100% retribuciones anuales", "50% de las retribuciones anuales (excluyendo antigüedad)", "20%", "30%"], respuesta_correcta: 1, explicacion: "En ningún caso podrá totalizar para el conjunto un importe superior al 50% de retribuciones (sin antigüedad)." },
+                { pregunta: "¿Son compatibles las asistencias con las dietas de alojamiento y manutención?", opciones: ["No, son excluyentes", "Sí, las percepciones de asistencias serán compatibles con las dietas", "Solo con el alojamiento", "Son incompatibles y conllevan sanción"], respuesta_correcta: 1, explicacion: "Serán compatibles con las dietas que puedan corresponder." },
+                { pregunta: "Por concurrencia a reuniones de Consejos de Administración (empresas de control público), el límite de asistencia anual es:", opciones: ["20% del sueldo", "25%", "40% de las retribuciones anuales (sin antigüedad)", "50%"], respuesta_correcta: 2, explicacion: "El límite para esta modalidad (Consejos y Órganos Colegiados) es el 40%." },
+                { pregunta: "Por participación en tribunales de oposiciones, el límite anual no superará el:", opciones: ["20% de las retribuciones anuales (sin antigüedad)", "25%", "30%", "40%"], respuesta_correcta: 0, explicacion: "Para tribunales, en ningún caso el importe anual superará el 20%." },
+                { pregunta: "Por colaboración en actividades de formación (ej. INAP), el límite anual de asistencias es:", opciones: ["El 25% de retribuciones anuales y un máximo de 75 horas/año", "El 40% y 100 horas/año", "El 20% sin límite de horas", "No hay límite para formación"], respuesta_correcta: 0, explicacion: "Máximo 75 horas al año y no superior al 25% de retribuciones." },
+                { pregunta: "Las asistencias por participar en Tribunales, para órganos de 'Categoría primera' seleccionan a personal de:", opciones: ["Subgrupos C1 y C2", "Agrupaciones Profesionales", "Subgrupo A1", "Subgrupo A2 y C1"], respuesta_correcta: 2, explicacion: "Categoría primera: Cuerpos del Subgrupo A1." },
+                { pregunta: "Los tribunales para ingreso al Subgrupo C2 pertenecen a la Categoría:", opciones: ["Primera", "Segunda", "Tercera", "Cuarta"], respuesta_correcta: 2, explicacion: "Categoría tercera: acceso a C2 y Agrupaciones Profesionales." },
+                { pregunta: "Si las sesiones de los tribunales de oposiciones se celebran en sábados o festivos:", opciones: ["Se cobran como un día normal", "Las cuantías de asistencia se incrementarán en el 50%", "Se dobla la dieta pero no la asistencia", "Está prohibido legalmente celebrar sesiones en sábado"], respuesta_correcta: 1, explicacion: "Las cuantías se incrementarán en el 50% de su importe." },
+                { pregunta: "Si se celebra más de una sesión del tribunal en un mismo día:", opciones: ["Se cobra una asistencia por cada sesión", "Se devengará una única asistencia en el supuesto de celebrarse más de una sesión en el mismo día", "Se devenga doble automáticamente", "No hay límite"], respuesta_correcta: 1, explicacion: "Se devenga una única asistencia si es en el mismo día." },
+                { pregunta: "¿A quién corresponde informar si la colaboración en formación y tribunales supera los límites de 20%, 25% o 75 horas?", opciones: ["A la Seguridad Social", "A la unidad de personal que lo audita todo mágicamente", "Al interesado (corresponde al colaborador poner en conocimiento su situación)", "No hay obligación de avisar"], respuesta_correcta: 2, explicacion: "Corresponde al colaborador poner en conocimiento de los centros su situación personal en relación con límites." },
+                { pregunta: "¿Quién debe autorizar excepcionalmente las asistencias por órganos colegiados?", opciones: ["El Rey", "El titular del Ministerio competente en materia de Hacienda", "El Director del centro", "El Ministerio de Justicia"], respuesta_correcta: 1, explicacion: "Debe ser autorizado por el titular del Ministerio de Hacienda." },
+                { pregunta: "Si un proceso selectivo es excepcionalmente complejo y con gran número de aspirantes, Hacienda puede autorizar un incremento de la asistencia hasta un:", opciones: ["100%", "20%", "50%", "10%"], respuesta_correcta: 2, explicacion: "Incremento de hasta el 50% sobre las cuantías que corresponderían inicialmente." },
+                { pregunta: "Las horas límite de colaboración en formación son:", opciones: ["75 al año por el conjunto", "75 al mes", "100 al año", "50 al año por academia"], respuesta_correcta: 0, explicacion: "Total de horas del conjunto no supere 75 al año." },
+                { pregunta: "A las cuantías cobradas por asistencias, ¿se les practica retención del IRPF?", opciones: ["No, están exentas", "Sí, los centros pagadores efectuarán las retenciones a efectos del IRPF correspondientes", "Solo si superan 1.000 euros", "Lo asume la Administración"], respuesta_correcta: 1, explicacion: "Se efectuarán las retenciones a efectos de IRPF que correspondan." },
+                { pregunta: "¿Quién fija inicialmente las cuantías máximas de asistencia a Consejos y Órganos colegiados?", opciones: ["El propio Consejo autónomamente", "Ministerio competente en Hacienda a iniciativa del Departamento", "Ministerio de Función Pública", "El Presidente de la Empresa Pública"], respuesta_correcta: 1, explicacion: "Este Ministerio (Hacienda) fijará inicialmente las cuantías máximas a percibir." },
+                { pregunta: "¿Tienen validez perpetua las cuantías máximas aprobadas para los Órganos Colegiados?", opciones: ["Sí", "Tienen validez el ejercicio en curso y el siguiente (periodos bienales)", "Caducan al mes", "Se renuevan diariamente"], respuesta_correcta: 1, explicacion: "Validez durante el ejercicio en curso y el siguiente. Para bienales sucesivos se autorizará continuidad." },
+                { pregunta: "¿Están los Expertos Nacionales en la Comisión Europea sujetos al RD 462/2002?", opciones: ["Sí, en todos sus términos", "No, se rigen por la Decisión correspondiente de dicha Comisión", "Solo en traslados", "Solo si están empadronados en Madrid"], respuesta_correcta: 1, explicacion: "Se regirán por la correspondiente Decisión de dicha Comisión, no resultando aplicación el RD." },
+                { pregunta: "Si las retribuciones (sin antigüedad) del funcionario son 40.000€ y participa en Tribunales (límite 20%). ¿Cuánto puede cobrar máximo en el año por Tribunales?", opciones: ["10.000€", "4.000€", "8.000€", "20.000€"], respuesta_correcta: 2, explicacion: "El 20% de 40.000 es 8.000€." },
+                { pregunta: "Las indemnizaciones compensatorias reguladas en el RD 462/2002:", opciones: ["No se aplican a laborales, que van por su convenio (salvo remisión)", "Se aplican a los miembros de la carrera judicial", "Se aplican al personal de la Admón General del Estado", "Todas son correctas"], respuesta_correcta: 3, explicacion: "El ámbito ampara AGE, Justicia (por norma) y exceptúa laborales puros (van por Convenio)." },
+                { pregunta: "¿Cuál de estos órganos se asimila a Categoría segunda de Tribunales?", opciones: ["Acceso a Subgrupo A1", "Acceso a Subgrupos A2 y C1", "Acceso a Subgrupo C2", "Agrupaciones profesionales"], respuesta_correcta: 1, explicacion: "Categoría segunda: acceso a Cuerpos A2 y C1." }
+            ],
+            // TEST 10: Repaso y Miscelánea
+            [
+                { pregunta: "¿Quién tiene la competencia para reconocer los trienios devengados (servicios previos)?", opciones: ["Los Ministros", "Los Subsecretarios o Delegados del Gobierno (del depto donde preste servicios al solicitarlo)", "Los Ayuntamientos", "La Seguridad Social"], respuesta_correcta: 1, explicacion: "Corresponde a Subsecretarios o Delegados del Gobierno, dependiendo de donde preste servicios el funcionario en el momento." },
+                { pregunta: "¿Computa a efectos de trienios el trabajo prestado en otra Administración Pública Europea?", opciones: ["Nunca", "Sí, siempre que no fueran prestaciones obligatorias", "Solo si era de funcionario de carrera", "Se devengan al 50%"], respuesta_correcta: 1, explicacion: "Se computará a efectos de trienios (...) excepto aquellos servicios de carácter obligatorio." },
+                { pregunta: "Si el funcionario accede a un nuevo Cuerpo o Escala sin cambiar de residencia, tiene derecho a un permiso de:", opciones: ["Un mes", "Tres días hábiles", "Un día natural", "Quince días"], respuesta_correcta: 1, explicacion: "Permiso retribuido de tres días hábiles (si no hay cambio de residencia) y un mes si lo comporta." },
+                { pregunta: "Durante el plazo posesorio por cambio de puesto, ¿qué retribuciones cobra el funcionario?", opciones: ["Ninguna", "Solo las básicas", "La totalidad (básicas y complementarias mensuales fijas)", "Solo dietas"], respuesta_correcta: 2, explicacion: "Tendrán derecho, durante el plazo posesorio, a la totalidad de las retribuciones (básicas y complementarias) mensuales fijas." },
+                { pregunta: "Una 'nómina de incidencia' es aquella que:", opciones: ["Se emite para pagar horas extra mensualmente de forma fija", "Se envía a Seguridad Social para bajas médicas exclusivas", "Recoge liquidaciones no contenidas en la nómina ordinaria", "Contiene todas las nóminas de todo el país"], respuesta_correcta: 2, explicacion: "Será aquella que recoja liquidaciones no contenidas en la nómina ordinaria." },
+                { pregunta: "Para calcular el incremento retributivo adicional 2024 del 0,5%, la condición era:", opciones: ["Que el PIB supere un 3%", "Que la suma de la variación del IPCA 2022-2024 supere el incremento fijo acumulado", "Decisión discrecional del Ministro", "Que aprueben Presupuestos"], respuesta_correcta: 1, explicacion: "Si la suma de la variación del IPCA supera el incremento retributivo fijo, se aplicará el 0,5% adicional." },
+                { pregunta: "Al reincorporarse tras una reducción de jornada de trabajo, en la nómina se justifica con:", opciones: ["Acuerdo de reducción de jornada y certificación de fecha de reincorporación a jornada normal", "Una simple instancia", "Alta de afiliación en Seguridad Social", "Certificado penal"], respuesta_correcta: 0, explicacion: "Acuerdo de reducción y certificación expedida acreditativa de reincorporación." },
+                { pregunta: "Al personal acogido a Mugeju, el código de deducción es:", opciones: ["01", "03", "06", "09"], respuesta_correcta: 2, explicacion: "El código es 06: MUGEJU." },
+                { pregunta: "¿Un funcionario destinado en un municipio puede cobrar indemnización por residencia eventual en su municipio de destino oficial?", opciones: ["Sí", "No, salvo que la orden consigne excepcionalmente autorizada su residencia en término distinto", "Si es verano", "Es legalmente su derecho"], respuesta_correcta: 1, explicacion: "Se debe desempeñar fuera del término donde radique residencia oficial (salvo autorización expresa excepcional de residir en otro)." },
+                { pregunta: "¿Qué es la Aplicación Presupuestaria de 17 dígitos?", opciones: ["El número de cuenta bancaria", "Identificador de Sección, Organismo, Servicio, programa, subprograma, concepto, etc., único por concepto y persona", "El DNI extendido", "Un código aleatorio"], respuesta_correcta: 1, explicacion: "Aplicación de 17 dígitos separando Sección, Organismo, Servicio, programa... Debe ser única por perceptor/concepto." },
+                { pregunta: "¿Un interino devenga trienios?", opciones: ["Nunca los cobra", "Sí, los perfecciona y cobra los servicios prestados, con efectos retributivos desde entrada en vigor EBEP", "Sí, pero se los pagan al cesar", "Los cobra como paga extra exclusivamente"], respuesta_correcta: 1, explicacion: "Perciben básicas, incluidos trienios. Se les reconocen también servicios anteriores a la vigencia EBEP." },
+                { pregunta: "Si el funcionario en activo titular de un puesto ve suprimido este:", opciones: ["Se le despide", "Percibirá hasta nombramiento de otro, durante máximo 3 meses las complementarias de puesto suprimido, a cuenta del nuevo", "Cobra solo el sueldo base", "Va a desempleo automáticamente"], respuesta_correcta: 1, explicacion: "Continuará percibiendo durante máximo 3 meses las complementarias del puesto suprimido a cuenta." },
+                { pregunta: "El complemento personal de antigüedad consolidada en laborales (hasta 31 de dic 1998) es:", opciones: ["Una retribución en especie", "Una percepción no salarial", "Otras retribuciones de carácter personal", "Un complemento absorbible anualmente"], respuesta_correcta: 2, explicacion: "Se ubica en Otras retribuciones de carácter personal." },
+                { pregunta: "Para pagar por 'Transferencia', el Decreto de 1974 dice que pueden hacerlo a:", opciones: ["Cualquier banco mundial", "Caja Postal, Cajas de Ahorro y Entidades de crédito inscritas en Registro de Bancos y Banqueros", "Banco Central Europeo exclusivamente", "Cajas fuertes privadas"], respuesta_correcta: 1, explicacion: "A cuentas abiertas en Caja Postal, Cajas de Ahorro de la Conf. Española y Entidades de crédito inscritas." },
+                { pregunta: "La parte proporcional de las pagas extras devengadas por domingos y festivos de temporeros laborales viene tasada referenciada al salario de:", opciones: ["Treinta días en cada una de ellas", "15 días en cada una", "2 meses íntegros", "Al día de trabajo"], respuesta_correcta: 0, explicacion: "Correspondiente al salario de 30 días en cada una de las dos gratificaciones (RD SMI)." },
+                { pregunta: "¿Cuál es el órgano que autoriza las asistencias a órganos colegiados (y que fija cuantías máximas de Consejos)?", opciones: ["Presidencia del Gobierno", "Secretaría de Estado de Función Pública", "Ministerio de Hacienda", "Jefatura del Estado"], respuesta_correcta: 2, explicacion: "El Ministerio competente en materia de Hacienda." },
+                { pregunta: "En caso de fallecimiento de familiar, el estado paga:", opciones: ["El funeral", "El traslado del cadáver a la población señalada", "Tres pagas completas", "Una mudanza internacional"], respuesta_correcta: 1, explicacion: "El personal activo tiene derecho al traslado, hasta la población que señale, por cuenta del Estado." },
+                { pregunta: "Para obtener dieta 100% el día de salida en un viaje >24 horas, la hora límite de salida es:", opciones: ["22:00h", "16:00h", "Antes de las 14:00h", "12:00h de la noche"], respuesta_correcta: 2, explicacion: "Antes de las 14 horas, en que percibirá el 100% de dichos gastos (manutención)." },
+                { pregunta: "Fórmula de deducción formalizable en nómina por 'Cuota Obrera de Seguridad Social' (código 09). Esta reducción:", opciones: ["Se aplica sobre el IRPF", "Forma parte del Importe Líquido (se resta del Íntegro)", "Es no formalizable", "Se reintegra a fin de año"], respuesta_correcta: 1, explicacion: "Es una deducción formalizable, se resta del íntegro para obtener el líquido." },
+                { pregunta: "El Resumen General de nómina por aplicaciones presupuestarias debe:", opciones: ["Ser firmado por el Rey", "Figurar conteniendo las retribuciones ordenadas según PGE. Sumas íntegras, deducciones y líquidos igual a totales", "Publicarse en el BOE cada mes", "Remitirse por carta a cada perceptor"], respuesta_correcta: 1, explicacion: "Siguen orden de Presupuestos y las sumas coincidirán con los totales de la nómina." }
+            ]
+        ];
+
+        // ==========================================
+        // 2. LÓGICA DE INYECCIÓN DOM Y FUNCIONES
+        // ==========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.getElementById('navbar');
+            const mainContent = document.getElementById('main-content');
+
+            // --- Generar Pestañas (Esquema + 10 Test) ---
+            
+            // Pestaña Esquema
+            const btnEsquema = document.createElement('button');
+            btnEsquema.className = 'tab-btn active';
+            btnEsquema.innerText = 'Esquema (Resumen)';
+            btnEsquema.onclick = () => showTab('tab-esquema', btnEsquema);
+            navbar.appendChild(btnEsquema);
+
+            const secEsquema = document.createElement('section');
+            secEsquema.id = 'tab-esquema';
+            secEsquema.className = 'tab-content active';
+            
+            const btnHablar = document.createElement('button');
+            btnHablar.className = 'btn-action';
+            btnHablar.innerText = '🔊 Escuchar Tema Completo';
+            btnHablar.onclick = () => leerEsquema();
+            secEsquema.appendChild(btnHablar);
+
+            // Inyectar 40 tarjetas del esquema
+            esquemaPreguntas.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'card schema-card';
+                card.innerHTML = `<h3 style="color: var(--primary);">Q${idx+1}: ${q.pregunta}</h3><p>${q.respuesta_detallada}</p>`;
+                secEsquema.appendChild(card);
+            });
+            mainContent.appendChild(secEsquema);
+
+            // Pestañas y Contenido de los 10 Test
+            examenes.forEach((test, tIndex) => {
+                // Tab button
+                const btnTest = document.createElement('button');
+                btnTest.className = 'tab-btn';
+                btnTest.innerText = `Test ${tIndex + 1}`;
+                const sectionId = `tab-test-${tIndex}`;
+                btnTest.onclick = () => showTab(sectionId, btnTest);
+                navbar.appendChild(btnTest);
+
+                // Section
+                const section = document.createElement('section');
+                section.id = sectionId;
+                section.className = 'tab-content';
+
+                // Score Display Top
+                const scoreTop = document.createElement('div');
+                scoreTop.className = 'score-display';
+                scoreTop.id = `score-top-${tIndex}`;
+                section.appendChild(scoreTop);
+
+                // Inyectar 20 preguntas por test
+                test.forEach((q, qIndex) => {
+                    const qCard = document.createElement('div');
+                    qCard.className = 'card test-card';
+                    qCard.id = `card-t${tIndex}-q${qIndex}`;
+
+                    const title = document.createElement('h3');
+                    title.innerText = `${qIndex + 1}. ${q.pregunta}`;
+                    qCard.appendChild(title);
+
+                    const form = document.createElement('form');
+                    form.id = `form-t${tIndex}-q${qIndex}`;
+
+                    q.opciones.forEach((opt, oIndex) => {
+                        const label = document.createElement('label');
+                        label.className = 'option-label';
+                        label.id = `label-t${tIndex}-q${qIndex}-o${oIndex}`;
+                        label.innerHTML = `
+                            <input type="radio" name="q${qIndex}" value="${oIndex}">
+                            <span>${opt}</span>
+                        `;
+                        form.appendChild(label);
+                    });
+                    
+                    const explanation = document.createElement('div');
+                    explanation.className = 'explanation-box';
+                    explanation.id = `exp-t${tIndex}-q${qIndex}`;
+                    explanation.innerHTML = `<strong>Respuesta Correcta:</strong> ${q.opciones[q.respuesta_correcta]}<br><br>${q.explicacion}`;
+
+                    qCard.appendChild(form);
+                    qCard.appendChild(explanation);
+                    section.appendChild(qCard);
+                });
+
+                // Score Display Bottom
+                const scoreBot = document.createElement('div');
+                scoreBot.className = 'score-display';
+                scoreBot.id = `score-bot-${tIndex}`;
+                section.appendChild(scoreBot);
+
+                // Botones Acción (Corregir / Reiniciar)
+                const actDiv = document.createElement('div');
+                actDiv.style.display = 'flex';
+                actDiv.style.flexWrap = 'wrap';
+                actDiv.style.gap = '10px';
+                
+                const btnCorregir = document.createElement('button');
+                btnCorregir.className = 'btn-action';
+                btnCorregir.innerText = 'Corregir Examen';
+                btnCorregir.onclick = () => corregirTest(tIndex);
+
+                const btnReiniciar = document.createElement('button');
+                btnReiniciar.className = 'btn-action';
+                btnReiniciar.style.backgroundColor = '#6c757d';
+                btnReiniciar.innerText = 'Reiniciar Test';
+                btnReiniciar.onclick = () => reiniciarTest(tIndex);
+
+                actDiv.appendChild(btnCorregir);
+                actDiv.appendChild(btnReiniciar);
+                section.appendChild(actDiv);
+
+                mainContent.appendChild(section);
+            });
+        });
+
+        // Alternar visualización de Pestañas
+        function showTab(tabId, btnClicked) {
+            window.speechSynthesis.cancel(); // Stop reading if tab changed
+
+            document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btnClicked.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Lógica de Corregir Examen
+        function corregirTest(testIndex) {
+            const test = examenes[testIndex];
+            let aciertos = 0;
+            let errores = 0;
+
+            test.forEach((q, qIndex) => {
+                const form = document.getElementById(`form-t${testIndex}-q${qIndex}`);
+                const radios = form.querySelectorAll('input[type="radio"]');
+                const explanation = document.getElementById(`exp-t${testIndex}-q${qIndex}`);
+                
+                // Deshabilitar radio buttons (bloquear cambios)
+                radios.forEach(r => r.disabled = true);
+
+                const selected = form.querySelector('input[type="radio"]:checked');
+                const correctIdx = q.respuesta_correcta;
+                
+                // Limpiar clases previas (en caso de re-corrección forzada)
+                form.querySelectorAll('.option-label').forEach(lbl => {
+                    lbl.classList.remove('correct', 'incorrect');
+                });
+
+                // Marcar siempre la correcta en verde
+                document.getElementById(`label-t${testIndex}-q${qIndex}-o${correctIdx}`).classList.add('correct');
+
+                if (selected) {
+                    const selectedVal = parseInt(selected.value);
+                    if (selectedVal === correctIdx) {
+                        aciertos++;
+                        explanation.style.display = 'none'; // ocultar si acertó
+                    } else {
+                        errores++;
+                        document.getElementById(`label-t${testIndex}-q${qIndex}-o${selectedVal}`).classList.add('incorrect');
+                        explanation.style.display = 'block'; // mostrar recuadro azul pastel
+                    }
+                } else {
+                    errores++; // No respondida cuenta como fallo para visualización rápida
+                    explanation.style.display = 'block';
+                }
+            });
+
+            // Mostrar Score
+            const msg = `Puntuación: ${aciertos} Aciertos / ${errores} Errores (Blanco o Fallo)`;
+            const st = document.getElementById(`score-top-${testIndex}`);
+            const sb = document.getElementById(`score-bot-${testIndex}`);
+            st.innerText = msg;
+            sb.innerText = msg;
+            st.style.display = 'block';
+            sb.style.display = 'block';
+        }
+
+        // Lógica de Reiniciar Examen
+        function reiniciarTest(testIndex) {
+            const test = examenes[testIndex];
+            test.forEach((q, qIndex) => {
+                const form = document.getElementById(`form-t${testIndex}-q${qIndex}`);
+                const radios = form.querySelectorAll('input[type="radio"]');
+                const explanation = document.getElementById(`exp-t${testIndex}-q${qIndex}`);
+                
+                radios.forEach(r => {
+                    r.disabled = false;
+                    r.checked = false;
+                });
+                
+                form.querySelectorAll('.option-label').forEach(lbl => {
+                    lbl.classList.remove('correct', 'incorrect');
+                });
+                
+                explanation.style.display = 'none';
+            });
+            
+            document.getElementById(`score-top-${testIndex}`).style.display = 'none';
+            document.getElementById(`score-bot-${testIndex}`).style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Lógica Lectura por Voz Secuencial
+        function leerEsquema() {
+            window.speechSynthesis.cancel(); // Stop anything current
+            
+            const textos = esquemaPreguntas.map((q, i) => `Pregunta número ${i+1}. ${q.pregunta} ... Respuesta: ${q.respuesta_detallada}`);
+            let currentIndex = 0;
+
+            function hablarSiguiente() {
+                if (currentIndex < textos.length) {
+                    const utterance = new SpeechSynthesisUtterance(textos[currentIndex]);
+                    utterance.lang = 'es-ES';
+                    utterance.rate = 1.0;
+                    
+                    utterance.onend = () => {
+                        currentIndex++;
+                        hablarSiguiente();
+                    };
+                    
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+            
+            hablarSiguiente();
+        }
+    </script>
+</body>
+</html>

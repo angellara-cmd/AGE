@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Estudio: AGE - Procedimiento Administrativo de Gasto</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --primary-color: #0056b3;
+            --primary-hover: #004494;
+            --correct-bg: #d4edda;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-text: #721c24;
+            --explain-bg: #e6f2ff;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .pdf-links {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .pdf-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .pdf-links a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px 0;
+            justify-content: flex-start;
+            scrollbar-width: thin;
+        }
+
+        @media (min-width: 768px) {
+            nav {
+                justify-content: center;
+            }
+        }
+
+        .nav-btn {
+            background-color: #e9ecef;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #dde2e6;
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        main {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .action-btn {
+                width: auto;
+            }
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .action-btn.secondary {
+            background-color: #6c757d;
+        }
+        
+        .action-btn.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .option-label {
+            display: block;
+            padding: 12px 16px;
+            background-color: #f1f3f5;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label input {
+            margin-right: 10px;
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+        }
+
+        .option-label.correct {
+            background-color: var(--correct-bg);
+            color: var(--correct-text);
+            border-color: var(--correct-text);
+        }
+
+        .option-label.incorrect {
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-text);
+            border-color: var(--incorrect-text);
+        }
+
+        .explanation-box {
+            background-color: var(--explain-bg);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--primary-color);
+            display: none;
+        }
+
+        .score-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="pdf-links">
+        Documentos de referencia: 
+        <a href="Tema_03.pdf" target="_blank">Tema_03.pdf</a> | 
+        <a href="Tema_03anexo_I.pdf" target="_blank">Tema_03anexo_I.pdf</a> | 
+        <a href="Tema_03anexo_II.pdf" target="_blank">Tema_03anexo_II.pdf</a>
+    </div>
+    <nav id="mainNav">
+        <button class="nav-btn active" onclick="switchTab(-1)">Esquema de Estudio</button>
+        <!-- Test buttons will be injected here -->
+    </nav>
+</header>
+
+<main>
+    <!-- ESQUEMA VIEW -->
+    <section id="esquemaView" class="view-section active">
+        <button class="action-btn" onclick="escucharTema()" id="btnEscuchar">🔊 Escuchar Tema Completo</button>
+        <div id="esquemaContainer"></div>
+    </section>
+
+    <!-- TEST VIEW -->
+    <section id="testView" class="view-section">
+        <div id="scoreTop" class="score-display"></div>
+        <div id="testContainer"></div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+            <button class="action-btn" onclick="corregirExamen()" id="btnCorregir">✅ Corregir Examen</button>
+            <button class="action-btn secondary" onclick="reiniciarExamen()" id="btnReiniciar">🔄 Reiniciar Test</button>
+        </div>
+        <div id="scoreBottom" class="score-display" style="margin-top: 20px;"></div>
+    </section>
+</main>
+
+<script>
+    // DATOS: Esquema de Estudio (40 Preguntas/Respuestas detalladas basadas literalmente en los PDF)
+    const esquemaPreguntas = [
+        { p: "¿En qué consiste la ejecución del Presupuesto de gastos?", r: "Ejecutar el Presupuesto es realizar los gastos públicos en él autorizados. Constituye la utilización por la Administración de las autorizaciones que la Ley de Presupuestos le confiere[cite: 3]." },
+        { p: "¿Cuáles son las fases principales de la gestión del Presupuesto de gastos?", r: "Se realiza a través de cinco fases: a) Aprobación del gasto, b) Compromiso de gasto, c) Reconocimiento de la obligación, d) Ordenación del pago, y e) Pago material[cite: 8]." },
+        { p: "¿Qué órgano es competente para aprobar y comprometer gastos en los Departamentos Ministeriales?", r: "Corresponde a los Ministros y a los titulares de los demás órganos del Estado con dotaciones diferenciadas, salvo los casos reservados por la Ley al Consejo de Ministros[cite: 5]." },
+        { p: "¿Cuándo se requiere autorización previa del Consejo de Ministros para convenios o contratos-programa?", r: "Se necesita autorización cuando el importe del gasto que de aquellos se derive sea superior a doce millones de euros, con exclusión de los convenios de créditos gestionados por las Comunidades Autónomas[cite: 5]." },
+        { p: "¿Qué implica la aprobación del gasto (Fase A)?", r: "Es el acto mediante el cual se autoriza la realización de un gasto determinado por una cuantía cierta o aproximada, reservando a tal fin la totalidad o parte de un crédito presupuestario. No implica relaciones con terceros[cite: 8]." },
+        { p: "¿Qué caracteriza a la fase de Compromiso de gasto (Fase D)?", r: "Es el acto mediante el cual se acuerda la realización de gastos previamente aprobados. Tiene relevancia jurídica para con terceros, vinculando a la Hacienda Pública o a la Seguridad Social a realizar el gasto[cite: 8]." },
+        { p: "¿Qué supone el reconocimiento de la obligación (Fase OK)?", r: "Es el acto que declara la existencia de un crédito exigible contra la Hacienda Pública o la Seguridad Social, derivado de un gasto aprobado y comprometido. Lleva implícita la propuesta de pago[cite: 8, 9]." },
+        { p: "¿Cuáles son las situaciones en las que puede encontrarse un crédito presupuestario?", r: "Los créditos pueden estar en tres situaciones: Créditos disponibles, Créditos no disponibles y Créditos retenidos[cite: 6]." },
+        { p: "¿Qué documento contable se utiliza para la retención de créditos por no disponibilidad?", r: "La Dirección General de Presupuestos expide un documento 'RC' de retención de créditos por no disponibilidad (RC-102)[cite: 6, 11]." },
+        { p: "¿Qué documento contable ampara la autorización y compromiso en un solo acto?", r: "Cuando la autorización y el compromiso se acuerdan en un acto único, se expedirá un documento mixto 'AD'[cite: 11]." },
+        { p: "¿Qué documento se expide cuando se acumulan autorización, compromiso y reconocimiento de obligación?", r: "Se expedirá un documento mixto 'ADOK'[cite: 12]." },
+        { p: "¿Cómo se tramitan los gastos de retribuciones de personal fijo y vencimiento periódico al inicio del ejercicio?", r: "El Servicio gestor formulará un documento 'AD' por el importe que se prevea gastar durante dicho ejercicio, estimación que podrá efectuarse a partir de la nómina del mes de enero[cite: 15]." },
+        { p: "¿Qué documento se tramita al aprobar un expediente de expropiación forzosa para pagar a los expropiados?", r: "El Servicio gestor tramitará un pago a justificar mediante la expedición de un documento 'ADOK', para proceder al pago o depósito previo a la expedición del acta de ocupación[cite: 18]." },
+        { p: "¿Qué condición especial se incluye en el pliego de la tramitación anticipada de expedientes de contratación?", r: "Se hará constar que la adjudicación y formalización queda sometida a la condición suspensiva de existencia de crédito adecuado y suficiente para financiar las obligaciones en el ejercicio correspondiente[cite: 19]." },
+        { p: "¿Cuál es el límite temporal para los compromisos de gasto de carácter plurianual (regla general)?", r: "El número de ejercicios a que pueden aplicarse los gastos no será superior a cuatro ejercicios posteriores a aquel en que se autoricen[cite: 21]." },
+        { p: "¿Cuáles son los límites porcentuales para los gastos plurianuales según el artículo 47 de la LGP?", r: "El gasto no podrá exceder del 70% en el ejercicio inmediato siguiente, el 60% en el segundo ejercicio, y el 50% en los ejercicios tercero y cuarto[cite: 21]." },
+        { p: "¿En qué contratos de obra plurianual se efectúa una retención adicional del 10%?", r: "En los contratos de obra de carácter plurianual, con excepción de los realizados bajo la modalidad de abono total del precio, se efectuará una retención adicional (RC-108) del 10% del importe de adjudicación[cite: 21]." },
+        { p: "¿Qué supuestos excepcionan los límites porcentuales y de anualidades de los gastos plurianuales?", r: "Las limitaciones no serán de aplicación a los compromisos derivados de la carga financiera de la Deuda y de los arrendamientos de inmuebles[cite: 21]." },
+        { p: "¿Qué órgano puede autorizar la modificación de los porcentajes o incremento de anualidades en gastos plurianuales?", r: "El Gobierno, en casos especialmente justificados, mediante acuerdo del Consejo de Ministros a propuesta del Ministro de Hacienda[cite: 21]." },
+        { p: "¿A quién compete la función de Ordenador general de pagos del Estado?", r: "Bajo la superior autoridad del Ministro de Economía, Comercio y Empresa, compete al Director General del Tesoro y Política Financiera[cite: 26]." },
+        { p: "¿Cómo se materializa ordinariamente el pago de las obligaciones del Estado?", r: "El pago se efectuará mediante transferencia bancaria contra la cuenta del Tesoro en el Banco de España o Entidad autorizada. Excepcionalmente, el Director General del Tesoro podrá autorizar el pago mediante cheque nominativo no a la orden para personas físicas[cite: 28, 30]." },
+        { p: "¿Qué institución centraliza las cuentas de situación de fondos de la Administración General del Estado?", r: "Con carácter general, los ingresos y pagos se canalizarán a través de la cuenta o cuentas que se mantengan en el Banco de España[cite: 28]." },
+        { p: "¿Cuáles son los objetivos principales del control interno del gasto público?", r: "Verificar el cumplimiento normativo, el adecuado registro contable, evaluar la buena gestión financiera conforme a la Ley Orgánica de Estabilidad Presupuestaria, y verificar el cumplimiento de objetivos de los centros gestores[cite: 32]." },
+        { p: "¿Qué órgano ejerce el control interno en el sector público estatal?", r: "El control interno será realizado por la Intervención General de la Administración del Estado (IGAE), actuando con autonomía, ejercicio desconcentrado y jerarquía interna[cite: 32]." },
+        { p: "¿En qué modalidades se ejerce la función interventora?", r: "Se ejerce en sus modalidades de intervención formal (verificación del cumplimiento de requisitos legales y documentales) y material (comprobación de la real y efectiva aplicación de los fondos públicos)[cite: 33]." },
+        { p: "¿Qué tipos de gastos están exentos de fiscalización previa?", r: "Contratos menores, gastos periódicos de tracto sucesivo (tras el inicial), gastos < 5.000€ por anticipo de caja fija, procesos electorales, subvenciones nominativas, contratos de acceso a bases de datos y gastos excepcionales de emergencia[cite: 34]." },
+        { p: "¿Qué efecto tiene la formulación de un reparo por la Intervención?", r: "Si el reparo se basa en insuficiencia de crédito, órgano incompetente, graves irregularidades documentales, comprobación material o trámites esenciales omitidos, suspenderá la tramitación del expediente hasta que sea solventado[cite: 34, 35]." },
+        { p: "¿Quién resuelve las discrepancias si un órgano gestor no acepta un reparo de una Intervención Delegada?", r: "Corresponderá a la Intervención General de la Administración del Estado (IGAE) conocer la discrepancia, siendo su resolución obligatoria[cite: 35]." },
+        { p: "¿Cuál es el plazo de la Intervención para fiscalizar un expediente?", r: "El plazo máximo es de 10 días contados desde el siguiente a la recepción del expediente completo. Se reducirá a 5 días si se ha declarado urgente la tramitación[cite: 36]." },
+        { p: "¿A partir de qué importe es preceptivo solicitar representante de la IGAE para la comprobación material de la inversión?", r: "Cuando el importe de la inversión sea igual o superior a 50.000 euros, con exclusión del Impuesto sobre el Valor Añadido (IVA) o impuesto equivalente[cite: 38]." },
+        { p: "¿Cuál es el plazo para solicitar representante de la IGAE para la comprobación material?", r: "Con una antelación de 30 días hábiles a la fecha prevista para la terminación de la prestación. Si es fuera de España, el plazo será de 45 días hábiles[cite: 38]." },
+        { p: "¿Qué debe hacer la Intervención en la intervención formal de la ordenación del pago?", r: "Verificar que las órdenes de pago se dictan por órgano competente, se ajustan al acto de reconocimiento de la obligación y se acomodan al plan de disposición de fondos[cite: 40]." },
+        { p: "¿Sobre quiénes se ejerce el control financiero permanente?", r: "Sobre la AGE, organismos autónomos, entidades públicas empresariales, autoridades administrativas independientes, entidades gestoras de la Seguridad Social, y mutuas colaboradoras[cite: 41]." },
+        { p: "¿Qué órgano tiene atribuido el control externo del sector público estatal?", r: "Corresponde al Tribunal de Cuentas, como supremo órgano fiscalizador de las cuentas y de la gestión económica del Estado[cite: 42]." },
+        { p: "¿Cómo está compuesto el Pleno del Tribunal de Cuentas?", r: "Se integra por 12 Consejeros de Cuentas (seis por el Congreso y seis por el Senado con mayoría de 3/5), uno de los cuales será el Presidente, y además el Fiscal[cite: 42, 44]." },
+        { p: "¿Quién elige al Presidente del Tribunal de Cuentas y por cuánto tiempo?", r: "Es nombrado de entre los miembros del Tribunal, por el Rey, a propuesta del Tribunal en Pleno para un período de tres años[cite: 42]." },
+        { p: "¿Qué es la responsabilidad contable directa según la Ley Orgánica 2/1982?", r: "Afecta a quienes hayan ejecutado, forzado o inducido a ejecutar los hechos, o participado posteriormente para ocultarlos. Es siempre solidaria respecto a todos los perjuicios[cite: 47]." },
+        { p: "¿Qué es el alcance en el ámbito de la jurisdicción contable?", r: "A efectos de responsabilidad contable se entiende por alcance el saldo deudor injustificado de una cuenta o la ausencia de numerario[cite: 44, 76]." },
+        { p: "¿Quién ostenta el control político o parlamentario del presupuesto?", r: "Las Cortes Generales, mediante la aprobación de los Presupuestos, modificaciones de crédito durante el ejercicio y la aprobación de la Cuenta General del Estado[cite: 47]." },
+        { p: "¿Qué es la auditoría pública y qué formas adopta?", r: "Es la verificación sistemática y posterior de la actividad. Adopta formas de auditoría de regularidad contable, de cumplimiento y operativa[cite: 41, 75]." }
+    ];
+
+    // DATOS: 10 Exámenes de 20 preguntas cada uno, con distractores y referencias.
+    // Usamos índices 0,1,2,3 para la respuesta correcta ('c').
+    const examenes = [
+        // TEST 1: Fases del Gasto y Órganos Competentes
+        [
+            { p: "¿Qué fase del gasto inicia el procedimiento de ejecución reservando crédito presupuestario?", o: ["Compromiso", "Aprobación", "Reconocimiento", "Propuesta de pago"], c: 1, e: "La aprobación (Fase A) reserva crédito e inicia el procedimiento[cite: 8]." },
+            { p: "¿Qué fase vincula jurídicamente a la Administración con terceros?", o: ["Aprobación", "Compromiso", "Reconocimiento de obligación", "Pago material"], c: 1, e: "El compromiso (Fase D) es un acto con relevancia jurídica para con terceros[cite: 8]." },
+            { p: "¿Qué acto lleva implícita la propuesta de pago?", o: ["Aprobación", "Reconocimiento de la obligación", "Compromiso de gasto", "Ordenación de pago"], c: 1, e: "Todo reconocimiento de obligación lleva implícita la correspondiente propuesta de pago[cite: 9]." },
+            { p: "¿Quiénes son los órganos competentes, como regla general, para aprobar gastos en los Ministerios?", o: ["Los Directores Generales", "Los Ministros y titulares de órganos con dotación diferenciada", "El Secretario de Estado en todo caso", "El Consejo de Ministros siempre"], c: 1, e: "Corresponde a los Ministros y titulares con dotación diferenciada[cite: 5]." },
+            { p: "¿A partir de qué importe se exige autorización del Consejo de Ministros para suscribir convenios de colaboración?", o: ["5 millones de euros", "10 millones de euros", "12 millones de euros", "Ninguna de las anteriores"], c: 2, e: "Requieren autorización cuando el importe derivado supera los doce millones de euros[cite: 5]." },
+            { p: "La autorización del Consejo de Ministros para un contrato de más de 12 millones de euros implica:", o: ["El pago de la obligación", "El compromiso de gasto", "La aprobación del gasto", "A y C son correctas"], c: 2, e: "La autorización del Consejo de Ministros implicará la aprobación del gasto[cite: 6]." },
+            { p: "¿Quién ordena los pagos en una Entidad Gestora de la Seguridad Social?", o: ["El Director General del Tesoro", "El Ministro de Seguridad Social", "El Director General de la Tesorería General de la Seguridad Social", "El Interventor General"], c: 2, e: "Compete al Director Gral de la TGSS como Ordenador general de pagos de la SS[cite: 26]." },
+            { p: "¿Se puede acumular en un solo acto las fases del presupuesto?", o: ["Sí, cuando la naturaleza de la operación lo determine", "No, está prohibido por la LGP", "Solo para gastos de personal", "Solo para contratos de obra"], c: 0, e: "Cuando la naturaleza lo determine, se acumularán en un solo acto las fases de ejecución precisas[cite: 9]." },
+            { p: "¿Cuál de estas no es una situación de los créditos presupuestarios según la Instrucción de Operatoria Contable?", o: ["Créditos disponibles", "Créditos comprometidos al cobro", "Créditos retenidos", "Créditos no disponibles"], c: 1, e: "Las situaciones son: disponibles, no disponibles y retenidos[cite: 6]." },
+            { p: "¿Quién expide un documento RC por no disponibilidad?", o: ["El Servicio gestor", "La Oficina Presupuestaria", "La Dirección General de Presupuestos", "La IGAE"], c: 2, e: "La Dirección General de Presupuestos expedirá el RC por no disponibilidad[cite: 6]." },
+            { p: "¿Qué documento contable se usa para el Compromiso de gasto?", o: ["A", "AD", "D", "OK"], c: 2, e: "El documento D de compromiso de gastos[cite: 11]." },
+            { p: "¿Qué documento se expide para reconocer una obligación sin propuesta de pago (ej. Deuda)?", o: ["O", "OK", "K", "ADOK"], c: 0, e: "El documento O se utilizará exclusivamente en la gestión de la Deuda sin proponer el pago[cite: 11]." },
+            { p: "¿Qué justificante acompañará a un documento 'A' de aprobación?", o: ["La nómina", "El acuerdo o resolución que apruebe el gasto", "El contrato firmado", "La factura"], c: 1, e: "Al documento A se unirá el acuerdo o resolución que apruebe el gasto[cite: 13]." },
+            { p: "¿Qué justificante ampara un documento 'D' de compromiso de gastos?", o: ["Resolución de inicio de expediente", "Resolución, acuerdo o contrato en que se formalice el compromiso", "Acta de comprobación material", "Factura conformada"], c: 1, e: "A los documentos D se unirá la resolución, acuerdo o contrato en que se formalice el compromiso[cite: 13]." },
+            { p: "¿Qué documento contable ampara la operación ADOK?", o: ["Autorización y compromiso", "Reconocimiento y pago", "Autorización, compromiso y reconocimiento de obligaciones", "Solo propuesta de pago"], c: 2, e: "ADOK: Autorización, compromiso y reconocimiento de obligaciones[cite: 12]." },
+            { p: "¿Qué signo lleva un documento contable de anulación de retención de crédito?", o: ["Positivo (+)", "Negativo (/)", "Neutro (0)", "Asterisco (*)"], c: 1, e: "A través del documento RC negativo ('RC'/) o con signo / (barra) para anular[cite: 8, 12]." },
+            { p: "¿A cargo de qué fondos se efectúan generalmente los anticipos a comisiones de servicio?", o: ["Fondo de contingencia", "Anticipo de caja fija o fondos a justificar", "Presupuesto cerrado", "Deuda pública"], c: 1, e: "Se efectuarán con cargo a los fondos del anticipo de caja fija o fondos a justificar[cite: 18]." },
+            { p: "¿Qué documento se expide al inicio de un expediente de transferencias de crédito?", o: ["RC de ejercicios posteriores", "RC para transferencias", "MC de anulación", "D negativo"], c: 1, e: "Se expedirá un RC de retención de créditos para transferencias[cite: 7]." },
+            { p: "¿Cómo se justifica un crédito extraordinario en el sistema contable?", o: ["Con la firma del Rey", "Con la inclusión en el documento de la referencia a la Ley publicada en el BOE", "Con informe de IGAE", "No necesita justificación"], c: 1, e: "Justificación suficiente es la inclusión en el documento de la referencia legal y fecha de BOE[cite: 13]." },
+            { p: "¿Qué documento se utiliza para el seguimiento de fondos de la Unión Europea?", o: ["Documento ADOK-UE", "Documento MC-060", "Documento Anexo Seguimiento Fondos Unión Europea", "RC-103"], c: 2, e: "Se crea el documento 'Anexo Seguimiento Fondos Unión Europea'[cite: 11]." }
+        ],
+        // TEST 2: Gastos Plurianuales y Tramitación Anticipada
+        [
+            { p: "¿Cuál es el porcentaje máximo imputable al segundo ejercicio en un gasto plurianual (regla general)?", o: ["70%", "60%", "50%", "40%"], c: 1, e: "En el ejercicio inmediato siguiente 70%, en el segundo 60%[cite: 21]." },
+            { p: "¿Cuál es el límite del porcentaje en el tercer y cuarto ejercicio plurianual?", o: ["70%", "60%", "50%", "25%"], c: 2, e: "En los ejercicios tercero y cuarto, el 50%[cite: 21]." },
+            { p: "¿A qué expedientes NO se aplican las limitaciones porcentuales de plurianuales?", o: ["Carga financiera de la Deuda", "Arrendamientos de inmuebles", "A y B son correctas", "Contratos de obra"], c: 2, e: "No serán de aplicación a compromisos derivados de la carga de la Deuda y arrendamientos de inmuebles[cite: 21]." },
+            { p: "En los contratos de obra de carácter plurianual (salvo abono total del precio) se efectuará una retención adicional del:", o: ["1%", "5%", "10%", "20%"], c: 2, e: "Se efectuará una retención adicional de crédito del 10% del importe de adjudicación[cite: 21]." },
+            { p: "¿Se pueden adquirir gastos con cargo a ejercicios futuros para subvenciones nominativas?", o: ["Sí, sin límite", "Sí, con límite del 50%", "No, está expresamente prohibido", "Depende del Consejo de Ministros"], c: 2, e: "No podrán adquirirse compromisos de gasto con cargo a ejercicios futuros para subvenciones nominativas[cite: 22]." },
+            { p: "¿Quién puede modificar los porcentajes generales de gastos plurianuales?", o: ["El Ministro de Hacienda", "El Interventor General", "El Consejo de Ministros en casos justificados", "Las Cortes Generales"], c: 2, e: "El Gobierno, en casos justificados, previo informe, podrá acordar la modificación[cite: 21]." },
+            { p: "La tramitación anticipada de expedientes de contratación permite llegar hasta:", o: ["La aprobación del gasto (A)", "La formalización del contrato", "El reconocimiento de la obligación", "El pago material"], c: 1, e: "Podrán ultimarse incluso con la adjudicación y formalización del correspondiente contrato[cite: 19]." },
+            { p: "En el pliego de tramitación anticipada se debe incluir una condición suspensiva referente a:", o: ["Existencia de crédito adecuado y suficiente en el ejercicio correspondiente", "Firma del Ministro", "Informe de viabilidad", "Aprobación europea"], c: 0, e: "Condición suspensiva de existencia de crédito adecuado y suficiente en el ejercicio correspondiente[cite: 19]." },
+            { p: "¿Qué documento contable se expide para retener crédito en tramitación anticipada?", o: ["RC de ejercicios posteriores", "RC-100 de tramitación anticipada", "MC de incorporación", "RC-104"], c: 1, e: "Se expide RC-100 de 'Retención de crédito para tramitación anticipada'[cite: 20]." },
+            { p: "Si en un ejercicio futuro no hay crédito para una anualidad plurianual comprometida, ¿qué es lo primero que procede?", o: ["Resolución del contrato", "Comunicarlo al tercero y reprogramar (reajuste) si hay crédito", "Pago por la caja fija", "Incautación de garantía"], c: 1, e: "Comunicar al tercero y reprogramar si lo permiten las disponibilidades (reajuste de anualidades)[cite: 22]." },
+            { p: "¿Qué sucede con los fondos europeos del Mecanismo de Recuperación respecto a las anualidades plurianuales?", o: ["Máximo 4 anualidades", "Máximo 3 anualidades sin pasar de 2026", "Límites del 10%", "Están prohibidos los plurianuales"], c: 1, e: "No será superior a tres, sin extenderse más allá del ejercicio 2026[cite: 25]." },
+            { p: "¿Cuál es el documento para autorización de gastos en tramitación anticipada?", o: ["A-210", "A-200", "AD-220", "OK-420"], c: 0, e: "A-210: 'Autorización sobre crédito retenido para tramitación anticipada'[cite: 20]." },
+            { p: "En arrendamientos de inmuebles según PGE prorrogados 2024/2025, el máximo de anualidades es:", o: ["4", "10", "No hay límite", "15"], c: 1, e: "No podrán superar las diez anualidades y el porcentaje aplicable será el 100%[cite: 24, 25]." },
+            { p: "¿Cómo se contabilizan los gastos plurianuales?", o: ["Como extrapresupuestarios", "Como ingresos", "Deberán ser objeto de contabilización separada", "Se contabilizan el último año"], c: 2, e: "Los compromisos plurianuales deberán ser objeto de contabilización separada[cite: 22]." },
+            { p: "¿Qué número máximo de ejercicios posteriores abarca la regla general del art 47 LGP?", o: ["Dos", "Tres", "Cuatro", "Cinco"], c: 2, e: "El número de ejercicios a que pueden aplicarse no será superior a cuatro[cite: 21]." },
+            { p: "¿Debe iniciarse la ejecución en el propio ejercicio para aplicar un compromiso plurianual ordinario?", o: ["No es necesario", "Sí, siempre que su ejecución se inicie en el propio ejercicio", "Solo si es contrato menor", "Depende de IGAE"], c: 1, e: "Siempre que su ejecución se inicie en el propio ejercicio[cite: 21]." },
+            { p: "En la compra diferida de inmuebles > 6 millones €, el desembolso inicial no puede ser inferior al:", o: ["10%", "20%", "25%", "50%"], c: 2, e: "El desembolso inicial a la firma de la escritura no puede ser inferior al 25% del precio[cite: 24]." },
+            { p: "El documento RC-109 para tramitación anticipada corresponde a:", o: ["Retención de transferencias", "Retención adicional del 10%", "Retención 1% cultural", "Bajas por anulación"], c: 2, e: "RC-109: 'Retención 1% cultural para tramitación anticipada'[cite: 20]." },
+            { p: "¿A qué créditos afecta el documento MC-030?", o: ["Transferencias", "Ampliaciones", "Créditos extraordinarios", "Suplementos"], c: 2, e: "MC-030 refiere a Créditos extraordinarios[cite: 53]." },
+            { p: "¿Es la tramitación anticipada aplicable a subvenciones?", o: ["No, solo contratos", "Sí, cumpliendo la normativa específica", "Solo si superan 12 millones", "Nunca"], c: 1, e: "Tramitación anticipada de expedientes de subvenciones cumpliendo normativa específica[cite: 20]." }
+        ],
+        // TEST 3: Ordenación del Pago y Perceptores
+        [
+            { p: "¿Quién es el Ordenador general de pagos del Estado?", o: ["Ministro de Hacienda", "Director General de Presupuestos", "Director General del Tesoro y Política Financiera", "El Rey"], c: 2, e: "Bajo el Ministro de Economía, compete al Director General del Tesoro y PF[cite: 26]." },
+            { p: "¿Tienen competencia los Ministros (excepto Economía) para ordenar pagos?", o: ["Sí, en sus ministerios", "No, solo pueden proponer el pago", "Sí, hasta 5000 euros", "Solo en entes autónomos"], c: 1, e: "No tienen competencia para ordenar pagos, solo pueden proponer el pago (interesar del Ordenador)[cite: 26]." },
+            { p: "¿Quién ordena los pagos en los Organismos Autónomos?", o: ["Director General del Tesoro", "Los Presidentes o Directores del Organismo Autónomo", "El Interventor Delegado", "El Secretario General del Tesoro"], c: 1, e: "Compete a los presidentes o directores de los OOAA la ordenación de los pagos[cite: 26, 27]." },
+            { p: "¿A través de qué entidad financiera se canalizan, con carácter general, los pagos del Tesoro Público?", o: ["ICO", "BBVA", "Banco de España", "Caja Rural"], c: 2, e: "Se canalizarán a través de las cuentas en el Banco de España[cite: 28]." },
+            { p: "¿Se requiere autorización para abrir una cuenta del Tesoro fuera del Banco de España?", o: ["No", "Sí, previa de la Dirección General del Tesoro y PF", "Sí, del IGAE", "Sí, del Consejo de Ministros"], c: 1, e: "Requerirá previa autorización de la Dirección General del Tesoro y Política Financiera[cite: 29]." },
+            { p: "Si pasan 3 meses desde la solicitud de apertura de cuenta sin autorización expresa:", o: ["Se entiende concedida", "Se entiende no concedida (silencio negativo)", "Pasa a la IGAE", "Se abre provisionalmente"], c: 1, e: "Transcurridos tres meses, la autorización se entenderá no concedida[cite: 29]." },
+            { p: "¿Pueden las cuentas del sector público fuera del Banco de España pactar compensación bancaria?", o: ["Sí, libremente", "No, contendrán cláusula de exclusión de compensación", "Solo con autorización IGAE", "Sí, si el saldo es positivo"], c: 1, e: "Contendrán necesariamente cláusula de exclusión de la facultad de compensación e inembargabilidad[cite: 29]." },
+            { p: "¿Cuál es el modo preferente de pago de las obligaciones de la AGE?", o: ["Cheque nominativo", "Efectivo metálico", "Transferencia bancaria", "Letra de cambio"], c: 2, e: "Se efectuará mediante transferencia bancaria[cite: 30]." },
+            { p: "¿En qué caso se puede pagar por cheque nominativo no a la orden?", o: ["Para sociedades mercantiles", "Excepcionalmente, por causas justificadas, solo para personas físicas", "Para nóminas", "Para pagar a otras AA.PP."], c: 1, e: "Excepcionalmente y solo para personas físicas, autorizado por Director Gral Tesoro[cite: 30]." },
+            { p: "¿Qué son los pagos en formalización?", o: ["Pagos con billetes físicos formales", "Cancelación de obligaciones sin salida material de fondos (compensaciones/retenciones)", "Pagos visados por notario", "Transferencias a cuentas de Suiza"], c: 1, e: "Pagos a conceptos de ingresos/no presupuestarios que no producirán variaciones efectivas de tesorería[cite: 31, 67]." },
+            { p: "¿Qué órgano comprueba que las propuestas de pago se ajustan al Presupuesto monetario?", o: ["IGAE", "Banco de España", "Dirección General del Tesoro y Política Financiera", "Tribunal de Cuentas"], c: 2, e: "La DG del Tesoro comprobará que se ajustan al Presupuesto monetario antes de ordenar[cite: 28]." },
+            { p: "El interés legal del dinero fijado para 2023 (prorrogado a 2025) es:", o: ["3,00%", "3,25%", "4,0625%", "5,00%"], c: 1, e: "Interés legal del dinero queda establecido en 3,25%[cite: 30]." },
+            { p: "El interés de demora tributaria y de subvenciones prorrogado a 2025 es:", o: ["3,25%", "4,0625%", "5,00%", "2,5%"], c: 1, e: "El interés de demora será el 4,0625%[cite: 30]." },
+            { p: "¿Cuántas cuentas bancarias máximo pueden designar los acreedores directos en el Fichero de Terceros, inicialmente?", o: ["1", "3", "5", "Ilimitadas"], c: 1, e: "Designarán un máximo de tres cuentas bancarias. Podrá elevarse previa solicitud[cite: 67]." },
+            { p: "¿Qué documento expide el Jefe de Contabilidad de oficio para devoluciones de ingresos?", o: ["OK", "AD", "K", "Propuesta de pago de oficio"], c: 3, e: "Las propuestas de pago de conceptos no presupuestarios y devolución pueden ser de oficio[cite: 66]." },
+            { p: "¿Qué sucede si existen retenciones judiciales previas a la ordenación del pago?", o: ["Se cancela el pago", "Se pagan en formalización por el importe retenido", "Se envían en efectivo", "Se devuelven al gestor"], c: 1, e: "Los descuentos se deducirán para su aplicación en formalización[cite: 68]." },
+            { p: "¿Qué ocurre con una propuesta de pago con una incidencia en el Fichero Central de Terceros?", o: ["El sistema la retiene a la espera de actuaciones", "Se paga inmediatamente", "Se devuelve al Servicio Gestor", "Se eleva al Consejo de Ministros"], c: 0, e: "El Sistema retendrá las correspondientes propuestas de pago al objeto de determinar actuaciones[cite: 28]." },
+            { p: "¿Puede el Tesoro autorizar apertura de cuentas en el ICO?", o: ["No, solo Banco de España", "Sí, cuando el ICO actúe como agente financiero", "Sí, pero sin autorización", "Solo para entes territoriales"], c: 1, e: "Podrán abrirse cuentas en el ICO cuando actúe como agente financiero, previa autorización DG Tesoro[cite: 29]." },
+            { p: "¿Qué es una cuenta de 'situación de fondos'?", o: ["Cuenta abierta fuera del Banco de España para canalizar gastos concretos", "Cuenta de ahorro", "Cuenta de inversión de deuda", "Cuenta opaca"], c: 0, e: "Cuenta fuera del BE previa autorización de DG Tesoro para ciertos fondos de AGE[cite: 29]." },
+            { p: "¿Qué documento se usa para proponer el pago en un expediente normal?", o: ["O", "K", "OK", "A"], c: 2, e: "Normalmente el OK ampara reconocimiento de obligación y propuesta de pago implícita[cite: 9]." }
+        ],
+        // TEST 4: Control Interno y Función Interventora
+        [
+            { p: "¿Quién ejerce el control interno de la gestión económico-financiera del sector público estatal?", o: ["El Tribunal de Cuentas", "Las Cortes Generales", "La IGAE", "El Banco de España"], c: 2, e: "El control interno será realizado por la Intervención General de la Administración del Estado[cite: 32]." },
+            { p: "¿Cuáles son las modalidades del control interno según LGP?", o: ["Función interventora, control financiero permanente y auditoría pública", "Legalidad, oportunidad y eficiencia", "Previo y simultáneo", "A priori y a posteriori"], c: 0, e: "El control se realizará mediante función interventora, control financiero permanente y auditoría pública[cite: 32]." },
+            { p: "¿Qué momento temporal tiene la Función Interventora?", o: ["Posterior al pago", "Previo, antes de que sean aprobados los actos", "Simultáneo al consumo", "Al cierre del ejercicio"], c: 1, e: "Tiene por objeto controlar, antes de que sean aprobados, los actos que den lugar a gastos[cite: 32]." },
+            { p: "¿Cuáles son las dos vertientes de la Función Interventora?", o: ["Formal y material", "Lícita e ilícita", "Nacional y europea", "Pública y privada"], c: 0, e: "Se ejercerá en sus modalidades de intervención formal y material[cite: 33]." },
+            { p: "¿Qué acto NO está sometido a fiscalización previa?", o: ["Contrato de obra de 20.000 euros", "Subvención nominativa", "Convenio con Comunidad Autónoma", "Contrato de suministro de 50.000 euros"], c: 1, e: "No estarán sometidos a fiscalización previa las subvenciones con asignación nominativa[cite: 34]." },
+            { p: "¿Están sujetos a fiscalización previa los contratos menores?", o: ["Sí, todos", "No, ni los asimilados a ellos", "Solo los que superan 3.000 euros", "Depende del Ministerio"], c: 1, e: "No estarán sometidos a fiscalización previa: a) los contratos menores[cite: 34]." },
+            { p: "¿Se requiere fiscalización previa en gastos por anticipo de caja fija menores de 5.000€?", o: ["Sí", "No", "Solo si es en territorio extranjero", "Solo nóminas"], c: 1, e: "No están sometidos a fiscalización previa los menores de 5.000 euros mediante caja fija[cite: 34]." },
+            { p: "¿Qué efecto produce la formulación de un reparo fundamentado en la insuficiencia de crédito?", o: ["Ninguno, es solo informativo", "Efecto suspensivo de la tramitación del expediente", "Resolución automática del contrato", "Infracción disciplinaria"], c: 1, e: "Procederá reparo con efecto suspensivo si se basa en insuficiencia de crédito[cite: 34]." },
+            { p: "¿Quién resuelve una discrepancia si un reparo lo formula la IGAE y el órgano gestor no lo acepta?", o: ["El Secretario de Estado", "El Ministro de Hacienda", "El Consejo de Ministros", "El Tribunal Supremo"], c: 2, e: "Si subsiste discrepancia con reparo de IGAE, corresponderá al Consejo de Ministros[cite: 36]." },
+            { p: "¿Cuál es el plazo ordinario de la Intervención para fiscalizar un expediente?", o: ["5 días", "10 días", "15 días", "30 días"], c: 1, e: "La Intervención fiscalizará el expediente en el plazo máximo de 10 días[cite: 36]." },
+            { p: "¿Y si el expediente se ha declarado urgente?", o: ["1 día", "3 días", "5 días", "7 días"], c: 2, e: "Este plazo se reducirá a cinco días cuando se haya declarado urgente[cite: 36]." },
+            { p: "¿A partir de qué importe es obligatorio pedir representante a la IGAE para comprobar la inversión?", o: ["15.000€", "30.000€", "50.000€ excluido IVA", "100.000€"], c: 2, e: "Asistencia potestativa a comprobación material cuando el importe sea igual o superior a 50.000 euros (sin IVA)[cite: 38]." },
+            { p: "Plazo de solicitud de representante de IGAE para comprobaciones en España:", o: ["10 días hábiles", "15 días naturales", "30 días hábiles", "45 días hábiles"], c: 2, e: "Con una antelación de treinta días hábiles a la fecha prevista para la terminación[cite: 38]." },
+            { p: "Y si la recepción debe efectuarse fuera de España, el plazo de solicitud a la IGAE será de:", o: ["30 días hábiles", "45 días hábiles", "60 días naturales", "90 días hábiles"], c: 1, e: "Fuera de España, el plazo será de cuarenta y cinco días hábiles[cite: 38]." },
+            { p: "¿Qué se requiere para emitir reparo en régimen de 'fiscalización de requisitos básicos'?", o: ["Cualquier error formal", "Que no se cumpla alguno de los extremos básicos de necesaria comprobación", "No hay reparos en este régimen", "Criterio de oportunidad"], c: 1, e: "Solo procederá reparo cuando no se cumpla alguno de los extremos de necesaria comprobación (art 152.1)[cite: 35]." },
+            { p: "¿Qué pasa si se omite preceptivamente la intervención de la comprobación material (acta de recepción)?", o: ["No pasa nada, se subsana firmando", "Impedirá que pueda reconocerse la obligación hasta que se subsane la omisión", "El contrato es nulo de pleno derecho", "La IGAE asume el pago"], c: 1, e: "Impedirá reconocer la obligación o pago hasta que se subsane dicha omisión[cite: 39]." },
+            { p: "¿Qué acto finaliza el control de legalidad interno en el pago material?", o: ["Intervención formal del pago", "Intervención material del pago verificando perceptor y cuantía", "Auditoría pública", "Acuerdo del Banco de España"], c: 1, e: "Intervención material del pago: verificará identidad del perceptor y la cuantía[cite: 40]." },
+            { p: "El Interventor General ejerce fiscalización previa directamente en actos aprobados por:", o: ["Directores Generales", "Subsecretarios", "Consejo de Ministros", "Alcaldes"], c: 2, e: "Ejercerá fiscalización previa en los que hayan de ser aprobados por Consejo de Ministros[cite: 36]." },
+            { p: "¿Se fiscalizan previamente los gastos por tramitación de emergencia?", o: ["Sí, todos", "No, salvo la orden de pago a justificar de fondos", "Sí, plazo reducido", "Nunca"], c: 1, e: "No sujetos gastos de emergencia, salvo la fiscalización previa de la orden de pago a justificar[cite: 34]." },
+            { p: "¿Pueden los interventores emitir 'observaciones complementarias'?", o: ["No", "Sí, y suspenden el trámite", "Sí, sin que tengan en ningún caso efectos suspensivos", "Solo en entes territoriales"], c: 2, e: "Sin que las mismas tengan, en ningún caso, efectos suspensivos en la tramitación[cite: 35]." }
+        ],
+        // TEST 5: Control Financiero Permanente y Auditoría Pública
+        [
+            { p: "¿Cuál es la principal característica temporal del Control Financiero Permanente?", o: ["Previo", "Posterior anual", "Continuo", "Quinquenal"], c: 2, e: "Verificación de forma continua realizada a través de la correspondiente intervención delegada[cite: 40]." },
+            { p: "¿Qué verifica el Control Financiero Permanente?", o: ["Situación y funcionamiento en aspecto económico-financiero, cumplimiento normativo y estabilidad presupuestaria", "Solo la cuenta de tesorería", "La firma del contrato menor", "La caja fija exclusivamente"], c: 0, e: "Comprobar funcionamiento económico-financiero, legalidad y estabilidad presupuestaria de forma continua[cite: 40]." },
+            { p: "¿Sobre quién NO se aplica el control financiero permanente como regla general según el art 157?", o: ["Administración General del Estado", "Entidades Gestoras de Seguridad Social", "Mutuas Colaboradoras en supuestos art 100", "Congreso de los Diputados"], c: 3, e: "Las Cortes no están en el ámbito (art 157). Se aplica a AGE, OOAA, EPEs, AAI, SS[cite: 41]." },
+            { p: "¿Puede sustituirse la función interventora por control financiero permanente?", o: ["No, nunca", "Sí, por el Consejo de Ministros a propuesta de la IGAE en ciertos organismos", "Sí, por el Ministro del ramo", "Solo en ayuntamientos"], c: 1, e: "El Consejo de Ministros podrá acordar la aplicación del control financiero en sustitución de la función interventora[cite: 33]." },
+            { p: "¿Qué es el Plan de Acción en relación al control financiero permanente?", o: ["Un plan de gastos", "Un plan que elabora el Ministerio para subsanar deficiencias de los informes de control", "Un documento del Banco de España", "La auditoría contable"], c: 1, e: "Plan de Acción: determina medidas a adoptar para subsanar debilidades, deficiencias o errores mostrados en informes[cite: 74]." },
+            { p: "¿En qué plazo debe remitirse a la IGAE el Plan de Acción de un ministerio?", o: ["1 mes", "2 meses", "3 meses", "6 meses"], c: 2, e: "En el plazo de 3 meses desde que el titular reciba los informes de control[cite: 74]." },
+            { p: "¿En qué consiste la Auditoría Pública?", o: ["Verificación previa exhaustiva", "Verificación realizada con posterioridad y sistemática de la actividad", "Revisión diaria", "Control del Senado"], c: 1, e: "Verificación con posterioridad y de forma sistemática de la actividad económico-financiera[cite: 41]." },
+            { p: "¿Qué tipo de auditoría revisa y verifica la información contable?", o: ["Auditoría de cumplimiento", "Auditoría operativa", "Auditoría de regularidad contable", "Auditoría de legalidad"], c: 2, e: "Auditoría de regularidad contable: revisión y verificación de documentación contable[cite: 75]." },
+            { p: "¿Cuál audita que la gestión se ha desarrollado de conformidad con las normas?", o: ["Operativa", "De cumplimiento", "Regularidad contable", "Permanente"], c: 1, e: "Auditoría de cumplimiento: verificación de que se desarrolló conforme a normas[cite: 75]." },
+            { p: "¿Cuál evalúa la racionalidad económico-financiera, deficiencias y emite recomendaciones de gestión?", o: ["De regularidad contable", "De cumplimiento", "Auditoría operativa", "Jurisdiccional"], c: 2, e: "Auditoría operativa: valoración de racionalidad económico-financiera y adecuación a principios de buena gestión[cite: 75]." },
+            { p: "¿Quién aprueba el plan anual de auditorías públicas?", o: ["Cortes Generales", "Tribunal de Cuentas", "IGAE", "Consejo de Ministros"], c: 2, e: "La IGAE elaborará anualmente un plan de auditorías[cite: 41]." },
+            { p: "A los informes de auditoría de cuentas anuales, ¿a quién se rinden?", o: ["Al Congreso exclusivamente", "Al Tribunal de Cuentas junto con las cuentas anuales", "Al Banco de España", "A la Intervención municipal"], c: 1, e: "Se rendirán en todo caso al Tribunal de Cuentas junto con las cuentas anuales[cite: 75]." },
+            { p: "Un informe resumen de auditorías de cuentas se remite anualmente al:", o: ["Senado", "Tribunal Constitucional", "Consejo de Ministros", "Rey"], c: 2, e: "La IGAE remitirá al Consejo de Ministros un informe resumen de las auditorías[cite: 75]." },
+            { p: "¿La auditoría pública es incompatible con la función interventora?", o: ["Sí", "No, se aplica sin perjuicio de las actuaciones de la función interventora", "Depende del gasto", "Anulan una a la otra"], c: 1, e: "Se ejercerá sin perjuicio de las actuaciones correspondientes a la función interventora[cite: 41]." },
+            { p: "¿La auditoría pública puede combinar objetivos de contabilidad, cumplimiento y operativa?", o: ["Sí, la IGAE puede determinarlo", "No, son excluyentes", "Solo operativa y contabilidad", "No existen esas clasificaciones"], c: 0, e: "La Intervención General podrá determinar auditorías en que se combinen objetivos[cite: 75]." },
+            { p: "¿Quién ejecuta la auditoría pública en la Seguridad Social dentro del plan anual?", o: ["Empresa privada externa", "La Intervención General de la Seguridad Social bajo el plan de la IGAE", "El Ministro", "Banco de España"], c: 1, e: "A través de la Intervención General de la SS y de Defensa, integradas en el Plan de IGAE[cite: 42]." },
+            { p: "¿El control financiero permanente informa sobre la planificación de tesorería?", o: ["No, eso es función interventora", "Sí, comprueba la planificación, gestión y situación de la tesorería", "Solo auditoría lo hace", "Ninguno"], c: 1, e: "Contenido: Comprobación de la planificación, gestión y situación de tesorería[cite: 74]." },
+            { p: "¿Quién propone la sustitución de control permanente por auditoría pública en EPEs?", o: ["Ministerio de Hacienda e iniciativa de IGAE", "El presidente de la EPE", "Consejo de Estado", "Tribunal Supremo"], c: 0, e: "Consejo de Ministros a propuesta de Min. Hacienda a iniciativa de IGAE[cite: 41]." },
+            { p: "¿El control de eficacia entra dentro del control de gestión?", o: ["No existe control de eficacia", "Sí, mediante análisis de coste de funcionamiento y cumplimiento de objetivos", "Solo es para empresas privadas", "Se encarga el Banco Central"], c: 1, e: "Control de eficacia: análisis coste funcionamiento, utilidad y cumplimiento de objetivos[cite: 32]." },
+            { p: "¿Qué documento plasma los resultados de una actuación de auditoría pública?", o: ["Informes escritos de acuerdo con las normas que la IGAE apruebe", "Boletín Oficial", "Acta Notarial", "Factura Proforma"], c: 0, e: "Se reflejarán en informes escritos de acuerdo con normas de IGAE[cite: 75]." }
+        ],
+        // TEST 6: Control Externo (Tribunal de Cuentas) y Político
+        [
+            { p: "Según la Constitución, el supremo órgano fiscalizador de las cuentas y gestión económica del Estado es:", o: ["La IGAE", "El Tribunal Supremo", "El Tribunal de Cuentas", "Las Cortes Generales"], c: 2, e: "Corresponde al Tribunal de Cuentas el control externo del sector público estatal[cite: 42]." },
+            { p: "¿Qué tipo de control ejerce el Tribunal de Cuentas?", o: ["Interno y preventivo", "Externo, jurisdiccional y fiscalizador", "Político", "Disciplinario exclusivo"], c: 1, e: "Ejerce control externo: función fiscalizadora y enjuiciamiento contable (jurisdicción)[cite: 42, 45]." },
+            { p: "El Pleno del Tribunal de Cuentas está integrado por:", o: ["12 Consejeros (incluyendo Presidente) y el Fiscal", "10 Consejeros", "7 Jueces Supremos", "15 Parlamentarios"], c: 0, e: "Se integra por 12 Consejeros, uno de los cuales es Presidente, y además el Fiscal[cite: 42]." },
+            { p: "¿Cómo se eligen los Consejeros de Cuentas?", o: ["Por el Gobierno", "6 por Congreso y 6 por Senado, mayoría de 3/5, periodo de 9 años", "Por el Rey vitalicios", "Oposición pública"], c: 1, e: "Designados por Cortes (6 y 6) mayoría de 3/5 por nueve años[cite: 44]." },
+            { p: "¿Para qué periodo es nombrado el Presidente del Tribunal de Cuentas?", o: ["3 años", "5 años", "9 años", "Vitalicio"], c: 0, e: "Por el Rey, a propuesta del Pleno para un período de tres años[cite: 42]." },
+            { p: "¿Qué órgano del Tribunal de Cuentas nombra a los Delegados Instructores para expedientes de alcance?", o: ["El Pleno", "El Presidente", "La Comisión de Gobierno", "La Sección de Enjuiciamiento"], c: 2, e: "La Comisión de Gobierno nombra los Delegados Instructores para reintegro por alcance[cite: 43]." },
+            { p: "¿Cuál NO es un órgano del Tribunal de Cuentas?", o: ["Sección de Fiscalización", "Comisión de Gobierno", "Asamblea General de Auditores", "Secretaría General"], c: 2, e: "Son órganos: Presidente, Pleno, Comisión, Secciones, Consejeros, Fiscalía y Secretaría[cite: 44]." },
+            { p: "¿Qué se entiende por 'alcance' en responsabilidad contable?", o: ["Falta de puntualidad", "Saldo deudor injustificado de una cuenta o ausencia de numerario", "Superávit excesivo", "Discrepancia formal menor"], c: 1, e: "Por alcance el saldo deudor injustificado de una cuenta (o ausencia numerario)[cite: 44, 76]." },
+            { p: "¿Cuáles son los dos tipos de responsabilidad contable?", o: ["Objetiva y subjetiva", "Civil y penal", "Directa y subsidiaria", "Administrativa y laboral"], c: 2, e: "Responsabilidad Directa y Subsidiaria[cite: 47]." },
+            { p: "La responsabilidad contable directa es siempre:", o: ["Solidaria", "Mancomunada", "Proporcional", "Perdonable"], c: 0, e: "Siempre solidaria y afectará a todos los perjuicios causados[cite: 47]." },
+            { p: "¿A quién afecta la responsabilidad contable subsidiaria?", o: ["Al ejecutor material del robo", "A quienes por negligencia o demora en obligaciones legales hayan dado ocasión al menoscabo", "Al superior jerárquico siempre, aunque no sepa", "Al Banco depositario"], c: 1, e: "Quienes por negligencia o demora hayan dado ocasión directa o indirecta al menoscabo[cite: 47]." },
+            { p: "¿Es compatible la jurisdicción contable con la jurisdicción penal?", o: ["No, non bis in idem", "Sí, respecto a unos mismos hechos", "Solo si el daño supera un millón", "Si hay delito la contable desaparece"], c: 1, e: "Es compatible, respecto de unos mismos hechos, con la actuación jurisdicción penal[cite: 46]." },
+            { p: "¿Ante qué órgano se exige la responsabilidad civil o criminal de los Consejeros de Cuentas?", o: ["Tribunal Superior de Justicia", "Audiencia Nacional", "Tribunal Supremo", "Tribunal Constitucional"], c: 2, e: "La responsabilidad en que incurran se exigirá ante el Tribunal Supremo[cite: 44]." },
+            { p: "¿Qué órgano ejerce el control parlamentario o político?", o: ["Cortes Generales", "IGAE", "Consejo de Ministros", "Tribunal de Cuentas"], c: 0, e: "Control político o parlamentario: es el control de las Cortes Generales[cite: 47]." },
+            { p: "El control parlamentario se concreta mediante la aprobación de:", o: ["PGE, Modificaciones (créditos extraordinarios y suplementos) y Cuenta General", "Solo de leyes ordinarias", "Nombramientos directos de directores generales", "Expedientes de la caja fija"], c: 0, e: "Aprobación de PGE, créditos extraordinarios/suplementos y Cuenta General[cite: 47]." },
+            { p: "El plazo del Tribunal de Cuentas para el examen y comprobación de la Cuenta General del Estado es:", o: ["3 meses", "6 meses desde que la recibe", "1 año", "Sin plazo"], c: 1, e: "Examen de la Cuenta General dentro del plazo de seis meses a partir de su recepción[cite: 76]." },
+            { p: "¿A quién se remiten los Informes o Memorias anuales del Tribunal de Cuentas sobre la Administración estatal?", o: ["A las Cortes Generales (y al Gobierno)", "Exclusivamente al Rey", "Al Parlamento Europeo", "Al Ministro de Hacienda"], c: 0, e: "Se elevarán a las Cortes Generales (y Asambleas CC.AA para su ámbito)[cite: 45, 46]." },
+            { p: "¿Qué órgano conoce de los recursos de alzada contra resoluciones administrativas de órganos del Tribunal de Cuentas?", o: ["Tribunal Supremo", "La Comisión de Gobierno", "El Pleno del Tribunal", "La Audiencia Nacional"], c: 2, e: "El Pleno conoce de los recursos de alzada contra resoluciones administrativas del Tribunal[cite: 43]." },
+            { p: "¿Quién aprueba la Cuenta General del Estado como acto final de control?", o: ["El Tribunal de Cuentas", "Las Cortes Generales", "La IGAE", "El Rey"], c: 1, e: "Control de las Cortes que culminará con la aprobación de dicha Cuenta General[cite: 47]." },
+            { p: "¿Están sometidos los Consejeros de Cuentas a las mismas incompatibilidades que los Jueces?", o: ["Sí, Ley Orgánica del Poder Judicial", "No, son políticos", "Parcialmente", "Tienen inmunidad total"], c: 0, e: "Están sujetos a las mismas causas de incapacidad, incompatibilidades que Poder Judicial[cite: 44]." }
+        ],
+        // TEST 7: Documentos Contables (Detalle)
+        [
+            { p: "Identifica la operación: 'RC-106'", o: ["Retención para transferencias", "No disponibilidad", "Retención para bajas por anulación y otras minoraciones", "Tramitación anticipada"], c: 2, e: "RC-106: Retención de crédito para bajas por anulación[cite: 11]." },
+            { p: "¿Qué ampara el documento AD?", o: ["Aprobación", "Aprobación y Compromiso conjuntos", "Propuesta de pago", "Reconocimiento y pago"], c: 1, e: "AD es documento mixto: autorización y compromiso en un solo acto[cite: 11]." },
+            { p: "El documento K se utiliza para:", o: ["Comprometer el gasto", "Reconocer obligación", "Propuesta de pago separada", "Anulación del pago"], c: 2, e: "K: se utilizará para proponer el pago, separado del reconocimiento O[cite: 11]." },
+            { p: "Un documento RC de signo negativo ('RC'/):", o: ["Multiplica el saldo", "Anula una retención de crédito previa", "Desplaza al ejercicio siguiente", "Autoriza el pago"], c: 1, e: "Cuando proceda anular una retención se realiza a través del documento RC negativo[cite: 8]." },
+            { p: "La justificación para un documento RC negativo por renuncia al trámite es:", o: ["Acuerdo del Consejo de Ministros", "Renuncia o desistimiento, o memoria justificativa de anulación solicitada", "Factura proforma", "Decreto Ley"], c: 1, e: "Se justificarán con la renuncia, desistimiento, o con memoria justificativa[cite: 13]." },
+            { p: "El documento 'I' sirve para:", o: ["Inversión inmaterial", "Anticipos de Tesorería", "Intervención previa", "Ingresos extra"], c: 1, e: "Al documento 'I' mediante el que se efectúe el registro del anticipo de Tesorería...[cite: 14]." },
+            { p: "Cancelación de una obligación reconocida sin propuesta de pago en anticipo de tesorería es:", o: ["O-410", "O-416", "K-436", "OK-426"], c: 1, e: "O-416: Cancelación de obligaciones reconocidas sin propuesta de pago (anticipos Tesorería)[cite: 12]." },
+            { p: "Prescripción de obligaciones reconocidas utiliza el documento:", o: ["PR-460", "MD-410", "OK-420", "CA"], c: 0, e: "PR-460: Prescripción de obligaciones[cite: 54]." },
+            { p: "Rectificación del saldo inicial de obligaciones reconocidas:", o: ["MC-030", "MD-410", "K-430", "I-000"], c: 1, e: "MD-410: Rectificación del saldo inicial de obligaciones reconocidas de ejercicios cerrados[cite: 54]." },
+            { p: "¿Para qué sirve un documento MC?", o: ["Modificación de Créditos", "Movimiento de Caja", "Mandato Comercial", "Memoria Contable"], c: 0, e: "A los documentos MC de modificaciones de crédito se unirá la resolución aprobatoria[cite: 13]." },
+            { p: "Documento MC-060:", o: ["Crédito extraordinario", "Incorporación remanentes", "Transferencias de créditos positivas", "Generaciones por ingresos"], c: 2, e: "MC-060: Transferencias de créditos positivas[cite: 53]." },
+            { p: "Documento MC-040:", o: ["Bajas por anulación", "Suplemento de crédito", "Ampliación", "Crédito extraordinario"], c: 1, e: "MC-040: Suplemento de crédito[cite: 53]." },
+            { p: "Al iniciar un expediente de gasto plurianual, además del RC de ejercicio corriente, se emite un:", o: ["MC-070", "RC de ejercicios posteriores", "AD de tramitación anticipada", "D-306"], c: 1, e: "Se expedirá un documento RC de ejercicios posteriores detallando importe posterior[cite: 7]." },
+            { p: "Para aperturar el presupuesto inicial (apertura del presupuesto de gastos), el documento contable a expedir es:", o: ["MC Inicial", "RC de arranque", "No es necesario expedir documento contable alguno", "AD Global"], c: 2, e: "Servirá de justificante la Ley publicada en BOE, sin que sea necesario expedir documento contable[cite: 13]." },
+            { p: "Los documentos 'D' de signo negativo se justifican con:", o: ["Resolución de anulación de la aprobación del gasto", "Acuerdo de revocación del compromiso o de resolución del contrato", "Renuncia previa", "Nada"], c: 1, e: "Se justificarán con acuerdo de revocación del compromiso de gasto o resolución del contrato[cite: 14]." },
+            { p: "El RC-104 corresponde a:", o: ["Retención para transferencias", "No disponibilidad", "Retención cautelar por operaciones pendientes de registro contable", "Retención 1% cultural"], c: 2, e: "RC-104: Retención cautelar por operaciones pendientes de registro contable[cite: 11]." },
+            { p: "El documento ADOK-260 refleja:", o: ["Anticipo Tesorería", "Autorización, compromiso y reconocimiento s/ crédito disponible", "Anulación ADOK", "Propuesta en divisas"], c: 1, e: "ADOK-260 -> s/ crédito disponible[cite: 54]." },
+            { p: "Documento A-210 es:", o: ["Autorización s/crédito disponible", "Autorización s/crédito retenido", "Autorización para personal", "Cancelación de autorizaciones"], c: 1, e: "A-210: s/ crédito retenido[cite: 53]." },
+            { p: "¿En expropiaciones forzosas, cómo se efectúa el pago o depósito previo al acta?", o: ["Documento RC negativo", "Abono directo de cuenta", "Tramitando un pago a justificar con ADOK", "Cheque de la caja fija"], c: 2, e: "Se tramitará pago a justificar mediante documento 'ADOK' para el depósito[cite: 18]." },
+            { p: "Cuando un gasto no llega a la fase de pago (ej: se retiene todo judicialmente), ¿qué documento lo salda contablemente?", o: ["Se cancela", "Pago en formalización", "RC de extinción", "PR de prescripción"], c: 1, e: "Pagos en formalización por descuentos u embargos igual al principal[cite: 67, 68]." }
+        ],
+        // TEST 8: Repaso Mixto I
+        [
+            { p: "El gasto que imputemos en el segundo año de un plurianual no puede superar respecto al crédito inicial:", o: ["50%", "60%", "70%", "No hay límite"], c: 1, e: "En el segundo ejercicio, el 60%[cite: 21]." },
+            { p: "¿Cuántos días antes del vencimiento deben efectuarse medidas para el pago de las nóminas del personal?", o: ["Al menos 15 días", "Al menos 5 días de antelación al vencimiento", "1 día antes", "El mismo día 1"], c: 1, e: "Se adoptarán medidas para el pago al menos con cinco días de antelación al vencimiento[cite: 17]." },
+            { p: "¿Qué día límite deben presentar los cajeros los resúmenes de nóminas y documentos OK/ADOK al mes?", o: ["Día 1", "Antes del día 7 de cada mes", "Antes del día 15", "El último día del mes"], c: 1, e: "Antes del día 7 de cada mes[cite: 17]." },
+            { p: "Si en una expropiación tramitamos el depósito previo, se acude a la figura del pago:", o: ["A justificar", "Por caja fija", "Directo", "En formalización"], c: 0, e: "El Servicio gestor tramitará un pago a justificar, mediante ADOK, para el depósito[cite: 18]." },
+            { p: "¿Puede modificarse el porcentaje anual del 10% en retención de obras (plurianuales) por certificación final?", o: ["Sí, se cancela", "No, esta retención adicional computa dentro de los porcentajes establecidos", "Depende del IVA", "Se eleva al 20%"], c: 1, e: "Esa retención del 10% computará dentro de los porcentajes de límites plurianuales[cite: 21]." },
+            { p: "¿Quién fija los límites por debajo de los cuales los Secretarios de Estado ejercen competencias de gasto?", o: ["El Consejo de Ministros", "Los Ministros en su ámbito respectivo", "El IGAE", "El BOE por defecto universal"], c: 1, e: "Corresponderá a los Ministros fijar los límites por debajo de los cuales las competencias corresponden a Secretarios[cite: 5]." },
+            { p: "La fiscalización del IGAE de los ingresos y derechos del Tesoro puede sustituirse por:", o: ["Intervención formal", "Control financiero permanente y auditoría pública", "No puede sustituirse", "Delegación en el Tesoro"], c: 1, e: "Podrá sustituirse reglamentariamente por las comprobaciones en control financiero permanente y auditoría pública[cite: 4, 33]." },
+            { p: "¿Están sujetos a fiscalización previa los contratos de acceso a bases de datos y suscripción a publicaciones?", o: ["Sí, por su especialidad", "Sí, si pasan 5.000 euros", "No, si no tienen carácter sujeto a regulación armonizada", "Solo las publicaciones internacionales"], c: 2, e: "No estarán sometidos: los contratos de acceso a bases de datos que no tengan carácter SARA[cite: 34]." },
+            { p: "¿Qué documento expide la DGP para anular una retención por transferencia no ejecutada?", o: ["Un RC-101", "Un RC-102 negativo", "Un RC negativo para la retención correspondiente", "Un documento D"], c: 2, e: "RC negativo (RC/) acompañado del certificado original y memoria justificativa[cite: 13]." },
+            { p: "¿Quién resuelve si la IGAE y un Ministerio discrepan por un reparo en un gasto?", o: ["El Ministerio", "La IGAE prevalece siempre automáticamente", "El Consejo de Ministros", "Las Cortes Generales"], c: 2, e: "Corresponderá al Consejo de Ministros adoptar resolución definitiva[cite: 36]." },
+            { p: "El número de cuentas máximo iniciales que un acreedor puede declarar en el Tesoro es:", o: ["Una", "Dos", "Tres", "Diez"], c: 2, e: "Designarán un máximo de tres cuentas bancarias para inclusión en Fichero de Terceros[cite: 67]." },
+            { p: "¿Cuál es el fin último de la fase 'Ordenación del pago'?", o: ["Firmar el contrato", "Reservar crédito", "Dar instrucción a caja para abonar y liberar a la Administración", "Recaudar impuestos"], c: 2, e: "Poner en conexión el gasto con el procedimiento de pago, liberar a la Admon con salida fondos[cite: 26]." },
+            { p: "Una obligación no reconocida expresamente, ¿puede ordenarse su pago?", o: ["Sí, si es de emergencia", "No, no procederá ordenar pago sin obligación reconocida amparada en dotación", "Sí, por el Ministro", "Solo por orden judicial provisional"], c: 1, e: "No procederá ordenar el pago si no se ha reconocido la obligación, amparada presupuestariamente[cite: 26]." },
+            { p: "La cuenta general del Estado debe ser aprobada por:", o: ["El Tribunal de Cuentas", "El IGAE", "Las Cortes Generales", "El Consejo de Ministros"], c: 2, e: "Control parlamentario que culminará con la aprobación de dicha Cuenta General por las Cortes[cite: 47]." },
+            { p: "¿A quién se dirigen los informes del Control Financiero Permanente en un Ministerio?", o: ["A los medios de comunicación", "Al titular del departamento ministerial correspondiente y otros órganos directivos", "Solo al IGAE", "Al Tribunal Supremo"], c: 1, e: "Se elaborará informe y el departamento preparará Plan de Acción en 3 meses desde recepción[cite: 74]." },
+            { p: "¿Qué porcentaje del precio de compra se exige de pago inicial como mínimo en inmuebles con abono diferido >6 millones?", o: ["10%", "15%", "25%", "50%"], c: 2, e: "Desembolso inicial a la firma no puede ser inferior al 25% del precio[cite: 24]." },
+            { p: "¿El Tribunal de Cuentas fiscaliza subvenciones públicas a particulares?", o: ["No, solo sector público", "Sí, fiscalizará las subvenciones, créditos o ayudas percibidas por personas físicas o jurídicas", "Solo si superan 1 millón", "No"], c: 1, e: "Fiscalizará subvenciones, créditos o ayudas percibidas por personas físicas o jurídicas[cite: 45]." },
+            { p: "¿Quién asiste por parte de IGAE a la recepción material de contratos de más de 50.000 euros?", o: ["El Interventor General", "El representante designado por el Interventor General", "El Ministro", "Un perito judicial"], c: 1, e: "La intervención material se realizará por el representante designado por el IGAE[cite: 37]." },
+            { p: "¿Puede un funcionario del cuerpo técnico que diseñó el proyecto ser el asesor de IGAE en la comprobación?", o: ["Sí", "No, no debe haber intervenido en proyecto, dirección o ejecución", "Sí, es el más idóneo", "Depende del importe"], c: 1, e: "Asesor se designará entre funcionarios que no hayan intervenido en proyecto, adjudicación o ejecución[cite: 38]." },
+            { p: "¿Cómo se llama la intervención de comprobación sin representante, validada por el centro directivo?", o: ["Fraude", "Acta de conformidad del centro directivo (justificación supletoria)", "Reparo material", "Prescripción de acta"], c: 1, e: "Cuando no sea preceptiva, se justificará con acta de conformidad firmada por centro directivo[cite: 39]." }
+        ],
+        // TEST 9: Repaso Mixto II
+        [
+            { p: "En caso de omitirse la retención adicional del 10% en un contrato de obras plurianual, ¿qué podría ocurrir?", o: ["Se sanciona al interventor", "Se emitirá un reparo porque falta un trámite normativo contable", "No pasa nada", "Se convalida automático"], c: 1, e: "El incumplimiento de requisitos legales para comprometer genera reparos[cite: 34]." },
+            { p: "Señala la correcta sobre un documento 'ADOK' negativo:", o: ["Justificará que se va a pagar más", "Anulará en un solo acto autorización, compromiso y obligación reconocida previas", "No existe", "Solo anula el pago material"], c: 1, e: "Anulaciones soportadas en documentos análogos de signo negativo. ADOK negativo anula las tres fases acumuladas[cite: 12]." },
+            { p: "¿Puede haber créditos disponibles que no se puedan gastar?", o: ["No, si es disponible es gastable", "Sí, si se decreta la no disponibilidad por el Gobierno y pasan a estado 'no disponible'", "Solo en OO.AA", "Solo en entes privados"], c: 1, e: "Cuando el Gobierno acuerde la no disponibilidad, DGP expedirá RC por no disponibilidad[cite: 6]." },
+            { p: "El acto administrativo 'Propuesta de pago' pertenece al procedimiento de:", o: ["Aprobación de gasto", "Es el acto intermedio que conecta el procedimiento de gasto con el de pago", "Pertenece al pago material exclusivo", "Pertenece al control del IGAE"], c: 1, e: "La propuesta de pago es acto intermedio que pone en conexión gasto con procedimiento de pago[cite: 4]." },
+            { p: "¿Qué documento expide el servicio gestor para retribuciones de personal laboral eventual imputadas a Inversiones Reales (Cap 6)?", o: ["RC, AD", "RC de ejercicios posteriores y D", "ADOK directo anual", "Solo O"], c: 0, e: "Servicio gestor expedirá RC y tras formalizar contrato un AD corriente y en su caso de ejercicios posteriores[cite: 16]." },
+            { p: "La resolución de un convenio autorizado por el Consejo de Ministros (>12M), ¿requiere volver al Consejo?", o: ["No", "Sí, requerirá autorización previa del Consejo con independencia del momento de suscripción", "Solo si quedan deudas", "Solo en convenios europeos"], c: 1, e: "Acuerdos que tengan por objeto resolución de convenios autorizados por CM, requieren previa autorización del CM[cite: 6]." },
+            { p: "En la Ordenación de Pagos, ¿se verifican los posibles embargos antes de la transferencia bancaria?", o: ["No, los lleva el juzgado", "Sí, al cruzar datos con Fichero de Terceros e Incidencias (embargos, deudas)", "Solo si el acreedor lo pide", "Lo verifica el banco"], c: 1, e: "Se validará la existencia de incidencias como embargos y compensaciones de deudas[cite: 28]." },
+            { p: "¿Es compatible la jurisdicción contable (TC) con la potestad disciplinaria?", o: ["No", "Sí", "Solo si es un delito", "Excluye todo tipo de expedientes"], c: 1, e: "La jurisdicción contable es compatible con la potestad disciplinaria y penal por mismos hechos[cite: 46]." },
+            { p: "¿Quién conoce del recurso de casación contra resoluciones del Tribunal de Cuentas?", o: ["Pleno del TC", "Tribunal Constitucional", "Tribunal Supremo", "Audiencia Nacional"], c: 2, e: "Resoluciones de TC serán susceptibles de recurso de casación ante el Tribunal Supremo[cite: 47]." },
+            { p: "¿Cuál de estos órganos forma la jurisdicción del Tribunal de Cuentas para juicios y alcances en 1ª instancia?", o: ["El Presidente", "Los Consejeros de Cuentas", "El Fiscal", "El Rey"], c: 1, e: "Los Consejeros de Cuentas resuelven en 1ª o única instancia los juicios de cuentas, alcances, etc[cite: 44]." },
+            { p: "¿Quién nombra a los Abogados Fiscales del TC?", o: ["Las Cortes", "Están en la Fiscalía que depende del Fiscal General del Estado", "El Senado", "La IGAE"], c: 1, e: "La Fiscalía depende funcionalmente del Fiscal General del Estado[cite: 44]." },
+            { p: "El 'control de legalidad' que asegura que el expediente se ajusta a disposiciones aplicables es:", o: ["El control político", "La función interventora formal", "La auditoría operativa", "El control ciudadano"], c: 1, e: "Intervención formal: verificación de requisitos legales y documentos preceptivos[cite: 33]." },
+            { p: "¿La Intervención General (IGAE) puede intervenir directamente en la adjudicación (mesa de contratación)?", o: ["La IGAE y sus órganos delegados asesoran, no toman decisión material de adjudicar, sino que fiscalizan el expediente previo a aprobarlo", "Sí, con voto dirimente", "Son el órgano de contratación", "Nunca ven contratos"], c: 0, e: "IGAE controla y fiscaliza previamente los actos, es control, no órgano gestor activo que decida oportunidad[cite: 33, 34]." },
+            { p: "¿Qué documento refleja los cambios en los tiempos (calendario) de obra plurianual de un laboral eventual?", o: ["RC inverso", "AD positivos o negativos ajustando el gasto al ejercicio final", "MC-060", "Documento Z"], c: 1, e: "Darán lugar a AD positivos o negativos que se aplicarán al ejercicio en que deba concluirse, ajustándose[cite: 16]." },
+            { p: "En caso de gastos corrientes (indemnizaciones razón servicio) tramitados por comisión y NO por caja fija, primero se emite un:", o: ["A", "AD remitido junto al acuerdo, y después OK tras recibirse justificantes", "OK directamente", "ADOK"], c: 1, e: "Se expedirá AD... Posteriormente, al recibir justificantes, se reconocerá obligación con OK[cite: 19]." },
+            { p: "¿Qué control evalúa el coste de funcionamiento y el rendimiento de los servicios?", o: ["Control de Legalidad", "Control de Eficacia", "Control Parlamentario", "Control Preventivo"], c: 1, e: "Eficacia: ejerce mediante análisis coste funcionamiento y rendimiento o utilidad de servicios[cite: 32]." },
+            { p: "¿Cuál no es una clase de control por el 'momento'?", o: ["Preventivo", "Simultáneo", "Posterior", "Jurisdiccional"], c: 3, e: "Jurisdiccional es por el 'órgano'. Por momento: Preventivo, Simultáneo, Posterior[cite: 31]." },
+            { p: "¿Puede delegarse la ordenación de pagos en los Organismos Autónomos?", o: ["No, es indelegable", "Sí, en los términos que establezcan las disposiciones reglamentarias", "Solo en el IGAE", "Solo por ley orgánica"], c: 1, e: "La facultad podrá delegarse en los términos que establezcan disposiciones reglamentarias[cite: 27]." },
+            { p: "En una obligación de importe superior a los créditos, los actos dictados (salvo ley) son:", o: ["Subsanables", "Válidos", "Nulos de pleno derecho", "Anulables"], c: 2, e: "La LGP determina nulidad plena de actos y disposiciones de rango inferior a Ley que adquieran compromisos superiores a crédito[cite: 4]." },
+            { p: "La propuesta de pago 'K' se justifica mediante:", o: ["Factura", "Acuerdo de reconocimiento 'O' al que está ligada, o si es conjunta OK", "Resolución plurianual", "Acuerdo Consejo Ministros"], c: 1, e: "Para proponer el pago separado, el justificante clave es el acto de reconocimiento previo u O[cite: 11]." }
+        ],
+        // TEST 10: Fin de Repaso General
+        [
+            { p: "La exención de fiscalización previa en contratos de emergencia no exime a:", o: ["La certificación final", "La orden de pago a justificar librada para atender esos gastos", "El contrato en sí", "La firma del acta"], c: 1, e: "La no sujeción no comprende la fiscalización previa de la orden de pago a justificar para emergencias[cite: 34]." },
+            { p: "El 'Servicio Hecho' es condición básica en qué fase:", o: ["Aprobación", "Compromiso", "Reconocimiento de obligación", "Pago"], c: 2, e: "El reconocimiento requiere previa acreditación de la realización de la prestación (servicio hecho)[cite: 9]." },
+            { p: "¿Tienen efecto suspensivo las observaciones complementarias que emita un Interventor?", o: ["Sí, igual que los reparos", "No, en ningún caso tienen efectos suspensivos", "Depende del órgano gestor", "Solo si es urgente"], c: 1, e: "Sin que las mismas tengan, en ningún caso, efectos suspensivos en la tramitación[cite: 35]." },
+            { p: "¿Un crédito 'retenido' puede ser usado por el servicio gestor para otra finalidad en ese instante?", o: ["Sí", "No, queda reservado para la operación solicitada (gasto, transferencia, etc.)", "Si lo autoriza el Interventor sí", "Se devuelve al Banco"], c: 1, e: "Una vez registrado el documento RC, el crédito queda retenido para ser utilizado en la realización de la baja/gasto específico[cite: 7]." },
+            { p: "¿Cuándo se unirá el contrato administrativo formalizado al sistema contable?", o: ["Con el RC", "Con el primer documento OK de ejecución del mismo (a veces en el D)", "Nunca", "Al finalizar la obra"], c: 1, e: "Cuando se formalice, se deberá adjuntar con el primer documento OK que se expida en la ejecución[cite: 13]." },
+            { p: "La cuenta de un Organismo Autónomo en el Banco de España requiere:", o: ["Solo contrato con el Banco", "Autorización previa de Dirección General Tesoro", "Que el saldo sea positivo siempre", "Firma del Rey"], c: 1, e: "Apertura requiere autorización previa de Dirección General del Tesoro y Política Financiera[cite: 28]." },
+            { p: "¿Puede un pago en formalización producir una salida de dinero en efectivo de la caja del Banco de España?", o: ["Sí", "No, no producirán variaciones efectivas de tesorería", "Solo una parte", "Si hay embargos parciales, la parte del embargo no sale y la otra sí por transferencia"], c: 1, e: "Formalización: a conceptos de ingresos o no presupuestarios, no producirán variaciones efectivas tesorería[cite: 31]." },
+            { p: "Si en los Presupuestos no hay crédito para una anualidad plurianual antigua (imputación anual), el gestor tiene:", o: ["10 días para actuar", "30 días para comunicar a Contabilidad las actuaciones (reajustes, etc)", "No puede hacer nada", "Se cancela el servicio"], c: 1, e: "Plazo de treinta días para comunicar actuaciones a realizar con compromisos pendientes[cite: 23]." },
+            { p: "Si el gestor no comunica actuaciones a Contabilidad sobre los plurianuales en 30 días:", o: ["Se suspende su sueldo", "Contabilidad registrará de oficio retenciones de crédito por ese importe", "El contrato se extingue", "Interviene IGAE con reparo disciplinario"], c: 1, e: "La oficina de contabilidad procederá a registrar de oficio las retenciones de crédito[cite: 23]." },
+            { p: "La designación de un asesor técnico por IGAE recae en alguien que:", o: ["Diseñó el proyecto para mayor certeza", "No haya intervenido en el proyecto, dirección, adjudicación o ejecución del gasto", "Sea empresa privada externa", "Sea del mismo centro directivo obligatoriamente"], c: 1, e: "Asesor entre funcionarios que no hayan intervenido en proyecto, adjudicación...[cite: 38]." },
+            { p: "¿Debe la IGAE verificar materialmente las recepciones por sistema obligatoriamente?", o: ["No, puede limitarse a la formal", "Sí, enviará siempre al representante si es >50.000€ (su asistencia es potestativa para IGAE pero solicitarlo es obligatorio para gestor)", "Solo en contratos SARA", "Solo obras"], c: 1, e: "Órganos gestores DEBEN solicitar asistencia (obligatorio). Asistencia es potestativa para IGAE[cite: 38]." },
+            { p: "¿Puede la Administración pagar un cheque al portador en ejecución del presupuesto?", o: ["Sí, sin problema", "No, los cheques, si se autorizan, serán excepcionales, para personas físicas y 'nominativos no a la orden'", "Sí para personas jurídicas", "Sí para ayudas"], c: 1, e: "Solo personas físicas, autorizado Director Tesoro: cheque nominativo no a la orden[cite: 30]." },
+            { p: "El documento Anexo Seguimiento Fondos de la Unión Europea sirve para:", o: ["Gasto de caja fija", "Seguimiento de gastos presupuestarios financiados con Fondos de la UE", "Personal expatriado", "Devolución PAC"], c: 1, e: "Seguimiento de gastos financiados con Fondos de la Unión Europea[cite: 11]." },
+            { p: "¿La Intervención aprueba el gasto?", o: ["Sí, la IGAE aprueba", "No, la IGAE controla/fiscaliza. La aprobación la hace el órgano gestor (Ministro, Director OA)", "Sí, en reparos conjuntos", "Ambos"], c: 1, e: "Función interventora: controlar ANTES de que sean aprobados... No aprueba, controla[cite: 32]." },
+            { p: "¿Un expediente que no se somete a fiscalización previa se fiscaliza alguna vez?", o: ["No, nunca", "Sí, mediante control financiero permanente y/o auditoría pública o en la fase de pago", "Solo por los medios", "Se auditan 100% de ellos el mismo mes"], c: 1, e: "Se aplicarán controles financieros y auditoría pública, y fiscalización posterior/pago[cite: 33, 41]." },
+            { p: "¿El reparo por falta de saldo presupuestario (insuficiencia de crédito) es suspensivo?", o: ["Sí", "No", "Depende", "Solo en obras"], c: 0, e: "Procederá formulación del reparo suspensivo cuando se base en insuficiencia de crédito[cite: 34]." },
+            { p: "Para que opere un plurianual normal (art 47), la duración máxima es:", o: ["Año actual + 4 posteriores", "Año actual + 3", "2 años", "6 años"], c: 0, e: "El número de ejercicios a que pueden aplicarse los gastos no será superior a cuatro (posteriores)[cite: 21]." },
+            { p: "¿Un contrato menor lleva fiscalización previa por IGAE?", o: ["Sí, siempre", "No estarán sometidos a la fiscalización previa", "Solo si lleva anticipo", "Depende del Ministerio"], c: 1, e: "No estarán sometidos a la fiscalización previa: los contratos menores[cite: 34]." },
+            { p: "La responsabilidad contable de los miembros del TC:", o: ["Es ante el TC", "Es ante el Tribunal Supremo", "Tienen inmunidad", "No pueden tener responsabilidad"], c: 1, e: "Responsabilidad civil o criminal que incurran... ante Tribunal Supremo[cite: 44]." },
+            { p: "Documento RC-108:", o: ["Retención del 10% adicional de la adjudicación", "Retención 1% cultural", "Retención para transferencias", "Documento mixto"], c: 0, e: "RC-108: Retención adicional del 10% de la adjudicación[cite: 11, 20]." }
+        ]
+    ];
+
+    let currentTestIndex = -1; 
+    let testRespuestas = [];
+
+    // Inicialización DOM
+    document.addEventListener("DOMContentLoaded", () => {
+        const nav = document.getElementById('mainNav');
+        for (let i = 0; i < examenes.length; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'nav-btn';
+            btn.innerText = `Test ${i + 1}`;
+            btn.onclick = () => switchTab(i);
+            nav.appendChild(btn);
+        }
+        renderEsquema();
+    });
+
+    // Pestañas
+    function switchTab(index) {
+        currentTestIndex = index;
+        document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', i - 1 === index);
+        });
+        
+        window.speechSynthesis.cancel(); // Detener audio al cambiar de tab
+
+        if (index === -1) {
+            document.getElementById('esquemaView').classList.add('active');
+            document.getElementById('testView').classList.remove('active');
+        } else {
+            document.getElementById('esquemaView').classList.remove('active');
+            document.getElementById('testView').classList.add('active');
+            renderTest(index);
+        }
+    }
+
+    // Render Esquema
+    function renderEsquema() {
+        const container = document.getElementById('esquemaContainer');
+        container.innerHTML = '';
+        esquemaPreguntas.forEach((q, idx) => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                <div class="card-title">Pregunta ${idx + 1}: ${q.p}</div>
+                <div>${q.r.replace(/\[cite:\s*[0-9,\s]+\]/g, match => `<small style="color:var(--primary-color);"><em>${match}</em></small>`)}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // Speech Synthesis
+    function escucharTema() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const textToSpeak = esquemaPreguntas.map(q => "Pregunta. " + q.p + ". Respuesta. " + q.r.replace(/\[cite:[^\]]+\]/g, '')).join(". ");
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.0;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Tu navegador no soporta lectura por voz.");
+        }
+    }
+
+    // Render Test
+    function renderTest(index) {
+        const container = document.getElementById('testContainer');
+        container.innerHTML = '';
+        testRespuestas = new Array(examenes[index].length).fill(null);
+        document.getElementById('scoreTop').style.display = 'none';
+        document.getElementById('scoreBottom').style.display = 'none';
+        document.getElementById('btnCorregir').disabled = false;
+
+        examenes[index].forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            let htmlOptions = '';
+            q.o.forEach((opt, optIndex) => {
+                htmlOptions += `
+                    <label class="option-label" id="label_t${index}_q${qIndex}_o${optIndex}">
+                        <input type="radio" name="test${index}_q${qIndex}" value="${optIndex}" onchange="seleccionarRespuesta(${qIndex}, ${optIndex})">
+                        ${opt}
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="card-title">${qIndex + 1}. ${q.p}</div>
+                <div class="options-container">${htmlOptions}</div>
+                <div class="explanation-box" id="explain_t${index}_q${qIndex}">
+                    <strong>Explicación:</strong> ${q.e.replace(/\[cite:\s*[0-9,\s]+\]/g, match => `<small style="color:var(--primary-color);"><em>${match}</em></small>`)}<br>
+                    <strong>Correcta:</strong> ${q.o[q.c]}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Lógica Test
+    window.seleccionarRespuesta = function(qIndex, optIndex) {
+        testRespuestas[qIndex] = optIndex;
+    }
+
+    window.corregirExamen = function() {
+        if (currentTestIndex === -1) return;
+        const test = examenes[currentTestIndex];
+        let correctas = 0;
+        let errores = 0;
+        let noContestadas = 0;
+
+        test.forEach((q, qIndex) => {
+            const inputs = document.getElementsByName(`test${currentTestIndex}_q${qIndex}`);
+            inputs.forEach(input => input.disabled = true);
+
+            const respuestaUsuario = testRespuestas[qIndex];
+            const labelCorrecta = document.getElementById(`label_t${currentTestIndex}_q${qIndex}_o${q.c}`);
+            
+            labelCorrecta.classList.add('correct');
+
+            if (respuestaUsuario === null) {
+                noContestadas++;
+                document.getElementById(`explain_t${currentTestIndex}_q${qIndex}`).style.display = 'block';
+            } else if (respuestaUsuario === q.c) {
+                correctas++;
+            } else {
+                errores++;
+                const labelError = document.getElementById(`label_t${currentTestIndex}_q${qIndex}_o${respuestaUsuario}`);
+                labelError.classList.add('incorrect');
+                document.getElementById(`explain_t${currentTestIndex}_q${qIndex}`).style.display = 'block';
+            }
+        });
+
+        document.getElementById('btnCorregir').disabled = true;
+
+        const msj = `Aciertos: <span style="color:var(--correct-text)">${correctas}</span> | Errores: <span style="color:var(--incorrect-text)">${errores}</span> | Sin contestar: ${noContestadas}`;
+        document.getElementById('scoreTop').innerHTML = msj;
+        document.getElementById('scoreTop').style.display = 'block';
+        document.getElementById('scoreBottom').innerHTML = msj;
+        document.getElementById('scoreBottom').style.display = 'block';
+    }
+
+    window.reiniciarExamen = function() {
+        if (currentTestIndex !== -1) {
+            renderTest(currentTestIndex);
+        }
+    }
+</script>
+
+</body>
+</html>
