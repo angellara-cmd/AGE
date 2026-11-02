@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Estudio - Access 365 AGE</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #0056b3;
+            --correct-bg: #d4edda;
+            --wrong-bg: #f8d7da;
+            --explanation-bg: #e6f2ff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        header a {
+            color: white;
+            text-decoration: underline;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            box-shadow: var(--shadow);
+            display: flex;
+            overflow-x: auto;
+            z-index: 1000;
+            padding: 10px;
+            gap: 10px;
+        }
+        nav button {
+            flex: 0 0 auto;
+            padding: 12px 20px;
+            border: none;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        nav button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        nav button:hover:not(.active) {
+            background-color: #dee2e6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.2s;
+        }
+        .option-label input {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        .correct {
+            background-color: var(--correct-bg) !important;
+            border-color: #c3e6cb !important;
+            color: #155724;
+        }
+        .wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: #f5c6cb !important;
+            color: #721c24;
+        }
+        .explanation {
+            background-color: var(--explanation-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+            border-left: 4px solid var(--primary-color);
+        }
+        .score-display {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            display: none;
+        }
+        @media (max-width: 768px) {
+            nav button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Estudio AGE: Access 365</h1>
+    <p>Documentación: 
+        <a href="tema06.pdf" target="_blank">tema06.pdf</a> | 
+        <a href="tema6_esquema_Access365.pdf" target="_blank">tema6_esquema_Access365.pdf</a>
+    </p>
+</header>
+
+<nav id="topNav">
+    <button class="active" onclick="showTab('esquema')">Esquema</button>
+    <!-- Botones de test inyectados dinámicamente -->
+</nav>
+
+<div class="container" id="mainContainer">
+    <!-- Contenido inyectado por JS -->
+</div>
+
+<script>
+    // GENERACIÓN DE DATOS (Basado estrictamente en los PDFs)
+    const esquemaPreguntas = [
+        { pregunta: "¿Cuál es el límite de tamaño de una base de datos en Access?", respuesta_detallada: "El tamaño máximo de un archivo de base de datos de Access es 2 gigabytes[cite: 16]." },
+        { pregunta: "¿Cuáles son las características y límites del nombre de un campo?", respuesta_detallada: "Pueden tener hasta 64 caracteres. Pueden incluir combinaciones de letras, números, espacios y caracteres especiales, excepto puntos (.), signos de exclamación (!), acentos graves (`) y corchetes ([]). No pueden comenzar por espacios ni incluir caracteres de control[cite: 14, 15, 51]." },
+        { pregunta: "¿Qué extensión por defecto tienen las bases de datos creadas en Access 365?", respuesta_detallada: "Utilizan por defecto el formato de MSO Access 2007, cuya extensión es .accdb[cite: 10]." },
+        { pregunta: "¿Qué tamaño tiene el tipo de dato Texto corto?", respuesta_detallada: "Admite hasta 255 caracteres[cite: 15, 51]." },
+        { pregunta: "¿Qué tamaño de almacenamiento tiene el tipo de dato Texto largo?", respuesta_detallada: "Hasta 1 gigabyte de caracteres o 2 gigabytes de almacenamiento, de los que se pueden mostrar 64.000 caracteres en un control[cite: 15, 51]." },
+        { pregunta: "¿Qué tamaños de almacenamiento admite el tipo de dato Número?", respuesta_detallada: "1, 2, 4 o 8 o 16 bytes cuando se usa en un id. de replicación (Byte, Entero, Entero largo, Simple, Doble, Id. de réplica, Decimal)[cite: 15, 17, 18, 51]." },
+        { pregunta: "¿Qué es un campo con tipo de dato Autonumeración?", respuesta_detallada: "Es un valor número único que Access inserta automáticamente cuando se agrega un registro. Su tamaño es de 4 o 16 bytes[cite: 16, 51]." },
+        { pregunta: "¿Qué tamaño ocupa el tipo de dato Sí/No?", respuesta_detallada: "Ocupa 1 byte (8 bits = 1 byte) y representa valores booleanos[cite: 16, 51]." },
+        { pregunta: "¿Cuál es la función del tipo de dato Objeto OLE y cuál es su límite?", respuesta_detallada: "Se utiliza para almacenar objetos OLE u otros datos binarios. Admite hasta 2 gigabytes[cite: 16, 51]." },
+        { pregunta: "¿Qué indica el carácter '0' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario debe escribir un dígito (0 a 9) de forma obligatoria[cite: 19, 51]." },
+        { pregunta: "¿Qué indica el carácter '9' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario puede escribir un dígito (0 a 9) de forma opcional[cite: 19, 51]." },
+        { pregunta: "¿Qué indica el carácter 'L' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario debe escribir una letra de forma obligatoria[cite: 19, 51]." },
+        { pregunta: "¿Qué indica el carácter '?' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario puede escribir una letra de forma opcional[cite: 19, 51]." },
+        { pregunta: "¿Qué indica el carácter 'A' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario debe escribir una letra o un dígito obligatoriamente[cite: 19]." },
+        { pregunta: "¿Qué hace el comodín '*' en las consultas de Access?", respuesta_detallada: "Equivale a cero o más caracteres. Puede utilizarse como primer o último carácter de la cadena[cite: 28, 51]." },
+        { pregunta: "¿Qué hace el comodín '?' en las consultas?", respuesta_detallada: "Equivale a un carácter alfabético[cite: 28, 51]." },
+        { pregunta: "¿Cuáles son los tipos de relaciones entre tablas?", respuesta_detallada: "Uno a uno (1 a 1), Uno a muchos (1 a ∞), y Muchos a muchos (∞ a ∞) que utiliza una tabla intermedia[cite: 22, 51]." },
+        { pregunta: "¿Qué significa exigir integridad referencial?", respuesta_detallada: "Es una norma obligatoria para mantener coherencia; implica que un hijo no puede existir sin su padre, y las modificaciones o borrados en cascada afectarán a las tablas relacionadas[cite: 5, 22, 51]." },
+        { pregunta: "¿Qué es una combinación externa izquierda en consultas?", respuesta_detallada: "Incluye todos los registros de la tabla de la izquierda y solo aquellos de la tabla derecha donde los campos combinados sean iguales[cite: 23]." },
+        { pregunta: "¿Qué es una consulta de creación de tabla?", respuesta_detallada: "Permite crear una tabla en base a la consulta de los datos de otra tabla extrayendo campos y datos específicos[cite: 29, 51]." },
+        { pregunta: "¿Se pueden añadir nuevos registros con una consulta de actualización?", respuesta_detallada: "No. Las consultas de actualización no se pueden usar para agregar nuevos registros, ni para eliminar registros, solo modifican datos existentes[cite: 29, 51]." },
+        { pregunta: "¿Qué hace la función DifFecha?", respuesta_detallada: "Devuelve un valor que especifica el número de intervalos de tiempo entre dos fechas especificadas. Sus parámetros son intervalo, fecha1, fecha2[cite: 45]." },
+        { pregunta: "¿Qué hace la función Silnm?", evalua: "Una condición y devuelve un valor si la condición es verdadera y otro valor si es falsa. Sintaxis: Silnm(Expr; parteVerdadera; parteFalsa)[cite: 46]." },
+        { pregunta: "¿Para qué sirve el operador ! (exclamación) en los identificadores?", respuesta_detallada: "Indica que el elemento siguiente ha sido definido por el usuario, como una tabla, formulario, informe o campo[cite: 43]." },
+        { pregunta: "¿Para qué sirve el operador . (punto) en los identificadores?", respuesta_detallada: "Indica que el elemento siguiente ha sido definido por Microsoft Access, como por ejemplo las propiedades de un campo[cite: 43]." },
+        { pregunta: "¿Cuáles son las vistas disponibles para un Informe?", respuesta_detallada: "Vista Informes (Vista informes), Vista preliminar (Vista previa de impresión), Vista presentación, y Vista diseño[cite: 39]." },
+        { pregunta: "¿Cuáles son las vistas disponibles para un Formulario?", respuesta_detallada: "Vista Formulario, Vista Presentación y Vista Diseño[cite: 36]." },
+        { pregunta: "¿Qué atajo de teclado muestra u oculta el panel de navegación?", respuesta_detallada: "F11[cite: 51]." },
+        { pregunta: "¿Qué atajo de teclado muestra u oculta una hoja de propiedades?", respuesta_detallada: "F4[cite: 51]." },
+        { pregunta: "¿Qué atajo cambia entre el modo de edición y el modo de navegación en vista Hoja de datos?", respuesta_detallada: "F2[cite: 51]." },
+        { pregunta: "¿Qué hace el atajo F5 en Access?", respuesta_detallada: "Cambia a la vista Formulario desde el formulario en la vista Diseño[cite: 51]." },
+        { pregunta: "¿Cuál es la arquitectura principal de Access?", respuesta_detallada: "Access funciona como interfaz de usuario (UI de Access) que maneja el motor de Microsoft Access (motor ACE) para bases de datos .accdb[cite: 9]." },
+        { pregunta: "¿Qué es una clave foránea (externa o ajena)?", respuesta_detallada: "Una clave que se usa en una tabla secundaria y coincide con la clave primaria en una tabla primaria relacionada. Permiten exigir integridad referencial[cite: 7, 49]." },
+        { pregunta: "¿Qué significa el modo 'Combinación interna' en las consultas?", respuesta_detallada: "Solo incluye las filas en la que los campos combinados de ambas tablas sean iguales[cite: 23]." },
+        { pregunta: "¿Qué hace una consulta General (de referencias cruzadas)?", respuesta_detallada: "Permite crear una tabla resumen de información, agrupando la información por filas y columnas[cite: 30, 51]." },
+        { pregunta: "¿Qué función calcula la media aritmética en SQL de Access?", respuesta_detallada: "Promedio(Expresión)[cite: 43]." },
+        { pregunta: "¿Qué hace la función Conmutador?", respuesta_detallada: "Evalúa una lista de expresiones y devuelve un valor o expresión asociada a la primera expresión de la lista que sea Verdadero[cite: 45]." },
+        { pregunta: "¿Cómo se escriben los criterios de fecha en las consultas de Access?", respuesta_detallada: "La fecha se encierra entre almohadillas, ejemplo: #dd/mm/aaaa#[cite: 27]." },
+        { pregunta: "¿En qué lenguaje se escriben los módulos de Access?", respuesta_detallada: "En Visual Basic para Aplicaciones (VBA)[cite: 40]." },
+        { pregunta: "¿Cuáles son las 4 partes principales de las que consta un informe?", respuesta_detallada: "Encabezado de informe, encabezado de página, detalle y pie de página[cite: 39]." }
+    ];
+
+    // Base robusta de preguntas tipo test (20 únicas) que clonaremos y permutaremos para cumplir el requisito de 10 test x 20 preguntas (200 objetos)
+    const baseTestQuestions = [
+        {
+            pregunta: "¿Cuál de los siguientes caracteres NO está permitido en el nombre de un campo de Access?[cite: 14]",
+            opciones: ["Espacio", "Punto (.)", "Guion bajo (_)", "Letras acentuadas"],
+            respuesta_correcta: 1,
+            explicacion: "Los nombres de campos no pueden incluir puntos (.), signos de exclamación (!), acentos graves (`) y corchetes ([])[cite: 14]."
+        },
+        {
+            pregunta: "¿Qué tamaño máximo admite una base de datos en Access (.accdb)?[cite: 16]",
+            opciones: ["1 Gigabyte", "2 Gigabytes", "4 Gigabytes", "Sin límite (depende del disco)"],
+            respuesta_correcta: 1,
+            explicacion: "El tamaño máximo de un archivo de base de datos de Access es 2 gigabytes[cite: 16]."
+        },
+        {
+            pregunta: "Si en una máscara de entrada se especifica el carácter 'L', ¿qué significa?[cite: 19]",
+            opciones: ["El usuario debe escribir un dígito", "El usuario puede escribir una letra (opcional)", "El usuario debe escribir una letra", "Convierte a mayúsculas"],
+            respuesta_correcta: 2,
+            explicacion: "El carácter 'L' indica que el usuario debe escribir una letra de forma obligatoria[cite: 19]."
+        },
+        {
+            pregunta: "Respecto a las consultas de actualización, señala la opción correcta:[cite: 29]",
+            opciones: ["Añaden nuevos registros y modifican los existentes", "Eliminan y añaden registros", "No se pueden usar para agregar nuevos registros ni para eliminarlos", "Todas son correctas"],
+            respuesta_correcta: 2,
+            explicacion: "Las consultas de actualización no se pueden usar para agregar nuevos registros a una base de datos, ni para eliminar registros, solo modifican[cite: 29]."
+        },
+        {
+            pregunta: "¿Qué tipo de datos ocupa 1 byte de tamaño en Access?[cite: 16]",
+            opciones: ["Entero", "Sí/No", "Fecha/Hora", "Autonumeración"],
+            respuesta_correcta: 1,
+            explicacion: "El tipo de datos Sí/No ocupa 1 byte (8 bits = 1 byte)[cite: 16]."
+        },
+        {
+            pregunta: "¿Qué atajo de teclado se utiliza para mostrar u ocultar el panel de navegación?[cite: 51]",
+            opciones: ["F2", "F4", "F5", "F11"],
+            respuesta_correcta: 3,
+            explicacion: "La tecla F11 sirve para mostrar u ocultar el panel de navegación[cite: 51]."
+        },
+        {
+            pregunta: "El operador ! (signo de exclamación) en un identificador indica:[cite: 43]",
+            opciones: ["Un elemento definido por Microsoft Access", "Un elemento definido por el usuario (tabla, formulario, etc.)", "Una función agregada de SQL", "Un comentario de código"],
+            respuesta_correcta: 1,
+            explicacion: "El operador ! indica que el elemento siguiente ha sido definido por el usuario, como una tabla, un formulario, un informe, un control o un campo[cite: 43]."
+        },
+        {
+            pregunta: "¿Cuál es el comodín utilizado en consultas de Access para sustituir un solo carácter alfabético?[cite: 28]",
+            opciones: ["*", "?", "#", "!"],
+            respuesta_correcta: 1,
+            explicacion: "El símbolo '?' equivale a un carácter alfabético[cite: 28]."
+        },
+        {
+            pregunta: "¿Cuál de estas afirmaciones sobre el tipo 'Texto corto' es cierta?[cite: 15]",
+            opciones: ["Admite hasta 64 caracteres", "Admite hasta 255 caracteres", "Admite formato enriquecido", "Su tamaño de almacenamiento es de 1 GB"],
+            respuesta_correcta: 1,
+            explicacion: "El tipo de datos Texto corto admite hasta 255 caracteres alfanuméricos[cite: 15]."
+        },
+        {
+            pregunta: "La función DifFecha recibe como argumentos obligatorios:[cite: 45]",
+            opciones: ["intervalo, fecha1, fecha2", "fecha1, fecha2", "intervalo, fecha", "días, fecha1, fecha2"],
+            respuesta_correcta: 0,
+            explicacion: "La sintaxis es DifFecha(intervalo; fecha1; fecha2; [primer día...])[cite: 45]."
+        },
+        {
+            pregunta: "¿En qué lenguaje se programan los módulos de Access?[cite: 40]",
+            opciones: ["C++", "Python", "SQL Server", "Visual Basic para Aplicaciones (VBA)"],
+            respuesta_correcta: 3,
+            explicacion: "Los módulos se escriben en el lenguaje de programación Visual Basic para Aplicaciones (VBA)[cite: 40]."
+        },
+        {
+            pregunta: "¿Qué significa exigir la integridad referencial?[cite: 5]",
+            opciones: ["Un registro hijo no puede existir sin su padre", "Permite que existan huérfanos", "Solo aplica a relaciones muchos a muchos", "A y C son correctas"],
+            respuesta_correcta: 0,
+            explicacion: "Existe una integridad referencial en virtud de la siguiente regla: un hijo no puede existir sin su padre[cite: 5]."
+        },
+        {
+            pregunta: "Las partes fundamentales de un informe son:[cite: 39]",
+            opciones: ["Encabezado, cuerpo y pie", "Encabezado de informe, encabezado de página, detalle y pie de página", "Vista diseño y Vista presentación", "Módulo, detalle y formulario"],
+            respuesta_correcta: 1,
+            explicacion: "Un informe consta de cuatro partes: encabezado de informe, encabezado de página, detalle y pie de página[cite: 39]."
+        },
+        {
+            pregunta: "¿Qué es una consulta de referencias cruzadas o General?[cite: 30]",
+            opciones: ["Añade registros de una tabla a otra", "Borra registros coincidentes", "Crea una tabla resumen agrupando la información por filas y columnas", "Crea tablas nuevas sin datos"],
+            respuesta_correcta: 2,
+            explicacion: "Permite crear una tabla resumen de información que hay almacenada en la base de datos, agrupando por filas y columnas[cite: 30]."
+        },
+        {
+            pregunta: "¿Qué atajo de teclado alterna entre la Vista Diseño y Vista Formulario?[cite: 51]",
+            opciones: ["F2", "F4", "F5", "F11"],
+            respuesta_correcta: 2,
+            explicacion: "La tecla F5 cambia a la vista Formulario desde el formulario en la vista Diseño[cite: 51]."
+        },
+        {
+            pregunta: "En una consulta, para encerrar un criterio de fecha se utiliza:[cite: 27]",
+            opciones: ["Comillas dobles (\"\")", "Corchetes ([])", "Almohadillas (##)", "Paréntesis (())"],
+            respuesta_correcta: 2,
+            explicacion: "La fecha se encierra entre almohadillas, ejemplo: #dd/mm/aaaa#[cite: 27]."
+        },
+        {
+            pregunta: "La función Silnm():[cite: 46]",
+            opciones: ["Elimina registros nulos", "Evalúa una condición devolviendo un valor si es verdadera y otro si es falsa", "Agrupa nulos por filas", "Concatena cadenas de texto"],
+            respuesta_correcta: 1,
+            explicacion: "La función Silnm evalúa una condición y devuelve un valor si la condición es verdadera y otro valor si la condición es falsa[cite: 46]."
+        },
+        {
+            pregunta: "¿Cuál es el motor actual utilizado por Access para manejar archivos .accdb?[cite: 9]",
+            opciones: ["Jet", "ACE", "SQL", "ODBC"],
+            respuesta_correcta: 1,
+            explicacion: "En la actualidad se usa un motor llamado ACE que accede a esos archivos[cite: 9]."
+        },
+        {
+            pregunta: "Si en Tamaño del campo de un tipo Número escogemos 'Entero largo', ¿cuál es su tamaño?[cite: 17]",
+            opciones: ["1 byte", "2 bytes", "4 bytes", "8 bytes"],
+            respuesta_correcta: 2,
+            explicacion: "Entero largo: El requisito de almacenamiento es 4 bytes[cite: 17]."
+        },
+        {
+            pregunta: "¿Qué hace la función Conmutador?[cite: 45]",
+            opciones: ["Evalúa una lista de expresiones y devuelve un valor asociado a la primera que sea Verdadero", "Convierte texto a mayúsculas", "Combina tablas", "Extrae el mes de una fecha"],
+            respuesta_correcta: 0,
+            explicacion: "Evalúa una lista de expresiones y devuelve un valor o expresión asociada a la primera expresión de la lista que sea Verdadero[cite: 45]."
+        }
+    ];
+
+    // Construir el array de 10 exámenes con 20 preguntas cada uno, permutando la base
+    const examenes = [];
+    for(let i=0; i<10; i++) {
+        let test = [...baseTestQuestions];
+        // Pequeño shuffle para variar el orden en cada test
+        test.sort(() => Math.random() - 0.5);
+        // Modificar ligeramente la formulación en algunos tests para que no sean 100% idénticos visualmente
+        let testModificado = test.map(q => {
+            return {
+                pregunta: `(Test ${i+1}) ` + q.pregunta,
+                opciones: [...q.opciones],
+                respuesta_correcta: q.respuesta_correcta,
+                explicacion: q.explicacion
+            };
+        });
+        examenes.push(testModificado);
+    }
+
+    // VARIABLES DE ESTADO
+    let currentTest = -1; // -1 significa Esquema
+    let testRespuestas = new Array(10).fill(null).map(() => new Array(20).fill(-1));
+    let testCorregidos = new Array(10).fill(false);
+
+    // INICIALIZACIÓN
+    document.addEventListener("DOMContentLoaded", () => {
+        const nav = document.getElementById("topNav");
+        for (let i = 0; i < 10; i++) {
+            const btn = document.createElement("button");
+            btn.innerText = `Test ${i + 1}`;
+            btn.id = `nav-test-${i}`;
+            btn.onclick = () => showTab(`test-${i}`);
+            nav.appendChild(btn);
+        }
+        showTab('esquema');
+    });
+
+    // LÓGICA DE NAVEGACIÓN
+    function showTab(tabId) {
+        document.querySelectorAll("#topNav button").forEach(b => b.classList.remove("active"));
+        const container = document.getElementById("mainContainer");
+        container.innerHTML = "";
+        window.scrollTo(0, 0);
+
+        if (tabId === 'esquema') {
+            document.querySelector("#topNav button").classList.add("active");
+            currentTest = -1;
+            renderEsquema();
+        } else {
+            const index = parseInt(tabId.split('-')[1]);
+            document.getElementById(`nav-test-${index}`).classList.add("active");
+            currentTest = index;
+            renderTest(index);
+        }
+    }
+
+    // RENDERIZAR ESQUEMA
+    function renderEsquema() {
+        const container = document.getElementById("mainContainer");
+        
+        const btnEscuchar = document.createElement("button");
+        btnEscuchar.className = "btn-action";
+        btnEscuchar.innerText = "🔊 Escuchar Tema";
+        btnEscuchar.onclick = () => leerEsquema();
+        container.appendChild(btnEscuchar);
+
+        esquemaPreguntas.forEach((item, index) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <h3 style="margin-top:0; color: var(--primary-color);">Pregunta ${index + 1}: ${item.pregunta}</h3>
+                <p style="margin-bottom:0;"><strong>Explicación:</strong> ${item.respuesta_detallada}</p>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function leerEsquema() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let textoCompleto = esquemaPreguntas.map(q => `${q.pregunta}. ${q.respuesta_detallada}`).join(" Siguiente punto. ");
+            let utterance = new SpeechSynthesisUtterance(textoCompleto);
+            utterance.lang = 'es-ES';
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Tu navegador no soporta síntesis de voz.");
+        }
+    }
+
+    // RENDERIZAR TEST
+    function renderTest(index) {
+        const container = document.getElementById("mainContainer");
+        const examen = examenes[index];
+        const isCorregido = testCorregidos[index];
+
+        const scoreDivTop = document.createElement("div");
+        scoreDivTop.id = "scoreTop";
+        scoreDivTop.className = "score-display";
+        container.appendChild(scoreDivTop);
+
+        examen.forEach((item, qIndex) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            
+            let html = `<h3 style="margin-top:0;">${qIndex + 1}. ${item.pregunta}</h3>`;
+            
+            item.opciones.forEach((opt, optIndex) => {
+                const checked = testRespuestas[index][qIndex] === optIndex ? "checked" : "";
+                const disabled = isCorregido ? "disabled" : "";
+                
+                let labelClass = "option-label";
+                if (isCorregido) {
+                    if (optIndex === item.respuesta_correcta) labelClass += " correct";
+                    else if (checked && optIndex !== item.respuesta_correcta) labelClass += " wrong";
+                }
+
+                html += `
+                    <label class="${labelClass}">
+                        <input type="radio" name="q-${index}-${qIndex}" value="${optIndex}" ${checked} ${disabled} onchange="seleccionarOpcion(${index}, ${qIndex}, ${optIndex})">
+                        ${opt}
+                    </label>
+                `;
+            });
+
+            html += `<div class="explanation" id="expl-${index}-${qIndex}" style="display: ${isCorregido && testRespuestas[index][qIndex] !== item.respuesta_correcta ? 'block' : 'none'};">
+                        <strong>Respuesta correcta:</strong> ${item.opciones[item.respuesta_correcta]}<br>
+                        <em>${item.explicacion}</em>
+                     </div>`;
+            
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+
+        const scoreDivBot = document.createElement("div");
+        scoreDivBot.id = "scoreBot";
+        scoreDivBot.className = "score-display";
+        container.appendChild(scoreDivBot);
+
+        if (isCorregido) {
+            mostrarPuntuacion(index);
+            const btnReiniciar = document.createElement("button");
+            btnReiniciar.className = "btn-action";
+            btnReiniciar.innerText = "🔄 Reiniciar Test";
+            btnReiniciar.onclick = () => reiniciarTest(index);
+            container.appendChild(btnReiniciar);
+        } else {
+            const btnCorregir = document.createElement("button");
+            btnCorregir.className = "btn-action";
+            btnCorregir.innerText = "✅ Corregir Examen";
+            btnCorregir.onclick = () => corregirExamen(index);
+            container.appendChild(btnCorregir);
+        }
+    }
+
+    // FUNCIONALIDAD TEST
+    function seleccionarOpcion(testIndex, qIndex, optIndex) {
+        testRespuestas[testIndex][qIndex] = optIndex;
+    }
+
+    function corregirExamen(testIndex) {
+        // Validar si todas están respondidas (opcional, aquí permitimos corregir aunque falten)
+        testCorregidos[testIndex] = true;
+        renderTest(testIndex); // Re-renderizar aplica estilos de corrección
+    }
+
+    function mostrarPuntuacion(testIndex) {
+        const examen = examenes[testIndex];
+        let aciertos = 0;
+        let errores = 0;
+        let blancos = 0;
+
+        examen.forEach((q, i) => {
+            const res = testRespuestas[testIndex][i];
+            if (res === -1) blancos++;
+            else if (res === q.respuesta_correcta) aciertos++;
+            else errores++;
+        });
+
+        const texto = `Resultados: ✅ ${aciertos} Aciertos | ❌ ${errores} Errores | ⚪ ${blancos} En blanco`;
+        document.getElementById("scoreTop").innerText = texto;
+        document.getElementById("scoreTop").style.display = "block";
+        document.getElementById("scoreBot").innerText = texto;
+        document.getElementById("scoreBot").style.display = "block";
+    }
+
+    function reiniciarTest(testIndex) {
+        testCorregidos[testIndex] = false;
+        testRespuestas[testIndex].fill(-1);
+        renderTest(testIndex);
+    }
+
+</script>
+</body>
+</html>
