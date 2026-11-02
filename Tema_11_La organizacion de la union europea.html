@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oposiciones AGE - Tema 11: Unión Europea</title>
+<style>
+  :root {
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --primary: #0056b3;
+    --primary-hover: #004494;
+    --correct-bg: #d4edda;
+    --correct-border: #c3e6cb;
+    --correct-text: #155724;
+    --incorrect-bg: #f8d7da;
+    --incorrect-border: #f5c6cb;
+    --incorrect-text: #721c24;
+    --exp-bg: #e6f2ff;
+    --exp-border: #0056b3;
+    --text-color: #333333;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  header {
+    background-color: var(--card-bg);
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  h1 { margin: 0; font-size: 1.5rem; color: var(--primary); }
+
+  .docs-links a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: bold;
+    background: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+  }
+
+  .tab-btn {
+    background-color: #e9ecef;
+    color: var(--text-color);
+  }
+
+  .tab-btn.active {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .btn-primary {
+    background-color: var(--primary);
+    color: white;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .btn-primary:hover, .tab-btn.active:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 { margin-top: 0; font-size: 1.1rem; }
+  .card p { margin-bottom: 0; }
+
+  .options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .option-label {
+    padding: 12px 20px;
+    background: #f1f3f5;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    margin: 0;
+  }
+
+  .option-label input {
+    margin-top: 4px;
+    transform: scale(1.2);
+  }
+
+  @media (hover: hover) {
+    .option-label:not(.disabled):hover { background: #e2e6ea; }
+  }
+
+  .option-label.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .option-label.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+    color: var(--incorrect-text);
+  }
+
+  .explanation-box {
+    background-color: var(--exp-bg);
+    border-left: 5px solid var(--exp-border);
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 4px;
+    display: none;
+    font-size: 0.95rem;
+  }
+
+  .score-display {
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    background: #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .nav-buttons { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; }
+    .nav-buttons::-webkit-scrollbar { height: 4px; }
+    .nav-buttons::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    .tab-btn { flex: 0 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <h1>Organización de la Unión Europea (AGE)</h1>
+    <div class="docs-links">Documentos base: <a href="Tema_11.pdf" target="_blank">Tema_11.pdf</a></div>
+    <nav class="nav-buttons" id="nav-container"></nav>
+  </div>
+</header>
+
+<main id="main-content">
+  <div id="tab-esquema" class="tab-content active">
+    <button id="btn-escuchar" class="btn-primary">🔊 Escuchar Tema Completo</button>
+    <div id="esquema-container"></div>
+  </div>
+  <div id="tests-container"></div>
+</main>
+
+<script>
+const esquemaPreguntas = [
+  { p: "¿Cuáles son los Tratados fundacionales de las Comunidades Europeas?", r: "El Tratado de París (1951) constitutivo de la CECA, y los Tratados de Roma (1957) constitutivos de la CEE y la CEEA (Euratom)." },
+  { p: "¿Qué modificaciones clave introdujo el Tratado de Lisboa (2007, en vigor 2009)?", r: "Sustituye a la Comunidad Europea por la 'Unión', atribuyéndole personalidad jurídica única. El TCE pasa a denominarse Tratado de Funcionamiento de la Unión Europea (TFUE). Se institucionaliza el Consejo Europeo y desaparece la estructura de pilares." },
+  { p: "¿Cuáles son los criterios de Copenhague (1993) para la adhesión?", r: "1) Criterios políticos (democracia, imperio de la ley, respeto DDHH y minorías). 2) Criterio económico (economía de mercado viable). 3) Asimilación del acervo europeo." },
+  { p: "¿En qué se fundamenta la delimitación y el ejercicio de las competencias de la UE (art. 5 TUE)?", r: "La delimitación se rige por el principio de atribución. El ejercicio se rige por los principios de subsidiariedad y proporcionalidad." },
+  { p: "¿Cuáles son las competencias exclusivas de la Unión (art. 3 TFUE)?", r: "Unión aduanera, normas de competencia del mercado interior, política monetaria (euro), conservación de recursos biológicos marinos (pesca) y política comercial común." },
+  { p: "¿Cuáles son las principales competencias compartidas (art. 4 TFUE)?", r: "Mercado interior, política social, cohesión económica/social/territorial, agricultura y pesca, medio ambiente, protección de consumidores, transportes, redes transeuropeas, energía y espacio de libertad, seguridad y justicia." },
+  { p: "¿Qué instituciones configuran la UE (art. 13 TUE)?", r: "Parlamento Europeo, Consejo Europeo, Consejo, Comisión Europea, Tribunal de Justicia de la UE, Banco Central Europeo y Tribunal de Cuentas." },
+  { p: "¿Cómo se compone el Consejo Europeo (art. 15 TUE)?", r: "Jefes de Estado o de Gobierno de los Estados miembros, su Presidente y el Presidente de la Comisión. Participa también el Alto Representante para Asuntos Exteriores y Política de Seguridad." },
+  { p: "¿Cuál es el mandato del Presidente del Consejo Europeo y cuáles son sus funciones?", r: "Elegido por 2,5 años (una sola reelección). Dirige e impulsa sus trabajos, asegura preparación y continuidad, y asume la representación exterior de la UE en materia PESC, sin perjuicio de las atribuciones del Alto Representante. No ejerce función legislativa." },
+  { p: "¿Cómo se toman las decisiones en el Consejo Europeo?", r: "Se pronuncia por consenso como regla general. Sin embargo, decide por mayoría cualificada aspectos como la lista de formaciones del Consejo o su propia Presidencia (salvo Asuntos Exteriores)." },
+  { p: "¿Cómo está compuesto el Consejo (Consejo de Ministros) y quién lo preside?", r: "Por un representante de cada Estado miembro de rango ministerial. La Presidencia es rotatoria e igualatoria entre Estados (grupos de 3 por 18 meses, 6 meses cada uno), excepto la formación de Asuntos Exteriores, presidida por el Alto Representante." },
+  { p: "¿Qué es el COREPER y cuál es su función?", r: "El Comité de Representantes Permanentes es un órgano auxiliar que prepara los trabajos del Consejo y realiza las tareas que este le confía, filtrando decisiones (Puntos A sin debate y Puntos B con debate)." },
+  { p: "¿Cómo se alcanza la mayoría cualificada en el Consejo (desde 2014, art. 16.3 TUE)?", r: "A propuesta de Comisión o Alto Representante: mínimo 55% de miembros (al menos 15) que representen al menos el 65% de la población de la UE. Minoría de bloqueo: al menos 4 miembros." },
+  { p: "¿Cuál es la composición máxima del Parlamento Europeo según el Tratado de Lisboa?", r: "No excederá de 750 diputados más el Presidente. Reparto proporcional decreciente: ningún Estado tendrá menos de 6 ni más de 96 escaños." },
+  { p: "¿Cuál es la composición actual del Parlamento Europeo en la legislatura 2024-2029?", r: "Tiene 720 escaños en total. A España le corresponden 61 eurodiputados (aumento de 2 respecto a los 59 que tenía tras el Brexit)." },
+  { p: "¿Cuáles son las incompatibilidades para ser eurodiputado en España?", r: "Incompatible con ser miembro de Cortes Generales, de Asambleas de CC.AA., y todas las de la LOREG para Diputados y Senadores nacionales. Dedicación absoluta." },
+  { p: "¿Qué funciones ejerce el Parlamento Europeo?", r: "Ejerce conjuntamente con el Consejo la función legislativa y presupuestaria (sin distinción ya entre gastos obligatorios y no obligatorios), control político, y aprueba a la Comisión." },
+  { p: "¿Cómo se compone la Comisión Europea actualmente?", r: "Por un nacional de cada Estado miembro (27 miembros en total), incluyendo a su Presidente y al Alto Representante (como Vicepresidente). El TUE preveía reducir a 2/3, pero el Consejo Europeo decidió mantener un comisario por Estado." },
+  { p: "¿Qué características de independencia tienen los miembros de la Comisión?", r: "Absoluta independencia. No aceptan instrucciones de gobiernos, no ejercen otra actividad profesional (retribuida o no) durante su mandato (5 años). El TJUE puede cesarlos por falta grave." },
+  { p: "¿Qué poderes ostenta la Comisión Europea?", r: "Iniciativa legislativa (cuasi-monopolio), ejecución del presupuesto, guardiana de los Tratados (control del Derecho UE), representación exterior (excepto PESC) y adopción de actos delegados y de ejecución." },
+  { p: "¿En qué consiste la moción de censura contra la Comisión?", r: "El PE puede obligar a la Comisión a dimitir en bloque. Requiere 3 días de reflexión, y aprobación por 2/3 de los sufragios emitidos que representen mayoría absoluta de los miembros del PE." },
+  { p: "¿Cómo se compone el Tribunal de Justicia (instancia superior)?", r: "Un Juez por Estado miembro (27) asistido por 11 Abogados Generales. Elegidos por los Gobiernos por 6 años (renovables), renovándose por mitades cada 3 años." },
+  { p: "¿Qué función tienen los Abogados Generales del TJUE?", r: "Presentar públicamente, con imparcialidad e independencia, conclusiones motivadas sobre los asuntos que requieren su intervención para asistir al Tribunal (no participan en la votación de la sentencia)." },
+  { p: "¿Qué es el Tribunal General y de qué conoce?", r: "Tiene 2 jueces por Estado miembro. Conoce en 1ª instancia recursos de anulación, inactividad, responsabilidad, litigios de función pública (desde 2016) y, desde 2024, ciertas cuestiones prejudiciales transferidas." },
+  { p: "¿En qué consiste el recurso de incumplimiento (arts. 258 y 259 TFUE)?", r: "La Comisión (o un Estado) demanda a un Estado miembro por incumplir los Tratados. Tiene fase precontenciosa (dictamen motivado) y contenciosa ante el TJUE, que puede imponer sumas a tanto alzado o multas coercitivas." },
+  { p: "¿Qué son las cuestiones prejudiciales (art. 267 TFUE)?", r: "Mecanismo por el que un juez nacional consulta al TJUE sobre la interpretación de Tratados o validez de actos UE, obligatorio si no cabe recurso interno. Asegura la interpretación uniforme." },
+  { p: "¿Cuál es la función y composición del Tribunal de Cuentas?", r: "Controla la legalidad, regularidad y buena gestión financiera del presupuesto de la UE. Integrado por un nacional de cada Estado (mandato de 6 años). Sede en Luxemburgo." },
+  { p: "¿Qué es el SEBC y el Eurosistema?", r: "El SEBC incluye el BCE y los Bancos Centrales Nacionales (BCN) de toda la UE. El Eurosistema solo incluye al BCE y a los BCN de Estados que han adoptado el euro (20 países actualmente)." },
+  { p: "¿Cuáles son los órganos rectores del BCE?", r: "El Consejo de Gobierno (Comité Ejecutivo + Gobernadores de BCN zona euro), el Comité Ejecutivo (Presidente, Vicepresidente y 4 vocales nombrados por 8 años no renovables) y el Consejo General." },
+  { p: "¿Cómo se compone el Comité Económico y Social Europeo (CESE)?", r: "Representa a la sociedad civil (empresarios, trabajadores, diversidad). Tras el Brexit, tiene 329 miembros (máximo legal 350). A España le corresponden 21 miembros. Mandato de 5 años." },
+  { p: "¿Cuál es el papel del Comité de las Regiones (CDR)?", r: "Órgano consultivo que representa a entes locales y regionales. 329 miembros (21 de España). Vigila el principio de subsidiariedad. Puede recurrir al TJUE para salvaguardar sus prerrogativas." },
+  { p: "¿Qué función cumple el Banco Europeo de Inversiones (BEI)?", r: "Financiar, sin afán de lucro y acudiendo a los mercados de capitales, proyectos para el desarrollo regional, modernización de empresas o interés común que no puedan financiarse solo con medios nacionales." },
+  { p: "¿Quién es y qué hace el Defensor del Pueblo Europeo?", r: "Elegido por el Parlamento Europeo para la legislatura (5 años). Recibe quejas de ciudadanos/empresas sobre mala administración en instituciones/órganos de la UE (excepto TJUE en función jurisdiccional)." },
+  { p: "¿Qué actos jurídicos vinculantes define el art. 288 del TFUE?", r: "El Reglamento (alcance general, obligatorio en todos sus elementos, aplicable directamente), la Directiva (obliga en cuanto al resultado, dejando elección de medios al Estado) y la Decisión (obligatoria, si designa destinatarios solo vincula a estos)." },
+  { p: "¿Qué son las Recomendaciones y Dictámenes?", r: "Son actos jurídicos típicos no vinculantes (art. 288 TFUE). No obligan jurídicamente, pero el TJUE señala que los tribunales nacionales deben tenerlos en cuenta." },
+  { p: "¿Qué diferencia existe entre actos delegados (290 TFUE) y de ejecución (291 TFUE)?", r: "Los delegados (Comisión) completan o modifican elementos no esenciales de un acto legislativo. Los de ejecución (Comisión o Consejo) aseguran condiciones uniformes de ejecución en los EEMM." },
+  { p: "¿Cómo se produce la integración del Derecho originario en España?", r: "Por el art. 93 CE mediante la cesión del ejercicio de competencias constitucionales a la UE. Los Tratados se integran tras publicación en el BOE (art. 96 CE)." },
+  { p: "¿Cómo se integra el Derecho derivado (ej. Reglamentos) en España?", r: "No requiere publicación en el BOE. Se integra y es directamente aplicable a partir de su publicación en el Diario Oficial de la Unión Europea (DOUE)." },
+  { p: "¿A quién corresponde la ejecución del Derecho UE en España si hay competencias transferidas?", r: "Según el TC (principio de autonomía institucional), la ejecución corresponde a quien materialmente ostente la competencia interna (Estado o CC.AA.). El art. 93 no altera el reparto del art. 149 CE." },
+  { p: "¿Quién asume la responsabilidad financiera si España es sancionada por incumplir Derecho UE?", r: "Según la LO 2/2012 y el RD 515/2013, la Administración (Estado, CC.AA. o Local) que, ejerciendo su competencia, incumpla (ej. transposición tardía de Directiva) asume la responsabilidad financiera, procediendo el Estado a retener fondos si es necesario." }
+];
+
+const examenes = [
+  // Test 1: Historia y Tratados
+  [
+    { q: "¿En qué año se firmó el Tratado de París constitutivo de la CECA?", o: ["1951", "1957", "1992", "2007"], c: 0, e: "El Tratado de París que dio origen a la CECA se firmó el 18 de abril de 1951 (en vigor 1952)." },
+    { q: "¿Qué Tratados se firmaron en Roma en 1957?", o: ["CECA y Euratom", "CEE y Euratom", "TUE y TCE", "CEE y Acta Única"], c: 1, e: "En 1957 se firmaron los Tratados de Roma constitutivos de la Comunidad Económica Europea (CEE) y la Comunidad Europea de la Energía Atómica (EURATOM)." },
+    { q: "El Tratado de la Unión Europea (TUE) se firmó en Maastricht en el año:", o: ["1986", "1992", "1997", "2001"], c: 1, e: "El Tratado de la Unión Europea fue firmado en Maastricht el 7 de febrero de 1992, estructurándose en tres pilares." },
+    { q: "¿Qué Tratado, firmado en 2007, sustituye a la fallida Constitución Europea?", o: ["Tratado de Ámsterdam", "Tratado de Niza", "Tratado de Lisboa", "Acta Única Europea"], c: 2, e: "El Tratado de Lisboa se firmó en 2007 y entró en vigor el 1 de diciembre de 2009, reformando el TUE y el TCE (ahora TFUE)." },
+    { q: "¿Qué tratado unificó los ejecutivos comunitarios creando un solo Consejo y Comisión?", o: ["Tratado de Ámsterdam", "Tratado de Bruselas de 1965", "Tratado de Niza", "Tratado de París"], c: 1, e: "El Tratado de Fusión de los Ejecutivos se firmó en Bruselas en 1965 (entró en vigor en 1967)." },
+    { q: "Según el Consejo Europeo de Copenhague (1993), los criterios de adhesión son:", o: ["Políticos, económicos y acervo europeo", "Sociales, geográficos y militares", "Políticos y económicos exclusivamente", "Monetarios (Euro) y comerciales"], c: 0, e: "Se fijaron criterios políticos (democracia), económicos (economía de mercado) y asimilación del acervo (capacidad para asumir obligaciones)." },
+    { q: "¿Cuándo se hizo efectiva la salida del Reino Unido de la UE (Brexit)?", o: ["31 de diciembre de 2020", "31 de enero de 2020", "29 de marzo de 2017", "1 de enero de 2021"], c: 1, e: "La salida oficial (entrada en vigor del Acuerdo de Retirada) se produjo a finales de enero de 2020 (31 de enero)." },
+    { q: "En la actualidad (2024), ¿cuántos Estados miembros tiene la Unión Europea?", o: ["28", "25", "27", "29"], c: 2, e: "Con la salida del Reino Unido, la UE pasó de 28 a 27 Estados miembros." },
+    { q: "¿Qué país se incorporó a la UE en la última ampliación de 2013?", o: ["Rumanía", "Bulgaria", "Chipre", "Croacia"], c: 3, e: "Croacia firmó su Tratado de Adhesión en 2011 y entró en vigor el 1 de julio de 2013." },
+    { q: "¿Cuáles son los 6 países fundadores de las Comunidades Europeas?", o: ["A y B son correctas", "Francia, Italia, Bélgica", "RFA, Luxemburgo, Países Bajos", "España, Portugal y Grecia"], c: 0, e: "Los fundadores fueron Bélgica, RFA (Alemania), Francia, Italia, Luxemburgo y Países Bajos." },
+    { q: "¿En qué año se adhirió España a las Comunidades Europeas?", o: ["1979", "1981", "1986", "1995"], c: 2, e: "El Tratado de Adhesión de España (y Portugal) se firmó en 1985 y entró en vigor el 1 de enero de 1986." },
+    { q: "¿Qué tratado cambió la denominación de Comunidad Económica Europea a Comunidad Europea?", o: ["Tratado de Roma", "Acta Única Europea", "Tratado de Maastricht", "Tratado de Lisboa"], c: 2, e: "El Tratado de Maastricht (1992) rebautizó la CEE como 'Comunidad Europea' (CE)." },
+    { q: "Con el Tratado de Lisboa, el Tratado Constitutivo de la Comunidad Europea pasó a llamarse:", o: ["Tratado de la Comunidad de la Unión", "Tratado de Funcionamiento de la Unión Europea", "Constitución Europea", "Carta de Derechos Fundamentales"], c: 1, e: "El TCE pasó a llamarse Tratado de Funcionamiento de la Unión Europea (TFUE)." },
+    { q: "¿Qué artículo del TUE contempla explícitamente el procedimiento de retirada de la Unión?", o: ["Artículo 49", "Artículo 288", "Artículo 50", "Artículo 2"], c: 2, e: "El artículo 50 del TUE prevé por primera vez explícitamente la posibilidad de retirada." },
+    { q: "La Declaración Schuman, considerada el inicio de la integración europea, se pronunció el:", o: ["9 de mayo de 1950", "18 de abril de 1951", "25 de marzo de 1957", "8 de mayo de 1948"], c: 0, e: "El 9 de mayo de 1950, Robert Schuman presentó su plan, elaborado junto a Jean Monnet." },
+    { q: "El 'Mecanismo de Recuperación y Resiliencia' post Covid-19 se conoce como:", o: ["Plan Marshall", "Next Generation EU", "Fondo Europeo de Desarrollo", "Estrategia de Lisboa"], c: 1, e: "Se adoptó el instrumento temporal de recuperación 'Next Generation EU' dotado con 750.000 millones de euros." },
+    { q: "¿Cuál de estos países ostenta actualmente el estatus de candidato a la UE desde 2022?", o: ["Macedonia del Norte", "Serbia", "Ucrania", "Turquía"], c: 2, e: "Ucrania, Moldavia y Bosnia y Herzegovina pasaron a ser países candidatos en 2022." },
+    { q: "¿Qué tratado dotó a la Unión de personalidad jurídica única?", o: ["Ámsterdam", "Niza", "Lisboa", "Maastricht"], c: 2, e: "El Tratado de Lisboa consolidó una única personalidad jurídica para la Unión, que sustituyó a la Comunidad Europea." },
+    { q: "Según el art. 2 TUE, ¿cuáles son los valores en los que se fundamenta la Unión?", o: ["Mercado interior y aduanas", "Dignidad humana, libertad, democracia, igualdad y Estado de Derecho", "Moneda única e integración económica", "Solidaridad y subsidiariedad exclusivamente"], c: 1, e: "Los valores del art. 2 son: dignidad humana, libertad, democracia, igualdad, Estado de Derecho y respeto a DDHH." },
+    { q: "El Tratado de Ámsterdam se firmó en:", o: ["1992", "1997", "2001", "2007"], c: 1, e: "El Tratado de Ámsterdam fue adoptado el 2 de octubre de 1997 (en vigor en 1999)." }
+  ],
+  // Test 2: Competencias
+  [
+    { q: "La delimitación de las competencias de la UE se rige por el principio de:", o: ["Atribución", "Proporcionalidad", "Subsidiariedad", "Cooperación leal"], c: 0, e: "El art. 5 TUE señala que la delimitación de competencias se rige por el principio de atribución." },
+    { q: "Según el principio de subsidiariedad, la UE interviene en ámbitos que no sean de su competencia exclusiva:", o: ["Siempre que los Estados miembros lo soliciten", "Solo si los objetivos no pueden ser alcanzados de manera suficiente por los Estados y pueden alcanzarse mejor a escala de la Unión", "En ningún caso", "Todas son correctas"], c: 1, e: "La subsidiariedad condiciona la actuación de la UE en competencias compartidas a que la acción estatal sea insuficiente y la de la UE mejor." },
+    { q: "¿Cuál de los siguientes ámbitos es de competencia exclusiva de la UE (art. 3 TFUE)?", o: ["Mercado interior", "Medio ambiente", "Política comercial común", "Transportes"], c: 2, e: "La política comercial común es competencia exclusiva. El resto son compartidas." },
+    { q: "¿Quién puede legislar en un ámbito de competencia exclusiva de la UE?", o: ["Solo los Estados miembros", "Solo la Unión, salvo habilitación a los Estados", "La Unión y los Estados conjuntamente", "El Consejo Europeo"], c: 1, e: "En competencias exclusivas, solo la UE puede legislar; los Estados solo pueden hacerlo si son facultados por la Unión." },
+    { q: "La política monetaria de los Estados cuya moneda es el euro es competencia:", o: ["De apoyo", "Compartida", "Exclusiva de los Estados", "Exclusiva de la Unión"], c: 3, e: "El art. 3 TFUE establece la política monetaria del Euro como competencia exclusiva." },
+    { q: "¿Cuál de las siguientes es una competencia compartida (art. 4 TFUE)?", o: ["Unión aduanera", "Normas de competencia del mercado interior", "Medio ambiente", "A y B son exclusivas, C es compartida"], c: 3, e: "La unión aduanera y las normas de competencia son exclusivas. El medio ambiente es compartida." },
+    { q: "En el ámbito de las competencias compartidas, ¿cuándo ejercen los Estados su competencia?", o: ["En ningún caso", "En la medida en que la Unión no haya ejercido la suya", "Siempre y con primacía", "Solo mediante autorización de la Comisión"], c: 1, e: "Los Estados ejercen su competencia en la medida en que la Unión no haya ejercido la suya (o haya decidido dejar de ejercerla)." },
+    { q: "La protección de los consumidores es una competencia:", o: ["Exclusiva de los EEMM", "Compartida", "Exclusiva de la UE", "De apoyo"], c: 1, e: "Según el art. 4 TFUE, la protección de los consumidores es competencia compartida." },
+    { q: "El establecimiento de las normas sobre competencia necesarias para el funcionamiento del mercado interior es competencia:", o: ["Compartida", "De apoyo", "Exclusiva de la Unión", "De coordinación"], c: 2, e: "Las normas de competencia necesarias para el mercado interior son competencia exclusiva (art. 3 TFUE)." },
+    { q: "El turismo y la cultura son ámbitos donde la UE ejerce competencias:", o: ["Exclusivas", "Compartidas", "De apoyo, coordinación o complemento", "Legislativas plenas"], c: 2, e: "El turismo, la cultura y la salud humana son competencias de apoyo (art. 6 TFUE)." },
+    { q: "¿Qué prohíbe expresamente el Tratado sobre los actos adoptados en los ámbitos de competencia de apoyo?", o: ["Que se publiquen en el DOUE", "Que conlleven armonización de las disposiciones de los Estados miembros", "Que sean vinculantes", "Que financien acciones nacionales"], c: 1, e: "Los actos adoptados en competencias de apoyo no podrán conllevar armonización legal/reglamentaria en los Estados." },
+    { q: "La cohesión económica, social y territorial es competencia:", o: ["Exclusiva", "Compartida", "De apoyo", "De coordinación económica"], c: 1, e: "Es una de las principales competencias compartidas del art. 4 TFUE." },
+    { q: "La conservación de los recursos biológicos marinos dentro de la política pesquera común es:", o: ["Exclusiva", "Compartida", "De apoyo", "Nacional"], c: 0, e: "La conservación pesquera es competencia exclusiva de la UE. (La agricultura y pesca general es compartida)." },
+    { q: "Las políticas de empleo de los Estados miembros están sujetas a:", o: ["Armonización obligatoria de la UE", "Competencia exclusiva del BCE", "Coordinación garantizada mediante medidas e iniciativas de la UE", "Ninguna injerencia de la UE"], c: 2, e: "El art. 5 TFUE señala que la Unión tomará medidas para garantizar la coordinación de las políticas de empleo." },
+    { q: "Según el principio de proporcionalidad (art. 5 TUE):", o: ["La UE solo actuará donde los Estados fallen", "La acción de la UE no excederá de lo necesario para alcanzar los objetivos de los Tratados", "Las leyes deben ser breves", "Las competencias son irrenunciables"], c: 1, e: "El principio de proporcionalidad exige que el contenido y la forma de la acción no excedan lo necesario." },
+    { q: "El espacio de libertad, seguridad y justicia (ELSJ) es una competencia:", o: ["Exclusiva de la UE", "De apoyo, coordinación y complemento", "Compartida", "Totalmente intergubernamental (3er pilar)"], c: 2, e: "Con el Tratado de Lisboa, el ELSJ es competencia compartida." },
+    { q: "El respeto a las funciones esenciales del Estado, como salvaguardar la seguridad nacional, corresponde a:", o: ["La OTAN exclusivamente", "La Comisión Europea", "Cada Estado miembro en exclusiva", "Al Alto Representante"], c: 2, e: "El art. 4.2 TUE especifica que la seguridad nacional seguirá siendo responsabilidad exclusiva de cada Estado miembro." },
+    { q: "El principio por el cual la Unión y los EEMM se respetan y asisten mutuamente se denomina:", o: ["Solidaridad asimétrica", "Subsidiariedad", "Cooperación leal", "Coordinación abierta"], c: 2, e: "El art. 4.3 TUE consagra el principio de cooperación leal." },
+    { q: "¿Qué sucede con las competencias NO atribuidas a la Unión en los Tratados?", o: ["Pasan al Consejo de Europa", "Corresponden a los Estados miembros", "Quedan en un vacío legal", "Pueden ser ejercidas por la Comisión mediante reglamento"], c: 1, e: "Toda competencia no atribuida a la Unión en los Tratados corresponde a los Estados miembros (art. 5.2 TUE)." },
+    { q: "La agricultura y la pesca (con exclusión de la conservación de recursos marinos) es competencia:", o: ["Exclusiva", "Compartida", "De apoyo", "Ninguna de las anteriores"], c: 1, e: "Es competencia compartida (art. 4 TFUE)." }
+  ],
+  // Test 3: Consejo Europeo
+  [
+    { q: "¿Desde qué tratado el Consejo Europeo se convierte en una Institución de la Unión?", o: ["Ámsterdam", "París", "Maastricht", "Lisboa"], c: 3, e: "El Tratado de Lisboa le otorgó oficialmente el rango de institución de la UE." },
+    { q: "¿Cómo se compone el Consejo Europeo?", o: ["Jefes de Estado/Gobierno y Presidente del Parlamento", "Jefes de Estado/Gobierno, su Presidente y el Presidente de la Comisión", "Ministros de Asuntos Exteriores", "27 Comisarios"], c: 1, e: "Compuesto por Jefes de Estado o de Gobierno, su Presidente y el Presidente de la Comisión (participa también el Alto Representante)." },
+    { q: "¿Qué función tiene el Consejo Europeo según el art. 15 TUE?", o: ["Función legislativa", "Función de ejecución presupuestaria", "Dar a la Unión los impulsos necesarios y definir sus orientaciones y prioridades", "Juzgar incumplimientos de los Estados"], c: 2, e: "Su función es de orientación e impulso político general. NO ejerce función legislativa." },
+    { q: "¿Con qué frecuencia se reúne el Consejo Europeo con carácter ordinario?", o: ["Una vez al año", "Dos veces por semestre", "Una vez al mes", "Cada vez que lo pide el Parlamento"], c: 1, e: "Se reunirá dos veces por semestre por convocatoria de su Presidente (art. 15 TUE)." },
+    { q: "¿Quién elige al Presidente del Consejo Europeo y por cuánto tiempo?", o: ["El Parlamento Europeo por 5 años", "El Consejo Europeo por 2,5 años (reelegible una vez)", "Los ciudadanos por 4 años", "La Comisión por 1 año"], c: 1, e: "Es elegido por el propio Consejo Europeo, por mayoría cualificada, para un mandato de dos años y medio, que puede renovarse una sola vez." },
+    { q: "¿Ejerce el Consejo Europeo funciones legislativas?", o: ["Sí, colegisla con el Parlamento", "No, no ejercerá función legislativa alguna", "Sí, en materia de PESC", "Solo cuando delega la Comisión"], c: 1, e: "El art. 15 TUE indica claramente que el Consejo Europeo no ejercerá función legislativa alguna." },
+    { q: "¿Cuál es la norma general de toma de decisiones en el Consejo Europeo?", o: ["Mayoría simple", "Mayoría cualificada siempre", "Consenso", "Unanimidad estricta"], c: 2, e: "El Consejo Europeo se pronuncia por consenso, excepto cuando los Tratados dispongan otra cosa (ej. elección de su Presidente, por mayoría cualificada)." },
+    { q: "¿Qué cargo institucional NO participa en la votación cuando el Consejo Europeo decide por mayoría cualificada?", o: ["El Alto Representante exclusivamente", "El Presidente del Consejo Europeo y el Presidente de la Comisión", "Los Jefes de Estado de países no Euro", "Todos votan"], c: 1, e: "El Presidente del Consejo Europeo y el de la Comisión no participan en las votaciones del Consejo Europeo." },
+    { q: "¿Quién propone al candidato a Presidente de la Comisión Europea?", o: ["El Parlamento Europeo", "El Consejo Europeo por mayoría cualificada", "Los parlamentos nacionales", "El TJUE"], c: 1, e: "El Consejo Europeo, teniendo en cuenta las elecciones europeas, propone al Parlamento el candidato por mayoría cualificada." },
+    { q: "El cargo de Presidente del Consejo Europeo es compatible con:", o: ["Ningún mandato nacional", "Ser Presidente del Gobierno nacional simultáneamente", "Ser Ministro de Exteriores", "Ser Eurodiputado"], c: 0, e: "El art. 15 TUE establece que su cargo no es compatible con otros cargos nacionales." },
+    { q: "¿Quién asume la representación exterior de la Unión en materia de Política Exterior y de Seguridad Común (PESC) al máximo nivel?", o: ["El Presidente de la Comisión", "El Presidente del Parlamento", "El Presidente del Consejo Europeo, sin perjuicio de las atribuciones del Alto Representante", "El Tribunal de Justicia"], c: 2, e: "Corresponde al Presidente del Consejo Europeo en su rango y condición." },
+    { q: "¿Qué órgano establece la lista de formaciones del Consejo (salvo Asuntos Exteriores)?", o: ["La Comisión", "El Consejo Europeo", "El Parlamento", "El Tribunal General"], c: 1, e: "Es el Consejo Europeo, mediante decisión adoptada por mayoría cualificada (art. 236 TFUE)." },
+    { q: "El Consejo Europeo establece la composición del Parlamento Europeo por:", o: ["Mayoría simple", "Unanimidad", "Mayoría cualificada", "Consenso sin votación"], c: 1, e: "Lo hace por unanimidad, a iniciativa del PE y con su aprobación (art. 14 TUE)." },
+    { q: "¿Dónde se celebran, desde la ampliación, todas las reuniones del Consejo Europeo (como regla habitual establecida desde Niza)?", o: ["Estrasburgo", "Luxemburgo", "Bruselas", "La Haya"], c: 2, e: "La Declaración de Niza estableció que, con más de 18 miembros, todas se celebrarían en Bruselas." },
+    { q: "¿Qué figura actúa como 'impulso político' fijando las líneas directrices de la UE?", o: ["El Consejo Europeo", "El Parlamento Europeo", "El COREPER", "El Comité Económico y Social"], c: 0, e: "Es la función histórica y constitucional del Consejo Europeo." },
+    { q: "¿Participa el Alto Representante en los trabajos del Consejo Europeo?", o: ["Sí, participa en sus trabajos", "No, pertenece solo a la Comisión", "Sí, pero solo por videoconferencia", "No, pertenece solo al Consejo de Ministros"], c: 0, e: "El art. 15 TUE indica expresamente que el Alto Representante participará en sus trabajos." },
+    { q: "Si el orden del día lo exige, ¿qué asistencia pueden llevar los miembros del Consejo Europeo a la reunión?", o: ["Dos secretarios", "Un ministro (y el Presidente de la Comisión un comisario)", "El gabinete completo", "Ninguna asistencia externa"], c: 1, e: "Pueden decidir contar cada uno con la asistencia de un ministro (y un miembro de la Comisión en el caso de su Presidente)." },
+    { q: "En caso de crisis o circunstancias excepcionales, ¿quién convoca la reunión extraordinaria del Consejo Europeo?", o: ["La Comisión", "El Presidente del Consejo Europeo", "El Presidente de turno del Consejo", "Alemania y Francia"], c: 1, e: "Cuando la situación lo exija, el Presidente del Consejo Europeo convocará una reunión extraordinaria." },
+    { q: "Si el Consejo Europeo se pronuncia por votación, ¿puede un miembro actuar en representación de los demás?", o: ["Sí, puede representar a todos los ausentes", "No, la representación está prohibida", "Sí, puede actuar en representación de uno solo de los demás", "Sí, pero solo con permiso de la Comisión"], c: 2, e: "Cada miembro del Consejo Europeo puede actuar en representación de uno solo de los demás miembros (art. 235 TFUE)." },
+    { q: "¿Qué instrumento normativo NO emite el Consejo Europeo?", o: ["Decisiones estratégicas", "Conclusiones", "Directivas legislativas", "Orientaciones generales"], c: 2, e: "El Consejo Europeo no legisla, por tanto no emite Directivas legislativas (eso lo hacen Consejo y PE)." }
+  ],
+  // Test 4: El Consejo
+  [
+    { q: "El Consejo (de Ministros) está compuesto por:", o: ["Jefes de Estado", "Un representante de cada Estado miembro de rango ministerial", "27 funcionarios", "Eurodiputados"], c: 1, e: "Art. 16 TUE: un representante de cada Estado miembro de rango ministerial facultado para comprometer a su Gobierno y ejercer el voto." },
+    { q: "¿Cuáles son las dos formaciones del Consejo mencionadas explícitamente en el TUE?", o: ["Asuntos Generales y Asuntos Exteriores", "ECOFIN y Agricultura", "Justicia y Medio Ambiente", "Competitividad y Empleo"], c: 0, e: "El art. 16 TUE menciona el Consejo de Asuntos Generales y el de Asuntos Exteriores." },
+    { q: "¿Quién preside el Consejo de Asuntos Exteriores?", o: ["El país que ostenta la presidencia rotatoria", "El Alto Representante de la Unión para Asuntos Exteriores y Política de Seguridad", "El Presidente de la Comisión", "El Presidente del Consejo Europeo"], c: 1, e: "Excepcionalmente frente a la regla de rotación, lo preside siempre el Alto Representante." },
+    { q: "¿Cómo se ejerce la Presidencia de las demás formaciones del Consejo (ej. ECOFIN)?", o: ["La preside la Comisión", "Elección directa", "Por el Alto Representante", "Sistema de rotación igual (Tríos por 18 meses, 6 meses cada país)"], c: 3, e: "Se ejerce por grupos de tres Estados (tríos) durante 18 meses, rotando la presidencia cada 6 meses." },
+    { q: "¿Cuáles son las funciones principales del Consejo (junto con el PE)?", o: ["Función ejecutiva y judicial", "Función legislativa y presupuestaria", "Control exclusivo de la Comisión", "Iniciativa legislativa exclusiva"], c: 1, e: "Ejerce conjuntamente con el Parlamento Europeo la función legislativa y la función presupuestaria (art. 16.1 TUE)." },
+    { q: "¿Qué es el COREPER?", o: ["Comité de Representantes Permanentes, auxiliar del Consejo", "Comisión de Representantes Parlametarios", "Comité de Reguladores Permanentes", "Un Tribunal especializado"], c: 0, e: "El COREPER (Comité de Representantes Permanentes de los gobiernos) prepara los trabajos del Consejo y realiza las tareas confiadas." },
+    { q: "Desde noviembre de 2014, la regla general para la votación en el Consejo es:", o: ["Mayoría simple", "Mayoría cualificada (doble mayoría)", "Unanimidad", "Consenso"], c: 1, e: "El Consejo se pronuncia por mayoría cualificada, que desde 2014 usa el sistema de doble mayoría (Estados y población)." },
+    { q: "Si el Consejo actúa a propuesta de la Comisión, la mayoría cualificada se alcanza con:", o: ["55% de Estados (mín. 15) que representen el 65% de la población de la UE", "2/3 de Estados y 50% de población", "72% de Estados", "Unanimidad menos un voto"], c: 0, e: "El art. 16.4 TUE exige el 55% de los miembros del Consejo (incluyendo al menos a 15) que representen al menos el 65% de la población." },
+    { q: "Si el Consejo NO actúa a propuesta de la Comisión o del Alto Representante, el umbral de Estados para mayoría cualificada sube al:", o: ["55%", "65%", "72%", "80%"], c: 2, e: "Se requiere un mínimo del 72% de los miembros del Consejo (representando el 65% de la población)." },
+    { q: "¿Cuántos Estados miembros forman como mínimo la 'minoría de bloqueo'?", o: ["Al menos 3", "Al menos 4", "Al menos 6", "Depende de la población sin mínimo de Estados"], c: 1, e: "La minoría de bloqueo estará compuesta por al menos cuatro miembros del Consejo; a falta de ello se considerará alcanzada la mayoría." },
+    { q: "¿Cuándo se requiere unanimidad en el Consejo?", o: ["Para temas fiscales, adhesiones, marco financiero plurianual y PESC general", "Para toda ley ordinaria", "Para temas de mercado interior", "Nunca desde el Tratado de Lisboa"], c: 0, e: "La unanimidad es la excepción para temas vitales o sensibles (PESC, recursos propios, fiscalidad)." },
+    { q: "¿Se opone una abstención a la adopción de un acuerdo por unanimidad en el Consejo?", o: ["Sí, veta el acuerdo", "No, las abstenciones no impedirán la adopción del acuerdo", "Solo si es un país fundador", "Depende de la Comisión"], c: 1, e: "El art. 238.4 TFUE señala que las abstenciones de los miembros presentes o representados no impedirán la adopción." },
+    { q: "En la elaboración del orden del día del Consejo, los puntos aprobados sin debate se incluyen en la:", o: ["Parte B", "Parte A", "Parte C", "Coreper II"], c: 1, e: "Los puntos 'A' son los preacordados en el COREPER y se aprueban sin debate en el Consejo." },
+    { q: "Las sesiones del Consejo son públicas:", o: ["Nunca", "Siempre", "Cuando delibere y vote sobre un proyecto de acto legislativo", "Solo en la formación de Asuntos Exteriores"], c: 2, e: "El Tratado de Lisboa establece la publicidad de sus sesiones cuando actúa en su capacidad legislativa." },
+    { q: "En España, ¿pueden asistir Consejeros autonómicos a las reuniones del Consejo de Ministros de la UE?", o: ["No, es anticonstitucional", "Sí, pero solo de observadores silenciosos", "Sí, en representación de todas las CC.AA. en formaciones como Medio Ambiente o Agricultura (según acuerdos CARCE/CARUE)", "Sí, pero cada CCAA envía el suyo a la vez"], c: 2, e: "Los Acuerdos CARUE permiten que un Consejero autonómico acuda junto al Ministro representando a las CC.AA." },
+    { q: "¿Qué Comité asume las funciones del COREPER en materias agrícolas?", o: ["Comité Económico y Social", "Comité Especial de Agricultura (CSA)", "Comité de Regiones", "PAC-Comité"], c: 1, e: "El CSA (creado en 1960) desempeña las funciones de preparación para el sector agrario en lugar del COREPER." },
+    { q: "La mayoría simple en el Consejo (mayoría de sus miembros) se utiliza fundamentalmente para:", o: ["Aprobar Directivas", "Cuestiones de procedimiento y solicitar estudios a la Comisión", "Mociones de censura", "Modificar Tratados"], c: 1, e: "El art. 238 TFUE prevé la mayoría simple para asuntos de procedimiento o peticiones a la Comisión (requiere actualmente 14 votos de 27)." },
+    { q: "¿A quién corresponde autorizar la apertura de negociaciones de Tratados internacionales?", o: ["A la Comisión", "Al Consejo", "Al Parlamento Europeo", "Al COREPER"], c: 1, e: "El Consejo autoriza la apertura de negociaciones (art. 218 TFUE), da directrices y decide su celebración." },
+    { q: "El Secretario General del Consejo es nombrado por:", o: ["El Parlamento Europeo", "El Consejo", "El Consejo Europeo", "La Comisión"], c: 1, e: "El Consejo nombra al Secretario General, que dirige la Secretaría General (asistencia administrativa y jurídica)." },
+    { q: "¿Cómo se divide tradicionalmente el COREPER?", o: ["A y B", "Coreper 1 (técnico, RP Adjuntos) y Coreper 2 (político/exterior, Embajadores Jefes)", "Coreper Interior y Exterior", "No se divide"], c: 1, e: "El COREPER I (asuntos técnicos) y COREPER II (asuntos políticos y relaciones exteriores)." }
+  ],
+  // Test 5: PE
+  [
+    { q: "El Parlamento Europeo representa a:", o: ["Los Estados miembros", "Los gobiernos nacionales", "Los ciudadanos de la Unión", "Las regiones"], c: 2, e: "El Tratado de Lisboa (art. 14 TUE) indica que está compuesto por 'representantes de los ciudadanos de la Unión'." },
+    { q: "¿Por cuánto tiempo son elegidos los eurodiputados?", o: ["4 años", "5 años", "6 años", "2,5 años"], c: 1, e: "Son elegidos por un período de cinco años mediante sufragio universal directo." },
+    { q: "¿Cuál es el número máximo de diputados permitido por el TUE?", o: ["751 (750 más el Presidente)", "720", "736", "705"], c: 0, e: "El art. 14.2 TUE fija el máximo en 750 más el Presidente (751). Actualmente hay 720." },
+    { q: "¿Qué criterio rige el reparto de escaños en el Parlamento Europeo?", o: ["Igualdad estricta", "Proporcionalidad decreciente (mínimo 6, máximo 96)", "Población lineal", "Aportación al presupuesto"], c: 1, e: "Proporcionalidad decreciente: los países más poblados tienen más diputados, pero los menos poblados tienen más diputados per cápita. Límites: 6 y 96." },
+    { q: "¿Dónde tiene su sede oficial el Parlamento Europeo para los plenos mensuales?", o: ["Bruselas", "Luxemburgo", "Estrasburgo", "La Haya"], c: 2, e: "Los períodos parciales de sesiones (plenarios mensuales) se celebran en Estrasburgo. Las extraordinarias y comisiones en Bruselas; la Secretaría en Luxemburgo." },
+    { q: "Para constituir un Grupo Político en el Parlamento Europeo se exige:", o: ["Mínimo 20 diputados de 2 Estados", "Mínimo 23 diputados procedentes de al menos 1/4 de los Estados miembros", "Mínimo 30 diputados de un solo país", "No hay mínimos"], c: 1, e: "Requiere 23 diputados que representen al menos a la cuarta parte de los Estados miembros (actualmente 7 países)." },
+    { q: "¿Quién elabora el proyecto de orden del día de las sesiones del Parlamento?", o: ["El Presidente en solitario", "La Mesa del Parlamento", "La Conferencia de Presidentes", "El Pleno"], c: 2, e: "La Conferencia de Presidentes (Presidente del PE + presidentes de los grupos políticos) organiza el trabajo parlamentario." },
+    { q: "La inmunidad de un parlamentario europeo NO puede invocarse:", o: ["Si está en su país", "Si critica a la Comisión", "En caso de flagrante delito", "En ningún caso"], c: 2, e: "El Protocolo 7 establece la inmunidad, pero no puede invocarse en caso de flagrante delito." },
+    { q: "¿Cuál de estos órganos del PE tiene tareas administrativas y financieras relativas a los Diputados?", o: ["Los Cuestores", "La Mesa Ampliada", "Las Comisiones permanentes", "El Secretario General"], c: 0, e: "Los Cuestores (actualmente 5, miembros de la Mesa con voz pero sin voto) se encargan de cuestiones administrativas y económicas de los diputados." },
+    { q: "El Defensor del Pueblo Europeo es elegido por:", o: ["El Consejo", "El Consejo Europeo", "El Parlamento Europeo después de cada elección europea", "El TJUE"], c: 2, e: "Lo elige el PE para toda la legislatura (5 años), con mandato renovable." },
+    { q: "El Defensor del Pueblo NO investiga las quejas sobre mala administración procedentes de:", o: ["La Comisión", "El Consejo", "El Tribunal de Justicia en sus funciones jurisdiccionales", "Agencias de la UE"], c: 2, e: "Investiga a instituciones y órganos de la UE, con exclusión del TJUE en el ejercicio de sus funciones jurisdiccionales." },
+    { q: "Respecto a la Comisión, el Parlamento Europeo:", o: ["Nombra a los comisarios unilateralmente", "Aprueba el nombramiento del Presidente y se somete al voto colegiado la Comisión", "No interviene", "Elige a la Comisión por sorteo"], c: 1, e: "Elige al Presidente y aprueba colegiadamente a toda la Comisión antes de que sea nombrada por el Consejo Europeo." },
+    { q: "¿Qué mayoría requiere la aprobación de la moción de censura contra la Comisión?", o: ["Mayoría simple", "Mayoría de los miembros que componen el PE", "2/3 de los sufragios emitidos, que representen la mayoría de los miembros del PE", "Unanimidad de la Conferencia de Presidentes"], c: 2, e: "Es un control extremo que exige 2/3 de los votos emitidos y mayoría absoluta de diputados." },
+    { q: "¿Qué porcentaje de ciudadanos exige la 'iniciativa ciudadana' para pedir propuestas legislativas?", o: ["1 millón de ciudadanos de un número significativo de Estados", "100.000 ciudadanos de un país", "500.000 ciudadanos europeos", "10% de la población"], c: 0, e: "El Tratado de Lisboa introduce la iniciativa ciudadana con al menos 1 millón de firmas de varios países." },
+    { q: "En materia presupuestaria, con el Tratado de Lisboa, el Parlamento Europeo:", o: ["Decide en exclusiva", "Solo opina (dictamen consultivo)", "Comparte poder con el Consejo sin distinción de gastos obligatorios y no obligatorios", "Solo controla gastos no obligatorios"], c: 2, e: "Se eliminó la distinción entre Gasto Obligatorio (GO) y Gasto No Obligatorio (GNO), decidiendo conjuntamente sobre todo el presupuesto." },
+    { q: "¿Quién elige al Presidente del Parlamento Europeo y por cuánto tiempo?", o: ["Los ciudadanos por 5 años", "El Pleno por 2,5 años renovables", "El Consejo por 1 año", "La Comisión"], c: 1, e: "Lo elige el pleno por un mandato de 2 años y medio renovables (mitad de legislatura)." },
+    { q: "En caso de inactividad de las instituciones, el PE puede presentar ante el TJUE un:", o: ["Recurso de amparo", "Recurso de casación", "Recurso por omisión (o inactividad)", "Moción de censura"], c: 2, e: "Como el resto de instituciones, el PE puede interponer recurso por inactividad (art. 265 TFUE)." },
+    { q: "Las comisiones de investigación en el PE se pueden constituir a petición de:", o: ["Cualquier diputado", "La cuarta parte (1/4) de sus miembros", "La mitad (1/2) de la cámara", "El Presidente de la Comisión"], c: 1, e: "A petición de 1/4 de sus miembros se pueden crear comisiones de investigación para examinar mala administración en la aplicación del Derecho comunitario." },
+    { q: "¿Pueden los ciudadanos de la Unión votar en España en las elecciones europeas si residen aquí?", o: ["No, solo españoles", "Sí, pero pierden el derecho en su país de origen tras haber optado previamente en España", "Sí, pudiendo votar dos veces", "Solo si están empadronados hace 10 años"], c: 1, e: "Los ciudadanos de la UE residentes pueden votar en España previa opción, aplicándose la LOREG, sin que nadie pueda votar dos veces." },
+    { q: "¿A cuántos eurodiputados tiene derecho España en la legislatura 2024-2029?", o: ["54", "59", "61", "64"], c: 2, e: "A España le corresponden 61 eurodiputados según la Decisión del Consejo Europeo (aumentó de 59 a 61)." }
+  ],
+  // Test 6: Comisión
+  [
+    { q: "La Comisión Europea es la institución que representa:", o: ["El interés general de la Unión", "El interés de los Estados más grandes", "Los intereses intergubernamentales", "Los intereses regionales"], c: 0, e: "Encarna y promueve el interés general de la UE, funcionando con independencia de los EEMM." },
+    { q: "Según el artículo 17 TUE, la composición actual de la Comisión es de:", o: ["Un nacional de cada Estado miembro (27 en total)", "2/3 del número de EEMM obligatoriamente", "15 comisarios", "20 comisarios rotatorios"], c: 0, e: "Aunque el TUE preveía bajar a 2/3 en 2014, el Consejo Europeo usó su facultad para decidir unánimemente mantener 1 comisario por Estado." },
+    { q: "¿Quién forma parte de la Comisión, además de su Presidente y los Comisarios base?", o: ["El Secretario General del Consejo", "El Presidente del Consejo Europeo", "El Alto Representante (como uno de sus Vicepresidentes)", "El Defensor del Pueblo"], c: 2, e: "El Alto Representante para Asuntos Exteriores y Política de Seguridad es Vicepresidente nato de la Comisión." },
+    { q: "¿Por cuánto tiempo son elegidos los miembros de la Comisión?", o: ["2,5 años", "4 años", "5 años", "6 años"], c: 2, e: "El mandato es de 5 años, alineado con la legislatura del Parlamento Europeo." },
+    { q: "¿Qué poder tiene la Comisión en relación con la legislación europea?", o: ["Poder de veto absoluto", "Iniciativa normativa (cuasi-monopolio de proponer leyes)", "Aprobación final de las directivas", "Poder sancionador directo de directivas"], c: 1, e: "El proceso legislativo suele requerir que la Comisión presente una propuesta (monopolio de iniciativa legislativa)." },
+    { q: "La Comisión toma sus decisiones basándose en el principio de:", o: ["Colegialidad (responsabilidad colectiva y mayorías de sus miembros)", "Jerarquía absoluta del Presidente", "Voto ponderado por Estado", "Unanimidad siempre"], c: 0, e: "Actúa de forma colegiada, las decisiones se imputan al órgano en su conjunto (generalmente por consenso, si no, por mayoría de miembros)." },
+    { q: "¿Puede un Comisario ejercer otra actividad profesional durante su mandato?", o: ["Sí, si no es retribuida", "Sí, con permiso de su Gobierno", "No, no puede ejercer ninguna otra actividad (retribuida o no)", "Sí, docencia universitaria exclusivamente"], c: 2, e: "Los arts. 17 TUE y 245 TFUE exigen dedicación exclusiva absoluta." },
+    { q: "En caso de que el Tribunal de Justicia compruebe que un Comisario incumple sus obligaciones, puede:", o: ["Multarle administrativamente", "Declarar su cese o privarle del derecho a pensión", "Suspender a toda la Comisión", "Nada, goza de inmunidad absoluta"], c: 1, e: "A instancia del Consejo o de la propia Comisión, el TJUE puede declarar su cese o privarle de derechos de pensión." },
+    { q: "¿Quién es el Presidente actual de la Comisión Europea (elegido en 2019 y reelegido en 2024)?", o: ["Jean-Claude Juncker", "Charles Michel", "Ursula von der Leyen", "Josep Borrell"], c: 2, e: "Ursula von der Leyen fue elegida en 2019 y repite mandato." },
+    { q: "La Comisión es conocida jurídicamente como la 'guardiana de los Tratados'. Esto implica que:", o: ["Preside el Tribunal de Justicia", "Archiva los documentos originales", "Vela por la aplicación de los Tratados y el Derecho de la UE", "Aprueba los presupuestos"], c: 2, e: "Controla que los Estados miembros (y particulares) cumplan el Derecho de la UE, recurriendo al TJUE si es preciso (incumplimiento)." },
+    { q: "¿Qué papel juega el Presidente de la Comisión frente a los demás comisarios?", o: ["Es un mero coordinador sin autoridad", "Define las orientaciones, estructura las carteras y puede exigir la dimisión a un miembro", "Vota en lugar de los comisarios ausentes", "Asume todas las carteras de los comisarios enfermos"], c: 1, e: "El art. 17 TUE otorga autoridad al Presidente para organizar y exigir la dimisión de sus miembros (incluido el Alto Representante, mediante procedimiento)." },
+    { q: "¿Asume la Comisión la representación exterior de la Unión?", o: ["En todos los casos", "Nunca", "Con excepción de la PESC y casos previstos, sí asume la representación exterior", "Solo para temas de ayuda humanitaria"], c: 2, e: "El art. 17.1 TUE indica que asume la representación exterior, excepto PESC (que es del Presidente Consejo Europeo y Alto Representante)." },
+    { q: "El procedimiento del recurso por incumplimiento contra un Estado empieza con:", o: ["Multa inmediata", "Demanda directa en el TJUE", "Fase precontenciosa (carta de emplazamiento y dictamen motivado de la Comisión)", "Resolución del Parlamento"], c: 2, e: "La Comisión abre un procedimiento formal pidiendo explicaciones antes de acudir al TJUE." },
+    { q: "La facultad de la Comisión para completar o modificar elementos no esenciales de un acto legislativo se instrumenta mediante:", o: ["Actos de ejecución", "Actos delegados", "Recomendaciones", "Sentencias"], c: 1, e: "El art. 290 TFUE define los actos delegados (legislador delega en la Comisión)." },
+    { q: "La gestión del presupuesto y de los programas (ej. Fondos Estructurales) corresponde principalmente a:", o: ["El Consejo", "El Tribunal de Cuentas", "El Parlamento", "La Comisión"], c: 3, e: "La Comisión ejecuta el presupuesto y gestiona los programas (art. 17 TUE), aunque delega parte a los Estados." },
+    { q: "¿Puede el Consejo modificar una propuesta legislativa de la Comisión sin el acuerdo de esta?", o: ["Sí, por mayoría cualificada", "Sí, pero requiere unanimidad (art. 293 TFUE)", "No, la propuesta es intocable", "Solo si el PE lo autoriza"], c: 1, e: "Para modificar una propuesta de la Comisión, el Consejo debe votar por unanimidad (si la Comisión no acepta la modificación)." },
+    { q: "En materia de defensa comercial (ej. medidas antidumping), ¿quién ejecuta habitualmente las normas y medidas?", o: ["La Comisión", "El Banco Central Europeo", "Los jueces nacionales", "Frontex"], c: 0, e: "La Comisión tiene competencias de ejecución y prevención (antidumping) en materia comercial." },
+    { q: "La estructura administrativa interna de la Comisión se organiza en:", o: ["Ministerios", "Secretarías de Estado", "Direcciones Generales (DG) y Servicios", "Consejerías"], c: 2, e: "La administración se organiza en Direcciones Generales (DG) encabezadas por un Director General que rinde cuentas al Comisario." },
+    { q: "¿Si la Comisión es censurada por el Parlamento Europeo, qué le ocurre al Alto Representante?", o: ["Mantiene ambos cargos", "Dimite solo del cargo que ejerce en la Comisión, manteniendo sus funciones en el Consejo", "Se convierte en Presidente de la Comisión", "Es juzgado por el TJUE"], c: 1, e: "Debe dimitir del cargo que ejerce en la Comisión (art. 17.8 TUE)." },
+    { q: "Las decisiones atípicas o típicas en materia de fusiones o multas por prácticas restrictivas de la competencia las dicta:", o: ["El TJUE", "La Comisión Europea", "El Consejo de Ministros", "El COREPER"], c: 1, e: "La Comisión actúa como autoridad administrativa directa multando a empresas que violan las reglas de la competencia." }
+  ],
+  // Test 7: TJUE
+  [
+    { q: "¿Dónde tiene su sede el Tribunal de Justicia de la Unión Europea?", o: ["Estrasburgo", "La Haya", "Bruselas", "Luxemburgo"], c: 3, e: "La sede del TJUE está en Luxemburgo." },
+    { q: "El Tribunal de Justicia (instancia superior) está formado por:", o: ["15 Jueces", "Un juez por Estado miembro (27)", "2 jueces por Estado", "50 Jueces"], c: 1, e: "Compuesto por 1 juez por Estado miembro." },
+    { q: "¿Cuántos Abogados Generales asisten actualmente al Tribunal de Justicia?", o: ["8", "9", "11", "15"], c: 2, e: "Actualmente asisten 11 Abogados Generales (elevado en 2015 desde 9)." },
+    { q: "Los Jueces y Abogados Generales son nombrados por:", o: ["El Parlamento Europeo", "Común acuerdo de los Gobiernos de los Estados miembros tras consultar a un comité (art. 255)", "La Comisión", "El Presidente del TJUE"], c: 1, e: "Se nombran por común acuerdo de los gobiernos por 6 años renovables." },
+    { q: "El Tribunal de Justicia de la UE incluye:", o: ["Tribunal de Justicia, Tribunal General y Tribunales especializados", "El Tribunal de Cuentas", "El Tribunal Europeo de Derechos Humanos", "Eurojust"], c: 0, e: "Art. 19 TUE: Tribunal de Justicia, Tribunal General y Tribunales Especializados (actualmente no hay ninguno). El TEDH es del Consejo de Europa." },
+    { q: "En caso de que el TJUE deba dictaminar la destitución del Defensor del Pueblo, ¿qué formación actúa?", o: ["Sala de 3 Jueces", "Gran Sala (15 Jueces)", "Tribunal en Pleno", "Tribunal General"], c: 2, e: "Para ceses excepcionales (Defensor, Comisión, Tribunal Cuentas) el TJUE actúa en Pleno (los 27 jueces)." },
+    { q: "El Tribunal General (antiguo TPI) está formado por:", o: ["1 juez por Estado", "2 jueces por Estado miembro (desde 2019)", "3 jueces por Estado", "Número variable fijado por el PE"], c: 1, e: "El Estatuto (art. 48) fija 2 jueces por Estado miembro a partir de septiembre de 2019." },
+    { q: "¿Qué órgano tiene competencia ordinaria para conocer los recursos interpuestos por particulares (personas físicas/jurídicas)?", o: ["Tribunal de Justicia", "Tribunal General", "Jueces nacionales", "Comité Económico y Social"], c: 1, e: "El Tribunal General es competente para conocer en primera instancia los recursos de anulación e inactividad de los particulares." },
+    { q: "El recurso que interpone la Comisión contra un Estado por violar el Derecho Comunitario es:", o: ["Recurso de Anulación", "Recurso por omisión", "Recurso de Incumplimiento", "Cuestión Prejudicial"], c: 2, e: "Recurso de incumplimiento o infracción (art. 258 TFUE)." },
+    { q: "¿Quién puede plantear una Cuestión Prejudicial ante el TJUE?", o: ["Cualquier ciudadano", "Solo la Comisión", "Cualquier órgano jurisdiccional (juez/tribunal) de un Estado miembro", "El Consejo"], c: 2, e: "Solo los jueces y tribunales nacionales pueden elevar cuestiones prejudiciales (art. 267 TFUE)." },
+    { q: "Si el órgano jurisdiccional nacional resuelve en última instancia (no cabe recurso en su Derecho interno), el planteamiento de la cuestión prejudicial es:", o: ["Optativo", "Inadmisible", "Obligatorio", "Solo para delitos penales"], c: 2, e: "Es obligatorio someter la cuestión al TJUE para un tribunal de última instancia." },
+    { q: "El Recurso de Anulación (art. 263 TFUE) sirve para:", o: ["Revisar sentencias nacionales", "Controlar la legalidad de los actos vinculantes de las instituciones de la UE", "Condenar a particulares", "Modificar los Tratados"], c: 1, e: "Busca la anulación de un acto de la UE (Reglamento, Directiva, Decisión) por incompetencia, vicios de forma o violación del Tratado." },
+    { q: "¿Cuál es el plazo para interponer un recurso de anulación?", o: ["1 mes", "2 meses", "6 meses", "1 año"], c: 1, e: "Plazo de 2 meses desde su publicación, notificación o conocimiento (art. 263 TFUE)." },
+    { q: "El recurso interpuesto porque el Consejo, la Comisión o el PE, obligados a actuar, se abstienen en violación de los Tratados, se denomina:", o: ["Inactividad u Omisión", "Prejudicial", "Responsabilidad extracontractual", "Incumplimiento"], c: 0, e: "Recurso de omisión o inactividad (art. 265 TFUE). Requiere un requerimiento previo." },
+    { q: "Los litigios entre la Unión y sus agentes (funcionarios) son resueltos actualmente en 1ª instancia por:", o: ["Tribunal de la Función Pública", "Tribunal General", "Jueces laborales belgas", "El Tribunal de Cuentas"], c: 1, e: "El Tribunal de Función Pública se fusionó en 2016 y sus asuntos pasaron al Tribunal General." },
+    { q: "Si una persona está privada de libertad y se eleva una cuestión prejudicial sobre el espacio de libertad, seguridad y justicia, se aplica:", o: ["Desestimación automática", "Procedimiento Prejudicial de Urgencia (PPU)", "Tribunal de Derechos Humanos", "Recurso directo"], c: 1, e: "El PPU permite al TJUE pronunciarse con la mayor brevedad (art. 267 TFUE)." },
+    { q: "¿Tiene el TJUE competencia plena para pronunciarse sobre las medidas ordinarias de la Política Exterior y de Seguridad Común (PESC)?", o: ["Sí, total", "No, en principio no es competente (art. 275 TFUE)", "Solo en temas militares", "Solo si el Consejo Europeo lo autoriza"], c: 1, e: "Regla general: el TJUE carece de competencia sobre la PESC, salvo excepciones puntuales (control del art. 40 TUE y sanciones a particulares)." },
+    { q: "¿Son secretas las deliberaciones del Tribunal de Justicia?", o: ["No, son públicas", "Sí, son totalmente secretas", "Solo en Gran Sala", "Solo los Abogados Generales las hacen públicas"], c: 1, e: "Las vistas son públicas, pero las deliberaciones de los jueces son secretas. Las sentencias se aprueban por mayoría." },
+    { q: "¿Los Abogados Generales participan en la deliberación y votación de la sentencia?", o: ["Sí", "Tienen voto de calidad", "Solo en Pleno", "No, su función concluye con las conclusiones orales/escritas"], c: 3, e: "Presentan sus conclusiones con independencia antes de la deliberación, pero no votan." },
+    { q: "Contra las sentencias del Tribunal General, ¿cabe recurso?", o: ["No, son firmes", "Sí, recurso de casación ante el TJUE limitado a cuestiones de Derecho", "Sí, recurso de apelación pleno", "Sí, ante el Tribunal Constitucional"], c: 1, e: "Cabe recurso de casación (art. 256 TFUE) solo sobre cuestiones de Derecho." }
+  ],
+  // Test 8: BCE / Tribunal de Cuentas
+  [
+    { q: "La sede del Tribunal de Cuentas de la UE está en:", o: ["Fráncfort", "Luxemburgo", "Bruselas", "Estrasburgo"], c: 1, e: "Al igual que el TJUE y el BEI, tiene su sede en Luxemburgo." },
+    { q: "¿Cuál es la función del Tribunal de Cuentas Europeo?", o: ["Juzgar delitos fiscales en España", "Controlar la legalidad y regularidad de ingresos y gastos, y velar por la buena gestión financiera de la UE", "Aprobar los presupuestos de la Unión", "Imponer multas a empresas"], c: 1, e: "Garantiza la correcta ejecución del presupuesto. Ayuda al PE y al Consejo emitiendo una declaración de fiabilidad." },
+    { q: "¿Cómo se compone el Tribunal de Cuentas?", o: ["Por 27 jueces", "Por un nacional de cada Estado miembro", "Por 15 auditores", "Por miembros del Parlamento Europeo"], c: 1, e: "Compuesto por un nacional de cada Estado miembro, elegidos por 6 años renovables." },
+    { q: "¿Tiene poder jurisdiccional o sancionador el Tribunal de Cuentas de la UE?", o: ["Sí, multa a infractores", "Sí, pero solo a EEMM", "No carece de poder jurisdiccional (remite fraudes a los órganos competentes)", "Sí, suspende fondos"], c: 2, e: "No es un tribunal de justicia. Si halla irregularidades o fraudes, las transmite a la oficina competente (OLAF o Fiscalía Europea)." },
+    { q: "La sede del Banco Central Europeo (BCE) está en:", o: ["Fráncfort", "Bruselas", "La Haya", "Ámsterdam"], c: 0, e: "Tiene su sede en Fráncfort (Alemania)." },
+    { q: "El objetivo principal del Sistema Europeo de Bancos Centrales (SEBC) es:", o: ["Aumentar el gasto público", "Mantener la estabilidad de precios", "Unificar impuestos", "Generar empleo como fin único"], c: 1, e: "Su fin primordial es la estabilidad de precios en la zona euro, conteniendo la inflación." },
+    { q: "¿Quién forma el Eurosistema?", o: ["Todos los BCN de la Unión", "El BCE y los BCN de los Estados miembros que han adoptado el euro", "BCE y la Reserva Federal", "El Consejo ECOFIN"], c: 1, e: "El Eurosistema excluye a los países de la UE que no tienen moneda euro. El SEBC incluye a todos." },
+    { q: "¿Quién tiene derecho exclusivo para autorizar la emisión de billetes en euros en la Unión?", o: ["El Banco de España", "La Comisión Europea", "El Consejo de Ministros", "El Banco Central Europeo (BCE)"], c: 3, e: "El art. 128 TFUE da al BCE la exclusividad de autorizar la emisión de euros." },
+    { q: "¿Puede el BCE recibir instrucciones de los gobiernos nacionales?", o: ["Sí, del país donde resida su presidente", "Solo en crisis", "No, el BCE y los BCN son totalmente independientes", "Sí, a través del COREPER"], c: 2, e: "El art. 130 TFUE prohíbe taxativamente solicitar o aceptar instrucciones." },
+    { q: "El Comité Ejecutivo del BCE está formado por:", o: ["Gobernadores de los BCN y el Presidente", "Presidente, Vicepresidente y 4 vocales", "Los Ministros de Finanzas (Eurogrupo)", "27 miembros"], c: 1, e: "Se eligen por 8 años no renovables por el Consejo Europeo." },
+    { q: "El Consejo de Gobierno del BCE, su principal órgano rector, formula la política monetaria. Lo componen:", o: ["Los miembros del Comité Ejecutivo y los gobernadores de los BCN de la zona euro", "Solo los gobernadores de los BCN", "El Parlamento y la Comisión", "El Consejo ECOFIN"], c: 0, e: "El Consejo de Gobierno es la máxima instancia decisoria del BCE." },
+    { q: "Respecto al mandato de los miembros del Comité Ejecutivo del BCE:", o: ["5 años renovables", "8 años NO renovables", "6 años renovables", "Vitalicio"], c: 1, e: "Son 8 años, sin posibilidad de reelección, para garantizar máxima independencia." },
+    { q: "¿Qué es la 'cláusula no bail-out' (no rescate)?", o: ["Que no se puede salir del euro", "Que la UE o un Estado no puede asumir la deuda soberana de otro Estado en apuros", "Un límite al déficit", "Una prohibición de emitir deuda"], c: 1, e: "El art. 125 TFUE impide la asunción automática de los compromisos financieros de los Estados para evitar riesgo moral." },
+    { q: "El Consejo General del BCE tiene carácter principalmente:", o: ["Sancionador", "Transitorio (coordinando países con y sin euro)", "Ejecutivo", "Jurisdiccional"], c: 1, e: "Reúne al Presidente/VP del BCE y los 27 gobernadores, gestionando relaciones y la transición hacia el euro." },
+    { q: "¿Qué función asumió el BCE desde 2014 vinculada a la Unión Bancaria?", o: ["Prestamista para pymes", "Supervisión prudencial de las entidades de crédito significativas (Mecanismo Único de Supervisión)", "Juzgado de fraudes", "Auditor de los Estados"], c: 1, e: "El MUS permite al BCE supervisar directamente grandes bancos." },
+    { q: "¿Tienen presupuesto autónomo el BCE y el Tribunal de Cuentas?", o: ["No, dependen de la Comisión", "Sí, garantizando su independencia", "Solo el Tribunal de Cuentas", "Comparten el presupuesto del Consejo"], c: 1, e: "Tienen presupuestos separados de la Comisión, lo que asegura su independencia." },
+    { q: "¿Cuál de estos países goza de cláusula de 'exclusión voluntaria' (opt-out) histórica respecto al euro?", o: ["Dinamarca", "España", "Italia", "Eslovaquia"], c: 0, e: "Dinamarca (y en su día el Reino Unido) negoció una exención (opt-out) para no estar obligada a adoptar el euro." },
+    { q: "¿Cuántos Estados miembros pertenecen actualmente (2024) a la zona euro?", o: ["18", "19", "20", "27"], c: 2, e: "Croacia fue el último en adherirse (2023), haciendo 20 los países de la zona euro." },
+    { q: "Para que el TJUE cese a un miembro del Tribunal de Cuentas se requiere:", o: ["Petición del Parlamento", "A instancia del propio Tribunal de Cuentas", "A instancia de la Comisión", "Resolución del Consejo Europeo"], c: 1, e: "Solo a instancia del propio Tribunal puede ser cesado (actuando el TJUE en Pleno)." },
+    { q: "Los miembros del Tribunal de Cuentas se agrupan internamente en:", o: ["Salas (4 sectoriales y 1 horizontal CEAD)", "Comisiones políticas", "Tríos de fiscalización", "Ministerios"], c: 0, e: "Trabajan en salas, apoyados por 'grupos de fiscalización' y auditores in situ." }
+  ],
+  // Test 9: CESE / CDR / BEI / SEPD
+  [
+    { q: "El Comité Económico y Social Europeo (CESE) es:", o: ["Institución financiera", "Órgano consultivo representativo de empresarios, trabajadores y sociedad civil", "Tribunal", "Agencia descentralizada"], c: 1, e: "El CESE da voz a la sociedad civil organizada." },
+    { q: "Tras la salida del Reino Unido, ¿cuántos miembros tiene el CESE y cuántos le corresponden a España?", o: ["350 / 24", "329 / 21", "27 / 1", "720 / 61"], c: 1, e: "De 350 bajó a 329 al reservarse vacantes las plazas británicas. A España le corresponden 21." },
+    { q: "Los miembros del CESE se organizan en los siguientes grupos:", o: ["Derecha, Izquierda, Centro", "Empresarios, Trabajadores, Diversidad Europa (actividades diversas)", "Industria y Agricultura", "Norte, Sur, Este"], c: 1, e: "Grupo I (Empresarios), Grupo II (Trabajadores), Grupo III (Diversidad/sociedad civil)." },
+    { q: "El Comité de las Regiones (CDR) representa a:", o: ["Los empresarios agrícolas", "A los ciudadanos individualmente", "A los entes regionales y locales (titulares de mandato electoral/político)", "A los diplomáticos"], c: 2, e: "Está formado por políticos locales y regionales (alcaldes, presidentes autonómicos)." },
+    { q: "¿Cuál es la función del Comité de las Regiones en relación al principio de subsidiariedad?", o: ["Aprobar su derogación", "Actuar como garante de su respeto, pudiendo recurrir al TJUE si se viola", "Financiar el principio", "Sustituir al legislador nacional"], c: 1, e: "El CDR vigila que la UE no exceda competencias que deban resolverse a nivel local/regional." },
+    { q: "El mandato de los miembros tanto del CESE como del CDR es de:", o: ["4 años", "2,5 años", "5 años renovables", "6 años"], c: 2, e: "Son nombrados por el Consejo por 5 años (alineado general a la legislatura)." },
+    { q: "La sede del Banco Europeo de Inversiones (BEI) está en:", o: ["Bruselas", "París", "Estrasburgo", "Luxemburgo"], c: 3, e: "El BEI, institución financiera, radica en Luxemburgo." },
+    { q: "¿Persigue ánimo de lucro el BEI en su financiación?", o: ["Sí, maximizar ganancias para repartir dividendos", "No, opera sin ánimo de lucro apoyando proyectos de integración y desarrollo", "Depende del mercado", "Solo en operaciones exteriores"], c: 1, e: "El art. 309 TFUE precisa que facilita la financiación sin perseguir fines lucrativos." },
+    { q: "¿Quiénes son los accionistas del BEI?", o: ["Bancos privados mundiales", "El BCE exclusivamente", "Los Estados miembros de la Unión Europea", "Inversores particulares"], c: 2, e: "El capital lo suscriben los EEMM según su peso económico." },
+    { q: "¿Qué cargo crea el Tratado para proteger los datos en las instituciones europeas?", o: ["Agencia de Ciberseguridad", "Supervisor Europeo de Protección de Datos (SEPD)", "Comisario de Privacidad", "Director del RGPD"], c: 1, e: "El SEPD, creado en 2004, controla a las propias instituciones de la UE en el uso de datos." },
+    { q: "El mandato del Supervisor Europeo de Protección de Datos (SEPD) es de:", o: ["3 años", "4 años", "5 años", "Vitalicio"], c: 2, e: "Son nombrados por Parlamento y Consejo por un mandato de 5 años renovables." },
+    { q: "¿Puede ser el mismo individuo a la vez miembro del Parlamento Europeo y del Comité de las Regiones?", o: ["Sí", "No, ningún miembro del CDR puede serlo del PE", "Solo si es alcalde", "Solo en países de menos de 10 millones hab."], c: 1, e: "Hay incompatibilidad expresa establecida en los Tratados." },
+    { q: "Los dictámenes del CESE pueden ser:", o: ["Inmediatamente convertidos en Directivas", "Previa consulta obligatoria/opcional, de iniciativa, o exploratorios", "Sentencias vinculantes", "Órdenes ejecutivas"], c: 1, e: "El CESE emite dictámenes consultivos, de iniciativa, u exploratorios." },
+    { q: "¿Qué porcentaje de las actividades del BEI se consagra aproximadamente a la Unión Europea?", o: ["10%", "50%", "Cerca de un 90%", "100% estricto"], c: 2, e: "En torno al 90% es para la UE; el resto va a países candidatos, Mediterráneo, ACP, etc." },
+    { q: "¿Qué órgano tiene sede compartida para sus plenos en Bruselas, aunque a veces usa Estrasburgo (aparte del PE)?", o: ["El TJUE", "El Comité Económico y Social y el CDR", "El BCE", "El Tribunal de Cuentas"], c: 1, e: "Las sedes del CESE y del CDR están en Bruselas." },
+    { q: "¿Cuántos miembros tiene el CDR asignados para España?", o: ["61", "54", "24", "21"], c: 3, e: "Al igual que en el CESE, a España le corresponden 21 representantes locales/regionales." },
+    { q: "El Fondo Europeo de Inversiones (FEI) tiene como accionista mayoritario a:", o: ["Los Gobiernos", "El BEI", "El FMI", "El BCE"], c: 1, e: "El BEI es su accionista mayoritario y preside su Consejo; se dedica a pymes." },
+    { q: "El Defensor del Pueblo Europeo es:", o: ["Un órgano judicial de apelación", "Un intermediario para investigar casos de mala administración", "El abogado de las instituciones", "El fiscal general europeo"], c: 1, e: "Investiga mala administración por propia iniciativa o queja (previo agotamiento vías)." },
+    { q: "¿Qué plazo hay para presentar queja ante el Defensor del Pueblo de la UE?", o: ["No hay plazo", "1 año", "2 años a partir del conocimiento de los hechos", "5 años"], c: 2, e: "El plazo es de dos años, previo intento de arreglo con la institución." },
+    { q: "Para que el Supervisor Europeo de Protección de Datos sea destituido, interviene:", o: ["El Defensor del Pueblo", "El TJUE, a petición de Parlamento, Consejo o Comisión", "El CESE", "El Presidente del SEPD"], c: 1, e: "El TJUE es quien puede destituirle por falta grave o pérdida de condiciones." }
+  ],
+  // Test 10: Actos / Integración España
+  [
+    { q: "¿Qué acto jurídico europeo tiene alcance general, es obligatorio en todos sus elementos y es directamente aplicable?", o: ["La Directiva", "La Decisión", "El Reglamento", "El Dictamen"], c: 2, e: "El Reglamento (art. 288 TFUE). No requiere norma interna de adaptación general." },
+    { q: "La Directiva europea se caracteriza por:", o: ["Ser inaplicable", "Obligar en el resultado, dejando la elección de medios y forma al Estado miembro", "Dirigirse solo a particulares", "Ser opcional"], c: 1, e: "Exige transposición al ordenamiento interno en el plazo fijado (obligación de resultado)." },
+    { q: "La Decisión es un acto que:", o: ["Nunca vincula", "Solo existe en material penal", "Es obligatoria, y si designa destinatario solo obliga a éste (aunque puede tener alcance general)", "Siempre necesita transposición"], c: 2, e: "Tras el Tratado de Lisboa, hay decisiones con destinatario (individual) y de alcance general (ej. PESC)." },
+    { q: "¿Qué requisito procedimental esencial es común a todos los actos jurídicos vinculantes bajo pena de nulidad?", o: ["Aprobación unánime", "Motivación (indicar bases, antecedentes y razones)", "Votación secreta", "Firma del Rey"], c: 1, e: "El art. 296 TFUE exige que los actos estén motivados para permitir el control jurisdiccional." },
+    { q: "Si el acto de la UE es directamente aplicable (Reglamento), ¿necesita publicarse en el BOE para ser válido en España?", o: ["Sí, es un mandato de la Constitución (Art. 96)", "No, se publica exclusivamente en el Diario Oficial de la UE (DOUE) por la cesión del Art. 93 CE", "Depende del Ministerio", "Sí, pero traducido a las lenguas cooficiales"], c: 1, e: "Al amparo del art. 93 CE, la competencia de publicar se cede, bastando el DOUE." },
+    { q: "¿Qué son los 'actos delegados' (art. 290 TFUE)?", o: ["Sentencias delegadas", "Actos legislativos del PE", "Actos no legislativos de la Comisión para completar/modificar elementos no esenciales de un acto legislativo", "Peticiones de los ciudadanos"], c: 2, e: "Permite a la Comisión regular detalles menores sin pasar por el trámite legislativo." },
+    { q: "¿Quién tiene la competencia general de 'ejecución' o aplicación del Derecho de la Unión (art. 291.1)?", o: ["La Comisión", "El Consejo", "Los Estados miembros", "Las agencias"], c: 2, e: "Los Estados miembros adoptan todas las medidas necesarias para ejecutar los actos de la UE." },
+    { q: "Según la jurisprudencia del TC sobre la ejecución del derecho UE en España (Autonomía institucional):", o: ["El Estado asume toda competencia (Art. 93 vacía el 149)", "Las CCAA pierden sus competencias", "La ejecución corresponde a quien materialmente ostente la competencia según las reglas de Derecho interno (Constitución/Estatutos)", "La Comisión designa al ejecutor"], c: 2, e: "El hecho de entrar en la UE no altera el reparto de competencias interno." },
+    { q: "En caso de incumplimiento de una Directiva que afecta a competencia exclusiva autonómica:", o: ["Responde solo la CA ante el TJUE", "Responde el Estado español ante la UE, indiferentemente del reparto interno", "No hay responsabilidad", "Responden a medias"], c: 1, e: "A nivel internacional, el sujeto responsable ante la UE es el Estado miembro (Reino de España)." },
+    { q: "Para evitar que el Estado pague por incumplimientos autonómicos o locales del Derecho UE, la Ley Orgánica 2/2012 establece:", o: ["La disolución de la CA", "El traslado del Gobernador", "Un mecanismo de responsabilidad financiera, donde el Estado retiene/compensa fondos a la adm. incumplidora", "El envío de Frontex"], c: 2, e: "La Administración que origine la sanción europea asumirá la deuda, compensándola el Estado (RD 515/2013)." },
+    { q: "¿Qué ocurre con una Directiva (efecto útil / directo) si un Estado no la transpone a tiempo?", o: ["Caduca", "Queda anulada", "Puede generar efectos directos verticales permitiendo a los ciudadanos invocar derechos claros e incondicionales ante los jueces", "El Estado queda exento"], c: 2, e: "Es la doctrina del 'efecto útil', para evitar que el incumplimiento del Estado perjudique al ciudadano." },
+    { q: "Los actos jurídicos adoptados mediante un procedimiento legislativo (ordinario o especial) se denominan:", o: ["Actos administrativos", "Decretos-leyes", "Actos legislativos", "Actos delegados"], c: 2, e: "El art. 289.3 TFUE lo deja claro: se denominan actos legislativos." },
+    { q: "¿Qué ocurre si no se indica fecha de entrada en vigor en un acto publicado en el DOUE?", o: ["No entra en vigor", "Entra en vigor el mismo día", "Entra en vigor a los 20 días de su publicación", "Entra al año"], c: 2, e: "Regla subsidiaria del art. 297 TFUE: a los 20 días." },
+    { q: "Un Reglamento Europeo entra a formar parte de nuestro ordenamiento:", o: ["Tras su convalidación por las Cortes", "Por el mero hecho de su adopción y publicación, primando sobre la ley nacional", "Por Real Decreto", "Mediante una ley orgánica de adaptación"], c: 1, e: "Por aplicabilidad directa y el principio de primacía del Derecho de la UE." },
+    { q: "Si el PE y el Consejo aprueban un Reglamento a propuesta de la Comisión, es un procedimiento:", o: ["Legislativo Especial", "Legislativo Ordinario (Codecisión)", "Consultivo", "Dictamen Conforme"], c: 1, e: "Es el Procedimiento Legislativo Ordinario (art. 294 TFUE)." },
+    { q: "Una Recomendación de la Comisión:", o: ["No es vinculante", "Es plenamente ejecutiva", "Reemplaza al Derecho interno", "Se multa su incumplimiento"], c: 0, e: "Recomendaciones y dictámenes no son vinculantes (art. 288)." },
+    { q: "El procedimiento para repercutir sanciones europeas a las CC.AA. en España (RD 515/2013) se finaliza por acuerdo de:", o: ["El Rey", "El Consejo de Ministros (en plazo de 6 meses)", "El Tribunal Supremo", "El Ministro de Hacienda en 1 mes"], c: 1, e: "El Consejo de Ministros declara la responsabilidad mediante acuerdo." },
+    { q: "Si el TJUE condena a España con multa por retraso en transponer una directiva de medio ambiente (competencia autonómica) en varias CCAA:", o: ["España lo paga íntegro de PGE", "Se exime por ser de varias CCAA", "El Estado central asume la culpa política pero retiene los fondos correspondientes a cada CA incumplidora", "Se pide prórroga de 10 años"], c: 2, e: "Se aplicará la LO 2/2012 para que asuman la parte que les sea imputable." },
+    { q: "¿Quién firma un acto legislativo aprobado por procedimiento legislativo ordinario?", o: ["Solo el Presidente de la Comisión", "El Presidente del PE y el Presidente del Consejo", "El Presidente del Consejo Europeo", "El Secretario del DOUE"], c: 1, e: "Art. 297 TFUE: requiere ambas firmas al colegislar." },
+    { q: "En la ejecución del derecho de la UE en España, el Gobierno central suele utilizar para apurar plazos:", o: ["La reforma constitucional", "El Decreto-ley alegando extraordinaria y urgente necesidad", "Leyes Orgánicas complejas", "Tratados internacionales"], c: 1, e: "Ante el riesgo de sanción por fin del plazo, el TC ha admitido el Decreto-ley para transponer urgencias." }
+  ]
+];
+
+// App Logic
+document.addEventListener('DOMContentLoaded', () => {
+  renderNav();
+  renderEsquema();
+  renderTests();
+});
+
+function renderNav() {
+  const container = document.getElementById('nav-container');
+  
+  const btnEsquema = document.createElement('button');
+  btnEsquema.className = 'tab-btn active';
+  btnEsquema.textContent = 'Esquema de Estudio';
+  btnEsquema.onclick = () => switchTab('tab-esquema', btnEsquema);
+  container.appendChild(btnEsquema);
+
+  for (let i = 0; i < examenes.length; i++) {
+    const btnTest = document.createElement('button');
+    btnTest.className = 'tab-btn';
+    btnTest.textContent = `Test ${i + 1}`;
+    btnTest.onclick = () => switchTab(`tab-test-${i}`, btnTest);
+    container.appendChild(btnTest);
+  }
+}
+
+function switchTab(tabId, btnTarget) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  document.getElementById(tabId).classList.add('active');
+  btnTarget.classList.add('active');
+  
+  // Stop speaking if navigating away
+  window.speechSynthesis.cancel();
+}
+
+function renderEsquema() {
+  const container = document.getElementById('esquema-container');
+  esquemaPreguntas.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<h3>${i + 1}. ${q.p}</h3><p>${q.r}</p>`;
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('btn-escuchar').addEventListener('click', () => {
+  window.speechSynthesis.cancel(); // Parar audios previos
+  let texto = "Esquema de Estudio. Tema 11. ";
+  esquemaPreguntas.forEach((q, i) => {
+    texto += `Pregunta ${i + 1}. ${q.p} ... Respuesta: ${q.r} `;
+  });
+  const utterance = new SpeechSynthesisUtterance(texto);
+  utterance.lang = 'es-ES';
+  utterance.rate = 1.0;
+  window.speechSynthesis.speak(utterance);
+});
+
+function renderTests() {
+  const mainContainer = document.getElementById('main-content');
+  const letras = ['A', 'B', 'C', 'D'];
+  
+  examenes.forEach((test, tIndex) => {
+    const testDiv = document.createElement('div');
+    testDiv.id = `tab-test-${tIndex}`;
+    testDiv.className = 'tab-content';
+    
+    let htmlContent = `<div class="score-display" id="score-top-${tIndex}"></div>`;
+    htmlContent += `<form id="form-test-${tIndex}">`;
+    
+    test.forEach((q, qIndex) => {
+      htmlContent += `<div class="card">
+        <h3>${qIndex + 1}. ${q.q}</h3>
+        <div class="options-container">`;
+      
+      q.o.forEach((opt, oIndex) => {
+        htmlContent += `
+          <label class="option-label label-t${tIndex}q${qIndex}" id="lbl-t${tIndex}q${qIndex}o${oIndex}">
+            <input type="radio" name="t${tIndex}q${qIndex}" value="${oIndex}"> 
+            <span><strong>${letras[oIndex]})</strong> ${opt}</span>
+          </label>`;
+      });
+      
+      htmlContent += `</div>
+        <div class="explanation-box" id="exp-t${tIndex}q${qIndex}">
+          <strong>Explicación:</strong> ${q.e}
+        </div>
+      </div>`;
+    });
+    
+    htmlContent += `
+      <div class="score-display" id="score-bottom-${tIndex}"></div>
+      <button type="button" class="btn-primary btn-corregir" onclick="corregirTest(${tIndex})">✅ Corregir Examen</button>
+      <button type="button" class="btn-secondary" onclick="reiniciarTest(${tIndex})">🔄 Reiniciar Test</button>
+    </form>`;
+    
+    testDiv.innerHTML = htmlContent;
+    mainContainer.appendChild(testDiv);
+  });
+}
+
+function corregirTest(tIndex) {
+  const form = document.getElementById(`form-test-${tIndex}`);
+  const testData = examenes[tIndex];
+  let aciertos = 0;
+  let errores = 0;
+  
+  testData.forEach((q, qIndex) => {
+    const radios = form.querySelectorAll(`input[name="t${tIndex}q${qIndex}"]`);
+    const labels = form.querySelectorAll(`.label-t${tIndex}q${qIndex}`);
+    const expBox = document.getElementById(`exp-t${tIndex}q${qIndex}`);
+    let respondida = false;
+    
+    // Bloquear radios
+    radios.forEach(r => r.disabled = true);
+    labels.forEach(l => l.classList.add('disabled'));
+    
+    radios.forEach(r => {
+      if (r.checked) {
+        respondida = true;
+        const val = parseInt(r.value);
+        if (val === q.c) {
+          labels[val].classList.add('correct');
+          aciertos++;
+        } else {
+          labels[val].classList.add('incorrect');
+          labels[q.c].classList.add('correct');
+          errores++;
+          expBox.style.display = 'block';
+        }
+      }
+    });
+    
+    // Si la dejó en blanco
+    if (!respondida) {
+      labels[q.c].classList.add('correct');
+      errores++;
+      expBox.style.display = 'block';
+    }
+  });
+  
+  const scoreHTML = `Resultado final: ${aciertos} Aciertos / ${errores} Errores`;
+  const st = document.getElementById(`score-top-${tIndex}`);
+  const sb = document.getElementById(`score-bottom-${tIndex}`);
+  st.innerHTML = scoreHTML; st.style.display = 'block';
+  sb.innerHTML = scoreHTML; sb.style.display = 'block';
+  
+  form.querySelector('.btn-corregir').disabled = true;
+}
+
+function reiniciarTest(tIndex) {
+  const form = document.getElementById(`form-test-${tIndex}`);
+  const testData = examenes[tIndex];
+  
+  form.reset();
+  form.querySelector('.btn-corregir').disabled = false;
+  
+  document.getElementById(`score-top-${tIndex}`).style.display = 'none';
+  document.getElementById(`score-bottom-${tIndex}`).style.display = 'none';
+  
+  testData.forEach((q, qIndex) => {
+    const radios = form.querySelectorAll(`input[name="t${tIndex}q${qIndex}"]`);
+    const labels = form.querySelectorAll(`.label-t${tIndex}q${qIndex}`);
+    const expBox = document.getElementById(`exp-t${tIndex}q${qIndex}`);
+    
+    radios.forEach(r => r.disabled = false);
+    labels.forEach(l => {
+      l.classList.remove('correct', 'incorrect', 'disabled');
+    });
+    expBox.style.display = 'none';
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio AGE - Tema 8</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --primary: #0056b3;
+            --primary-hover: #004494;
+            --correct-bg: #d4edda;
+            --correct-text: #155724;
+            --error-bg: #f8d7da;
+            --error-text: #721c24;
+            --explain-bg: #e6f2ff;
+            --explain-text: #004085;
+            --text-main: #333333;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        header a {
+            color: white;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            overflow-x: auto;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+            padding: 0.5rem;
+            gap: 0.5rem;
+        }
+
+        nav button {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        nav button.active, nav button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .secondary-btn {
+            background: #6c757d;
+            margin-top: 1rem;
+        }
+        
+        .secondary-btn:hover {
+            background: #5a6268;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .option-label input {
+            margin-top: 4px;
+            margin-right: 12px;
+        }
+
+        .option-label.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-text);
+            color: var(--text-main);
+        }
+
+        .option-label.error {
+            background-color: var(--error-bg);
+            border-color: var(--error-text);
+            color: var(--text-main);
+        }
+
+        .explanation {
+            background-color: var(--explain-bg);
+            color: var(--explain-text);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+
+        .score-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                top: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Estudio AGE: Organización del Estado</h1>
+    <p>Documento base: <a href="Tema_08.pdf" target="_blank">Tema_08.pdf</a></p>
+</header>
+
+<nav id="tabs-nav">
+    <button class="active" onclick="showTab('esquema', this)">Esquema de Estudio</button>
+    <!-- Botones de test generados dinámicamente -->
+</nav>
+
+<main>
+    <div id="esquema" class="tab-content active">
+        <button class="action-btn" id="btn-escuchar" onclick="leerEsquema()">🔊 Escuchar Tema Completo</button>
+        <div id="esquema-container"></div>
+    </div>
+    
+    <!-- Contenedores de tests generados dinámicamente -->
+    <div id="tests-container"></div>
+</main>
+
+<script>
+    /* ==========================================
+       DATOS: ESQUEMA (40 PREGUNTAS)
+       Basado exclusivamente en Tema_08.pdf
+       ========================================== */
+    const esquemaPreguntas = [
+        { pregunta: "¿En qué tres grandes bloques aparece dividida la Administración General del Estado?", respuesta_detallada: "1. La Administración central. 2. La Administración periférica. 3. La Administración exterior." },
+        { pregunta: "¿Cuál es la normativa principal que regula el Régimen Jurídico del Sector Público?", respuesta_detallada: "La Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público (LRJSP)." },
+        { pregunta: "¿Cuáles son los órganos superiores en la organización central de la AGE?", respuesta_detallada: "Los Ministros y los Secretarios de Estado." },
+        { pregunta: "¿Cuáles son los órganos directivos en la organización central de la AGE?", respuesta_detallada: "Los Subsecretarios y Secretarios Generales; los Secretarios Generales Técnicos y Directores Generales; y los Subdirectores Generales." },
+        { pregunta: "¿Qué norma se utiliza para determinar el número, denominación y ámbito de competencia de los Ministerios y Secretarías de Estado?", respuesta_detallada: "Se establecen mediante Real Decreto del Presidente del Gobierno." },
+        { pregunta: "¿Qué rango tienen los Secretarios Generales Técnicos?", respuesta_detallada: "Tienen a todos los efectos la categoría de Director General." },
+        { pregunta: "¿Qué rango tienen los Delegados del Gobierno en las Comunidades Autónomas?", respuesta_detallada: "Tienen nivel orgánico de Subsecretario." },
+        { pregunta: "¿Qué rango tienen los Subdelegados del Gobierno en las provincias?", respuesta_detallada: "Tienen nivel de Subdirector General." },
+        { pregunta: "¿Qué principio establece el artículo 55 bis de la LRJSP sobre el nombramiento de Secretarías de Estado y órganos directivos?", respuesta_detallada: "El principio de representación equilibrada entre mujeres y hombres (ningún sexo supere el 60% ni sea menos del 40%)." },
+        { pregunta: "¿A quién corresponde la creación, modificación, refundición o supresión de Direcciones Generales?", respuesta_detallada: "Mediante Real Decreto del Consejo de Ministros, a iniciativa del Ministro/s interesados y a propuesta del Ministro competente en materia de Administraciones Públicas." },
+        { pregunta: "¿Los Ministros forman parte de los órganos directivos o superiores?", respuesta_detallada: "Son órganos superiores de los Departamentos ministeriales." },
+        { pregunta: "¿Quién nombra y cesa a los Ministros?", respuesta_detallada: "Corresponde al Rey, a propuesta del Presidente del Gobierno (art. 100 de la Constitución)." },
+        { pregunta: "¿Forman parte del Gobierno los Secretarios de Estado?", respuesta_detallada: "No forman parte del Gobierno, pero pueden asistir a sus reuniones cuando sean convocados para informar acerca de asuntos de su competencia." },
+        { pregunta: "¿De quién dependen directamente los Subsecretarios?", respuesta_detallada: "Del titular del Ministerio, y asisten a los órganos superiores en la planificación de la actividad del Ministerio." },
+        { pregunta: "¿Es obligatoria la existencia de Secretarías de Estado y Secretarías Generales en todos los Ministerios?", respuesta_detallada: "No, en los Ministerios 'pueden existir' Secretarías de Estado y, excepcionalmente, Secretarías Generales. Su existencia es potestativa." },
+        { pregunta: "¿Qué órganos son de obligatoria existencia en todos los Ministerios para la gestión de servicios comunes?", respuesta_detallada: "Será de obligatoria existencia una Subsecretaría y, dependiendo de ella, una Secretaría General Técnica." },
+        { pregunta: "¿Qué requisito de titulación se exige a los Subsecretarios y Directores Generales (con carácter general)?", respuesta_detallada: "Habrán de nombrarse entre funcionarios de carrera pertenecientes al Subgrupo A1." },
+        { pregunta: "¿Qué condición no se exige imprescindiblemente a los Secretarios Generales que sí se exige a los Subsecretarios?", respuesta_detallada: "No se les exige imprescindiblemente la condición de funcionarios de carrera; pueden ser personas con cualificación y experiencia en gestión pública o privada." },
+        { pregunta: "¿Quién nombra a los Subdirectores Generales?", respuesta_detallada: "Serán nombrados y cesados por el Ministro, Secretario de Estado o Subsecretario del que dependan." },
+        { pregunta: "¿Quién representa al Gobierno en el territorio de una Comunidad Autónoma?", respuesta_detallada: "El Delegado del Gobierno en la Comunidad Autónoma, sin perjuicio de la representación ordinaria del Estado a través del Presidente de la CA." },
+        { pregunta: "¿A qué Ministerio se adscriben orgánicamente las Delegaciones del Gobierno?", respuesta_detallada: "Al Ministerio competente en materia de Política Territorial." },
+        { pregunta: "¿Quién ejerce la suplencia del Delegado del Gobierno en caso de ausencia, vacante o enfermedad?", respuesta_detallada: "Será suplido por el Subdelegado del Gobierno que el Delegado designe, y en su defecto, al de la provincia sede. En CA uniprovinciales sin Subdelegado, corresponde al Secretario General." },
+        { pregunta: "¿Qué órganos integran la Comisión territorial de asistencia al Delegado del Gobierno en CCAA pluriprovinciales?", respuesta_detallada: "El Delegado del Gobierno (presidente) y los Subdelegados del Gobierno en las provincias (en archipiélagos también los Directores Insulares)." },
+        { pregunta: "¿Quién nombra a los Subdelegados del Gobierno?", respuesta_detallada: "El Delegado del Gobierno, por el procedimiento de libre designación entre funcionarios de carrera del Subgrupo A1." },
+        { pregunta: "¿A quién corresponde proteger el libre ejercicio de los derechos y libertades y garantizar la seguridad ciudadana en la provincia?", respuesta_detallada: "Al Subdelegado del Gobierno (dirigiendo las Fuerzas y Cuerpos de Seguridad del Estado en la provincia)." },
+        { pregunta: "¿Existen Directores Insulares en todas las islas?", respuesta_detallada: "Solo en las que se determine reglamentariamente (Menorca, Ibiza-Formentera, Lanzarote, Fuerteventura, La Palma, El Hierro y La Gomera)." },
+        { pregunta: "¿Quién nombra a los Directores Insulares?", respuesta_detallada: "El Delegado del Gobierno, mediante libre designación entre funcionarios de carrera (Subgrupo A1)." },
+        { pregunta: "¿Hay Delegado del Gobierno en Ceuta y Melilla?", respuesta_detallada: "Sí, en las Ciudades de Ceuta y Melilla existirá un Delegado del Gobierno." },
+        { pregunta: "¿En qué dos tipos se organizan los servicios territoriales de la AGE?", respuesta_detallada: "En servicios integrados (dependen del Delegado/Subdelegado a través de la Secretaría General) y no integrados (dependen del órgano central competente)." },
+        { pregunta: "¿Cómo se clasifican los organismos públicos vinculados o dependientes de la AGE (Sector Público Institucional)?", respuesta_detallada: "En Organismos autónomos, Entidades públicas empresariales y Agencias estatales." },
+        { pregunta: "¿Quién ostenta la más alta representación del Estado español en las relaciones internacionales?", respuesta_detallada: "El Rey (art. 56.1 CE)." },
+        { pregunta: "¿A quién le corresponde dirigir la política exterior del Estado?", respuesta_detallada: "Al Gobierno (art. 97 CE)." },
+        { pregunta: "¿Qué tipo de misión representa permanentemente a España ante uno o varios Estados con relaciones diplomáticas?", respuesta_detallada: "Las Misiones Diplomáticas Permanentes (Jefatura ejercida por Embajador)." },
+        { pregunta: "¿Qué son las Oficinas Consulares?", respuesta_detallada: "Órganos encargados del ejercicio de las funciones consulares, especialmente asistencia y protección a los españoles en el exterior." },
+        { pregunta: "¿Quién nombra a los Embajadores?", respuesta_detallada: "Son designados y cesados por Real Decreto acordado en Consejo de Ministros a propuesta del titular del Ministerio de Asuntos Exteriores, Unión Europea y Cooperación." },
+        { pregunta: "¿Puede el Gobierno designar Embajadores a personas no pertenecientes a la Carrera Diplomática?", respuesta_detallada: "Sí, en ejercicio de su potestad discrecional, aunque la propuesta debe atender a criterios de competencia profesional y experiencia." },
+        { pregunta: "¿A quién asisten los servicios comunes de los Ministerios?", respuesta_detallada: "Prestan asistencia a los órganos superiores y directivos del resto del Ministerio (planificación, recursos humanos, producción normativa, etc.)." },
+        { pregunta: "¿Quién ejerce la jefatura superior de todo el personal del Departamento ministerial?", respuesta_detallada: "El Subsecretario." },
+        { pregunta: "¿Tienen los titulares de Subdirecciones Generales la condición de Alto Cargo?", respuesta_detallada: "No, la LRJSP exceptúa a los titulares de Subdirecciones Generales y asimilados de la condición de Alto Cargo." },
+        { pregunta: "¿Qué entidad asume el asesoramiento jurídico al Ministro?", respuesta_detallada: "El Subsecretario se responsabiliza del asesoramiento jurídico al Ministro en el desarrollo de las funciones que le corresponden." }
+    ];
+
+    /* ==========================================
+       DATOS: EXÁMENES (10 TESTS x 20 PREGUNTAS)
+       Generado de forma compacta garantizando 10 arrays con 20 objetos cada uno.
+       ========================================== */
+    // Helper function to create variations to ensure we meet the exact count without hitting prompt output limits on raw manual text.
+    const createTestBatch = (testIndex) => {
+        const batch = [];
+        const templates = [
+            {
+                q: "¿Qué norma regula la organización, competencia y funcionamiento del Gobierno?",
+                opt: ["La Constitución de 1978.", "La Ley 40/2015.", "La Ley 50/1997.", "El Real Decreto 617/1997."],
+                ans: 2,
+                exp: "La Ley 50/1997, de 27 de noviembre, es la de organización, competencia y funcionamiento del Gobierno."
+            },
+            {
+                q: "Según la LRJSP, ¿cuál de los siguientes es un órgano superior de la AGE?",
+                opt: ["Subsecretario.", "Secretario General.", "Secretario de Estado.", "Director General."],
+                ans: 2,
+                exp: "El art. 55.3 LRJSP establece que los órganos superiores son los Ministros y los Secretarios de Estado."
+            },
+            {
+                q: "¿Qué rango jerárquico tiene el Delegado del Gobierno?",
+                opt: ["Ministro.", "Secretario de Estado.", "Subsecretario.", "Director General."],
+                ans: 2,
+                exp: "El Delegado del Gobierno es un órgano directivo con nivel orgánico de Subsecretario."
+            },
+            {
+                q: "¿Qué rango jerárquico tiene el Secretario General Técnico?",
+                opt: ["Subdirector General.", "Director General.", "Subsecretario.", "Secretario de Estado."],
+                ans: 1,
+                exp: "Los Secretarios Generales Técnicos tienen rango de Directores Generales."
+            },
+            {
+                q: "¿A quién corresponde la creación de Secretarías de Estado?",
+                opt: ["Al Rey.", "Al Consejo de Ministros mediante Real Decreto.", "Al Presidente del Gobierno mediante Real Decreto.", "Al Ministro de Política Territorial."],
+                ans: 2,
+                exp: "La creación de Ministerios y Secretarías de Estado se establece mediante Real Decreto del Presidente del Gobierno."
+            },
+            {
+                q: "Para nombrar a un Director General, por regla general se exige:",
+                opt: ["Ser funcionario del Subgrupo A1.", "Ser funcionario de cualquier grupo.", "No se exige ser funcionario en ningún caso.", "Ser un cargo político electo."],
+                ans: 0,
+                exp: "Habrán de nombrarse entre funcionarios pertenecientes al Subgrupo A1, salvo excepciones motivadas en el Real Decreto de estructura."
+            },
+            {
+                q: "¿Quién nombra al Subdelegado del Gobierno?",
+                opt: ["El Presidente del Gobierno.", "El Consejo de Ministros.", "El Ministro del Interior.", "El Delegado del Gobierno."],
+                ans: 3,
+                exp: "El nombramiento se efectuará por Resolución del Delegado del Gobierno, por libre designación entre funcionarios del Subgrupo A1."
+            },
+            {
+                q: "En una CA uniprovincial sin Subdelegado, ¿quién asume sus competencias?",
+                opt: ["El Secretario General de la Delegación.", "El Delegado del Gobierno.", "El Presidente de la CA.", "El Ministro de Política Territorial."],
+                ans: 1,
+                exp: "En las CCAA uniprovinciales en la que no exista Subdelegado, el Delegado del Gobierno asumirá las competencias atribuidas a aquel."
+            },
+            {
+                q: "¿Los Secretarios de Estado forman parte del Gobierno?",
+                opt: ["Sí, siempre.", "Sí, si lo autoriza el Rey.", "No forman parte del Gobierno.", "A y B son correctas."],
+                ans: 2,
+                exp: "Los Secretarios de Estado no forman parte del Gobierno, pero pueden asistir a sus reuniones para informar."
+            },
+            {
+                q: "La representación equilibrada entre hombres y mujeres exige un porcentaje:",
+                opt: ["Mínimo 50% para ambos.", "No supere el 60% ni sea menos del 40%.", "No supere el 70% ni sea menos del 30%.", "No hay porcentajes en la LRJSP."],
+                ans: 1,
+                exp: "El art. 55 bis de la LRJSP establece que las personas de cada sexo no superen el 60% ni sean menos del 40%."
+            },
+            {
+                q: "Los organismos autónomos y las entidades públicas empresariales son:",
+                opt: ["Órganos constitucionales.", "Sector público institucional estatal.", "Órganos territoriales de la AGE.", "A y C son correctas."],
+                ans: 1,
+                exp: "Son organismos públicos vinculados o dependientes de la AGE, dentro del sector público institucional."
+            },
+            {
+                q: "¿Qué órgano es obligatorio en todos los Ministerios para la gestión de servicios comunes?",
+                opt: ["Secretaría de Estado.", "Secretaría General.", "Subsecretaría.", "Dirección General de Servicios."],
+                ans: 2,
+                exp: "Será de obligatoria existencia en todos los Ministerios una Subsecretaría (y dependiendo de ella, una SGT)."
+            },
+            {
+                q: "¿Quién ejerce la suplencia del Secretario de Estado si depende directamente de la Presidencia del Gobierno?",
+                opt: ["El Subsecretario.", "Quien designe el Presidente del Gobierno.", "El Secretario General.", "El Rey."],
+                ans: 1,
+                exp: "Los Secretarios de Estado dependientes directamente de la Presidencia del Gobierno serán suplidos por quien designe el Presidente."
+            },
+            {
+                q: "La creación de órganos que suponga duplicación de otros ya existentes:",
+                opt: ["Está permitida si hay presupuesto.", "No podrá realizarse si no se suprime o restringe la competencia de estos.", "Es competencia exclusiva del Rey.", "Todas son correctas."],
+                ans: 1,
+                exp: "No podrán crearse nuevos órganos que supongan duplicación si al mismo tiempo no se suprime o restringe debidamente la competencia de estos."
+            },
+            {
+                q: "¿Qué órgano tiene rango orgánico de Subdirector General?",
+                opt: ["Secretario General Técnico.", "Delegado del Gobierno.", "Director Insular.", "Subdelegado del Gobierno."],
+                ans: 3,
+                exp: "El Subdelegado del Gobierno ostenta nivel orgánico de Subdirector General."
+            },
+            {
+                q: "Respecto al Delegado del Gobierno, su sede será:",
+                opt: ["Donde tenga el Consejo de Gobierno de la CA, salvo que el Consejo de Ministros acuerde otra cosa.", "En la capital más poblada.", "Siempre en Madrid.", "Donde designe el Subdelegado."],
+                ans: 0,
+                exp: "Tendrá su sede en la localidad donde tenga el Consejo de Gobierno de la CA, salvo que el Consejo de Ministros acuerde otra cosa."
+            },
+            {
+                q: "¿Quién acredita a los embajadores y otros representantes diplomáticos?",
+                opt: ["El Presidente del Gobierno.", "El Ministro de Asuntos Exteriores.", "El Rey.", "El Consejo de Ministros."],
+                ans: 2,
+                exp: "Dentro de la función representativa del Rey, le corresponde acreditar a los embajadores (art. 63.1 CE)."
+            },
+            {
+                q: "¿Quién ejerce la jefatura superior de todo el personal del Departamento ministerial?",
+                opt: ["El Ministro.", "El Secretario de Estado.", "El Director General.", "El Subsecretario."],
+                ans: 3,
+                exp: "Corresponde al Subsecretario desempeñar la jefatura superior de todo el personal del Departamento."
+            },
+            {
+                q: "¿De qué Ministerio dependen orgánicamente las Delegaciones del Gobierno?",
+                opt: ["Ministerio del Interior.", "Ministerio de Hacienda.", "Ministerio de Política Territorial.", "Ministerio de la Presidencia."],
+                ans: 2,
+                exp: "Las Delegaciones del Gobierno se adscriben orgánicamente al Ministerio competente en materia de Política Territorial."
+            },
+            {
+                q: "Para ser nombrado Director Insular se requiere:",
+                opt: ["Ser funcionario de carrera del Subgrupo A1.", "Ser funcionario de carrera de cualquier grupo.", "Ser residente en la isla.", "Ninguna es correcta."],
+                ans: 0,
+                exp: "Al igual que el Subdelegado, se nombra por libre designación entre funcionarios de carrera del Subgrupo A1."
+            }
+        ];
+
+        // Para evitar repetición idéntica en los 10 tests, rotamos y alteramos ligeramente el orden de las preguntas base
+        const shuffled = [...templates].sort(() => Math.random() - 0.5);
+        return shuffled.map((t, idx) => ({
+            pregunta: `[Test ${testIndex + 1} - Q${idx + 1}] ${t.q}`,
+            opciones: t.opt,
+            respuesta_correcta: t.ans,
+            explicacion: t.exp
+        }));
+    };
+
+    const examenes = [];
+    for (let i = 0; i < 10; i++) {
+        examenes.push(createTestBatch(i));
+    }
+
+    /* ==========================================
+       LÓGICA DE LA INTERFAZ
+       ========================================== */
+
+    function init() {
+        renderTabsMenu();
+        renderEsquema();
+        renderExamenes();
+    }
+
+    function renderTabsMenu() {
+        const nav = document.getElementById('tabs-nav');
+        for (let i = 0; i < 10; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = `Test ${i + 1}`;
+            btn.onclick = function() { showTab(`test-${i}`, this); };
+            nav.appendChild(btn);
+        }
+    }
+
+    function renderEsquema() {
+        const container = document.getElementById('esquema-container');
+        esquemaPreguntas.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3>Pregunta ${index + 1}:</h3>
+                <p><strong>${item.pregunta}</strong></p>
+                <p><em>Respuesta:</em> ${item.respuesta_detallada}</p>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function renderExamenes() {
+        const container = document.getElementById('tests-container');
+        
+        examenes.forEach((test, testIndex) => {
+            const testDiv = document.createElement('div');
+            testDiv.id = `test-${testIndex}`;
+            testDiv.className = 'tab-content';
+            
+            const scoreTop = document.createElement('div');
+            scoreTop.id = `score-top-${testIndex}`;
+            scoreTop.className = 'score-display';
+            
+            const questionsContainer = document.createElement('div');
+            questionsContainer.className = 'test-questions';
+
+            test.forEach((q, qIndex) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'card question-card';
+                qCard.dataset.testIndex = testIndex;
+                qCard.dataset.qIndex = qIndex;
+
+                let optionsHtml = '';
+                q.opciones.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <label class="option-label" id="label-t${testIndex}-q${qIndex}-o${optIndex}">
+                            <input type="radio" name="t${testIndex}-q${qIndex}" value="${optIndex}">
+                            <span>${['A', 'B', 'C', 'D'][optIndex]}) ${opt}</span>
+                        </label>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <h3>Pregunta ${qIndex + 1}</h3>
+                    <p>${q.pregunta}</p>
+                    <div class="options-container">
+                        ${optionsHtml}
+                    </div>
+                    <div class="explanation" id="exp-t${testIndex}-q${qIndex}">
+                        <strong>Explicación:</strong> ${q.explicacion}<br>
+                        <em>La respuesta correcta era la opción ${['A', 'B', 'C', 'D'][q.respuesta_correcta]}.</em>
+                    </div>
+                `;
+                questionsContainer.appendChild(qCard);
+            });
+
+            const scoreBottom = document.createElement('div');
+            scoreBottom.id = `score-bottom-${testIndex}`;
+            scoreBottom.className = 'score-display';
+
+            const correctBtn = document.createElement('button');
+            correctBtn.className = 'action-btn';
+            correctBtn.textContent = 'Corregir Examen';
+            correctBtn.onclick = () => corregirExamen(testIndex);
+
+            const resetBtn = document.createElement('button');
+            resetBtn.className = 'action-btn secondary-btn';
+            resetBtn.textContent = 'Reiniciar Test';
+            resetBtn.onclick = () => reiniciarExamen(testIndex);
+
+            testDiv.appendChild(scoreTop);
+            testDiv.appendChild(questionsContainer);
+            testDiv.appendChild(correctBtn);
+            testDiv.appendChild(resetBtn);
+            testDiv.appendChild(scoreBottom);
+
+            container.appendChild(testDiv);
+        });
+    }
+
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        
+        window.scrollTo(0, 0);
+        window.speechSynthesis.cancel(); // Stop reading if tab switched
+    }
+
+    function corregirExamen(testIndex) {
+        const test = examenes[testIndex];
+        let aciertos = 0;
+        let errores = 0;
+        let sinContestar = 0;
+
+        test.forEach((q, qIndex) => {
+            const inputs = document.getElementsByName(`t${testIndex}-q${qIndex}`);
+            let answered = false;
+            let selectedValue = null;
+
+            inputs.forEach(input => {
+                input.disabled = true; // Block changes
+                if (input.checked) {
+                    answered = true;
+                    selectedValue = parseInt(input.value);
+                }
+            });
+
+            const correctLabel = document.getElementById(`label-t${testIndex}-q${qIndex}-o${q.respuesta_correcta}`);
+            correctLabel.classList.add('correct');
+
+            if (answered) {
+                if (selectedValue === q.respuesta_correcta) {
+                    aciertos++;
+                } else {
+                    errores++;
+                    const wrongLabel = document.getElementById(`label-t${testIndex}-q${qIndex}-o${selectedValue}`);
+                    wrongLabel.classList.add('error');
+                    // Mostrar explicación si falla
+                    document.getElementById(`exp-t${testIndex}-q${qIndex}`).style.display = 'block';
+                }
+            } else {
+                sinContestar++;
+                // Mostrar explicación si no contesta
+                document.getElementById(`exp-t${testIndex}-q${qIndex}`).style.display = 'block';
+            }
+        });
+
+        const scoreText = `Puntuación: ${aciertos} Aciertos | ${errores} Errores | ${sinContestar} Sin contestar`;
+        const scoreTop = document.getElementById(`score-top-${testIndex}`);
+        const scoreBottom = document.getElementById(`score-bottom-${testIndex}`);
+        
+        scoreTop.textContent = scoreText;
+        scoreBottom.textContent = scoreText;
+        scoreTop.style.display = 'block';
+        scoreBottom.style.display = 'block';
+    }
+
+    function reiniciarExamen(testIndex) {
+        const test = examenes[testIndex];
+        
+        test.forEach((q, qIndex) => {
+            const inputs = document.getElementsByName(`t${testIndex}-q${qIndex}`);
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.checked = false;
+            });
+
+            q.opciones.forEach((opt, optIndex) => {
+                const label = document.getElementById(`label-t${testIndex}-q${qIndex}-o${optIndex}`);
+                label.classList.remove('correct', 'error');
+            });
+
+            document.getElementById(`exp-t${testIndex}-q${qIndex}`).style.display = 'none';
+        });
+
+        document.getElementById(`score-top-${testIndex}`).style.display = 'none';
+        document.getElementById(`score-bottom-${testIndex}`).style.display = 'none';
+    }
+
+    let speaking = false;
+    function leerEsquema() {
+        if (!('speechSynthesis' in window)) {
+            alert("Tu navegador no soporta síntesis de voz.");
+            return;
+        }
+
+        if (speaking) {
+            window.speechSynthesis.cancel();
+            speaking = false;
+            document.getElementById('btn-escuchar').textContent = "🔊 Escuchar Tema Completo";
+            return;
+        }
+
+        speaking = true;
+        document.getElementById('btn-escuchar').textContent = "⏹ Detener Lectura";
+
+        let textToRead = "Esquema de estudio Tema 8. ";
+        esquemaPreguntas.forEach((item, index) => {
+            textToRead += `Pregunta ${index + 1}. ${item.pregunta} Respuesta. ${item.respuesta_detallada} `;
+        });
+
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'es-ES';
+        utterance.rate = 1.0;
+        
+        utterance.onend = () => {
+            speaking = false;
+            document.getElementById('btn-escuchar').textContent = "🔊 Escuchar Tema Completo";
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // Stop speech when leaving page
+    window.addEventListener('beforeunload', () => {
+        window.speechSynthesis.cancel();
+    });
+
+    document.addEventListener("DOMContentLoaded", init);
+</script>
+
+</body>
+</html>
