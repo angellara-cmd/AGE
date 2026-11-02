@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oposiciones AGE - Poder Judicial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .option-label { transition: all 0.2s ease-in-out; }
+        .correct-answer { background-color: #d1fae5; border-color: #10b981; color: #065f46; }
+        .incorrect-answer { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .explanation { display: none; }
+        .explanation.show { display: block; }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white shadow-md p-4 flex flex-col sm:flex-row justify-between items-center shrink-0 z-10">
+        <div class="text-center sm:text-left mb-4 sm:mb-0">
+            <h1 class="text-2xl font-bold">Esquemas y Test AGE</h1>
+            <p class="text-sm text-blue-200">Tema 4: El Poder Judicial</p>
+        </div>
+        <div class="flex flex-col text-sm text-right space-y-1">
+            <span class="font-semibold text-blue-100">Documentación de referencia:</span>
+            <a href="#" class="text-white hover:text-blue-300 underline" onclick="alert('En un entorno real, esto abriría Tema_04.pdf')">PDF Gem (Tema_04.pdf)</a>
+            <a href="#" class="text-white hover:text-blue-300 underline" onclick="alert('En un entorno real, esto abriría Tema_04_DC_CGPJ_AspectosGenerales.pdf')">Tema_04_DC_CGPJ_AspectosGenerales.pdf</a>
+            <a href="#" class="text-white hover:text-blue-300 underline" onclick="alert('En un entorno real, esto abriría Tema_04_DC_MinisterioFiscal_Basico.pdf')">Tema_04_DC_MinisterioFiscal_Basico.pdf</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex flex-col sm:flex-row flex-1 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <nav class="bg-white w-full sm:w-64 border-r border-gray-200 overflow-y-auto shrink-0 flex flex-col">
+            <div class="p-4 font-bold text-gray-700 uppercase text-xs tracking-wider border-b border-gray-100">
+                Secciones
+            </div>
+            <button onclick="switchTab('esquema')" id="btn-esquema" class="tab-btn w-full text-left px-6 py-4 border-b border-gray-100 hover:bg-blue-50 focus:outline-none bg-blue-50 text-blue-700 font-semibold transition-colors">
+                Esquema de Preguntas
+            </button>
+            <div id="test-nav-container" class="flex flex-col">
+                <!-- Test buttons will be injected here -->
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-50 relative" id="main-content">
+            
+            <!-- Esquema Tab -->
+            <div id="tab-esquema" class="tab-content active max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Esquema Fundamental del Poder Judicial</h2>
+                    <button id="tts-btn" onclick="toggleTTS()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full shadow-lg flex items-center transition-all">
+                        <svg id="tts-icon" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg>
+                        <span id="tts-text">Escuchar Esquema</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-gray-200">
+                    <p class="mb-6 text-gray-600">Este esquema contiene 40 preguntas clave sobre el Poder Judicial, el CGPJ, el Tribunal Supremo y el Ministerio Fiscal, con respuestas explicadas extraídas exclusivamente de la documentación adjunta.</p>
+                    <div id="esquema-container" class="space-y-6">
+                        <!-- Esquema questions injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tests Container -->
+            <div id="tests-wrapper">
+                <!-- Tests injected here -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Data and Logic -->
+    <script>
+        // --- DATA EXTRACTED STRICTLY FROM PROVIDED PDFs ---
+
+        const esquemaData = [
+            { q: "¿Qué establecen los principios constitucionales sobre Jueces y Magistrados (Art. 117 CE)?", a: "La justicia emana del pueblo y se administra en nombre del Rey por Jueces y Magistrados integrantes del poder judicial, independientes, inamovibles, responsables y sometidos únicamente al imperio de la ley." },
+            { q: "¿En qué consiste el principio de unidad jurisdiccional?", a: "Es la base de la organización y funcionamiento de los Tribunales. La jurisdicción es única, sin perjuicio de potestades de otros órganos (TC, Tribunal de Cuentas). Como excepción, la ley regula la jurisdicción militar en el ámbito estrictamente castrense y en supuestos de estado de sitio." },
+            { q: "¿Cómo se regula la participación popular en la Administración de Justicia?", a: "Mediante el ejercicio de la acción popular, Tribunales consuetudinarios y tradicionales (Tribunal de las Aguas de la Vega Valenciana y Consejo de Hombres Buenos de Murcia) y mediante el Tribunal del Jurado (formado por 9 jurados, 1 Magistrado Presidente y 2 suplentes en el ámbito de la Audiencia Provincial)." },
+            { q: "¿Cuál es la naturaleza y sede del Consejo General del Poder Judicial (CGPJ)?", a: "Es el órgano de gobierno del Poder Judicial. Su sede se encuentra en la villa de Madrid. Ejerce sus competencias en todo el territorio nacional." },
+            { q: "¿Cómo se compone el CGPJ y cuál es la duración de su mandato?", a: "Está integrado por el Presidente del Tribunal Supremo (que lo preside) y por 20 Vocales nombrados por el Rey por un período de 5 años. Se renueva en su totalidad cada 5 años." },
+            { q: "¿Cuál es la procedencia de los 20 Vocales del CGPJ?", a: "12 son Jueces o Magistrados en servicio activo y 8 son juristas de reconocida competencia con más de 15 años de ejercicio en su profesión. Son elegidos por mayoría de tres quintos (10 por el Congreso y 10 por el Senado, de los cuales cada cámara elige 6 del turno judicial y 4 del turno de juristas)." },
+            { q: "¿Qué ocurre si una Cámara incumple el plazo para designar a los Vocales del CGPJ?", a: "El CGPJ se constituirá con los 10 Vocales designados por la otra Cámara y con los Vocales del Consejo saliente que hubieren sido designados por la Cámara que incumplió. Si ninguna Cámara cumple, el Consejo saliente continuará en funciones." },
+            { q: "¿Cuáles son algunas atribuciones principales del CGPJ?", a: "Proponer el nombramiento del Presidente del TS y del CGPJ, de Jueces y Magistrados, proponer 2 Magistrados del Tribunal Constitucional, ser oído antes del nombramiento del Fiscal General del Estado, ejercer la alta inspección de Tribunales y elaborar/ejecutar su propio presupuesto." },
+            { q: "¿Qué labor realiza el Pleno del CGPJ respecto a los anteproyectos de ley?", a: "Aprueba los informes sobre anteproyectos de ley o disposiciones generales que se sometan a su dictamen, teniendo un plazo improrrogable de 30 días (15 si es urgente) para emitirlos." },
+            { q: "¿A quién rinde cuentas el CGPJ mediante su Memoria anual?", a: "Remite anualmente a las Cortes Generales una Memoria sobre el estado, funcionamiento y actividades del CGPJ y de los Juzgados y Tribunales, incluyendo necesidades de personal e impacto de género." },
+            { q: "¿Cuáles son los órganos del CGPJ?", a: "El Presidente, el Vicepresidente, el Pleno, la Comisión Permanente, la Comisión Disciplinaria, la Comisión de Asuntos Económicos, la Comisión de Igualdad, la Comisión de Calificación y la Comisión de Supervisión y Control de Protección de Datos." },
+            { q: "¿Quién compone la Comisión Permanente del CGPJ y cómo se renueva?", a: "La componen el Presidente del TS y del CGPJ y 7 Vocales (4 del turno judicial y 3 juristas). Los Vocales se renuevan anualmente para que todos formen parte de ella al menos un año durante el mandato del Consejo." },
+            { q: "¿Qué competencias tiene la Comisión Disciplinaria del CGPJ y por quién está formada?", a: "Resuelve expedientes por infracciones graves y muy graves e impone sanciones a Jueces y Magistrados, salvo la separación del servicio (que corresponde al Pleno). Está formada por 7 Vocales elegidos por cinco años." },
+            { q: "¿Qué figura instruye los expedientes disciplinarios a Jueces y Magistrados?", a: "El Promotor de la Acción Disciplinaria, nombrado por el Pleno para un mandato que coincide con el del Consejo. Vacante la plaza, se provee entre Magistrados del TS y Magistrados con más de 25 años de antigüedad en la carrera." },
+            { q: "¿Cómo se elige al Presidente del Tribunal Supremo y del CGPJ?", a: "En la sesión constitutiva del CGPJ, es elegido por mayoría de tres quintos del Pleno. Debe ser Magistrado del TS con condiciones para presidir Sala, o jurista con más de 25 años de antigüedad profesional. Su mandato dura 5 años, reelegible una sola vez." },
+            { q: "¿Qué competencias tiene la Sala de Gobierno del Tribunal Supremo?", a: "Aprueba las normas de reparto de asuntos, completa provisionalmente la composición de las Salas y ejerce facultades disciplinarias sobre Magistrados del TS." },
+            { q: "¿Cuáles son las Salas de Justicia del Tribunal Supremo?", a: "Sala 1ª de lo Civil, Sala 2ª de lo Penal, Sala 3ª de lo Contencioso-Administrativo, Sala 4ª de lo Social y Sala 5ª de lo Militar." },
+            { q: "¿De qué conoce la Sala de lo Civil del Tribunal Supremo?", a: "De los recursos de casación y revisión en materia civil, y de demandas de responsabilidad civil contra altas autoridades (Presidente Gobierno, Ministros, Diputados, Senadores, etc.) por hechos en el ejercicio de su cargo." },
+            { q: "¿Qué materias resuelve la Sala de lo Penal del Tribunal Supremo?", a: "Recursos de casación/revisión en materia penal y la instrucción y enjuiciamiento de causas contra las mismas altas autoridades (Presidente del Gobierno, Diputados, Fiscal General, etc.)." },
+            { q: "¿Para qué sirve la Sala del art. 61 de la LOPJ (Sala especial de revisión) del TS?", a: "Conoce de recursos de revisión contra sentencias de la Sala Contencioso-Administrativa del TS en única instancia, responsabilidad civil o penal contra Presidentes de Sala o la mayoría de Magistrados de una Sala del TS, incidentes de recusación del Presidente del TS y disolución de partidos políticos." },
+            { q: "¿Cómo se divide la organización territorial judicial del Estado?", a: "En Municipios, Partidos Judiciales, Provincias y Comunidades Autónomas. La demarcación se revisa cada 5 años por ley." },
+            { q: "¿Qué jurisdicción y sedes tiene la Audiencia Nacional?", a: "Tiene sede en la Villa de Madrid y jurisdicción en toda España. Está integrada por las Salas de Apelación, de lo Penal, de lo Contencioso-Administrativo y de lo Social." },
+            { q: "¿Qué delitos concretos conoce la Sala de lo Penal de la Audiencia Nacional?", a: "Delitos contra el titular de la Corona; falsificación de moneda; defraudaciones de grave repercusión en la economía nacional; tráfico de drogas organizado con efectos en distintas Audiencias; delitos fuera del territorio nacional y extradiciones." },
+            { q: "¿Qué órganos culminan la organización judicial en las Comunidades Autónomas?", a: "Los Tribunales Superiores de Justicia (TSJ), que toman el nombre de la C.A. y tienen jurisdicción en su ámbito territorial. Integran las Salas de lo Civil y Penal, Contencioso-Administrativo y de lo Social." },
+            { q: "¿De qué entiende la Sala de lo Civil y Penal del TSJ (como Sala de lo Civil)?", a: "Recursos de casación y revisión en materia civil basados en la infracción del Derecho civil, foral o especial propio de la Comunidad Autónoma, si lo prevé su Estatuto." },
+            { q: "¿De qué asuntos conoce la Sala de lo Contencioso-Administrativo del TSJ en única instancia?", a: "De recursos contra actos de Entidades Locales, Administraciones de la C.A., disposiciones de Asambleas Legislativas autonómicas, Juntas Electorales Provinciales y autonómicas, y órganos de la AGE con competencia nacional pero nivel inferior a Ministro o Secretario de Estado." },
+            { q: "¿Dónde tienen su sede y qué jurisdicción abarcan las Audiencias Provinciales?", a: "Tienen sede en la capital de la provincia, de la que toman su nombre, y extienden su jurisdicción a toda ella. Conocen en el orden penal (delitos no atribuidos a Tribunales de Instancia) y civil (recursos contra sentencias de primera instancia de Tribunales de Instancia)." },
+            { q: "¿Qué órgano existe en cada partido judicial según la LOPJ?", a: "Habrá un Tribunal de Instancia con sede en su capital. Estarán integrados por una Sección Única, de Civil y de Instrucción, o separadas si lo indica la Ley de Demarcación." },
+            { q: "¿Qué conocen las Secciones Civiles de los Tribunales de Instancia?", a: "En primera instancia, juicios no atribuidos a otros, actos de jurisdicción voluntaria, recursos contra resoluciones de jueces de paz y reconocimiento y ejecución de sentencias extranjeras civiles (salvo Familia o Mercantil si existe sección)." },
+            { q: "¿Qué juzga, de forma exclusiva y excluyente, la Sección de Familia, Infancia y Capacidad?", a: "Asuntos relativos al matrimonio, medidas de crisis matrimonial, guarda y custodia, filiación, adopción, alimentos entre parientes y medidas judiciales de apoyo a personas con discapacidad." },
+            { q: "¿Qué conoce una Sección de lo Mercantil de los Tribunales de Instancia?", a: "Cuestiones en materia de propiedad intelectual e industrial, competencia desleal, sociedades mercantiles, concurso de acreedores (cualquiera que sea el deudor), derecho marítimo y aéreo, y recursos contra registradores mercantiles." },
+            { q: "¿Quién instruye las causas por delito cuyo enjuiciamiento corresponde a las Audiencias Provinciales?", a: "Las Secciones de Instrucción (o Secciones Únicas) de los Tribunales de Instancia, salvo que sea competencia de Violencia sobre la Mujer o contra la Infancia y la Adolescencia. También conocen el habeas corpus y controlan los CIEs." },
+            { q: "¿Cuáles son las competencias de las Secciones de Violencia sobre la Mujer en el orden penal?", a: "Instruyen procesos por homicidio, lesiones, contra la libertad, integridad moral o libertad sexual, siempre que se cometan contra la esposa o mujer ligada por análoga relación (aun sin convivencia) y delitos conexos, así como la adopción de órdenes de protección." },
+            { q: "¿Dónde y cómo se eligen los Jueces de Paz?", a: "En cada municipio donde no exista Tribunal de Instancia. Son elegidos por el Pleno del Ayuntamiento por mayoría absoluta y nombrados por la Sala de Gobierno del TSJ por un período de 4 años." },
+            { q: "¿Cuáles son los principios de actuación del Ministerio Fiscal (Art. 124 CE)?", a: "Actúa conforme a los principios de unidad de actuación y dependencia jerárquica, y con sujeción en todo caso a los principios de legalidad e imparcialidad." },
+            { q: "¿Quién nombra al Fiscal General del Estado y cuál es su mandato?", a: "Es nombrado por el Rey, a propuesta del Gobierno, oído el CGPJ. Su mandato dura 4 años y no puede ser renovado (salvo que haya estado menos de 2 años en el cargo). Solo puede cesar por petición propia, incompatibilidad, incapacidad, incumplimiento grave o cuando cese el Gobierno que lo propuso." },
+            { q: "¿Qué requisitos se exigen para ser propuesto como Fiscal General del Estado?", a: "Ser jurista español de reconocido prestigio con más de 15 años de ejercicio efectivo. No puede haber sido Ministro, Secretario de Estado, Consejero autonómico, Presidente local o Parlamentario en los 5 años anteriores." },
+            { q: "¿Cuáles son las incompatibilidades de la Carrera Fiscal?", a: "No pueden desempeñar cargo de juez o magistrado, cargos de elección popular, empleos retribuidos (salvo docencia, investigación o creación artística), abogacía, procura, ni actividad mercantil." },
+            { q: "¿Cuáles son las categorías de la Carrera Fiscal?", a: "1) Fiscales de Sala del TS (equiparados a Magistrados del TS). 2) Fiscales (equiparados a Magistrados). 3) Abogados-Fiscales (equiparados a Jueces)." },
+            { q: "¿Qué función tiene la Fiscalía Europea según la última reforma legal?", a: "Es responsable de investigar y ejercer la acción penal ante el órgano de enjuiciamiento competente en primera instancia y vía de recurso contra autores en delitos que perjudiquen los intereses financieros de la Unión Europea." }
+        ];
+
+        const testsData = [
+            // TEST 1 - Principios y CGPJ Básico
+            [
+                { q: "Según el art. 117 de la CE, la justicia se administra en nombre de:", o: ["El pueblo español.", "El Rey.", "El Consejo General del Poder Judicial.", "El Gobierno de la Nación."], c: 1, e: "Según el art. 117 CE: 'La justicia emana del pueblo y se administra en nombre del Rey por Jueces y Magistrados...'." },
+                { q: "El principio que establece que los Jueces y Magistrados no podrán ser separados, suspendidos, trasladados ni jubilados sino por las causas previstas en la ley se denomina:", o: ["Principio de inamovilidad.", "Principio de imparcialidad.", "Principio de exclusividad.", "Principio de unidad jurisdiccional."], c: 0, e: "El art. 117.2 CE establece la inamovilidad de los Jueces y Magistrados." },
+                { q: "El principio de unidad jurisdiccional:", o: ["Impide totalmente la existencia de la jurisdicción militar.", "Es la base de la organización y funcionamiento de los Tribunales.", "Determina que solo existe un orden jurisdiccional en España.", "Ninguna de las respuestas anteriores es correcta."], c: 1, e: "Art. 117.5 CE: El principio de unidad jurisdiccional es la base de la organización y funcionamiento de los Tribunales. La jurisdicción militar se reconoce como excepción." },
+                { q: "¿Quién es el órgano de gobierno del Poder Judicial según el artículo 122 de la Constitución?", o: ["El Tribunal Supremo.", "El Presidente del Gobierno.", "El Consejo General del Poder Judicial.", "El Ministerio Fiscal."], c: 2, e: "El art. 122.2 CE dispone que el CGPJ es el órgano de gobierno del mismo." },
+                { q: "De los 20 Vocales que integran el CGPJ, ¿cuántos son elegidos entre Jueces y Magistrados en servicio activo?", o: ["8 Vocales.", "10 Vocales.", "12 Vocales.", "6 Vocales."], c: 2, e: "Según el art. 122.3 CE y la LOPJ, de los 20 vocales, 12 se eligen entre Jueces y Magistrados y 8 entre juristas." },
+                { q: "El mandato de los Vocales del CGPJ y de su Presidente tiene una duración de:", o: ["4 años.", "5 años.", "6 años.", "Es un cargo vitalicio."], c: 1, e: "El CGPJ se renueva en su totalidad cada 5 años, coincidiendo la duración del mandato del Presidente con la del Consejo." },
+                { q: "¿Qué mayoría se exige en el Congreso y en el Senado para elegir a los Vocales del CGPJ?", o: ["Mayoría absoluta.", "Mayoría de dos tercios.", "Mayoría de tres quintos.", "A y B son correctas según la cámara."], c: 2, e: "La elección se realiza en ambas Cámaras por mayoría de tres quintos de sus miembros." },
+                { q: "Si en el momento de constituir el nuevo CGPJ una Cámara no ha designado a sus Vocales en plazo:", o: ["No se puede constituir el CGPJ.", "El Consejo se constituye con los 10 Vocales de la otra Cámara y con los del Consejo saliente designados por la Cámara incumplidora.", "El Presidente asume las funciones en solitario.", "Todas las respuestas son incorrectas."], c: 1, e: "La LOPJ prevé que se constituya con los designados por la otra Cámara y los salientes de la incumplidora para poder ejercer funciones." },
+                { q: "La propuesta de nombramiento del Fiscal General del Estado corresponde a:", o: ["El Consejo General del Poder Judicial.", "El Rey.", "El Gobierno.", "El Tribunal Supremo."], c: 2, e: "El Fiscal General del Estado es nombrado por el Rey a propuesta del Gobierno, oído el CGPJ." },
+                { q: "¿Cuál de las siguientes atribuciones corresponde al CGPJ?", o: ["Nombrar al Fiscal General del Estado.", "Regular el estatuto orgánico de Jueces y Magistrados.", "Interponer el conflicto de atribuciones entre órganos constitucionales del Estado.", "Dictar sentencias de inconstitucionalidad."], c: 2, e: "Entre sus atribuciones está la de interponer el conflicto de atribuciones entre órganos constitucionales (art. 560 LOPJ)." },
+                { q: "Para ser propuesto como Vocal del CGPJ por el turno de juristas, se exigen más de:", o: ["10 años de experiencia.", "15 años de experiencia.", "20 años de experiencia.", "25 años de experiencia."], c: 1, e: "Deben ser juristas de reconocida competencia con más de 15 años de ejercicio profesional (Art. 122 CE)." },
+                { q: "¿Puede el CGPJ elaborar y ejecutar su propio presupuesto?", o: ["Sí, en ejercicio de su autonomía.", "No, depende del Ministerio de Justicia.", "Sí, pero solo ejecutarlo, lo elabora el Gobierno.", "Las respuestas b y c son correctas."], c: 0, e: "El art. 560 LOPJ le atribuye la función de elaborar y ejecutar su propio presupuesto." },
+                { q: "¿Cuál es el órgano que asume la potestad reglamentaria del CGPJ?", o: ["La Comisión Permanente.", "El Presidente del CGPJ.", "El Pleno.", "La Comisión Disciplinaria."], c: 2, e: "El ejercicio de la potestad reglamentaria en los términos de la ley es competencia exclusiva del Pleno." },
+                { q: "El Pleno del CGPJ se reunirá en sesión ordinaria:", o: ["Una vez por semana.", "Quincenalmente.", "Una vez al mes.", "Cuando lo solicite la mitad de sus miembros."], c: 2, e: "El Pleno se reúne en sesión ordinaria, a convocatoria del Presidente, una vez al mes." },
+                { q: "El quórum mínimo para la válida constitución del Pleno del CGPJ (salvo elección de Presidente) es:", o: ["El Presidente y 10 Vocales.", "El Presidente y 12 Vocales.", "Mayoría absoluta de sus miembros.", "Todos los miembros deben estar presentes."], c: 0, e: "Para la constitución del Pleno es necesaria, como mínimo, la presencia de diez Vocales y el Presidente." },
+                { q: "¿Quién preside la Comisión Permanente del CGPJ?", o: ["El Vicepresidente del TS.", "El Presidente del Tribunal Supremo y del CGPJ.", "El Vocal de mayor antigüedad.", "Un Vocal jurista elegido por el Pleno."], c: 1, e: "La Comisión Permanente está presidida por el Presidente del TS y del CGPJ." },
+                { q: "¿Cuántos Vocales componen la Comisión Disciplinaria?", o: ["3 Vocales.", "5 Vocales.", "7 Vocales.", "10 Vocales."], c: 2, e: "Está compuesta por 7 Vocales (4 del turno judicial y 3 del turno de juristas) elegidos por cinco años." },
+                { q: "Si la propuesta de sanción en un expediente disciplinario es la separación de la carrera judicial, ¿quién resuelve?", o: ["La Comisión Disciplinaria.", "El Promotor de la Acción Disciplinaria.", "El Pleno del CGPJ.", "El Tribunal Supremo."], c: 2, e: "La Comisión Disciplinaria resuelve las graves y muy graves, con la sola excepción de la separación del servicio, que compete al Pleno." },
+                { q: "La Comisión de Igualdad del CGPJ está integrada por:", o: ["7 Vocales.", "5 Vocales.", "3 Vocales.", "El Pleno actúa como Comisión de Igualdad."], c: 2, e: "La Comisión de Igualdad estará integrada por 3 Vocales elegidos anualmente por el Pleno." },
+                { q: "¿Quién dirige el Gabinete de la Presidencia del TS y del CGPJ?", o: ["El Vicepresidente del TS.", "Un Director nombrado y cesado libremente por el Presidente.", "El Promotor de la Acción Disciplinaria.", "Un Vocal designado por el Pleno."], c: 1, e: "El Presidente estará asistido por un Director de Gabinete de la Presidencia, nombrado y cesado libremente por él." }
+            ],
+            // TEST 2 - Tribunal Supremo y Audiencia Nacional
+            [
+                { q: "El órgano jurisdiccional superior en todos los órdenes (salvo en garantías constitucionales) es:", o: ["El Consejo General del Poder Judicial.", "El Tribunal Constitucional.", "El Tribunal Supremo.", "La Audiencia Nacional."], c: 2, e: "Art. 123 CE y 53 LOPJ: El Tribunal Supremo es el órgano jurisdiccional superior en todos los órdenes, salvo garantías constitucionales." },
+                { q: "Las Salas del Tribunal Supremo son en número de:", o: ["Cuatro.", "Cinco.", "Seis.", "Siete."], c: 1, e: "Son cinco: Civil (1ª), Penal (2ª), Contencioso-Administrativo (3ª), Social (4ª) y Militar (5ª)." },
+                { q: "Para ser Magistrado del TS por el turno de Abogados y Juristas de reconocida competencia, se exige un ejercicio superior a:", o: ["10 años.", "15 años.", "20 años.", "25 años."], c: 1, e: "Se provee una de cada cinco plazas entre Abogados y Juristas de reconocida competencia con más de 15 años en su actividad profesional." },
+                { q: "La instrucción y enjuiciamiento de las causas penales contra el Presidente del Gobierno es competencia de:", o: ["El Pleno del Tribunal Supremo.", "La Sala de lo Civil del Tribunal Supremo.", "La Sala de lo Penal (Sala 2ª) del Tribunal Supremo.", "La Audiencia Nacional."], c: 2, e: "La Sala 2ª conoce de la instrucción y enjuiciamiento contra altas autoridades del Estado, incluido el Presidente del Gobierno." },
+                { q: "De las demandas de responsabilidad civil por hechos realizados en el ejercicio de su cargo por el Defensor del Pueblo conoce:", o: ["La Sala 3ª del Tribunal Supremo.", "La Sala 1ª (Civil) del Tribunal Supremo.", "La Sala del art. 61 del Tribunal Supremo.", "El Tribunal Superior de Justicia."], c: 1, e: "La Sala de lo Civil del TS conoce de estas demandas de responsabilidad civil contra autoridades estatales." },
+                { q: "La Sala Especial de revisión regulada en el art. 61 de la LOPJ del Tribunal Supremo está formada por:", o: ["Solo por los Presidentes de Sala.", "El Presidente del TS, los Presidentes de Sala y el Magistrado más antiguo y más moderno de cada Sala.", "El Presidente del TS y 10 Magistrados elegidos por el CGPJ.", "El Pleno completo."], c: 1, e: "Su composición exacta es: Presidente del TS, Presidentes de Sala, Magistrado más antiguo y Magistrado más moderno de cada Sala." },
+                { q: "¿De qué conoce la Sala del art. 61 de la LOPJ?", o: ["Recursos de revisión contra sentencias de la Sala de lo Penal.", "Procesos de disolución de partidos políticos.", "Instrucción de causas contra el Rey.", "Cuestiones de competencia entre Tribunales Superiores de Justicia."], c: 1, e: "Entre sus funciones está conocer de los procesos de declaración de ilegalidad y disolución de los partidos políticos." },
+                { q: "La jurisdicción de la Audiencia Nacional abarca:", o: ["A la Comunidad de Madrid.", "A todo el territorio nacional.", "A las provincias que carecen de Tribunal de Instancia.", "El ámbito estrictamente castrense."], c: 1, e: "La Audiencia Nacional, con sede en Madrid, tiene jurisdicción en toda España." },
+                { q: "¿Qué Salas integran la Audiencia Nacional?", o: ["Apelación, Penal, Contencioso-Administrativo y Social.", "Civil, Penal, Contencioso-Administrativo y Social.", "Apelación, Penal y Social (no tiene Contencioso-Administrativo).", "Todas son correctas."], c: 0, e: "Está integrada por 4 Salas: Apelación, Penal, Contencioso-Administrativo y Social. No tiene Sala de lo Civil." },
+                { q: "El conocimiento de delitos relativos a la falsificación de moneda cometidos por grupos criminales corresponde a:", o: ["El Tribunal Supremo.", "El Juzgado de Instrucción correspondiente.", "La Sala de lo Penal de la Audiencia Nacional.", "El Tribunal Central de Instancia en exclusiva."], c: 2, e: "La Sala de lo Penal de la AN conoce de estos delitos siempre que sean cometidos por organizaciones o grupos criminales y no estén atribuidos a la Sección de lo Penal del Tribunal Central." },
+                { q: "¿Qué órgano conoce de los recursos contra los actos dictados por la Comisión de Vigilancia de Actividades de Financiación del Terrorismo?", o: ["Sala de lo Contencioso-Administrativo del TS.", "Sala de lo Penal de la Audiencia Nacional.", "Sala de lo Contencioso-Administrativo de la Audiencia Nacional.", "Tribunal Superior de Justicia de Madrid."], c: 2, e: "Corresponde a la Sala de lo Contencioso-Administrativo de la Audiencia Nacional en única instancia." },
+                { q: "El Presidente de la Audiencia Nacional tiene la consideración de:", o: ["Presidente del Tribunal Supremo.", "Presidente de Sala del Tribunal Supremo.", "Magistrado ordinario.", "Vocal del CGPJ."], c: 1, e: "El Presidente de la Audiencia Nacional tendrá la consideración de Presidente de Sala del Tribunal Supremo." },
+                { q: "El Gabinete Técnico del Tribunal Supremo tiene como función principal:", o: ["Ejercer la potestad disciplinaria sobre los letrados.", "Asistir a la Presidencia y a sus Salas en los procesos de admisión de asuntos y elaboración de estudios.", "Sustituir a los Magistrados en sus bajas.", "A y C son correctas."], c: 1, e: "Asistirá a la Presidencia y a sus diferentes Salas en los procesos de admisión y mediante la elaboración de estudios e informes." },
+                { q: "La Sala Cuarta del Tribunal Supremo corresponde al orden:", o: ["Militar.", "Civil.", "Social.", "Contencioso-Administrativo."], c: 2, e: "La Sala 4ª es la de lo Social." },
+                { q: "Las sentencias y demás resoluciones del Tribunal Supremo y demás órganos judiciales se publican de modo oficial cuidando su:", o: ["Redacción literaria en verso.", "Recopilación, difusión y certificación velando por la protección de datos personales.", "Difusión exclusiva para magistrados.", "Ninguna es correcta."], c: 1, e: "El CGPJ cuidará de la publicación oficial velando por su integridad, autenticidad, y asegurando el cumplimiento en protección de datos (art. 560 LOPJ)." },
+                { q: "Si un Magistrado del TS es recusado en grupo (más de dos de la Sala), conoce del incidente:", o: ["La Sala Penal.", "La Sala Especial del art. 61 de la LOPJ.", "El CGPJ.", "El Tribunal Constitucional."], c: 1, e: "La Sala del art. 61 conoce de los incidentes de recusación del Presidente del TS, Presidentes de Sala o más de dos Magistrados de una Sala." },
+                { q: "En la Sala 5ª (Militar) del Tribunal Supremo, ¿cuántos Letrados del Gabinete Técnico podrá haber?", o: ["Ninguno.", "Un Letrado.", "Cinco Letrados.", "Quince Letrados."], c: 1, e: "Según la LOPJ, en la Sala Quinta de lo Militar podrá haber un Letrado del Gabinete Técnico." },
+                { q: "La instrucción de causas contra los miembros del Consejo de Gobierno de una C.A. compete, por regla general, a:", o: ["Sala Civil y Penal del Tribunal Superior de Justicia respectivo.", "Audiencia Provincial.", "Tribunal Supremo.", "Tribunal Central de Instancia."], c: 0, e: "Le corresponde al TSJ (Sala Penal) la instrucción y enjuiciamiento de delitos contra Presidente y miembros del Consejo de Gobierno si lo dice su Estatuto." },
+                { q: "La competencia para autorizar la cesión de datos que permitan la identificación en servicios de la sociedad de la información (Ley 34/2002) corresponde a:", o: ["La Agencia de Protección de Datos.", "La Sección de lo Contencioso-Administrativo del Tribunal Central de Instancia.", "El Pleno del CGPJ.", "Juzgados de Paz."], c: 1, e: "La Sección de lo Contencioso-Administrativo del Tribunal Central de Instancia autoriza esto mediante auto." },
+                { q: "¿En qué casos se reúnen en Pleno todos los miembros del Tribunal Supremo actualmente?", o: ["Para dictar cualquier sentencia penal.", "Para conocer de recursos de casación unificadores.", "Toma de posesión del Presidente del TS/FGE y apertura del año judicial.", "A y B son correctas."], c: 2, e: "El pleno del TS se reúne exclusivamente para la toma de posesión del Presidente del TS, del Fiscal General del Estado y la apertura del año judicial." }
+            ],
+            // TEST 3 - Tribunal Central de Instancia y Tribunales Superiores de Justicia
+            [
+                { q: "¿Dónde tiene su sede el Tribunal Central de Instancia?", o: ["En cada capital de Comunidad Autónoma.", "En la Villa de Madrid.", "En cada capital de Provincia.", "No tiene sede fija."], c: 1, e: "Tiene su sede en la Villa de Madrid y jurisdicción en todo el territorio nacional." },
+                { q: "¿Qué sección del Tribunal Central de Instancia tramita los expedientes de ejecución de las órdenes europeas de detención y entrega?", o: ["Sección de lo Penal.", "Sección de Vigilancia Penitenciaria.", "Sección de Instrucción.", "Sección de Menores."], c: 2, e: "La Sección de Instrucción del Tribunal Central de Instancia tramita estos expedientes." },
+                { q: "¿A qué Sección corresponde la ejecución de sentencias por delito grave dictadas por la propia Sección de Instrucción del Tribunal Central de Instancia?", o: ["Sección de Instrucción.", "Sección de lo Penal del Tribunal Central de Instancia.", "Sala de lo Penal de la Audiencia Nacional.", "Juzgados de Ejecutorias."], c: 1, e: "Corresponde a la Sección de lo Penal del Tribunal Central de Instancia la ejecución de las sentencias dictadas en causas por delito grave o menos grave por la Sección de Instrucción." },
+                { q: "Las Salas de los Tribunales Superiores de Justicia son:", o: ["Civil y Penal, Contencioso-Administrativo, y Social.", "Civil, Penal, Contencioso-Administrativo y Social (separadas).", "Penal, Militar y Social.", "A y C son correctas."], c: 0, e: "El TSJ está integrado por la Sala de lo Civil y Penal, Sala Contencioso-Administrativo y Sala de lo Social." },
+                { q: "Conocer en única instancia recursos contra actos de las Entidades Locales compete a:", o: ["Sala de lo Civil del TSJ.", "Sala de lo Contencioso-Administrativo del TSJ.", "Tribunal de Instancia de lo Penal.", "Tribunal Supremo en todos los casos."], c: 1, e: "La Sala de lo Contencioso-Administrativo del TSJ conoce de recursos contra actos de Entidades Locales que no correspondan a los Tribunales de Instancia." },
+                { q: "¿Quién conoce del recurso de apelación contra las resoluciones dictadas en 1ª instancia por las Audiencias Provinciales?", o: ["La Audiencia Nacional.", "El Tribunal Supremo.", "La Sala Civil y Penal del Tribunal Superior de Justicia.", "El Tribunal Central de Instancia."], c: 2, e: "Como Sala de lo Penal, el TSJ conoce de los recursos de apelación contra las resoluciones de primera instancia de las Audiencias Provinciales." },
+                { q: "¿Qué sección del Tribunal Central de Instancia autoriza las peticiones de información de la Agencia Estatal de Protección de Datos a operadores de comunicaciones?", o: ["Sección de lo Contencioso-Administrativo.", "Sección de Instrucción.", "Sección Civil.", "No es competencia judicial."], c: 0, e: "Corresponde a la Sección de lo Contencioso-Administrativo autorizar, mediante auto, dichos requerimientos." },
+                { q: "El TSJ extiende su jurisdicción a:", o: ["Una o varias comarcas.", "La provincia donde tenga su sede.", "El ámbito territorial de la respectiva Comunidad Autónoma.", "Todo el territorio nacional."], c: 2, e: "El Tribunal Superior de Justicia culminará la organización judicial en el ámbito territorial de la Comunidad Autónoma." },
+                { q: "Si un TSJ debe conocer un recurso de revisión fundamentado en el Derecho Civil foral propio de su C.A., lo hará a través de:", o: ["La Sala de lo Civil y Penal (como Sala Civil).", "La Sala Contencioso-Administrativo.", "La Audiencia Provincial respectiva.", "Esa materia se reserva en exclusiva al TS."], c: 0, e: "Como Sala de lo Civil, el TSJ conoce recursos extraordinarios de revisión fundados en infracción de derecho civil foral si lo prevé su Estatuto." },
+                { q: "Los conflictos de competencia entre órganos judiciales civiles radicados en la C.A. sin superior jerárquico común, los resuelve:", o: ["La Sala Civil del TS.", "El Presidente de la Audiencia Provincial.", "La Sala de lo Civil y Penal del TSJ.", "El Pleno del CGPJ."], c: 2, e: "La Sala de lo Civil del TSJ conoce de las cuestiones de competencia entre órganos del orden civil con sede en la C.A. que no tengan superior común." },
+                { q: "En el Tribunal Central de Instancia, los jueces de garantías en los delitos que conoce la Fiscalía Europea están encuadrados en:", o: ["La Sección de Menores.", "La Sección de lo Penal.", "La Sección de Instrucción.", "La Sección Contenciosa."], c: 2, e: "En la Sección de Instrucción, los jueces de garantías conocerán las peticiones de la Fiscalía Europea relativas a medidas cautelares, etc." },
+                { q: "Si se deben impugnar convenios colectivos con ámbito superior al de un Tribunal de Instancia pero no exceda de la Comunidad Autónoma, la competencia es de:", o: ["Sección de lo Social del Tribunal Central.", "Sala de lo Social de la Audiencia Nacional.", "Sala de lo Social del TSJ.", "Juzgados de lo Social."], c: 2, e: "La Sala de lo Social del TSJ conoce de estos procesos cuando el ámbito no exceda de la Comunidad Autónoma." },
+                { q: "Las resoluciones dictadas en alzada por el Tribunal Económico-Administrativo Central en materia de tributos cedidos se recurren en única instancia ante:", o: ["La Sala Contenciosa del TS.", "La Sala Contenciosa de la Audiencia Nacional.", "La Sala Contenciosa del TSJ.", "Tribunales Consuetudinarios."], c: 2, e: "Corresponde a las Salas Contencioso-Administrativas de los TSJ en única instancia." },
+                { q: "El control jurisdiccional de la potestad disciplinaria de las autoridades penitenciarias, a nivel del Tribunal Central de Instancia, corresponde a:", o: ["Sección de Vigilancia Penitenciaria.", "Sección de lo Penal.", "Sala de Apelación.", "Ninguna de las anteriores."], c: 0, e: "La Sección de Vigilancia Penitenciaria tiene estas funciones en relación con los delitos competencia de la Audiencia Nacional." },
+                { q: "El Presidente del TSJ es Presidente nato de:", o: ["Todas las Salas del TSJ.", "La Sala de lo Social.", "La Sala de lo Civil y Penal.", "La Audiencia Provincial de la capital autonómica."], c: 2, e: "Preside el TSJ y la Sala de lo Civil y Penal (aunque no se indique literalmente con estas mismas palabras en todas las partes del temario, es el Presidente de esta sala)." },
+                { q: "La prohibición de reuniones reguladas en la Ley Orgánica 9/1983 se recurre ante:", o: ["Sala de lo Contencioso-Administrativo del TSJ.", "Audiencia Provincial.", "Juzgado de Instrucción de guardia.", "Tribunal Supremo."], c: 0, e: "Las Salas de lo Contencioso del TSJ conocen en única instancia sobre prohibición o modificación de reuniones." },
+                { q: "Si el número de asuntos lo aconseja, ¿pueden crearse más Secciones de las Salas del TSJ en otras capitales?", o: ["No, siempre deben estar en la sede central.", "Sí, pero solo para lo Civil.", "Sí, Secciones e incluso Sala de lo Penal para conocer apelaciones contra Audiencias Provinciales.", "A y B son correctas."], c: 2, e: "Podrán crearse Secciones e incluso Sala de lo Penal con su circunscripción en capitales que ya sean sede de otras Salas del TSJ, para apelaciones." },
+                { q: "Los Magistrados y Fiscales de la Comunidad Autónoma acusados de delitos en su cargo, son enjuiciados por:", o: ["La Sala Penal del TSJ.", "El Juzgado de Instrucción nº1.", "La Audiencia Nacional.", "Tribunal Especial Militar."], c: 0, e: "La Sala Civil y Penal (como Penal) del TSJ instruye y falla las causas contra Jueces, Magistrados y Fiscales por delitos y faltas cometidos en el cargo en la C.A." },
+                { q: "¿En qué casos conoce la Sección de lo Contencioso-Administrativo del Tribunal Central del procedimiento de Partidos Políticos?", o: ["Para su disolución (art 61).", "Para el procedimiento del art. 12 bis de la Ley de Partidos (cuestiones económicas).", "No conoce nada de Partidos, es el TS.", "C es la única correcta."], c: 1, e: "Conoce del procedimiento previsto en el art. 12 bis de la Ley Orgánica 6/2002 de Partidos Políticos (referido a financiación/sanciones)." },
+                { q: "Las apelaciones promovidas contra autos de las Secciones de lo Contencioso-Administrativo de los Tribunales de Instancia se resuelven en:", o: ["Segunda instancia por las Salas Contencioso-Administrativas del TSJ.", "Única instancia por el TS.", "Sección Apelación Tribunal Central.", "Ninguna de las anteriores."], c: 0, e: "Los TSJ (Sala Contencioso) conocen en segunda instancia las apelaciones contra sentencias y autos de dichas Secciones de los Tribunales de Instancia." }
+            ],
+            // TEST 4 - Audiencias Provinciales y Tribunales de Instancia (I)
+            [
+                { q: "Las Audiencias Provinciales extienden su jurisdicción a:", o: ["Todo el territorio nacional.", "La respectiva Comunidad Autónoma.", "Toda la provincia.", "Únicamente a la capital de provincia."], c: 2, e: "Las Audiencias Provinciales, con sede en la capital, extienden su jurisdicción a toda la provincia (sin perjuicio de Secciones adscritas a partidos)." },
+                { q: "La composición de las Audiencias Provinciales es:", o: ["Un Presidente y un Magistrado.", "Un Presidente y dos o más Magistrados.", "Cinco Magistrados rotatorios.", "Tres Jueces de Paz."], c: 1, e: "Se compondrán de un Presidente y dos o más Magistrados (pudiendo tener varias Secciones)." },
+                { q: "Las Audiencias Provinciales conocen de los recursos contra las resoluciones dictadas en primera instancia por:", o: ["Las Secciones Civiles de los Tribunales de Instancia de la provincia.", "El Tribunal Supremo.", "Los TSJ.", "Las resoluciones del Fiscal General."], c: 0, e: "En el orden civil, conocen recursos contra resoluciones en primera instancia de Secciones Civiles, Familia, Mercantil, etc., de los Tribunales de Instancia de la provincia." },
+                { q: "En Alicante, existe un órgano especializado con jurisdicción en toda España relativo a Marcas de la UE, ¿dónde se integra en primera instancia?", o: ["En la Audiencia Nacional.", "En el Tribunal Supremo.", "En la Sección de lo Mercantil del Tribunal de Instancia de Alicante (y 2ª inst. en Audiencia Provincial).", "A y B son correctas."], c: 2, e: "La Sección de lo Mercantil del Tribunal de Instancia de Alicante y, en 2ª instancia, la sección de la Audiencia Provincial de Alicante." },
+                { q: "¿Habrá un Tribunal de Instancia en cada...?", o: ["Distrito municipal.", "Partido judicial.", "Comunidad Autónoma.", "Provincia, exclusivamente en la capital."], c: 1, e: "Art. 84 LOPJ: Habrá un Tribunal de Instancia en cada partido judicial, con sede en su capital." },
+                { q: "El Tribunal de Instancia estará integrado, con carácter general, por:", o: ["Una Sala Civil y Penal.", "Una Sección Única de Civil y de Instrucción.", "Cuatro Secciones diferentes obligatoriamente.", "Jueces de Paz adscritos."], c: 1, e: "Los Tribunales de Instancia estarán integrados por una Sección Única, de Civil y de Instrucción (o ambas separadas según Ley de Planta)." },
+                { q: "¿En qué casos cuentan con Presidencia de Sección las Secciones de los Tribunales de Instancia?", o: ["En todos los casos.", "Cuando hay dos o más Secciones, la Sección tiene 8 o más plazas y el total del Tribunal es igual o mayor a 12.", "Si el alcalde del municipio lo aprueba.", "A y C son correctas."], c: 1, e: "Art 84: 2+ Secciones, 8+ plazas en la Sección, y 12+ plazas en total en el Tribunal." },
+                { q: "¿Quién conoce del habeas corpus?", o: ["Las Secciones de lo Contencioso-Administrativo.", "La Sala de lo Civil del TS.", "Las Secciones de Instrucción de los Tribunales de Instancia.", "Los Jueces de Paz."], c: 2, e: "En el orden penal, las Secciones de Instrucción conocen de los procedimientos de habeas corpus." },
+                { q: "Autorizar el internamiento de extranjeros en centros de internamiento es competencia de:", o: ["Las Audiencias Provinciales.", "La Sala Social del TSJ.", "Las Secciones de Instrucción (o Únicas) de los Tribunales de Instancia.", "El Ministerio del Interior de forma autónoma."], c: 2, e: "Las Secciones de Instrucción y las Secciones Únicas conocerán de la autorización del internamiento de extranjeros y control de su estancia." },
+                { q: "Las Secciones de lo Mercantil conocen, entre otras, de:", o: ["Propiedad intelectual e industrial, competencia desleal y concurso de acreedores.", "Divorcios y nulidades matrimoniales.", "Trata de seres humanos.", "Todas las respuestas son correctas."], c: 0, e: "Tienen competencia en materias como propiedad intelectual, sociedades, transportes, recursos contra registradores y concurso de acreedores." },
+                { q: "¿Son competentes las Secciones de lo Mercantil para los derechos de los viajeros aéreos según Reglamento CE 261/2004?", o: ["Sí, siempre.", "No, por excepción expresa legal no son competentes.", "Sí, si el daño supera los 5.000€.", "Las respuestas A y C son correctas."], c: 1, e: "Por excepción (art 87 LOPJ), no serán competentes para pretensiones basadas exclusivamente en dichos Reglamentos de pasajeros." },
+                { q: "Si no existe Sección de Familia, Infancia y Capacidad en un Tribunal de Instancia, ¿quién asume los asuntos de familia?", o: ["Se archiva el procedimiento.", "Corresponde a uno de los jueces de la Sección Civil (o Única).", "Sube a la Audiencia Provincial directamente.", "Ninguna de las anteriores."], c: 1, e: "El CGPJ acordará que el conocimiento corresponda a uno de los jueces de la Sección Civil o Única." },
+                { q: "La oposición a resoluciones de la Dirección General de Seguridad Jurídica y Fe Pública en materia de Registro Civil, es competencia de:", o: ["Sección de lo Contencioso-Administrativo.", "Sección de lo Mercantil.", "Sección de Familia, Infancia y Capacidad.", "La Audiencia Nacional."], c: 2, e: "La Sección de Familia tiene jurisdicción exclusiva sobre esto (art 781 bis LEC)." },
+                { q: "Las Audiencias Provinciales conocen de los conflictos de competencia en materia civil y penal entre:", o: ["Distintas Audiencias Provinciales.", "Tribunales Superiores de Justicia.", "Jueces y Magistrados de un mismo o distinto Tribunal de Instancia de la provincia.", "A y B son correctas."], c: 2, e: "Corresponde a las A.P. el conocimiento de cuestiones de competencia civil y penal entre jueces de Instancia de la provincia." },
+                { q: "¿Quién nombra a dos jueces o magistrados de un Tribunal de Instancia para apoyar una instrucción de especial complejidad?", o: ["El Fiscal General del Estado.", "El Ministro de Justicia.", "Se puede nombrar conforme a un turno preestablecido en el propio Tribunal.", "El Tribunal Constitucional."], c: 2, e: "En el Tribunal de Instancia se podrá nombrar a dos de sus jueces conforme a turno para encargarse junto al titular de procesos de volumen/complejidad." },
+                { q: "Si la provincia tiene menos de 500.000 habitantes, ¿qué puede ocurrir con la Sección de lo Mercantil?", o: ["Se elimina y pasa al TSJ.", "El Gobierno puede extender a esa provincia la jurisdicción de la Sección de otra provincia limítrofe de la misma C.A.", "Actuará la Fiscalía en su lugar.", "Todas las afirmaciones son correctas."], c: 1, e: "Por Real Decreto, se puede extender la jurisdicción de la Sección de lo Mercantil de una provincia limítrofe." },
+                { q: "El acuerdo de especialización de Secciones de la Audiencia Provincial para temas Mercantiles será obligatorio cuando:", o: ["Las plazas de magistrados Mercantiles en la provincia sean más de 5.", "Lo pida un ciudadano.", "Exista superávit en Justicia.", "A y C son correctas."], c: 0, e: "Deberá adoptarse necesariamente cuando el número de plazas de magistrados de Secciones de lo Mercantil de la provincia sea superior a cinco." },
+                { q: "La Sección de Instrucción del Tribunal de Instancia puede dictar sentencia de conformidad con la acusación:", o: ["Nunca, solo instruye.", "En los casos establecidos por la ley y en procesos por aceptación de decreto.", "Solo si el acusado es menor de 18 años.", "Las respuestas A y C son correctas."], c: 1, e: "Les corresponde asimismo dictar sentencia de conformidad con la acusación en los casos establecidos y en procesos por aceptación de decreto." },
+                { q: "¿Qué jurisdicción tendrá una Sección Civil de un Tribunal de Instancia con carácter general?", o: ["Un partido judicial.", "Dos provincias limítrofes.", "Toda la Comunidad Autónoma.", "Solo la capital de la provincia."], c: 0, e: "Con carácter general, las Secciones Civiles o Únicas extenderán su jurisdicción a un partido judicial." },
+                { q: "Las solicitudes de declaración de concurso de acreedores de persona natural, si hay de 2 a 4 jueces en la Sección Mercantil:", o: ["Se reparten entre todos por igual.", "Se repartirán a uno solo de ellos.", "Requieren tribunal colegiado.", "A y C son correctas."], c: 1, e: "Si hay más de 1 y menos de 5 jueces, las solicitudes se repartirán a uno solo de ellos." }
+            ],
+            // TEST 5 - Tribunales de Instancia (II) - Violencia y Especialidades
+            [
+                { q: "¿Qué requisitos se exigen para que la Sección de Violencia sobre la Mujer tenga competencia civil exclusiva y excluyente?", o: ["Que sea un proceso civil de familia y alguna parte sea víctima de violencia de género/sexual.", "Que alguna parte sea imputado en dichos delitos y haya actuaciones penales previas o vigentes sobre ello.", "Ninguna de las respuestas anteriores.", "A y B son correctas y se deben cumplir simultáneamente junto con inicio de actuaciones penales o protección."], c: 3, e: "Deben concurrir requisitos simultáneos: materia civil familiar, parte víctima y agresor en procedimiento penal u orden de protección previos." },
+                { q: "La instrucción por un delito de aborto o lesiones cometidos contra descendientes (con violencia de género conexa) corresponde a:", o: ["La Audiencia Provincial directamente.", "La Sección de Menores.", "La Sección de Violencia sobre la Mujer.", "El Jurado Popular."], c: 2, e: "La Sección de Violencia sobre la Mujer instruye delitos como aborto, lesiones... si es contra descendientes y hay violencia de género conexa." },
+                { q: "¿Puede el Juez de Violencia sobre la Mujer inadmitir un asunto civil de familia si cree que no hubo violencia de género?", o: ["Sí, si los hechos puestos en su conocimiento de forma notoria no constituyen expresión de violencia, puede inadmitir y remitirlo.", "No, una vez presentado debe conocer el asunto siempre.", "Solo si el Fiscal lo autoriza.", "Ninguna es correcta."], c: 0, e: "Cuando el juez aprecie de forma notoria que no son actos de violencia de género/sexual, puede inadmitir la pretensión y remitirla al órgano competente." },
+                { q: "¿Están permitidos los medios de solución de controversias (mediación) en casos donde actúe la Sección de Violencia sobre la Mujer con competencia excluyente civil?", o: ["Sí, es lo más recomendado.", "No, en todos estos casos está vedada la utilización de medios adecuados de solución de controversias.", "Sí, si las partes lo firman voluntariamente.", "Depende del Juez de Instrucción."], c: 1, e: "La ley establece explícitamente: 'En todos estos casos está vedada la utilización de los medios adecuados de solución de controversias'." },
+                { q: "¿Qué Sección instruye el delito de trata de seres humanos cuando al menos una víctima sea niño, niña o adolescente?", o: ["La Sección de Violencia sobre la Mujer.", "La Sección de Menores.", "La Sección de Violencia contra la Infancia y la Adolescencia.", "El Juzgado de Paz."], c: 2, e: "Es competencia penal de la Sección de Violencia contra la Infancia y la Adolescencia (art. 177 bis CP)." },
+                { q: "Si unos hechos objeto de instrucción pudiesen ser de la Sección contra la Infancia y de la Sección sobre la Mujer, ¿quién tiene preferencia?", o: ["Ambas por igual.", "La Sección contra la Infancia.", "La Sección de Violencia sobre la Mujer (la competencia le corresponde en todo caso).", "La Sala de lo Civil del TSJ."], c: 2, e: "En caso de concurrencia, la competencia le corresponde en todo caso a la Sección de Violencia sobre la Mujer." },
+                { q: "El enjuiciamiento de los delitos menos graves instruidos por Violencia contra la Infancia corresponde a:", o: ["La misma Sección instructora.", "Las Secciones de lo Penal de los Tribunales de Instancia.", "El Tribunal de Justicia de la UE.", "Juzgados de Menores."], c: 1, e: "Las Secciones de lo Penal ejecutan sentencias dictadas en causas por delito grave o menos grave por las Secciones Instructoras (Instrucción, Mujer, Infancia)." },
+                { q: "El establecimiento de la sede de Secciones de Vigilancia Penitenciaria fuera de la capital lo realiza:", o: ["El Rey por decreto.", "El Gobierno, previa audiencia de la C.A. y del CGPJ.", "El Pleno del CGPJ en solitario.", "Las Administraciones Locales."], c: 1, e: "El Gobierno establecerá la sede, previa audiencia de la comunidad autónoma afectada y del CGPJ." },
+                { q: "La emisión y ejecución de instrumentos de reconocimiento mutuo de resoluciones penales en la UE compete a:", o: ["Secciones de Instrucción.", "Secciones de lo Penal y de Menores.", "Secciones de Vigilancia Penitenciaria.", "Todas son correctas, según la fase o el sujeto."], c: 3, e: "Esa función se le asigna repetidamente en la LOPJ a casi todas las Secciones penales (Instrucción, Penal, Menores, Penitenciaria, Mujer, Infancia) en su ámbito respectivo." },
+                { q: "Las Secciones de lo Contencioso-Administrativo en los Tribunales de Instancia conocen de:", o: ["Recursos contra el Consejo de Ministros.", "Autorizar mediante auto la entrada en domicilios para ejecución forzosa de actos de la Administración.", "Amparos constitucionales.", "A y B son correctas."], c: 1, e: "Tienen competencia para autorizar la entrada en domicilios cuando sea necesaria para la ejecución forzosa de actos de la Administración." },
+                { q: "También pueden autorizar la entrada en domicilios solicitada por:", o: ["La Administración Tributaria, aun con carácter previo al inicio formal del procedimiento.", "Solo la Policía Judicial de oficio.", "Empresas de seguridad privada.", "Cualquier ciudadano."], c: 0, e: "Las Secciones Contencioso-Administrativas autorizan la entrada acordada por la Administración Tributaria ante riesgo de oposición." },
+                { q: "¿En qué casos conoce la Sección de lo Social de los Tribunales de Instancia?", o: ["Procesos sobre controversias entre empresarios y trabajadores en ámbito superior a C.A.", "En única o 1ª instancia procesos propios de este orden que no estén atribuidos a otros.", "Penas por estafa empresarial.", "Disolución de Partidos."], c: 1, e: "Las Secciones de lo Social conocerán, en 1ª o única instancia, procesos de su orden que no estén atribuidos a otros órganos." },
+                { q: "¿Las Secciones de Menores enjuician conductas tipificadas como delito en mayores de edad cometidas por menores?", o: ["Sí, conocen del ejercicio de funciones establecidas para menores que incurran en delitos o delitos leves.", "No, eso es competencia de la Audiencia Provincial.", "Solo si el menor supera los 18 años durante el juicio.", "Las respuestas A y B son correctas."], c: 0, e: "Las Secciones de Menores ejercen las funciones por conductas típicas que en menores son delitos o delitos leves (Ley de Responsabilidad Penal Menores)." },
+                { q: "En caso de agrupación de Secciones por aumento delictivo vinculado a criminalidad organizada (narcotráfico/trata), la medida es:", o: ["Permanente y general.", "Excepcional y limitada al periodo de tiempo de la coyuntura.", "Solo aplicable a delitos civiles.", "Aprobada directamente por la Comisión Europea."], c: 1, e: "Se trata de una modificación singular limitada al tiempo en que se produzca la coyuntura que la motiva." },
+                { q: "La agrupación mencionada en la pregunta anterior será presidida por:", o: ["El Presidente del Tribunal de Instancia del partido judicial con mayor número de habitantes.", "El Vocal más mayor del CGPJ.", "El Fiscal General.", "El Rey."], c: 0, e: "Estará presidida por el Presidente del Tribunal de Instancia del partido con mayor número de habitantes de la agrupación." },
+                { q: "¿Se aumentarán las dotaciones presupuestarias automáticamente por estas agrupaciones coyunturales?", o: ["Sí, siempre.", "No, la efectividad de la decisión no implicará aumento de dotaciones presupuestarias.", "Solo si lo aprueba el Alcalde.", "B y C son correctas."], c: 1, e: "El texto especifica que la efectividad de dicha decisión no implicará el aumento de dotaciones presupuestarias." },
+                { q: "Las dependencias en procesos de Violencia sobre la Mujer deben impedir:", o: ["La entrada del Juez.", "La confrontación de la víctima y el agresor.", "El acceso a abogados.", "Las notificaciones electrónicas."], c: 1, e: "El CGPJ impulsará dependencias que impidan la confrontación de la víctima y el agresor durante el proceso." },
+                { q: "El Observatorio contra la Violencia Doméstica y de Género elaborará un informe que enviará a:", o: ["Naciones Unidas.", "La Comisión de seguimiento de los acuerdos del Pacto de Estado del Congreso y Senado.", "Exclusivamente al Tribunal Supremo.", "Los Registros Mercantiles."], c: 1, e: "Se remite a la Comisión de seguimiento y evaluación del Pacto de Estado en el Congreso y el Senado." },
+                { q: "Si la provincia tiene capital pero algunos de sus partidos no son limítrofes, ¿pueden establecerse Secciones de lo Penal fuera de la capital?", o: ["Nunca.", "Sí, delimitándose en cada caso el ámbito territorial de su jurisdicción.", "Solo si la capital renuncia a su sede.", "Las respuestas B y C son correctas."], c: 1, e: "Podrán establecerse Secciones de lo Penal en Tribunales que tengan sede en poblaciones distintas de la capital." },
+                { q: "La competencia para dictar sentencias de conformidad con acusación en Instrucción requiere:", o: ["Aceptación de la acusación (y estar en casos previstos/aceptación decreto).", "Testigos internacionales obligatoriamente.", "Autorización del CGPJ cada vez.", "Todas son correctas."], c: 0, e: "En los casos de la ley y procesos por aceptación de decreto, pueden dictar sentencia de conformidad." }
+            ],
+            // TEST 6 - Juzgados de Paz y Ministerio Fiscal
+            [
+                { q: "¿En qué municipios habrá un Juez de Paz?", o: ["En todos los municipios de España.", "Solo en las capitales de provincia.", "En cada municipio donde no exista Tribunal de Instancia.", "En los municipios limítrofes con Francia y Portugal."], c: 2, e: "Habrá un juez o jueza de paz en cada municipio donde no exista Tribunal de Instancia." },
+                { q: "¿Qué requisito académico o profesional se exige para ser Juez de Paz?", o: ["Ser Licenciado o Grado en Derecho.", "Tener más de 15 años de ejercicio jurídico.", "No es preciso ser licenciado en Derecho.", "Estar inscrito en el Colegio de Abogados."], c: 2, e: "El nombramiento recae en la persona elegida por el Pleno del Ayuntamiento (no siendo preciso ser licenciado en Derecho)." },
+                { q: "Los Jueces de Paz en el orden penal conocen de:", o: ["Instrucción de delitos graves.", "De los procesos por delito leve que les atribuya la ley en primera instancia.", "Recursos de casación.", "Ninguna de las respuestas es correcta."], c: 1, e: "En el orden penal: primera instancia de los procesos por delito leve que les atribuya la ley y actuaciones de prevención." },
+                { q: "Según el art. 124 CE, ¿el Ministerio Fiscal es parte del Poder Judicial (Jueces y Magistrados)?", o: ["Sí, y tiene inamovilidad.", "No, actúa ante los Tribunales pero no es Juez, promueve la acción de la justicia.", "Sí, y es el órgano superior.", "Ninguna de las anteriores."], c: 1, e: "Es un órgano con relevancia constitucional que promueve la acción de la justicia, pero los Fiscales no son Jueces y no gozan de inamovilidad." },
+                { q: "Los principios del Ministerio Fiscal según la Constitución son:", o: ["Independencia, inamovilidad y gratuidad.", "Unidad de actuación, dependencia jerárquica, legalidad e imparcialidad.", "Autogobierno y sumisión a la potestad municipal.", "Solo dependencia jerárquica y oralidad."], c: 1, e: "El MF actúa conforme a los principios de unidad de actuación y dependencia jerárquica, legalidad e imparcialidad." },
+                { q: "¿Quién imparte las órdenes e instrucciones para el servicio y orden interno de la institución del Ministerio Fiscal?", o: ["El Rey.", "El Presidente del TS.", "El Fiscal General del Estado.", "Las Comisiones de Igualdad."], c: 2, e: "El Fiscal General del Estado es la Jefatura Superior e imparte las órdenes e instrucciones al resto de fiscales." },
+                { q: "Los Fiscales tienen una dependencia...", o: ["Interna respecto de sus superiores y externa con relación al Gobierno.", "Interna y externa del CGPJ.", "Absoluta de las Comunidades Autónomas.", "Ninguna, son totalmente independientes."], c: 0, e: "Tienen dependencia interna respecto de sus superiores y externa con relación al Gobierno." },
+                { q: "¿Los miembros del Ministerio Fiscal pueden recibir indicaciones de particulares sobre el ejercicio de sus funciones?", o: ["Sí, si se hacen por escrito.", "No, actuarán con objetividad e independencia sin recibir órdenes de particulares.", "Solo en casos de delitos leves.", "A y B son correctas."], c: 1, e: "Ningún miembro podrá recibir ni atender órdenes o indicaciones concernientes a su función de ninguna autoridad, funcionario o particular." },
+                { q: "¿Tienen inamovilidad los miembros del Ministerio Fiscal?", o: ["Sí, igual que los Jueces.", "No, no gozan de inamovilidad ni de independencia (dependencia jerárquica).", "Sí, pero solo por 5 años.", "Solo los Abogados-Fiscales."], c: 1, e: "A diferencia de Jueces y Magistrados, no gozan de inamovilidad, ya que no gozan de independencia funcional interna." },
+                { q: "¿Se puede recusar a un Fiscal?", o: ["Sí, en cualquier momento del proceso.", "No, tampoco puede ejercitarse el derecho de recusación (pero sí deben abstenerse por causas legales).", "Sí, si el acusado lo pide.", "Solo si es un juicio por delito de asesinato."], c: 1, e: "No puede ejercitarse el derecho de recusación, pero se abstendrán si incurren en causas de abstención de la LOPJ." },
+                { q: "Entre los órganos del Ministerio Fiscal se encuentran:", o: ["El Consejo Fiscal, Junta de Fiscales de Sala y Unidad de Protección de Datos.", "El Pleno del CGPJ.", "La Sala de lo Civil.", "A y C son correctas."], c: 0, e: "Los órganos incluyen FGE, Consejo Fiscal, Junta de Fiscales de Sala, Fiscalías Provinciales, de Área, de CCAA, y Unidad de Protección de Datos." },
+                { q: "Las Fiscalías Provinciales contarán obligatoriamente con Secciones de:", o: ["Propiedad Industrial.", "Menores, Violencia sobre la Mujer y Medio Ambiente.", "Derecho Marítimo.", "Tribunal de Jurado Permanente."], c: 1, e: "La normativa indica que existirán Secciones de Menores, Violencia sobre la Mujer y Medio Ambiente en las Fiscalías Provinciales." },
+                { q: "Además, en las Fiscalías Provinciales podrán crearse (no obligatoriamente) Secciones de:", o: ["Seguridad vial y siniestralidad laboral.", "Solo Medio Ambiente (que es obligatoria).", "Instrucción Civil.", "Las respuestas A y B son correctas."], c: 0, e: "Podrán crearse Secciones de seguridad vial y siniestralidad laboral." },
+                { q: "Respecto a los delitos de odio, la Fiscalía:", o: ["No tiene competencias.", "Existirá una Sección contra delitos de odio que llevará un registro de los procedimientos.", "Se encarga la Audiencia Nacional en exclusiva.", "La Ley prohíbe registros al respecto."], c: 1, e: "Existirá una Sección contra delitos de odio que coordinará y llevará registro de procedimientos penales." },
+                { q: "El Fiscal General del Estado toma posesión de su cargo ante:", o: ["El Presidente del Gobierno.", "Las Cortes Generales.", "El Pleno del Tribunal Supremo.", "El Tribunal Constitucional."], c: 2, e: "Una vez nombrado y tras prestar juramento ante el Rey, tomará posesión ante el Pleno del Tribunal Supremo." },
+                { q: "En los actos oficiales, el Fiscal General del Estado ocupa el lugar inmediato siguiente al de:", o: ["Rey de España.", "Presidente del Congreso.", "Presidente del Tribunal Supremo.", "Defensor del Pueblo."], c: 2, e: "En actos oficiales, ocupa el lugar inmediato siguiente al del Presidente del Tribunal Supremo." },
+                { q: "Si cesa el Gobierno que propuso al Fiscal General del Estado, este:", o: ["Continúa su mandato de 4 años obligatoriamente.", "Pasa a ser Presidente del TS.", "Cesa en su cargo.", "Es reelegido automáticamente."], c: 2, e: "Una de las causas de cese del FGE antes de acabar su mandato es 'Cuando cese el Gobierno que lo hubiera propuesto'." },
+                { q: "¿En qué situación administrativa queda un miembro de la Carrera Fiscal nombrado Fiscal General del Estado?", o: ["Servicio activo.", "Excedencia forzosa.", "Servicios especiales.", "Jubilación anticipada."], c: 2, e: "Quedará en la situación administrativa de servicios especiales." },
+                { q: "El Fiscal General ostenta, como órgano unipersonal:", o: ["La Presidencia del Tribunal Constitucional.", "La Jefatura Superior del Ministerio Fiscal.", "La presidencia compartida del CGPJ.", "Las tres respuestas anteriores son correctas."], c: 1, e: "El FGE ostenta la Jefatura Superior del Ministerio Fiscal." },
+                { q: "Las categorías de la Carrera Fiscal se equiparan a las de Jueces y Magistrados. Los Abogados-Fiscales se equiparan a:", o: ["Magistrados del Tribunal Supremo.", "Magistrados ordinarios.", "Jueces.", "No tienen equiparación."], c: 2, e: "Fiscales de Sala (Magistrados TS), Fiscales (Magistrados), Abogados-Fiscales (Jueces)." }
+            ],
+            // TEST 7 - Funciones detalladas (Fiscalía y CGPJ)
+            [
+                { q: "El Ministerio Fiscal tiene, entre sus funciones:", o: ["Sancionar infracciones administrativas.", "Dictar sentencias penales.", "Velar por el cumplimiento de las resoluciones judiciales que afecten al interés público y social.", "Aprobar el Presupuesto General del Estado."], c: 2, e: "Función #9 del MF: Velar por el cumplimiento de las resoluciones judiciales que afecten al interés público y social." },
+                { q: "En el ámbito de personas menores o desvalidas, el Ministerio Fiscal:", o: ["Se inhibe totalmente.", "Interviene en los procesos civiles en tanto se provee de los mecanismos ordinarios de representación.", "Solo interviene si hay violencia física.", "Aplica la Ley de Extranjería."], c: 1, e: "Función #7: Intervenir en procesos civiles... cuando puedan afectar a personas menores, incapaces o desvalidas en tanto se provee de representación." },
+                { q: "¿Quién interpone el recurso de amparo constitucional en representación del interés público?", o: ["El CGPJ.", "El Defensor del Pueblo de forma exclusiva.", "El Ministerio Fiscal (también puede interponerlo o intervenir).", "La Sala Penal del TS."], c: 2, e: "Función #12 del MF: Interponer el recurso de amparo constitucional e intervenir en procesos del Tribunal Constitucional." },
+                { q: "En caso de conflicto de atribuciones entre el Tribunal Supremo y la Audiencia Nacional, promueve los conflictos de jurisdicción o competencia procedentes:", o: ["El Rey.", "El Ministerio Fiscal.", "La Policía Judicial.", "El Jurado Popular."], c: 1, e: "Función #8: Mantener la integridad de jurisdicción... promoviendo los conflictos de jurisdicción y cuestiones de competencia." },
+                { q: "La protección procesal de las víctimas, testigos y peritos es procurada o promovida por:", o: ["El Ministerio Fiscal.", "El CGPJ.", "El Consejo de Ministros.", "Exclusivamente la Policía de proximidad."], c: 0, e: "Función #10 del MF: Velar por la protección procesal de las víctimas y testigos..." },
+                { q: "El Tribunal del Jurado se rige por el principio de:", o: ["Participación popular en la Administración de Justicia.", "Dependencia jerárquica.", "Inelegibilidad permanente.", "Secreto sumarial perpetuo."], c: 0, e: "El Jurado es expresión del 'Principio de participación popular en la Administración de Justicia' (art 125 CE)." },
+                { q: "El Ministerio Fiscal ejerce en materia de responsabilidad penal de menores las funciones que encomiende la legislación, orientadas a:", o: ["El castigo máximo.", "La satisfacción del interés superior del menor.", "El ahorro procesal.", "El interés de los padres."], c: 1, e: "Función #13: ...debiendo orientar su actuación a la satisfacción del interés superior del menor." },
+                { q: "En los supuestos previstos, defender la legalidad en los procesos del Tribunal de Cuentas, es función de:", o: ["Los Vocales del CGPJ.", "El Ministerio Fiscal.", "Jueces de Paz.", "La Abogacía del Estado en exclusiva."], c: 1, e: "Función #14: Intervenir en los procedimientos ante el Tribunal de Cuentas." },
+                { q: "El Pleno del CGPJ designará a Vocales para servir de interlocución entre las instituciones del territorio y el Consejo. ¿Cuántos por Comunidad Autónoma?", o: ["Máximo dos.", "Mínimo cuatro.", "Un suplente rotatorio.", "Cinco para las CCAA históricas."], c: 0, e: "El Pleno designará un máximo de dos Vocales por cada Comunidad Autónoma para servir de cauce de interlocución." },
+                { q: "La aprobación de la relación de puestos de trabajo del personal funcionario al servicio del CGPJ compete a:", o: ["El Ministerio de Justicia.", "La Comisión Permanente del CGPJ.", "El Pleno (o el CGPJ en funciones, que conserva esta atribución).", "La Sala de Gobierno del TS."], c: 2, e: "Atribución #18 del art 560 y art 570 (CGPJ en funciones): Aprobar la RPT del personal a su servicio." },
+                { q: "La Comisión de Calificación del CGPJ sirve para:", o: ["Fijar los sueldos de la carrera judicial.", "Informar, en todo caso, sobre nombramientos de competencia del Pleno, garantizando valoración objetiva.", "Supervisar las obras en sedes judiciales.", "Redactar sentencias en lugar del TS."], c: 1, e: "La Comisión de Calificación informa nombramientos basando su valoración en la trayectoria profesional de los candidatos." },
+                { q: "¿Cuántos Vocales forman la Comisión de Calificación?", o: ["Tres.", "Cinco (3 turno judicial, 2 juristas).", "Siete.", "Diez."], c: 1, e: "Estará integrada por cinco Vocales (3 judicial, 2 juristas) elegidos anualmente por el Pleno." },
+                { q: "Corresponde recibir las quejas de los ciudadanos sobre el funcionamiento de los órganos judiciales a:", o: ["El Tribunal Supremo.", "El Consejo General del Poder Judicial.", "La Policía Local.", "A y B son correctas."], c: 1, e: "Atribución 20ª del CGPJ: Recibir quejas de los ciudadanos en materias relacionadas con la Administración de Justicia (y el Promotor de Acción Disciplinaria las recepciona a nivel disciplinario)." },
+                { q: "¿Cuál es la función del Fiscal sobre las medidas cautelares en el proceso penal?", o: ["No tiene ninguna capacidad.", "Instar de la autoridad judicial su adopción y la práctica de diligencias.", "Puede dictarlas él mismo y encerrar al acusado sin orden judicial.", "Solo vigila que se cumplan."], c: 1, e: "Función #5: Intervenir instando de la autoridad judicial la adopción de las medidas cautelares que procedan." },
+                { q: "La determinación de la carga de trabajo que cabe exigir (a efectos disciplinarios) a un Juez corresponde en exclusiva a:", o: ["Las Comunidades Autónomas.", "El Ministerio de Justicia.", "El Consejo General del Poder Judicial.", "El Tribunal Constitucional."], c: 2, e: "Art. 560, regla 21: La determinación de la carga de trabajo que cabe exigir, a efectos disciplinarios... corresponderá en exclusiva al CGPJ." },
+                { q: "¿El CGPJ puede emitir informes en expedientes de responsabilidad patrimonial por funcionamiento anormal de la Administración de Justicia?", o: ["No, nunca.", "Sí, es una de sus atribuciones (incluso estando en funciones).", "Solo si el Rey se lo pide.", "Solamente la Comisión Económica."], c: 1, e: "Emitir informe en expedientes de responsabilidad patrimonial por anormal funcionamiento es atribución 23ª del CGPJ." },
+                { q: "El control externo del gasto del CGPJ lo realiza:", o: ["Un interventor interno.", "La Comisión Permanente.", "El Tribunal de Cuentas.", "El Ministerio de Hacienda en exclusiva."], c: 2, e: "El control interno se lleva por un funcionario de Intervención del Estado, y el control externo por el Tribunal de Cuentas." },
+                { q: "¿Puede el Rey elegir libremente a un amigo como Vocal del CGPJ?", o: ["Sí.", "No, son nombrados por el Rey pero previa elección de las Cortes (Congreso y Senado).", "Sí, pero solo los 8 del turno de juristas.", "B y C son correctas."], c: 1, e: "Los 20 miembros son nombrados por el Rey, pero designados por las Cortes Generales (10 y 10)." },
+                { q: "¿Se puede recusar a un Vocal del CGPJ?", o: ["No, no actúan jurisdiccionalmente.", "No hay mención de recusación general en su función (salvo reglas admin). El temario no cita recusación de Vocales.", "Sí, siempre.", "No, gozan de impunidad absoluta."], c: 1, e: "La abstención y recusación típica es para funciones jurisdiccionales, aunque en derecho administrativo se prevea, el temario estricto habla de recusación para Magistrados, no destaca recusación de vocales CGPJ en el texto base." },
+                { q: "Los principios de ética judicial, su divulgación y promoción, corresponden a:", o: ["Ministerio Fiscal.", "CGPJ.", "Asociaciones privadas de Jueces.", "Abogacía del Estado."], c: 1, e: "Atribución 24ª del CGPJ: Recopilación y actualización de los Principios de Ética Judicial." }
+            ],
+            // TEST 8 - Procedimientos y Casos Prácticos Institucionales
+            [
+                { q: "El TSJ actúa como Tribunal Consuetudinario en:", o: ["Asuntos de la Vega Valenciana.", "Nunca, los Tribunales Consuetudinarios (Aguas de Valencia, Hombres Buenos) son distintos e independientes, aunque ejercen jurisdicción.", "Asuntos marítimos.", "Todos los juicios de faltas."], c: 1, e: "Se reconocen como Tribunales consuetudinarios, no son parte orgánica del TSJ (art 19 LOPJ)." },
+                { q: "¿Debe prestar colaboración un ciudadano para ejecutar una sentencia judicial?", o: ["No, es opcional.", "Sí, es obligado cumplir las sentencias y prestar la colaboración requerida.", "Solo si recibe un pago previo.", "Exclusivamente la policía."], c: 1, e: "Art. 118 CE: Es obligado cumplir las sentencias y demás resoluciones firmes... así como prestar la colaboración requerida." },
+                { q: "La Justicia será gratuita:", o: ["Para todos los ciudadanos en todos los casos.", "Cuando lo disponga la ley y, en todo caso, para quienes acrediten insuficiencia de recursos.", "Jamás en el orden civil.", "Para empresas que facturen menos de un millón de euros."], c: 1, e: "Art. 119 CE: La justicia será gratuita cuando lo disponga la ley, y en todo caso para quienes acrediten insuficiencia de recursos para litigar." },
+                { q: "¿Cuál es el principio dominante en el procedimiento en materia criminal según la CE?", o: ["Predominantemente escrito.", "Predominantemente oral.", "En secreto hasta la sentencia.", "Las sentencias no requieren ser motivadas."], c: 1, e: "Art. 120 CE: El procedimiento será predominantemente oral, sobre todo en materia criminal." },
+                { q: "La Policía Judicial, en averiguación de delitos, depende funcionalmente de:", o: ["Del Ministro del Interior.", "De los Jueces, Tribunales y del Ministerio Fiscal.", "Del Presidente de la Comunidad Autónoma.", "Del Ejército."], c: 1, e: "Art. 126 CE: La policía judicial depende de los Jueces, de los Tribunales y del Ministerio Fiscal en sus funciones de averiguación..." },
+                { q: "Un Juez o Fiscal en servicio activo, ¿puede pertenecer a un partido político?", o: ["Sí, pero no a sindicatos.", "No, no pueden pertenecer a partidos políticos o sindicatos.", "Sí, si el CGPJ lo autoriza.", "Solo de carácter local."], c: 1, e: "Art. 127 CE: Jueces, Magistrados y Fiscales en activo no podrán desempeñar otros cargos públicos, ni pertenecer a partidos políticos o sindicatos." },
+                { q: "La acción popular puede ejercerla:", o: ["Solo el Ministerio Fiscal.", "Cualquier ciudadano para la defensa del interés común (penal).", "Las Administraciones Públicas únicamente.", "Los extranjeros sin residencia."], c: 1, e: "Se define como legitimación para acudir a los tribunales extendida a cualquier ciudadano para la defensa del interés común (especialmente en lo penal)." },
+                { q: "¿Tienen jurisdicción especial fuera del poder judicial el Tribunal Constitucional y de Cuentas?", o: ["No, forman parte del TS.", "Sí, se les reconoce potestades jurisdiccionales (son Tribunales especiales, no integrados en el Poder Judicial).", "Están dentro de la jurisdicción ordinaria.", "A y B son correctas."], c: 1, e: "El art 3 LOPJ reconoce potestades a otros órganos (TC, Tribunal Cuentas) considerándolos Tribunales especiales (con jurisdicción) pero fuera del PJ." },
+                { q: "¿A quién corresponde la creación y diseño del estatuto de Jueces y Magistrados, incompatibilidades y funciones del CGPJ?", o: ["Reglamento del TS.", "La Constitución remite su establecimiento a una Ley Orgánica (LOPJ).", "Ley Ordinaria de Planta.", "Real Decreto del Ministerio de Justicia."], c: 1, e: "El art. 122 CE remite a una ley orgánica el establecimiento de su estatuto, que es la LO 6/1985 (LOPJ)." },
+                { q: "¿En qué plazo deben tomar posesión los Vocales del CGPJ constituyendo la sesión?", o: ["30 días.", "15 días.", "5 días posteriores a la expiración del anterior Consejo (salvo retraso de Cámaras).", "10 días."], c: 2, e: "La toma de posesión y sesión constitutiva tendrá lugar dentro de los cinco días posteriores a la expiración del anterior." },
+                { q: "¿Quién nombra a los profesores de la Escuela Judicial?", o: ["El Rector universitario correspondiente.", "El Pleno del CGPJ o quien ejerza la atribución (CGPJ).", "Ministerio de Educación.", "Ministerio de Justicia."], c: 1, e: "El CGPJ tiene la atribución de regular la estructura de la Escuela Judicial, y nombrar a su Director y a sus profesores (art 560, regla 11)." },
+                { q: "Si el Pleno del CGPJ quiere crear una Comisión nueva, aparte de las enumeradas, necesita:", o: ["Unanimidad.", "Mayoría absoluta.", "Mayoría de tres quintos (3/5) de los vocales.", "Permiso del TSJ."], c: 2, e: "El Pleno podrá crear otras Comisiones por mayoría de 3/5 de los vocales (formadas por 5 vocales: 3 jud, 2 juristas)." },
+                { q: "¿Quién decide las licencias reglamentarias de jueces y magistrados?", o: ["La Comisión Disciplinaria.", "La Comisión Permanente del CGPJ.", "El Pleno (todas).", "El Ministerio Fiscal."], c: 1, e: "A la Comisión Permanente le compete: resolver sobre la concesión de licencias a Jueces y Magistrados." },
+                { q: "Si el CGPJ está 'en funciones' por no haberse renovado a tiempo, ¿puede nombrar al Director de la Escuela Judicial?", o: ["Sí, sin problemas.", "No. Su atribución está limitada a garantizar el funcionamiento y actualizar programas (art 570.2).", "Solo si hay urgencia aprobada por Gobierno.", "Lo nombra el Rey entonces."], c: 1, e: "El CGPJ en funciones tiene atribuciones limitadas (art 570 bis). El nombramiento de cargos discrecionales se reduce, limitándose a garantizar programas." },
+                { q: "¿Quién interpone el conflicto de atribuciones entre el Gobierno y las Cámaras?", o: ["El Rey.", "El Consejo General del Poder Judicial.", "Los grupos parlamentarios legitimados u órganos enfrentados según LOTC (el CGPJ interpone los que afecten al Poder Judicial).", "C es la más precisa."], c: 3, e: "El CGPJ interpone el conflicto de atribuciones 'entre órganos constitucionales del Estado' cuando el afectado es el Poder Judicial." },
+                { q: "Si un Magistrado comete una falta muy grave en su juzgado y no debe ser separado de carrera, es sancionado por:", o: ["Comisión Disciplinaria del CGPJ.", "Comisión de Calificación.", "El Promotor de Acción Disciplinaria.", "El Ministerio Fiscal."], c: 0, e: "La Comisión Disciplinaria resuelve expedientes por infracciones graves y muy graves (salvo separación del servicio)." },
+                { q: "¿Qué recurso cabe contra acuerdos de la Comisión Permanente del CGPJ?", o: ["Recurso de súplica.", "Recurso de apelación.", "Recurso de alzada ante el Pleno.", "No cabe recurso alguno."], c: 2, e: "Los acuerdos de la Comisión Permanente son recurribles en alzada ante el Pleno." },
+                { q: "El recurso de queja en materia contencioso-administrativa, cuando corresponda legalmente contra Secciones de Tribunales de Instancia, va a:", o: ["TSJ Sala Contenciosa.", "TS.", "A la propia Sección.", "Tribunal Central de Instancia."], c: 0, e: "El TSJ (Sala Contencioso) conocerá en 2ª instancia apelaciones y los correspondientes recursos de queja contra Tribunales de Instancia." },
+                { q: "¿Qué sucede con el CGPJ si ninguna de las Cámaras (Congreso y Senado) efectúa la designación a tiempo?", o: ["Se disuelve el Poder Judicial.", "Se eligen por sorteo.", "El Consejo saliente continuará en funciones hasta la toma de posesión del nuevo.", "Las tres respuestas anteriores son falsas."], c: 2, e: "El Consejo saliente continuará en funciones hasta la toma de posesión del nuevo." },
+                { q: "¿Qué cargo puede cesar por decisión de 3/5 del Pleno por notoria incapacidad?", o: ["El Defensor del Pueblo.", "El Presidente del TS y del CGPJ.", "Un Diputado.", "El Fiscal General del Estado."], c: 1, e: "El Presidente del TS y CGPJ puede cesar por decisión del Pleno, por notoria incapacidad o incumplimiento grave, apreciados por 3/5." }
+            ],
+            // TEST 9 - Repaso General (A y B)
+            [
+                { q: "¿Es un principio constitucional que las actuaciones judiciales sean públicas?", o: ["No, todas son secretas.", "Sí, con las excepciones que prevean las leyes de procedimiento.", "Solo en juicios penales.", "Sí, sin excepción alguna."], c: 1, e: "Art. 120 CE: Las actuaciones judiciales serán públicas, con las excepciones que prevean las leyes." },
+                { q: "¿Qué orden jurisdiccional pertenece a la jurisdicción ordinaria?", o: ["El Civil.", "El Penal.", "El Contencioso-Administrativo y el Social.", "Todas las respuestas son correctas."], c: 3, e: "Los órdenes jurisdiccionales ordinarios son: civil, penal, contencioso-administrativo y social o laboral." },
+                { q: "Los juristas elegidos para el CGPJ deben ser:", o: ["Letrados de las Cortes.", "Juristas de reconocida competencia con más de 15 años de ejercicio.", "Jueces jubilados.", "A y B son correctas."], c: 1, e: "Los 8 vocales 'no jueces' deben ser abogados y otros juristas, de reconocida competencia con >15 años de ejercicio." },
+                { q: "Al TSJ corresponde la jurisdicción en:", o: ["Todo el territorio nacional.", "Una comarca específica.", "El ámbito territorial de la Comunidad Autónoma.", "La provincia exclusivamente."], c: 2, e: "El TSJ extiende su jurisdicción al ámbito territorial de la Comunidad Autónoma correspondiente." },
+                { q: "¿Qué órgano tiene jurisdicción en materia de delitos de contrabando de material de defensa y doble uso (art 65 LOPJ)?", o: ["El Juzgado de Paz.", "La Sala de lo Penal de la Audiencia Nacional.", "El Tribunal Consuetudinario.", "Las Secciones de lo Social."], c: 1, e: "La Sala de lo Penal de la Audiencia Nacional conoce de los delitos de contrabando de material de defensa." },
+                { q: "¿De qué se encarga la Unidad de Protección de Datos en la estructura judicial?", o: ["Hay una Autoridad de Control, y el CGPJ colabora y ejerce función respecto de Jueces y Magistrados.", "Vigila los correos personales de los Jueces.", "No existe esa estructura en LOPJ.", "B y C son correctas."], c: 0, e: "Atribución 19 del CGPJ: Colaborar con la Autoridad de Control y Comisión de Supervisión de Datos (Art. 236 octies)." },
+                { q: "Los Letrados de la Administración de Justicia prestan servicio en:", o: ["El CGPJ exclusivamente.", "El Ministerio Fiscal.", "El Tribunal Supremo (y demás órganos judiciales).", "La Sala de lo Social de las CCAA."], c: 2, e: "El TS se compone de Presidente y Magistrados. Además, prestan servicio Fiscales, Letrados de la Administración de Justicia y otro personal." },
+                { q: "¿A quién corresponde la instrucción de causas contra el Defensor del Pueblo?", o: ["Audiencia Provincial.", "Tribunal Superior de Justicia.", "Sala 2ª (Penal) del Tribunal Supremo.", "Juzgados de Guardia."], c: 2, e: "La Sala 2ª del TS conoce de la instrucción y causas contra el Defensor del Pueblo, entre otros altos cargos." },
+                { q: "Recursos de revisión contra resoluciones de los Tribunales Militares son competencia de:", o: ["Sala 2ª TS.", "Sala 5ª (Militar) del TS.", "Sala del art. 61 TS.", "Audiencia Nacional."], c: 1, e: "La Sala 5ª (Militar) conocerá de los recursos de casación y revisión contra resoluciones del Tribunal Militar Central, etc." },
+                { q: "¿Quién preside la Sala Especial del art. 61 de la LOPJ?", o: ["El Magistrado más antiguo.", "El Vicepresidente del CGPJ.", "El Presidente del Tribunal Supremo.", "El Presidente de la Sala 1ª."], c: 2, e: "Está compuesta por el Presidente del TS (que la preside), los Presidentes de Sala, y el más antiguo y moderno de cada Sala." },
+                { q: "¿Las sentencias de los Tribunales Consuetudinarios (como el de Aguas) forman parte de la jurisdicción?", o: ["Sí, aunque son tribunales especiales.", "No, solo actúan como mediadores voluntarios sin valor jurídico.", "Sí, pero solo en materia penal.", "Las respuestas A y C son correctas."], c: 0, e: "Tienen potestades jurisdiccionales reconocidas, pero no integrados en el Poder Judicial propiamente, son Tribunales Especiales con valor vinculante." },
+                { q: "¿Los Jueces de Paz deben poseer alguna especialización jurídica específica?", o: ["Sí, ser Letrados.", "No, no es preciso ser licenciado en Derecho.", "Solo para el orden penal, no para el civil.", "Sí, 15 años de ejercicio."], c: 1, e: "El nombramiento (art. Jueces de Paz) no requiere ser licenciado en derecho." },
+                { q: "¿Tienen las Audiencias Provinciales competencias en materia laboral/social?", o: ["Sí, conocen de los recursos de suplicación.", "No, sus competencias son exclusivamente en el orden penal y civil.", "Solo en casos de huelgas ilegales.", "A y B son ciertas según la provincia."], c: 1, e: "La Audiencia Provincial conoce de los órdenes Civil y Penal. Lo Social va a Tribunales de Instancia (Sección Social) y TSJ." },
+                { q: "En caso de huelga con impacto en el territorio nacional, interviene el Tribunal:", o: ["Supremo (Sala Social).", "Tribunal Superior de Justicia de Madrid.", "Audiencia Nacional (Sala Social) o Tribunal de Instancia/Central según correspondiese en instancia.", "A y C son correctas. En única instancia conflictos colectivos > C.A. van a Sala Social de Audiencia Nacional."], c: 3, e: "La Sala Social de la Audiencia Nacional conoce conflictos colectivos con efectos superiores a Comunidad Autónoma." },
+                { q: "El Fiscal General del Estado toma instrucciones y atiende requerimientos de:", o: ["El Gobierno, ya que le propone.", "Nadie, no puede recibir ni atender órdenes o instrucciones fuera de lo legalmente establecido, actuando con objetividad.", "Del Presidente del Congreso.", "Los ciudadanos si reúnen firmas."], c: 1, e: "El MF actúa con plena objetividad e independencia... ni el FGE ni ningún miembro podrá recibir órdenes de ninguna autoridad." },
+                { q: "¿Cuánto dura el mandato de la Comisión Permanente del CGPJ?", o: ["Toda la vida.", "Anual (se renuevan anualmente los vocales).", "Cinco años obligatorios sin rotación.", "Un mes."], c: 1, e: "Los 7 Vocales se eligen anualmente por el Pleno para que todos puedan participar." },
+                { q: "El Gabinete de la Presidencia del TS/CGPJ, ¿a quién asiste?", o: ["Solo al Vicepresidente.", "Al Presidente, auxiliándole en sus funciones y dirigiendo los Servicios de Secretaría.", "Al Promotor de la Acción.", "Al Defensor del Pueblo."], c: 1, e: "Auxilia al Presidente en sus funciones, ejerciendo otras que encomiende y dirigiendo Servicios de Secretaría." },
+                { q: "Un Tribunal de Instancia se organiza en base territorial a un:", o: ["Distrito sanitario.", "Término Municipal exclusivo.", "Partido Judicial.", "Territorio de Policía."], c: 2, e: "Habrá un Tribunal de Instancia en cada partido judicial." },
+                { q: "¿Puede el Ministerio Fiscal promover el proceso de Habeas Corpus?", o: ["No.", "Sí, si la autoridad judicial se lo requiere, o instar medidas (interviniendo en procesos de amparo/derechos fundamentales).", "Solo lo hace la Policía.", "A y C son ciertas."], c: 1, e: "Es el guardián de la legalidad y velará por las libertades públicas (Función #3 y #11)." },
+                { q: "Las Juntas Electorales Provinciales emiten actos que pueden ser recurridos contenciosamente ante:", o: ["TSJ, Sala Contenciosa.", "TS.", "Audiencia Provincial.", "Juzgados de lo Mercantil."], c: 0, e: "La Sala Contenciosa de los TSJ conoce recursos contra actos de Juntas Electorales Provinciales y de CCAA." }
+            ],
+            // TEST 10 - Examen Final: Temas y Especialidades
+            [
+                { q: "En la elección del Vicepresidente del TS, es necesaria mayoría absoluta en primera votación. Si no se alcanza:", o: ["Queda vacante el puesto.", "Asume el cargo el Vocal más mayor.", "El Presidente debe efectuar una nueva propuesta de Vicepresidente.", "Lo decide el Rey."], c: 2, e: "De no alcanzarse mayoría absoluta, el Presidente del TS deberá efectuar una nueva propuesta de Vicepresidente." },
+                { q: "El Vocal que preside la Comisión Disciplinaria es:", o: ["El Presidente del TS.", "El Vicepresidente.", "El Vocal de origen judicial con mayor categoría y antigüedad.", "Un jurista designado por las Cortes."], c: 2, e: "La Comisión Disciplinaria actuará bajo la presidencia del Vocal de origen judicial con mayor categoría y antigüedad." },
+                { q: "La Sala 3ª del Tribunal Supremo es:", o: ["Penal.", "Civil.", "Social.", "Contencioso-Administrativo."], c: 3, e: "La Sala 3ª es de lo Contencioso-Administrativo." },
+                { q: "¿Quién conoce del recurso de casación contra Tribunales Militares?", o: ["Audiencia Nacional.", "TS Sala Penal.", "TS Sala Militar (5ª).", "El Ministerio de Defensa."], c: 2, e: "La Sala de lo Militar (5ª) conoce de casación y revisión contra Tribunales Militares Territoriales y Central." },
+                { q: "Si la Sala 3ª del TS dicta resolución de única instancia, y se formula recurso de revisión, conocerá:", o: ["La Sala 61 (Especial de revisión) del TS.", "El Pleno del TS.", "La Sala 1ª Civil.", "No hay recurso."], c: 0, e: "La Sala del art. 61 conocerá recursos de revisión contra sentencias de única instancia de la Sala Contenciosa del TS." },
+                { q: "La competencia para autorizar la interrupción de un servicio de la sociedad de la información que vulnere propiedad intelectual recae en:", o: ["El Ministro de Cultura.", "La Sección Contencioso-Administrativo del Tribunal Central de Instancia.", "Audiencia Provincial de Alicante.", "TSJ."], c: 1, e: "La Sección de lo Contencioso-Administrativo del Tribunal Central autoriza mediante auto la interrupción por propiedad intelectual (Ley 34/2002)." },
+                { q: "¿Los tribunales de instancia tienen sección civil que abarca normalmente un partido judicial?", o: ["Sí, con carácter general.", "No, siempre son provinciales.", "Solo si el ayuntamiento lo pide.", "Falso, no existen secciones civiles."], c: 0, e: "Las Secciones Civiles o Únicas extenderán su jurisdicción a un partido judicial, con carácter general." },
+                { q: "Jueces de Adscripción Territorial ejercen sus funciones en:", o: ["El ámbito del TSJ para plazas vacantes, refuerzos o ausencias > 3 meses.", "Solo en la AN.", "En las Embajadas.", "Tienen carácter supranacional."], c: 0, e: "Actúan en el ámbito provincial del TSJ para evitar interinidad y reforzar órganos vacantes o con bajas largas." },
+                { q: "Si una persona es elegida para Juez de Paz por el Pleno del Ayuntamiento y nombrada por el TSJ, ¿cuánto dura su cargo?", o: ["2 años.", "4 años.", "5 años.", "Vitalicio."], c: 1, e: "Los Jueces de Paz son nombrados por un período de cuatro años." },
+                { q: "¿A quién corresponde emitir el informe para la convalidación de un acuerdo del Gobierno en gestión directa de redes de telecomunicación?", o: ["La Sala 3ª (Contenciosa) del Tribunal Supremo.", "Juzgados Centrales de Instrucción.", "El CGPJ en Pleno.", "Sala Especial Art. 61."], c: 0, e: "La Sala 3ª del TS conoce la solicitud del Gobierno prevista en la Ley 11/2022 General de Telecomunicaciones." },
+                { q: "En la Fiscalía, ¿quién preside el Consejo Fiscal?", o: ["El Ministro de Justicia.", "El Rey.", "El Fiscal General del Estado.", "El Presidente del TS."], c: 2, e: "El Fiscal General del Estado preside el Consejo Fiscal." },
+                { q: "Los Abogados-Fiscales de la carrera fiscal son equiparados a:", o: ["Magistrados TS.", "Jueces.", "Catedráticos de Derecho.", "Vocales CGPJ."], c: 1, e: "Abogados-Fiscales están equiparados a Jueces." },
+                { q: "¿Es posible ejercer la Abogacía simultáneamente a la Carrera Fiscal activa?", o: ["Sí, en horas libres.", "No, es una incompatibilidad absoluta.", "Solo abogacía en causas civiles.", "Ninguna es correcta."], c: 1, e: "Existe incompatibilidad absoluta con el ejercicio de la abogacía y de la procura para miembros del Ministerio Fiscal." },
+                { q: "Si un Vocal CGPJ fue antes miembro del Parlamento autonómico en los 5 años previos:", o: ["Es un mérito.", "No podrá ser elegido por el turno de juristas.", "Puede serlo si renuncia al escaño justo al ser nombrado.", "Solo lo eligen si el Rey firma dispensa."], c: 1, e: "Para juristas, no podrán ser elegidos si en 5 años anteriores tuvieron condición de diputado/senador/parlamento autonómico, etc." },
+                { q: "La propuesta de nombramiento de Jueces y Magistrados por el CGPJ, que no tengan carácter discrecional, puede ser decidida por:", o: ["Comisión Disciplinaria.", "Comisión de Calificación.", "Comisión Permanente (carácter íntegramente reglado).", "La Memoria Anual."], c: 2, e: "La Permanente decide nombramientos de carácter íntegramente reglado (art 595 LOPJ)." },
+                { q: "¿Quién asume la competencia exclusiva de marcas de la Unión Europea a nivel nacional en segunda instancia?", o: ["La Audiencia Nacional.", "Audiencia Provincial de Madrid.", "Sección/es especializada de la Audiencia Provincial de Alicante.", "TS Sala 1ª."], c: 2, e: "La A.P. de Alicante conocerá en 2ª instancia y exclusiva como Tribunal de Marca de la Unión Europea." },
+                { q: "El Pleno de un Ayuntamiento debe aprobar la elección del Juez de Paz por:", o: ["Mayoría simple.", "Unanimidad.", "Mayoría absoluta.", "Consenso de grupos."], c: 2, e: "La elección por el Pleno del Ayuntamiento se hace por mayoría absoluta." },
+                { q: "Las resoluciones del Fiscal General del Estado pueden ser ignoradas por los fiscales jerárquicamente subordinados:", o: ["Sí, por independencia.", "No, hay dependencia jerárquica y unidad de actuación.", "Depende de la Comunidad Autónoma.", "Solo en materia tributaria."], c: 1, e: "El Ministerio Fiscal ejerce por órganos propios bajo principios de unidad de actuación y dependencia jerárquica." },
+                { q: "¿Los Letrados del Gabinete Técnico del TS prestan servicio en?", o: ["La Escuela Judicial.", "Las diferentes áreas del TS atendiendo a su especialización.", "La Fiscalía General.", "Comunidad Europea."], c: 1, e: "Prestarán servicios en las diferentes áreas (tantas como órdenes) atendiendo a su especialización." },
+                { q: "La Memoria Anual del CGPJ debe incluir un informe específico sobre:", o: ["Los sueldos de alcaldes.", "Impacto de género en el ámbito judicial y uso de lenguas cooficiales.", "El presupuesto de Defensa.", "Misiones internacionales militares."], c: 1, e: "La Memoria incluye sendos capítulos respecto a: a) Actividad y gasto, b) Impacto de género, c) Uso de lenguas cooficiales." }
+            ]
+        ];
+
+        // --- UI LOGIC ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-blue-50', 'text-blue-700', 'border-l-4', 'border-blue-500', 'font-semibold');
+                el.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            const btn = document.getElementById('btn-' + tabId);
+            btn.classList.add('bg-blue-50', 'text-blue-700', 'border-l-4', 'border-blue-500', 'font-semibold');
+            btn.classList.remove('text-gray-600', 'hover:bg-gray-50');
+            
+            // Stop TTS if switching away from Esquema
+            if(tabId !== 'esquema') {
+                window.speechSynthesis.cancel();
+                updateTTSButtonState(false);
+            }
+        }
+
+        function renderEsquema() {
+            const container = document.getElementById('esquema-container');
+            let html = '';
+            esquemaData.forEach((item, index) => {
+                html += `
+                    <div class="border-b border-gray-100 pb-4 last:border-0 last:pb-0" id="esq-item-${index}">
+                        <h3 class="font-bold text-lg text-blue-900 mb-2">
+                            <span class="text-blue-500 mr-2">${index + 1}.</span>${item.q}
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed">${item.a}</p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderTests() {
+            const navContainer = document.getElementById('test-nav-container');
+            const testsWrapper = document.getElementById('tests-wrapper');
+            
+            testsData.forEach((test, index) => {
+                const testId = `test-${index + 1}`;
+                
+                // Add Nav Button
+                navContainer.innerHTML += `
+                    <button onclick="switchTab('${testId}')" id="btn-${testId}" class="tab-btn w-full text-left px-6 py-3 border-b border-gray-100 text-gray-600 hover:bg-gray-50 focus:outline-none transition-colors">
+                        Test ${index + 1}
+                    </button>
+                `;
+
+                // Add Test Content Area
+                let testHTML = `
+                    <div id="tab-${testId}" class="tab-content max-w-4xl mx-auto">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Test ${index + 1} (20 Preguntas)</h2>
+                        <div class="bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-gray-200">
+                            <form id="form-${testId}" onsubmit="return false;" class="space-y-8">
+                `;
+
+                test.forEach((q, qIndex) => {
+                    testHTML += `
+                        <div class="question-block" id="block-${testId}-${qIndex}">
+                            <h3 class="font-semibold text-lg text-gray-800 mb-4"><span class="text-blue-600">${qIndex + 1}.</span> ${q.q}</h3>
+                            <div class="space-y-2">
+                    `;
+                    q.o.forEach((opt, optIndex) => {
+                        testHTML += `
+                            <label class="option-label flex items-start p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 w-full" id="label-${testId}-${qIndex}-${optIndex}">
+                                <input type="radio" name="q-${testId}-${qIndex}" value="${optIndex}" class="mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-3 text-gray-700">${opt}</span>
+                            </label>
+                        `;
+                    });
+                    
+                    testHTML += `
+                            </div>
+                            <div id="exp-${testId}-${qIndex}" class="explanation mt-4 p-4 rounded-lg bg-blue-50 border border-blue-100 text-sm text-blue-900 shadow-inner">
+                                <strong>Explicación:</strong> ${q.e}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                testHTML += `
+                                <div class="pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between">
+                                    <div id="result-${testId}" class="text-xl font-bold text-gray-800 mb-4 sm:mb-0 hidden"></div>
+                                    <div class="space-x-4">
+                                        <button type="button" onclick="submitTest(${index})" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow transition-colors">Calcular resultado</button>
+                                        <button type="button" onclick="resetTest(${index})" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg transition-colors">Reiniciar test</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                testsWrapper.innerHTML += testHTML;
+            });
+        }
+
+        function submitTest(testIndex) {
+            const testId = `test-${testIndex + 1}`;
+            const test = testsData[testIndex];
+            let score = 0;
+            let total = test.length;
+
+            test.forEach((q, qIndex) => {
+                const radios = document.getElementsByName(`q-${testId}-${qIndex}`);
+                let selectedValue = null;
+                
+                // reset previous styles
+                q.o.forEach((_, optIndex) => {
+                    const label = document.getElementById(`label-${testId}-${qIndex}-${optIndex}`);
+                    label.classList.remove('correct-answer', 'incorrect-answer');
+                    // Disable radios after submission
+                    document.querySelector(`input[name="q-${testId}-${qIndex}"][value="${optIndex}"]`).disabled = true;
+                });
+
+                radios.forEach(radio => {
+                    if (radio.checked) selectedValue = parseInt(radio.value);
+                });
+
+                const correctLabel = document.getElementById(`label-${testId}-${qIndex}-${q.c}`);
+                correctLabel.classList.add('correct-answer');
+
+                if (selectedValue !== null) {
+                    if (selectedValue === q.c) {
+                        score++;
+                    } else {
+                        const wrongLabel = document.getElementById(`label-${testId}-${qIndex}-${selectedValue}`);
+                        wrongLabel.classList.add('incorrect-answer');
+                    }
+                }
+
+                // Show explanation
+                document.getElementById(`exp-${testId}-${qIndex}`).classList.add('show');
+            });
+
+            const resultDiv = document.getElementById(`result-${testId}`);
+            resultDiv.innerHTML = `Resultado: ${score} / ${total} aciertos. <span class="text-sm font-normal text-gray-500 ml-2">(${total - score} errores/en blanco)</span>`;
+            resultDiv.classList.remove('hidden');
+        }
+
+        function resetTest(testIndex) {
+            const testId = `test-${testIndex + 1}`;
+            const test = testsData[testIndex];
+
+            // Reset form
+            document.getElementById(`form-${testId}`).reset();
+            
+            // Hide results
+            document.getElementById(`result-${testId}`).classList.add('hidden');
+
+            test.forEach((q, qIndex) => {
+                // Enable inputs and remove classes
+                q.o.forEach((_, optIndex) => {
+                    const label = document.getElementById(`label-${testId}-${qIndex}-${optIndex}`);
+                    label.classList.remove('correct-answer', 'incorrect-answer');
+                    document.querySelector(`input[name="q-${testId}-${qIndex}"][value="${optIndex}"]`).disabled = false;
+                });
+
+                // Hide explanation
+                document.getElementById(`exp-${testId}-${qIndex}`).classList.remove('show');
+            });
+        }
+
+        // --- TEXT TO SPEECH (TTS) ---
+        let ttsActive = false;
+        
+        function updateTTSButtonState(active) {
+            ttsActive = active;
+            const btn = document.getElementById('tts-btn');
+            const text = document.getElementById('tts-text');
+            if(active) {
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-red-500', 'hover:bg-red-600');
+                text.innerText = 'Detener Lectura';
+            } else {
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.remove('bg-red-500', 'hover:bg-red-600');
+                text.innerText = 'Escuchar Esquema';
+            }
+        }
+
+        function toggleTTS() {
+            if (ttsActive) {
+                window.speechSynthesis.cancel();
+                updateTTSButtonState(false);
+            } else {
+                // Stop any previous speech
+                window.speechSynthesis.cancel();
+                
+                // Extract all text from schema
+                let fullText = "Esquema Fundamental del Poder Judicial. ";
+                esquemaData.forEach((item, index) => {
+                    fullText += `Pregunta ${index + 1}. ${item.q}. Respuesta: ${item.a}. `;
+                });
+
+                // Split into chunks to avoid browser synthesis limits
+                const chunks = fullText.match(/[^.!?]+[.!?]+/g) || [fullText];
+                
+                chunks.forEach((chunk, index) => {
+                    const utterance = new SpeechSynthesisUtterance(chunk.trim());
+                    utterance.lang = 'es-ES';
+                    utterance.rate = 1.0; 
+                    
+                    if (index === chunks.length - 1) {
+                        utterance.onend = () => updateTTSButtonState(false);
+                    }
+                    utterance.onerror = () => updateTTSButtonState(false);
+
+                    window.speechSynthesis.speak(utterance);
+                });
+                
+                updateTTSButtonState(true);
+            }
+        }
+
+        // INIT
+        window.onload = () => {
+            renderEsquema();
+            renderTests();
+        };
+
+    </script>
+</body>
+</html>
