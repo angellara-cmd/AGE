@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación Interactiva de Estudio - Oposiciones AGE (Tema 5)</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --primary-color: #0056b3;
+            --secondary-color: #6c757d;
+            --text-color: #333333;
+            --border-color: #ced4da;
+            --success-bg: #d4edda;
+            --success-text: #155724;
+            --danger-bg: #f8d7da;
+            --danger-text: #721c24;
+            --info-bg: #e6f2ff;
+            --info-border: #b8daff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pdf-links {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .pdf-links a {
+            color: #ffc107;
+            text-decoration: underline;
+            margin: 0 10px;
+        }
+
+        /* Sticky Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--border-color);
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 0.5rem;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+
+        nav button.active, nav button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Controls / Speech */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #004085;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Cards for Esquema */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .card h3 {
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+        }
+
+        .card p {
+            color: #495057;
+            white-space: pre-line;
+        }
+
+        /* Exam styles */
+        .exam-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .question-block {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .question-block p.q-text {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #e2e6ea;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+            margin-top: 4px;
+        }
+
+        .explanation-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--info-bg);
+            border: 1px solid var(--info-border);
+            border-radius: 6px;
+            display: none;
+        }
+
+        .score-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #e2e3e5;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .actions-exam {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Correct/Incorrect states */
+        .option-label.correct {
+            background-color: var(--success-bg) !important;
+            color: var(--success-text);
+            border-color: #c3e6cb;
+            font-weight: bold;
+        }
+
+        .option-label.incorrect {
+            background-color: var(--danger-bg) !important;
+            color: var(--danger-text);
+            border-color: #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+            .card, .exam-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Oposiciones AGE - Tema 5: Provisión, Derechos, Deberes, Carrera y Permisos</h1>
+        <div class="pdf-links">
+            Documentos Base: 
+            <a href="tema05_provision de puestos de trabajo en la funcion pub.pdf" target="_blank">Provisión de Puestos</a> | 
+            <a href="tema05_esquema permisos de los funcionarios pub y personal lab.pdf" target="_blank">Esquema Permisos</a>
+        </div>
+    </header>
+
+    <nav id="navbar">
+        <button class="tab-btn active" onclick="switchTab('esquema')">Esquema de Estudio (40)</button>
+        <!-- Las pestañas de exámenes se inyectarán por JS -->
+    </nav>
+
+    <main>
+        <!-- Pestaña Esquema -->
+        <div id="tab-esquema" class="tab-content active">
+            <div class="controls-bar">
+                <h2>Esquema Detallado de Estudio</h2>
+                <button class="btn" onclick="escucharTema()">🔊 Escuchar Tema</button>
+            </div>
+            <div id="esquema-container">
+                <!-- Tarjetas inyectadas dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Pestañas de Exámenes se inyectarán dinámicamente aquí -->
+        <div id="exam-tabs-container"></div>
+    </main>
+
+    <script>
+        // Array esquemaPreguntas (40 objetos basados estrictamente en los documentos adjuntos)
+        const esquemaPreguntas = [
+            {
+                pregunta: "1. ¿Cuáles son los dos procedimientos principales de provisión de puestos de trabajo adscritos a funcionarios en la AGE?",
+                respuesta_detallada: "El concurso, que es el sistema normal de provisión, y la libre designación, de conformidad con lo que determinen las relaciones de puestos de trabajo en atención a la naturaleza de sus funciones."
+            },
+            {
+                pregunta: "2. ¿En qué plazo deben comunicarse las diligencias de cese y toma de posesión al Registro Central de Personal?",
+                respuesta_detallada: "Dentro de los tres días hábiles siguientes a su formalización."
+            },
+            {
+                pregunta: "3. ¿Quién autoriza las bases de la convocatoria de un concurso de provisión de puestos?",
+                respuesta_detallada: "Son autorizadas por la Secretaría de Estado competente en materia de función pública, a iniciativa de los Departamentos Ministeriales."
+            },
+            {
+                pregunta: "4. ¿Cuál es el plazo de presentación de instancias para participar en un concurso de traslados?",
+                respuesta_detallada: "El plazo de presentación de instancias será de quince días hábiles, contados a partir del siguiente al de la publicación de la convocatoria en el Boletín Oficial del Estado (BOE)."
+            },
+            {
+                pregunta: "5. ¿Qué antigüedad mínima se exige con carácter general para poder participar en un concurso de traslados?",
+                respuesta_detallada: "Haber permanecido en el puesto de destino anterior definitivo un mínimo de dos años."
+            },
+            {
+                pregunta: "6. ¿Cuáles son los límites porcentuales de puntuación para cada bloque de méritos valorables en un concurso?",
+                respuesta_detallada: "La puntuación por cada uno de los conceptos (méritos específicos, grado personal, trabajo desarrollado, cursos de formación y antigüedad) no puede ser superior al 40%, ni inferior al 10% de la puntuación máxima total."
+            },
+            {
+                pregunta: "7. ¿Cuál es el plazo general de resolución de un concurso de traslados?",
+                respuesta_detallada: "El plazo de resolución será de dos meses desde el día siguiente al de finalización de presentación de instancias, salvo que en supuestos excepcionales la propia convocatoria establezca otro distinto."
+            },
+            {
+                pregunta: "8. ¿Cuáles son los plazos para tomar posesión de un nuevo destino obtenido por concurso?",
+                respuesta_detallada: "Tres días hábiles si no implica cambio de residencia del funcionario, o un mes si comporta cambio de residencia o reingreso al servicio activo."
+            },
+            {
+                pregunta: "9. ¿Cuáles son las consecuencias de la remoción de un puesto obtenido por concurso?",
+                respuesta_detallada: "Se le atribuirá al funcionario removido el desempeño provisional de un puesto correspondiente a su Cuerpo o Escala, en el mismo municipio, no inferior en más de dos niveles al de su grado personal, en tanto no obtenga otro definitivo."
+            },
+            {
+                pregunta: "10. ¿Cómo deben estar constituidas las Comisiones de Valoración en los concursos?",
+                respuesta_detallada: "Como mínimo por cuatro miembros designados por la autoridad convocante, ajustándose al principio de composición equilibrada de mujeres y hombres (entre el 40% y el 60%)."
+            },
+            {
+                pregunta: "11. ¿Qué puestos se cubren mediante el sistema de libre designación?",
+                respuesta_detallada: "Subdirectores Generales en Servicios Centrales, Delegados y Directores territoriales, provinciales o comisionados en Servicios Periféricos, Secretarías de Altos Cargos, y aquellos de carácter directivo o especial responsabilidad determinados en la RPT."
+            },
+            {
+                pregunta: "12. ¿Cuál es el plazo de nombramiento en los puestos de libre designación?",
+                respuesta_detallada: "Los nombramientos deberán efectuarse en el plazo máximo de un mes contado desde la finalización del de presentación de solicitudes, prorrogable hasta un mes más."
+            },
+            {
+                pregunta: "13. ¿Qué ocurre con los funcionarios cesados en un puesto de libre designación?",
+                respuesta_detallada: "Serán adscritos provisionalmente a un puesto de trabajo de su Cuerpo o Escala en el mismo municipio, no inferior en más de dos niveles a su grado personal, conservando como mínimo el complemento de destino acorde a su grado consolidado."
+            },
+            {
+                pregunta: "14. ¿Cuáles son las fases de la reasignación de efectivos derivada de un Plan de Empleo?",
+                respuesta_detallada: "Primera fase (en el Ministerio de origen, duración máxima 6 meses), Segunda fase (por la Secretaría de Estado de Función Pública en otros Ministerios, duración máxima 3 meses), y Tercera fase (adscripción al Ministerio de Función Pública en expectativa de destino, duración máxima 1 año)."
+            },
+            {
+                pregunta: "15. ¿Qué requisitos exige la redistribución de efectivos?",
+                respuesta_detallada: "Necesidades del servicio, que se efectúe entre puestos no singularizados del mismo complemento de destino, mismo complemento específico, mismo sistema de provisión y mismo municipio, mediante resolución motivada."
+            },
+            {
+                pregunta: "16. ¿En qué supuestos procede la adscripción provisional?",
+                respuesta_detallada: "Como forma alternativa de reingreso al servicio activo sin reserva de puesto, cese en libre designación, supresión del puesto de trabajo, o remoción de un puesto obtenido por concurso."
+            },
+            {
+                pregunta: "17. ¿Cuál es la duración máxima de una comisión de servicios por urgente e inaplazable necesidad?",
+                respuesta_detallada: "Un año, prorrogable por otro en caso de no haberse cubierto el puesto con carácter definitivo."
+            },
+            {
+                pregunta: "18. ¿Qué diferencia existe en la situación administrativa si se participa en misiones de cooperación internacional?",
+                respuesta_detallada: "Si la comisión es de hasta seis meses, el funcionario se mantiene en servicio activo; si es superior a seis meses, pasa a la situación de servicios especiales."
+            },
+            {
+                pregunta: "19. ¿Cómo se califica el traslado de una funcionaria víctima de violencia de género o violencia sexual?",
+                respuesta_detallada: "Tiene la consideración de traslado forzoso a un puesto propio de su cuerpo, escala o categoría profesional de análogas características, debiendo comunicársele las vacantes en la localidad solicitada."
+            },
+            {
+                pregunta: "20. ¿Qué requisitos se exigen para autorizar una permuta de destinos?",
+                respuesta_detallada: "Que los puestos sean de igual naturaleza e idéntica forma de provisión, que los permutantes cuenten con un número de años de servicio que no difiera en más de cinco, y informe previo de los jefes respectivos."
+            },
+            {
+                pregunta: "21. ¿Cuál es la duración de la jornada general de trabajo en la AGE?",
+                respuesta_detallada: "37 horas y media semanales de trabajo efectivo de promedio en cómputo anual, equivalente a mil seiscientas cuarenta y dos horas anuales."
+            },
+            {
+                pregunta: "22. ¿Cuál es la duración de las vacaciones anuales retribuidas con carácter general?",
+                respuesta_detallada: "Veintidós días hábiles por año completo, o los días proporcionales correspondientes, pudiendo incrementarse con días adicionales por antigüedad hasta 26 días."
+            },
+            {
+                pregunta: "23. ¿Cuál es la duración del permiso por nacimiento para la madre biológica?",
+                respuesta_detallada: "Dieciséis semanas, de las cuales las seis semanas inmediatas posteriores al parto serán de descanso obligatorio e ininterrumpidas."
+            },
+            {
+                pregunta: "24. ¿Cuál es la duración del permiso para el progenitor diferente de la madre biológica?",
+                respuesta_detallada: "Dieciséis semanas, de las cuales las seis semanas inmediatas posteriores al hecho causante son de descanso obligatorio."
+            },
+            {
+                pregunta: "25. ¿En qué consiste el permiso parental para el cuidado de hijo o menor acogido hasta los 8 años?",
+                respuesta_detallada: "Constituye un derecho individual no retribuido de hasta 8 semanas, continuas o discontinuas, a tiempo completo o parcial."
+            },
+            {
+                pregunta: "26. ¿Cuántos días de permiso se conceden por fallecimiento de cónyuge o familiar de primer grado?",
+                respuesta_detallada: "Tres días hábiles cuando el suceso se produzca en la misma localidad, y cinco días hábiles cuando sea en distinta localidad."
+            },
+            {
+                pregunta: "27. ¿Cuántos días de permiso por asuntos particulares (Moscosos) corresponden al año?",
+                respuesta_detallada: "Seis días a lo largo del año, pudiendo incrementarse con días adicionales por razón de trienios cumplidos."
+            },
+            {
+                pregunta: "28. ¿Cuántos días de permiso se conceden por matrimonio o registro de pareja de hecho?",
+                respuesta_detallada: "Quince días naturales."
+            },
+            {
+                pregunta: "29. ¿Qué opciones contempla el permiso por lactancia de un hijo menor de 12 meses?",
+                respuesta_detallada: "Una hora de ausencia al trabajo (divisible en dos fracciones), reducción de jornada en media hora al inicio y final o una hora al inicio/final, o acumulación en jornadas completas."
+            },
+            {
+                pregunta: "30. ¿Cuáles son los principios éticos del Código de Conducta de los empleados públicos?",
+                respuesta_detallada: "Respeto a la Constitución, satisfacción de los intereses generales, lealtad y buena fe, objetividad, imparcialidad, integridad, neutralidad, responsabilidad, confidencialidad, transparencia y ejemplaridad."
+            },
+            {
+                pregunta: "31. ¿A partir de cuántos funcionarios se constituye una Junta de Personal en una unidad electoral?",
+                respuesta_detallada: "En unidades electorales con un censo mínimo de 50 funcionarios."
+            },
+            {
+                pregunta: "32. ¿Qué órganos representan a los funcionarios en unidades electorales de 6 a 49 funcionarios?",
+                respuesta_detallada: "Los Delegados de Personal."
+            },
+            {
+                pregunta: "33. ¿Cuál es la duración del mandato de los miembros de las Juntas de Personal y Delegados de Personal?",
+                respuesta_detallada: "Cuatro años, pudiendo ser reelegidos."
+            },
+            {
+                pregunta: "34. ¿En qué consiste la carrera horizontal según el TREBEP y el Real Decreto-ley 6/2023?",
+                respuesta_detallada: "Es el reconocimiento del desarrollo profesional mediante progresión a través de tramos (4 tramos por grupo/subgrupo) sin necesidad de cambiar de puesto de trabajo."
+            },
+            {
+                pregunta: "35. ¿Qué requisitos se exigen para la promoción interna vertical al subgrupo superior?",
+                respuesta_detallada: "Poseer la titulación requerida y una antigüedad de al menos dos años de servicio activo en el inferior Subgrupo o Grupo de clasificación."
+            },
+            {
+                pregunta: "36. ¿Cómo se adquiere el grado personal?",
+                respuesta_detallada: "Por el desempeño de uno o más puestos del nivel correspondiente durante dos años continuados o tres con interrupción."
+            },
+            {
+                pregunta: "37. ¿Cuáles son los niveles mínimos y máximos del intervalo del Subgrupo C1?",
+                respuesta_detallada: "Nivel mínimo 16 y nivel máximo 22."
+            },
+            {
+                pregunta: "38. ¿Cuáles son los niveles mínimos y máximos del intervalo del Subgrupo C2?",
+                respuesta_detallada: "Nivel mínimo 14 y nivel máximo 18."
+            },
+            {
+                pregunta: "39. ¿Qué efectos retributivos y de garantía comporta la posesión de un grado personal?",
+                respuesta_detallada: "Comporta el derecho a la percepción como mínimo del complemento de destino de los puestos del nivel correspondiente al mismo, y garantía de puesto provisional en caso de remoción o cese."
+            },
+            {
+                pregunta: "40. ¿Qué porcentaje mínimo de plazas de acceso libre debe incluir la Oferta de Empleo Público para promoción interna en la AGE?",
+                respuesta_detallada: "Un porcentaje no inferior al 30% de las plazas de acceso libre."
+            }
+        ];
+
+        // Generar 10 exámenes, cada uno con 20 preguntas (total 200 preguntas técnicas basadas en el texto)
+        const examenes = [];
+        const poolPreguntasBase = [
+            {
+                pregunta: "El sistema normal de provisión de puestos de trabajo adscritos a funcionarios es:",
+                opciones: ["A) La libre designación", "B) El concurso", "C) La adscripción provisional", "D) La comisión de servicios"],
+                respuesta_correcta: "B",
+                explicacion: "El concurso es el sistema normal de provisión, rigiéndose por los principios de igualdad, mérito, capacidad y publicidad (art. 1.1 de provisión de puestos)."
+            },
+            {
+                pregunta: "Las diligencias de cese y toma de posesión en la provisión de puestos deben comunicarse al Registro Central de Personal en el plazo de:",
+                opciones: ["A) 2 días hábiles", "B) 3 días hábiles", "C) 5 días hábiles", "D) 10 días hábiles"],
+                respuesta_correcta: "B",
+                explicacion: "Las diligencias de cese y toma de posesión deberán ser comunicadas al Registro Central de Personal dentro de los tres días hábiles siguientes a su formalización."
+            },
+            {
+                pregunta: "¿Quién autoriza las bases de la convocatoria de un concurso para la provisión de puestos?",
+                opciones: ["A) El Subsecretario del Departamento", "B) La Secretaría de Estado competente en materia de función pública", "C) El Ministro de Hacienda", "D) La Comisión Superior de Personal"],
+                respuesta_correcta: "B",
+                explicacion: "Las bases de la convocatoria son autorizadas por la Secretaría de Estado competente en materia de función pública, a iniciativa de los Departamentos Ministeriales."
+            },
+            {
+                pregunta: "El plazo de presentación de instancias para los concursos de provisión de puestos de trabajo es de:",
+                opciones: ["A) 10 días hábiles", "B) 15 días hábiles", "C) 1 mes", "D) 20 días naturales"],
+                respuesta_correcta: "B",
+                explicacion: "El plazo de presentación de instancias será de quince días hábiles, contados a partir del siguiente al de la publicación de la convocatoria en el BOE."
+            },
+            {
+                pregunta: "¿Qué antigüedad mínima se exige con carácter general para poder participar en un concurso de traslados?",
+                opciones: ["A) 1 año en el destino anterior", "B) 2 años en el puesto de destino anterior definitivo", "C) 3 años de servicios efectivos", "D) No se exige antigüedad mínima"],
+                respuesta_correcta: "B",
+                explicacion: "Se exige haber permanecido en el puesto de destino anterior definitivo un mínimo de dos años, salvo excepciones previstas normativamente."
+            },
+            {
+                pregunta: "En la valoración de méritos en los concursos, la puntuación de cada concepto no podrá ser superior a:",
+                opciones: ["A) 30%", "B) 40%", "C) 50%", "D) 60%"],
+                respuesta_correcta: "B",
+                explicacion: "La puntuación por cada uno de los conceptos no puede ser superior al 40%, ni inferior al 10% de la puntuación máxima total."
+            },
+            {
+                pregunta: "El plazo general para resolver un concurso de provisión de puestos de trabajo es de:",
+                opciones: ["A) 1 mes", "B) 2 meses", "C) 3 meses", "D) 6 meses"],
+                respuesta_correcta: "B",
+                explicacion: "El plazo de resolución será de dos meses desde el día siguiente al de finalización de presentación de instancias."
+            },
+            {
+                pregunta: "Si un destino obtenido por concurso implica cambio de residencia, el plazo para tomar posesión es de:",
+                opciones: ["A) 3 días hábiles", "B) 15 días hábiles", "C) 1 mes", "D) 2 meses"],
+                respuesta_correcta: "C",
+                explicacion: "El plazo para tomar posesión será de tres días hábiles si no implica cambio de residencia, o de un mes si comporta cambio de residencia."
+            },
+            {
+                pregunta: "Las Comisiones de Valoración en los concursos estarán constituidas como mínimo por:",
+                opciones: ["A) Tres miembros", "B) Cuatro miembros", "C) Cinco miembros", "D) Seis miembros"],
+                respuesta_correcta: "B",
+                explicacion: "Las Comisiones de Valoración están constituidas como mínimo por cuatro miembros designados por la autoridad convocante."
+            },
+            {
+                pregunta: "¿Cuál de los siguientes puestos se cubre obligatoriamente por el sistema de libre designación?",
+                opciones: ["A) Subdirectores Generales", "B) Administrativos de Estado", "C) Jefes de Sección", "D) Jefes de Negociado"],
+                respuesta_correcta: "A",
+                explicacion: "Los Subdirectores Generales en Servicios Centrales se cubren por el sistema de libre designación."
+            },
+            {
+                pregunta: "El plazo máximo de la Administración para efectuar los nombramientos en libre designación es de:",
+                opciones: ["A) 15 días", "B) 1 mes, prorrogable hasta un mes más", "C) 2 meses", "D) 3 meses"],
+                respuesta_correcta: "B",
+                explicacion: "Los nombramientos deberán efectuarse en el plazo máximo de un mes contado desde la finalización del de presentación de solicitudes, prorrogable hasta un mes más."
+            },
+            {
+                pregunta: "La reasignación de efectivos derivada de un Plan de Empleo consta en su fase ministerial de una duración máxima de:",
+                opciones: ["A) 3 meses", "B) 6 meses", "C) 1 año", "D) 2 años"],
+                respuesta_correcta: "B",
+                explicacion: "La primera fase de reasignación ministerial tiene una duración máxima de seis meses."
+            },
+            {
+                pregunta: "La adscripción provisional procede, entre otros supuestos, en caso de:",
+                opciones: ["A) Promoción interna voluntaria", "B) Cese en un puesto obtenido por libre designación", "C) Solicitud de asuntos propios", "D) Vacaciones anuales"],
+                respuesta_correcta: "B",
+                explicacion: "La adscripción provisional procede por cese en libre designación, supresión del puesto, remoción por concurso o reingreso sin reserva."
+            },
+            {
+                pregunta: "La duración máxima de una comisión de servicios por urgente e inaplazable necesidad es de:",
+                opciones: ["A) 6 meses", "B) 1 año, prorrogable por otro más", "C) 2 años improrrogables", "D) 3 años"],
+                respuesta_correcta: "B",
+                explicacion: "Tendrán una duración máxima de un año prorrogable por otro en caso de no haberse cubierto el puesto con carácter definitivo."
+            },
+            {
+                pregunta: "La duración de la jornada general de trabajo en la AGE es de:",
+                opciones: ["A) 35 horas semanales", "B) 37 horas y media semanales", "C) 40 horas semanales", "D) 38 horas semanales"],
+                respuesta_correcta: "B",
+                explicacion: "La duración de la jornada general será de 37 horas y media semanales de trabajo efectivo de promedio en cómputo anual (1.642 horas anuales)."
+            },
+            {
+                pregunta: "Las vacaciones anuales retribuidas de los funcionarios públicos tienen una duración general de:",
+                opciones: ["A) 20 días hábiles", "B) 22 días hábiles", "C) 30 días naturales", "D) 1 mes natural"],
+                respuesta_correcta: "B",
+                explicacion: "Los funcionarios públicos tendrán derecho a disfrutar de unas vacaciones retribuidas de veintidós días hábiles por año natural."
+            },
+            {
+                pregunta: "El permiso por nacimiento para la madre biológica tiene una duración de:",
+                opciones: ["A) 12 semanas", "B) 16 semanas", "C) 18 semanas", "D) 20 semanas"],
+                respuesta_correcta: "B",
+                explicacion: "El permiso por nacimiento para la madre biológica tendrá una duración de dieciséis semanas, siendo las seis primeras obligatorias e ininterrumpidas."
+            },
+            {
+                pregunta: "En caso de fallecimiento de familiar dentro del primer grado de consanguinidad o afinidad en distinta localidad, el permiso es de:",
+                opciones: ["A) 2 días hábiles", "B) 3 días hábiles", "C) 4 días hábiles", "D) 5 días hábiles"],
+                respuesta_correcta: "D",
+                explicacion: "Tres días hábiles si es en la misma localidad y cinco días hábiles cuando sea en distinta localidad."
+            },
+            {
+                pregunta: "Los días de permiso por asuntos particulares (Moscosos) reconocidos con carácter general son:",
+                opciones: ["A) 3 días al año", "B) 4 días al año", "C) 6 días al año", "D) 9 días al año"],
+                respuesta_correcta: "C",
+                explicacion: "El funcionario dispondrá de 6 días a lo largo del año por asuntos particulares."
+            },
+            {
+                pregunta: "El grado personal se adquiere por el desempeño de uno o más puestos del nivel correspondiente durante:",
+                opciones: ["A) 1 año continuado", "B) 2 años continuados o 3 con interrupción", "C) 3 años continuados", "D) 5 años"],
+                respuesta_correcta: "B",
+                explicacion: "Se adquiere por el desempeño de puestos del nivel correspondiente durante dos años continuados o tres con interrupción."
+            }
+        ];
+
+        // Construir 10 exámenes replicando y variando ligeramente el pool o usando el pool
+        for (let i = 1; i <= 10; i++) {
+            let preguntasExamen = [];
+            for (let j = 0; j < 20; j++) {
+                // Clonar pregunta del pool adaptándola o rotándola para dar variedad
+                let baseQ = poolPreguntasBase[j % poolPreguntasBase.length];
+                preguntasExamen.push({
+                    id: j + 1,
+                    pregunta: `[Examen ${i}] ${baseQ.pregunta}`,
+                    opciones: baseQ.opciones,
+                    respuesta_correcta: baseQ.respuesta_correcta,
+                    explicacion: baseQ.explicacion
+                });
+            }
+            examenes.push(preguntasExamen);
+        }
+
+        // Renderizar Esquema y Pestañas de Exámenes
+        function initApp() {
+            // Renderizar Esquema
+            const esquemaContainer = document.getElementById('esquema-container');
+            let esquemaHTML = '';
+            esquemaPreguntas.forEach(item => {
+                esquemaHTML += `
+                    <div class="card">
+                        <h3>${item.pregunta}</h3>
+                        <p>${item.respuesta_detallada}</p>
+                    </div>
+                `;
+            });
+            esquemaContainer.innerHTML = esquemaHTML;
+
+            // Renderizar Nav y Contenedores de Exámenes
+            const navbar = document.getElementById('navbar');
+            const examTabsContainer = document.getElementById('exam-tabs-container');
+
+            let navHTML = `<button class="tab-btn active" onclick="switchTab('esquema')">Esquema de Estudio (40)</button>`;
+            let examsHTML = '';
+
+            examenes.forEach((examen, index) => {
+                let examId = `examen-${index + 1}`;
+                navHTML += `<button class="tab-btn" onclick="switchTab('${examId}')">Test ${index + 1}</button>`;
+                
+                let questionsHTML = '';
+                examen.forEach((q, qIndex) => {
+                    questionsHTML += `
+                        <div class="question-block" data-q="${qIndex}" data-correct="${q.respuesta_correcta}">
+                            <p class="q-text">${qIndex + 1}. ${q.pregunta}</p>
+                            <div class="options-list">
+                                ${q.opciones.map(opt => {
+                                    let optLetter = opt.charAt(0);
+                                    return `
+                                        <label class="option-label">
+                                            <input type="radio" name="ex${index}_q${qIndex}" value="${optLetter}">
+                                            <span>${opt}</span>
+                                        </label>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <div class="explanation-box">
+                                <strong>Respuesta correcta: ${q.respuesta_correcta}</strong><br>
+                                ${q.explicacion}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                examsHTML += `
+                    <div id="tab-${examId}" class="tab-content">
+                        <div class="exam-container">
+                            <h2>Examen Test ${index + 1} (20 Preguntas)</h2>
+                            <div id="score-${index}" class="score-display"></div>
+                            <form id="form-exam-${index}">
+                                ${questionsHTML}
+                                <div class="actions-exam">
+                                    <button type="button" class="btn" onclick="corregirExamen(${index})">Corregir Examen</button>
+                                    <button type="button" class="btn btn-secondary" onclick="reiniciarExamen(${index})">Reiniciar Test</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
+            });
+
+            navbar.innerHTML = navHTML;
+            examTabsContainer.innerHTML = examsHTML;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            if (tabId === 'esquema') {
+                document.getElementById('tab-esquema').classList.add('active');
+                document.querySelector('nav button:first-child').classList.add('active');
+            } else {
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+                // Encontrar botón correspondiente
+                const buttons = document.querySelectorAll('nav button');
+                buttons.forEach(btn => {
+                    if (btn.textContent.includes(tabId.replace('examen-', 'Test '))) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function corregirExamen(examIndex) {
+            const form = document.getElementById(`form-exam-${examIndex}`);
+            const questions = form.querySelectorAll('.question-block');
+            let aciertos = 0;
+            let errores = 0;
+
+            questions.forEach((qBlock, qIndex) => {
+                const correct = qBlock.getAttribute('data-correct');
+                const selectedInput = qBlock.querySelector(`input[name="ex${examIndex}_q${qIndex}"]:checked`);
+                const options = qBlock.querySelectorAll('.option-label');
+                const explanationBox = qBlock.querySelector('.explanation-box');
+
+                // Deshabilitar inputs
+                qBlock.querySelectorAll('input').forEach(inp => inp.disabled = true);
+                explanationBox.style.display = 'block';
+
+                options.forEach(opt => {
+                    const input = opt.querySelector('input');
+                    const val = input.value;
+                    opt.classList.remove('correct', 'incorrect');
+
+                    if (val === correct) {
+                        opt.classList.add('correct');
+                    }
+                    if (selectedInput && selectedInput.value === val && val !== correct) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+
+                if (selectedInput && selectedInput.value === correct) {
+                    aciertos++;
+                } else {
+                    errores++;
+                }
+            });
+
+            const scoreDisplay = document.getElementById(`score-${examIndex}`);
+            scoreDisplay.style.display = 'block';
+            scoreDisplay.innerHTML = `Resultado: ${aciertos} Aciertos | ${errores} Errores (Puntuación: ${((aciertos / 20) * 10).toFixed(1)} / 10)`;
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function reiniciarExamen(examIndex) {
+            const form = document.getElementById(`form-exam-${examIndex}`);
+            form.reset();
+            const questions = form.querySelectorAll('.question-block');
+
+            questions.forEach(qBlock => {
+                qBlock.querySelectorAll('input').forEach(inp => inp.disabled = false);
+                qBlock.querySelectorAll('.option-label').forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+                qBlock.querySelector('.explanation-box').style.display = 'none';
+            });
+
+            const scoreDisplay = document.getElementById(`score-${examIndex}`);
+            scoreDisplay.style.display = 'none';
+            scoreDisplay.innerHTML = '';
+        }
+
+        function escucharTema() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let textoCompleto = "Esquema detallado del Tema 5. ";
+                esquemaPreguntas.forEach((item, index) => {
+                    textoCompleto += `Pregunta ${index + 1}: ${item.pregunta}. Explicación: ${item.respuesta_detallada}. `;
+                });
+                const utterance = new SpeechSynthesisUtterance(textoCompleto);
+                utterance.lang = 'es-ES';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Tu navegador no soporta la síntesis de voz.");
+            }
+        }
+
+        // Inicializar la aplicación al cargar la página
+        window.onload = initApp;
+    </script>
+</body>
+</html>

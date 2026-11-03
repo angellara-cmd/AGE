@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepAGE - Tema 3: El Personal Funcionario y la Selección</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --primary-color: #0d6efd;
+            --primary-hover: #0b5ed7;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+            --success-text: #155724;
+            --error-bg: #f8d7da;
+            --error-border: #f5c6cb;
+            --error-text: #721c24;
+            --explanation-bg: #e6f2ff;
+            --explanation-border: #b8daff;
+            --explanation-text: #004085;
+            --border-color: #dee2e6;
+            --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --font-main: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: #002b49;
+            margin-bottom: 8px;
+        }
+
+        .pdf-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .pdf-link:hover {
+            background-color: #dee2e6;
+        }
+
+        /* Sticky Navigation */
+        nav.nav-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #ffffff;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 5px 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        nav.nav-sticky button {
+            background: none;
+            border: none;
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-right: 5px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        nav.nav-sticky button:hover {
+            background-color: #f1f3f5;
+            color: var(--primary-color);
+        }
+
+        nav.nav-sticky button.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Audio Controls Bar */
+        .audio-controls {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .audio-controls h2 {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: #6c757d; color: #fff; }
+        .btn-secondary:hover { background-color: #5c636a; }
+        .btn-success { background-color: #198754; color: #fff; }
+        .btn-success:hover { background-color: #157347; }
+        .btn-warning { background-color: #ffc107; color: #000; }
+        .btn-danger { background-color: #dc3545; color: #fff; }
+
+        /* Card Styles for Scheme */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-number {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a252f;
+        }
+
+        .card-content {
+            font-size: 1rem;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        .card-content ul {
+            margin-left: 20px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Test Styles */
+        .test-container {
+            display: none;
+        }
+
+        .test-container.active {
+            display: block;
+        }
+
+        .score-banner {
+            display: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .score-banner.show {
+            display: block;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #212529;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #fff;
+            min-height: 48px;
+        }
+
+        .option-label:hover {
+            background-color: #f1f3f5;
+            border-color: #adb5bd;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            font-size: 0.98rem;
+            color: #333;
+        }
+
+        /* Test Feedback States */
+        .option-label.correct-option {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success-border) !important;
+            color: var(--success-text) !important;
+            font-weight: 600;
+        }
+
+        .option-label.wrong-option {
+            background-color: var(--error-bg) !important;
+            border-color: var(--error-border) !important;
+            color: var(--error-text) !important;
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--explanation-bg);
+            border: 1px solid var(--explanation-border);
+            color: var(--explanation-text);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.25rem; }
+            .audio-controls { flex-direction: column; align-items: stretch; }
+            .audio-buttons { width: 100%; justify-content: space-between; }
+            .audio-buttons .btn { flex: 1; text-align: center; }
+            .test-actions { flex-direction: column; }
+            .test-actions .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PrepAGE: Tema 3 - El Personal Funcionario y la Selección</h1>
+        <p style="font-size: 0.9rem; color: #6c757d; margin-top: 4px;">Estatuto Básico del Empleado Público, RD 364/1995 y RDL 6/2023</p>
+        <div style="margin-top: 10px;">
+            <a href="tema03_El personal funcionario al servicio de las adm publicas.pdf" target="_blank" class="pdf-link">
+                📄 Abrir Documento Principal (PDF Tema 3)
+            </a>
+        </div>
+    </header>
+
+    <!-- Navigation Sticky Menu -->
+    <nav class="nav-sticky" id="mainNav">
+        <button class="nav-btn active" onclick="switchTab('esquema')">📌 Esquema de Estudio</button>
+        <!-- Test buttons generated dynamically -->
+    </nav>
+
+    <div class="container">
+        <!-- TAB 1: ESQUEMA DE ESTUDIO -->
+        <div id="tab-esquema" class="tab-content active">
+            <div class="audio-controls">
+                <div>
+                    <h2>🔊 Reproductor de Audio del Tema</h2>
+                    <p style="font-size: 0.85rem; color: #6c757d;">Lectura secuencial automática de las 40 tarjetas didácticas</p>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn btn-primary" onclick="playAudio()">▶ Escuchar Tema</button>
+                    <button class="btn btn-warning" onclick="pauseAudio()">⏸ Pausar</button>
+                    <button class="btn btn-danger" onclick="stopAudio()">⏹ Detener</button>
+                </div>
+            </div>
+
+            <div class="cards-grid" id="esquemaContainer">
+                <!-- Cards injected dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- TEST TABS (Generated dynamically) -->
+        <div id="testsContainer"></div>
+    </div>
+
+    <script>
+        // DATA STRUCTURES: CENTRALIZED JS OBJECTS
+
+        const esquemaPreguntas = [
+            {
+                pregunta: "1. ¿Cómo se define el concepto de Funcionario de Carrera?",
+                respuesta_detallada: "Son funcionarios de carrera quienes, en virtud de nombramiento legal, están vinculados a una Administración Pública por una relación estatutaria regulada por el Derecho Administrativo para el desempeño de servicios profesionales retribuidos de carácter permanente."
+            },
+            {
+                pregunta: "2. ¿Cuáles son las notas o características fundamentales del Funcionario de Carrera?",
+                respuesta_detallada: "Las notas características son cuatro:\n- Permanencia: Excluye a personas que presten servicios de forma ocasional.\n- Profesionalidad.\n- Retribución: Con cargo a los Presupuestos de las distintas Administraciones Públicas.\n- Sometimiento al Derecho Administrativo: Sus derechos y pretensiones se ejercitan por la vía contencioso-administrativa, no laboral o social."
+            },
+            {
+                pregunta: "3. ¿Qué funciones corresponden exclusivamente a los funcionarios públicos?",
+                respuesta_detallada: "Corresponde exclusivamente a los funcionarios públicos el ejercicio de las funciones que impliquen la participación directa o indirecta en el ejercicio de las potestades públicas o en la salvaguardia de los intereses generales del Estado y de las Administraciones Públicas."
+            },
+            {
+                pregunta: "4. ¿Qué es un Funcionario Interino y por qué razones se nombra?",
+                respuesta_detallada: "Son funcionarios interinos los que, por razones expresamente justificadas de necesidad y urgencia, son nombrados como tales para el desempeño de funciones propias de funcionarios de carrera, al darse alguna de las circunstancias legalmente tasadas."
+            },
+            {
+                pregunta: "5. Causa de Interinidad 1: Cobertura de Plazas Vacantes.",
+                respuesta_detallada: "Se nombra interino por la existencia de plazas vacantes cuando no sea posible su cobertura por funcionarios de carrera.\n- Duración máxima: Un máximo de 3 años."
+            },
+            {
+                pregunta: "6. Causa de Interinidad 2: Sustitución Transitoria de Titulares.",
+                respuesta_detallada: "Se nombra interino para la sustitución transitoria de los titulares de los puestos.\n- Duración: Durante el tiempo estrictamente necesario."
+            },
+            {
+                pregunta: "7. Causa de Interinidad 3: Ejecución de Programas Temporales.",
+                respuesta_detallada: "Se nombra interino para la ejecución de programas de carácter temporal.\n- Duración: No podrá tener una duración superior a 3 años, ampliable hasta 12 meses más por las leyes de Función Pública que se dicten en desarrollo del Estatuto."
+            },
+            {
+                pregunta: "8. Causa de Interinidad 4: Exceso o Acumulación de Tareas.",
+                respuesta_detallada: "Se nombra interino por exceso o acumulación de tareas.\n- Duración máxima: Plazo máximo de 9 meses, dentro de un periodo de 18 meses."
+            },
+            {
+                pregunta: "9. Definición y características del Personal Laboral.",
+                respuesta_detallada: "Es el personal que presta servicios vinculado a la Administración en virtud de un contrato de trabajo (fijo, por tiempo indefinido o temporal). Es la única clase de personal vinculado por relación laboral."
+            },
+            {
+                pregunta: "10. Definición y características del Personal Eventual.",
+                respuesta_detallada: "Tiene carácter no permanente y realiza únicamente funciones expresamente calificadas como de confianza o asesoramiento especial."
+            },
+            {
+                pregunta: "11. ¿Cuáles son los sistemas selectivos de funcionarios de carrera?",
+                respuesta_detallada: "Los sistemas selectivos son:\n- Oposición (sistema ordinario/principal).\n- Concurso-oposición.\n- Concurso (carácter estrictamente excepcional y solo en virtud de ley)."
+            },
+            {
+                pregunta: "12. ¿En qué consiste el sistema de Oposición?",
+                respuesta_detallada: "Consiste en la celebración de una o más pruebas de capacidad para determinar la aptitud de los aspirantes y fijar el orden de prelación de los mismos en la selección."
+            },
+            {
+                pregunta: "13. ¿En qué consiste el sistema de Concurso?",
+                respuesta_detallada: "Consiste exclusivamente en la calificación de los méritos de los aspirantes y en la determinación de la prelación de los mismos en la selección. Solo se aplica excepcionalmente en virtud de Ley."
+            },
+            {
+                pregunta: "14. ¿En qué consiste el sistema de Concurso-Oposición?",
+                respuesta_detallada: "Consiste en la sucesiva celebración, como parte del mismo procedimiento, de los sistemas de oposición y de concurso."
+            },
+            {
+                pregunta: "15. Regla sobre la valoración de méritos en el Concurso-Oposición.",
+                respuesta_detallada: "La valoración de méritos debe ser proporcionada y no determinará, en ningún caso, por sí misma el resultado del proceso selectivo."
+            },
+            {
+                pregunta: "16. Tipos de pruebas en los procesos selectivos.",
+                respuesta_detallada: "Las pruebas pueden consistir en:\n- Comprobación de conocimientos y capacidad analítica (oral o escrita).\n- Realización de ejercicios que demuestren habilidades y destrezas.\n- Dominio de lenguas extranjeras.\n- Pruebas físicas (en su caso)."
+            },
+            {
+                pregunta: "17. Exigencia de ejercicios prácticos en las pruebas selectivas.",
+                respuesta_detallada: "Salvo excepciones debidamente justificadas, en los procedimientos selectivos que consten de varios ejercicios, al menos uno deberá tener carácter práctico."
+            },
+            {
+                pregunta: "18. Pruebas y métodos complementarios en la selección.",
+                respuesta_detallada: "Para asegurar la objetividad y racionalidad, las pruebas podrán completarse con:\n- Cursos o periodos de prácticas.\n- Exposición curricular por los candidatos.\n- Pruebas psicotécnicas o realización de entrevistas.\n- Reconocimientos médicos."
+            },
+            {
+                pregunta: "19. Principios rectores y garantías en los procesos selectivos.",
+                respuesta_detallada: "Los procesos tendrán carácter abierto y garantizarán la libre concurrencia (sin perjuicio de promoción interna y discriminación positiva). Se velará por la igualdad de oportunidades entre sexos."
+            },
+            {
+                pregunta: "20. Selección en Comunidades Autónomas con dos lenguas oficiales.",
+                respuesta_detallada: "Las Administraciones Públicas deberán prever la selección de empleados públicos debidamente capacitados para cubrir los puestos de trabajo en CCAA con dos lenguas oficiales."
+            },
+            {
+                pregunta: "21. Órganos especializados y permanentes de selección.",
+                respuesta_detallada: "Las Administraciones Públicas podrán crear órganos especializados y permanentes para la organización de procesos selectivos, pudiendo encomendar estas funciones a los Institutos o Escuelas de Administración Pública."
+            },
+            {
+                pregunta: "22. Descentralización de las pruebas selectivas.",
+                respuesta_detallada: "Las convocatorias podrán determinar, según las circunstancias, que la totalidad o parte de las pruebas selectivas se celebren de forma descentralizada."
+            },
+            {
+                pregunta: "23. Competencia para regular los órganos de selección.",
+                respuesta_detallada: "El Gobierno es el órgano competente para regular la composición y funcionamiento de los órganos de selección, garantizando la especialización de sus integrantes y la agilidad del proceso sin perjuicio de su objetividad."
+            },
+            {
+                pregunta: "24. Tipos de órganos de selección según el RD 364/1995.",
+                respuesta_detallada: "Se constituyen dos tipos de órganos de selección:\n1. Las Comisiones Permanentes de Selección.\n2. Los Tribunales."
+            },
+            {
+                pregunta: "25. Características de las Comisiones Permanentes de Selección.",
+                respuesta_detallada: "Se encomiendan a procesos con elevado número de aspirantes y exigencia de titulación/especialización. Estarán constituidas por un número impar de miembros y tienen la facultad de evaluar varios procesos selectivos."
+            },
+            {
+                pregunta: "26. Características y composición de los Tribunales de Selección.",
+                respuesta_detallada: "Se nombran para cada convocatoria. Evalúan un solo proceso selectivo. Composición:\n- Número impar de miembros, no inferior a cinco.\n- Todos deben ser funcionarios de carrera.\n- Se designará el mismo número de suplentes.\n- Se velará por el principio de especialidad."
+            },
+            {
+                pregunta: "27. Prohibición sobre la representación mayoritaria en órganos de selección.",
+                respuesta_detallada: "Los órganos de selección no podrán estar formados mayoritariamente por funcionarios pertenecientes al mismo Cuerpo o Escala objeto de la selección."
+            },
+            {
+                pregunta: "28. Prohibición por preparación de aspirantes.",
+                respuesta_detallada: "No podrán formar parte de los órganos de selección aquellos funcionarios que hubiesen realizado tareas de preparación de aspirantes a pruebas selectivas en los 5 años anteriores a la publicación de la convocatoria."
+            },
+            {
+                pregunta: "29. Asesores Especialistas en los órganos de selección.",
+                respuesta_detallada: "Tribunales y Comisiones Permanentes pueden disponer la incorporación de asesores especialistas para todas o algunas pruebas. Colaborarán exclusivamente en el ejercicio de sus especialidades técnicas."
+            },
+            {
+                pregunta: "30. Abstención, recusación y recursos en los órganos de selección.",
+                respuesta_detallada: "- Abstención y Recusación: Según normas del Régimen Jurídico del Sector Público.\n- Recursos: Contra actos de trámite que impidan continuar o produzcan indefensión cabe recurso ordinario ante la autoridad que nombró a su presidente."
+            },
+            {
+                pregunta: "31. Aprobación y periodicidad de la Oferta de Empleo Público (OEP).",
+                respuesta_detallada: "La OEP se aprueba anualmente por el Gobierno (a propuesta del Ministerio de Función Pública, tras elaboración por DGFP e informe presupuestario). Debe aprobarse dentro del primer trimestre de cada año y publicarse en el BOE."
+            },
+            {
+                pregunta: "32. Plazo de ejecución de la Oferta de Empleo Público.",
+                respuesta_detallada: "En todo caso, la ejecución de la OEP o instrumento similar deberá desarrollarse dentro del plazo improrrogable de tres años."
+            },
+            {
+                pregunta: "33. Porcentaje adicional de plazas en la Oferta de Empleo Público.",
+                respuesta_detallada: "La OEP comporta la obligación de convocar procesos selectivos para las plazas comprometidas y hasta un 10% adicional."
+            },
+            {
+                pregunta: "34. Plazo de publicación de convocatorias tras el RDL 6/2023 (AGE).",
+                respuesta_detallada: "Las convocatorias deberán publicarse en el mismo año natural de la publicación en el BOE de la Oferta de Empleo Público en la que se incluyan las plazas."
+            },
+            {
+                pregunta: "35. Plazos máximos de ejecución de convocatorias y oposiciones (RDL 6/2023).",
+                respuesta_detallada: "- Ejecución total de la convocatoria: Plazo máximo de 2 años desde su publicación.\n- Fases de oposición: Plazo máximo de 1 año (salvo causa justificada)."
+            },
+            {
+                pregunta: "36. Reutilización de plazas no cubiertas (RDL 6/2023).",
+                respuesta_detallada: "Pueden convocarse nuevamente si no han transcurrido más de 3 años desde la OEP, previo informe del Ministerio de Función Pública (que podrá asignarlas a otros cuerpos/escalas preferentemente del mismo grupo/subgrupo/categoría)."
+            },
+            {
+                pregunta: "37. Plazo de presentación de solicitudes para pruebas selectivas.",
+                respuesta_detallada: "Las solicitudes deben presentarse en el plazo de 20 días hábiles a partir del día siguiente al de la publicación de la convocatoria en el Boletín Oficial del Estado."
+            },
+            {
+                pregunta: "38. Plazo de publicación de listas de admitidos/excluidos y subsanación.",
+                respuesta_detallada: "- Dictamen de resolución con lista: Plazo máximo de 1 mes tras expiración del plazo de instancias.\n- Plazo para subsanación de errores/faltas: 10 días hábiles para aspirantes excluidos."
+            },
+            {
+                pregunta: "39. Antelación mínima en la publicación de anuncios de exámenes.",
+                respuesta_detallada: "Comenzado el proceso, los anuncios se publican en los locales de examen con:\n- Al menos 12 horas de antelación si se trata del mismo ejercicio.\n- Al menos 24 horas de antelación si se trata de un nuevo ejercicio."
+            },
+            {
+                pregunta: "40. Plazo para aportación de documentos, nombramiento y toma de posesión.",
+                respuesta_detallada: "- Presentación de documentos aprobados: 20 días hábiles desde publicación de la lista.\n- Nombramiento: Por el Secretario de Estado competente en función pública.\n- Toma de posesión: 15 días naturales desde la publicación del nombramiento (1 mes si implica cambio de localidad de residencia)."
+            }
+        ];
+
+        // 10 TESTS x 20 QUESTIONS EACH = 200 QUESTIONS TOTAL
+        const examenes = [
+            // TEST 1
+            [
+                {
+                    pregunta: "1. ¿Qué vincula al funcionario de carrera con la Administración Pública?",
+                    opciones: ["Un contrato laboral indefinido", "Una relación estatutaria regulada por el Derecho Administrativo", "Un contrato mercantil de prestación de servicios", "Una relación regulada por el Derecho Laboral y el Convenio Único"],
+                    respuesta_correcta: 1,
+                    explicacion: "Según el texto, el funcionario de carrera está vinculado a una Administración Pública por una relación estatutaria regulada por el Derecho Administrativo."
+                },
+                {
+                    pregunta: "2. ¿Cuál de las siguientes NOTAS NO caracteriza al funcionario de carrera?",
+                    opciones: ["Permanencia en el servicio", "Profesionalidad", "Sometimiento al Derecho Laboral o Social", "Retribución con cargo a los Presupuestos Públicos"],
+                    respuesta_correcta: 2,
+                    explicacion: "El funcionario de carrera está sometido al Derecho Administrativo, ejercitando sus derechos por la vía contencioso-administrativa y NO por la vía laboral o social."
+                },
+                {
+                    pregunta: "3. ¿Por qué razones expresas se nombra a un funcionario interino?",
+                    opciones: ["Por conveniencia política y libre designación", "Por razones de necesidad y urgencia expresamente justificadas", "Únicamente por decisión discrecional del Subsecretario", "Por acumulación de tareas sin límite temporal"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los funcionarios interinos son nombrados por razones expresamente justificadas de necesidad y urgencia para el desempeño de funciones propias de funcionarios de carrera."
+                },
+                {
+                    pregunta: "4. ¿Cuál es el plazo máximo de nombramiento de un interino para la cobertura de plazas vacantes?",
+                    opciones: ["Máximo de 12 meses", "Máximo de 2 años", "Máximo de 3 años", "Máximo de 5 años"],
+                    respuesta_correcta: 2,
+                    explicacion: "La existencia de plazas vacantes permite el nombramiento de interinos por un máximo de tres años cuando no sea posible su cobertura por funcionarios de carrera."
+                },
+                {
+                    pregunta: "5. En los programas de carácter temporal, ¿cuál es la duración máxima del nombramiento interino y su posible prórroga?",
+                    opciones: ["Máximo 2 años, ampliable 6 meses más", "Máximo 3 años, ampliable hasta 12 meses más por leyes de Función Pública", "Máximo 1 año, sin posibilidad de prórroga", "Máximo 4 años improrrogables"],
+                    respuesta_correcta: 1,
+                    explicacion: "La ejecución de programas temporales no podrá superar los 3 años, ampliable hasta 12 meses más por las leyes de Función Pública que se dicten en desarrollo del Estatuto."
+                },
+                {
+                    pregunta: "6. Por exceso o acumulación de tareas, ¿cuál es el plazo máximo de nombramiento interino?",
+                    opciones: ["Máximo 6 meses dentro de un periodo de 12 meses", "Máximo 9 meses dentro de un periodo de 18 meses", "Máximo 12 meses dentro de un periodo de 24 meses", "Máximo 3 meses dentro de un periodo de 6 meses"],
+                    respuesta_correcta: 1,
+                    explicacion: "El exceso o acumulación de tareas permite el nombramiento de interinos por un plazo máximo de 9 meses dentro de un periodo de 18 meses."
+                },
+                {
+                    pregunta: "7. ¿Qué duración tiene el nombramiento interino para la sustitución transitoria de los titulares?",
+                    opciones: ["Durante un máximo de 3 años", "Durante un máximo de 12 meses", "Durante el tiempo estrictamente necesario", "Durante 9 meses improrrogables"],
+                    respuesta_correcta: 2,
+                    explicacion: "La sustitución transitoria de titulares se mantiene durante el tiempo estrictamente necesario."
+                },
+                {
+                    pregunta: "8. ¿Qué tipo de personal es el único vinculado a la Administración mediante contrato de trabajo?",
+                    opciones: ["El funcionario de carrera", "El funcionario interino", "El personal eventual", "El personal laboral"],
+                    respuesta_correcta: 3,
+                    explicacion: "El personal laboral (fijo, por tiempo indefinido o temporal) es la única clase de personal vinculado a la Administración en virtud de contrato de trabajo."
+                },
+                {
+                    pregunta: "9. El personal eventual realiza exclusivamente funciones de:",
+                    opciones: ["Gestión administrativa común", "Confianza o asesoramiento especial", "Atención al ciudadano en servicios periféricos", "Fiscalización y control presupuestario"],
+                    respuesta_correcta: 1,
+                    explicacion: "El personal eventual tiene carácter no permanente y solo realiza funciones expresamente calificadas como de confianza o asesoramiento especial."
+                },
+                {
+                    pregunta: "10. ¿A qué personal corresponde en exclusiva el ejercicio de funciones que impliquen potestades públicas?",
+                    opciones: ["Al personal laboral fijo", "Exclusivamente al personal funcionario público", "A las Comisiones Permanentes de Selección", "A cualquier empleado público independientemente de su relación laboral"],
+                    respuesta_correcta: 1,
+                    explicacion: "A los funcionarios públicos les corresponde exclusivamente el ejercicio de las funciones que impliquen la participación en el ejercicio de potestades públicas o salvaguardia de intereses generales."
+                },
+                {
+                    pregunta: "11. ¿Cuál es la vía jurisdiccional para que un funcionario de carrera ejercite sus derechos derivados de la relación estatutaria?",
+                    opciones: ["La vía social", "La vía laboral", "La vía contencioso-administrativa", "La vía civil ordinaria"],
+                    respuesta_correcta: 2,
+                    explicacion: "El funcionario ejercitará sus derechos por la vía contencioso-administrativa, y no por la vía laboral o social."
+                },
+                {
+                    pregunta: "12. ¿Qué norma aprueba el Reglamento General de Ingreso del Personal al servicio de la AGE citado en la documentación?",
+                    opciones: ["Real Decreto-ley 6/2023", "Real Decreto 364/1995, de 10 de marzo", "Real Decreto Legislativo 5/2015", "Ley 39/2015"],
+                    respuesta_correcta: 1,
+                    explicacion: "El Reglamento General de Ingreso del Personal al servicio de la AGE fue aprobado por el Real Decreto 364/1995, de 10 de marzo."
+                },
+                {
+                    pregunta: "13. ¿Qué norma aprueba el texto refundido de la Ley del Estatuto Básico del Empleado Público?",
+                    opciones: ["Real Decreto 364/1995", "Real Decreto Legislativo 5/2015, de 30 de octubre", "Real Decreto-ley 6/2023", "Ley 40/2015"],
+                    respuesta_correcta: 1,
+                    explicacion: "El TREBEP fue aprobado por el Real Decreto Legislativo 5/2015, de 30 de octubre."
+                },
+                {
+                    pregunta: "14. ¿Cuál de los siguientes supuestos NO justifica legalmente el nombramiento de un funcionario interino?",
+                    opciones: ["Existencia de plazas vacantes sin cobertura por funcionarios de carrera", "Sustitución transitoria de titulares", "Realización de funciones permanentes de gestión de directivos", "Ejecución de programas de carácter temporal"],
+                    respuesta_correcta: 2,
+                    explicacion: "Las cuatro causas legales de interinidad son: vacantes (máx 3 años), sustitución transitoria, programas temporales (máx 3 años + 12 meses) y exceso/acumulación de tareas (máx 9 meses en 18 meses)."
+                },
+                {
+                    pregunta: "15. La relación estatutaria del funcionario de carrera se caracteriza por su carácter:",
+                    opciones: ["Eventual", "Permanente", "Temporal", "Contractual mercantil"],
+                    respuesta_correcta: 1,
+                    explicacion: "Definición legal: el funcionario de carrera está vinculado para el desempeño de servicios profesionales retribuidos de carácter permanente."
+                },
+                {
+                    pregunta: "16. En la sustitución transitoria de un funcionario titular, ¿cuándo finaliza la interinidad?",
+                    opciones: ["Al cabo de 3 años improrrogables", "Transcurridos 9 meses", "Al reincorporarse el titular o extinguirse la causa de sustitución (tiempo estrictamente necesario)", "En el primer trimestre del año siguiente"],
+                    respuesta_correcta: 2,
+                    explicacion: "Se mantiene durante el tiempo estrictamente necesario que dure la sustitución transitoria del titular."
+                },
+                {
+                    pregunta: "17. ¿A y B son correctas respecto a las notas del funcionario de carrera? (A) Nombramiento legal; (B) Retribución con cargo a presupuestos públicos.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Tanto el nombramiento legal como la retribución con cargo a los presupuestos públicos son notas esenciales de la definición del funcionario de carrera."
+                },
+                {
+                    pregunta: "18. ¿Qué norma introdujo medidas urgentes para la ejecución del Plan de Recuperación en materia de función pública a finales de 2023?",
+                    opciones: ["Real Decreto 364/1995", "Real Decreto Legislativo 5/2015", "Real Decreto-ley 6/2023, de 19 de diciembre", "Ley 30/1984"],
+                    respuesta_correcta: 2,
+                    explicacion: "El Real Decreto-ley 6/2023, de 19 de diciembre, aprobó medidas urgentes para la ejecución del Plan de Recuperación en materia de función pública."
+                },
+                {
+                    pregunta: "19. ¿Cuál es la principal diferencia de vinculación entre el Personal Laboral y el Funcionario de Carrera?",
+                    opciones: ["El personal laboral se vincula por contrato de trabajo y el funcionario por relación estatutaria", "El personal laboral se nombra por Real Decreto y el funcionario por contrato", "El funcionario no recibe retribución pública y el laboral sí", "No existe ninguna diferencia"],
+                    respuesta_correcta: 0,
+                    explicacion: "El personal laboral se vincula por contrato de trabajo (Derecho Laboral) y el funcionario por relación estatutaria (Derecho Administrativo)."
+                },
+                {
+                    pregunta: "20. ¿Un funcionario interino nombrado por acumulación de tareas por 9 meses puede prorrogarse por 9 meses adicionales inmediatamente en el mismo periodo?",
+                    opciones: ["Sí, automáticamente", "No, el plazo máximo es de 9 meses dentro de un periodo de 18 meses", "Sí, previa autorización del Ministerio", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto establece claramente el límite infranqueable de un plazo máximo de 9 meses dentro de un periodo de 18 meses."
+                }
+            ],
+            // TEST 2
+            [
+                {
+                    pregunta: "1. ¿Cuáles son los sistemas selectivos ordinarios para funcionarios de carrera según el TREBEP?",
+                    opciones: ["La oposición y el concurso", "La oposición y el concurso-oposición", "Únicamente la oposición", "El concurso de méritos y la entrevista"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los sistemas selectivos de funcionarios de carrera serán los de oposición y concurso-oposición. El concurso es excepcional."
+                },
+                {
+                    pregunta: "2. ¿Bajo qué condición legal se puede aplicar el sistema de concurso para el acceso a funcionario de carrera?",
+                    opciones: ["Por simple resolución del Subsecretario", "Solo en virtud de ley y con carácter excepcional", "Mediante acuerdo del Tribunal Calificador", "Por petición expresa de las organizaciones sindicales"],
+                    respuesta_correcta: 1,
+                    explicacion: "Solo en virtud de ley podrá aplicarse, con carácter excepcional, el sistema de concurso que consistirá únicamente en la valoración de méritos."
+                },
+                {
+                    pregunta: "3. ¿En qué consiste el sistema de Oposición según el RD 364/1995?",
+                    opciones: ["Exclusivamente en la valoración de títulos académicos", "En la celebración de una o más pruebas de capacidad para determinar la aptitud y fijar el orden de prelación", "En la superación de una entrevista personal y concurso de méritos", "En la evaluación continuada durante 3 años de interinidad"],
+                    respuesta_correcta: 1,
+                    explicacion: "La oposición consiste en la celebración de una o más pruebas de capacidad para determinar la aptitud de los aspirantes y fijar el orden de prelación."
+                },
+                {
+                    pregunta: "4. Según el RD 364/1995, el acceso a Cuerpos o Escalas de la Administración del Estado será con carácter general a través de:",
+                    opciones: ["El sistema de concurso", "El sistema de concurso-oposición", "El sistema de oposición", "La libre designación"],
+                    respuesta_correcta: 2,
+                    explicacion: "El RD 364/1995 establece que el acceso será a través de la oposición, salvo cuando por la naturaleza de las funciones sea más adecuada la utilización del concurso-oposición y, excepcionalmente, el concurso."
+                },
+                {
+                    pregunta: "5. En el sistema de concurso-oposición, ¿qué papel juega la valoración de méritos?",
+                    opciones: ["Puede determinar por sí misma el resultado del proceso selectivo", "Debe ser proporcionada y no determinará por sí misma el resultado", "Representa el 90% de la nota final obligatoriamente", "Se realiza con carácter previo a las pruebas de capacidad y es eliminatoria"],
+                    respuesta_correcta: 1,
+                    explicacion: "La valoración de méritos solo podrá otorgar una puntuación proporcionada que no determinará, en ningún caso, por sí misma el resultado del proceso selectivo."
+                },
+                {
+                    pregunta: "6. ¿En qué consiste el sistema de Concurso?",
+                    opciones: ["En la realización de un examen práctico y otro teórico", "Exclusivamente en la calificación de los méritos de los aspirantes y la prelación de los mismos", "En un curso selectivo de 6 meses", "En pruebas físicas y entrevistas estructuradas"],
+                    respuesta_correcta: 1,
+                    explicacion: "El concurso consiste exclusivamente en la calificación de los méritos de los aspirantes y la prelación de los mismos en la selección."
+                },
+                {
+                    pregunta: "7. ¿En qué consiste el sistema de Concurso-Oposición?",
+                    opciones: ["En la realización únicamente de méritos académicos", "En la sucesiva celebración como parte del procedimiento de los sistemas de oposición y concurso", "En la exención de exámenes para los interinos con más de 5 años de servicio", "En una entrevista obligatoria seguida de una prueba física"],
+                    respuesta_correcta: 1,
+                    explicacion: "El concurso-oposición consiste en la sucesiva celebración como parte del procedimiento de los dos sistemas anteriores (oposición y concurso)."
+                },
+                {
+                    pregunta: "8. ¿Qué requisito es obligatorio incluir en los sistemas de oposición y concurso-oposición?",
+                    opciones: ["Un examen de idioma extranjero obligatorio", "Una o varias pruebas para determinar la capacidad de los aspirantes y establecer el orden de prelación", "Una prueba de esfuerzo físico", "Una declaración jurada de bienes"],
+                    respuesta_correcta: 1,
+                    explicacion: "Deberán incluir, en todo caso, una o varias pruebas para determinar la capacidad de los aspirantes y establecer el orden de prelación."
+                },
+                {
+                    pregunta: "9. ¿Se puede aplicar el sistema de concurso libre mediante una simple Orden Ministerial?",
+                    opciones: ["Sí, si hay urgente necesidad", "No, solo en virtud de Ley con carácter excepcional", "Sí, si se aprueba en la Oferta de Empleo Público", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto señala expresamente que solo en virtud de Ley podrá aplicarse, con carácter excepcional, el sistema de concurso."
+                },
+                {
+                    pregunta: "10. ¿Cuál es el orden de celebración en el concurso-oposición según el RD 364/1995?",
+                    opciones: ["La fase de concurso se realiza siempre al final tras la oposición", "Sucesiva celebración de ambos sistemas como parte del procedimiento", "Primero el concurso y si se aprueba se pasa a la oposición sin nota mínima", "Es indistinto y lo decide el Tribunal en cada prueba"],
+                    respuesta_correcta: 1,
+                    explicacion: "El concurso-oposición consiste en la sucesiva celebración como parte del procedimiento de los dos sistemas citados."
+                },
+                {
+                    pregunta: "11. Las pruebas selectivas deben fijar:",
+                    opciones: ["El salario inicial del funcionario", "El orden de prelación de los aspirantes en la selección", "El destino definitivo de forma arbitraria", "La fecha de jubilación del aspirante"],
+                    respuesta_correcta: 1,
+                    explicacion: "Tienen por objeto determinar la capacidad de los aspirantes y fijar el orden de prelación de los mismos en la selección."
+                },
+                {
+                    pregunta: "12. ¿Qué afirmación es CORRECTA respecto al concurso-oposición?",
+                    opciones: ["La fase de concurso es suficiente para aprobar la plaza", "La fase de oposición es optativa si se tienen muchos méritos", "La valoración de méritos no determinará por sí misma el resultado", "Todas las afirmaciones son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "El texto indica expresamente que la valoración de méritos no determinará, en ningún caso, por sí misma el resultado del proceso selectivo."
+                },
+                {
+                    pregunta: "13. ¿Cuál de los siguientes es el sistema ordinario de acceso según el RD 364/1995 para la Administración del Estado?",
+                    opciones: ["Concurso", "Concurso-oposición", "Oposición", "Libre designación"],
+                    respuesta_correcta: 2,
+                    explicacion: "El RD 364/1995 dispone que el acceso será a través del sistema de oposición salvo excepciones justificadas."
+                },
+                {
+                    pregunta: "14. A y B son correctas respecto a los sistemas selectivos: (A) La oposición evalúa la capacidad mediante pruebas; (B) El concurso evalúa exclusivamente méritos.",
+                    opciones: ["A es correcta y B es falsa", "A es falsa y B es correcta", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas definiciones corresponden exactamente con lo expuesto en el RD 364/1995 y en el texto."
+                },
+                {
+                    pregunta: "15. ¿Puede un proceso de concurso-oposición otorgar el 100% de la puntuación a la antigüedad?",
+                    opciones: ["Sí, si la convocatoria lo establece", "No, la valoración debe ser proporcionada y no determinar por sí misma el resultado", "Sí, en la Administración General del Estado", "Solo si se trata de personal de servicios periféricos"],
+                    respuesta_correcta: 1,
+                    explicacion: "La norma impone que la valoración de méritos sea proporcionada y nunca determine por sí sola el resultado."
+                },
+                {
+                    pregunta: "16. En los Cuerpos y Escalas generales de la AGE, la regla general de selección es:",
+                    opciones: ["Oposición", "Concurso", "Evaluación continua", "Concurso de traslados"],
+                    respuesta_correcta: 0,
+                    explicacion: "El RD 364/1995 establece la Oposición como norma general de acceso a Cuerpos y Escalas de la Administración del Estado."
+                },
+                {
+                    pregunta: "17. ¿Qué norma regula la no determinación del resultado por la sola fase de méritos?",
+                    opciones: ["Código Civil", "Estatuto Básico del Empleado Público (TREBEP)", "Ley de Contratos del Sector Público", "Ley Reguladora de las Bases del Régimen Local"],
+                    respuesta_correcta: 1,
+                    explicacion: "Se recoge en la regulación básica del TREBEP (Real Decreto Legislativo 5/2015)."
+                },
+                {
+                    pregunta: "18. En el concurso, la selección se realiza mediante:",
+                    opciones: ["Pruebas físicas y de conocimientos", "Únicamente calificación de los méritos", "Exposición de un proyecto de trabajo", "Curso selectivo"],
+                    respuesta_correcta: 1,
+                    explicacion: "El concurso consiste exclusivamente en la calificación de los méritos de los aspirantes."
+                },
+                {
+                    pregunta: "19. ¿El sistema de concurso puede aplicarse de forma habitual sin norma con rango de ley?",
+                    opciones: ["Sí, mediante resolución directiva", "No, exige en todo caso rango de ley y carácter excepcional", "Sí, para funcionarios interinos siempre", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "Texto explícito: 'Solo en virtud de ley podrá aplicarse, con carácter excepcional, el sistema de concurso'."
+                },
+                {
+                    pregunta: "20. La prelación de los aspirantes en la oposición se establece en función de:",
+                    opciones: ["La antigüedad en la Administración", "La puntuación obtenida en las pruebas de capacidad", "El orden de presentación de la instancia", "La edad de los candidatos"],
+                    respuesta_correcta: 1,
+                    explicacion: "La oposición evalúa la aptitud mediante pruebas para fijar el orden de prelación según los resultados obtenidos."
+                }
+            ],
+            // TEST 3
+            [
+                {
+                    pregunta: "1. ¿Qué aspecto de los aspirantes se comprueba en las pruebas selectivas?",
+                    opciones: ["Únicamente su condición física", "Conocimientos, capacidad analítica, habilidades, destrezas, lenguas y/o pruebas físicas", "Exclusivamente la memoria conceptual del temario", "Su historial de cotización a la Seguridad Social"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las pruebas comprueban conocimientos y capacidad analítica (oral/escrita), habilidades, destrezas, dominio de lenguas extranjeras y pruebas físicas."
+                },
+                {
+                    pregunta: "2. En los procedimientos selectivos con varios ejercicios, ¿qué exigencia existe sobre el carácter práctico?",
+                    opciones: ["Todos los ejercicios deben ser prácticos", "Al menos uno de los ejercicios deberá tener carácter práctico, salvo excepciones debidamente justificadas", "Ningún ejercicio puede ser práctico", "El carácter práctico es solo para el personal laboral"],
+                    respuesta_correcta: 1,
+                    explicacion: "Salvo excepciones debidamente justificadas, en los procedimientos que consten de varios ejercicios, al menos uno deberá tener carácter práctico."
+                },
+                {
+                    pregunta: "3. ¿Con qué elementos se pueden completar las pruebas para asegurar la objetividad y racionalidad?",
+                    opciones: ["Cursos, periodos de prácticas, exposición curricular, psicotécnicos, entrevistas o reconocimientos médicos", "Sorteo público ante notario", "Votación de los compañeros del departamento", "Un examen oral ante el Ministro obligatoriamente"],
+                    respuesta_correcta: 0,
+                    explicacion: "Pueden completarse con cursos, periodos de prácticas, exposición curricular, pruebas psicotécnicas, entrevistas y reconocimientos médicos."
+                },
+                {
+                    pregunta: "4. ¿Qué carácter tienen los procesos selectivos de la Administración Pública?",
+                    opciones: ["Carácter reservado a interinos", "Carácter abierto, garantizando la libre concurrencia", "Carácter restringido por titulación universitaria superior únicamente", "Carácter confidencial y secreto"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los procesos selectivos tendrán carácter abierto y garantizarán la libre concurrencia, sin perjuicio de promoción interna y discriminación positiva."
+                },
+                {
+                    pregunta: "5. En Comunidades Autónomas con dos lenguas oficiales, ¿qué debe prever la Administración?",
+                    opciones: ["Eximir de examen a los nacidos en la Comunidad", "La selección de empleados públicos debidamente capacitados para cubrir los puestos de trabajo en dichas CCAA", "Traducir el examen únicamente al inglés", "Realizar las pruebas exclusivamente en la sede central de Madrid"],
+                    respuesta_correcta: 1,
+                    explicacion: "Deberán prever la selección de empleados públicos debidamente capacitados para cubrir los puestos en las CCAA que gocen de dos lenguas oficiales."
+                },
+                {
+                    pregunta: "6. ¿Qué principio específico deben velar obligatoriamente los órganos de selección?",
+                    opciones: ["El principio de antigüedad preferente", "El principio de igualdad de oportunidades entre sexos", "El principio de selección territorializada obligatoria", "El principio de jerarquía administrativa"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los órganos de selección velarán por el cumplimiento del principio de igualdad de oportunidades entre sexos."
+                },
+                {
+                    pregunta: "7. ¿Se pueden celebrar las pruebas selectivas de forma descentralizada?",
+                    opciones: ["No, siempre deben celebrarse en la capital de España", "Sí, si las convocatorias determinan que la totalidad o parte de las pruebas se celebren descentralizadamente", "Solo para el personal eventual", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las convocatorias podrán determinar en algunas circunstancias que la totalidad o parte de las pruebas se celebren descentralizadamente."
+                },
+                {
+                    pregunta: "8. ¿A quién se puede encomendar la organización de procesos selectivos por parte de órganos especializados permanentes?",
+                    opciones: ["A empresas privadas de reclutamiento", "A los Institutos o Escuelas de Administración Pública", "A los sindicatos con representación mayoritaria", "A las Juntas de Personal de cada ministerio"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las AA.PP. podrán crear órganos especializados y permanentes, pudiéndose encomendar estas funciones a los Institutos o Escuelas de Administración Pública."
+                },
+                {
+                    pregunta: "9. ¿La exposición oral o escrita sirve para comprobar qué aspecto de los aspirantes?",
+                    opciones: ["Las aptitudes físicas", "Los conocimientos y la capacidad analítica", "La altura y presencia física", "El expediente de vida laboral"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto especifica que la comprobación de conocimientos y capacidad analítica se expresa de forma oral o escrita."
+                },
+                {
+                    pregunta: "10. Las entrevistas o pruebas psicotécnicas en un proceso selectivo:",
+                    opciones: ["Están prohibidas por el TREBEP", "Sirven para completar las pruebas asegurando objetividad y racionalidad", "Son el único método en la oposición", "Sustituyen a las pruebas de conocimientos"],
+                    respuesta_correcta: 1,
+                    explicacion: "Se mencionan como elementos con los que se pueden completar las pruebas para asegurar la objetividad y la racionalidad."
+                },
+                {
+                    pregunta: "11. ¿A y B son correctas sobre los procesos selectivos? (A) Garantizan la libre concurrencia; (B) Tienen carácter abierto.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Los procesos selectivos tendrán carácter abierto y garantizarán la libre concurrencia."
+                },
+                {
+                    pregunta: "12. ¿Es obligatorio exigir reconocimientos médicos en todas las oposiciones sin excepción?",
+                    opciones: ["Sí, en el 100% de los procesos", "No, es una posibilidad con la que se pueden completar las pruebas ('en su caso / podrán exigirse')", "No, están expresamente prohibidos", "Solo para los funcionarios interinos"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto indica que 'Igualmente podrán exigirse reconocimientos médicos' de forma complementaria."
+                },
+                {
+                    pregunta: "13. Para evaluar el dominio de lenguas extranjeras en las pruebas selectivas:",
+                    opciones: ["Se exige en todos los procesos obligatoriamente", "Es un tipo de prueba que se puede contemplar en los procesos selectivos", "Solo se evalúa a diplomáticos", "Está prohibido en la Administración del Estado"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las pruebas podrán consistir (...) en la comprobación del dominio de lenguas extranjeras."
+                },
+                {
+                    pregunta: "14. La libre concurrencia se entiende sin perjuicio de:",
+                    opciones: ["Las medidas de discriminación positiva y la promoción interna", "El veto a personas de otras provincias", "La reserva del 50% de plazas para nombramientos a dedo", "La eliminación de pruebas escritas"],
+                    respuesta_correcta: 0,
+                    explicacion: "Garantizarán la libre concurrencia 'sin perjuicio de lo establecido para la promoción interna y de las medidas de discriminación positiva'."
+                },
+                {
+                    pregunta: "15. Un procedimiento selectivo de varios ejercicios debe incluir, por norma general:",
+                    opciones: ["Al menos un ejercicio práctico", "Tres exámenes orales seguidos", "Solo pruebas físicas", "Dos entrevistas psicotécnicas"],
+                    respuesta_correcta: 0,
+                    explicacion: "Salvo excepciones debidamente justificadas, al menos uno de los ejercicios deberá tener carácter práctico."
+                },
+                {
+                    pregunta: "16. ¿Qué función pueden asumir los Institutos o Escuelas de Administración Pública?",
+                    opciones: ["La aprobación de las Leyes de Presupuestos", "La organización de procesos selectivos como órganos especializados y permanentes encomendados", "El nombramiento final de los funcionarios interinos", "La resolución de recursos contenciosos"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las AA.PP. pueden encomendar las funciones de organización de procesos selectivos a dichos Institutos o Escuelas."
+                },
+                {
+                    pregunta: "17. La capacidad analítica de los aspirantes se puede verificar mediante:",
+                    opciones: ["Pruebas físicas exclusivamente", "Expresión oral o escrita", "Análisis de antecedentes penales", "Sometimiento a detector de mentiras"],
+                    respuesta_correcta: 1,
+                    explicacion: "Comprobación de los conocimientos y la capacidad analítica expresados de forma oral o escrita."
+                },
+                {
+                    pregunta: "18. ¿Qué medidas de discriminación positiva menciona el texto respecto a la concurrencia?",
+                    opciones: ["Son compatibles con el carácter abierto y la libre concurrencia", "Son ilegales según el TREBEP", "Sustituyen a las pruebas de capacidad", "Solo aplican al personal eventual"],
+                    respuesta_correcta: 0,
+                    explicacion: "El texto especifica que el carácter abierto y libre concurrencia se da sin perjuicio de las medidas de discriminación positiva."
+                },
+                {
+                    pregunta: "19. ¿En qué lugar se determina si un proceso selectivo tendrá pruebas descentralizadas?",
+                    opciones: ["En la Ley de Presupuestos", "En las correspondientes convocatorias", "En el contrato de trabajo", "En la solicitud del opositor"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las convocatorias podrán determinar en algunas circunstancias que la totalidad o parte de las pruebas se celebren descentralizadamente."
+                },
+                {
+                    pregunta: "20. La comprobación de habilidades y destrezas se realiza mediante:",
+                    opciones: ["Exclusivamente certificados académicos", "La realización de ejercicios específicos", "Una prueba de idiomas obligatoria", "Entrevistas sin baremar"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las pruebas pueden consistir (...) en la realización de ejercicios que demuestren la posesión de habilidades y destrezas."
+                }
+            ],
+            // TEST 4
+            [
+                {
+                    pregunta: "1. ¿Qué órgano tiene la competencia para regular la composición y funcionamiento de los órganos de selección?",
+                    opciones: ["El Congreso de los Diputados", "El Gobierno", "El Tribunal Supremo", "Las Secretarías Generales Técnicas"],
+                    respuesta_correcta: 1,
+                    explicacion: "El Gobierno es el órgano competente para regular la composición y funcionamiento de los órganos de selección."
+                },
+                {
+                    pregunta: "2. ¿Cuáles son los dos órganos de selección establecidos expresamente en el art. 10 del RD 364/1995?",
+                    opciones: ["Las Juntas de Personal y los Comités de Empresa", "Las Comisiones Permanentes de Selección y los Tribunales", "Los Consejos de Dirección y los Subsecretarios", "Las Delegaciones del Gobierno y la DGFP"],
+                    respuesta_correcta: 1,
+                    explicacion: "De acuerdo con el art. 10 del RD 364/1995, se constituyen en órganos de selección: Las Comisiones Permanentes de Selección y los Tribunales."
+                },
+                {
+                    pregunta: "3. Las Comisiones Permanentes de Selección se encomiendan a procesos selectivos caracterizados por:",
+                    opciones: ["Tener un número muy reducido de opositores", "Un elevado número de aspirantes y nivel de titulación y especialización exigidos", "Ser únicamente para personal laboral temporal", "Seleccionar exclusivamente altos cargos"],
+                    respuesta_correcta: 1,
+                    explicacion: "Se encomiendan a Cuerpos y Escalas en los que el elevado número de aspirantes y el nivel de titulación y especialización exigidos así lo aconsejan."
+                },
+                {
+                    pregunta: "4. ¿Cuántos procesos selectivos pueden evaluar las Comisiones Permanentes de Selección?",
+                    opciones: ["Únicamente un solo proceso selectivo", "Pueden evaluar varios procesos selectivos", "Un máximo de dos procesos en toda su existencia", "Ninguno, solo supervisan a los Tribunales"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las Comisiones Permanentes de Selección pueden evaluar varios procesos selectivos."
+                },
+                {
+                    pregunta: "5. ¿Cuántos procesos selectivos evalúan los Tribunales de Selección?",
+                    opciones: ["Varios procesos selectivos simultáneos", "Evalúan un solo proceso selectivo", "Todos los del mismo Ministerio durante tres años", "Ilimitados dentro de la misma Oferta"],
+                    respuesta_correcta: 1,
+                    explicacion: "A diferencia de las Comisiones Permanentes, los Tribunales evalúan un solo proceso selectivo."
+                },
+                {
+                    pregunta: "6. Número y condición de los miembros de un Tribunal de Selección:",
+                    opciones: ["Número par, no inferior a 4 miembros, de cualquier categoría", "Número impar de miembros, funcionarios de carrera, no inferior a cinco", "Número impar de 3 miembros de libre designación", "Número variable de personal eventual"],
+                    respuesta_correcta: 1,
+                    explicacion: "Estarán constituidos por un número impar de miembros, funcionarios de carrera, no inferior a cinco, debiendo designarse el mismo número de suplentes."
+                },
+                {
+                    pregunta: "7. ¿Cómo debe ser el número de miembros de las Comisiones Permanentes de Selección?",
+                    opciones: ["Siempre número par", "Constituidas por un número impar de miembros", "Sin límite numérico determinado", "Exactamente 10 miembros"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las Comisiones Permanentes de Selección estarán constituidas por un número impar de miembros."
+                },
+                {
+                    pregunta: "8. ¿Qué principio debe velarse en la composición de los Tribunales respecto a las materias a evaluar?",
+                    opciones: ["Principio de jerarquía estricta", "Principio de especialidad", "Principio de paridad territorial", "Principio de rotación anual obligatoria"],
+                    respuesta_correcta: 1,
+                    explicacion: "En su composición se velará por el cumplimiento del principio de especialidad."
+                },
+                {
+                    pregunta: "9. Los Tribunales de Selección serán nombrados ordinariamente:",
+                    opciones: ["Por periodos de 5 años fijos", "Salvo excepción justificada, en cada orden de convocatoria", "Mediante Ley Orgánica en las Cortes", "Por los sindicatos de la AGE"],
+                    respuesta_correcta: 1,
+                    explicacion: "Serán nombrados, salvo excepción justificada, en cada orden de convocatoria."
+                },
+                {
+                    pregunta: "10. ¿Se deben designar miembros suplentes en los Tribunales de Selección?",
+                    opciones: ["No, no es necesario", "Sí, debiendo designarse el mismo número de miembros suplentes que de titulares", "Solo si el proceso supera los 1.000 candidatos", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "Debiendo designarse el mismo número de miembros suplentes en los Tribunales."
+                },
+                {
+                    pregunta: "11. ¿Qué garantizan las reglas de regulación del Gobierno sobre los órganos de selección?",
+                    opciones: ["Gratuidad absoluta para los aspirantes", "Especialización de los integrantes y agilidad del proceso sin perjuicio de la objetividad", "Aprobación automática de la mitad de candidatos", "Exención de exámenes escritos"],
+                    respuesta_correcta: 1,
+                    explicacion: "Garantizando la especialización de los integrantes y la agilidad del proceso selectivo, sin perjuicio de su objetividad."
+                },
+                {
+                    pregunta: "12. ¿Un Tribunal de Selección puede estar formado por 4 miembros titulares?",
+                    opciones: ["Sí, si hay acuerdo", "No, debe ser un número impar no inferior a cinco", "Sí, si son todos funcionarios del subgrupo A1", "Depende del número de opositores"],
+                    respuesta_correcta: 1,
+                    explicacion: "La norma impone un número impar y un mínimo de 5 miembros."
+                },
+                {
+                    pregunta: "13. ¿Qué diferencia principal existe entre una Comisión Permanente de Selección y un Tribunal?",
+                    opciones: ["La Comisión evalúa varios procesos y el Tribunal evalúa un solo proceso selectivo", "La Comisión la forman laborales y el Tribunal funcionarios", "El Tribunal no requiere número impar de miembros y la Comisión sí", "No existe ninguna diferencia"],
+                    respuesta_correcta: 0,
+                    explicacion: "Las Comisiones Permanentes pueden evaluar varios procesos selectivos, mientras que los Tribunales evalúan un solo proceso selectivo."
+                },
+                {
+                    pregunta: "14. A y B son correctas respecto a los Tribunales: (A) Todos sus miembros deben ser funcionarios de carrera; (B) Su número debe ser impar e igual o superior a 5.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas premisas son reglas explícitas de la composición de los Tribunales."
+                },
+                {
+                    pregunta: "15. ¿Los miembros de los Tribunales pueden ser personal eventual?",
+                    opciones: ["Sí, en funciones de asesoría", "No, deben ser obligatoriamente funcionarios de carrera", "Sí, si representan al Gobierno", "Solo si el Presidente lo autoriza"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto especifica que los miembros de los Tribunales deben ser funcionarios de carrera."
+                },
+                {
+                    pregunta: "16. ¿Qué órgano elabora la Oferta de Empleo Público antes de ser aprobada por el Gobierno?",
+                    opciones: ["El Tribunal Calificador", "La Dirección General de la Función Pública", "El Subsecretario del Ministerio", "El Instituto Nacional de Estadística"],
+                    respuesta_correcta: 1,
+                    explicacion: "Aprobada por el Gobierno tras su elaboración por la Dirección General de la Función Pública."
+                },
+                {
+                    pregunta: "17. Las Comisiones Permanentes de Selección se caracterizan por su carácter:",
+                    opciones: ["Temporal y de sustitución", "Especializado y permanente", "Eventual y confidencial", "Político e indisponible"],
+                    respuesta_correcta: 1,
+                    explicacion: "Son órganos especializados y permanentes creados para la organización de procesos selectivos."
+                },
+                {
+                    pregunta: "18. ¿Un miembro de una Comisión Permanente de Selección debe ser número impar?",
+                    opciones: ["Sí, siempre estarán constituidas por un número impar", "No, es indistinto", "Solo en la AGE", "Solo si intervienen asesores"],
+                    respuesta_correcta: 0,
+                    explicacion: "El texto dispone que 'Estarán constituidas por un número impar de miembros'."
+                },
+                {
+                    pregunta: "19. ¿Cuál es el objetivo principal del principio de especialidad en los Tribunales?",
+                    opciones: ["Asegurar la paridad de género", "Garantizar que los miembros tengan conocimientos idóneos sobre las materias del examen", "Reducir el coste económico del tribunal", "Evitar que haya funcionarios de otras administraciones"],
+                    respuesta_correcta: 1,
+                    explicacion: "El principio de especialidad garantiza la idoneidad técnica de los evaluadores respecto a las pruebas exigidas."
+                },
+                {
+                    pregunta: "20. Los miembros suplentes de un Tribunal de Selección:",
+                    opciones: ["Son opcionales", "Se designan en número igual al de los miembros titulares", "Tienen la mitad de votos", "Deben ser personal laboral"],
+                    respuesta_correcta: 1,
+                    explicacion: "Debiendo designarse el mismo número de miembros suplentes que de miembros titulares."
+                }
+            ],
+            // TEST 5
+            [
+                {
+                    pregunta: "1. Regla general de composición: ¿Pueden estar los órganos de selección formados mayoritariamente por funcionarios del mismo Cuerpo o Escala objeto de la selección?",
+                    opciones: ["Sí, es lo recomendable por el principio de especialidad", "No, no podrán estar formados mayoritariamente por funcionarios del mismo Cuerpo o Escala objeto de la selección (salvo excepciones reguladas)", "Sí, siempre que no superen el 80%", "Únicamente si son de subgrupo A1"],
+                    respuesta_correcta: 1,
+                    explicacion: "No podrán estar formados mayoritariamente por funcionarios pertenecientes al mismo Cuerpo o Escala objeto de la selección, salvo las peculiaridades de las normas específicas."
+                },
+                {
+                    pregunta: "2. Prohibición por preparación de aspirantes: ¿Cuál es el periodo de incompatibilidad previo?",
+                    opciones: ["2 años anteriores a la convocatoria", "3 años anteriores a la convocatoria", "5 años anteriores a la publicación de la correspondiente convocatoria", "10 años anteriores"],
+                    respuesta_correcta: 2,
+                    explicacion: "No podrán formar parte los funcionarios que hubiesen realizado tareas de preparación de aspirantes a pruebas selectivas en los 5 años anteriores a la publicación de la convocatoria."
+                },
+                {
+                    pregunta: "3. ¿Qué papel desempeñan los Asesores Especialistas incorporados a los órganos de selección?",
+                    opciones: ["Tienen voto decisivo en la nota final del opositor", "Colaboran exclusivamente en el ejercicio de sus especialidades técnicas", "Sustituyen al Presidente del Tribunal en caso de ausencia", "Elaboran las actas de las sesiones"],
+                    respuesta_correcta: 1,
+                    explicacion: "Dichos asesores colaborarán con el órgano de selección exclusivamente en el ejercicio de sus especialidades técnicas."
+                },
+                {
+                    pregunta: "4. Régimen de Abstención y Recusación en los órganos de selección:",
+                    opciones: ["Se rige por el Código Penal", "Se rige por las normas reguladoras del Régimen Jurídico del Sector Público", "Se rige libremente según la voluntad del Presidente", "No es aplicable a las pruebas de oposición"],
+                    respuesta_correcta: 1,
+                    explicacion: "Deberán abstenerse cuando concurran las circunstancias previstas en las normas del Régimen Jurídico del Sector Público, pudiendo ser recusados por los aspirantes."
+                },
+                {
+                    pregunta: "5. ¿Qué efecto tienen las resoluciones de los Tribunales o Comisiones Permanentes de Selección respecto a la Administración?",
+                    opciones: ["Son meramente consultivas y no obligan", "Vinculan a la Administración, sin perjuicio de que esta pueda proceder a su revisión según la legislación vigente", "Tienen carácter provisional sujeto a ratificación judicial obligatoria", "Se pueden anular libremente por el Subsecretario en cualquier momento"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las resoluciones de los Tribunales o Comisiones Permanentes vinculan a la Administración, sin perjuicio de su posible revisión conforme a la legislación."
+                },
+                {
+                    pregunta: "6. Contra las resoluciones y actos de trámite cualificados que impidan continuar el procedimiento, ¿qué recurso procede?",
+                    opciones: ["Recurso contencioso-administrativo directo sin vía previa", "Recurso ordinario ante la autoridad que haya nombrado a su presidente", "Recurso de amparo ante el Tribunal Constitucional", "Reclamación previa a la vía laboral"],
+                    respuesta_correcta: 1,
+                    explicacion: "Podrá interponerse recurso ordinario ante la autoridad que haya nombrado a su presidente."
+                },
+                {
+                    pregunta: "7. ¿Un funcionario que preparó opositores hace 4 años puede ser miembro de un Tribunal?",
+                    opciones: ["Sí, porque ya pasaron más de 3 años", "No, deben haber transcurrido al menos 5 años", "Sí, si no cobra por ello", "Solo si es en una academia online"],
+                    respuesta_correcta: 1,
+                    explicacion: "La prohibición abarca a quienes hayan realizado tareas de preparación en los cinco años anteriores a la convocatoria."
+                },
+                {
+                    pregunta: "8. ¿Los asesores especialistas forman parte con pleno derecho de voto del Tribunal?",
+                    opciones: ["Sí, en todas las decisiones", "No, colaboran exclusivamente en el ejercicio de sus especialidades técnicas", "Sí, si el Presidente les delega el voto", "Solo si son funcionarios del subgrupo A1"],
+                    respuesta_correcta: 1,
+                    explicacion: "Colaboran exclusivamente en el ejercicio de sus especialidades técnicas (asesoramiento técnico)."
+                },
+                {
+                    pregunta: "9. ¿Quiénes pueden recusar a los miembros de los órganos de selección?",
+                    opciones: ["Únicamente los sindicatos", "Los aspirantes del proceso selectivo", "El Ministerio de Hacienda exclusivamente", "Cualquier ciudadano sin interés directo"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los aspirantes podrán recusarlos cuando concurra alguna de las circunstancias legales."
+                },
+                {
+                    pregunta: "10. La incorporación de asesores especialistas debe estar prevista en:",
+                    opciones: ["La Ley Orgánica del Poder Judicial", "Las correspondientes convocatorias", "El contrato de trabajo del funcionario", "El acta final del examen"],
+                    respuesta_correcta: 1,
+                    explicacion: "Podrán disponer la incorporación de asesores de acuerdo con lo previsto en las correspondientes convocatorias."
+                },
+                {
+                    pregunta: "11. ¿A y B son correctas sobre los órganos de selección? (A) No pueden estar formados mayoritariamente por el mismo cuerpo examinado; (B) Los actos de trámite que causen indefensión pueden recurrirse.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas afirmaciones están expresamente contempladas en el RD 364/1995 y en el texto."
+                },
+                {
+                    pregunta: "12. La autoridad competente para resolver el recurso ordinario contra actos de un Tribunal es:",
+                    opciones: ["El Presidente del propio Tribunal Calificador", "La autoridad que haya nombrado a su Presidente", "El Juez de lo Contencioso-Administrativo", "El Defensor del Pueblo"],
+                    respuesta_correcta: 1,
+                    explicacion: "El recurso ordinario se interpone ante la autoridad que haya nombrado al presidente del órgano de selección."
+                },
+                {
+                    pregunta: "13. Si en un miembro del Tribunal concurre una causa de abstención de la Ley de Régimen Jurídico del Sector Público, este debe:",
+                    opciones: ["Ignorarla si no se la recuerdan", "Abstenerse de intervenir en el procedimiento", "Pedir permiso al sindicato", "Puntuar un 50% más bajo a los candidatos"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los miembros de los órganos de selección deberán abstenerse cuando concurran las circunstancias legales."
+                },
+                {
+                    pregunta: "14. La prohibición de formar parte de tribunales a preparadores busca garantizar:",
+                    opciones: ["La celeridad del examen", "La imparcialidad, objetividad y neutralidad en la selección", "El ahorro presupuestario", "La rotación obligatoria de personal"],
+                    respuesta_correcta: 1,
+                    explicacion: "Garantiza la objetividad, imparcialidad e igualdad de condiciones para todos los aspirantes."
+                },
+                {
+                    pregunta: "15. ¿Qué actos del órgano de selección pueden ser objeto de recurso ordinario?",
+                    opciones: ["Las resoluciones definitivas y los actos de trámite que impidan continuar el procedimiento o produzcan indefensión", "Cualquier borrador interno de trabajo", "Las preguntas del examen antes de celebrarse", "Las opiniones verbales de los vocales"],
+                    respuesta_correcta: 0,
+                    explicacion: "Contra las resoluciones y actos de trámite que impidan continuar el procedimiento o produzcan indefensión."
+                },
+                {
+                    pregunta: "16. ¿Puede una Comisión Permanente incorporar asesores especialistas para una prueba técnica?",
+                    opciones: ["Sí, de acuerdo con lo previsto en las convocatorias", "No, está reservado a los Tribunales únicamente", "Solo si el examen es de idiomas", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 0,
+                    explicacion: "Tanto los Tribunales como las Comisiones Permanentes de Selección pueden disponer la incorporación de asesores especialistas."
+                },
+                {
+                    pregunta: "17. La revisión de oficio de las resoluciones de los órganos selectivos por la Administración:",
+                    opciones: ["Es imposible en todo caso", "Se puede realizar conforme a la legislación vigente", "Requiere una consulta previa a las Cortes Generales", "Anula automáticamente todo el proceso"],
+                    respuesta_correcta: 1,
+                    explicacion: "Vinculan a la Administración 'sin perjuicio de que esta, en su caso, pueda proceder a su revisión, conforme a la legislación vigente'."
+                },
+                {
+                    pregunta: "18. ¿Un funcionario que preparó aspirantes hace 6 años puede formar parte de un Tribunal de Selección?",
+                    opciones: ["Sí, porque han transcurrido más de los 5 años exigidos por la norma", "No, la prohibición es de por vida", "Solo si lo autoriza el Subsecretario", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 0,
+                    explicacion: "La incompatibilidad aplica estrictamente a los 5 años anteriores a la publicación de la convocatoria. Pasados 6 años, no existe ese impedimento legal."
+                },
+                {
+                    pregunta: "19. ¿El incumplimiento de la abstención por un vocal del tribunal da lugar a responsabilidad?",
+                    opciones: ["Sí, según las normas del Régimen Jurídico del Sector Público", "No, no tiene trascendencia jurídica", "Solo si el aspirante aprueba", "Se le sanciona perdiendo el sueldo de un día"],
+                    respuesta_correcta: 0,
+                    explicacion: "La obligación de abstención se regula bajo los principios y responsabilidades de la normativa de Régimen Jurídico del Sector Público."
+                },
+                {
+                    pregunta: "20. La regla de no mayoría de miembros del mismo Cuerpo o Escala tiene por objeto:",
+                    opciones: ["Evitar el corporativismo y garantizar la neutralidad e imparcialidad", "Aumentar el gasto en dietas", "Dificultar la corrección de los exámenes", "Obligar a contratar asesores externos"],
+                    respuesta_correcta: 0,
+                    explicacion: "Busca asegurar un juzgamiento objetivo evitando sesgos o endogamia corporativa."
+                }
+            ],
+            // TEST 6
+            [
+                {
+                    pregunta: "1. ¿Qué instrumento cubre las necesidades de recursos humanos con asignación presupuestaria que deban proveerse de nuevo ingreso?",
+                    opciones: ["El Plan de Pensiones de la AGE", "La Oferta de Empleo Público (OEP) o instrumento similar", "Las Relaciones de Puestos de Trabajo (RPT) exclusivamente", "El Presupuesto General del Estado únicamente"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las necesidades de RR.HH. con asignación presupuestaria de nuevo ingreso serán objeto de Oferta de Empleo Público o instrumento similar."
+                },
+                {
+                    pregunta: "2. La aprobación de la Oferta de Empleo Público comporta la obligación de convocar las plazas comprometidas y hasta un adicional de:",
+                    opciones: ["Hasta un 5% adicional", "Hasta un 10% adicional", "Hasta un 15% adicional", "Hasta un 20% adicional"],
+                    respuesta_correcta: 1,
+                    explicacion: "Comportará la obligación de convocar los correspondientes procesos selectivos para las plazas comprometidas y hasta un 10% adicional."
+                },
+                {
+                    pregunta: "3. ¿Cuándo debe aprobarse la Oferta de Empleo Público anualmente?",
+                    opciones: ["Dentro del último trimestre del año", "Dentro del primer trimestre de cada año", "En el mes de agosto obligatoriamente", "Coincidiendo con las elecciones generales"],
+                    respuesta_correcta: 1,
+                    explicacion: "La Oferta deberá ser publicada en el Boletín Oficial del Estado y tendrá que ser aprobada dentro del primer trimestre de cada año."
+                },
+                {
+                    pregunta: "4. Plazo máximo e improrrogable de ejecución de la Oferta de Empleo Público según el TREBEP:",
+                    opciones: ["Un plazo de 1 año", "Un plazo de 2 años", "Un plazo improrrogable de 3 años", "Un plazo de 5 años"],
+                    respuesta_correcta: 2,
+                    explicacion: "En todo caso, la ejecución de la oferta de empleo público o instrumento similar deberá desarrollarse dentro del plazo improrrogable de tres años."
+                },
+                {
+                    pregunta: "5. ¿Qué órgano aprueba la Oferta de Empleo Público en el ámbito estatal?",
+                    opciones: ["El Congreso de los Diputados", "El Gobierno", "El Director General de la Función Pública", "El Ministro de Hacienda"],
+                    respuesta_correcta: 1,
+                    explicacion: "La Oferta es aprobada por el Gobierno, a propuesta del Ministerio competente en materia de función pública."
+                },
+                {
+                    pregunta: "6. ¿Qué informe obligatorio se exige para la aprobación de la Oferta de Empleo Público?",
+                    opciones: ["Informe del Consejo de Estado", "Informe presupuestario", "Informe del Tribunal de Cuentas", "Informe de la Real Academia Española"],
+                    respuesta_correcta: 1,
+                    explicacion: "Para su aprobación se exige informe presupuestario."
+                },
+                {
+                    pregunta: "7. ¿Quién elabora la propuesta de Oferta de Empleo Público en función de las peticiones de los ministerios?",
+                    opciones: ["La Dirección General de la Función Pública", "Las Comisiones Permanentes de Selección", "El Centro de Información Administrativa", "El Subsecretario de Trabajo"],
+                    respuesta_correcta: 0,
+                    explicacion: "Tras su elaboración por la Dirección General de la Función Pública en función de las peticiones de los diferentes Departamentos Ministeriales."
+                },
+                {
+                    pregunta: "8. ¿Se pueden aprobar Ofertas de Empleo Público para ámbitos administrativos específicos con urgencia?",
+                    opciones: ["No, siempre debe ser una única oferta global", "Sí, excepcionalmente cuando existan necesidades urgentes de incorporaciones de personal", "Solo si lo aprueba el Parlamento", "Únicamente en caso de guerra"],
+                    respuesta_correcta: 1,
+                    explicacion: "Excepcionalmente, cuando existan necesidades urgentes de incorporaciones de personal, el Gobierno podrá aprobar Ofertas de Empleo Público para ámbitos administrativos específicos."
+                },
+                {
+                    pregunta: "9. Dónde debe ser publicada obligatoriamente la Oferta de Empleo Público?",
+                    opciones: ["En el Boletín Oficial del Estado (BOE)", "En la prensa económica de gran tirada", "En el Tablón de Edictos del Ministerio de Justicia", "En el Diario Oficial de la Unión Europea"],
+                    respuesta_correcta: 0,
+                    explicacion: "La Oferta deberá ser publicada en el Boletín Oficial del Estado (BOE)."
+                },
+                {
+                    pregunta: "10. ¿Qué norma legal señala anualmente los criterios aplicables a la Oferta de Empleo en el Sector Público Estatal?",
+                    opciones: ["Las Leyes de Presupuestos Generales del Estado", "El Reglamento de la Caja General de Depósitos", "La Ley del Procedimiento Administrativo Común", "El Código de Comercio"],
+                    respuesta_correcta: 0,
+                    explicacion: "Anualmente, y de acuerdo con las prioridades de la política económica, las Leyes de Presupuestos señalarán los criterios aplicables."
+                },
+                {
+                    pregunta: "11. La OEP fija el plazo máximo para la convocatoria de las plazas y la obligación de incluir hasta un:",
+                    opciones: ["10% adicional", "20% adicional", "5% adicional", "15% adicional"],
+                    respuesta_correcta: 0,
+                    explicacion: "Obligación de convocar las plazas comprometidas y hasta un 10% adicional."
+                },
+                {
+                    pregunta: "12. A y B son correctas sobre la OEP estatal: (A) Aprobada por el Gobierno; (B) Publicada dentro del primer trimestre de cada año.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas premisas se recogen expresamente en la regulación de la OEP."
+                },
+                {
+                    pregunta: "13. ¿Qué ocurre si transcurren más de 3 años sin ejecutar la Oferta de Empleo Público según el TREBEP general?",
+                    opciones: ["Se prorroga automáticamente por 3 años más", "Caduca, al ser el plazo de 3 años de carácter improrrogable", "Se dobla el número de plazas", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "El plazo de tres años establecido en el TREBEP para la ejecución de la OEP se califica expresamente como 'improrrogable'."
+                },
+                {
+                    pregunta: "14. ¿La Oferta de Empleo Público puede contener medidas derivadas de la planificación de recursos humanos?",
+                    opciones: ["Sí, la Oferta o instrumento similar podrá contener medidas derivadas de la planificación de RRHH", "No, solo puede ser una lista de plazas", "Está prohibido incluir planificación en la OEP", "Solo si es para personal laboral fijo"],
+                    respuesta_correcta: 0,
+                    explicacion: "El texto afirma: 'La Oferta de empleo público o instrumento similar podrá contener medidas derivadas de la planificación de recursos humanos'."
+                },
+                {
+                    pregunta: "15. ¿Quién propone al Gobierno la aprobación de la OEP?",
+                    opciones: ["El Ministerio competente en materia de función pública", "El Ministerio de Asuntos Exteriores", "El Presidente del Tribunal de Cuentas", "La Comisión Europea"],
+                    respuesta_correcta: 0,
+                    explicacion: "La Oferta es aprobada por el Gobierno, a propuesta del Ministerio competente en materia de función pública."
+                },
+                {
+                    pregunta: "16. ¿Se requiere dotación presupuestaria para las plazas ofertadas en la OEP?",
+                    opciones: ["No, se presupuestan tras la oposición", "Sí, las necesidades de RR.HH. deben contar con asignación presupuestaria", "Solo para las plazas de personal eventual", "Es opcional según el Ministerio"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las necesidades de recursos humanos, con asignación presupuestaria, que deban proveerse... serán objeto de OEP."
+                },
+                {
+                    pregunta: "17. ¿La OEP puede ser aprobada en el mes de mayo?",
+                    opciones: ["Sí, pero la norma general exige su aprobación dentro del primer trimestre de cada año", "Está prohibido en cualquier circunstancia", "Sí, no hay plazo marcado en el texto", "Solo en años bisiestos"],
+                    respuesta_correcta: 0,
+                    explicacion: "La norma establece que 'tendrá que ser aprobada dentro del primer trimestre de cada año', aunque de forma extraordinaria caben ofertas específicas urgentes."
+                },
+                {
+                    pregunta: "18. ¿Qué unidad administrativa recopila las peticiones ministeriales para la OEP?",
+                    opciones: ["La Dirección General de la Función Pública", "El Consejo Económico y Social", "La Secretaría General del Congreso", "El Colegio Oficial de Gestores"],
+                    respuesta_correcta: 0,
+                    explicacion: "Elaborada por la Dirección General de la Función Pública en función de las peticiones de los Departamentos Ministeriales."
+                },
+                {
+                    pregunta: "19. Criterios de la OEP anuales se supeditan a:",
+                    opciones: ["Las prioridades de la política económica y necesidades de planificación de RRHH en la Ley de Presupuestos", "La voluntad exclusiva del Tribunal de Selección", "El número de solicitudes del año anterior", "Decisión unipersonal del Subsecretario"],
+                    respuesta_correcta: 0,
+                    explicacion: "Las Leyes de Presupuestos señalarán los criterios aplicables según la política económica y la planificación de RRHH."
+                },
+                {
+                    pregunta: "20. La publicación en el BOE de la OEP es un requisito de carácter:",
+                    opciones: ["Opcional", "Preceptivo y obligatorio", "Secreto", "Reservado a la Administración Periférica"],
+                    respuesta_correcta: 1,
+                    explicacion: "La Oferta deberá ser publicada en el Boletín Oficial del Estado obligatoriamente."
+                }
+            ],
+            // TEST 7
+            [
+                {
+                    pregunta: "1. Según el art. 108 del RDL 6/2023, ¿cuándo deben publicarse las convocatorias respecto a la OEP en la AGE?",
+                    opciones: ["En el plazo de 3 años desde la OEP", "En el mismo año natural de la publicación de la OEP en el BOE", "Dentro de los 6 meses siguientes independientemente del año", "No existe plazo de publicación"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las convocatorias deberán publicarse en el mismo año natural de la publicación en el Boletín Oficial del Estado de la Oferta de Empleo Público."
+                },
+                {
+                    pregunta: "2. Según el RDL 6/2023, ¿cuál es el plazo máximo de ejecución de las convocatorias desde su publicación?",
+                    opciones: ["Plazo máximo de 1 año", "Plazo máximo de 2 años", "Plazo máximo de 3 años", "Plazo máximo de 5 años"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las convocatorias deberán ejecutarse en el plazo máximo de dos años desde su publicación."
+                },
+                {
+                    pregunta: "3. Según el RDL 6/2023, ¿en qué plazo máximo deben ejecutarse las respectivas fases de oposición?",
+                    opciones: ["En 6 meses", "En un año, salvo causa justificada", "En 2 años improrrogables", "En 18 meses"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las respectivas fases de oposición deberán ejecutarse en un año, salvo causa justificada."
+                },
+                {
+                    pregunta: "4. Según el RDL 6/2023, ¿se pueden volver a convocar plazas no cubiertas en una convocatoria previa?",
+                    opciones: ["No, quedan canceladas definitivamente", "Sí, siempre que no hayan transcurrido más de 3 años desde la publicación de la Oferta", "Sí, sin límite temporal alguno", "Solo previa autorización judicial"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las plazas no cubiertas podrán convocarse nuevamente siempre que no hayan transcurrido más de tres años desde la publicación de la oferta."
+                },
+                {
+                    pregunta: "5. Para volver a convocar plazas no cubiertas según el RDL 6/2023 se requiere informe previo de:",
+                    opciones: ["El Tribunal Supremo", "El Ministerio con competencias en función pública", "La Junta de Personal correspondiente", "El Delegado del Gobierno"],
+                    respuesta_correcta: 1,
+                    explicacion: "Previo informe del Ministerio con competencias en función pública."
+                },
+                {
+                    pregunta: "6. ¿Pueden reasignarse las plazas no cubiertas a otros cuerpos o escalas según el RDL 6/2023?",
+                    opciones: ["No, es totalmente ilegal", "Sí, el Ministerio competente puede asignarlas preferentemente al mismo grupo/subgrupo profesional o categoría", "Solo si se convierten en plazas de personal eventual", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "El Ministerio con competencias en función pública podrá asignar esas plazas a otros cuerpos o escalas, preferentemente del mismo grupo o subgrupo profesional."
+                },
+                {
+                    pregunta: "7. ¿Qué requisito formal debe cumplir la nueva convocatoria de plazas no cubiertas?",
+                    opciones: ["Aumentar la sueldo de la plaza", "Identificar las plazas que proceden de convocatorias anteriores y la oferta a la que corresponden", "Eliminar la fase de examen práctico", "Ser aprobada por ley de Cortes"],
+                    respuesta_correcta: 1,
+                    explicacion: "La nueva convocatoria deberá identificar las plazas que proceden de convocatorias anteriores y la oferta a la que corresponden."
+                },
+                {
+                    pregunta: "8. Comparativa RDL 6/2023 vs TREBEP: La ejecución de la OEP general en TREBEP es de 3 años, mientras que la ejecución de la convocatoria en RDL 6/2023 se fija en:",
+                    opciones: ["1 año", "Máximo 2 años desde su publicación", "4 años", "6 meses"],
+                    respuesta_correcta: 1,
+                    explicacion: "El RDL 6/2023 precisa para la AGE que las convocatorias deberán ejecutarse en el plazo máximo de dos años desde su publicación."
+                },
+                {
+                    pregunta: "9. Si una OEP se publica en el BOE en mayo de 2024, ¿cuándo debe publicarse la convocatoria según el RDL 6/2023?",
+                    opciones: ["Como máximo en mayo de 2027", "En el mismo año natural de 2024", "En el primer trimestre de 2025", "En un plazo de 30 días"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las convocatorias deberán publicarse en el mismo año natural de la publicación en el BOE de la OEP correspondientes."
+                },
+                {
+                    pregunta: "10. ¿La fase de oposición que sufra un retraso de 14 meses viola el RDL 6/2023?",
+                    opciones: ["Sí, el plazo es de 1 año salvo causa justificada", "No, el plazo legal es de 3 años para la oposición", "No, las fases de oposición no tienen plazo", "Solo si lo impugnan los candidatos"],
+                    respuesta_correcta: 0,
+                    explicacion: "El RDL 6/2023 fija el desarrollo de las fases de oposición en un año, admitiendo demora solo si existe 'causa justificada'."
+                },
+                {
+                    pregunta: "11. A y B son correctas respecto al RDL 6/2023: (A) Convocatorias en el mismo año natural de la OEP; (B) Ejecución de convocatoria en un máximo de 2 años.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas reglas introducidas por el RDL 6/2023 constan textualmente en el material de estudio."
+                },
+                {
+                    pregunta: "12. En la reasignación de plazas no cubiertas a otros Cuerpos, la preferencia es asignarlas a:",
+                    opciones: ["Cuerpos de grupo profesional superior únicamente", "Preferentemente del mismo grupo o subgrupo profesional (o categoría laboral)", "Cuerpos de personal eventual", "Cualquier cuerpo sin preferencia alguna"],
+                    respuesta_correcta: 1,
+                    explicacion: "Podrá asignar esas plazas a otros cuerpos o escalas, preferentemente del mismo grupo o subgrupo profesional."
+                },
+                {
+                    pregunta: "13. ¿Cuál es el límite temporal máximo para poder convocar de nuevo plazas no cubiertas según RDL 6/2023?",
+                    opciones: ["2 años desde la convocatoria", "Que no hayan transcurrido más de 3 años desde la publicación de la Oferta", "5 años desde la creación del puesto", "10 años"],
+                    respuesta_correcta: 1,
+                    explicacion: "Siempre que no hayan transcurrido más de tres años desde la publicación de la oferta correspondiente."
+                },
+                {
+                    pregunta: "14. El informe para reasignar plazas no cubiertas lo emite:",
+                    opciones: ["El Ministerio con competencias en función pública", "El Ministerio de Defensa", "La Fiscalía General del Estado", "El Banco de España"],
+                    respuesta_correcta: 0,
+                    explicacion: "Exige el 'previo informe del Ministerio con competencias en función pública'."
+                },
+                {
+                    pregunta: "15. ¿Las medidas del art. 108 del RDL 6/2023 se aplican en el ámbito de la Administración del Estado?",
+                    opciones: ["Sí, precisan la regulación para el ámbito de la Administración del Estado", "No, solo aplican a Corporaciones Locales", "Solo aplican a las Universidades", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 0,
+                    explicacion: "El texto señala expresamente que el art. 108 del Real Decreto-Ley 6/2023 aplica en el ámbito de la Administración del Estado."
+                },
+                {
+                    pregunta: "16. La ejecución de las fases de oposición en un año según RDL 6/2023 puede excederse únicamente:",
+                    opciones: ["En caso de causa justificada", "Si lo solicita la mitad de los opositores", "Por decisión del tribunal sin justificación", "En ningún caso, es imposible"],
+                    respuesta_correcta: 0,
+                    explicacion: "El texto puntualiza: 'y las respectivas fases de oposición en un año, salvo causa justificada'."
+                },
+                {
+                    pregunta: "17. ¿Se pueden reasignar plazas no cubiertas de personal funcionario a personal laboral?",
+                    opciones: ["Sí, haciendo referencia a la categoría en el caso del personal laboral", "No, está terminantemente prohibido mezclar regímenes", "Solo si es en el extranjero", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 0,
+                    explicacion: "El texto cita: 'o categoría en el caso del personal laboral, en función de las necesidades'."
+                },
+                {
+                    pregunta: "18. ¿La OEP sustituye a las Convocatorias?",
+                    opciones: ["Sí, son lo mismo", "No, la OEP comporta la obligación de convocar posteriormente los procesos selectivos", "La OEP se aprueba después de las convocatorias", "Las convocatorias solo se publican si lo pide el juez"],
+                    respuesta_correcta: 1,
+                    explicacion: "La OEP es el instrumento de planificación presupuestada que genera la obligación de publicar las correspondientes convocatorias."
+                },
+                {
+                    pregunta: "19. Si una plaza de la OEP 2024 queda desierta en 2025, ¿hasta qué año puede reincorporarse en una nueva convocatoria?",
+                    opciones: ["Hasta 2027 (no más de 3 años desde la publicación de la OEP 2024)", "Hasta 2035", "Indefinidamente", "Solo en 2025"],
+                    respuesta_correcta: 0,
+                    explicacion: "El plazo límite son 3 años contados desde la publicación de la Oferta de Empleo Público de procedencia."
+                },
+                {
+                    pregunta: "20. El RDL 6/2023 busca respecto a los procesos selectivos en la AGE:",
+                    opciones: ["Aumentar la burocracia", "Agilizar los plazos de convocatoria y ejecución reduciendo tiempos de espera", "Eliminar los exámenes orales", "Derogar el TREBEP"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las medidas urgentes del RDL 6/2023 imponen plazos más estrictos (mismo año natural, 2 años de ejecución, 1 año para la oposición) para agilizar la función pública."
+                }
+            ],
+            // TEST 8
+            [
+                {
+                    pregunta: "1. ¿Quién puede aprobar Bases Generales para sucesivas convocatorias previa informe favorable de la DGFP?",
+                    opciones: ["El Subsecretario convocante", "El Presidente del Gobierno", "El Jefe de Sección de Personal", "El Tribunal Calificador"],
+                    respuesta_correcta: 0,
+                    explicacion: "El Subsecretario convocante podrá aprobar, con el informe favorable de la Dirección General de la Función Pública, bases generales."
+                },
+                {
+                    pregunta: "2. ¿A quiénes vinculan de manera estricta las Bases de la Convocatoria?",
+                    opciones: ["Solo a los aspirantes", "Solo al Tribunal Calificador", "A la Administración, a los Tribunales/Comisiones y a quienes participen en el proceso", "Solo al Ministerio de Hacienda"],
+                    respuesta_correcta: 2,
+                    explicacion: "Las bases de la convocatoria vinculan a la Administración, a los Tribunales o Comisiones Permanentes de Selección y a quienes participen en las mismas."
+                },
+                {
+                    pregunta: "3. ¿Cómo pueden modificarse las convocatorias o sus bases una vez publicadas?",
+                    opciones: ["Libremente por decisión verbal del Tribunal", "Únicamente con sujeción estricta a la Ley del Procedimiento Administrativo Común (LPACAP)", "Mediante anexo no publicado en el BOE", "No se pueden modificar bajo ninguna circunstancia"],
+                    respuesta_correcta: 1,
+                    explicacion: "Una vez publicadas, solamente podrán ser modificadas con sujeción estricta a la Ley del Procedimiento Administrativo Común de las Administraciones Públicas."
+                },
+                {
+                    pregunta: "4. ¿Qué informe debe acompañar la aprobación de convocatorias de pruebas selectivas como regla general?",
+                    opciones: ["Informe de sostenibilidad ambiental", "Informe de impacto de género (salvo casos de urgencia)", "Informe del Colegio de Abogados", "Informe de la Junta Electoral Central"],
+                    respuesta_correcta: 1,
+                    explicacion: "La aprobación de convocatorias deberá acompañarse de un informe de impacto de género, salvo en casos de urgencia."
+                },
+                {
+                    pregunta: "5. ¿Cuál es el plazo de presentación de solicitudes para participar en los procesos selectivos de ingreso?",
+                    opciones: ["10 días hábiles", "15 días naturales", "Veinte días hábiles a partir del siguiente al de la publicación de la convocatoria en el BOE", "Un mes natural"],
+                    respuesta_correcta: 2,
+                    explicacion: "Las solicitudes deben presentarse en el plazo de veinte días hábiles a partir del siguiente al de la publicación de la respectiva convocatoria en el BOE."
+                },
+                {
+                    pregunta: "6. Expirado el plazo de presentación de instancias, ¿en qué plazo máximo debe dictarse resolución aprobando las listas de admitidos y excluidos?",
+                    opciones: ["Plazo máximo de 10 días", "Plazo máximo de un mes", "Plazo máximo de tres meses", "Plazo máximo de 15 días"],
+                    respuesta_correcta: 1,
+                    explicacion: "Expirado el plazo, la autoridad convocante dictará resolución en el plazo máximo de un mes declarando aprobada la lista de admitidos y excluidos."
+                },
+                {
+                    pregunta: "7. Plazo conferido a los aspirantes excluidos para subsanar errores en la solicitud:",
+                    opciones: ["5 días hábiles", "10 días hábiles", "15 días naturales", "20 días hábiles"],
+                    respuesta_correcta: 1,
+                    explicacion: "A los aspirantes excluidos se les dará un plazo de diez días hábiles para subsanación de la falta de datos y errores."
+                },
+                {
+                    pregunta: "8. ¿Dónde debe publicarse la resolución que aprueba las listas de admitidos y excluidos?",
+                    opciones: ["En la tablón de la academia de preparación", "En el Boletín Oficial del Estado (BOE)", "En un diario de distribución nacional", "En el perfil del contratante"],
+                    respuesta_correcta: 1,
+                    explicacion: "Dicha resolución deberá publicarse en el Boletín Oficial del Estado (BOE)."
+                },
+                {
+                    pregunta: "9. Dónde deben ponerse de manifiesto las listas completas de admitidos y excluidos?",
+                    opciones: ["Departamentos Ministeriales convocantes, DGFP, Centro de Información Administrativa y Delegaciones del Gobierno", "Únicamente en los Juzgados de lo Contencioso", "En las comisarías de Policía Nacional", "En las sedes sindicales únicamente"],
+                    respuesta_correcta: 0,
+                    explicacion: "Departamentos Ministeriales convocantes, Dirección General de la Función Pública, Centro de Información Administrativa y Delegaciones del Gobierno."
+                },
+                {
+                    pregunta: "10. ¿Qué se especifica en la resolución aprobatoria de las listas publicada en el BOE?",
+                    opciones: ["El sueldo exacto de cada opositor", "Lugar y fecha de comienzo de los ejercicios y, en su caso, orden de actuación de los aspirantes", "Las preguntas que caerán en el examen", "La relación de miembros suplentes únicamente"],
+                    respuesta_correcta: 1,
+                    explicacion: "En la resolución debe determinarse el lugar y fecha de comienzo de los ejercicios y, en su caso, orden de actuación."
+                },
+                {
+                    pregunta: "11. ¿Se puede omitir la exposición pública de la lista completa de admitidos cuando el procedimiento lo permita?",
+                    opciones: ["No, siempre es obligatoria la lista completa de admitidos en el BOE", "Sí, si se especifica en la convocatoria, publicando en BOE fecha, lugar y solo la relación de excluidos", "Sí, no publicando nada en el BOE", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "Cuando el procedimiento lo permita, no será preceptiva la exposición pública de admitidos, recogiendo la resolución en BOE lugar, fecha y relación de excluidos."
+                },
+                {
+                    pregunta: "12. La publicación de la resolución de admitidos/excluidos en el BOE es determinante a efectos de:",
+                    opciones: ["Determinación del IRPF", "Cómputo de plazos a efectos de posibles impugnaciones o recursos", "Cobro de tasas de examen", "Antigüedad en el cuerpo"],
+                    respuesta_correcta: 1,
+                    explicacion: "La publicación de la resolución en el Boletín Oficial del Estado será determinante de los plazos a efectos de posibles impugnaciones o recursos."
+                },
+                {
+                    pregunta: "13. Las convocatorias pueden ser de carácter:",
+                    opciones: ["Unitario o para el ingreso en Cuerpos o Escalas determinados", "Privado y confidencial", "Únicamente autonómico", "Permanente e indefinido"],
+                    respuesta_correcta: 0,
+                    explicacion: "Las convocatorias podrán ser de carácter unitario o para el ingreso en Cuerpos o Escalas determinados."
+                },
+                {
+                    pregunta: "14. A y B son correctas sobre el plazo de instancias: (A) Son 20 días hábiles; (B) Se cuentan a partir del día siguiente al de publicación en el BOE.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas premisas coinciden de forma exacta con la regulación indicada en el texto."
+                },
+                {
+                    pregunta: "15. ¿Los días para la presentación de instancias son naturales o hábiles?",
+                    opciones: ["Días naturales", "Días hábiles", "Días laborables según el convenio", "Indistinto"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto señala expresamente 20 días 'hábiles'."
+                },
+                {
+                    pregunta: "16. El informe de impacto de género en las convocatorias solo puede omitirse en caso de:",
+                    opciones: ["Solicitud del Tribunal", "Urgencia", "Falta de presupuesto", "Convocatorias de promoción interna"],
+                    respuesta_correcta: 1,
+                    explicacion: "Deberá acompañarse de un informe de impacto de género, salvo en casos de urgencia."
+                },
+                {
+                    pregunta: "17. Para aprobar Bases Generales aplicables a sucesivas convocatorias, el Subsecretario precisa informe favorable de:",
+                    opciones: ["La Dirección General de la Función Pública", "El Ministerio de Defensa", "El Tribunal Supremo", "La Junta Electoral"],
+                    respuesta_correcta: 0,
+                    explicacion: "El Subsecretario convocante podrá aprobar bases generales 'con el informe favorable de la Dirección General de la Función Pública'."
+                },
+                {
+                    pregunta: "18. ¿Qué ocurre con la solicitud enviada fuera del plazo de 20 días hábiles?",
+                    opciones: ["Se admite siempre con recargo", "Queda excluida del procedimiento", "Se guarda para la OEP del año siguiente", "Depende de la decisión verbal del Tribunal"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las solicitudes presentadas fuera de plazo conllevan la exclusión por no cumplir el requisito temporal de la convocatoria."
+                },
+                {
+                    pregunta: "19. ¿Cuál es el plazo de subsanación de errores tras la lista provisional de excluidos?",
+                    opciones: ["10 días hábiles", "10 días naturales", "15 días hábiles", "1 mes"],
+                    respuesta_correcta: 0,
+                    explicacion: "Se les dará un plazo de diez días hábiles para subsanación de la falta de datos y errores cometidos."
+                },
+                {
+                    pregunta: "20. La resolución de la lista de admitidos y excluidos en el BOE se dicta en el plazo máximo de 1 mes desde:",
+                    opciones: ["La aprobación de la OEP", "La expiración del plazo de presentación de instancias", "La realización del primer examen", "El nombramiento del Tribunal"],
+                    respuesta_correcta: 1,
+                    explicacion: "Expirado el plazo de presentación de instancias, la autoridad dictará resolución en el plazo máximo de un mes."
+                }
+            ],
+            // TEST 9
+            [
+                {
+                    pregunta: "1. Una vez comenzado el proceso selectivo, ¿es obligatoria la publicación de los sucesivos anuncios de exámenes en el BOE?",
+                    opciones: ["Sí, todos los exámenes deben publicarse en el BOE obligatoriamente", "No, no será obligatoria la publicación de sucesivos anuncios en el BOE", "Solo si hay más de 5.000 opositores", "Solo el último ejercicio práctico"],
+                    respuesta_correcta: 1,
+                    explicacion: "Una vez comenzados los procesos selectivos no será obligatoria la publicación de los sucesivos anuncios de la celebración de las restantes pruebas en el Boletín Oficial del Estado."
+                },
+                {
+                    pregunta: "2. Si se trata del MISMO ejercicio, ¿con qué antelación mínima deben publicar los anuncios los órganos de selección en los locales de examen?",
+                    opciones: ["Al menos 12 horas de antelación", "Al menos 24 horas de antelación", "Al menos 48 horas de antelación", "Al menos 5 días de antelación"],
+                    respuesta_correcta: 0,
+                    explicacion: "Dichos anuncios deberán hacerse públicos (...) con doce horas al menos de antelación del comienzo de las mismas, si se trata del mismo ejercicio."
+                },
+                {
+                    pregunta: "3. Si se trata de un NUEVO ejercicio, ¿con qué antelación mínima debe hacerse público el anuncio?",
+                    opciones: ["Al menos 12 horas", "Al menos 24 horas de antelación", "Al menos 72 horas", "Al menos 10 días"],
+                    respuesta_correcta: 1,
+                    explicacion: "Deberán hacerse públicos con al menos 24 horas de antelación si se trata de un nuevo ejercicio."
+                },
+                {
+                    pregunta: "4. Terminada la calificación, ¿dónde se hace pública la relación de aprobados?",
+                    opciones: ["En el Boletín Oficial de las CCAA", "En el lugar o lugares de celebración del último ejercicio", "Únicamente en la sede del Ministerio de Hacienda", "No se hace pública hasta el nombramiento"],
+                    respuesta_correcta: 1,
+                    explicacion: "Las Comisiones Permanentes o Tribunales harán pública, en el lugar o lugares de celebración del último ejercicio, la relación de aprobados."
+                },
+                {
+                    pregunta: "5. ¿Pueden los órganos de selección aprobar a un número de aspirantes superior al de plazas convocadas?",
+                    opciones: ["Sí, siempre para crear bolsa de interinos", "No, no pudiendo rebasar este el número de plazas convocadas (salvo previsión específica de curso selectivo)", "Sí, hasta un 20% más", "Depende del Tribunal"],
+                    respuesta_correcta: 1,
+                    explicacion: "No pudiendo rebasar estos el número de plazas convocadas. Únicamente cuando el proceso comprenda un curso selectivo, el número de aprobados en las pruebas previas podrá superar las plazas."
+                },
+                {
+                    pregunta: "6. En el caso de que el proceso selectivo comprenda un CURSO SELECTIVO:",
+                    opciones: ["El número de aprobados en las pruebas selectivas podrá ser superior al de plazas convocadas", "El número de aprobados debe ser exactamente la mitad", "Queda prohibido el concurso-oposición", "Los aprobados no adquieren la condición de funcionarios en prácticas"],
+                    respuesta_correcta: 0,
+                    explicacion: "El proceso selectivo podrá comprender un curso selectivo o período de prácticas. Solo en el primer caso el número de aprobados en las pruebas selectivas podrá ser superior al de plazas convocadas."
+                },
+                {
+                    pregunta: "7. Plazo para que los aspirantes aprobados aporten la documentación acreditativa de requisitos:",
+                    opciones: ["10 días hábiles", "15 días naturales", "Dentro del plazo de 20 días hábiles desde que se hagan públicas las relaciones de aprobados", "Un mes natural"],
+                    respuesta_correcta: 2,
+                    explicacion: "La documentación debe aportarse por los aspirantes aprobados dentro del plazo de 20 días hábiles desde que se hagan públicas las relaciones de aprobados."
+                },
+                {
+                    pregunta: "8. Exención de acreditación documental para funcionarios públicos aprobados:",
+                    opciones: ["Deben presentar todos los documentos originales otra vez", "Están exentos de justificar requisitos ya acreditados, presentando únicamente certificación del Ministerio/Organismo del que dependan", "No tienen que presentar ningún documento", "Deben realizar un examen médico adicional"],
+                    respuesta_correcta: 1,
+                    explicacion: "Quienes tuvieran la condición de funcionarios públicos están exentos de justificar los requisitos ya acreditados, presentando certificación de su expediente personal."
+                },
+                {
+                    pregunta: "9. Si un aspirante aprobado no presenta la documentación en plazo (salvo fuerza mayor) o carece de requisitos:",
+                    opciones: ["Se le da un año extra", "No podrá ser nombrado, quedando anuladas todas las actuaciones, sin perjuicio de responsabilidad por falsedad", "Se le nombra interino automáticamente", "Se le pasa al último lugar de la lista"],
+                    respuesta_correcta: 1,
+                    explicacion: "No podrán ser nombrados, quedando anuladas todas las actuaciones, sin perjuicio de la responsabilidad por falsedad."
+                },
+                {
+                    pregunta: "10. ¿Qué ocurre si un aspirante no supera el curso selectivo?",
+                    opciones: ["Repite el curso inmediatamente", "Perderá el derecho a su nombramiento como funcionario de carrera mediante resolución motivada", "Pasa a ser personal eventual", "Se le nombra funcionario de carrera de subgrupo inferior"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los aspirantes que no superen el curso selectivo perderán el derecho a su nombramiento como funcionarios de carrera, mediante resolución motivada."
+                },
+                {
+                    pregunta: "11. Aplazamiento de curso selectivo o prácticas por fuerza mayor o servicio militar:",
+                    opciones: ["Pierden todos sus derechos selectivos", "Podrán efectuarlo con posterioridad, intercalándose en el lugar correspondiente a la puntuación obtenida", "Deben repetir la fase de oposición completa", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "Podrán efectuarlo con posterioridad, intercalándose en el lugar correspondiente a la puntuación obtenida."
+                },
+                {
+                    pregunta: "12. A y B son correctas respecto a los anuncios de exámenes: (A) Mismo ejercicio: mínimo 12 horas; (B) Nuevo ejercicio: mínimo 24 horas.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambas cifras son estrictamente exactas conforme a lo establecido en el RD 364/1995 y en el texto."
+                },
+                {
+                    pregunta: "13. ¿Quién propone la resolución motivada de pérdida de derechos al no superar el curso selectivo?",
+                    opciones: ["El órgano responsable de la evaluación del curso selectivo", "El Delegado del Gobierno", "Cualquier opositor que haya suspenso", "El sindicato con más representación"],
+                    respuesta_correcta: 0,
+                    explicacion: "A propuesta del órgano responsable de la evaluación del curso selectivo."
+                },
+                {
+                    pregunta: "14. ¿Qué nombramiento ostentan los aspirantes durante la realización del curso selectivo o periodo de prácticas?",
+                    opciones: ["Funcionarios de carrera con destino definitivo", "Funcionarios en prácticas", "Personal eventual de libre designación", "Personal laboral temporal"],
+                    respuesta_correcta: 1,
+                    explicacion: "La autoridad que haya efectuado la convocatoria nombrará funcionarios en prácticas a los aspirantes propuestos."
+                },
+                {
+                    pregunta: "15. ¿Se eleva la relación de aprobados a la autoridad competente tras la calificación?",
+                    opciones: ["Sí, para que ordene su publicación en el Boletín Oficial del Estado", "No, queda archivada en el tribunal", "Solo si hay impugnaciones pendientes", "Se envía a la Unión Europea"],
+                    respuesta_correcta: 0,
+                    explicacion: "Elevarán dicha relación a la autoridad competente que ordenará su publicación en el Boletín Oficial del Estado."
+                },
+                {
+                    pregunta: "16. En los procedimientos que consten de período de prácticas (sin curso selectivo), el número de aprobados en la fase de examen:",
+                    opciones: ["Puede superar el número de plazas", "No podrá ser superior al de plazas convocadas", "Debe ser el doble de plazas", "Es ilimitado"],
+                    respuesta_correcta: 1,
+                    explicacion: "Solo en el caso de 'curso selectivo' se puede superar el número de plazas convocadas en la fase de pruebas selectivas. En periodo de prácticas no."
+                },
+                {
+                    pregunta: "17. ¿Dónde se publican los anuncios de examen una vez iniciadas las pruebas selectivas?",
+                    opciones: ["En el BOE obligatoriamente siempre", "En los locales donde se hayan celebrado las pruebas anteriores", "En el perfil de la red social del Ministerio", "En el tablón del Ayuntamiento de Madrid"],
+                    respuesta_correcta: 1,
+                    explicacion: "Estos anuncios deberán hacerse públicos por los órganos de selección en los locales donde se hayan celebrado las pruebas anteriores."
+                },
+                {
+                    pregunta: "18. ¿La relación de aprobados ordenada se establece según?",
+                    opciones: ["La edad de los aspirantes", "El orden de puntuación obtenida", "El orden alfábetico del primer apellido", "La fecha de solicitud"],
+                    respuesta_correcta: 1,
+                    explicacion: "Harán pública la relación de aprobados por orden de puntuación."
+                },
+                {
+                    pregunta: "19. Si un aspirante no presenta la documentación por causa de fuerza mayor debidamente acreditada:",
+                    opciones: ["Se anulan sus actuaciones sin excepción", "Se contempla como salvedad al plazo estricto de 20 días hábiles", "Pasa a ser expulsado del país", "Se le suspende por dos años"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto matiza: 'Quienes dentro del plazo indicado, y salvo casos de fuerza mayor, no presentasen la documentación...'."
+                },
+                {
+                    pregunta: "20. La acreditación de requisitos por los aprobados se realiza en el plazo de:",
+                    opciones: ["10 días hábiles", "20 días hábiles", "1 mes natural", "15 días hábiles"],
+                    respuesta_correcta: 1,
+                    explicacion: "La documentación debe aportarse por los aspirantes aprobados dentro del plazo de 20 días hábiles."
+                }
+            ],
+            // TEST 10
+            [
+                {
+                    pregunta: "1. Concluido el proceso selectivo, ¿qué autoridad nombra funcionarios de carrera a quienes lo hubieran superado?",
+                    opciones: ["El Presidente del Gobierno", "El Secretario de Estado competente en materia de función pública", "El Subsecretario del Ministerio convocante", "El Director del BOE"],
+                    respuesta_correcta: 1,
+                    explicacion: "Serán nombrados funcionarios de carrera por el Secretario de Estado competente en materia de función pública."
+                },
+                {
+                    pregunta: "2. Límite de los nombramientos de funcionarios de carrera tras el proceso:",
+                    opciones: ["No hay límite", "Hasta el límite de plazas anunciadas y que se hallen dotadas presupuestariamente", "Hasta el doble de plazas ofertadas", "Cualquier número acordado con los sindicatos"],
+                    respuesta_correcta: 1,
+                    explicacion: "Hasta el límite de plazas anunciadas y que se hallen dotadas presupuestariamente."
+                },
+                {
+                    pregunta: "3. La adjudicación de puestos de trabajo a los funcionarios de nuevo ingreso se efectúa según:",
+                    opciones: ["Sorteo público", "Las peticiones de los interesados según el orden establecido en el proceso selectivo", "La proximidad al domicilio de residencia libremente", "La decisión unilateral del tribunal"],
+                    respuesta_correcta: 1,
+                    explicacion: "Se efectuará de acuerdo con las peticiones de los interesados entre los puestos ofertados a los mismos, según el orden establecido en el proceso selectivo."
+                },
+                {
+                    pregunta: "4. ¿Qué carácter tienen los destinos adjudicados a los funcionarios de nuevo ingreso?",
+                    opciones: ["Carácter provisional durante 2 años", "Carácter definitivo, equivalente a todos los efectos a los obtenidos por concurso", "Carácter interino recusable", "Carácter eventual revocable"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los destinos tendrán carácter definitivo, equivalente a todos los efectos a los obtenidos por concurso."
+                },
+                {
+                    pregunta: "5. Tras las novedades del RDL 6/2023, ¿cuál es el plazo general para efectuar la toma de posesión desde la publicación del nombramiento?",
+                    opciones: ["Plazo de 10 días hábiles", "Plazo de quince días naturales", "Plazo de un mes natural en todos los casos", "Plazo de 30 días hábiles"],
+                    respuesta_correcta: 1,
+                    explicacion: "La toma de posesión, tras el Real Decreto-Ley 6/2023, deberá efectuarse en el plazo de quince días naturales desde la publicación del nombramiento."
+                },
+                {
+                    pregunta: "6. Si la toma de posesión implica CAMBIO DE LOCALIDAD de residencia, ¿cuál es el plazo según el RDL 6/2023?",
+                    opciones: ["15 días naturales", "Un mes", "20 días hábiles", "2 meses"],
+                    respuesta_correcta: 1,
+                    explicacion: "El plazo será de un mes si implica cambio de localidad de residencia."
+                },
+                {
+                    pregunta: "7. En SERVICIOS CENTRALES, ¿ante qué autoridad se efectúa la toma de posesión?",
+                    opciones: ["Ante el Presidente del Gobierno", "Ante el Subsecretario del Ministerio correspondiente", "Ante el Delegado del Gobierno", "Ante el Secretario de Estado de Hacienda"],
+                    respuesta_correcta: 1,
+                    explicacion: "La toma de posesión tendrá lugar ante el Subsecretario del Ministerio correspondiente, en caso de tener lugar en servicios centrales."
+                },
+                {
+                    pregunta: "8. En SERVICIOS PERIFÉRICOS, ¿ante qué autoridad se efectúa la toma de posesión?",
+                    opciones: ["Ante el Alcalde del Municipio", "Ante el Subsecretario del Ministerio", "Ante el Delegado del Gobierno", "Ante el Jefe de Sección"],
+                    respuesta_correcta: 2,
+                    explicacion: "Tendrá lugar ante el Delegado del Gobierno, en el caso de servicios periféricos."
+                },
+                {
+                    pregunta: "9. Con la toma de posesión en plazo se perfecciona la condición de funcionario de carrera y se concluye:",
+                    opciones: ["La Oferta de Empleo Público del año siguiente", "El proceso selectivo", "La vida laboral del empleado", "La vigencia de las bases generales"],
+                    respuesta_correcta: 1,
+                    explicacion: "El proceso concluirá con la toma de posesión en los plazos legalmente fijados."
+                },
+                {
+                    pregunta: "10. ¿Los destinos obtenidos por los funcionarios de nuevo ingreso se consideran provisionales?",
+                    opciones: ["Sí, durante el primer año", "No, tienen carácter definitivo equivalente a los obtenidos por concurso", "Sí, hasta superar un examen de idoneidad", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "Los destinos tendrán carácter definitivo, equivalente a todos los efectos a los obtenidos por concurso."
+                },
+                {
+                    pregunta: "11. A y B son correctas sobre la toma de posesión (RDL 6/2023): (A) Plazo general: 15 días naturales; (B) Con cambio de residencia: 1 mes.",
+                    opciones: ["A es correcta pero B no", "B es correcta pero A no", "A y B son correctas", "Ni A ni B son correctas"],
+                    respuesta_correcta: 2,
+                    explicacion: "Ambos plazos corresponden exactamente a la modificación reflejada por el RDL 6/2023."
+                },
+                {
+                    pregunta: "12. ¿Los días para la toma de posesión (15 días) se computan como naturales o hábiles tras el RDL 6/2023?",
+                    opciones: ["Días hábiles", "Días naturales", "Días laborables", "Indistinto según el Ministerio"],
+                    respuesta_correcta: 1,
+                    explicacion: "El texto especifica textualmente 15 días 'naturales'."
+                },
+                {
+                    pregunta: "13. ¿Qué autoridad publica la orden de nombramiento en el BOE?",
+                    opciones: ["La autoridad competente que la ordene tras recibir la propuesta", "El Tribunal de Selección directamente", "El sindicato de la función pública", "El Defensor del Pueblo"],
+                    respuesta_correcta: 0,
+                    explicacion: "Elevarán la relación a la autoridad competente que ordenará su publicación en el Boletín Oficial del Estado."
+                },
+                {
+                    pregunta: "14. La elección de vacantes ofertadas entre los aprobados se rige estrictamente por:",
+                    opciones: ["La antigüedad en la empresa privada", "El orden de puntuación final obtenido en el proceso selectivo", "El estado civil de los opositores", "Sorteo ante el tribunal"],
+                    respuesta_correcta: 1,
+                    explicacion: "Efectuada de acuerdo con las peticiones de los interesados según el orden establecido en el proceso selectivo."
+                },
+                {
+                    pregunta: "15. En un puesto de la Administración Periférica en Huelva, la toma de posesión del nuevo funcionario se realiza ante:",
+                    opciones: ["El Subsecretario de Servicios Centrales", "El Delegado del Gobierno", "El Ministro del Interior", "El Director General de la Función Pública"],
+                    respuesta_correcta: 1,
+                    explicacion: "En el caso de servicios periféricos, la toma de posesión se realiza ante el Delegado del Gobierno."
+                },
+                {
+                    pregunta: "16. En un puesto del Ministerio de Hacienda en Madrid (Servicios Centrales), la toma de posesión se efectúa ante:",
+                    opciones: ["El Subsecretario del Ministerio correspondiente", "El Delegado del Gobierno en Madrid", "El Alcalde de Madrid", "El Presidente del Tribunal Constitucional"],
+                    respuesta_correcta: 0,
+                    explicacion: "En servicios centrales, la toma de posesión tiene lugar ante el Subsecretario del Ministerio correspondiente."
+                },
+                {
+                    pregunta: "17. ¿Puede nombrarse funcionario de carrera a quien no haya superado el proceso o no tenga plaza dotada?",
+                    opciones: ["Sí, si lo autoriza el Secretario de Estado", "No, el nombramiento se efectúa a quienes lo hayan superado y hasta el límite de plazas dotadas", "Sí, en calidad de puesto de confianza", "El dato solicitado no se encuentra en la documentación adjunta"],
+                    respuesta_correcta: 1,
+                    explicacion: "El nombramiento se ciñe a quienes hayan superado el proceso y hasta el límite de plazas anunciadas con dotación presupuestaria."
+                },
+                {
+                    pregunta: "18. ¿Qué implica que el destino de nuevo ingreso sea equivalente al obtenido por concurso?",
+                    opciones: ["Que es un destino provisional revocable en cualquier momento", "Que consolida el carácter definitivo del puesto a todos los efectos legales", "Que no se puede cambiar de puesto en toda la vida", "Que requiere pagar un canon especial"],
+                    respuesta_correcta: 1,
+                    explicacion: "Otorga el carácter de destino definitivo, plenamente equiparado al obtenido mediante concurso de provisión."
+                },
+                {
+                    pregunta: "19. ¿Cuál de los siguientes actos pone fin al proceso selectivo de ingreso?",
+                    opciones: ["La publicación de la OEP", "La presentación de la solicitud", "La toma de posesión del puesto de trabajo", "La realización del primer examen"],
+                    respuesta_correcta: 2,
+                    explicacion: "El proceso concluirá con la toma de posesión en la plaza correspondiente."
+                },
+                {
+                    pregunta: "20. El nombramiento formal como funcionario de carrera compete a la Secretaría de Estado competente en materia de:",
+                    opciones: ["Función Pública", "Relaciones con las Cortes", "Asuntos Económicos", "Políticas Sociales"],
+                    respuesta_correcta: 0,
+                    explicacion: "Nombrados funcionarios de carrera por el Secretario de Estado competente en materia de función pública."
+                }
+            ]
+        ];
+
+        // RENDER LOGIC & APP CONTROLLER
+
+        let currentSpeech = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderNavButtons();
+            renderEsquemaCards();
+            renderTestContainers();
+        });
+
+        // Render Dynamic Navigation Tabs
+        function renderNavButtons() {
+            const nav = document.getElementById("mainNav");
+            for (let i = 1; i <= 10; i++) {
+                const btn = document.createElement("button");
+                btn.className = "nav-btn";
+                btn.id = `nav-btn-test${i}`;
+                btn.innerText = `📝 Test ${i}`;
+                btn.onclick = () => switchTab(`test${i}`);
+                nav.appendChild(btn);
+            }
+        }
+
+        // Render Tab 1: Esquema Cards
+        function renderEsquemaCards() {
+            const container = document.getElementById("esquemaContainer");
+            container.innerHTML = "";
+
+            esquemaPreguntas.forEach((item, index) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <div class="card-number">Ficha Didáctica ${index + 1} de 40</div>
+                    <div class="card-title">${item.pregunta}</div>
+                    <div class="card-content">${item.respuesta_detallada}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render Test Tabs & Questions
+        function renderTestContainers() {
+            const container = document.getElementById("testsContainer");
+            container.innerHTML = "";
+
+            examenes.forEach((testQuestions, testIdx) => {
+                const testNum = testIdx + 1;
+                const testDiv = document.createElement("div");
+                testDiv.id = `tab-test${testNum}`;
+                testDiv.className = "tab-content test-container";
+
+                let html = `
+                    <div id="scoreBanner${testNum}" class="score-banner"></div>
+                    <h2 style="margin-bottom: 20px; color: #002b49;">Examen de Evaluación - Test ${testNum} (20 Preguntas)</h2>
+                    <form id="testForm${testNum}">
+                `;
+
+                testQuestions.forEach((q, qIdx) => {
+                    html += `
+                        <div class="question-card" id="test${testNum}_q${qIdx}">
+                            <div class="question-text">${qIdx + 1}. ${q.pregunta}</div>
+                            <div class="options-list">
+                    `;
+
+                    q.opciones.forEach((opt, optIdx) => {
+                        html += `
+                            <label class="option-label" id="label_t${testNum}_q${qIdx}_opt${optIdx}">
+                                <input type="radio" name="t${testNum}_q${qIdx}" value="${optIdx}">
+                                <span class="option-text">${String.fromCharCode(65 + optIdx)}) ${opt}</span>
+                            </label>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                            <div class="explanation-box" id="exp_t${testNum}_q${qIdx}">
+                                <strong>💡 Explicación y Fundamento:</strong><br>
+                                ${q.explicacion}<br>
+                                <strong style="color: #155724; display: inline-block; margin-top: 5px;">Opción Correcta: ${String.fromCharCode(65 + q.respuesta_correcta)}) ${q.opciones[q.respuesta_correcta]}</strong>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    </form>
+                    <div class="score-banner" id="scoreBannerBottom${testNum}"></div>
+                    <div class="test-actions">
+                        <button class="btn btn-success" onclick="corregirTest(${testNum})">✅ Corregir Examen</button>
+                        <button class="btn btn-secondary" onclick="reiniciarTest(${testNum})">🔄 Reiniciar Test</button>
+                    </div>
+                `;
+
+                testDiv.innerHTML = html;
+                container.appendChild(testDiv);
+            });
+        }
+
+        // Tab Switching Functionality
+        function switchTab(tabId) {
+            stopAudio();
+            // Update Navigation Buttons
+            document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+            if (tabId === "esquema") {
+                document.querySelector(".nav-btn").classList.add("active");
+            } else {
+                const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+                if (activeBtn) activeBtn.classList.add("active");
+            }
+
+            // Update Tab Content
+            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.add("active");
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Test Correction Logic
+        function corregirTest(testNum) {
+            const testQuestions = examenes[testNum - 1];
+            let aciertos = 0;
+            let errores = 0;
+            let sinContestar = 0;
+
+            testQuestions.forEach((q, qIdx) => {
+                const selectedOption = document.querySelector(`input[name="t${testNum}_q${qIdx}"]:checked`);
+                const questionCard = document.getElementById(`test${testNum}_q${qIdx}`);
+                const expBox = document.getElementById(`exp_t${testNum}_q${qIdx}`);
+                const correctIdx = q.respuesta_correcta;
+
+                // Lock inputs
+                const inputs = document.querySelectorAll(`input[name="t${testNum}_q${qIdx}"]`);
+                inputs.forEach(input => input.disabled = true);
+
+                // Highlight Correct Option
+                const correctLabel = document.getElementById(`label_t${testNum}_q${qIdx}_opt${correctIdx}`);
+                correctLabel.classList.add("correct-option");
+
+                if (selectedOption) {
+                    const userVal = parseInt(selectedOption.value);
+                    if (userVal === correctIdx) {
+                        aciertos++;
+                    } else {
+                        errores++;
+                        const wrongLabel = document.getElementById(`label_t${testNum}_q${qIdx}_opt${userVal}`);
+                        wrongLabel.classList.add("wrong-option");
+                        expBox.classList.add("show");
+                    }
+                } else {
+                    sinContestar++;
+                    expBox.classList.add("show");
+                }
+            });
+
+            const total = testQuestions.length;
+            const porcentaje = ((aciertos / total) * 100).toFixed(1);
+            const scoreText = `📊 Resultado Final: ${aciertos} Aciertos | ${errores} Errores | ${sinContestar} Sin Contestar — Nota: ${porcentaje}% (${aciertos}/${total})`;
+
+            const bannerTop = document.getElementById(`scoreBanner${testNum}`);
+            const bannerBottom = document.getElementById(`scoreBannerBottom${testNum}`);
+
+            const bannerClass = porcentaje >= 50 ? "score-banner show btn-success" : "score-banner show btn-danger";
+            bannerTop.className = bannerClass;
+            bannerTop.innerText = scoreText;
+
+            bannerBottom.className = bannerClass;
+            bannerBottom.innerText = scoreText;
+
+            bannerTop.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Reset Test Logic
+        function reiniciarTest(testNum) {
+            const testForm = document.getElementById(`testForm${testNum}`);
+            testForm.reset();
+
+            // Unlock inputs & clear classes
+            const inputs = testForm.querySelectorAll(`input[type="radio"]`);
+            inputs.forEach(input => input.disabled = false);
+
+            const labels = testForm.querySelectorAll(`.option-label`);
+            labels.forEach(label => {
+                label.classList.remove("correct-option", "wrong-option");
+            });
+
+            const expBoxes = testForm.querySelectorAll(`.explanation-box`);
+            expBoxes.forEach(box => box.classList.remove("show"));
+
+            const bannerTop = document.getElementById(`scoreBanner${testNum}`);
+            const bannerBottom = document.getElementById(`scoreBannerBottom${testNum}`);
+            bannerTop.className = "score-banner";
+            bannerBottom.className = "score-banner";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // SPEECH SYNTHESIS API (AUDIO PLAYER FOR TAB 1)
+        function playAudio() {
+            if ('speechSynthesis' in window) {
+                if (window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
+                    return;
+                }
+
+                stopAudio();
+
+                let fullText = "Esquema de Estudio. Tema 3. El Personal Funcionario y la Selección. \n\n";
+                esquemaPreguntas.forEach((item, index) => {
+                    fullText += `Ficha didáctica ${index + 1}. ${item.pregunta}. Respuesta: ${item.respuesta_detallada}. \n\n`;
+                });
+
+                currentSpeech = new SpeechSynthesisUtterance(fullText);
+                currentSpeech.lang = 'es-ES';
+                currentSpeech.rate = 1.0;
+
+                window.speechSynthesis.speak(currentSpeech);
+            } else {
+                alert("Su navegador no soporta la API de síntesis de voz (SpeechSynthesis).");
+            }
+        }
+
+        function pauseAudio() {
+            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+                window.speechSynthesis.pause();
+            }
+        }
+
+        function stopAudio() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+    </script>
+</body>
+</html>
