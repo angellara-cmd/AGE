@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudio Oposiciones AGE - Administrativo del Estado</title>
+    <title>Estudio Oposiciones AGE - El Presupuesto</title>
     <style>
         :root {
             --bg-color: #f8f9fa;
@@ -15,15 +15,13 @@
             --pastel-green: #d4edda;
             --text-green: #155724;
             --pastel-red: #f8d7da;
+            --text-red: #721c24;
             --pastel-blue: #e6f2ff;
+            --text-blue: #004085;
             --border-color: #dee2e6;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -36,22 +34,20 @@
         header {
             background-color: var(--primary);
             color: white;
-            padding: 1rem;
+            padding: 1.5rem 1rem;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        header a {
-            color: white;
-            text-decoration: underline;
-            margin: 0 10px;
-            font-size: 0.9rem;
-        }
+        header h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        header p { font-size: 0.9rem; margin-bottom: 0.5rem; opacity: 0.9; }
+        header a { color: white; margin: 0 8px; font-size: 0.9rem; font-weight: bold; }
 
         nav {
             position: sticky;
             top: 0;
             background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 10px;
             display: flex;
             gap: 10px;
@@ -68,7 +64,8 @@
             cursor: pointer;
             font-weight: bold;
             color: var(--text-main);
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
         }
 
         nav button.active {
@@ -77,9 +74,7 @@
             border-color: var(--primary);
         }
 
-        nav button:hover:not(.active) {
-            background: #e2e6ea;
-        }
+        nav button:hover:not(.active) { background: #e2e6ea; }
 
         main {
             max-width: 800px;
@@ -87,7 +82,6 @@
             padding: 0 15px;
         }
 
-        /* Tarjetas de Esquema */
         .card {
             background: var(--card-bg);
             border-radius: 8px;
@@ -97,12 +91,9 @@
             border: 1px solid var(--border-color);
         }
 
-        .card h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
+        .card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.1rem; }
+        .card p { color: var(--text-main); }
 
-        /* Botón de Audio */
         .audio-btn {
             display: block;
             width: 100%;
@@ -116,12 +107,10 @@
             margin-bottom: 20px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background 0.2s;
         }
-        .audio-btn.playing {
-            background: #dc3545;
-        }
+        .audio-btn.playing { background: #dc3545; }
 
-        /* Test */
         .pregunta-container {
             background: var(--card-bg);
             padding: 20px;
@@ -130,35 +119,25 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border: 1px solid var(--border-color);
         }
+        .pregunta-container h3 { font-size: 1.1rem; margin-bottom: 15px; }
 
-        .opciones {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 15px;
-        }
+        .opciones { display: flex; flex-direction: column; gap: 8px; }
 
         .opcion-label {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 14px 20px;
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s;
+            font-size: 1rem;
         }
 
-        .opcion-label input {
-            margin-right: 15px;
-            transform: scale(1.2);
-        }
+        .opcion-label input { margin-right: 15px; transform: scale(1.2); }
+        .opcion-label:hover { background: #e9ecef; }
 
-        .opcion-label:hover {
-            background: #e9ecef;
-        }
-
-        /* Estados de corrección */
         .correcta {
             background-color: var(--pastel-green) !important;
             color: var(--text-green);
@@ -168,18 +147,19 @@
 
         .erronea {
             background-color: var(--pastel-red) !important;
-            color: #721c24;
+            color: var(--text-red);
             border-color: #f5c6cb;
         }
 
         .explicacion-box {
             background-color: var(--pastel-blue);
-            color: #004085;
+            color: var(--text-blue);
             padding: 15px;
             border-radius: 6px;
             margin-top: 15px;
             border: 1px solid #b8daff;
             display: none;
+            font-size: 0.95rem;
         }
 
         .test-controls {
@@ -197,29 +177,30 @@
             cursor: pointer;
             font-weight: bold;
             color: white;
+            transition: opacity 0.2s;
         }
+        .action-btn:hover { opacity: 0.9; }
 
         .btn-corregir { background: var(--primary); }
-        .btn-corregir:hover { background: var(--primary-hover); }
         .btn-reiniciar { background: #6c757d; }
-        .btn-reiniciar:hover { background: #5a6268; }
 
         .score-display {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: var(--primary);
             margin: 20px 0;
+            padding: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
             display: none;
         }
 
         .hidden { display: none !important; }
 
         @media (min-width: 768px) {
-            .test-controls {
-                flex-direction: row;
-                justify-content: center;
-            }
+            .test-controls { flex-direction: row; justify-content: center; }
             .action-btn { width: 250px; }
         }
     </style>
@@ -227,8 +208,8 @@
 <body>
 
 <header>
-    <h1>Oposiciones AGE: El Presupuesto</h1>
-    <p>Documentación adjunta:</p>
+    <h1>Oposiciones AGE: El Presupuesto y Ciclo Presupuestario</h1>
+    <p>Documentación de referencia:</p>
     <a href="Tema_01.pdf" target="_blank">Tema_01.pdf</a> | 
     <a href="Tema_01Elpresupuesto_Estado.pdf" target="_blank">Tema_01Elpresupuesto_Estado.pdf</a> | 
     <a href="Tema_01Esquema.pdf" target="_blank">Tema_01Esquema.pdf</a>
@@ -254,388 +235,481 @@
 </main>
 
 <script>
-    // --- DATOS: ESQUEMA DE ESTUDIO (40 Preguntas y Respuestas Detalladas) ---
-    const esquemaPreguntas = [
-        { pregunta: "1. ¿Cuál es el concepto legal de Presupuestos Generales del Estado (PGE)?", respuesta_detallada: "Según el art. 32 de la LGP, constituyen la expresión cifrada, conjunta y sistemática de los derechos y obligaciones a liquidar durante el ejercicio por cada uno de los órganos y entidades que forman parte del sector público estatal." },
-        { pregunta: "2. ¿Qué entes integran el sector público estatal según el art. 2 de la LGP?", respuesta_detallada: "La Administración General del Estado (AGE) y el sector público institucional estatal (organismos autónomos, entidades públicas empresariales, agencias estatales, autoridades administrativas independientes, sociedades mercantiles estatales, consorcios, fundaciones, universidades públicas no transferidas, etc.)." },
-        { pregunta: "3. ¿Qué poder del Estado elabora los PGE y cuál los aprueba?", respuesta_detallada: "Corresponde al Ejecutivo (Gobierno) la elaboración de los PGE (art. 134.1 CE) y al Legislativo (Cortes Generales) su examen, enmienda y aprobación." },
-        { pregunta: "4. ¿Cuál es el plazo constitucional para la presentación del proyecto de PGE por el Gobierno?", respuesta_detallada: "Al menos tres meses antes de la expiración de los del año anterior (es decir, antes del 1 de octubre)." },
-        { pregunta: "5. ¿Qué sucede si la Ley de PGE no se aprueba antes del primer día del ejercicio económico (1 de enero)?", respuesta_detallada: "Se consideran automáticamente prorrogados los presupuestos iniciales del ejercicio anterior hasta la aprobación y publicación de los nuevos en el BOE." },
-        { pregunta: "6. ¿Cuáles son las excepciones a la prórroga automática de los presupuestos?", respuesta_detallada: "La prórroga no afectará a los créditos para gastos correspondientes a programas o actuaciones que terminen en el ejercicio cuyos presupuestos se prorrogan o para obligaciones que se extingan en el mismo." },
-        { pregunta: "7. ¿En qué consiste el principio de universalidad?", respuesta_detallada: "En que los presupuestos han de contener la totalidad de los gastos y de los ingresos (art. 134 CE). No deben existir gastos al margen del presupuesto." },
-        { pregunta: "8. ¿En qué consiste el principio de unidad?", respuesta_detallada: "Según este principio, la totalidad de gastos e ingresos han de presentarse en un presupuesto único." },
-        { pregunta: "9. ¿Qué define el principio de especialidad cualitativa?", respuesta_detallada: "Los créditos para gastos se destinarán exclusivamente a la finalidad específica para la que hayan sido autorizados por la Ley de PGE." },
-        { pregunta: "10. ¿Qué establece el principio de especialidad cuantitativa?", respuesta_detallada: "No podrán adquirirse compromisos de gastos ni reconocer obligaciones por cuantía superior al importe de los créditos autorizados. Son nulos de pleno derecho los actos que infrinjan esto." },
-        { pregunta: "11. ¿En qué consiste el principio de especialidad temporal?", respuesta_detallada: "Los créditos para gastos que el último día del ejercicio no estén afectados al cumplimiento de obligaciones ya reconocidas quedarán anulados de pleno derecho, salvo excepciones (créditos incorporables)." },
-        { pregunta: "12. ¿Qué determina el principio de presupuesto bruto?", respuesta_detallada: "Los derechos liquidados y obligaciones reconocidas se aplicarán a los presupuestos por su importe íntegro, sin que puedan atenderse obligaciones mediante minoración de derechos, salvo autorización expresa de ley." },
-        { pregunta: "13. ¿Qué es el principio de estabilidad presupuestaria (LO 2/2012)?", respuesta_detallada: "Se entenderá por estabilidad de las Administraciones Públicas la situación de equilibrio o superávit estructural. Para empresas y sociedades, es la posición de equilibrio financiero." },
-        { pregunta: "14. ¿Qué es el principio de sostenibilidad financiera?", respuesta_detallada: "La capacidad para financiar compromisos de gasto presentes y futuros dentro de los límites de déficit y deuda pública. Se exige principio de prudencia financiera." },
-        { pregunta: "15. ¿Qué establece el principio de plurianualidad?", respuesta_detallada: "La elaboración de los presupuestos se encuadrará en un marco presupuestario a medio plazo, compatible con el principio de anualidad." },
-        { pregunta: "16. ¿Qué órgano ejerce el control interno de la gestión económica del Estado?", respuesta_detallada: "La Intervención General de la Administración del Estado (IGAE)." },
-        { pregunta: "17. ¿A quién corresponde el control externo del sector público estatal?", respuesta_detallada: "Al Tribunal de Cuentas, supremo órgano fiscalizador de las cuentas y gestión económica." },
-        { pregunta: "18. ¿Qué características tiene el Presupuesto Clásico o Tradicional?", respuesta_detallada: "Inspirado en el liberalismo (hasta 1929). Postula: gasto público mínimo, nivelación presupuestaria (equilibrio estricto anual), neutralidad impositiva y no emisión de deuda (salvo inversiones autoliquidables)." },
-        { pregunta: "19. ¿En qué consiste el Presupuesto en Base Cero?", respuesta_detallada: "Cada centro de gasto debe justificar la totalidad de sus necesidades presupuestarias probando la necesidad de todas las cantidades a gastar partiendo de cero, olvidando los gastos del ejercicio anterior." },
-        { pregunta: "20. ¿Qué diferencia a los programas finalistas de los instrumentales y de gestión?", respuesta_detallada: "En la estructura de programas, el cuarto carácter del código: letras 'A' a 'L' identifican programas finalistas, y letras 'M' a 'Z' programas instrumentales y de gestión." },
-        { pregunta: "21. ¿Cuáles son las fases del presupuesto por programas?", respuesta_detallada: "Planificación (fijar metas), Programación (evaluar impacto financiero plurianual), Presupuestación (asignar créditos para el año) y Control (evaluar resultados mediante indicadores)." },
-        { pregunta: "22. Nombra los tipos de indicadores en el presupuesto por programas.", respuesta_detallada: "Indicadores de impacto (efectos sobre grupos sociales/objetivos), de resultados (bienes/servicios producidos), de medios (recursos aplicados) y de gestión (compara costes con resultados)." },
-        { pregunta: "23. ¿Quién fija los objetivos de estabilidad presupuestaria y deuda pública?", respuesta_detallada: "El Gobierno, mediante acuerdo del Consejo de Ministros en el primer semestre del año, a propuesta del Ministro de Hacienda, expresados en porcentaje del PIB nacional nominal." },
-        { pregunta: "24. ¿A qué límite temporal están referidos los escenarios presupuestarios plurianuales?", respuesta_detallada: "Determinarán los límites referidos a los tres ejercicios siguientes. Son confeccionados por el Ministerio de Hacienda." },
-        { pregunta: "25. ¿A quién remitirán sus propuestas los Ministerios para elaborar los PGE?", respuesta_detallada: "Al Ministerio competente en Hacienda, ajustadas a los límites de las directrices fijadas por la Comisión de Políticas de Gasto." },
-        { pregunta: "26. ¿Quién elabora el anteproyecto de Presupuesto de la Seguridad Social?", respuesta_detallada: "El Ministerio de Inclusión, Seguridad Social y Migraciones, que luego lo remite al Ministerio de Hacienda para que ambos lo eleven al Gobierno." },
-        { pregunta: "27. ¿Qué entidades deben elaborar presupuestos de explotación y de capital?", respuesta_detallada: "Las entidades públicas empresariales, sociedades mercantiles estatales, fundaciones del sector público estatal y fondos sin personalidad jurídica." },
-        { pregunta: "28. ¿Qué informes de impacto deben acompañar al proyecto de Ley de PGE?", respuesta_detallada: "Impacto de género, impacto en la infancia, adolescencia y familia, alineamiento con ODS Agenda 2030 y alineamiento con la transición ecológica." },
-        { pregunta: "29. ¿Qué mayoría se necesita para aprobar la Ley de Presupuestos Generales del Estado?", respuesta_detallada: "Al ser una ley ordinaria, se aprueba por mayoría simple de las Cortes Generales." },
-        { pregunta: "30. ¿Puede la Ley de PGE crear tributos?", respuesta_detallada: "No puede crear tributos. Solo podrá modificarlos cuando una ley tributaria sustantiva así lo prevea (art. 134.7 CE)." },
-        { pregunta: "31. ¿Qué se necesita para tramitar una enmienda que suponga aumento de créditos o disminución de ingresos?", respuesta_detallada: "Requerirá, para su tramitación, la conformidad del Gobierno (art. 134.6 CE)." },
-        { pregunta: "32. ¿A quién compete la aprobación y compromiso del gasto en los Ministerios?", respuesta_detallada: "Corresponde a los Ministros y titulares de los demás órganos del Estado con dotaciones diferenciadas, salvo casos reservados al Consejo de Ministros." },
-        { pregunta: "33. ¿Qué cuantía obliga a solicitar autorización al Consejo de Ministros para convenios o contratos-programa?", float: "left", respuesta_detallada: "Se necesitará autorización del Consejo de Ministros cuando el importe del gasto que de aquéllos se derive sea superior a 12 millones de euros." },
-        { pregunta: "34. ¿Quién ejerce las funciones de Ordenador General de Pagos del Estado?", respuesta_detallada: "Bajo la superior autoridad del Ministro de Economía, competen al Director General del Tesoro y Política Financiera." },
-        { pregunta: "35. ¿Qué principio implica centralizar los fondos y valores del sector público?", respuesta_detallada: "El principio de unidad de caja. Sirve para centralizar cobros y pagos para una eficaz distribución (Tesoro Público)." },
-        { pregunta: "36. ¿A quién rinden cuentas obligatoriamente las entidades del sector público estatal?", respuesta_detallada: "Quedan sometidas a la obligación de rendir cuentas de sus operaciones al Tribunal de Cuentas, por conducto de la IGAE (principio de contabilidad)." },
-        { pregunta: "37. ¿Qué es el principio de lealtad institucional (LOEPSF)?", respuesta_detallada: "Cada Administración debe valorar el impacto de sus actuaciones en el resto, respetar competencias legítimas, ponderar intereses públicos y prestar asistencia activa." },
-        { pregunta: "38. ¿Qué fórmula presupuestaria busca contrarrestar las crisis de demanda de forma automática?", respuesta_detallada: "El presupuesto de estabilización automática, que usa el efecto flexibilizador del sistema fiscal sin intervención discrecional continua." },
-        { pregunta: "39. ¿Las Cortes Generales forman parte del Sector Público Estatal regido por la LGP?", respuesta_detallada: "La LGP no será de aplicación a las Cortes Generales, que gozan de autonomía presupuestaria (art. 72 CE), aunque se mantiene coordinación para elaborar los PGE." },
-        { pregunta: "40. ¿Qué caracteriza a los presupuestos administrativos frente a los empresariales?", respuesta_detallada: "Están sujetos a triple limitación de gasto (cualitativa, cuantitativa y temporal) y su vertiente de ingresos es siempre estimativa." }
-    ];
+// --- DATOS: ESQUEMA (40 PREGUNTAS DETALLADAS BASADAS EN PDFs) ---
+const esquemaBruto = [
+    {p:"1. Concepto de Presupuestos Generales del Estado (PGE)", r:"Según el art. 32 de la LGP, constituyen la expresión cifrada, conjunta y sistemática de los derechos y obligaciones a liquidar durante el ejercicio por cada uno de los órganos y entidades que forman parte del sector público estatal."},
+    {p:"2. Sector público estatal (Art. 2 LGP)", r:"Forman parte del sector público estatal: a) La Administración General del Estado. b) El sector público institucional estatal (OOAA, Entidades Públicas Empresariales, Agencias, Sociedades mercantiles, Consorcios, Fundaciones, Universidades públicas no transferidas, etc.)."},
+    {p:"3. Elaboración y Aprobación de PGE (Art. 134 CE)", r:"Corresponde al Gobierno la elaboración de los PGE y a las Cortes Generales su examen, enmienda y aprobación."},
+    {p:"4. Plazo de presentación (Constitución)", r:"El proyecto de Ley de PGE debe remitirse a las Cortes al menos tres meses antes de la expiración de los del año anterior (antes del 1 de octubre)."},
+    {p:"5. Prórroga automática de los PGE", r:"Si la Ley no se aprueba antes del primer día del ejercicio (1 de enero), se consideran automáticamente prorrogados los presupuestos iniciales del ejercicio anterior."},
+    {p:"6. Excepciones a la prórroga (Art. 38 LGP)", r:"La prórroga no afectará a los créditos para gastos correspondientes a programas o actuaciones que terminen en el ejercicio cuyos presupuestos se prorrogan o para obligaciones que se extingan en el mismo."},
+    {p:"7. Principio de Universalidad", r:"Los presupuestos han de contener la totalidad de los gastos y de los ingresos del sector público estatal. No deben existir gastos al margen del presupuesto."},
+    {p:"8. Principio de Unidad", r:"La totalidad de gastos e ingresos han de presentarse en un presupuesto único."},
+    {p:"9. Principio de Especialidad Cualitativa", r:"Los créditos para gastos se destinarán exclusivamente a la finalidad específica para la que hayan sido autorizados."},
+    {p:"10. Principio de Especialidad Cuantitativa", r:"No podrán adquirirse compromisos de gastos ni reconocer obligaciones por cuantía superior al importe de los créditos autorizados (son nulos de pleno derecho los actos que infrinjan esto)."},
+    {p:"11. Principio de Especialidad Temporal", r:"Los créditos para gastos que el último día del ejercicio no estén afectados al cumplimiento de obligaciones ya reconocidas quedarán anulados de pleno derecho (salvo excepciones)."},
+    {p:"12. Principio de Presupuesto Bruto", r:"Los derechos y obligaciones se aplicarán a los presupuestos por su importe íntegro, sin minorar derechos con obligaciones (compensaciones), salvo que la ley lo autorice expresamente."},
+    {p:"13. Principio de Unidad de Caja", r:"Centralización de todos los fondos y valores generados por operaciones presupuestarias y no presupuestarias (Tesoro Público)."},
+    {p:"14. Estabilidad Presupuestaria (LO 2/2012)", r:"Situación de equilibrio o superávit estructural para las AAPP. Para entidades empresariales y sociedades, es la posición de equilibrio financiero."},
+    {p:"15. Sostenibilidad Financiera", r:"Capacidad para financiar compromisos de gasto presentes y futuros dentro de los límites de déficit y deuda pública."},
+    {p:"16. Plurianualidad y Lealtad Institucional", r:"Elaboración encuadrada en marco a medio plazo (Plurianualidad). Obligación de valorar impactos en otras AAPP y facilitar información (Lealtad Institucional)."},
+    {p:"17. Presupuestos limitativos vs estimativos", r:"Limitativos: Estado, OOAA, Seguridad Social. Estimativos: Entidades Públicas Empresariales, Sociedades mercantiles, Fundaciones, Consorcios."},
+    {p:"18. Presupuesto Clásico (Tradicional)", r:"Liberalismo. Principios: Gasto público mínimo, nivelación anual, neutralidad impositiva, no emisión de deuda (salvo autoliquidable)."},
+    {p:"19. Presupuesto Compensatorio", r:"Intervención estatal (Keynes) para compensar la demanda privada, usando el déficit público como medida correctora."},
+    {p:"20. Presupuesto en Base Cero", r:"Exige la justificación de la totalidad de las peticiones presupuestarias, probando la necesidad partiendo desde cero (sin basarse en el histórico)."},
+    {p:"21. Presupuesto por Programas: Concepto", r:"Fija objetivos a conseguir cuantificados con indicadores, asignando recursos en función de las metas y evaluando alternativas."},
+    {p:"22. Codificación Programas (Finalistas vs Instrumentales)", r:"El cuarto carácter del código: letras 'A' a 'L' identifican programas finalistas; 'M' a 'Z' identifican programas instrumentales y de gestión."},
+    {p:"23. Fases del Presupuesto por Programas", r:"1. Planificación (fijar metas). 2. Programación (evaluar alternativas e impacto). 3. Presupuestación (asignar créditos anuales). 4. Control (indicadores)."},
+    {p:"24. Indicadores en Ppto por Programas", r:"Impacto (efectos en sociedad), Resultados (productos/servicios generados), Medios (recursos financieros aplicados), Gestión (compara medios aplicados con resultados obtenidos)."},
+    {p:"25. Límite de Gasto No Financiero (Techo de Gasto)", r:"El Gobierno, en el primer semestre, fija los objetivos de estabilidad y deuda y el límite de gasto no financiero, previo informe del CPFF y CNAL (plazo 15 días)."},
+    {p:"26. Escenarios Presupuestarios Plurianuales", r:"Programación de la actividad a 3 ejercicios siguientes. Confeccionados por el Ministerio de Hacienda."},
+    {p:"27. Directrices y Comisiones de Elaboración", r:"Orden de Hacienda dicta normas. Comisiones: Comisión de Políticas de Gasto y Comisiones de Análisis de Programas (reuniones bilaterales)."},
+    {p:"28. Elaboración Ppto de la Seguridad Social", r:"Sanidad envía INGESA y Derechos Sociales envía IMSERSO a Hacienda; luego van a Seguridad Social, que forma el anteproyecto y lo remite a Hacienda para elevación conjunta al Gobierno."},
+    {p:"29. Documentación Complementaria del Proyecto", r:"Acompañan al proyecto: Memorias, informe impacto de género, informe infancia/familia, alineamiento ODS 2030, alineamiento transición ecológica, informe económico financiero, y memoria beneficios fiscales."},
+    {p:"30. Informes de Impacto: Género y Transición Ecológica", r:"Género: Realidad, Representación y Recursos-Resultados. Transición: Dimensión verde (apoyo ambiental) y marrón (impacto negativo)."},
+    {p:"31. Tramitación de Enmiendas (Art. 134.6 CE)", r:"Toda proposición o enmienda que suponga incremento de créditos o disminución de ingresos requerirá la conformidad del Gobierno para tramitarse."},
+    {p:"32. Enmiendas de Aumento de Crédito (Congreso/Senado)", r:"Para admitirse, si proponen aumento en algún concepto, requieren proponer una baja de igual cuantía en la misma sección."},
+    {p:"33. Aprobación y Leyes Tributarias (Art. 134.7 CE)", r:"Se aprueba como Ley ordinaria. La LPGE no puede crear tributos. Podrá modificarlos cuando una ley tributaria sustantiva así lo prevea."},
+    {p:"34. Aprobación y Compromiso de Gasto", r:"Corresponde a Ministros y Presidentes de OOAA. Se necesita autorización del Consejo de Ministros si el convenio o contrato supera 12 millones de euros."},
+    {p:"35. Ordenador General de Pagos", r:"Del Estado: Director General del Tesoro y Política Financiera. De la Seguridad Social: Director General de la Tesorería General de la SS."},
+    {p:"36. Control Interno", r:"Ejercido por la Intervención General de la Administración del Estado (IGAE) respecto a la gestión económico-financiera."},
+    {p:"37. Control Externo y Jurisdiccional", r:"Corresponde al Tribunal de Cuentas, supremo fiscalizador de cuentas del Estado y sector público."},
+    {p:"38. Control Político", r:"Ejercido por las Cortes Generales durante la fase de aprobación y control posterior."},
+    {p:"39. Presupuesto Cíclico", r:"Niega el equilibrio económico anual; persigue alcanzar la estabilidad postergando el equilibrio según el período del ciclo económico a largo plazo."},
+    {p:"40. Principio de Transparencia (LO 2/2012)", r:"Presupuestos y cuentas deben contener información suficiente para verificar situación financiera, estabilidad y cumplimiento de requerimientos europeos. Disponibilidad pública de previsiones y metodologías."}
+];
 
-    // --- DATOS: 10 EXÁMENES DE 20 PREGUNTAS (200 Preguntas Totales) ---
-    const examenes = [
-        // TEST 1
-        [
-            { pregunta: "Según la Constitución Española, ¿quién elabora los PGE?", opciones: ["El Gobierno", "Las Cortes Generales", "El Ministerio de Hacienda", "El Tribunal de Cuentas"], respuesta_correcta: 0, explicacion: "El art. 134.1 CE establece que corresponde al Gobierno la elaboración de los Presupuestos Generales del Estado." },
-            { pregunta: "Según la LGP, la expresión cifrada, conjunta y sistemática de derechos y obligaciones a liquidar durante el ejercicio es...", opciones: ["El presupuesto consolidado", "Los Presupuestos Generales del Estado", "El ciclo presupuestario", "El plan contable estatal"], respuesta_correcta: 1, explicacion: "Definición legal recogida en el art. 32 de la LGP." },
-            { pregunta: "¿A quién corresponde el examen, enmienda y aprobación de los PGE?", opciones: ["Al Gobierno", "Al Ministerio de Hacienda", "A las Cortes Generales", "A la IGAE"], respuesta_correcta: 2, explicacion: "Corresponde a las Cortes Generales (Poder Legislativo) según el art. 134.1 CE." },
-            { pregunta: "¿Cuándo deben presentarse los PGE al Congreso según la Constitución?", opciones: ["Antes del 1 de enero", "Al menos tres meses antes de la expiración de los del año anterior", "El 1 de octubre", "En el primer trimestre del año"], respuesta_correcta: 1, explicacion: "El art. 134.3 CE especifica 'al menos tres meses antes de la expiración de los del año anterior'." },
-            { pregunta: "Si los PGE no se aprueban antes del 1 de enero...", opciones: ["Se aprueban por Decreto-Ley", "Se prorrogan automáticamente los del año anterior", "Se paraliza la Administración", "Se aprueban por silencio positivo"], respuesta_correcta: 1, explicacion: "El art. 134.4 CE establece la prórroga automática de los presupuestos iniciales del ejercicio anterior." },
-            { pregunta: "La prórroga presupuestaria...", opciones: ["Afecta a todos los créditos sin excepción", "No afecta a programas que terminen en el ejercicio", "A y B son correctas", "Solo afecta a los gastos de personal"], respuesta_correcta: 1, explicacion: "La LGP señala que la prórroga no afectará a los créditos para gastos correspondientes a programas que terminen en el ejercicio." },
-            { pregunta: "¿Qué principio establece que los presupuestos han de contener la totalidad de gastos e ingresos?", opciones: ["Especialidad", "Anualidad", "Universalidad", "Transparencia"], respuesta_correcta: 2, explicacion: "El principio de universalidad implica que no deben existir gastos al margen del presupuesto." },
-            { pregunta: "El principio de unidad exige que...", opciones: ["Los gastos se agrupen por Ministerios", "La totalidad de gastos e ingresos se presenten en un presupuesto único", "Exista una caja por cada Ministerio", "Todas son falsas"], respuesta_correcta: 1, explicacion: "La unidad presupuestaria significa presentar todos los gastos e ingresos en un documento único." },
-            { pregunta: "Destinar los créditos a la finalidad específica para la que fueron autorizados es...", opciones: ["Especialidad cuantitativa", "Especialidad temporal", "Especialidad cualitativa", "Principio bruto"], respuesta_correcta: 2, explicacion: "El límite de destino específico del gasto define la especialidad cualitativa." },
-            { pregunta: "Adquirir compromisos de gasto superiores al crédito autorizado es...", opciones: ["Infracción leve", "Nulo de pleno derecho", "Permitido si lo autoriza el Interventor", "Válido si hay superávit"], respuesta_correcta: 1, explicacion: "Es nulo de pleno derecho por vulnerar el principio de especialidad cuantitativa." },
-            { pregunta: "¿Qué sucede con los créditos no gastados el último día del ejercicio (salvo excepciones)?", opciones: ["Se suman al año siguiente", "Pasan al Tesoro Público", "Quedan anulados de pleno derecho", "Generan deuda"], respuesta_correcta: 2, explicacion: "Por la especialidad temporal, si no están afectados a obligaciones, quedan anulados." },
-            { pregunta: "El principio de presupuesto bruto prohíbe...", opciones: ["Pagar impuestos", "Deducir gastos financieros", "Minorar derechos a liquidar con obligaciones (compensar)", "Tener cuentas en el extranjero"], respuesta_correcta: 2, explicacion: "Los derechos y obligaciones se aplican por importe íntegro, sin compensarse entre sí." },
-            { pregunta: "Según la LO 2/2012, estabilidad presupuestaria para las Administraciones Públicas significa...", opciones: ["Gastar lo mínimo", "Situación de equilibrio o superávit estructural", "Déficit del 3%", "Amortizar deuda"], respuesta_correcta: 1, explicacion: "Se entenderá por estabilidad la situación de equilibrio o superávit estructural." },
-            { pregunta: "El principio de sostenibilidad financiera exige...", opciones: ["Capacidad para financiar compromisos dentro de límites de déficit y deuda", "Aprobación de la UE", "Aumento de tributos", "Superávit anual obligatorio"], respuesta_correcta: 0, explicacion: "Es la capacidad de afrontar compromisos futuros y presentes bajo los límites de deuda y déficit." },
-            { pregunta: "La elaboración de los PGE se encuadra en un marco a medio plazo por el principio de...", opciones: ["Plurianualidad", "Anualidad múltiple", "Previsión", "Sostenibilidad"], respuesta_correcta: 0, explicacion: "El principio de plurianualidad exige un marco a medio plazo, compatible con la anualidad del presupuesto." },
-            { pregunta: "El control externo del sector público estatal recae en...", opciones: ["IGAE", "Ministerio de Hacienda", "Tribunal de Cuentas", "Banco de España"], respuesta_correcta: 2, explicacion: "El supremo órgano fiscalizador externo es el Tribunal de Cuentas." },
-            { pregunta: "¿Quién realiza el control interno de la gestión económica del Estado?", opciones: ["IGAE", "El Gobierno", "Las Cortes", "El Tribunal de Cuentas"], respuesta_correcta: 0, explicacion: "La Intervención General de la Administración del Estado (IGAE) ejerce el control interno." },
-            { pregunta: "Las Cortes Generales...", opciones: ["Son parte de la AGE", "No se rigen por la LGP dada su autonomía", "Dependen del Ministerio de Hacienda", "No tienen presupuesto propio"], respuesta_correcta: 1, explicacion: "Tienen autonomía presupuestaria (art. 72 CE) y la LGP no les es de aplicación directa." },
-            { pregunta: "El control político del presupuesto lo realizan...", opciones: ["Los ciudadanos", "El Tribunal de Cuentas", "Las Cortes Generales", "El Ejecutivo"], respuesta_correcta: 2, explicacion: "El control político es un control externo realizado por las Cortes Generales." },
-            { pregunta: "¿Puede la Ley de Presupuestos crear tributos?", opciones: ["Sí, siempre", "Sí, si lo pide el Gobierno", "No, nunca", "No, pero puede modificarlos si una ley tributaria lo prevé"], respuesta_correcta: 3, explicacion: "El art. 134.7 CE dicta que no puede crear tributos, solo modificarlos bajo condición previa." }
-        ],
-        // TEST 2
-        [
-            { pregunta: "El sector público institucional estatal NO incluye:", opciones: ["Organismos autónomos", "Sociedades mercantiles estatales", "Entidades locales", "Agencias Estatales"], respuesta_correcta: 2, explicacion: "El art. 2 LGP delimita el sector estatal. Las EE.LL. tienen sus propios presupuestos (Ley 7/1985)." },
-            { pregunta: "El presupuesto de los entes del art. 2.2 vinculados a AGE tiene carácter...", opciones: ["Limitativo o estimativo, según el ente", "Siempre estimativo", "Siempre limitativo", "No tienen presupuesto"], respuesta_correcta: 0, explicacion: "Organismos autónomos tienen limitativo, mientras entidades empresariales y sociedades tienen estimativo." },
-            { pregunta: "Según la CE, en los PGE se consignará obligatoriamente...", opciones: ["El número de funcionarios", "El importe de los beneficios fiscales", "El déficit regional", "La lista de contratos públicos"], respuesta_correcta: 1, explicacion: "El art. 134.2 CE exige que se consigne el importe de los beneficios fiscales que afecten a los tributos." },
-            { pregunta: "Para tramitar una enmienda que disminuya los ingresos presupuestarios...", opciones: ["Se precisa mayoría absoluta", "No se puede tramitar", "Requiere conformidad del Gobierno", "Requiere informe del Tribunal de Cuentas"], respuesta_correcta: 2, explicacion: "Según el art. 134.6 CE, toda enmienda que incremente gastos o reduzca ingresos requiere conformidad del Gobierno." },
-            { pregunta: "La Ley de PGE es una ley...", opciones: ["Orgánica", "Ordinaria", "De bases", "Marco"], respuesta_correcta: 1, explicacion: "Concluido el proceso parlamentario, se aprueban como Ley ordinaria sin mayorías cualificadas." },
-            { pregunta: "La regla de gasto implica que la variación del gasto no podrá superar...", opciones: ["El crecimiento de la inflación", "La tasa de referencia de crecimiento del PIB de medio plazo", "El 3% anual", "Los ingresos por tributos"], respuesta_correcta: 1, explicacion: "Se basa en la tasa de referencia de crecimiento del PIB de medio plazo de la economía." },
-            { pregunta: "El límite de gasto no financiero (techo de gasto) del Estado lo aprueba...", opciones: ["El Congreso tras propuesta del Gobierno", "El Rey", "Las CC.AA.", "El Tribunal Constitucional"], respuesta_correcta: 0, explicacion: "El Gobierno fija el objetivo y lo remite a las Cortes. Si se rechaza, debe enviar otro acuerdo." },
-            { pregunta: "¿A quién rinden cuenta las entidades integrantes del sector público estatal?", opciones: ["A la IGAE", "Al Tribunal de Cuentas, por conducto de la IGAE", "Al Ministerio de Economía", "Al Congreso"], respuesta_correcta: 1, explicacion: "Rinden cuentas al Tribunal de Cuentas por conducto de la IGAE (art. 119 LGP)." },
-            { pregunta: "¿Qué principio clásico postula que el presupuesto debía ser mínimo?", opciones: ["Jurídico", "Contable", "Político", "Económico"], respuesta_correcta: 3, explicacion: "El principio de gasto público mínimo es de carácter económico en la escuela clásica liberal." },
-            { pregunta: "El presupuesto en base cero significa que...", opciones: ["No hay presupuesto", "Solo se aprueban gastos si hay ingresos cero", "Cada partida debe justificarse partiendo de cero", "El déficit debe ser cero"], respuesta_correcta: 2, explicacion: "Exige justificar todas las peticiones presupuestarias desde cero, sin basarse en el ejercicio anterior." },
-            { pregunta: "El cuarto carácter del código de programas si es una letra de 'A' a 'L' indica:", opciones: ["Programa finalista", "Programa instrumental", "Programa de gestión", "Programa de personal"], respuesta_correcta: 0, explicacion: "Letras A-L identifican programas de carácter finalista; M-Z para instrumentales y gestión." },
-            { pregunta: "¿Cuáles son fases del Presupuesto por Programas?", opciones: ["Ingreso y Gasto", "Planificación, Programación, Presupuestación, Control", "Elaboración y Aprobación", "Compromiso y Pago"], respuesta_correcta: 1, explicacion: "Las fases son Planificación (metas), Programación, Presupuestación, Ejecución y Control." },
-            { pregunta: "Los indicadores que miden productos físicos o servicios prestados son...", opciones: ["De impacto", "De resultados", "De medios", "De gestión"], respuesta_correcta: 1, explicacion: "Los indicadores de resultados miden las cantidades o niveles alcanzados (productos/servicios)." },
-            { pregunta: "El escenario presupuestario plurianual cubre...", opciones: ["El ejercicio vigente", "Los tres ejercicios siguientes", "Diez años", "La legislatura (4 años)"], respuesta_correcta: 1, explicacion: "Determinan límites referidos a los tres ejercicios siguientes." },
-            { pregunta: "¿Quién confecciona los escenarios presupuestarios plurianuales?", opciones: ["El Consejo de Ministros", "El Ministerio competente en Hacienda", "Las Cortes Generales", "El Banco de España"], respuesta_correcta: 1, explicacion: "Son confeccionados por el Ministerio de Hacienda, dando cuenta al Consejo de Ministros." },
-            { pregunta: "¿Quién elabora el presupuesto de ingresos de la AGE?", opciones: ["La Agencia Tributaria", "El Ministerio competente en Hacienda", "El Congreso", "Cada Ministerio su parte"], respuesta_correcta: 1, explicacion: "El presupuesto de ingresos de la AGE será elaborado por el Ministerio competente en Hacienda." },
-            { pregunta: "¿Quién aprueba y compromete el gasto propio de un Ministerio?", opciones: ["El Director General", "El Ministro (salvo reserva al Consejo de Ministros)", "El Subsecretario siempre", "El Interventor"], respuesta_correcta: 1, explicacion: "Corresponde a los Ministros y titulares de los demás órganos del Estado aprobar y comprometer sus gastos." },
-            { pregunta: "¿A partir de qué importe un convenio requiere autorización del Consejo de Ministros?", opciones: ["1 millón", "5 millones", "12 millones de euros", "20 millones"], respuesta_correcta: 2, explicacion: "Gastos derivados de convenios superiores a 12 millones de euros necesitan autorización del Consejo." },
-            { pregunta: "Bajo la superior autoridad del Ministro de Economía, ¿quién es Ordenador General de Pagos del Estado?", opciones: ["El Secretario de Estado", "El Director General del Tesoro y Política Financiera", "La IGAE", "El Banco de España"], respuesta_correcta: 1, explicacion: "Según la LGP, corresponde al Director General del Tesoro y Política Financiera." },
-            { pregunta: "El presupuesto cíclico (teoría keynesiana)...", opciones: ["Exige equilibrio anual estricto", "Posterga el equilibrio a largo plazo según el ciclo", "Impide el endeudamiento", "Rechaza la intervención estatal"], respuesta_correcta: 1, explicacion: "Niega el equilibrio económico anual y lo busca en el conjunto del ciclo a largo plazo." }
-        ],
-        // Añadimos arrays restantes iterando lógicamente sobre los datos...
-        // TEST 3 (Principios)
-        [
-            { p: "Principio de unidad de caja significa:", o: ["Una caja por ministerio", "Centralización de todos los fondos y valores", "Pago en efectivo", "Uso exclusivo de moneda única"], c: 1, e: "Centralizar fondos para operar con unidad presupuestaria." },
-            { p: "Si se rechazan los objetivos de estabilidad por el Senado tras ser aprobados por el Congreso:", o: ["Decaen", "Se someten a nueva votación en el Congreso y se aprueban por mayoría simple", "El Gobierno dimite", "Interviene el Rey"], c: 1, e: "El texto especifica que el Congreso puede ratificarlos por mayoría simple." },
-            { p: "¿Cuándo deben emitir su informe el CPFF y la CNAL sobre objetivos de estabilidad?", o: ["15 días desde la recepción", "1 mes", "10 días", "3 meses"], c: 0, e: "Tienen un plazo máximo de 15 días." },
-            { p: "En los Presupuestos, los programas 'M' a 'Z' son:", o: ["Finalistas", "Estructurales", "Instrumentales y de gestión", "Clásicos"], c: 2, e: "La letra del código define su naturaleza." },
-            { p: "Las entidades públicas empresariales elaboran presupuestos de:", o: ["Limitación y caja", "Ingresos y gastos limitativos", "Explotación y capital", "Bases de datos"], c: 2, e: "Tienen presupuesto estimativo materializado en Explotación y Capital." },
-            { p: "¿Qué documento complementario analiza la igualdad entre hombres y mujeres?", o: ["Informe infancia", "Informe Agenda 2030", "Informe impacto de género", "Memoria anual"], c: 2, e: "El informe de impacto de género acompaña a la Ley." },
-            { p: "Las enmiendas que implican aumento de crédito en una sección, para ser admitidas...", o: ["Requieren baja de igual cuantía en otra sección", "Requieren baja de igual cuantía en la MISMA sección", "Son libres", "Se prohíben"], c: 1, e: "Proponen una baja de igual cuantía en la misma sección para mantener el equilibrio." },
-            { p: "Las directrices para la distribución del gasto las determina:", o: ["El Consejo de Ministros", "El Congreso", "El Ministro de Hacienda", "La Unión Europea"], c: 2, e: "El Ministro competente en Hacienda dicta la orden y directrices." },
-            { p: "La evaluación de alternativas frente al coste-rentabilidad ocurre en la fase de:", o: ["Programación", "Ejecución", "Liquidación", "Auditoría"], c: 0, e: "En la Programación se evalúan los distintos programas para alcanzar objetivos." },
-            { p: "El principio clásico de 'gasto público mínimo' es incompatible con:", o: ["Estado liberal", "Estado social e intervención estatal", "Neutralidad impositiva", "Mercado libre"], c: 1, e: "El Estado social implica intervención y gastos públicos expansivos." },
-            { p: "Los indicadores que comparan costes (medios) con resultados son:", o: ["Impacto", "Gestión", "Resultados", "Básicos"], c: 1, e: "Los indicadores de gestión determinan el grado de eficiencia." },
-            { p: "El Presupuesto Compensatorio utiliza el déficit público para:", o: ["Reducir impuestos", "Compensar la falta de demanda privada", "Equilibrar las cuentas", "Pagar a funcionarios"], c: 1, e: "Estabilización económica basada en Keynes." },
-            { p: "El presupuesto de la Universidad Nacional de Educación a Distancia (UNED):", o: ["No se integra en los PGE", "Se une a los centros asociados de forma agregada", "Es limitativo", "Se aprueba por el Congreso directamente"], c: 1, e: "Se agregan/consolidan en los PGE con presupuesto estimativo." },
-            { p: "¿Quién envía la propuesta de presupuesto del IMSERSO al Ministerio de Hacienda?", o: ["Ministerio de Sanidad", "Ministerio de Derechos Sociales", "Seguridad Social", "Presidencia"], c: 1, e: "Depende del Ministerio de Derechos Sociales, Consumo y Agenda 2030." },
-            { p: "¿Y la propuesta del Instituto Nacional de Gestión Sanitaria (INGESA)?", o: ["Derechos Sociales", "Sanidad", "Seguridad Social", "Hacienda"], c: 1, e: "El Ministerio de Sanidad remite la propuesta." },
-            { p: "El principio de lealtad institucional exige:", o: ["Ocultar datos", "Ponderar intereses propios exclusivamente", "Facilitar información y cooperación activa", "Ignorar a otras AAPP"], c: 2, e: "Cooperación y suministro recíproco de información." },
-            { p: "La competencia para resolver convenios superiores a 12 millones es de:", o: ["Ministro", "Consejo de Ministros", "Congreso", "IGAE"], c: 1, e: "La suscripción, modificación y resolución compete al Consejo de Ministros si supera esa cuantía." },
-            { p: "Las autoridades independientes forman parte del sector público institucional:", o: ["Cierto", "Falso", "Solo si tienen personalidad mercantil", "Depende de la CCAA"], c: 0, e: "Están listadas expresamente en el art. 2 LGP." },
-            { p: "El control por parte del Tribunal de Cuentas es:", o: ["Interno y previo", "Externo y posterior", "Exclusivamente contable interno", "Político"], c: 1, e: "Es el órgano de fiscalización externa." },
-            { p: "El principio de especialidad cuantitativa se infringe si:", o: ["Gasto fuera del plazo", "Gasto en finalidad distinta", "Reconozco obligación por encima del crédito autorizado", "No incluyo el IVA"], c: 2, e: "Límite en la cantidad asignada." }
-        ],
-        // Se autogeneran 7 tests adicionales variando el contenido basándose rigurosamente en la documentación.
-        // Debido a las limitaciones de espacio, simplificamos la instanciación reutilizando lógicas (se completan 200 objetos)
-        // TEST 4
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Pregunta variada de repaso (Test 4 - Item ${i+1}): ¿Corresponde a las Cortes Generales la aprobación de los PGE?`,
-            opciones: ["No", "Sí", "Solo del Estado, no de la SS", "Depende del año"],
-            respuesta_correcta: 1,
-            explicacion: "El artículo 134 de la CE especifica su aprobación por el Legislativo."
-        })),
-        // TEST 5
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Repaso Ley Estabilidad (Test 5 - Item ${i+1}): El equilibrio o superávit estructural define el principio de...`,
-            opciones: ["Plurianualidad", "Transparencia", "Estabilidad presupuestaria", "Lealtad"],
-            respuesta_correcta: 2,
-            explicacion: "Art. 3 LOEPSF: Se entenderá por estabilidad presupuestaria de las AAPP la situación de equilibrio o superávit."
-        })),
-        // TEST 6
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Ciclo Presupuestario (Test 6 - Item ${i+1}): El control externo del presupuesto compete a:`,
-            opciones: ["Cortes Generales", "IGAE", "Tribunal de Cuentas", "A y C son externas"],
-            respuesta_correcta: 3,
-            explicacion: "Cortes (Político) y Tribunal de Cuentas (Gestión) son controles externos. IGAE es interno."
-        })),
-        // TEST 7
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Conceptos LGP (Test 7 - Item ${i+1}): ¿Cuándo se prorrogra el Presupuesto?`,
-            opciones: ["Nunca", "Si no se aprueba antes del 1 de enero", "El 1 de octubre", "En febrero"],
-            respuesta_correcta: 1,
-            explicacion: "Art. 38 LGP: Si no se aprueba antes del primer día del ejercicio económico."
-        })),
-        // TEST 8
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Competencias (Test 8 - Item ${i+1}): ¿Quién es el Ordenador General de Pagos de la Seguridad Social?`,
-            opciones: ["Director General del Tesoro", "Director General de la Tesorería General de la Seguridad Social", "Ministro de Hacienda", "IGAE"],
-            respuesta_correcta: 1,
-            explicacion: "Según la LGP, bajo el Ministro competente en Seguridad Social."
-        })),
-        // TEST 9
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Indicadores (Test 9 - Item ${i+1}): Los que miden efectos sociales (ej: tasa de empleo) son:`,
-            opciones: ["Gestión", "Medios", "Resultados", "Impacto"],
-            respuesta_correcta: 3,
-            explicacion: "Indicadores de impacto: efectos de programas sobre objetivos/sociedad."
-        })),
-        // TEST 10
-        ...Array.from({length: 20}).map((_, i) => ({
-            pregunta: `Principios Clásicos (Test 10 - Item ${i+1}): El principio de 'neutralidad de la imposición' es de carácter:`,
-            opciones: ["Jurídico", "Contable", "Político", "Económico"],
-            respuesta_correcta: 3,
-            explicacion: "Adam Smith propugnaba la neutralidad como principio económico del liberalismo."
-        }))
-    ];
+// --- DATOS: EXÁMENES (10 x 20 = 200 PREGUNTAS) ---
+// Extraídas estrictamente de los PDFs proporcionados.
+const examenesBruto = [
+    // TEST 1: Conceptos, Aprobación y Principios Generales
+    [
+        {p:"Según la CE, ¿quién elabora los Presupuestos Generales del Estado?", o:["Las Cortes Generales","El Gobierno","El Ministerio de Hacienda","El Tribunal de Cuentas"], c:1, e:"Art. 134.1 CE: Corresponde al Gobierno la elaboración de los PGE."},
+        {p:"Según la LGP (art. 32), los PGE son la expresión cifrada, conjunta y sistemática de:", o:["Gastos e ingresos a pagar","Derechos y obligaciones a liquidar","Bienes y servicios del Estado","Activos y pasivos nacionales"], c:1, e:"Constituyen la expresión de los derechos y obligaciones a liquidar durante el ejercicio."},
+        {p:"¿Quién examina, enmienda y aprueba los PGE?", o:["El Gobierno","El Ministerio de Hacienda","Las Cortes Generales","A y C son correctas"], c:2, e:"Art. 134.1 CE: Corresponde a las Cortes Generales su examen, enmienda y aprobación."},
+        {p:"¿Cuál es el plazo para que el Gobierno presente el proyecto de PGE al Congreso?", o:["1 de enero","Último trimestre del año","Al menos tres meses antes de la expiración de los del año anterior","El 1 de septiembre"], c:2, e:"Art. 134.3 CE exige presentar los PGE al menos tres meses antes de que expiren los del año anterior (antes del 1 de octubre)."},
+        {p:"Si los PGE no se aprueban antes del primer día del ejercicio económico:", o:["Se aprueban por Decreto-Ley","Se paraliza el gasto","Se prorrogan automáticamente los del año anterior","Se aprueba una prórroga por las Cortes"], c:2, e:"Art. 134.4 CE: se considerarán automáticamente prorrogados los presupuestos iniciales del ejercicio anterior."},
+        {p:"La prórroga presupuestaria...", o:["Afecta a todos los créditos por igual","No afecta a créditos para programas que terminen en el ejercicio","Excluye los gastos de personal","A y C son correctas"], c:1, e:"LGP Art. 38: La prórroga no afectará a créditos para programas/actuaciones que terminen en el ejercicio."},
+        {p:"El principio de universalidad implica que:", o:["Un único documento presupuestario","El presupuesto se aplica a todo el territorio","Los presupuestos han de contener la totalidad de gastos e ingresos","El control es universal"], c:2, e:"Universalidad: incluir la totalidad de gastos e ingresos, sin dejar nada al margen."},
+        {p:"El principio de unidad exige que:", o:["Se use moneda única","Los gastos se centralicen en Presidencia","Totalidad de gastos e ingresos se presenten en un presupuesto único","A y C son correctas"], c:2, e:"El principio de unidad dictamina que deben presentarse en un presupuesto único."},
+        {p:"Destinar créditos exclusivamente a la finalidad para la que fueron autorizados es el principio de:", o:["Especialidad cuantitativa","Especialidad temporal","Especialidad cualitativa","Presupuesto bruto"], c:2, e:"Especialidad cualitativa: los créditos se destinan exclusivamente a su finalidad específica."},
+        {p:"Adquirir compromisos de gasto por cuantía superior al crédito autorizado es:", o:["Infracción leve","Nulo de pleno derecho","Permitido con autorización de IGAE","Falta administrativa"], c:1, e:"LGP prohíbe comprometer gastos por cuantía superior (especialidad cuantitativa), siendo actos nulos de pleno derecho."},
+        {p:"¿Qué sucede con los créditos no afectados a obligaciones el último día del ejercicio (salvo excepciones)?", o:["Pasan al Tesoro","Se suman al año siguiente","Quedan anulados de pleno derecho","Generan remanente de libre disposición"], c:2, e:"Principio de especialidad temporal: quedan anulados de pleno derecho."},
+        {p:"El principio de presupuesto bruto prohíbe:", o:["Minorar derechos a liquidar con obligaciones (compensar)","Pagar en bruto a funcionarios","El uso de fondos extrapresupuestarios","A y B son correctas"], c:0, e:"Art. 27.4 LGP: no se pueden atender obligaciones mediante minoración de derechos (compensación)."},
+        {p:"La estabilidad presupuestaria (LO 2/2012) para las AAPP es la situación de:", o:["Equilibrio o superávit estructural","Déficit inferior al 3%","Crecimiento del PIB sostenido","Aumento de ingresos"], c:0, e:"Se entenderá por estabilidad presupuestaria la situación de equilibrio o superávit estructural."},
+        {p:"El principio de sostenibilidad financiera exige capacidad para financiar compromisos...", o:["Dentro de límites de déficit y deuda","Sin recurrir a impuestos","Aprobados por el CPFF exclusivamente","Todas son correctas"], c:0, e:"Capacidad para financiar compromisos presentes y futuros dentro de los límites de déficit y deuda (LO 2/2012)."},
+        {p:"El marco a medio plazo de los presupuestos se rige por el principio de:", o:["Anualidad exclusiva","Plurianualidad","Temporalidad","Previsión"], c:1, e:"Principio de plurianualidad (LO 2/2012): el presupuesto se encuadra en un marco a medio plazo."},
+        {p:"¿A quién corresponde el control externo del sector público estatal?", o:["Al Gobierno","A la IGAE","Al Tribunal de Cuentas","Al Defensor del Pueblo"], c:2, e:"El supremo órgano fiscalizador externo es el Tribunal de Cuentas."},
+        {p:"El control interno de la gestión económica del Estado se ejerce por:", o:["Tribunal de Cuentas","Intervención General de la Administración del Estado (IGAE)","Las Cortes Generales","Banco de España"], c:1, e:"La IGAE ejerce el control interno (Art. 140 LGP)."},
+        {p:"Las Cortes Generales, respecto a la aplicación de la LGP:", o:["Se rigen íntegramente por ella","No les es de aplicación, gozan de autonomía presupuestaria","Dependen del Ministerio de Hacienda","Tienen presupuesto estimativo"], c:1, e:"No es de aplicación a las Cortes Generales, que gozan de autonomía (Art. 72 CE)."},
+        {p:"El control político del ciclo presupuestario es realizado por:", o:["Cortes Generales","Tribunal de Cuentas","IGAE","Ejecutivo"], c:0, e:"El control político (externo) es realizado por las Cortes Generales."},
+        {p:"¿Puede la Ley de Presupuestos crear tributos?", o:["Sí, siempre que haya déficit","No, nunca","No, pero puede modificarlos si una ley tributaria sustantiva lo prevé","Sí, por mayoría absoluta"], c:2, e:"Art. 134.7 CE: La Ley de PGE no puede crear tributos. Podrá modificarlos si una ley tributaria lo prevé."}
+    ],
+    // TEST 2: Sector Público y Tipos de Presupuestos
+    [
+        {p:"Según la LGP (art. 2), el sector público estatal se compone de:", o:["Solo la AGE","AGE y CC.AA","AGE y el sector público institucional estatal","AGE, OOAA y Ayuntamientos"], c:2, e:"Integrado por la AGE y el sector público institucional estatal."},
+        {p:"NO forman parte del sector público estatal según el art. 2 de la LGP:", o:["Sociedades mercantiles estatales","Consorcios adscritos a la AGE","Fondos sin personalidad jurídica","Corporaciones Locales"], c:3, e:"Las Corporaciones Locales no están en los PGE, tienen presupuestos propios."},
+        {p:"¿Qué tipo de presupuesto tienen los Organismos Autónomos del Estado?", o:["Estimativo","Limitativo","Mixto","Comercial"], c:1, e:"Las leyes de PGE atribuyen presupuesto de carácter limitativo a Estado, OOAA y Seguridad Social."},
+        {p:"Las Entidades Públicas Empresariales aplican un presupuesto con carácter:", o:["Limitativo","Estimativo","Cíclico","Autónomo"], c:1, e:"Aplican presupuesto de carácter estimativo (explotación y capital)."},
+        {p:"Las Fundaciones del sector público estatal cuentan con presupuesto:", o:["Limitativo","Estimativo","Base cero","De caja exclusivo"], c:1, e:"Las Fundaciones se rigen por presupuestos de carácter estimativo."},
+        {p:"¿A quién encomienda la LGP servir al principio de unidad de caja?", o:["Banco de España","Tribunal de Cuentas","Tesoro Público","AEAT"], c:2, e:"Art. 91 LGP: Al Tesoro Público centralizando todos los fondos y valores."},
+        {p:"El art. 134.2 de la CE exige que en los PGE se consigne el importe de:", o:["Las deudas autonómicas","Los beneficios fiscales que afecten a tributos del Estado","El número total de funcionarios","Las subvenciones locales"], c:1, e:"En ellos se consignará el importe de los beneficios fiscales que afecten a los tributos del Estado."},
+        {p:"Según la LGP, las operaciones financieras se someterán al principio de:", o:["Prudencia financiera","Riesgo calculado","Solidaridad","Opacidad"], c:0, e:"Para el cumplimiento de sostenibilidad, se someten al principio de prudencia financiera (LO 2/2012)."},
+        {p:"El principio clásico que propugnaba un gasto público reducido pertenece a la escuela:", o:["Keynesiana","Neoclásica","Clásica o tradicional","Socialdemócrata"], c:2, e:"El Presupuesto Clásico liberal exigía el gasto público mínimo."},
+        {p:"¿Qué técnica presupuestaria exige justificar cada petición desde cero sin basarse en años previos?", o:["Ppto. Compensatorio","Ppto. por Tareas","Ppto. en Base Cero","Ppto. Cíclico"], c:2, e:"El Presupuesto en Base Cero olvida el gasto histórico y justifica todo desde cero."},
+        {p:"En la codificación del Presupuesto por Programas, las letras 'M' a 'Z' en el cuarto carácter indican:", o:["Programas finalistas","Programas instrumentales y de gestión","Programas de inversión","Programas autónomos"], c:1, e:"Las letras M a Z identifican programas instrumentales y de gestión."},
+        {p:"El presupuesto por programas consta de 4 fases:", o:["Estudio, Aprobación, Gasto, Pago","Planificación, Programación, Presupuestación, Control","Ingreso, Retención, Compromiso, Pago","A y C son correctas"], c:1, e:"Fases: Planificación, Programación, Presupuestación y Control."},
+        {p:"Los indicadores que miden los recursos financieros y costes aplicados son:", o:["De impacto","De resultados","De medios","De gestión"], c:2, e:"Los indicadores de medios miden los recursos financieros y costes totales imputados."},
+        {p:"Los presupuestos de explotación y capital se forman por:", o:["Entidades con ppto limitativo","Entidades públicas empresariales y sociedades estatales","La Administración General del Estado","Las Cortes Generales"], c:1, e:"Son elaborados por las entidades del sector público empresarial (presupuesto estimativo)."},
+        {p:"El escenario presupuestario plurianual (LGP) abarca:", o:["El ejercicio en curso","Los tres ejercicios siguientes","Cinco ejercicios","La legislatura completa"], c:1, e:"Determina los límites referidos a los tres ejercicios siguientes."},
+        {p:"¿Quién elabora el presupuesto de ingresos de la AGE?", o:["Cada Ministerio independientemente","El Ministerio competente en Hacienda","La Agencia Tributaria","El Consejo de Ministros"], c:1, e:"El presupuesto de ingresos de la AGE es elaborado por el Ministerio de Hacienda."},
+        {p:"Los convenios que superen 12 millones de euros necesitan autorización de:", o:["Interventor General","Consejo de Ministros","Tribunal de Cuentas","Cortes Generales"], c:1, e:"La LGP exige autorización del Consejo de Ministros cuando el importe supere 12 millones."},
+        {p:"¿Quién es el Ordenador General de Pagos del Estado?", o:["Director General del Tesoro y Política Financiera","Director de la IGAE","Ministro de Hacienda","Presidente del Gobierno"], c:0, e:"Bajo el Ministro de Economía, el Director General del Tesoro y Política Financiera."},
+        {p:"El presupuesto compensatorio busca equilibrar la economía mediante:", o:["Superávit continuo","Intervención estatal con déficit público (Keynes)","Reducción extrema del gasto","Neutralidad impositiva"], c:1, e:"Propugna la intervención para compensar demanda privada usando el déficit público."},
+        {p:"El presupuesto cíclico difiere del anual en que:", o:["Se aprueba cada 4 años","Rechaza la inversión","Posterga el equilibrio al ciclo a largo plazo","No usa estabilizadores"], c:2, e:"Niega el equilibrio anual y busca la estabilidad económica a lo largo del ciclo."}
+    ],
+    // TEST 3: Elaboración de los Presupuestos
+    [
+        {p:"¿Quién determina las directrices para la distribución del gasto en la elaboración de los PGE?", o:["Las Cortes","El Ministro de Hacienda","La IGAE","El Consejo de Ministros"], c:1, e:"El Ministro de Hacienda determina directrices y límites cuantitativos (Art. 36 LGP)."},
+        {p:"Para fijar el techo de gasto, el Gobierno aprueba el acuerdo previo informe de:", o:["CPFF y Comisión Nacional de Administración Local","Solo el CPFF","Las Cortes Generales","Tribunal de Cuentas"], c:0, e:"Previo informe del Consejo de Política Fiscal y Financiera y de la CNAL."},
+        {p:"El plazo máximo para que CPFF y CNAL emitan su informe sobre los objetivos es:", o:["1 mes","15 días","10 días","3 meses"], c:1, e:"Tienen un plazo máximo de 15 días a contar desde la recepción de propuestas."},
+        {p:"¿En qué semestre fija el Gobierno los objetivos de estabilidad y deuda pública?", o:["Primer semestre de cada año","Segundo semestre","Primer trimestre exclusivo","Último mes del año"], c:0, e:"Se fijan en el primer semestre de cada año mediante acuerdo del Consejo de Ministros."},
+        {p:"La regla de gasto (LO 2/2012) implica que la variación del gasto no superará:", o:["La inflación real","Tasa de referencia de crecimiento del PIB de medio plazo","El 5% anual","Los ingresos liquidados"], c:1, e:"Se basa en la tasa de referencia de crecimiento del PIB de medio plazo de la economía."},
+        {p:"Si el Congreso rechaza los objetivos de estabilidad presupuestaria:", o:["Se aplican los del año anterior","El Gobierno debe remitir un nuevo acuerdo en un mes máximo","Interviene el Rey","Se disuelven las Cortes"], c:1, e:"Si son rechazados, el Gobierno remitirá un nuevo acuerdo en el plazo máximo de 1 mes."},
+        {p:"La Comisión de Políticas de Gasto está presidida por:", o:["Presidente del Gobierno","Vicepresidencia/Ministro de Hacienda (o Sec. Estado de Pptos y Gastos)","Director de IGAE","Rey de España"], c:1, e:"Presidida por el titular del Ministerio de Hacienda (o Secretaría de Estado de Presupuestos y Gastos)."},
+        {p:"Las Comisiones de Análisis de Programas son reuniones bilaterales entre:", o:["Ministerio de Hacienda y los distintos Departamentos ministeriales","Cortes y Gobierno","Estado y CCAA","Sindicatos y Gobierno"], c:0, e:"Son reuniones bilaterales entre Hacienda y los distintos departamentos para estudiar la adecuación de programas."},
+        {p:"Las propuestas de presupuesto del INGESA se envían a:", o:["Hacienda directamente","Mº de Sanidad, que forma el anteproyecto y remite a Hacienda para enviarlo a Seguridad Social","Derechos Sociales","A y B son falsas"], c:1, e:"Sanidad envía INGESA a Hacienda, quien lo remite a Seguridad Social para integrarlo."},
+        {p:"¿Quién eleva al Gobierno el anteproyecto de Ley de Presupuestos Generales del Estado?", o:["El Director de Presupuestos","El Ministro competente en Hacienda","Las Cortes Generales","Tribunal de Cuentas"], c:1, e:"Corresponde al titular del Ministerio competente en Hacienda elevarlo al Gobierno."},
+        {p:"La Seguridad Social remite sus cifras y anexo de inversiones a Hacienda a través de la sección:", o:["Sección 50","Sección 60","Sección 99","Sección 12"], c:1, e:"La Orden de elaboración indica la remisión del presupuesto de la Seguridad Social mediante la Sección 60."},
+        {p:"¿Cuál de estos NO es un informe que acompañe al Proyecto de Ley de PGE?", o:["Informe de impacto de género","Informe impacto en la infancia, adolescencia y familia","Informe de inversiones privadas extranjeras","Memoria de beneficios fiscales"], c:2, e:"No existe informe de inversiones privadas extranjeras en la documentación legal exigida."},
+        {p:"El informe de alineamiento de los PGE con la transición ecológica evalúa:", o:["Solo los gastos de reforestación","La dimensión verde y la dimensión marrón (impacto negativo)","Vehículos eléctricos","A y C son correctas"], c:1, e:"Analiza los gastos que apoyan objetivos (verde) y los que afectan negativamente (marrón)."},
+        {p:"Las entidades empresariales y sociedades mercantiles elaboran presupuestos de:", o:["Gastos corrientes","Solo capital","Explotación y capital","Ingresos tributarios"], c:2, e:"Elaboran presupuestos de explotación y de capital (previsión de cuenta de resultados y flujos de efectivo)."},
+        {p:"Los programas plurianuales de los Ministerios (LGP) se establecen por un plazo de:", o:["1 año","3 años","4 años","5 años"], c:1, e:"Están referidos a los tres ejercicios siguientes."},
+        {p:"¿El presupuesto de ingresos de la AGE quién lo elabora?", o:["Mº de Inclusión","La Agencia Tributaria en solitario","Ministerio competente en Hacienda","Consejo de Estado"], c:2, e:"Es elaborado por el Ministerio competente en Hacienda ajustándose a la programación plurianual."},
+        {p:"Las universidades públicas no transferidas pertenecen al sector público:", o:["Administrativo con presupuesto estimativo","Institucional con presupuesto limitativo","Privado","A y C son correctas"], c:0, e:"Tienen presupuesto de carácter estimativo según la Ley de PGE (art. 2.2.b).2º)."},
+        {p:"En el Informe de Impacto de Género, sus tres capítulos principales son:", o:["Ingresos, Gastos y Déficit","Realidad, Representación y Recursos-Resultados","Estudio, Análisis y Conclusión","Administración, Entidades y SS"], c:1, e:"Orden HAC/641/2024: Realidad, Representación y Recursos-Resultados."},
+        {p:"¿Quién coordina el Informe de alineamiento con los ODS de la Agenda 2030?", o:["Mº Derechos Sociales, Secretaría de Estado de Pptos y Dirección Gral Pptos","Mº Sanidad","IGAE","Cortes Generales"], c:0, e:"Orden HAC/641/2024: Grupo de trabajo con Derechos Sociales, SEPG y DGP."},
+        {p:"Los proyectos de inversión financiados por Fondos de Recuperación empiezan su codificación por:", o:["Dígito 99","Dígitos 68 (y correlativos si es necesario)","Letra A","Letra Z"], c:1, e:"La codificación de proyectos de Recuperación y Resiliencia comienza por los dígitos 68 (pudiendo usar 69, 70...)"}
+    ],
+    // TEST 4: Aprobación, Enmiendas y Prórroga
+    [
+        {p:"La Ley de PGE se aprueba como una ley:", o:["Orgánica","De Bases","Ordinaria","Marco"], c:2, e:"Concluido el proceso, se aprueban como una Ley ordinaria sin mayorías cualificadas especiales."},
+        {p:"El proyecto de Ley de PGE goza en las Cámaras de:", o:["Carácter secreto","Preferencia en la tramitación","Debate único sin enmiendas","Tramitación en un mes máximo"], c:1, e:"Goza de preferencia en la tramitación con respecto a los demás trabajos de las Cámaras."},
+        {p:"Toda enmienda que suponga disminución de ingresos presupuestarios requiere:", o:["Mayoría absoluta","Acuerdo del Tribunal de Cuentas","Conformidad del Gobierno para su tramitación","No se puede presentar"], c:2, e:"Art. 134.6 CE: requerirá conformidad del Gobierno para su tramitación."},
+        {p:"Para admitir una enmienda que aumente créditos en un concepto, se debe:", o:["Proponer baja de igual cuantía en la misma sección","Proponer aumento de impuestos","Tener permiso del Rey","Basta con proponer baja en cualquier sección"], c:0, e:"Únicamente podrán ser admitidas si proponen una baja de igual cuantía en la misma sección."},
+        {p:"Si el 1 de enero no se ha aprobado la LPGE:", o:["El Gobierno cae","Prorroga automática de presupuestos iniciales del ejercicio anterior","Se paralizan pagos","Se aprueba el proyecto automáticamente"], c:1, e:"Art. 134.4 CE: se considerarán automáticamente prorrogados."},
+        {p:"La prórroga automática no afecta a:", o:["Gastos de personal funcionario","Gastos de bienes corrientes","Programas o actuaciones que terminen en el ejercicio","A y B son correctas"], c:2, e:"La prórroga excluye créditos de programas o actuaciones que terminen en el ejercicio que se prorroga (Art. 38 LGP)."},
+        {p:"¿Quién acuerda los criterios para instrumentar la aplicación de la prórroga presupuestaria?", o:["Consejo de Ministros a propuesta de Hacienda","El Rey","Las Cortes Generales","La IGAE"], c:0, e:"Art. 38 LGP: El Consejo de Ministros, a propuesta de Hacienda."},
+        {p:"¿Se pueden crear nuevos tributos a través de la LPGE?", o:["Sí, siempre","No, la LPGE no puede crear tributos","Sí, si lo aprueba el CPFF","Solo tributos autonómicos"], c:1, e:"Art. 134.7 CE: La LPGE no puede crear tributos. Podrá modificarlos si ley sustantiva lo prevé."},
+        {p:"La estructura orgánica del presupuesto prorrogado:", o:["No se puede cambiar nunca","Se adaptará a la organización administrativa en vigor sin alterar cuantía total","Disminuye un 10%","Se fija por el Tribunal Constitucional"], c:1, e:"LGP: se adaptará, sin alteración de cuantía total, a la organización administrativa en vigor."},
+        {p:"Las Cortes Generales en su función presupuestaria ejercen un control:", o:["Interno","Externo y Político","Jurisdiccional","Financiero de auditoría"], c:1, e:"Es un control externo y político (examen, enmienda, aprobación y fiscalización posterior)."},
+        {p:"Durante la elaboración, ¿quién forma el anteproyecto definitivo de Sanidad (INGESA) y Derechos Sociales (IMSERSO) antes de ir a SS?", o:["El Ministerio competente en Hacienda","Las Cortes","El Tribunal de Cuentas","Sus propios ministerios lo cierran"], c:0, e:"Hacienda forma el anteproyecto definitivo y lo remite a Inclusión, SS y Migraciones."},
+        {p:"El límite temporal del ciclo de Aprobación parlamentaria es:", o:["Normalmente durante el último trimestre del año anterior","En verano","En el primer trimestre del año de ejecución","A y C son correctas"], c:0, e:"Según las fases, la aprobación se da en el último trimestre del año anterior."},
+        {p:"¿Quién asume responsabilidades por el incumplimiento de estabilidad ante la normativa europea?", o:["Solo el Estado","Las AAPP que incumplan en la parte que les sea imputable","El Rey","El Tribunal de Cuentas"], c:1, e:"LOEPSF Art 8: Las Administraciones Públicas asumirán en la parte imputable las responsabilidades."},
+        {p:"¿El Estado asume compromisos de las CC.AA en caso de impago por estabilidad?", o:["Sí, siempre","No, no asumirá ni responderá de sus compromisos","Sí, subsidiariamente","Solo si es deuda comercial"], c:1, e:"LO 2/2012 Art 8: El Estado no asumirá ni responderá de los compromisos de las CC.AA."},
+        {p:"¿Cuáles de estos presupuestos se aprueban por las Cortes?", o:["Solo el del Estado","Solo el de OOAA","Presupuestos Generales del Estado (que incluyen todo el sector estatal)","Presupuestos de CC.AA"], c:2, e:"Las Cortes aprueban los PGE, que engloban a todo el sector público estatal."},
+        {p:"¿Qué principio establece que los presupuestos y cuentas deben estar disponibles públicamente?", o:["Principio de Unidad","Principio de Publicidad / Transparencia","Principio de Especialidad","Principio Bruto"], c:1, e:"El principio de transparencia y publicidad exige disponibilidad pública y contabilidad clara."},
+        {p:"El 'Presupuesto de Caja' o 'Consolidado del Tesoro' pretende:", o:["Pagar en efectivo","Mostrar efectos de ingresos y gastos sobre la liquidez del sistema","Aprobarse sin cortes","Ocultar el déficit"], c:1, e:"Muestra los efectos de los programas sobre la liquidez del sistema económico."},
+        {p:"Si el Senado aprueba una enmienda que aumenta el gasto:", o:["Se devuelve al Congreso y se necesita conformidad de Gobierno previa","Se rechaza automáticamente","Es nula","El Senado no puede enmendar PGE"], c:0, e:"Como toda enmienda que aumente créditos, requiere la conformidad del Gobierno para tramitarse en ambas cámaras."},
+        {p:"¿Cuál es la excepción al principio de Universalidad en época clásica?", o:["Había fondos extra-presupuestarios en el liberalismo","No había, debían contener la totalidad","El Rey no tributaba","Solo se presupuestaba gasto social"], c:1, e:"El principio clásico de universalidad exigía que la totalidad de ingresos y gastos figuren (sin deducciones ni extra-presupuestos)."},
+        {p:"¿En qué artículo constitucional se regula la materia presupuestaria fundamental?", o:["Art. 66","Art. 103","Art. 134","Art. 9.3"], c:2, e:"El Título VII, artículo 134 de la CE regula los Presupuestos Generales del Estado."}
+    ],
+    // TEST 5: Ejecución y Control
+    [
+        {p:"¿A quién corresponde aprobar y comprometer los gastos propios de un Ministerio?", o:["Al Presidente del Gobierno","Al Ministro","Al Secretario de Estado siempre","Al Interventor"], c:1, e:"Corresponde a los Ministros y titulares de los demás órganos del Estado con dotaciones diferenciadas."},
+        {p:"¿A quién compete reconocer la obligación y pago en los Organismos Autónomos?", o:["A sus Presidentes o Directores","Al Rey","A las Cortes Generales","A la Agencia Tributaria"], c:0, e:"Compete a los presidentes o directores de los OOAA (LGP)."},
+        {p:"Un convenio suscrito por un Ministerio que derive en 15 millones de euros de gasto requiere autorización de:", o:["Intervención General","Consejo de Ministros","Cortes Generales","Tribunal de Cuentas"], c:1, e:"Autorización del Consejo de Ministros si el importe del gasto supera 12 millones de euros."},
+        {p:"Si se va a modificar un contrato-programa ya autorizado por el Consejo de Ministros:", o:["Solo decide el Ministro","Requiere nueva autorización si altera el importe global o destino","Nunca se puede modificar","Lo autoriza la IGAE"], c:1, e:"Requiere autorización del Consejo si implican alteración del importe global, destino o calendarios."},
+        {p:"Bajo el Ministro de Economía, ¿quién ejerce como Ordenador General de Pagos del Estado?", o:["Director Gral. Tesoro y Política Financiera","Secretario Estado Hacienda","Director IGAE","Gobernador Banco España"], c:0, e:"Art. 75 LGP: Funciones del Ordenador General al Director General del Tesoro y Política Financiera."},
+        {p:"¿Quién es el Ordenador General de Pagos de la Seguridad Social?", o:["Director Gral. del INSS","Director Gral. de Tesorería General de la Seguridad Social","Ministro de Hacienda","Director de Muface"], c:1, e:"Director General de la TGSS, bajo la autoridad del Ministro competente en Seguridad Social."},
+        {p:"Las facultades de ejecución presupuestaria del Ministro (aprobar/comprometer gasto) pueden ser:", o:["Intransferibles","Delegadas o desconcentradas mediante Real Decreto","Anuladas por la oposición","Cedidas a empresas privadas"], c:1, e:"Podrán desconcentrarse por Real Decreto en Consejo de Ministros, o delegarse reglamentariamente."},
+        {p:"El control interno de la gestión económica del Estado se encomienda a:", o:["Tribunal de Cuentas","Las Cortes","Intervención General de la Administración del Estado (IGAE)","Defensor del Pueblo"], c:2, e:"Art. 140 LGP: La IGAE ejerce el control interno."},
+        {p:"El supremo órgano fiscalizador de las cuentas (Control Externo) es:", o:["IGAE","Tribunal de Cuentas","Banco de España","Ministerio de Hacienda"], c:1, e:"Tribunal de Cuentas ejerce el control externo del sector público estatal."},
+        {p:"¿A qué principio responde la rendición de cuentas al Tribunal de Cuentas?", o:["No afectación","Principio de contabilidad / Publicidad","Principio bruto","Especialidad"], c:1, e:"Principio de contabilidad (art. 119 LGP) exige rendir cuentas al Tribunal de Cuentas."},
+        {p:"El principio de responsabilidad (Art 176 LGP) implica que infracciones dolosas obligan a:", o:["Indemnizar daños y perjuicios a la Hacienda Pública","Cárcel directa","Amonestación verbal","Pérdida de nacionalidad"], c:0, e:"Obligación de indemnizar daños con independencia de responsabilidad penal o disciplinaria."},
+        {p:"El principio de no afectación dicta que los recursos del Estado:", o:["Deben invertirse en bolsa","Se destinan a satisfacer el conjunto de obligaciones (sin afectar a fines determinados)","Solo se gastan en sanidad","No se pueden gastar"], c:1, e:"Salvo que por Ley se establezca afectación a fines, se destinan a satisfacer el conjunto de obligaciones."},
+        {p:"Excepciones al principio de no afectación (ingresos para gastos concretos):", o:["Son imposibles","Tienen que establecerse por Ley","Los decide el Ministro","Son competencia local"], c:1, e:"Se pueden destinar si 'por Ley se establezca su afectación a fines determinados'."},
+        {p:"El presupuesto por programas facilita el control mediante:", o:["Un sistema de indicadores de realización y de información","Eliminación de la IGAE","Reducción de interventores","A y C son correctas"], c:0, e:"Facilita control de eficacia proporcionando datos a través de sistemas de indicadores y contabilidad de programas."},
+        {p:"La liquidación del presupuesto ocurre en la fase de:", o:["Planificación","Elaboración","Control / Ejecución final","Aprobación"], c:2, e:"Liquidación, evaluación de resultados y análisis son parte del final del ciclo y fase de Control."},
+        {p:"Si se declara un ingreso indebido, su devolución supone una excepción al principio de:", o:["Presupuesto Bruto","Anualidad","Especialidad Temporal","Unidad"], c:0, e:"Art. 27.4 LGP: Las devoluciones de ingresos indebidos son una excepción a la aplicación por importe íntegro (minoración permitida)."},
+        {p:"La autorización del Consejo de Ministros para gastos >12M€:", o:["Es posterior a la firma","Implica la aprobación del gasto que se derive del convenio","Sustituye la firma del Rey","Elimina la fiscalización"], c:1, e:"La autorización del Consejo implicará la aprobación del gasto que se derive."},
+        {p:"En el control externo, el Tribunal de Cuentas actúa respecto al Ejecutivo con:", o:["Plena dependencia funcional","Plena independencia / Supremo fiscalizador","Rendición diaria","Informes vinculantes para aprobación presupuestaria"], c:1, e:"Es el supremo órgano fiscalizador con autonomía garantizada por CE y LO."},
+        {p:"Las órdenes de pago expedidas pueden hacerse a favor de:", o:["Acreedor final","Cajas pagadoras o Habilitaciones","Entidades colaboradoras (subvenciones)","Todas son correctas"], c:3, e:"Se expiden al acreedor, pero reglamentariamente a Habilitaciones, Cajas pagadoras, etc., como intermediarios."},
+        {p:"El control político ocurre:", o:["Antes de elaborar el presupuesto","Durante y con posterioridad a la ejecución (Cortes)","Solo en CC.AA","Por la IGAE"], c:1, e:"Se ejerce por el Poder Legislativo durante la tramitación y mediante el control posterior de la Cuenta General."}
+    ],
+    // TEST 6: Presupuesto por Programas y Tipos
+    [
+        {p:"¿En qué ámbito nace la técnica del Presupuesto por Programas?", o:["Sector privado (General Motors, 1924)","Sector público español (1977)","Administración Francesa","Reino Unido (Siglo XIX)"], c:0, e:"Los antecedentes más remotos datan de 1924 en General Motors, sector privado."},
+        {p:"La fijación de metas u objetivos es la esencia de la fase de:", o:["Programación","Planificación (Fijar objetivos)","Presupuestación","Control"], c:1, e:"Objetivos (Planificación): consisten en fijar metas y alternativas."},
+        {p:"¿Qué fase implica evaluar el impacto financiero plurianual de los programas seleccionados?", o:["Control","Planificación","Programación","Aprobación"], c:2, e:"Programación implica cálculo del impacto financiero plurianual de los programas seleccionados."},
+        {p:"La presupuestación es la fase de:", o:["Medir resultados con indicadores","Determinar créditos anuales para cubrir los tramos del presupuesto","Aprobar en las Cortes","Pagar facturas"], c:1, e:"Fase de determinación formal de los créditos necesarios para el tramo anual."},
+        {p:"El cuarto carácter del código presupuestario, letras M a Z, indican:", o:["Programa finalista","Programa instrumental y de gestión","Inversión autonómica","Gasto de personal"], c:1, e:"A-L para finalistas, M-Z para instrumentales y de gestión."},
+        {p:"Los indicadores que señalan los efectos sobre la sociedad o grupo afectado son:", o:["Indicadores de resultados","Indicadores de impacto","Indicadores de gestión","Indicadores de medios"], c:1, e:"Impacto: miden los efectos de los programas emprendidos sobre los objetivos previstos sociales."},
+        {p:"Los indicadores de medios miden:", o:["Bienes y servicios físicos","Costes y resultados combinados","Recursos financieros y costes aplicados","Niveles de satisfacción ciudadana"], c:2, e:"Indicadores de medios miden los recursos financieros y costes totales imputados a cada programa."},
+        {p:"¿Qué técnica persigue evaluar las actividades y costes, asignando racionalmente recursos para fines concretos?", o:["Presupuesto en Base Cero","Presupuesto por Programas","Ppto Compensatorio","Ppto Cíclico"], c:1, e:"El Ppto por Programas expone y programa actividades según fines, midiendo resultados y asignando recursos."},
+        {p:"El Presupuesto por Tareas (precedente del Ppto por Programas) persigue:", o:["Gasto mínimo","Objetivos concretos cuantificando costes y seguimiento de tareas","Equilibrio cíclico","Estabilización automática"], c:1, e:"Persigue objetivos concretos cuantificando los costes para su consecución (tareas de la función pública)."},
+        {p:"La contabilidad de programas debe suministrar:", o:["Cifras globales sin detalle","Indicadores físicos y financieros, medios imputables y resultados","Aumentos salariales","Impuestos recaudados por CC.AA"], c:1, e:"Debe suministrar información mediante indicadores de los medios y costes, resultados y logro de objetivos."},
+        {p:"El presupuesto en base cero difiere del tradicional en que:", o:["Siempre parte de 0 euros para todos","Se basa en el histórico más IPC","No toma el histórico, exige justificar todas las partidas de nuevo","Permite el déficit 0"], c:2, e:"Exige probar la necesidad de las cantidades a gastar a partir de cero (sin inercia)."},
+        {p:"¿El presupuesto clásico permitía emitir deuda pública libremente?", o:["Sí, era su base","No, solo para financiar inversiones autoliquidables","Solo en caso de guerra","Sí, para pagar gasto corriente"], c:1, e:"Principio clásico: no emisión de deuda pública, salvo para inversiones autoliquidables."},
+        {p:"El principio clásico de nivelación presupuestaria exige:", o:["Equilibrio estricto anual (gastos no superiores a ingresos)","Déficit compensatorio","Déficit cero en 10 años","Exceso de ingresos"], c:0, e:"Gastos del Estado no podían ser superiores a los ingresos anuales."},
+        {p:"El presupuesto de estabilización automática se basa en:", o:["Intervención discrecional continua del Ministro","Utilizar el sistema fiscal para flexibilizar ingresos y gastos automáticamente","Emitir deuda infinita","Equilibrio clásico estricto"], c:1, e:"Supone flexibilidad automática dado el efecto del sistema fiscal sin intervención discrecional continua."},
+        {p:"El pacto europeo de reglas fiscales (2023) garantiza:", o:["Aumento indiscriminado de deuda","Reducción gradual de déficit y deuda, protección de inversiones (verde/digital)","Gasto público mínimo clásico","Neutralidad de inversión"], c:1, e:"Reducción de déficit/deuda, impacto contracíclico y protección de inversiones estratégicas."},
+        {p:"La LOEPSF (LO 2/2012) entiende por sostenibilidad de deuda comercial:", o:["Pagar tarde sin sanción","Que el PMP a proveedores no supere el plazo máximo legal","Gastar en comercio","Renegociar con quitas"], c:1, e:"El Periodo Medio de Pago (PMP) a proveedores no debe superar el plazo máximo previsto por morosidad."},
+        {p:"La lealtad institucional obliga a:", o:["Ponderar intereses públicos de otras AAPP","Romper acuerdos sin aviso","Asumir deuda de otras AAPP","No enviar información al Estado"], c:0, e:"Obliga a ponderar la totalidad de intereses públicos, valorar impactos y cooperar."},
+        {p:"Para que el Estado solvente necesidades aumentando la prestación de servicios, el presupuesto actúa como:", o:["Elemento de redistribución de renta","Carga insostenible","Freno económico","A y C son correctas"], c:0, e:"Tendrá efecto de redistribución de renta en función de la asignación del Ejecutivo."},
+        {p:"La técnica de Presupuesto Consolidado del Tesoro pretende:", o:["Consolidar deuda local","Mostrar el efecto en la liquidez del sistema económico","Aprobar presupuestos sin las Cortes","Congelar plazas de AGE"], c:1, e:"Mostrar los efectos de los programas de ingresos y gastos sobre la liquidez del sistema."},
+        {p:"La clasificación de los créditos por programas en España se estableció obligatoria a partir de la ley en el año:", o:["1929","1977 (LGP inicial) y aplicado en todos los Mº en 1984/85","2023","1950"], c:1, e:"La LGP de 1977 lo establece, en 1984 en todos los Mº indicativamente y en 1985 aplicado a PGE."}
+    ],
+    // TEST 7: Marco LO 2/2012 y Planificación Plurianual
+    [
+        {p:"¿A qué límite se adecuarán los PGE según la LGP?", o:["A los ingresos del mes anterior","A los escenarios presupuestarios plurianuales","A las decisiones locales","A la deuda de empresas privadas"], c:1, e:"Los PGE se adecuarán a los escenarios presupuestarios plurianuales y objetivos de programas."},
+        {p:"Los programas plurianuales ministeriales deben contener:", o:["Solo gastos de personal","Objetivos, actividad, medios necesarios, inversiones e indicadores de ejecución","Un análisis histórico de 10 años","Gasto de la Casa Real"], c:1, e:"Contendrán objetivos mensurables, actividad, medios necesarios, inversiones e indicadores."},
+        {p:"El programa plurianual del Ministerio de Sanidad contendrá:", o:["Solo su presupuesto","Los programas de todos los centros gestores que de él dependan","Los de las CC.AA","Los de empresas privadas"], c:1, e:"El programa plurianual de cada Ministerio contendrá los programas de todos los centros gestores dependientes."},
+        {p:"¿Quién elabora separadamente el Programa plurianual de la Seguridad Social?", o:["Ministro de Hacienda","Presidente del Gobierno","Ministro competente en Seguridad Social","Las Cortes"], c:2, e:"Se elaborará separadamente por el Ministro competente en Seguridad Social (LGP art 29)."},
+        {p:"Las asignaciones presupuestarias a los centros gestores tomarán en cuenta:", o:["El nivel de cumplimiento de objetivos en ejercicios anteriores","Las peticiones sin límite","El volumen de personal estatutario exclusivamente","Sorteo"], c:0, e:"LGP art 31: se efectuarán tomando en cuenta el nivel de cumplimiento de los objetivos en ejercicios anteriores."},
+        {p:"¿Quién confecciona los escenarios presupuestarios plurianuales?", o:["Las Cortes Generales","El Ministerio competente en Hacienda","La UE directamente","El Tribunal de Cuentas"], c:1, e:"LGP art 28: Serán confeccionados por el Ministerio competente en Hacienda."},
+        {p:"Si el escenario de ingresos tiene en cuenta efectos tendenciales y cambios normativos, el escenario de gastos:", o:["Es siempre cero","Asignará recursos disponibles según prioridades de políticas de gasto y vencimientos","Ignora los vencimientos","No existe"], c:1, e:"El escenario de gastos asignará los recursos disponibles de conformidad con las prioridades de gasto y vencimientos."},
+        {p:"Los objetivos de estabilidad se expresan en términos de:", o:["Euros brutos","Miles de euros","Porcentaje del Producto Interior Bruto (PIB) nacional nominal","Dólares"], c:2, e:"Dichos objetivos estarán expresados en términos porcentuales del PIB nacional nominal."},
+        {p:"¿Quién emite informe previo sobre los objetivos de estabilidad antes de que el Gobierno los apruebe?", o:["Solo el Rey","El Consejo de Política Fiscal y Financiera y la CNAL","Comisión Europea obligatoriamente","Intervención General"], c:1, e:"Previo informe del CPFF (CCAA) y de la Comisión Nacional de Administración Local (CNAL)."},
+        {p:"Si las Cortes rechazan los objetivos de estabilidad del Gobierno, este tiene un plazo de:", o:["1 semana","1 mes para remitir un nuevo acuerdo","1 año","No puede volver a presentar"], c:1, e:"El Gobierno, en el plazo máximo de 1 mes, remitirá un nuevo acuerdo."},
+        {p:"La regla de gasto vincula la variación del gasto de las AAPP a:", o:["Inflación interanual","Tasa de crecimiento del PIB de medio plazo de la economía española","Tasa de desempleo","Los ingresos reales mensuales"], c:1, e:"Al crecimiento de la tasa de referencia del PIB de medio plazo (Art 12 LOEPSF)."},
+        {p:"El límite de gasto no financiero (Techo de Gasto) del Presupuesto del Estado:", o:["Se aprueba al margen del objetivo de estabilidad","Se incluye en el acuerdo del Consejo de Ministros sobre objetivos de estabilidad","Lo fijan las Cortes libremente","No existe"], c:1, e:"El acuerdo del Consejo de Ministros de los objetivos de estabilidad incluirá el límite de gasto no financiero."},
+        {p:"El informe que evalúa la situación económica para la fijación de objetivos (cuadro macroeconómico) lo elabora:", o:["Mº de Hacienda","Mº de Trabajo","Mº competente en Economía","Banco de España exclusivamente"], c:2, e:"Será elaborado por el Ministerio competente en Economía (teniendo en cuenta previsiones de BCE y Comisión)."},
+        {p:"El principio de responsabilidad en estabilidad presupuestaria prohíbe que el Estado:", o:["Cobre impuestos","Asuma deudas de empresas privadas estatales","Asuma o responda de los compromisos de las CCAA y Corporaciones Locales","A y B son correctas"], c:2, e:"El Estado no asumirá ni responderá de los compromisos de CCAA o Corporaciones Locales (salvo garantías mutuas)."},
+        {p:"Los programas plurianuales ministeriales abarcan:", o:["El ejercicio en curso y el siguiente","Los tres ejercicios siguientes","Los próximos 10 años","La legislatura (4 años)"], c:1, e:"Están referidos a los tres ejercicios siguientes, ajustados a las previsiones de escenarios plurianuales."},
+        {p:"La eficiencia en la asignación orienta la gestión a:", o:["Gasto ciego","Eficacia, eficiencia, economía y calidad","Aumento de personal","Déficit automático"], c:1, e:"La gestión se orientará por la eficacia, eficiencia, economía y calidad (Art 7 LOEPSF)."},
+        {p:"Si el Senado rechaza los objetivos de estabilidad tras ser aprobados por el Congreso:", o:["Decaen definitivamente","Vuelven al Congreso, que puede ratificarlos por mayoría simple","Debe intervenir el Tribunal Constitucional","Se aprueban automáticamente"], c:1, e:"Se someterán a nueva votación en Pleno del Congreso, aprobándose si los ratifica por mayoría simple."},
+        {p:"Los proyectos de Ley y convenios deben supeditarse de forma estricta a:", o:["Las peticiones sindicales","Disponibilidades presupuestarias y límites de escenarios plurianuales","Nada en absoluto","Aumento de ingresos futuro"], c:1, e:"Reglas de programación: supeditarse a disponibilidades presupuestarias y escenarios plurianuales."},
+        {p:"La elaboración de los Presupuestos se rige por el principio de:", o:["Estabilidad y sostenibilidad","Plurianualidad y transparencia","Responsabilidad y lealtad institucional","Todas las anteriores"], c:3, e:"Se regirá por todos los principios establecidos en la Ley Orgánica 2/2012."},
+        {p:"La contabilidad de las AAPP debe permitir verificar:", o:["El estado civil de funcionarios","Situación financiera, cumplimiento de estabilidad y sostenibilidad (Transparencia)","Plazos de vacaciones","El censo"], c:1, e:"Principio de Transparencia (Art 6 LOEPSF) exige información suficiente de la situación financiera y cumplimiento."}
+    ],
+    // TEST 8: Órganos y Documentación (Orden HAC/641/2024)
+    [
+        {p:"¿Quién coordina a los centros directivos para las estimaciones de ingresos del Estado?", o:["Dirección General de Presupuestos","Secretaría de Estado de Presupuestos y Gastos","Mº Economía","Tribunal Cuentas"], c:1, e:"La SEPG coordinará las propuestas de los centros directivos para elaborar estados de ingresos."},
+        {p:"Los estados de gastos del anteproyecto de PGE los elabora:", o:["Secretaría Estado Pptos","Dirección General de Presupuestos","Mº Trabajo","Consejo Ministros"], c:1, e:"La Dirección General de Presupuestos elaborará los estados de gastos."},
+        {p:"Las propuestas de cada Ministerio se remiten a Hacienda a través de:", o:["Sus oficinas de RRHH","Sus Oficinas Presupuestarias","Servicios jurídicos","Los delegados sindicales"], c:1, e:"Deben ser remitidos a la Dirección General de Presupuestos a través de las oficinas presupuestarias de cada ministerio."},
+        {p:"¿Quién elabora el informe de impacto de los programas sobre la juventud?", o:["Mº Juventud y Mº Hacienda","Departamentos ministeriales que se establezcan, para la formulación por la SEPG","No existe ese informe","Solo el Congreso"], c:1, e:"Los departamentos remitirán el informe a la SEPG, que formulará la información presupuestaria sobre juventud."},
+        {p:"El informe sobre alineamiento con ODS Agenda 2030 es formulado por:", o:["SEPG con base en informes ministeriales (grupo de trabajo con Derechos Sociales)","Naciones Unidas","Mº Asuntos Exteriores","Director IGAE"], c:0, e:"Formulado por SEPG, apoyado por grupo de trabajo de Derechos Sociales, SEPG y DGP."},
+        {p:"El informe de Reto Demográfico analiza el impacto sobre:", o:["Las capitales de provincia","El Plan de 130 medidas frente al Reto Demográfico","Los nacimientos globales","Inmigración exclusivamente"], c:1, e:"El Mº para la Transición Ecológica remite informe analizando el impacto sobre el Plan de 130 medidas."},
+        {p:"La codificación de proyectos del Mecanismo de Recuperación (fondos europeos) empieza por los dígitos:", o:["01","99","68 (o siguientes 69, 70...)","55"], c:2, e:"Comenzará por los dígitos 68 (pudiendo habilitarse 69, 70 hasta 77 como identificadores)."},
+        {p:"Los presupuestos de explotación y capital de entidades empresariales se acompañan de:", o:["Liquidación del año anterior, avance del corriente y previsiones 3 años","Plan de viabilidad de 10 años","Garantías bancarias personales","Recibos físicos de cobro"], c:0, e:"Incluyen memoria, liquidación del año anterior y avance de ejecución del corriente, y programas plurianuales a 3 años."},
+        {p:"El anteproyecto del INGESA se aprueba por:", o:["Hacienda tras recibirlo de Sanidad","Ministerio de Seguridad Social aislado","No se integra en PGE","Es privado"], c:0, e:"Hacienda recibe la propuesta de Sanidad, forma anteproyecto definitivo y remite a Seguridad Social."},
+        {p:"¿A qué órgano se remite la relación de proyectos financiados con fondos de la Unión Europea?", o:["Tribunal Cuentas","Secretaría General de Fondos Europeos","Cortes Generales","Mº Asuntos Exteriores"], c:1, e:"Remitirán a la Secretaría General de Fondos Europeos una relación de proyectos susceptibles de fondos UE."},
+        {p:"Las normas de contenido presupuestario que se propongan para el articulado de la Ley (Articulado):", o:["Pueden modificar el Código Penal","Se remiten a la SEPG acompañadas de memoria explicativa de conexión","No se pueden enviar","Tienen que ser aprobadas por referéndum"], c:1, e:"Se remiten a SEPG las propuestas de normas con su memoria explicativa de conexión y efecto económico."},
+        {p:"¿Cuándo es el plazo orientativo habitual fijado en la Orden para remitir documentación de centros gestores (PGE 2025)?", o:["Diciembre","Octubre","Antes del 8 de julio de 2024","31 de diciembre de 2024"], c:2, e:"La Orden de elaboración de 2025 fijó como fecha clave la remisión antes del 8 de julio de 2024."},
+        {p:"El informe de impacto en infancia y familia cuenta con un grupo de trabajo integrado por:", o:["Mº Juventud e Infancia, Derechos Sociales, SEPG y DGP","Solo Derechos Sociales","Solo Hacienda","Mº Educación y Universidades"], c:0, e:"Integrado por Juventud e Infancia, Derechos Sociales y Agenda 2030, SEPG y DGP."},
+        {p:"¿Tienen los Ministerios que valorar el efecto de sus propuestas de normativa en el articulado sobre el gasto o ingresos?", o:["No","Solo en las enmiendas","Sí, cuantificando su efecto en las cifras presupuestarias","Solo lo hace el Congreso"], c:2, e:"Deben acompañar memoria explicativa cuantificando el efecto de la norma sobre cifras de ingreso/gasto."},
+        {p:"¿Qué debe remitirse en formato de 'anexo territorializado por provincias'?", o:["Gastos de personal","Proyectos de inversión de las entidades del sector público","Material de oficina","Gasto en transferencias corrientes"], c:1, e:"Las entidades remitirán un anexo de sus proyectos de inversión territorializados por provincias."},
+        {p:"La Universidad Nacional de Educación a Distancia (UNED):", o:["Tiene presupuesto con carácter limitativo","Es gestionada por las CCAA","Tiene presupuesto estimativo (consorcios, fondos y universidades)","No rinde cuentas"], c:2, e:"Las universidades públicas no transferidas pertenecen al grupo de presupuestos de carácter estimativo."},
+        {p:"El Informe de impacto de género en el aspecto de 'Representación' evalúa:", o:["Gasto en sanidad","Situación y representación de mujeres y hombres en la AGE","Estadísticas mundiales","Cifras de nacimientos"], c:1, e:"Analiza la situación y representación de mujeres y hombres en la AGE."},
+        {p:"La 'Realidad' en el Informe de Impacto de Género se realiza en colaboración con:", o:["Banco de España","Instituto Nacional de Estadística (INE)","ONU Mujeres","Tribunal Constitucional"], c:1, e:"El apartado Realidad se realizará en colaboración con el Instituto Nacional de Estadística (INE)."},
+        {p:"Los documentos de Fondos de Compensación Interterritorial se remiten a:", o:["Secretaría General de Fondos Europeos","Cortes Generales","Mº Justicia","IGAE"], c:0, e:"Se remitirán por las CCAA a la Secretaría General de Fondos Europeos."},
+        {p:"La Comisión de Políticas de Gasto fija:", o:["Los presupuestos locales","Directrices para la distribución del gasto, prioridades y límites cuantitativos","El sueldo del Rey","Solo los ingresos"], c:1, e:"Fija directrices, criterios y límites cuantitativos de la distribución del gasto respetando los objetivos."}
+    ],
+    // TEST 9: Recapitulación Leyes, Fechas y Tiempos
+    [
+        {p:"Ley 47/2003, de 26 de noviembre es la Ley...", o:["General Presupuestaria","De Estabilidad","De Transparencia","General Tributaria"], c:0, e:"La LGP es la Ley 47/2003, de 26 de noviembre."},
+        {p:"La Ley Orgánica 2/2012 regula:", o:["Las pensiones","Estabilidad Presupuestaria y Sostenibilidad Financiera","Impuestos sobre la renta","La contratación del sector público"], c:1, e:"LOEPSF: Ley Orgánica 2/2012 de 27 de abril de Estabilidad Presupuestaria y Sostenibilidad Financiera."},
+        {p:"Art. 134.1 CE confiere la elaboración de PGE a:", o:["Congreso","Senado","Tribunal Cuentas","Gobierno"], c:3, e:"Corresponde al Gobierno la elaboración."},
+        {p:"Plazo de remisión a las Cortes de los PGE:", o:["Antes 1 oct (3 meses antes expiración)","Antes 1 septiembre","31 de diciembre","1 de julio"], c:0, e:"Al menos 3 meses antes de que expiren los del año anterior (1 de octubre)."},
+        {p:"Día en que expira la vigencia del PGE ordinario:", o:["31 de diciembre","1 de julio","El día de publicación de los nuevos","Cuando cesa el Gobierno"], c:0, e:"Es anual y coincide con el año natural (31 diciembre)."},
+        {p:"Las propuestas de directrices presupuestarias son fijadas por:", o:["Ministro competente en Hacienda","Presidente del Senado","Mº Trabajo","Rey"], c:0, e:"Por el Ministro de Hacienda a través de Orden ministerial."},
+        {p:"Control simultáneo a la ejecución lo realiza:", o:["Tribunal Cuentas (Político)","IGAE (Control interno)","Solo el Rey","Congreso de los Diputados"], c:1, e:"La Intervención General realiza el control interno de gestión simultáneo (fiscalización previa)."},
+        {p:"El control externo por el Tribunal de Cuentas es:", o:["Previo a la aprobación","A priori del gasto","A posteriori, sobre cuentas y gestión","Vinculante para la prórroga"], c:2, e:"Fiscaliza cuentas y gestión económica una vez ejecutado (a posteriori)."},
+        {p:"La prórroga automática de los PGE aplica el día:", o:["1 de enero si no hay nueva Ley aprobada","1 de octubre","31 de diciembre del año anterior","En verano"], c:0, e:"Primer día del ejercicio económico correspondiente (1 de enero)."},
+        {p:"Aprobación de la Ley de PGE (mayoría):", o:["Unanimidad","Mayoría cualificada de 3/5","Mayoría simple (Ley ordinaria)","Mayoría absoluta (Ley Orgánica)"], c:2, e:"Es una Ley ordinaria, se aprueba por mayoría simple."},
+        {p:"Unidades gestoras de ministerios envían sus datos a:", o:["Directamente a Cortes","Oficina Presupuestaria de su Ministerio, y ésta a Dirección Gral Presupuestos","IGAE","Tribunal Cuentas"], c:1, e:"Las Oficinas Presupuestarias del Ministerio unifican y envían a Dirección Gral. de Presupuestos."},
+        {p:"¿El Senado puede tramitar enmiendas que aumenten el crédito?", o:["Sí, proponiendo baja en misma sección y con conformidad del Gobierno","No, solo el Congreso","Sí, con mayoría absoluta y sin baja","No, bajo ninguna circunstancia"], c:0, e:"Pueden si proponen baja en misma sección y, por aumentar gasto global, requieren conformidad del Gobierno."},
+        {p:"El Principio de Plurianualidad implica previsiones a:", o:["Medio plazo (3 años en escenarios)","Largo plazo (10 años)","Anual estricto","Indefinido"], c:0, e:"Encuadre a medio plazo (escenarios plurianuales a 3 ejercicios siguientes)."},
+        {p:"¿Quién liquida los PGE del año anterior para anexarlos al Proyecto?", o:["Gobierno (Mº Hacienda) los anexa al proyecto","Cortes los liquidan","Tribunal de Cuentas anexa su informe al proyecto de ley de inicio","Ayuntamientos"], c:0, e:"Al proyecto se acompaña la liquidación del ppto del año anterior (formada por el Ejecutivo/Hacienda)."},
+        {p:"La estabilidad presupuestaria de EE. Públicas Empresariales es:", o:["Déficit estructural","Equilibrio financiero","Superávit obligatario","Dependencia total de subvenciones"], c:1, e:"Para el sector art 2.2 LO 2/2012 (EPEs y Sociedades), estabilidad es posición de equilibrio financiero."},
+        {p:"Las Comunidades Autónomas tienen presupuestos:", o:["Dentro de los PGE","Excluidos de los PGE del Estado, aunque coordinados en estabilidad","No tienen, todo es del Estado","Limitativos de la IGAE"], c:1, e:"Los PGE abarcan el sector público estatal. Las CCAA tienen presupuestos y parlamentos propios."},
+        {p:"Entidades Gestoras de Seguridad Social (ej. INSS):", o:["Presupuesto estimativo","Presupuesto limitativo","Privado","Aprobado por los Sindicatos"], c:1, e:"El Estado, OOAA y Seguridad Social tienen presupuestos de carácter limitativo."},
+        {p:"Las 'Mutuas colaboradoras con la SS' respecto al PGE:", o:["Están excluidas totalmente","Se integran en el Anteproyecto de la Seguridad Social (limitativo)","Son sociedades mercantiles libres","No se someten a control"], c:1, e:"Se integran en el Presupuesto de la Seguridad Social (art 36 LGP)."},
+        {p:"Plazo del Gobierno para fijar límite de gasto no financiero:", o:["Último trimestre del año","Primer semestre del año","Octubre de cada año","Cuando se aprueben los presupuestos"], c:1, e:"Acuerdo del Consejo de Ministros en el primer semestre de cada año."},
+        {p:"Si el Estado genera deudas extra, se somete a:", o:["Lealtad institucional","Unidad de caja (Tesoro) y Principios de Estabilidad y Sostenibilidad","Falta de control","Exclusión europea"], c:1, e:"Estabilidad y sostenibilidad exigen el control de deuda pública y prudencia."}
+    ],
+    // TEST 10: Repaso Integral y Mixto
+    [
+        {p:"La LGP, art 32, define los PGE. Destaca que es una expresión:", o:["Cifrada, conjunta y sistemática de derechos y obligaciones","Literaria de intenciones","Aleatoria de gastos e ingresos","Independiente por cada Ministerio"], c:0, e:"Expresión cifrada, conjunta y sistemática."},
+        {p:"Pertenecen al Sector Público Institucional Estatal (Art 2 LGP):", o:["Tribunal Constitucional, Cortes","Organismos Autónomos, Agencias, EPEs, Sociedades Mercantiles","CCAA y Entidades Locales","Cajas de Ahorro y Bancos Privados"], c:1, e:"OOAA, EPEs, Agencias, Autoridades independientes, Sociedades mercantiles, etc."},
+        {p:"¿Tienen las Cortes Generales autonomía presupuestaria?", o:["No","Sí, según art 72 CE","Solo si el Gobierno lo autoriza","Tienen presupuesto estimativo"], c:1, e:"Sí, art 72 CE. La LGP no se les aplica directamente."},
+        {p:"El principio de Temporalidad de los créditos implica:", o:["Anulación al final de año si no están afectados a obligaciones","Gastos sin límite temporal","Traspaso automático de todo al año siguiente","Solo aplica a ingresos"], c:0, e:"Especialidad temporal: los créditos no gastados se anulan el 31 diciembre (con excepciones)."},
+        {p:"Diferencia principal del Ppto por Programas vs Funcional:", o:["El funcional es estimativo","El de programas fija metas/objetivos, analiza alternativas y usa indicadores","El funcional fue en 1929 y el otro no","No hay diferencia"], c:1, e:"Programas: planifica, evalúa alternativas para fines, e introduce indicadores (impacto, gestión)."},
+        {p:"El Presupuesto Compensatorio se basa en la teoría:", o:["Neoliberal","Marxista","Keynesiana (desequilibrio como estabilizador de demanda)","Clásica pura"], c:2, e:"Se apoya en Keynes para usar el déficit como corrector de demanda privada."},
+        {p:"¿Quién aprueba los presupuestos de las CC.AA.?", o:["Cortes Generales del Estado","Sus propios parlamentos autonómicos","Consejo de Ministros","El Tribunal Cuentas"], c:1, e:"Están excluidos de los PGE. Tienen parlamentos e instituciones propias según la Constitución y LOFCA."},
+        {p:"Las propuestas de presupuesto del IMSERSO las envía:", o:["Mº Inclusión","Mº Hacienda","Mº Derechos Sociales, Consumo y Agenda 2030","Mº Sanidad"], c:2, e:"Las manda Derechos Sociales a Hacienda para el anteproyecto, y este a Inclusión."},
+        {p:"En la LOEPSF, la responsabilidad por incumplir límites europeos recae en:", o:["Exclusivamente la AGE","La Administración o entidad infractora en su parte imputable","El Tribunal de Cuentas","El Ministro de Hacienda pagando multa personal"], c:1, e:"Cada Administración asume su parte imputable de responsabilidad."},
+        {p:"¿La autorización del Consejo de Ministros para convenios de >12M€ aplica a CCAA que gestionan créditos del art. 86 LGP?", o:["Sí, siempre","No resultará de aplicación para la formalización de esos compromisos financieros","Depende del importe exacto","Solo en Sanidad"], c:1, e:"Art 74 LGP: No resultará de aplicación a los convenios de créditos gestionados por CCAA (Art. 86 LGP)."},
+        {p:"Si se declara la improcedencia firme de garantías aportadas por administrados, el reembolso del coste:", o:["Es nulo","Es excepción al presupuesto bruto (minoración permitida de ingresos)","Supone especialidad temporal","No se puede devolver"], c:1, e:"Art 27.4 LGP: Excepción al ppto bruto (minoración de derechos a liquidar o ya ingresados)."},
+        {p:"Los recursos del Estado deben satisfacer el conjunto de obligaciones (sin separarlos), esto es el principio de:", o:["No afectación","Unidad","Presupuesto bruto","Anualidad"], c:0, e:"Art. 27.3 LGP: Principio de no afectación, salvo afectación por Ley a fines determinados."},
+        {p:"¿Cuáles de estas entidades tienen presupuesto limitativo?", o:["Agencias Estatales y OO.AA.","EPEs y Sociedades mercantiles","Universidades y Consorcios","A y B son correctas"], c:0, e:"OOAA y Estado (incluidas Agencias por su régimen) tienen limitativo; EPEs y mercantiles estimativo."},
+        {p:"El Informe Económico y Financiero que acompaña a la LPGE incluye:", o:["Explicación del contenido y principales modificaciones respecto a los vigentes","Datos de nacimientos del INE","El articulado final aprobado","Liquidación de sociedades privadas"], c:0, e:"Se exige una explicación de contenidos y principales modificaciones."},
+        {p:"Una enmienda en las Cortes que aumenta gastos necesita baja en la misma sección para ser admitida, y para tramitarse requiere:", o:["Mayoría absoluta","Conformidad del Gobierno","Aprobación del Rey","Nada más"], c:1, e:"Al suponer incremento global (o enmienda expansiva sin equilibrio general) requiere conformidad (Art. 134.6 CE)."},
+        {p:"¿Las Fundaciones del Sector Público rinden presupuesto limitativo?", o:["Sí, igual que los OOAA","No, tienen presupuesto de carácter estimativo (explotación y capital)","Están fuera de la LGP","Depende de su capital"], c:1, e:"Ley PGE: Cuentan con presupuesto de carácter estimativo."},
+        {p:"¿Quién determina los criterios del Informe de Impacto de Género en la elaboración?", o:["El Ministerio de Igualdad de forma exclusiva","Grupo de trabajo: Igualdad, SEPG, DGP, Costes Personal","Tribunal Constitucional","Solo la DGP"], c:1, e:"Orden HAC/641: Grupo de trabajo integrado por Igualdad, SEPG, DGP y Dir. Gral Costes Personal."},
+        {p:"Si un centro gestor no gasta su presupuesto al 31 de diciembre (no afectado a obligaciones), y no es incorporable:", o:["Pasa a gasto de personal extra","Queda anulado de pleno derecho (Especialidad temporal)","Se convierte en deuda","Va a la Casa Real"], c:1, e:"Especialidad temporal: los créditos expiran y quedan anulados."},
+        {p:"El presupuesto clásico abogaba por la no emisión de deuda pública, SALVO:", o:["Para financiar inversiones autoliquidables (que permitan su devolución)","Para guerras","Para servicios sociales","Nunca permitía deuda"], c:0, e:"Salvo inversiones autoliquidables, cuya rentabilidad pagara el principal e intereses."},
+        {p:"La Ley Orgánica de Financiación de CCAA (LOFCA 8/1980) rige los pptos autonómicos, que deben ser:", o:["De periodicidad bianual","Aprobados por el Estado","De periodicidad anual, integrando la totalidad de sus gastos e ingresos","Estimativos en todo caso"], c:2, e:"Tienen periodicidad anual, igual que el Estado, con totalidad de gastos e ingresos (Universalidad)."}
+    ]
+];
 
-    // Sustituyo las preguntas de mapeo rápido con variaciones exactas para cumplir con las 200 estrictas sin errores.
-    // En un entorno de producción estático puro, se mantendrían los arrays literales. Usamos map para inyectar volumen con datos verdaderos garantizados por el texto sin cortar el bloque.
+// --- LÓGICA DE LA APLICACIÓN ---
+let currentTest = -1; // -1 = Esquema
+let synth = window.speechSynthesis;
+let speechUtterance = new SpeechSynthesisUtterance();
+let isPlaying = false;
 
-    // --- LÓGICA DE LA APLICACIÓN ---
+document.addEventListener('DOMContentLoaded', () => {
+    buildNav();
+    renderEsquema();
+});
 
-    let currentTest = -1; // -1 significa Esquema
-    let synth = window.speechSynthesis;
-    let speechUtterance = new SpeechSynthesisUtterance();
-    let isPlaying = false;
+function buildNav() {
+    const nav = document.getElementById('nav-menu');
+    
+    let btnEsquema = document.createElement('button');
+    btnEsquema.textContent = "📖 Esquema de Estudio";
+    btnEsquema.className = "active";
+    btnEsquema.onclick = () => switchTab(-1, btnEsquema);
+    nav.appendChild(btnEsquema);
 
-    // Inicialización del DOM
-    document.addEventListener('DOMContentLoaded', () => {
-        buildNav();
-        renderEsquema();
+    for (let i = 0; i < examenesBruto.length; i++) {
+        let btn = document.createElement('button');
+        btn.textContent = `📝 Test ${i + 1}`;
+        btn.onclick = () => switchTab(i, btn);
+        nav.appendChild(btn);
+    }
+}
+
+function switchTab(index, btnElement) {
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+    currentTest = index;
+
+    if (isPlaying) {
+        synth.cancel();
+        isPlaying = false;
+        document.getElementById('btn-audio').textContent = "🔊 Escuchar Tema Completo";
+        document.getElementById('btn-audio').classList.remove('playing');
+    }
+
+    if (index === -1) {
+        document.getElementById('view-esquema').classList.remove('hidden');
+        document.getElementById('view-test').classList.add('hidden');
+    } else {
+        document.getElementById('view-esquema').classList.add('hidden');
+        document.getElementById('view-test').classList.remove('hidden');
+        renderTest(index);
+    }
+}
+
+function renderEsquema() {
+    const container = document.getElementById('esquema-content');
+    container.innerHTML = "";
+    
+    esquemaBruto.forEach(item => {
+        let card = document.createElement('div');
+        card.className = "card";
+        card.innerHTML = `<h3>${item.p}</h3><p>${item.r}</p>`;
+        container.appendChild(card);
     });
+}
 
-    function buildNav() {
-        const nav = document.getElementById('nav-menu');
+function toggleAudio() {
+    const btn = document.getElementById('btn-audio');
+    if (isPlaying) {
+        synth.cancel();
+        isPlaying = false;
+        btn.textContent = "🔊 Escuchar Tema Completo";
+        btn.classList.remove('playing');
+    } else {
+        let fullText = esquemaBruto.map(q => `${q.p}. ${q.r}`).join(". ");
+        speechUtterance.text = fullText;
+        speechUtterance.lang = 'es-ES';
+        speechUtterance.rate = 1.0;
         
-        let btnEsquema = document.createElement('button');
-        btnEsquema.textContent = "Esquema de Estudio";
-        btnEsquema.className = "active";
-        btnEsquema.onclick = () => switchTab(-1, btnEsquema);
-        nav.appendChild(btnEsquema);
-
-        for (let i = 0; i < 10; i++) {
-            let btn = document.createElement('button');
-            btn.textContent = `Test ${i + 1}`;
-            btn.onclick = () => switchTab(i, btn);
-            nav.appendChild(btn);
-        }
-    }
-
-    function switchTab(index, btnElement) {
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-
-        currentTest = index;
-
-        // Si salimos del esquema, detener audio
-        if (index !== -1 && isPlaying) {
-            synth.cancel();
-            isPlaying = false;
-            document.getElementById('btn-audio').textContent = "🔊 Escuchar Tema Completo";
-            document.getElementById('btn-audio').classList.remove('playing');
-        }
-
-        if (index === -1) {
-            document.getElementById('view-esquema').classList.remove('hidden');
-            document.getElementById('view-test').classList.add('hidden');
-        } else {
-            document.getElementById('view-esquema').classList.add('hidden');
-            document.getElementById('view-test').classList.remove('hidden');
-            renderTest(index);
-        }
-    }
-
-    // --- RENDER ESQUEMA ---
-    function renderEsquema() {
-        const container = document.getElementById('esquema-content');
-        container.innerHTML = "";
-        
-        esquemaPreguntas.forEach(item => {
-            let card = document.createElement('div');
-            card.className = "card";
-            card.innerHTML = `
-                <h3>${item.pregunta}</h3>
-                <p>${item.respuesta_detallada}</p>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    // --- AUDIO (TEXT-TO-SPEECH) ---
-    function toggleAudio() {
-        const btn = document.getElementById('btn-audio');
-        if (isPlaying) {
-            synth.cancel();
+        speechUtterance.onend = () => {
             isPlaying = false;
             btn.textContent = "🔊 Escuchar Tema Completo";
             btn.classList.remove('playing');
-        } else {
-            let fullText = esquemaPreguntas.map(q => `${q.pregunta}. ${q.respuesta_detallada}`).join(". ");
-            speechUtterance.text = fullText;
-            speechUtterance.lang = 'es-ES';
-            speechUtterance.rate = 1.0;
-            
-            speechUtterance.onend = () => {
-                isPlaying = false;
-                btn.textContent = "🔊 Escuchar Tema Completo";
-                btn.classList.remove('playing');
-            };
+        };
 
-            synth.speak(speechUtterance);
-            isPlaying = true;
-            btn.textContent = "⏹ Detener Lectura";
-            btn.classList.add('playing');
-        }
+        synth.speak(speechUtterance);
+        isPlaying = true;
+        btn.textContent = "⏹ Detener Lectura";
+        btn.classList.add('playing');
     }
+}
 
-    // --- RENDER TEST ---
-    function renderTest(testIndex) {
-        const container = document.getElementById('test-content');
-        container.innerHTML = "";
+function renderTest(testIndex) {
+    const container = document.getElementById('test-content');
+    container.innerHTML = "";
+    
+    document.getElementById('score-top').style.display = 'none';
+    document.getElementById('score-bottom').style.display = 'none';
+
+    const testData = examenesBruto[testIndex];
+
+    testData.forEach((q, qIndex) => {
+        let qDiv = document.createElement('div');
+        qDiv.className = "pregunta-container";
         
-        // Ocultar puntuaciones al cargar nuevo test
-        document.getElementById('score-top').style.display = 'none';
-        document.getElementById('score-bottom').style.display = 'none';
+        let title = document.createElement('h3');
+        title.textContent = `${qIndex + 1}. ${q.p}`;
+        qDiv.appendChild(title);
 
-        const testData = examenes[testIndex];
-
-        testData.forEach((q, qIndex) => {
-            let qDiv = document.createElement('div');
-            qDiv.className = "pregunta-container";
-            qDiv.id = `q-${testIndex}-${qIndex}`;
+        let form = document.createElement('form');
+        form.id = `form-${testIndex}-${qIndex}`;
+        form.className = "opciones";
+        
+        q.o.forEach((opcion, oIndex) => {
+            let label = document.createElement('label');
+            label.className = "opcion-label";
+            label.id = `label-${testIndex}-${qIndex}-${oIndex}`;
             
-            let title = document.createElement('h3');
-            title.textContent = `${qIndex + 1}. ${q.pregunta}`;
-            qDiv.appendChild(title);
-
-            let form = document.createElement('form');
-            form.id = `form-${testIndex}-${qIndex}`;
-            form.className = "opciones";
+            let input = document.createElement('input');
+            input.type = "radio";
+            input.name = `pregunta-${qIndex}`;
+            input.value = oIndex;
             
-            q.opciones.forEach((opcion, oIndex) => {
-                let label = document.createElement('label');
-                label.className = "opcion-label";
-                label.id = `label-${testIndex}-${qIndex}-${oIndex}`;
-                
-                let input = document.createElement('input');
-                input.type = "radio";
-                input.name = `pregunta-${qIndex}`;
-                input.value = oIndex;
-                
-                label.appendChild(input);
-                label.appendChild(document.createTextNode(opcion));
-                form.appendChild(label);
-            });
-
-            qDiv.appendChild(form);
-
-            let explicacionDiv = document.createElement('div');
-            explicacionDiv.className = "explicacion-box";
-            explicacionDiv.id = `expl-${testIndex}-${qIndex}`;
-            explicacionDiv.innerHTML = `<strong>Justificación:</strong> ${q.explicacion} <br><br><em>Respuesta correcta: ${q.opciones[q.respuesta_correcta]}</em>`;
-            
-            qDiv.appendChild(explicacionDiv);
-            container.appendChild(qDiv);
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(opcion));
+            form.appendChild(label);
         });
-    }
 
-    // --- CORRECCIÓN DE TEST ---
-    function corregirTest() {
-        if (currentTest === -1) return;
+        qDiv.appendChild(form);
+
+        let explicacionDiv = document.createElement('div');
+        explicacionDiv.className = "explicacion-box";
+        explicacionDiv.id = `expl-${testIndex}-${qIndex}`;
+        explicacionDiv.innerHTML = `<strong>Justificación:</strong> ${q.e} <br><br><em>Respuesta correcta: ${q.o[q.c]}</em>`;
         
-        const testData = examenes[currentTest];
-        let aciertos = 0;
-        let errores = 0;
-        let sinContestar = 0;
+        qDiv.appendChild(explicacionDiv);
+        container.appendChild(qDiv);
+    });
+}
 
-        testData.forEach((q, qIndex) => {
-            const form = document.getElementById(`form-${currentTest}-${qIndex}`);
-            const radios = form.querySelectorAll('input[type="radio"]');
-            
-            let respondida = false;
-            let respuestaUsuario = -1;
+function corregirTest() {
+    if (currentTest === -1) return;
+    
+    const testData = examenesBruto[currentTest];
+    let aciertos = 0;
+    let errores = 0;
+    let sinContestar = 0;
 
-            radios.forEach(radio => {
-                radio.disabled = true; // Bloquear cambios
-                if (radio.checked) {
-                    respondida = true;
-                    respuestaUsuario = parseInt(radio.value);
-                }
-            });
+    testData.forEach((q, qIndex) => {
+        const form = document.getElementById(`form-${currentTest}-${qIndex}`);
+        const radios = form.querySelectorAll('input[type="radio"]');
+        
+        let respondida = false;
+        let respuestaUsuario = -1;
 
-            // Resaltar respuesta correcta siempre
-            const labelCorrecta = document.getElementById(`label-${currentTest}-${qIndex}-${q.respuesta_correcta}`);
-            labelCorrecta.classList.add('correcta');
-
-            const explDiv = document.getElementById(`expl-${currentTest}-${qIndex}`);
-
-            if (!respondida) {
-                sinContestar++;
-                explDiv.style.display = "block"; // Mostrar por no haber contestado
-            } else if (respuestaUsuario === q.respuesta_correcta) {
-                aciertos++;
-            } else {
-                errores++;
-                const labelIncorrecta = document.getElementById(`label-${currentTest}-${qIndex}-${respuestaUsuario}`);
-                labelIncorrecta.classList.add('erronea');
-                explDiv.style.display = "block"; // Mostrar explicación al fallar
+        radios.forEach(radio => {
+            radio.disabled = true;
+            if (radio.checked) {
+                respondida = true;
+                respuestaUsuario = parseInt(radio.value);
             }
         });
 
-        // Mostrar puntuaciones
-        const scoreText = `Aciertos: ${aciertos} | Errores: ${errores} | En blanco: ${sinContestar} <br> Puntuación final: ${((aciertos/20)*10).toFixed(2)} / 10`;
-        const scoreTop = document.getElementById('score-top');
-        const scoreBottom = document.getElementById('score-bottom');
-        
-        scoreTop.innerHTML = scoreText;
-        scoreBottom.innerHTML = scoreText;
-        scoreTop.style.display = "block";
-        scoreBottom.style.display = "block";
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+        const labelCorrecta = document.getElementById(`label-${currentTest}-${qIndex}-${q.c}`);
+        if(labelCorrecta) labelCorrecta.classList.add('correcta');
 
-    // --- REINICIAR TEST ---
-    function reiniciarTest() {
-        if (currentTest === -1) return;
-        renderTest(currentTest); // Re-renderizar limpia todo (clases, checks, disabled)
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+        const explDiv = document.getElementById(`expl-${currentTest}-${qIndex}`);
+
+        if (!respondida) {
+            sinContestar++;
+            if(explDiv) explDiv.style.display = "block";
+        } else if (respuestaUsuario === q.c) {
+            aciertos++;
+        } else {
+            errores++;
+            const labelIncorrecta = document.getElementById(`label-${currentTest}-${qIndex}-${respuestaUsuario}`);
+            if(labelIncorrecta) labelIncorrecta.classList.add('erronea');
+            if(explDiv) explDiv.style.display = "block";
+        }
+    });
+
+    const nota = ((aciertos / 20) * 10).toFixed(2);
+    const scoreText = `📊 Resultado Final: ${aciertos} Aciertos | ${errores} Errores | ${sinContestar} En blanco <br> Nota: ${nota} / 10`;
+    
+    const scoreTop = document.getElementById('score-top');
+    const scoreBottom = document.getElementById('score-bottom');
+    
+    scoreTop.innerHTML = scoreText;
+    scoreBottom.innerHTML = scoreText;
+    scoreTop.style.display = "block";
+    scoreBottom.style.display = "block";
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reiniciarTest() {
+    if (currentTest === -1) return;
+    renderTest(currentTest);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
 </body>
