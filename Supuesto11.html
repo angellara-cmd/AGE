@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supuesto Práctico Nº 11 - AGE</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --border: #e5e7eb;
+            
+            --correct-bg: #d1fae5;
+            --correct-border: #10b981;
+            --correct-text: #065f46;
+            
+            --incorrect-bg: #fee2e2;
+            --incorrect-border: #ef4444;
+            --incorrect-text: #991b1b;
+            
+            --missed-bg: #dbeafe;
+            --missed-border: #3b82f6;
+            --missed-text: #1e40af;
+            
+            --exp-bg: #fef9c3;
+            --exp-border: #eab308;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 120px; /* Space for sticky footer */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .context-card {
+            background-color: var(--bg-card);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border-left: 4px solid var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #fafafa;
+        }
+
+        .option-label:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-label input[type="radio"] {
+            margin-top: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        /* Grading States */
+        .option-label.correct-user {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
+        }
+
+        .option-label.incorrect-user {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: var(--incorrect-text);
+        }
+
+        .option-label.correct-missed {
+            background-color: var(--missed-bg);
+            border-color: var(--missed-border);
+            color: var(--missed-text);
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background-color: var(--exp-bg);
+            border-left: 4px solid var(--exp-border);
+            border-radius: 0 4px 4px 0;
+            font-size: 0.9rem;
+            color: #854d0e;
+        }
+
+        .card.graded .explanation {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Floating Panel */
+        .controls-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .results {
+            display: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            gap: 15px;
+        }
+        
+        .res-aciertos { color: var(--correct-border); }
+        .res-errores { color: var(--incorrect-border); }
+        .res-blanco { color: var(--text-muted); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .controls-panel {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+            .results {
+                flex-direction: column;
+                gap: 5px;
+                text-align: center;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Supuesto Práctico Nº 11</h1>
+        <p>Preparación AGE - Subgrupo C1</p>
+    </header>
+
+    <div class="context-card">
+        <strong>ENUNCIADOS:</strong><br><br>
+        El funcionario, Luis Gómez, es destinado a la Subdirección General de Gestión Económica del Ministerio de Hacienda.<br><br>
+        En dicha Subdirección General se tramita un procedimiento de subvenciones a particulares, destinadas a la formación en el manejo de herramientas informáticas con objeto de evitar el nuevo fenómeno de la "infoexclusión". Dicho procedimiento, de acuerdo con la previsto en la Ley General de Subvenciones, se rige en lo que aquí interesa, por la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas. La publicación en el Boletín Oficial del Estado de la convocatoria de estas ayudas se produjo el 1 de abril de 2025 y el plazo establecido para dictar y notificar la resolución del procedimiento es de seis meses.<br><br>
+        Al funcionario Luis Gómez se le encarga la tramitación de una serie de expedientes de solicitudes de estas ayudas. También ha de resolver algunas consultas que plantean los ciudadanos en relación con dicho procedimiento.<br><br>
+        Del examen de algunas de las solicitudes de subvención presentadas, se deduce que adolecen de datos aportados sobre el destino que se pretende dar a las subvenciones, caso de que fueran concedidas.<br><br>
+        Durante la tramitación del procedimiento de la concesión de la subvención, se requiere un informe de los servicios jurídicos, para resolver una duda de naturaleza tributaria. Este informe no se encuentra previsto en ninguna norma aplicable a dicho procedimiento.<br><br>
+        También ha de realizar el trámite de audiencia que está previsto en la normativa aplicable a estas subvenciones.<br><br>
+        El funcionario, por último, ha de preparar los borradores de las resoluciones de las solicitudes que ha tramitado.<br><br>
+        Por otra parte, se han adquirido dos ordenadores para la Subdirección General y el funcionario ha de realizar ciertas actuaciones en relación con el contrato de adquisición de los mismos.
+    </div>
+
+    <form id="quiz-form">
+        <!-- Pregunta 1 -->
+        <div class="card question" data-correct="a">
+            <p class="question-text">1. Las solicitudes de subvención a que hace referencia el enunciado podrán presentarse:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q1" value="a"> a) En el Registro Electrónico General de la Administración General del Estado.</label>
+                <label class="option-label"><input type="radio" name="q1" value="b"> b) Solo en los registros de aquellos órganos administrativos que pertenezcan a la Administración General del Estado.</label>
+                <label class="option-label"><input type="radio" name="q1" value="c"> c) En cualquier oficina o lugar de trabajo de una Administración Pública.</label>
+                <label class="option-label"><input type="radio" name="q1" value="d"> d) Solo en los registros electrónicos que pertenezcan a la Administración General del Estado o a las Comunidades Autónomas.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Según el art. 16.4 de la Ley 39/2015, los documentos que los interesados dirijan a los órganos de las Administraciones Públicas podrán presentarse en el registro electrónico de la Administración u Organismo al que se dirijan, así como en los restantes registros electrónicos de cualquiera de los sujetos a los que se refiere el art. 2.1 (lo que incluye el Registro Electrónico General de la AGE).
+            </div>
+        </div>
+
+        <!-- Pregunta 2 -->
+        <div class="card question" data-correct="c">
+            <p class="question-text">2. Un particular presenta la solicitud de subvención una vez finalizado el plazo establecido en la convocatoria. La Administración debe:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q2" value="a"> a) Requerirle para que manifieste las causas por las cuales no ha presentado la solicitud en plazo.</label>
+                <label class="option-label"><input type="radio" name="q2" value="b"> b) Admitir a trámite la solicitud, si el tiempo transcurrido desde la finalización del plazo es inferior a un tercio de la duración del plazo fijado en la resolución.</label>
+                <label class="option-label"><input type="radio" name="q2" value="c"> c) Inadmitir la solicitud, ya que los términos y plazos obligan a las autoridades y personal al servicio de las Administraciones Públicas, así como a los interesados.</label>
+                <label class="option-label"><input type="radio" name="q2" value="d"> d) Ninguna es correcta.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Conforme al art. 29 de la Ley 39/2015, los términos y plazos establecidos en esta u otras leyes obligan a las autoridades y personal al servicio de las Administraciones Públicas competentes para la tramitación de los asuntos, así como a los interesados en los mismos. Al presentarse fuera de plazo la solicitud de iniciación de un procedimiento de concurrencia, procede su inadmisión por extemporánea.
+            </div>
+        </div>
+
+        <!-- Pregunta 3 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">3. Del examen de algunas de las solicitudes de subvención presentadas, resulta que en algunas de las mismas no se aporta información acerca del destino que se pretende dar a las subvenciones, caso de que fueran concedidas. Respecto de estas solicitudes, se deberá proceder del siguiente modo:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q3" value="a"> a) Se considerará que el interesado ha desistido de su solicitud.</label>
+                <label class="option-label"><input type="radio" name="q3" value="b"> b) Se requerirá a los interesados para que en el plazo de diez días subsanen la deficiencia y aporten los datos requeridos.</label>
+                <label class="option-label"><input type="radio" name="q3" value="c"> c) Se levantará acta sucinta de lo sucedido y se procederá a la desestimación de la solicitud.</label>
+                <label class="option-label"><input type="radio" name="q3" value="d"> d) Se considerará que el interesado ha renunciado a su derecho.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Según el art. 68.1 de la Ley 39/2015, si la solicitud de iniciación no reúne los requisitos, se requerirá al interesado para que, en un plazo de diez días, subsane la falta o acompañe los documentos preceptivos.
+            </div>
+        </div>
+
+        <!-- Pregunta 4 -->
+        <div class="card question" data-correct="a">
+            <p class="question-text">4. El cómputo del plazo para resolver y notificar el presente procedimiento se efectuará, según establece el artículo 30.4 de la Ley 39/2015:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q4" value="a"> a) A partir del día siguiente a la publicación de la resolución de la convocatoria en el Boletín Oficial del Estado, siendo el último día del plazo el 1 de octubre de 2025.</label>
+                <label class="option-label"><input type="radio" name="q4" value="b"> b) Desde el mismo día de la publicación de la resolución de la convocatoria en el Boletín Oficial del Estado, terminando el plazo el 1 de octubre de 2025.</label>
+                <label class="option-label"><input type="radio" name="q4" value="c"> c) Excluyendo los domingos y los declarados festivos en la sede del órgano administrativo que ha de resolver el procedimiento.</label>
+                <label class="option-label"><input type="radio" name="q4" value="d"> d) Desde el mismo día de la publicación de la resolución de la convocatoria en el Boletín Oficial del Estado, terminando el plazo el día 30 de septiembre de 2025.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 30.4 de la Ley 39/2015 estipula que los plazos fijados en meses se computan a partir del día siguiente a la publicación. Sin embargo, el plazo concluye el mismo día en que se produjo la publicación en el mes de vencimiento ("fecha a fecha"). Si se publicó el 1 de abril, el plazo finaliza el 1 de octubre.
+            </div>
+        </div>
+
+        <!-- Pregunta 5 -->
+        <div class="card question" data-correct="a">
+            <p class="question-text">5. En el procedimiento de tramitación de las solicitudes de subvenciones está previsto conceder un trámite de audiencia, que habrá de realizarse:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q5" value="a"> a) Instruido el procedimiento e inmediatamente antes de redactar la propuesta de resolución.</label>
+                <label class="option-label"><input type="radio" name="q5" value="b"> b) No es necesario realizar el trámite de audiencia, ya que es un trámite facultativo para la Administración.</label>
+                <label class="option-label"><input type="radio" name="q5" value="c"> c) Una vez dictada la resolución desestimatoria de la solicitud.</label>
+                <label class="option-label"><input type="radio" name="q5" value="d"> d) Una vez dictada la resolución, estimatoria o desestimatoria de la solicitud.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Tal y como establece el art. 82.1 de la Ley 39/2015: "Instruidos los procedimientos, e inmediatamente antes de redactar la propuesta de resolución, se pondrán de manifiesto a los interesados...".
+            </div>
+        </div>
+
+        <!-- Pregunta 6 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">6. El informe solicitado a los servicios jurídicos con objeto de resolver la duda tributaria que se plantea:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q6" value="a"> a) Tiene carácter preceptivo y vinculante.</label>
+                <label class="option-label"><input type="radio" name="q6" value="b"> b) Es facultativo y no vinculante.</label>
+                <label class="option-label"><input type="radio" name="q6" value="c"> c) Aunque no sea preceptivo, es vinculante por la naturaleza tributaria de la consulta.</label>
+                <label class="option-label"><input type="radio" name="q6" value="d"> d) Tiene carácter facultativo y vinculante.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 80.1 de la Ley 39/2015 regula que, salvo disposición expresa en contrario, los informes serán facultativos y no vinculantes. Como el enunciado indica expresamente que "Este informe no se encuentra previsto en ninguna norma aplicable a dicho procedimiento", adquiere la regla general.
+            </div>
+        </div>
+
+        <!-- Pregunta 7 -->
+        <div class="card question" data-correct="c">
+            <p class="question-text">7. El plazo para evacuar dicho informe, según la Ley 39/2015, es de:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q7" value="a"> a) Quince días.</label>
+                <label class="option-label"><input type="radio" name="q7" value="b"> b) Veinte días.</label>
+                <label class="option-label"><input type="radio" name="q7" value="c"> c) Diez días.</label>
+                <label class="option-label"><input type="radio" name="q7" value="d"> d) Treinta días.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Conforme al art. 80.2 de la Ley 39/2015, los informes serán evacuados en el plazo de diez días, salvo que una disposición o el cumplimiento del resto de los plazos del procedimiento exija otro plazo mayor o menor.
+            </div>
+        </div>
+
+        <!-- Pregunta 8 -->
+        <div class="card question" data-correct="a">
+            <p class="question-text">8. Una solicitud ha sido presentada por varios interesados, por lo que las actuaciones del procedimiento se efectuarán según una de las alternativas que se relacionan a continuación:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q8" value="a"> a) Con la persona que se haya señalado expresamente en la solicitud y, en su defecto, con la que figure en primer término en la solicitud.</label>
+                <label class="option-label"><input type="radio" name="q8" value="b"> b) Solo con el representante.</label>
+                <label class="option-label"><input type="radio" name="q8" value="c"> c) En todo caso, con la persona que figura en primer lugar.</label>
+                <label class="option-label"><input type="radio" name="q8" value="d"> d) Con la persona que libremente decida la Administración.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 7 de la Ley 39/2015 (Pluralidad de interesados) establece textualmente: "Cuando en una solicitud, escrito o comunicación figuren varios interesados, las actuaciones a que den lugar se efectuarán con el representante o el interesado que expresamente hayan señalado, y, en su defecto, con el que figure en primer término."
+            </div>
+        </div>
+
+        <!-- Pregunta 9 -->
+        <div class="card question" data-correct="c">
+            <p class="question-text">9. En una de las resoluciones dictadas concediendo una subvención se ha detectado un error en el cálculo de la cantidad. En este caso, el órgano que ha resuelto:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q9" value="a"> a) Debe proceder, previa declaración de lesividad e informe del Consejo de Estado a interponer demanda ante la jurisdicción contencioso-administrativa para revisar de oficio el acto.</label>
+                <label class="option-label"><input type="radio" name="q9" value="b"> b) Debe esperar a que el interesado presente un recurso contencioso-administrativo.</label>
+                <label class="option-label"><input type="radio" name="q9" value="c"> c) Podrá rectificar en cualquier momento, de oficio o a instancia del interesado, el error aritmético cometido.</label>
+                <label class="option-label"><input type="radio" name="q9" value="d"> d) Dispondrá de un plazo de diez días para rectificar el error cometido.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 109.2 de la Ley 39/2015 indica que "Las Administraciones Públicas podrán, asimismo, rectificar en cualquier momento, de oficio o a instancia de los interesados, los errores materiales, de hecho o aritméticos existentes en sus actos."
+            </div>
+        </div>
+
+        <!-- Pregunta 10 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">10. Los interesados en este procedimiento, en el trámite de audiencia, disponen para alegar y presentar documentos de un plazo:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q10" value="a"> a) No inferior a diez días ni superior a treinta.</label>
+                <label class="option-label"><input type="radio" name="q10" value="b"> b) No inferior a diez días ni superior a quince.</label>
+                <label class="option-label"><input type="radio" name="q10" value="c"> c) No inferior a diez días ni superior a veinte.</label>
+                <label class="option-label"><input type="radio" name="q10" value="d"> d) No inferior a veinte días.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Según el art. 82.2 de la Ley 39/2015, los interesados, en un plazo no inferior a diez días ni superior a quince, podrán alegar y presentar los documentos y justificaciones que estimen pertinentes.
+            </div>
+        </div>
+
+        <!-- Pregunta 11 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">11. La resolución del procedimiento de concesión de las subvenciones deberá ser:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q11" value="a"> a) Publicada en dos diarios nacionales entre los de mayor tirada.</label>
+                <label class="option-label"><input type="radio" name="q11" value="b"> b) Notificada a los interesados preferentemente por medios electrónicos y, en todo caso, cuando el interesado resulte obligado a recibirlas por esta vía.</label>
+                <label class="option-label"><input type="radio" name="q11" value="c"> c) Notificada a los interesados, salvo que los solicitantes conformen una pluralidad indeterminada de personas, en cuyo caso se publicará en el Boletín Oficial del Estado y en el de la Comunidad Autónoma correspondiente.</label>
+                <label class="option-label"><input type="radio" name="q11" value="d"> d) Notificada a los interesados o publicada en el Boletín Oficial del Estado, según decida la Administración.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> De acuerdo con el art. 41.1 de la Ley 39/2015, las notificaciones se practicarán preferentemente por medios electrónicos y, en todo caso, cuando el interesado resulte obligado a recibirlas por esta vía.
+            </div>
+        </div>
+
+        <!-- Pregunta 12 -->
+        <div class="card question" data-correct="c">
+            <p class="question-text">12. Contra las resoluciones del procedimiento de otorgamiento de las subvenciones, cuya competencia corresponde al Ministro, podrá interponerse:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q12" value="a"> a) Recurso de revisión, en el plazo de un mes desde que se hubiera dictado la resolución.</label>
+                <label class="option-label"><input type="radio" name="q12" value="b"> b) Declaración de lesividad, para el interés del solicitante, expresando los motivos que justifican su interposición.</label>
+                <label class="option-label"><input type="radio" name="q12" value="c"> c) Recurso potestativo de reposición.</label>
+                <label class="option-label"><input type="radio" name="q12" value="d"> d) Recurso de alzada.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Según el art. 114.1.a) de la Ley 39/2015, los actos de los Ministros ponen fin a la vía administrativa. Contra estos actos, conforme al art. 123.1, podrá interponerse potestativamente recurso de reposición ante el mismo órgano que los hubiera dictado o ser impugnados directamente ante el orden jurisdiccional contencioso-administrativo.
+            </div>
+        </div>
+
+        <!-- Pregunta 13 -->
+        <div class="card question" data-correct="a">
+            <p class="question-text">13. El plazo para interponer el mencionado recurso es de:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q13" value="a"> a) Un mes.</label>
+                <label class="option-label"><input type="radio" name="q13" value="b"> b) Dos meses.</label>
+                <label class="option-label"><input type="radio" name="q13" value="c"> c) Seis meses.</label>
+                <label class="option-label"><input type="radio" name="q13" value="d"> d) Tres meses.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 124.1 de la Ley 39/2015 establece que el plazo para la interposición del recurso de reposición será de un mes, si el acto fuera expreso.
+            </div>
+        </div>
+
+        <!-- Pregunta 14 -->
+        <div class="card question" data-correct="d">
+            <p class="question-text">14. El plazo para resolver y notificar la resolución del mencionado recurso es de:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q14" value="a"> a) Dos meses.</label>
+                <label class="option-label"><input type="radio" name="q14" value="b"> b) Seis meses.</label>
+                <label class="option-label"><input type="radio" name="q14" value="c"> c) Tres meses.</label>
+                <label class="option-label"><input type="radio" name="q14" value="d"> d) Un mes.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 124.2 de la Ley 39/2015 dictamina que el plazo máximo para dictar y notificar la resolución del recurso de reposición será de un mes.
+            </div>
+        </div>
+
+        <!-- Pregunta 15 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">15. El órgano de contratación para la adquisición de los dos ordenadores que van a ir destinados a la Subdirección General es:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q15" value="a"> a) El Subdirector General.</label>
+                <label class="option-label"><input type="radio" name="q15" value="b"> b) El Ministro o el Secretario de Estado.</label>
+                <label class="option-label"><input type="radio" name="q15" value="c"> c) El Consejo de Ministros.</label>
+                <label class="option-label"><input type="radio" name="q15" value="d"> d) El órgano del que dependa el Subdirector General.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 323.1 de la Ley 9/2017, de Contratos del Sector Público (LCSP) establece que, en la Administración General del Estado, los Ministros y los Secretarios de Estado son los órganos de contratación, facultados para celebrar en su nombre los contratos en el ámbito de su competencia.
+            </div>
+        </div>
+
+        <!-- Pregunta 16 -->
+        <div class="card question" data-correct="a">
+            <p class="question-text">16. El contrato de adquisición de ordenadores es calificable como:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q16" value="a"> a) Contrato de suministro.</label>
+                <label class="option-label"><input type="radio" name="q16" value="b"> b) Contrato de servicios.</label>
+                <label class="option-label"><input type="radio" name="q16" value="c"> c) Contrato de gestión de servicio público.</label>
+                <label class="option-label"><input type="radio" name="q16" value="d"> d) Contrato de concesión de servicios.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 16 de la Ley 9/2017 (LCSP) califica como contratos de suministro los que tienen por objeto la adquisición, arrendamiento financiero o el arrendamiento de productos o bienes muebles (como equipos y ordenadores).
+            </div>
+        </div>
+
+        <!-- Pregunta 17 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">17. El contrato de adquisición de ordenadores tendrá una duración máxima de:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q17" value="a"> a) Diez años, incluidas las prórrogas.</label>
+                <label class="option-label"><input type="radio" name="q17" value="b"> b) Cinco años, incluidas las prórrogas.</label>
+                <label class="option-label"><input type="radio" name="q17" value="c"> c) Cuatro años, sin posibilidad de prórrogas.</label>
+                <label class="option-label"><input type="radio" name="q17" value="d"> d) Diez años, sin posibilidad de prórrogas.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 29.4 de la LCSP (Ley 9/2017) estipula que los contratos de suministros y de servicios de prestación sucesiva tendrán un plazo máximo de duración de cinco años, incluyendo las posibles prórrogas que acuerde el órgano de contratación.
+            </div>
+        </div>
+
+        <!-- Pregunta 18 -->
+        <div class="card question" data-correct="b">
+            <p class="question-text">18. La jurisdicción competente para resolver las cuestiones litigiosas relativas a la preparación y adjudicación de este contrato es:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q18" value="a"> a) La civil.</label>
+                <label class="option-label"><input type="radio" name="q18" value="b"> b) La contencioso-administrativa.</label>
+                <label class="option-label"><input type="radio" name="q18" value="c"> c) La laboral.</label>
+                <label class="option-label"><input type="radio" name="q18" value="d"> d) La civil o la contencioso-administrativa, según decida el contratista.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Según el art. 27 de la LCSP, el orden jurisdiccional contencioso-administrativo será el competente para resolver las cuestiones litigiosas relativas a la preparación, adjudicación, efectos, modificación y extinción de los contratos administrativos.
+            </div>
+        </div>
+
+        <!-- Pregunta 19 -->
+        <div class="card question" data-correct="d">
+            <p class="question-text">19. El contrato de adquisición de ordenadores estará sujeto a regulación armonizada, cuando el valor estimado sea igual o superior a:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q19" value="a"> a) 221.000 euros.</label>
+                <label class="option-label"><input type="radio" name="q19" value="b"> b) 750.000 euros.</label>
+                <label class="option-label"><input type="radio" name="q19" value="c"> c) 216.000 euros.</label>
+                <label class="option-label"><input type="radio" name="q19" value="d"> d) 140.000 euros.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> Conforme al art. 21.1.a) de la LCSP, para los contratos de suministro y de servicios adjudicados por la Administración General del Estado (AGE), sujetos a regulación armonizada, el umbral base era de 140.000 euros (según las opciones históricas del test oficial, vinculadas a la revisión de umbrales europeos vigente en su redacción).
+            </div>
+        </div>
+
+        <!-- Pregunta 20 -->
+        <div class="card question" data-correct="c">
+            <p class="question-text">20. Indique cuál de los siguientes derechos corresponde a los interesados, según la Ley 39/2015:</p>
+            <div class="options-group">
+                <label class="option-label"><input type="radio" name="q20" value="a"> a) A conocer, en cualquier momento, el estado de la tramitación de los procedimientos en los que no tengan la condición de interesados; el sentido del silencio administrativo que corresponda, en caso de que la Administración no dicte ni notifique resolución expresa en plazo; el órgano competente para su instrucción, en su caso, y resolución; y los actos de trámite dictados. Asimismo, también tendrán derecho a acceder y a obtener copia de los documentos contenidos en los citados procedimientos.</label>
+                <label class="option-label"><input type="radio" name="q20" value="b"> b) A presentar documentos originales salvo que, de manera excepcional, la normativa reguladora aplicable establezca lo contrario.</label>
+                <label class="option-label"><input type="radio" name="q20" value="c"> c) A formular alegaciones, utilizar los medios de defensa admitidos por el ordenamiento jurídico, y a aportar documentos en cualquier fase del procedimiento anterior al trámite de audiencia, que deberán ser tenidos en cuenta por el órgano competente al redactar la propuesta de resolución.</label>
+                <label class="option-label"><input type="radio" name="q20" value="d"> d) Todas son correctas.</label>
+            </div>
+            <div class="explanation">
+                <strong>Justificación Normativa:</strong> El art. 53.1.e) de la Ley 39/2015 reconoce expresamente este derecho del interesado: "A formular alegaciones, utilizar los medios de defensa admitidos por el ordenamiento jurídico, y a aportar documentos en cualquier fase del procedimiento anterior al trámite de audiencia, que deberán ser tenidos en cuenta por el órgano competente al redactar la propuesta de resolución". La "a" es falsa (solo si son interesados tienen ese alcance) y la "b" es falsa (la regla general es no presentar originales).
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="controls-panel">
+    <button class="btn btn-primary" onclick="corregirTest()">Corregir Test</button>
+    <button class="btn btn-secondary" onclick="reiniciarTest()">Reiniciar Test</button>
+    
+    <div class="results" id="resultados-panel">
+        <span class="res-aciertos">✅ Aciertos: <span id="count-correct">0</span></span>
+        <span class="res-errores">❌ Errores: <span id="count-incorrect">0</span></span>
+        <span class="res-blanco">⚪ En blanco: <span id="count-blank">0</span></span>
+    </div>
+</div>
+
+<script>
+    function corregirTest() {
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let blankCount = 0;
+
+        const questions = document.querySelectorAll('.question');
+        
+        questions.forEach((question) => {
+            // Eliminar clases previas y marcar la pregunta como evaluada
+            question.classList.add('graded');
+            const labels = question.querySelectorAll('.option-label');
+            labels.forEach(label => {
+                label.classList.remove('correct-user', 'incorrect-user', 'correct-missed');
+            });
+
+            const correctAnswer = question.getAttribute('data-correct');
+            const checkedRadio = question.querySelector('input[type="radio"]:checked');
+
+            if (checkedRadio) {
+                const userAnswer = checkedRadio.value;
+                const userLabel = checkedRadio.closest('.option-label');
+
+                if (userAnswer === correctAnswer) {
+                    // El usuario acertó
+                    userLabel.classList.add('correct-user');
+                    correctCount++;
+                } else {
+                    // El usuario falló
+                    userLabel.classList.add('incorrect-user');
+                    incorrectCount++;
+                    // Mostrar cuál era la correcta
+                    const correctLabel = question.querySelector(`input[value="${correctAnswer}"]`).closest('.option-label');
+                    correctLabel.classList.add('correct-missed');
+                }
+            } else {
+                // En blanco
+                blankCount++;
+                // Mostrar cuál era la correcta
+                const correctLabel = question.querySelector(`input[value="${correctAnswer}"]`).closest('.option-label');
+                correctLabel.classList.add('correct-missed');
+            }
+        });
+
+        // Actualizar panel de resultados
+        document.getElementById('count-correct').innerText = correctCount;
+        document.getElementById('count-incorrect').innerText = incorrectCount;
+        document.getElementById('count-blank').innerText = blankCount;
+        
+        document.getElementById('resultados-panel').style.display = 'flex';
+        
+        // Hacer pequeño scroll suave para mostrar primer error o mantener flujo
+        window.scrollBy({ top: -1, behavior: 'smooth' }); 
+    }
+
+    function reiniciarTest() {
+        const questions = document.querySelectorAll('.question');
+        
+        questions.forEach((question) => {
+            question.classList.remove('graded');
+            const labels = question.querySelectorAll('.option-label');
+            labels.forEach(label => {
+                label.classList.remove('correct-user', 'incorrect-user', 'correct-missed');
+                const radio = label.querySelector('input[type="radio"]');
+                if (radio) radio.checked = false;
+            });
+        });
+
+        document.getElementById('resultados-panel').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

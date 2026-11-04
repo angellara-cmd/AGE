@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Interactivo AGE - Supuesto Práctico nº 15</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #e2e8f0;
+      
+      /* Retroalimentación */
+      --success-bg: #d1fae5;
+      --success-border: #10b981;
+      --success-text: #065f46;
+      
+      --danger-bg: #fee2e2;
+      --danger-border: #ef4444;
+      --danger-text: #991b1b;
+      
+      --info-bg: #dbeafe;
+      --info-border: #3b82f6;
+      --info-text: #1e40af;
+
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 100px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+
+    /* Caso práctico banner */
+    .case-card {
+      background-color: var(--card-bg);
+      border-left: 5px solid var(--primary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .case-card h2 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .case-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Panel de Resultados */
+    .results-panel {
+      display: none;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .results-panel h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      color: var(--text-main);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .stat-card {
+      padding: 1rem;
+      border-radius: 8px;
+      background: var(--bg-color);
+    }
+
+    .stat-card.correct { background: var(--success-bg); color: var(--success-text); }
+    .stat-card.incorrect { background: var(--danger-bg); color: var(--danger-text); }
+    .stat-card.blank { background: var(--info-bg); color: var(--info-text); }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    /* Tarjetas de preguntas */
+    .question-card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      transition: border-color 0.2s ease;
+    }
+
+    .question-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .options-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: #fff;
+    }
+
+    .option-item:hover {
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .option-item input[type="radio"] {
+      margin-top: 0.25rem;
+      margin-right: 0.75rem;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .option-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      flex: 1;
+    }
+
+    /* Estados de corrección visual */
+    .option-item.selected-correct {
+      background-color: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+      color: var(--success-text) !important;
+      font-weight: 600;
+    }
+
+    .option-item.selected-incorrect {
+      background-color: var(--danger-bg) !important;
+      border-color: var(--danger-border) !important;
+      color: var(--danger-text) !important;
+    }
+
+    .option-item.should-be-correct {
+      background-color: var(--info-bg) !important;
+      border-color: var(--info-border) !important;
+      color: var(--info-text) !important;
+      font-weight: 600;
+    }
+
+    /* Bloque de Explicación */
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f0fdf4;
+      border-left: 4px solid var(--success-border);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      color: #166534;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    .explanation strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: #14532d;
+    }
+
+    /* Botones de acción flotantes */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border-color);
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+
+    .btn {
+      padding: 0.75rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 1.4rem; }
+      .container { padding: 1rem 0.5rem; }
+      .question-card { padding: 1rem; }
+      .btn { width: 100%; justify-content: center; }
+      .action-bar { flex-direction: column; padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Oposiciones AGE - Subgrupo C1</h1>
+    <p>Test Autoevaluable: Supuesto Práctico Nº 15</p>
+  </header>
+
+  <main class="container">
+    
+    <!-- Cuadro del Caso Práctico -->
+    <section class="case-card">
+      <h2>📋 Supuesto Práctico Nº 15</h2>
+      <p>Carmen Flores presenta una solicitud de iniciación de un procedimiento administrativo que no reúne los requisitos establecidos en el art. 66 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas.</p>
+      <p>Durante la tramitación del procedimiento, el instructor del expediente decide la acumulación del de Carmen Flores con otro expediente similar.</p>
+      <p><em>En relación con el supuesto se formulan las siguientes cuestiones:</em></p>
+    </section>
+
+    <!-- Panel de Resultados -->
+    <section id="results-panel" class="results-panel">
+      <h2>Resultados de la Evaluación</h2>
+      <div class="stats-grid">
+        <div class="stat-card correct">
+          <div class="stat-number" id="score-correct">0</div>
+          <div class="stat-label">Aciertos</div>
+        </div>
+        <div class="stat-card incorrect">
+          <div class="stat-number" id="score-incorrect">0</div>
+          <div class="stat-label">Errores</div>
+        </div>
+        <div class="stat-card blank">
+          <div class="stat-number" id="score-blank">0</div>
+          <div class="stat-label">En Blanco</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contenedor Dinámico de Preguntas -->
+    <form id="quiz-form">
+      <div id="questions-container"></div>
+    </form>
+
+  </main>
+
+  <!-- Barra Flotante de Acciones -->
+  <div class="action-bar">
+    <button type="button" class="btn btn-primary" onclick="corregirTest()">✓ Corregir Test</button>
+    <button type="button" class="btn btn-secondary" onclick="reiniciarTest()">↻ Reiniciar Test</button>
+  </div>
+
+  <script>
+    // Datos completos extraídos fielmente de los PDF proporcionados
+    const quizData = [
+      {
+        id: 1,
+        question: "1. Ante la falta de los requisitos citados de la solicitud de Carmen Flores la Administración procederá:",
+        options: {
+          a: "A requerir a la interesada para que, en un plazo de cinco días, subsane la falta o acompañe los documentos preceptivos, con indicación de que, si así no lo hiciera, se le tendrá por desistido de su petición, previa resolución que deberá ser dictada en los términos previstos en el art 21.",
+          b: "Al archivo del expediente sin más trámite, si el requisito que falta es subsanable.",
+          c: "A tener a la interesada por desistida de su petición, sin necesidad de resolución expresa, siempre que no se trate de procedimientos selectivos o de concurrencia competitiva.",
+          d: "A requerir a la interesada para que subsane la falta o acompañe los documentos preceptivos."
+        },
+        correct: "d",
+        justification: "Art. 68.1 de la Ley 39/2015: Si la solicitud de iniciación no reúne los requisitos que señala el artículo 66 [...], se requerirá al interesado para que, en un plazo de diez días, subsane la falta o acompañe los documentos preceptivos. La opción d) recoge la obligación legal del órgano administrativo de emitir el requerimiento de subsanación."
+      },
+      {
+        id: 2,
+        question: "2. Ante la situación expuesta, si la Administración actúa en la forma establecida en la Ley 39/2015 y la interesada no realiza actuación alguna:",
+        options: {
+          a: "La Administración volverá a requerirle para la subsanación de la documentación.",
+          b: "La Administración dictará resolución, en los términos del art. 21 de la Ley 39/2015, teniéndole por desistida de su petición.",
+          c: "La Administración dictará resolución, en los términos del art. 20 de la Ley 39/2015, teniéndole por desistido de su petición.",
+          d: "La Administración procederá al archivo del expediente sin más trámite, de conformidad con lo establecido en el art. 20 de la Ley 39/2015."
+        },
+        correct: "b",
+        justification: "Art. 68.1 de la Ley 39/2015: Con indicación de que, si así no lo hiciera, se le tendrá por desistido de su petición, previa resolución que deberá ser dictada en los términos previstos en el artículo 21 (obligación de resolver)."
+      },
+      {
+        id: 3,
+        question: "3. La subsanación y mejora de la solicitud aplicable al presente caso se regula:",
+        options: {
+          a: "En el art. 65 de la Ley 39/2015.",
+          b: "En el art. 67 de la Ley 39/2015.",
+          c: "En el art. 68 de la Ley 39/2015.",
+          d: "En el art. 65 de la Ley 40/2015."
+        },
+        correct: "c",
+        justification: "La subsanación y mejora de la solicitud está expresamente regulada en el Artículo 68 del Capítulo I del Título IV de la Ley 39/2015, de 1 de octubre."
+      },
+      {
+        id: 4,
+        question: "4. El procedimiento previsto en la norma anterior, reguladora de la subsanación y mejora de la solicitud, se aplica:",
+        options: {
+          a: "Exclusivamente si la solicitud de iniciación no reúne los requisitos que señala el art. 66 de la Ley 39/2015.",
+          b: "Exclusivamente si la solicitud de iniciación no reúne los requisitos que señala el art. 66 de la Ley 40/2015.",
+          c: "Si la solicitud de iniciación no reúne los requisitos que señala el art. 66, y, en su caso, los que señala el art. 67, ambos de la Ley 39/2015 u otros exigidos por la legislación específica aplicable.",
+          d: "Si la solicitud de iniciación no reúne los requisitos que señala el art. 66, y, en su caso, los que señala el art. 67, ambos de la Ley 40/2015 u otros exigidos por la legislación específica aplicable."
+        },
+        correct: "c",
+        justification: "Art. 68.1 de la Ley 39/2015: Aplica cuando la solicitud no reúne los requisitos del art. 66 y, en su caso, el art. 67 (solicitudes de inicio en procedimientos de responsabilidad patrimonial) u otros exigidos por normativa específica."
+      },
+      {
+        id: 5,
+        question: "5. El plazo que la Administración debería haber concedido a la solicitante para que subsanara la solicitud:",
+        options: {
+          a: "Debería ser de 10 días.",
+          b: "Debería ser de 10 días como máximo.",
+          c: "Debería ser de 10 días, ampliables a otros 5.",
+          d: "Debería ser de 15 días."
+        },
+        correct: "a",
+        justification: "Art. 68.1 de la Ley 39/2015: Establece taxativamente un plazo general de diez días para que el interesado subsane la falta o acompañe los documentos preceptivos."
+      },
+      {
+        id: 6,
+        question: "6. El plazo que la Administración debería haber concedido a la solicitante para que subsanara la solicitud:",
+        options: {
+          a: "Podrá ser ampliado en todo tipo de procedimiento sin excepción, a petición del interesado o a iniciativa del órgano, cuando la aportación de los documentos requeridos presente dificultades especiales.",
+          b: "Podrá ser ampliado hasta 5 días, siempre que no se trate de procedimientos selectivos o de concurrencia competitiva, a petición del interesado o a iniciativa del órgano, cuando la aportación de los documentos requeridos presente dificultades especiales.",
+          c: "Podrá ser ampliado hasta 5 días, a petición del interesado o a iniciativa del órgano, cuando la aportación de los documentos requeridos presente dificultades especiales.",
+          d: "No podrá ser ampliado en ningún caso."
+        },
+        correct: "b",
+        justification: "Art. 68.2 de la Ley 39/2015: Siempre que no se trate de procedimientos selectivos o de concurrencia competitiva, este plazo podrá ser ampliado prudencialmente hasta cinco días, a petición del interesado o a iniciativa del órgano, cuando la aportación de los documentos requeridos presente dificultades especiales."
+      },
+      {
+        id: 7,
+        question: "7. Carmen Flores ignora el código de identificación del órgano al que se dirige su solicitud, ¿cómo podrá conocerlo?:",
+        options: {
+          a: "No es necesario que lo consigne en la solicitud.",
+          b: "No es necesario que lo consigne en la solicitud, ya que lo determina de oficio la Administración.",
+          c: "Puede conocerlo en la sede electrónica correspondiente.",
+          d: "Puede incluir esa demanda dentro del escrito de solicitud."
+        },
+        correct: "c",
+        justification: "Art. 66.1.f de la Ley 39/2015: Para conocer el código de identificación del órgano o unidad administrativa al que se dirige, el usuario o interesado puede consultar el catálogo en la sede electrónica de la Administración correspondiente."
+      },
+      {
+        id: 8,
+        question: "8. En el procedimiento en cuestión, la Administración ha establecido expresamente unos modelos específicos para la presentación de solicitudes, ¿está obligada Carmen Flores a utilizarlos?:",
+        options: {
+          a: "En ese caso los modelos serán de uso obligatorio por la interesada.",
+          b: "Se admitirán las solicitudes en otros formatos, siempre que tengan el mismo contenido.",
+          c: "Los modelos sólo tendrán carácter voluntario, ya que su finalidad es facilitar a los interesados sus solicitudes.",
+          d: "Ninguna es correcta."
+        },
+        correct: "a",
+        justification: "Art. 66.6 de la Ley 39/2015: Cuando la Administración disponga expresamente modelos específicos de presentación de solicitudes, estos serán de uso obligatorio por los interesados."
+      },
+      {
+        id: 9,
+        question: "9. Entre los requisitos que no reúne la solicitud de iniciación del procedimiento se encuentra el que la misma no se encuentra firmada por la interesada, ¿es necesaria la firma en el presente supuesto?:",
+        options: {
+          a: "Es necesaria en todo caso.",
+          b: "Es necesaria, aunque se trata de un requisito subsanable.",
+          c: "No es necesaria en ningún caso.",
+          d: "Es necesaria, aunque se entiende acreditada con la identificación del interesado."
+        },
+        correct: "b",
+        justification: "Art. 11.2.a) de la Ley 39/2015: Requiere firma para formular solicitudes. Sin embargo, su omisión constituye una falta subsanable conforme al Art. 68.1 de la misma norma."
+      },
+      {
+        id: 10,
+        question: "10. Si la interesada estampa en su solicitud su firma manuscrita, ¿será necesario que acredite su identidad?:",
+        options: {
+          a: "Sí, deberá también acreditar su identidad.",
+          b: "No, se entenderá ya acreditada mediante la firma.",
+          c: "No es obligatorio verificar la identidad de la interesada al tratarse de una solicitud.",
+          d: "Basta con cumplir uno de los requisitos, o la firma o la acreditación de la identidad."
+        },
+        correct: "a",
+        justification: "Art. 9 y Art. 11 de la Ley 39/2015: La identificación y la firma son trámites y conceptos jurídicos diferenciados. Salvo en sistemas electrónicos integrados, la firma manuscrita requiere la verificación o acreditación previa de la identidad del solicitante."
+      },
+      {
+        id: 11,
+        question: "11. Si la interesada utiliza uno de los sistemas de firma electrónica previstos en la Ley 39/2015, ¿será necesario que acredite su identidad?:",
+        options: {
+          a: "Las Administraciones Públicas están obligadas siempre a verificar la identidad de los interesados.",
+          b: "Sí, aunque se trate de sistemas de firma electrónica reconocida o cualificada.",
+          c: "Se entenderá ya acreditada mediante la firma.",
+          d: "Es obligatorio verificar la identidad del interesado al tratarse de una solicitud."
+        },
+        correct: "c",
+        justification: "Art. 9.1 y Art. 11.1 de la Ley 39/2015: Los sistemas de firma electrónica admitidos acreditan por sí mismos la identidad del firmante, integrando la identificación dentro del propia firma."
+      },
+      {
+        id: 12,
+        question: "12. ¿Puede la Administración recabar de la solicitante la modificación o mejora voluntaria de la solicitud?:",
+        options: {
+          a: "En ningún caso.",
+          b: "En todo caso y sin trámite especial alguno.",
+          c: "Sí en los procedimientos iniciados a solicitud de los interesados, procediendo al anuncio en el diario oficial correspondiente durante 10 días.",
+          d: "Sí en los procedimientos iniciados a solicitud de los interesados, levantándose de ello acta sucinta, que se incorporará al procedimiento."
+        },
+        correct: "d",
+        justification: "Art. 68.3 de la Ley 39/2015: En los procedimientos iniciados a solicitud de los interesados, el órgano competente podrá recabar del solicitante la modificación o mejora voluntaria de los términos de su solicitud. De ello se levantará acta sucinta, que se incorporará al procedimiento."
+      },
+      {
+        id: 13,
+        question: "13. Si la solicitante actuara en representación de una persona jurídica y presentara la solicitud presencialmente ante la Administración, en ese caso:",
+        options: {
+          a: "La Administración le requerirá para que subsane a través de su presentación electrónica y se considerará como fecha de presentación de la solicitud aquella en la que haya sido realizada la subsanación.",
+          b: "La Administración archivará el expediente sin más trámite.",
+          c: "La Administración continuará con el procedimiento al no encontrarse entre los sujetos obligados a relacionarse con la Administración a través de medios electrónicos.",
+          d: "La Administración le requerirá para que subsane a través de su presentación electrónica y se considerará como fecha de presentación de la solicitud la de presentación del documento físico."
+        },
+        correct: "a",
+        justification: "Art. 68.4 de la Ley 39/2015: Si alguno de los sujetos obligados a relacionarse electrónicamente (las personas jurídicas lo son, art. 14.2) presenta su solicitud presencialmente, la Administración le requerirá para que la subsane a través de su presentación electrónica. A estos efectos, se considerará como fecha de presentación de la solicitud aquella en la que haya sido realizada la subsanación."
+      },
+      {
+        id: 14,
+        question: "14. En el caso anterior, se considerará como fecha de presentación de la solicitud:",
+        options: {
+          a: "Aquella en la que tuvo lugar la presentación presencialmente.",
+          b: "Aquella en la que haya sido realizada la subsanación.",
+          c: "Aquella que se hubiera producido en primer lugar.",
+          d: "Nada establece la ley al respecto."
+        },
+        correct: "b",
+        justification: "Art. 68.4 de la Ley 39/2015: Dispone categóricamente que la fecha legal de presentación será aquella en la que efectivamente se realice la subsanación por medios electrónicos, perdiendo validez la fecha del trámite presencial improcedente."
+      },
+      {
+        id: 15,
+        question: "15. ¿Deberá en este caso la solicitante acreditar la representación?",
+        options: {
+          a: "Deberá acreditar la representación.",
+          b: "No deberá acreditar la representación, salvo que sea requerida para ello.",
+          c: "Se presumirá la representación.",
+          d: "Se presumirá la representación, aunque la Administración podrá requerir que la acredite."
+        },
+        correct: "a",
+        justification: "Art. 5.3 de la Ley 39/2015: Para formular solicitudes, interponer recursos, desistir de acciones o renunciar a derechos en nombre de otra persona, deberá acreditarse la representación. Solo para actos y gestiones de mero trámite se presumirá aquélla."
+      },
+      {
+        id: 16,
+        question: "16. Si la solicitante estuviera obligada a acreditar la representación, ¿cómo deberá hacerlo?:",
+        options: {
+          a: "Mediante apoderamiento apud acta efectuado por comparecencia personal o comparecencia electrónica.",
+          b: "Mediante acreditación de su inscripción en el registro electrónico de apoderamientos de la Administración Pública competente.",
+          c: "Mediante documento público cuya matriz conste en un archivo notarial.",
+          d: "Mediante cualquiera de los medios anteriores."
+        },
+        correct: "d",
+        justification: "Art. 5.4 de la Ley 39/2015: La representación podrá acreditarse mediante cualquier medio válido en Derecho que deje constancia fidedigna de su existencia. Todas las opciones enumeradas en a), b) y c) son medios legalmente contemplados."
+      },
+      {
+        id: 17,
+        question: "17. Si se tratara de representación realizada mediante apoderamiento apud acta, se entenderá acreditada:",
+        options: {
+          a: "Si se efectúa por comparecencia personal.",
+          b: "Si se efectúa por comparecencia electrónica en la correspondiente sede electrónica.",
+          c: "Mediante la acreditación de su inscripción en el registro electrónico de apoderamientos de la Administración Pública competente.",
+          d: "Todas las respuestas son correctas."
+        },
+        correct: "d",
+        justification: "Art. 5.4 de la Ley 39/2015: El apoderamiento apud acta podrá ser otorgado mediante comparecencia personal o electrónica en la sede correspondiente, o mediante inscripción en el registro de apoderamientos."
+      },
+      {
+        id: 18,
+        question: "18. Si la solicitante no acredita la representación:",
+        options: {
+          a: "Impedirá que se tenga por realizado el acto.",
+          b: "No impedirá que se tenga por realizado el acto.",
+          c: "Bajo determinadas circunstancias, no impedirá que se tenga por realizado el acto.",
+          d: "Ninguna es correcta."
+        },
+        correct: "c",
+        justification: "Art. 5.6 de la Ley 39/2015: La falta o insuficiente acreditación de la representación no impedirá que se tenga por realizado el acto de que se trate, siempre que se subsane el defecto o se aporte la acreditación dentro del plazo legal otorgado."
+      },
+      {
+        id: 19,
+        question: "19. Si la acreditación de la representación fuera insuficiente, no impedirá que se tenga por realizado el acto de que se trate:",
+        options: {
+          a: "Si se subsana el defecto dentro del plazo de 10 días que deberá conceder al efecto el órgano administrativo.",
+          b: "Lo anterior, o en un plazo superior cuando las circunstancias del caso así lo requieran.",
+          c: "Si se subsana el defecto antes de que se dicte resolución definitiva.",
+          d: "Sí impedirá que se tenga por realizado el acto de que se trate."
+        },
+        correct: "b",
+        justification: "Art. 5.6 de la Ley 39/2015: Contempla expresamente que el plazo de subsanación de 10 días podrá ser superior cuando las circunstancias del caso así lo requieran."
+      },
+      {
+        id: 20,
+        question: "20. ¿Qué recurso podrá interponer la interesada contra la resolución por la que se le requiere para la subsanación o mejora de la solicitud?:",
+        options: {
+          a: "Recurso de alzada.",
+          b: "Recurso de reposición.",
+          c: "Ninguno, al tratarse de un acto de trámite.",
+          d: "Recurso contencioso-administrativo."
+        },
+        correct: "c",
+        justification: "Art. 112.1 de la Ley 39/2015: El requerimiento de subsanación es un acto de trámite no cualificado (ya que no decide el fondo del asunto, no imposibilita la continuación ni produce indefensión), por lo que no cabe recurso independiente contra él, sin perjuicio de alegar lo conveniente para la resolución final."
+      }
+    ];
+
+    // Renderizar preguntas al cargar la página
+    function renderQuestions() {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      quizData.forEach((q) => {
+        const qCard = document.createElement('div');
+        qCard.className = 'question-card';
+        qCard.id = `q-card-${q.id}`;
+
+        let optionsHTML = '';
+        for (const key in q.options) {
+          optionsHTML += `
+            <label class="option-item" id="label-${q.id}-${key}">
+              <input type="radio" name="question-${q.id}" value="${key}">
+              <span class="option-text"><strong>${key})</strong> ${q.options[key]}</span>
+            </label>
+          `;
+        }
+
+        qCard.innerHTML = `
+          <div class="question-title">${q.question}</div>
+          <div class="options-list">${optionsHTML}</div>
+          <div class="explanation" id="explanation-${q.id}">
+            <strong>⚖️ Justificación Jurídica:</strong>
+            ${q.justification}
+          </div>
+        `;
+
+        container.appendChild(qCard);
+      });
+    }
+
+    // Corregir el Test y mostrar retroalimentación completa
+    function corregirTest() {
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let blankCount = 0;
+
+      quizData.forEach((q) => {
+        const selectedRadio = document.querySelector(`input[name="question-${q.id}"]:checked`);
+        const explanationDiv = document.getElementById(`explanation-${q.id}`);
+
+        // Ocultar previo estado
+        explanationDiv.style.display = 'block';
+
+        // Limpiar estilos previos
+        for (const key in q.options) {
+          const label = document.getElementById(`label-${q.id}-${key}`);
+          label.classList.remove('selected-correct', 'selected-incorrect', 'should-be-correct');
+        }
+
+        if (!selectedRadio) {
+          // Pregunta en blanco
+          blankCount++;
+          const correctLabel = document.getElementById(`label-${q.id}-${q.correct}`);
+          correctLabel.classList.add('should-be-correct');
+        } else {
+          const selectedValue = selectedRadio.value;
+          const selectedLabel = document.getElementById(`label-${q.id}-${selectedValue}`);
+
+          if (selectedValue === q.correct) {
+            // Respuesta correcta
+            correctCount++;
+            selectedLabel.classList.add('selected-correct');
+          } else {
+            // Respuesta incorrecta
+            incorrectCount++;
+            selectedLabel.classList.add('selected-incorrect');
+            const correctLabel = document.getElementById(`label-${q.id}-${q.correct}`);
+            correctLabel.classList.add('should-be-correct');
+          }
+        }
+      });
+
+      // Actualizar Panel de Resultados
+      document.getElementById('score-correct').innerText = correctCount;
+      document.getElementById('score-incorrect').innerText = incorrectCount;
+      document.getElementById('score-blank').innerText = blankCount;
+
+      const resultsPanel = document.getElementById('results-panel');
+      resultsPanel.style.display = 'block';
+      resultsPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Reiniciar todo el formulario
+    function reiniciarTest() {
+      document.getElementById('quiz-form').reset();
+      document.getElementById('results-panel').style.display = 'none';
+
+      quizData.forEach((q) => {
+        const explanationDiv = document.getElementById(`explanation-${q.id}`);
+        explanationDiv.style.display = 'none';
+
+        for (const key in q.options) {
+          const label = document.getElementById(`label-${q.id}-${key}`);
+          label.classList.remove('selected-correct', 'selected-incorrect', 'should-be-correct');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Inicializar al cargar
+    document.addEventListener('DOMContentLoaded', renderQuestions);
+  </script>
+</body>
+</html>

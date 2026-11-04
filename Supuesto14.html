@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Autoevaluable: Supuesto Práctico Nº 14 - AGE</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-body: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --color-correct: #dcfce7;
+            --border-correct: #22c55e;
+            --text-correct: #166534;
+            --color-incorrect: #fee2e2;
+            --border-incorrect: #ef4444;
+            --text-incorrect: #991b1b;
+            --color-missed: #e0f2fe;
+            --border-missed: #3b82f6;
+            --text-missed: #1e3a8a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            padding-bottom: 100px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+        }
+
+        .enunciado-box {
+            background: #f8fafc;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            color: #334155;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #111827;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #f9fafb;
+        }
+
+        .option-label:hover {
+            border-color: #cbd5e1;
+            background-color: #f1f5f9;
+        }
+
+        .option-label input[type="radio"] {
+            margin-top: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        /* Validation Styles */
+        .option-label.correct-user {
+            background-color: var(--color-correct);
+            border-color: var(--border-correct);
+            color: var(--text-correct);
+            font-weight: 500;
+        }
+
+        .option-label.incorrect-user {
+            background-color: var(--color-incorrect);
+            border-color: var(--border-incorrect);
+            color: var(--text-incorrect);
+            font-weight: 500;
+        }
+
+        .option-label.missed-correct {
+            background-color: var(--color-missed);
+            border-color: var(--border-missed);
+            color: var(--text-missed);
+            font-weight: 500;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0fdfa;
+            border-left: 4px solid #0d9488;
+            color: #0f766e;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .explanation strong {
+            color: #115e59;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Floating Controls */
+        .floating-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-reset {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-reset:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Results Panel */
+        #results-panel {
+            display: none;
+            justify-content: space-around;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 2px solid var(--primary);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .result-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .result-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .text-green { color: var(--border-correct); }
+        .text-red { color: var(--border-incorrect); }
+        .text-gray { color: #6b7280; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .floating-controls {
+                padding: 10px;
+                flex-direction: column;
+            }
+            body { padding-bottom: 130px; }
+            #results-panel { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>DERECHO ADMINISTRATIVO GENERAL</h1>
+            <p style="margin: 0; opacity: 0.9;">Supuesto práctico nº 14</p>
+            
+            <div class="enunciado-box">
+                El día 18 de octubre de 2025 Pedro Alonso recibe notificación del acuerdo de iniciación de procedimiento sancionador contra él, con motivo de una presunta infracción de la normativa de tráfico y circulación, adoptado el día 13 de octubre anterior. La infracción se había producido el día 3 de septiembre de 2025.<br><br>
+                Instruido el procedimiento cuya duración máxima se halla establecida en seis meses, se adopta resolución sancionadora, que no agota la vía administrativa, en fecha 16 de marzo de 2026. La resolución contiene solo el texto íntegro del acto. Se intenta notificar el día 4 de abril, pero al no encontrarse nadie en el domicilio del Sr Alonso, se procede a la notificación por medio de un anuncio en el BOE de 29 de abril de 2026.<br><br>
+                Casualmente, el Sr. Alonso lee el BOE, e interpone con fecha 25 de mayo de 2026 recurso procedente contra la resolución sancionadora. Al recurso no obtiene respuesta expresa, por lo cual decide continuar la vía impugnatoria correspondiente.
+            </div>
+        </header>
+
+        <div id="results-panel">
+            <div class="result-box">
+                <span class="result-number text-green" id="res-correctos">0</span>
+                <span>Aciertos</span>
+            </div>
+            <div class="result-box">
+                <span class="result-number text-red" id="res-incorrectos">0</span>
+                <span>Errores</span>
+            </div>
+            <div class="result-box">
+                <span class="result-number text-gray" id="res-blancos">0</span>
+                <span>En Blanco</span>
+            </div>
+        </div>
+
+        <form id="test-form">
+            <!-- P1 -->
+            <div class="question-card">
+                <div class="question-title">1. En el supuesto del enunciado, estamos en presencia de un procedimiento:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q1" value="a"> a) Declarativo.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="b" data-correct="true"> b) Iniciado de oficio.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="c"> c) Iniciado por denuncia.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="d"> d) Iniciado a solicitud del interesado.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 54 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas: "Los procedimientos de naturaleza sancionadora se iniciarán siempre de oficio por acuerdo del órgano competente...".
+                </div>
+            </div>
+
+            <!-- P2 -->
+            <div class="question-card">
+                <div class="question-title">2. ¿En qué momento podrá el Sr. Alonso recusar al instructor del procedimiento por su hipotética enemistad personal con él?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q2" value="a"> a) En cualquier momento del procedimiento anterior al trámite de audiencia.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="b" data-correct="true"> b) En cualquier momento de la tramitación del procedimiento.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="c"> c) En el plazo del correspondiente recurso.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="d"> d) En los tres días siguientes a tener conocimiento de esa circunstancia.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 24.1 de la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público: "La recusación podrá promoverse por los interesados en cualquier momento de la tramitación del procedimiento."
+                </div>
+            </div>
+
+            <!-- P3 -->
+            <div class="question-card">
+                <div class="question-title">3. Si el Sr. Alonso recusa al instructor, ¿quién resolvería sobre dicha recusación?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q3" value="a"> a) El propio instructor.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="b"> b) El Ministro, siempre.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="c" data-correct="true"> c) El superior jerárquico.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="d"> d) El Consejo de Ministros.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 24.3 de la Ley 40/2015: "En el día siguiente el recusado manifestará a su inmediato superior si se da o no en él la causa alegada... el superior resolverá en el plazo de tres días".
+                </div>
+            </div>
+
+            <!-- P4 -->
+            <div class="question-card">
+                <div class="question-title">4. ¿De qué plazo dispone el órgano competente para resolver la recusación?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q4" value="a"> a) Cinco días.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="b" data-correct="true"> b) Tres días.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="c"> c) Diez días.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="d"> d) Dos días.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 24.3 de la Ley 40/2015: "...el superior resolverá en el plazo de tres días, previos los informes y comprobaciones que considere oportunos."
+                </div>
+            </div>
+
+            <!-- P5 -->
+            <div class="question-card">
+                <div class="question-title">5. ¿Cuándo se entiende iniciado el procedimiento del enunciado?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q5" value="a" data-correct="true"> a) El 13 de octubre de 2025.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="b"> b) El 18 de octubre de 2025.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="c"> c) El 3 de septiembre de 2025.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="d"> d) Ninguna es correcta.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículos 58 y 21.4 de la Ley 39/2015. Los procedimientos de oficio se entienden iniciados en la fecha del acuerdo de iniciación (13 de octubre de 2025), independientemente de la fecha en que se notifique al interesado.
+                </div>
+            </div>
+
+            <!-- P6 -->
+            <div class="question-card">
+                <div class="question-title">6. Si se requiriera al Sr. Alonso para cumplimentar algún trámite sin especificar el plazo en que debe hacerlo:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q6" value="a"> a) Lo podría realizar en cualquier momento.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="b"> b) Debería realizarlo en 20 días a partir del siguiente al de la notificación del correspondiente acto.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="c"> c) Debería cumplimentarlo en un plazo de entre 10 y 15 días a partir del siguiente al de la notificación del correspondiente acto.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="d" data-correct="true"> d) Debería cumplimentarlo en 10 días a partir del siguiente al de la notificación del correspondiente acto.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 73.1 de la Ley 39/2015: "Los trámites que deban ser cumplimentados por los interesados deberán realizarse en el plazo de diez días a partir del siguiente al de la notificación del correspondiente acto, salvo en el caso de que en la norma correspondiente se fije plazo distinto."
+                </div>
+            </div>
+
+            <!-- P7 -->
+            <div class="question-card">
+                <div class="question-title">7. ¿Qué efecto jurídico se produciría si, expirado el plazo de seis meses, no se hubiera dictado y notificado resolución en el procedimiento del enunciado?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q7" value="a"> a) El silencio administrativo.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="b"> b) El allanamiento por la Administración.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="c" data-correct="true"> c) La caducidad del procedimiento.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="d"> d) La desestimación presunta de la pretensión.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 25.1.b) de la Ley 39/2015. En los procedimientos iniciados de oficio en los que la Administración ejercite potestades sancionadoras, el vencimiento del plazo máximo fijado sin que se haya dictado y notificado resolución expresa produce la caducidad.
+                </div>
+            </div>
+
+            <!-- P8 -->
+            <div class="question-card">
+                <div class="question-title">8. ¿Es correcta la actuación de la Administración en el intento de notificación?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q8" value="a"> a) Sí, puesto que no se pudo hallar al interesado.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="b"> b) Sí, siempre que la publicación se hubiera llevado a cabo mediante edictos en el tablón del Ayuntamiento donde el Sr. Alonso tuvo su último domicilio.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="c" data-correct="true"> c) No, ya que se debía haber intentado de nuevo por una sola vez y en una hora distinta dentro de los tres días siguientes.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="d"> d) No, debería haberse diligenciado en el expediente el intento de notificación, y haber continuado con la tramitación del procedimiento.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 42.2 de la Ley 39/2015. Si nadie se hace cargo de la notificación, se hará constar en el expediente, junto con el día y la hora en que se intentó, y se repetirá el intento por una sola vez y en una hora distinta dentro de los tres días siguientes.
+                </div>
+            </div>
+
+            <!-- P9 -->
+            <div class="question-card">
+                <div class="question-title">9. En el caso de que la notificación se hubiera logrado practicar el 4 de abril de 2026:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q9" value="a"> a) Se habría producido el silencio administrativo, porque la notificación es defectuosa.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="b" data-correct="true"> b) Se habría dictado y notificado la resolución dentro del plazo legalmente previsto.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="c"> c) Se habría producido la caducidad del procedimiento, porque la notificación es defectuosa.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="d"> d) Se habría dictado y notificado la resolución fuera del plazo legalmente previsto.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 21 de la Ley 39/2015. El plazo máximo es de seis meses. El procedimiento inició el 13 de octubre de 2025. El plazo de 6 meses finaliza el 13 de abril de 2026. Si se notifica el 4 de abril, se efectúa dentro de plazo.
+                </div>
+            </div>
+
+            <!-- P10 -->
+            <div class="question-card">
+                <div class="question-title">10. ¿Cuál es el último trámite del procedimiento cuando este se encuentra en la fase de instrucción?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q10" value="a"> a) La audiencia al interesado.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="b" data-correct="true"> b) La audiencia al interesado, si bien puede prescindirse de ella en ciertos casos.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="c"> c) Los informes.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="d"> d) Los informes, cuando tengan carácter de facultativos y/o no vinculantes.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 82 de la Ley 39/2015. La audiencia a los interesados es el trámite final de la instrucción (junto con la propuesta de resolución). El apartado 4 permite prescindir de ella cuando no figuren en el procedimiento ni sean tenidos en cuenta otros hechos ni otras alegaciones y pruebas que las aducidas por el interesado.
+                </div>
+            </div>
+
+            <!-- P11 -->
+            <div class="question-card">
+                <div class="question-title">11. ¿De qué plazo disponen los interesados para hacer alegaciones en el trámite de audiencia?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q11" value="a"> a) De 10 a 30 días.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="b"> b) De 10 a 20 días.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="c" data-correct="true"> c) De 10 a 15 días.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="d"> d) De 20 a 30 días.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 82.2 de la Ley 39/2015: "Los interesados, en un plazo no inferior a diez días ni superior a quince, podrán alegar y presentar los documentos y justificaciones que estimen pertinentes."
+                </div>
+            </div>
+
+            <!-- P12 -->
+            <div class="question-card">
+                <div class="question-title">12. El órgano instructor formulará una propuesta de resolución:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q12" value="a" data-correct="true"> a) Una vez concluida la instrucción del procedimiento.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="b"> b) Antes de concluir la instrucción del procedimiento.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="c"> c) Al iniciarse la instrucción del procedimiento.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="d"> d) Antes del trámite de audiencia.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 89.1 de la Ley 39/2015 en relación a la resolución: La propuesta de resolución se formula por el órgano instructor una vez concluida la instrucción del procedimiento sancionador (fase instructora).
+                </div>
+            </div>
+
+            <!-- P13 -->
+            <div class="question-card">
+                <div class="question-title">13. ¿De qué plazos dispone el Sr. Alonso para interponer el recurso administrativo que proceda?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q13" value="a"> a) De 15 días si lo interpone contra acto expreso y de 3 meses si lo interpone contra acto presunto.</label>
+                    <label class="option-label"><input type="radio" name="q13" value="b"> b) De 1 mes tanto si recurre un acto expreso como presunto.</label>
+                    <label class="option-label"><input type="radio" name="q13" value="c"> c) De 1 mes si lo interpone contra acto expreso y 2 meses si lo interpone contra acto presunto.</label>
+                    <label class="option-label"><input type="radio" name="q13" value="d" data-correct="true"> d) De 1 mes si lo interpone contra acto expreso y en cualquier momento si lo interpone contra acto presunto.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Al no agotar la vía administrativa, procede recurso de alzada. Según el Artículo 122.1 de la Ley 39/2015, el plazo para su interposición es de un mes si el acto fuera expreso. Si no es expreso (presunto), se podrá interponer en cualquier momento.
+                </div>
+            </div>
+
+            <!-- P14 -->
+            <div class="question-card">
+                <div class="question-title">14. ¿De qué plazo dispone la Administración para resolver el recurso interpuesto?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q14" value="a"> a) De un mes.</label>
+                    <label class="option-label"><input type="radio" name="q14" value="b"> b) De dos meses.</label>
+                    <label class="option-label"><input type="radio" name="q14" value="c" data-correct="true"> c) De tres meses.</label>
+                    <label class="option-label"><input type="radio" name="q14" value="d"> d) De quince días.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 122.2 de la Ley 39/2015: "El plazo máximo para dictar y notificar la resolución (del recurso de alzada) será de tres meses."
+                </div>
+            </div>
+
+            <!-- P15 -->
+            <div class="question-card">
+                <div class="question-title">15. ¿Quién es el órgano competente para resolver el recurso interpuesto por el Sr. Alonso?:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q15" value="a"> a) El mismo órgano que el acto recurrido.</label>
+                    <label class="option-label"><input type="radio" name="q15" value="b" data-correct="true"> b) El órgano superior jerárquico del que dictó el acto recurrido.</label>
+                    <label class="option-label"><input type="radio" name="q15" value="c"> c) El Consejo de Ministros.</label>
+                    <label class="option-label"><input type="radio" name="q15" value="d"> d) Ninguno de los anteriores.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 121.1 de la Ley 39/2015: "Las resoluciones y actos a que se refiere el artículo 112.1, cuando no pongan fin a la vía administrativa, podrán ser recurridos en alzada ante el órgano superior jerárquico del que los dictó."
+                </div>
+            </div>
+
+            <!-- P16 -->
+            <div class="question-card">
+                <div class="question-title">16. Si, pendiente la resolución del recurso administrativo interpuesto por el Sr. Alonso, cambiara la normativa de tráfico y dejara de considerar infracción los actos realizados:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q16" value="a"> a) La Administración correspondiente resolverá aplicando la disposición sancionadora vigente en el momento de producirse los hechos.</label>
+                    <label class="option-label"><input type="radio" name="q16" value="b" data-correct="true"> b) La Administración correspondiente resolverá aplicando la disposición sancionadora más favorable al presunto infractor.</label>
+                    <label class="option-label"><input type="radio" name="q16" value="c"> c) La Administración correspondiente resolverá aplicando la disposición sancionadora vigente en el momento de presentación del recurso.</label>
+                    <label class="option-label"><input type="radio" name="q16" value="d"> d) La Administración correspondiente suspenderá el procedimiento, solicitando dictamen preceptivo y no vinculante del Consejo de Estado.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 26.2 de la Ley 40/2015: "Las disposiciones sancionadoras producirán efecto retroactivo en cuanto favorezcan al presunto infractor o al infractor, tanto en lo referido a la tipificación de la infracción como a la sanción y a sus plazos de prescripción, incluso respecto de las sanciones pendientes de cumplimiento al entrar en vigor la nueva disposición."
+                </div>
+            </div>
+
+            <!-- P17 -->
+            <div class="question-card">
+                <div class="question-title">17. En caso de que el cumplimiento de la obligación prevista en la normativa correspondiera a Pedro Alonso y a su acompañante en el vehículo de forma conjunta, cada uno de ellos responderá de forma:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q17" value="a"> a) Mancomunada.</label>
+                    <label class="option-label"><input type="radio" name="q17" value="b" data-correct="true"> b) Solidaria.</label>
+                    <label class="option-label"><input type="radio" name="q17" value="c"> c) Directa respecto de su parte y subsidiaria respecto de la parte correspondiente al otro.</label>
+                    <label class="option-label"><input type="radio" name="q17" value="d"> d) Exclusivamente directa respecto de su parte.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 28.3 de la Ley 40/2015: "Cuando el cumplimiento de una obligación establecida por una norma con rango de Ley corresponda a varias personas conjuntamente, responderán de forma solidaria de las infracciones que en su caso se cometan y de las sanciones que se impongan."
+                </div>
+            </div>
+
+            <!-- P18 -->
+            <div class="question-card">
+                <div class="question-title">18. Indique el plazo de que dispone el Sr. Alonso para interponer, en su caso, el recurso contencioso-administrativo, según el artículo 46 de la Ley 29/1998:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q18" value="a"> a) Dos meses.</label>
+                    <label class="option-label"><input type="radio" name="q18" value="b"> b) Un mes.</label>
+                    <label class="option-label"><input type="radio" name="q18" value="c" data-correct="true"> c) Seis meses.</label>
+                    <label class="option-label"><input type="radio" name="q18" value="d"> d) Quince días.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 46.1 de la Ley 29/1998 (LJCA). Al estar ante un acto presunto (silencio administrativo al no haber respuesta), la literalidad de la Ley marca que "...si fuera presunto, el plazo será de seis meses". *(Nota para opositores: Pese a que jurisprudencia del TC dictaminó que en actos presuntos no hay plazo, las preguntas referidas a la literalidad de este artículo mantienen la respuesta de 6 meses en plantillas oficiales históricas).*
+                </div>
+            </div>
+
+            <!-- P19 -->
+            <div class="question-card">
+                <div class="question-title">19. Indique cómo iniciaría el Sr. Alonso el recurso contencioso-administrativo:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q19" value="a"> a) Por demanda siempre.</label>
+                    <label class="option-label"><input type="radio" name="q19" value="b"> b) Por demanda, al tratarse de un acto presunto.</label>
+                    <label class="option-label"><input type="radio" name="q19" value="c" data-correct="true"> c) Por un escrito simple de interposición.</label>
+                    <label class="option-label"><input type="radio" name="q19" value="d"> d) Ninguna es correcta.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 45.1 de la Ley 29/1998 (LJCA): "El recurso contencioso-administrativo se iniciará por un escrito reducido a citar la disposición, acto, inactividad o actuación constitutiva de vía de hecho que se impugne y a solicitar que se tenga por interpuesto el recurso..."
+                </div>
+            </div>
+
+            <!-- P20 -->
+            <div class="question-card">
+                <div class="question-title">20. Indique el plazo de que dispondrá la Administración para contestar a la demanda formulada por el Sr. Alonso en vía contencioso-administrativa:</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="q20" value="a" data-correct="true"> a) Veinte días.</label>
+                    <label class="option-label"><input type="radio" name="q20" value="b"> b) Treinta días.</label>
+                    <label class="option-label"><input type="radio" name="q20" value="c"> c) Un mes.</label>
+                    <label class="option-label"><input type="radio" name="q20" value="d"> d) Diez días.</label>
+                </div>
+                <div class="explanation">
+                    <strong>Justificación Jurídica:</strong> Artículo 54 de la Ley 29/1998 (LJCA): "Formalizada la demanda, se dará traslado de la misma... para que la contesten en el plazo de veinte días."
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="floating-controls">
+        <button class="btn-submit" onclick="corregirTest()">Corregir Test</button>
+        <button class="btn-reset" onclick="reiniciarTest()">Reiniciar Test</button>
+    </div>
+
+    <script>
+        function corregirTest() {
+            let correctos = 0;
+            let incorrectos = 0;
+            let enBlanco = 0;
+            const form = document.getElementById('test-form');
+            const questions = document.querySelectorAll('.question-card');
+
+            questions.forEach(q => {
+                const inputs = q.querySelectorAll('input[type="radio"]');
+                let answered = false;
+
+                inputs.forEach(input => {
+                    input.disabled = true; // Desactivar opciones al corregir
+                    const label = input.parentElement;
+
+                    if (input.checked) {
+                        answered = true;
+                        if (input.dataset.correct === "true") {
+                            label.classList.add('correct-user');
+                            correctos++;
+                        } else {
+                            label.classList.add('incorrect-user');
+                            incorrectos++;
+                        }
+                    }
+
+                    // Si el usuario falló o la dejó en blanco, pintar la correcta de azul
+                    if (input.dataset.correct === "true" && !input.checked) {
+                        label.classList.add('missed-correct');
+                    }
+                });
+
+                if (!answered) {
+                    enBlanco++;
+                }
+
+                // Mostrar explicación
+                const explanation = q.querySelector('.explanation');
+                if (explanation) {
+                    explanation.style.display = 'block';
+                }
+            });
+
+            // Actualizar panel de resultados
+            document.getElementById('res-correctos').innerText = correctos;
+            document.getElementById('res-incorrectos').innerText = incorrectos;
+            document.getElementById('res-blancos').innerText = enBlanco;
+            
+            const resultsPanel = document.getElementById('results-panel');
+            resultsPanel.style.display = 'flex';
+            
+            // Scrollear hacia los resultados
+            resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function reiniciarTest() {
+            const form = document.getElementById('test-form');
+            form.reset();
+            
+            const questions = document.querySelectorAll('.question-card');
+            
+            questions.forEach(q => {
+                const inputs = q.querySelectorAll('input[type="radio"]');
+                inputs.forEach(input => {
+                    input.disabled = false; // Reactivar opciones
+                    const label = input.parentElement;
+                    label.classList.remove('correct-user', 'incorrect-user', 'missed-correct');
+                });
+
+                const explanation = q.querySelector('.explanation');
+                if (explanation) {
+                    explanation.style.display = 'none';
+                }
+            });
+
+            document.getElementById('results-panel').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

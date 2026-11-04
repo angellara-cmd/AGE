@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AGE - Supuesto Práctico Nº 13</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --primary-hover: #004494;
+            --bg-color: #f4f7f6;
+            --text-main: #333333;
+            --card-bg: #ffffff;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --missed-bg: #cce5ff;
+            --missed-border: #b8daff;
+            --explanation-bg: #e9ecef;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .enunciado-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .enunciado-card h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .question-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #fff;
+        }
+
+        .option-label:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option-label input[type="radio"] {
+            margin-top: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        /* Feedback States */
+        .option-label.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            font-weight: bold;
+            color: #155724;
+        }
+
+        .option-label.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #721c24;
+            text-decoration: line-through;
+        }
+
+        .option-label.missed-correct {
+            background-color: var(--missed-bg);
+            border-color: var(--missed-border);
+            font-weight: bold;
+            color: #004085;
+        }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--explanation-bg);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Floating Controls */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 15px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-submit {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-reset {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #5a6268;
+        }
+
+        /* Results Modal */
+        #results-panel {
+            display: none;
+            background-color: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+
+        #results-panel.show {
+            display: block;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .stat-correct { color: #28a745; }
+        .stat-incorrect { color: #dc3545; }
+        .stat-blank { color: #6c757d; }
+
+        .citation {
+            font-size: 0.7em;
+            color: #888;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Supuesto Práctico Nº 13 - Administrativo del Estado (C1)</h1>
+    </header>
+
+    <div class="enunciado-card">
+        <h2>Enunciados <sup class="citation">[cite: 1]</sup></h2>
+        <p>En fecha 14 de marzo de 2025, un Director General del Ministerio de Educación, Formación Profesional y Deportes, dependiente directamente de la titular del Departamento, dicta una resolución administrativa por la que se concede, en régimen de concurrencia competitiva, una beca de investigación de 3 años por un importe de 46.000 euros, a Carmen Carrasco, que reunía todos los requisitos y condiciones establecidos en las bases de la convocatoria para su adjudicación.</p>
+        <p>La resolución administrativa, en la que se hizo constar de manera expresa la desestimación del resto de solicitudes, fue publicada en el BOE del 16 de marzo de 2025. En este supuesto el Director General actuaba ejercitando una competencia delegada por la Ministra de Educación, Formación Profesional y Deportes por Orden de 1 de febrero de 2021, sin haberse percatado de que dicha delegación había sido revocada el 15 de febrero de 2025.</p>
+        <p>Posteriormente, el 16 de mayo de 2025 la señora Carrasco presenta un escrito dirigido al Ministerio de Educación, Formación Profesional y Deportes, solicitando sea rectificado un error en la cuantía de la beca consignada en la resolución del Director General, puesto que el importe que se establecía en la convocatoria de la misma se cifraba en 49.000 euros.</p>
+        <p>Con motivo de la tramitación de la solicitud de Carmen Carrasco, la Administración advierte el vicio de incompetencia de la resolución del Director General mencionada anteriormente, por lo que el 18 de julio de 2025 inicia un expediente de declaración de lesividad de actos anulables tras el cual, previa audiencia a los interesados, decide declararla lesiva para el interés público el 18 de marzo de 2026 para, posteriormente, impugnarla ante el orden jurisdiccional contencioso-administrativo. El tribunal de instancia da traslado del escrito presentado por la Administración a Carmen Carrasco para que conteste al mismo, lo cual realiza la señora Carrasco en plazo alegando, por un lado, que la resolución administrativa no era lesiva para el interés público y podría haber sido convalidada y, por otro lado, que no había sido recabado por la Administración el dictamen del Consejo de Estado.</p>
+    </div>
+
+    <div id="results-panel">
+        <h2>Resultados del Test</h2>
+        <div class="stats">
+            <span class="stat-correct">Aciertos: <span id="count-correct">0</span></span>
+            <span class="stat-incorrect">Errores: <span id="count-incorrect">0</span></span>
+            <span class="stat-blank">En blanco: <span id="count-blank">0</span></span>
+        </div>
+    </div>
+
+    <form id="test-form">
+        <!-- Pregunta 1 -->
+        <div class="question-card" data-q="1">
+            <div class="question-title">1. De acuerdo con la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público, ¿se debió publicar la revocación de la delegación de competencias efectuada por la Ministra?: <sup class="citation">[cite: 1]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="a"> a) No, la Ley 40/2015 establece como único requisito que la competencia sea revocada por el órgano que la haya conferido.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="b"> b) Sí, en el Boletín Oficial del Estado.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="c"> c) Sí, en el Boletín Oficial de la Comunidad Autónoma en la que residía Doña Carmen Carrasco.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="d"> d) No, la Ley 40/2015 exige que sea publicada la delegación de competencias, pero no su revocación.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Según el art. 9.3 de la Ley 40/2015, "La delegación de competencias y su revocación deberán publicarse en el Boletín Oficial del Estado, en el de la Comunidad Autónoma o en el de la Provincia, según la Administración a que pertenezca el órgano delegante". Al tratarse de un Ministerio de la AGE, procede el BOE. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 2 -->
+        <div class="question-card" data-q="2">
+            <div class="question-title">2. Si en el procedimiento descrito en el enunciado, tres investigadores hubiesen optado a la misma beca que la concedida a Carmen Carrasco, ¿qué recurso podrían haber interpuesto contra la resolución administrativa de 14 de marzo de 2025, de acuerdo con la Ley 39/2015?: <sup class="citation">[cite: 2]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="a"> a) Recurso de alzada en el plazo de un mes, a contar desde el día siguiente a la publicación de la resolución.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="b"> b) Recurso potestativo de reposición en el plazo de un mes a contar desde el día siguiente a la publicación de la resolución.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="c"> c) Recurso de alzada en el plazo de un mes, a contar desde el día siguiente a la fecha en que la resolución fue dictada.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="d"> d) Recurso de reposición en el plazo de un mes, a contar desde el día siguiente a la fecha en que la resolución fue dictada.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Según el art. 9.4 de la Ley 40/2015, las resoluciones dictadas por delegación se consideran dictadas por el órgano delegante (la Ministra). Al dictarlas un Ministro, agotan la vía administrativa (art. 114.1 Ley 39/2015). Contra ellas cabe recurso potestativo de reposición. El plazo, al ser acto expreso publicado, es de 1 mes desde el día siguiente a su publicación (art. 124 Ley 39/2015). <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 3 -->
+        <div class="question-card" data-q="3">
+            <div class="question-title">3. ¿Qué órgano es el competente para resolver el recurso al que hace referencia la pregunta anterior?: <sup class="citation">[cite: 2]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="a"> a) El Consejo de Ministros.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="b"> b) El Director General que dictó la resolución recurrida.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="c"> c) El Secretario General Técnico.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="d"> d) La Ministra de Educación, Formación Profesional y Deportes.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> El recurso de reposición se interpone ante el mismo órgano que dictó el acto (art. 123 Ley 39/2015). Puesto que la resolución se considera jurídicamente dictada por el órgano delegante (art. 9.4 Ley 40/2015), la competente para resolverlo es la Ministra. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 4 -->
+        <div class="question-card" data-q="4">
+            <div class="question-title">4. De acuerdo con la Ley 39/2015, ¿podrían los tres investigadores de las dos preguntas anteriores haber presentado un único escrito de recurso?: <sup class="citation">[cite: 2]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="a"> a) No, cada interesado debería actuar de forma independiente.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="b"> b) Sí, pero solo si designasen un representante común con el que efectuar las posibles notificaciones, aunque sus pretensiones sean distintas.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="c"> c) Sí, si el contenido y fundamento de sus pretensiones fuese idéntico o sustancialmente similar.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="d"> d) No, salvo autorización expresa de la Administración.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> El artículo 66.2 de la Ley 39/2015 establece que cuando las pretensiones correspondientes a una pluralidad de personas tengan un contenido y fundamento idéntico o sustancialmente similar, podrán ser formuladas en una única solicitud, salvo que las normas reguladoras dispongan otra cosa. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 5 -->
+        <div class="question-card" data-q="5">
+            <div class="question-title">5. Conforme a la Ley 39/2015 ¿de qué plazo disponía Carmen Carrasco para solicitar la rectificación de errores de la resolución administrativa?: <sup class="citation">[cite: 2]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="a"> a) Un mes desde que la resolución fue publicada.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="b"> b) Dos meses desde que la resolución le fue publicada.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="c"> c) Tres meses desde que la resolución le fue publicada.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="d"> d) Esta solicitud no está sujeta a plazo, podrá solicitarse en cualquier momento.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> En virtud del artículo 109.2 de la Ley 39/2015, "Las Administraciones Públicas podrán, asimismo, rectificar en cualquier momento, de oficio o a instancia de los interesados, los errores materiales, de hecho o aritméticos existentes en sus actos". No hay sujeción a plazo temporal. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 6 -->
+        <div class="question-card" data-q="6">
+            <div class="question-title">6. De acuerdo con la Ley 39/2015 ¿qué vicio podría constituir el hecho de que la resolución de 14 de marzo de 2025 haya sido dictada por el Director General?: <sup class="citation">[cite: 3]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q6" value="a"> a) Nulidad de pleno derecho.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q6" value="b"> b) Anulabilidad.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q6" value="c"> c) Irregularidad no invalidante.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q6" value="d"> d) No constituye vicio alguno.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Al estar revocada la delegación, el Director General actuó con incompetencia jerárquica. Según el art. 47.1 b) Ley 39/2015, solo la incompetencia "manifiesta por razón de la materia o del territorio" produce nulidad de pleno derecho. Por descarte, la incompetencia jerárquica produce anulabilidad (infracción del ordenamiento, art. 48.1 Ley 39/2015), que además admite convalidación posterior. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 7 -->
+        <div class="question-card" data-q="7">
+            <div class="question-title">7. ¿Qué recurso puede interponer Carmen Carrasco contra la declaración de lesividad?: <sup class="citation">[cite: 3]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q7" value="a"> a) Recurso de alzada.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q7" value="b"> b) Recurso potestativo de reposición.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q7" value="c"> c) Recurso contencioso-administrativo.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q7" value="d"> d) No cabe la interposición de recurso alguno.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Art. 107.2 de la Ley 39/2015: "La declaración de lesividad no será susceptible de recurso, si bien podrá notificarse a los interesados a los meros efectos informativos." Esto se debe a que es un presupuesto procesal para que la Administración acuda a los Tribunales, no el acto definitivo que anula. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 8 -->
+        <div class="question-card" data-q="8">
+            <div class="question-title">8. En este supuesto y de acuerdo con la Ley 39/2015, ¿ha adoptado la Administración la declaración de lesividad en plazo?: <sup class="citation">[cite: 3]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q8" value="a"> a) No, puesto que la tendría que haber adoptado antes de que hubiesen transcurrido seis meses desde que se inició el procedimiento de declaración de lesividad.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q8" value="b"> b) No, puesto que la tendría que haber adoptado antes de que hubiese transcurrido un año desde que la resolución administrativa del Director General fuese publicada.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q8" value="c"> c) Sí, puesto que la declaración de lesividad puede adoptarla la Administración en cualquier momento.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q8" value="d"> d) Sí, puesto que la declaración de lesividad puede adoptarla la Administración antes de que transcurran cuatro años desde que el acto haya sido dictado.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Según el art. 107.4 de la Ley 39/2015: "Transcurrido el plazo de seis meses desde la iniciación del procedimiento sin que se hubiera declarado la lesividad se producirá la caducidad del mismo". Al iniciar el 18 de julio de 2025 y resolver el 18 de marzo de 2026 (8 meses después), excedió el plazo. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 9 -->
+        <div class="question-card" data-q="9">
+            <div class="question-title">9. La competencia para declarar la lesividad corresponde en este supuesto: <sup class="citation">[cite: 3]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q9" value="a"> a) Al Consejo de Ministros.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q9" value="b"> b) A la Ministra de Educación, Formación Profesional y Deportes.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q9" value="c"> c) Al Secretario de Estado competente.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q9" value="d"> d) Al Director General que dictó en su día la resolución.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Conforme al art. 107.3 de la Ley 39/2015, en el ámbito de la AGE, la declaración de lesividad corresponde "al titular del Ministerio competente por razón de la materia o al Consejo de Ministros...". Corresponde a la Ministra. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 10 -->
+        <div class="question-card" data-q="10">
+            <div class="question-title">10. De acuerdo con lo establecido en la Ley 29/1998, de 13 de julio, reguladora de la Jurisdicción Contencioso-Administrativa, ¿de qué plazo dispone la Administración para acudir a dicha jurisdicción en este caso?: <sup class="citation">[cite: 3]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q10" value="a"> a) Seis meses, a contar desde el día siguiente a la fecha de declaración de lesividad.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q10" value="b"> b) Cuatro meses, a contar desde el día siguiente a la fecha de declaración de lesividad.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q10" value="c"> c) Dos meses, a contar desde el día siguiente a la fecha declaración de lesividad.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q10" value="d"> d) Podrá acudir en cualquier momento.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> El artículo 46.5 de la Ley 29/1998, de la Jurisdicción Contencioso-Administrativa, establece taxativamente que el plazo para interponer el recurso de lesividad es de dos meses a contar desde el día siguiente al de la fecha de la declaración de lesividad. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 11 -->
+        <div class="question-card" data-q="11">
+            <div class="question-title">11. De acuerdo con lo establecido en la Ley 39/2015, ¿era necesario recabar el dictamen del Consejo de Estado con carácter previo a la declaración de lesividad de la resolución del Director General de 14 de marzo de 2025?: <sup class="citation">[cite: 4]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q11" value="a"> a) Sí, el dictamen del Consejo de Estado es preceptivo y vinculante.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q11" value="b"> b) Sí, el dictamen del Consejo de Estado es preceptivo pero no vinculante.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q11" value="c"> c) Sí, el dictamen del Consejo de Estado es preceptivo y además debe ser favorable.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q11" value="d"> d) No, para declarar la lesividad de un acto no se exige el dictamen previo del Consejo de Estado.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> A diferencia del procedimiento de revisión de oficio para actos nulos (art. 106 Ley 39/2015), la declaración de lesividad para actos anulables (art. 107 Ley 39/2015) es un trámite puramente administrativo que no requiere de forma preceptiva el dictamen del Consejo de Estado. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 12 -->
+        <div class="question-card" data-q="12">
+            <div class="question-title">12. Según establece el artículo 107 de la Ley 39/2015, ¿qué efectos produce la falta de declaración de lesividad en el plazo legalmente establecido?: <sup class="citation">[cite: 4]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q12" value="a"> a) Efectos desestimación.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q12" value="b"> b) Efectos estimatorios.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q12" value="c"> c) La caducidad del procedimiento.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q12" value="d"> d) No produce efecto alguno.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Art. 107.4 de la Ley 39/2015: "Transcurrido el plazo de seis meses desde la iniciación del procedimiento sin que se hubiera declarado la lesividad se producirá la caducidad del mismo." <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 13 -->
+        <div class="question-card" data-q="13">
+            <div class="question-title">13. El programa informático que utiliza el Ministerio de Educación, Formación Profesional y Deportes para la tramitación del procedimiento de concesión de becas fue adquirido a la empresa "Mi PC", que lo había desarrollado a la medida de las necesidades de ese Departamento. Indique ante qué clase de contrato nos encontramos: <sup class="citation">[cite: 4]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q13" value="a"> a) Contrato mixto.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q13" value="b"> b) Contrato de suministro.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q13" value="c"> c) Contrato de servicios.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q13" value="d"> d) Contrato de concesión de servicios.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Según el art. 16 y Anexos de la Ley 9/2017 de Contratos del Sector Público, los contratos que tienen por objeto el desarrollo de programas informáticos a medida se tipifican como contratos de servicios. Por el contrario, la adquisición de programas estándar (de mercado) se consideraría suministro. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 14 -->
+        <div class="question-card" data-q="14">
+            <div class="question-title">14. Conforme a lo previsto en el artículo 29 de la Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público, el contrato al que se hace referencia en la pregunta anterior no podrá tener un plazo de vigencia superior a: <sup class="citation">[cite: 4]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q14" value="a"> a) Diez años, incluidas las prórrogas.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q14" value="b"> b) Cinco años, incluidas las prórrogas.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q14" value="c"> c) Cuatro años, sin posibilidad de prórrogas.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q14" value="d"> d) Diez años, sin posibilidad de prórrogas.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> El artículo 29.4 de la LCSP establece: "Los contratos de suministros y de servicios de prestación sucesiva tendrán un plazo máximo de duración de cinco años, incluyendo las posibles prórrogas que en su caso se acuerden". <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 15 -->
+        <div class="question-card" data-q="15">
+            <div class="question-title">15. El recurso de lesividad se iniciará de acuerdo con la Ley 29/1998: <sup class="citation">[cite: 4]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q15" value="a"> a) Por un escrito limitado a indicar la resolución que se impugna y a solicitar que se tenga por interpuesta.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q15" value="b"> b) Por demanda.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q15" value="c"> c) Con la propia declaración de lesividad.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q15" value="d"> d) Por denuncia.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> El art. 45.4 de la Ley 29/1998 estipula de forma explícita que "El recurso de lesividad se iniciará por demanda...", lo cual supone una excepción a la norma general (que es por escrito reducido de interposición). <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 16 -->
+        <div class="question-card" data-q="16">
+            <div class="question-title">16. Conforme a lo establecido en la Ley 29/1998, ¿de qué plazo dispone el demandado para contestar a la demanda?: <sup class="citation">[cite: 5]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q16" value="a"> a) Diez días.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q16" value="b"> b) Treinta días.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q16" value="c"> c) Veinte días.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q16" value="d"> d) Quince días.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Según el artículo 54 de la Ley 29/1998, presentados los escritos de demanda, se dará traslado de los mismos, con entrega del expediente administrativo, a las partes demandadas para que contesten en el plazo de veinte días. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 17 -->
+        <div class="question-card" data-q="17">
+            <div class="question-title">17. Conforme a lo establecido en la Ley 29/1998, ¿de qué plazo disponen las partes para la práctica de las pruebas que hayan sido admitidas?: <sup class="citation">[cite: 5]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q17" value="a"> a) Diez días.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q17" value="b"> b) Treinta días.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q17" value="c"> c) Veinte días.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q17" value="d"> d) Quince días.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> El art. 60.4 de la Ley 29/1998 determina: "El plazo para practicar la prueba será de treinta días...". <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 18 -->
+        <div class="question-card" data-q="18">
+            <div class="question-title">18. Conforme a lo previsto en la Ley 39/2015, ¿podría haberse convalidado la resolución administrativa como alega la señora Carrasco?: <sup class="citation">[cite: 5]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q18" value="a"> a) Sí, podría haberse convalidado por la Ministra de Educación, Formación Profesional y Deportes.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q18" value="b"> b) Sí, podría haberse convalidado por el propio Director General que dictó la resolución administrativa.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q18" value="c"> c) Sí, podría haberse convalidado por el Consejo de Ministros.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q18" value="d"> d) No, puesto que la resolución administrativa adolece de un vicio de nulidad de pleno derecho.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Al tratarse de un vicio de incompetencia jerárquica (no determinante de nulidad), cabe la convalidación. Art. 52.2 de la Ley 39/2015: "Si el vicio consistiera en incompetencia no determinante de nulidad, la convalidación podrá ser realizada por el órgano competente cuando sea superior jerárquico del que dictó el acto viciado". En este caso, la Ministra es superior al Director General. <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 19 -->
+        <div class="question-card" data-q="19">
+            <div class="question-title">19. Cuando la Ley 39/2015 en el artículo 50 establece que, los actos nulos o anulables que, sin embargo, contengan los elementos constitutivos de otro distinto producirán los efectos de este, se está refiriendo a: <sup class="citation">[cite: 5]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q19" value="a"> a) La conservación de actos.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q19" value="b"> b) La conversión de actos.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q19" value="c"> c) La convalidación de actos.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q19" value="d"> d) La transmisibilidad de actos.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Este es el tenor literal del artículo 50 de la Ley 39/2015, cuyo propio epígrafe denomina esta figura jurídica como "Conversión de actos viciados". <sup class="citation">[cite: 6]</sup></div>
+        </div>
+
+        <!-- Pregunta 20 -->
+        <div class="question-card" data-q="20">
+            <div class="question-title">20. Si el acto administrativo a que se refiere el supuesto hubiese sido dictado por una entidad local, la declaración de lesividad, según el artículo 107 de la Ley 39/2015, se adoptará por: <sup class="citation">[cite: 5]</sup></div>
+            <ul class="options-list">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q20" value="a"> a) El Alcalde.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q20" value="b"> b) La Junta de Gobierno Local.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q20" value="c"> c) El Pleno de la Corporación.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q20" value="d"> d) La Comisión Informativa competente por razón de la materia.</label></li>
+            </ul>
+            <div class="explanation"><strong>Justificación Jurídica:</strong> Según el art. 107.3 de la Ley 39/2015: "Si el acto proviniere de las entidades de la Administración Local, la declaración de lesividad se adoptará por el Pleno de la Corporación o, en defecto de éste, por el órgano colegiado superior de la entidad". <sup class="citation">[cite: 6]</sup></div>
+        </div>
+    </form>
+</div>
+
+<div class="controls">
+    <button type="button" class="btn btn-submit" id="btn-corregir">Corregir Test</button>
+    <button type="button" class="btn btn-reset" id="btn-reiniciar">Reiniciar Test</button>
+</div>
+
+<script>
+    // Mapeo exclusivo de soluciones correctas según el PDF de soluciones
+    const soluciones = {
+        q1: 'b',
+        q2: 'b',
+        q3: 'd',
+        q4: 'c',
+        q5: 'd',
+        q6: 'b',
+        q7: 'd',
+        q8: 'a',
+        q9: 'b',
+        q10: 'c',
+        q11: 'd',
+        q12: 'c',
+        q13: 'c',
+        q14: 'b',
+        q15: 'b',
+        q16: 'c',
+        q17: 'b',
+        q18: 'a',
+        q19: 'b',
+        q20: 'c'
+    };
+
+    const btnCorregir = document.getElementById('btn-corregir');
+    const btnReiniciar = document.getElementById('btn-reiniciar');
+    const form = document.getElementById('test-form');
+    const resultsPanel = document.getElementById('results-panel');
+
+    btnCorregir.addEventListener('click', () => {
+        let correctas = 0;
+        let incorrectas = 0;
+        let blancas = 0;
+
+        const questions = document.querySelectorAll('.question-card');
+        
+        questions.forEach((card, index) => {
+            const qName = 'q' + (index + 1);
+            const selectedOption = form.querySelector(`input[name="${qName}"]:checked`);
+            const correctAnswer = soluciones[qName];
+            
+            // Mostrar la justificación jurídica
+            const explanation = card.querySelector('.explanation');
+            explanation.classList.add('show');
+
+            // Limpiar clases previas si se pulsa "Corregir" varias veces
+            const allLabels = card.querySelectorAll('.option-label');
+            allLabels.forEach(label => label.classList.remove('correct', 'incorrect', 'missed-correct'));
+
+            if (selectedOption) {
+                if (selectedOption.value === correctAnswer) {
+                    // El usuario acertó
+                    selectedOption.closest('.option-label').classList.add('correct');
+                    correctas++;
+                } else {
+                    // El usuario falló
+                    selectedOption.closest('.option-label').classList.add('incorrect');
+                    // Mostrar cuál era la correcta
+                    const correctInput = form.querySelector(`input[name="${qName}"][value="${correctAnswer}"]`);
+                    correctInput.closest('.option-label').classList.add('missed-correct');
+                    incorrectas++;
+                }
+            } else {
+                // El usuario la dejó en blanco
+                const correctInput = form.querySelector(`input[name="${qName}"][value="${correctAnswer}"]`);
+                correctInput.closest('.option-label').classList.add('missed-correct');
+                blancas++;
+            }
+        });
+
+        // Actualizar panel de resultados
+        document.getElementById('count-correct').textContent = correctas;
+        document.getElementById('count-incorrect').textContent = incorrectas;
+        document.getElementById('count-blank').textContent = blancas;
+        resultsPanel.classList.add('show');
+        
+        // Scroll hacia arriba para ver resultados
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    btnReiniciar.addEventListener('click', () => {
+        // Limpiar formulario (radios)
+        form.reset();
+        
+        // Ocultar explicaciones
+        document.querySelectorAll('.explanation').forEach(el => el.classList.remove('show'));
+        
+        // Eliminar colores y clases de feedback
+        document.querySelectorAll('.option-label').forEach(el => {
+            el.classList.remove('correct', 'incorrect', 'missed-correct');
+        });
+        
+        // Ocultar resultados
+        resultsPanel.classList.remove('show');
+        
+        // Subir arriba
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
