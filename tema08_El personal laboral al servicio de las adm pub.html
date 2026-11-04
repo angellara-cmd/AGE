@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Oposiciones AGE - Personal Laboral</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --primary: #0056b3;
+            --secondary: #6c757d;
+            --text: #212529;
+            --card-bg: #ffffff;
+            --correct-bg: #d4edda;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-text: #721c24;
+            --explanation-bg: #e6f2ff;
+            --explanation-text: #004085;
+            --border: #dee2e6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Encabezado y Navegación */
+        header {
+            background-color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .pdf-links a {
+            display: inline-block;
+            margin: 5px 10px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .pdf-links a:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            padding: 10px;
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        nav button {
+            background-color: white;
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        nav button.active, nav button:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Contenedor Principal */
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Esquema */
+        .header-esquema {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            opacity: 0.9;
+        }
+
+        .esquema-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .esquema-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        /* Tests */
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .score {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: var(--card-bg);
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            color: var(--primary);
+        }
+
+        .test-question {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+        }
+
+        .option-label.correct {
+            background-color: var(--correct-bg) !important;
+            color: var(--correct-text);
+            border-color: #c3e6cb;
+            font-weight: bold;
+        }
+
+        .option-label.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            color: var(--incorrect-text);
+            border-color: #f5c6cb;
+        }
+
+        .explanation-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--explanation-bg);
+            color: var(--explanation-text);
+            border-left: 4px solid var(--primary);
+            border-radius: 0 5px 5px 0;
+            font-size: 0.95rem;
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AGE: Tema 8 - Personal Laboral</h1>
+        <div class="pdf-links">
+            <a href="tema08_El personal laboral al servicio de las adm pub.pdf" target="_blank">📄 Documento Principal</a>
+            <a href="tema08_Esquema.pdf" target="_blank">📊 Esquema Resumen</a>
+        </div>
+    </header>
+
+    <nav id="main-nav"></nav>
+
+    <main id="content"></main>
+
+    <script>
+        // DATOS: ESQUEMA (40 preguntas)
+        const esquemaPreguntas = [
+            {q: "¿Qué se entiende por personal laboral al servicio de las Administraciones Públicas?", a: "Es aquel que, en virtud de contrato de trabajo formalizado por escrito, presta servicios retribuidos por las AAPP en cualquiera de las modalidades previstas en la legislación laboral. Su contrato puede ser fijo, indefinido o temporal[cite: 3]."},
+            {q: "¿Qué puestos excepcionalmente pueden ser desempeñados por personal laboral?", a: "Puestos de naturaleza no permanente o periódica/discontinua; oficios, vigilancia y custodia; carácter instrumental (mantenimiento, artes gráficas); conocimientos técnicos especializados sin cuerpo de funcionarios; puestos en el extranjero (trámite/auxiliares); y funciones auxiliares instrumentales[cite: 4]."},
+            {q: "¿Qué puestos tienen prohibido, en todo caso, ser desempeñados por personal laboral?", a: "Aquellos cuyo ejercicio implique la participación directa o indirecta en el ejercicio de potestades públicas o la salvaguardia de los intereses generales del Estado y AAPP[cite: 4]."},
+            {q: "¿Cuáles son los principios constitucionales y rectores para la selección de personal laboral?", a: "Igualdad, mérito, capacidad, publicidad, transparencia, imparcialidad y profesionalidad, independencia y discrecionalidad técnica, adecuación de procesos a funciones, y agilidad[cite: 4, 5]."},
+            {q: "¿Qué sistemas selectivos establece el TREBEP para el personal laboral fijo?", a: "Los de oposición, concurso-oposición (con una o varias pruebas para determinar capacidad y orden de prelación) y concurso de valoración de méritos[cite: 5]."},
+            {q: "¿Cómo se componen los órganos de selección para la provisión de personal laboral?", a: "Por un número impar de miembros. Como mínimo 4 representantes de la Administración (uno Presidente y otro Secretario) y 3 de los trabajadores. Todos deben pertenecer a un grupo profesional igual o superior al puesto[cite: 5, 17, 44]."},
+            {q: "¿Cuál es la duración del periodo de prueba para el personal de nuevo ingreso?", a: "Para grupos M3 y M2: 3 meses. Para los demás: 1 mes. Para personal sin titulación: 15 días laborables. Durante este periodo se puede extinguir la relación sin indemnización[cite: 18, 44]."},
+            {q: "¿Cuál es la vigencia máxima de las bolsas de trabajo provinciales?", a: "En ningún caso podrán superar los tres años, salvo prórroga solicitada y autorizada por la Dirección General de la Función Pública[cite: 6]."},
+            {q: "¿Cuáles son los derechos básicos de los trabajadores laborales?", a: "Trabajo y libre elección de profesión, libre sindicación, negociación colectiva, adopción de medidas de conflicto, huelga, reunión, e información/consulta y participación[cite: 7]."},
+            {q: "¿Qué destaca entre los derechos derivados del contrato de trabajo?", a: "La ocupación efectiva, promoción y formación profesional, no discriminación, integridad física/prevención de riesgos, respeto a la intimidad, percepción puntual de la remuneración, y ejercicio de acciones[cite: 7]."},
+            {q: "¿Cuáles son los deberes básicos de los trabajadores?", a: "Cumplir obligaciones con buena fe y diligencia, observar medidas de prevención, cumplir órdenes, no concurrir con la actividad, contribuir a la mejora de la productividad y los señalados para empleados públicos[cite: 8]."},
+            {q: "¿Qué establece el pacto de no concurrencia para el personal laboral?", a: "No podrán prestar servicio a varios empresarios si hay concurrencia desleal o dedicación plena pactada económicamente. A los laborales AAPP se les aplica plenamente la Ley de Incompatibilidades 53/1984[cite: 9, 10, 46]."},
+            {q: "¿A quién aplica principalmente el IV Convenio Colectivo Único?", a: "Al personal laboral de la AGE y sus organismos autónomos, e incluye Justicia no transferida, Seguridad Social (incluido INGESA central y periférico), Consejo Seguridad Nuclear, AEPD, Museo Reina Sofía y Trabajo Penitenciario[cite: 10, 11, 37]."},
+            {q: "¿Quién queda excluido del IV Convenio Único?", a: "Personal en el exterior, alta dirección, contratos administrativos (Ley 9/2017), minutas concretas, profesorado de religión, y los incluidos en otros convenios de la AGE[cite: 11, 12]."},
+            {q: "¿Cómo se estructura el sistema de clasificación profesional en el IV Convenio?", a: "En grupos profesionales (que agrupan aptitudes y titulación), familias profesionales (agrupan cualificaciones u oficios por afinidad) y especialidades (perfil concreto, competencias y especificaciones técnicas)[cite: 13]."},
+            {q: "¿Cuáles son los grupos profesionales M3, M2 y M1?", a: "M3: Título clasificado en Nivel 3 del MECES; M2: Nivel 2 del MECES; M1: Nivel 1 del MECES (o equivalentes)[cite: 13, 40]."},
+            {q: "¿Qué titulaciones exigen los grupos profesionales E2, E1 y E0?", a: "E2: Bachiller o Técnico. E1: Graduado en ESO o Título Profesional Básico. E0: Sin titulación prevista en el sistema educativo[cite: 13, 40]."},
+            {q: "¿Qué mecanismos existen para la provisión de vacantes?", a: "1) Concurso abierto y permanente (ordinario interdepartamental). 2) Promoción profesional. 3) Ingreso libre. Todo previo aviso y dotación presupuestaria[cite: 15, 42]."},
+            {q: "¿Quiénes pueden participar en los procesos de promoción interna?", a: "Todo personal laboral fijo del grupo inmediatamente inferior con 2 años de servicios efectivos. Del E0 al E1 se permite si tienen más de 10 años de antigüedad aunque no tengan titulación (salvo habilitante)[cite: 16, 17, 42]."},
+            {q: "¿Qué requisito exige el concurso abierto y permanente para participar?", a: "Haber permanecido en el último puesto obtenido de forma definitiva un mínimo de dos años, salvo si solicitan puesto en la misma Secretaría de Estado o Departamento Ministerial/Organismo[cite: 19, 42]."},
+            {q: "¿Cuántos días de vacaciones anuales corresponden y cuándo se disfrutan?", a: "22 días hábiles por año completo (sábados no son hábiles). Se disfrutan en el año natural y hasta el 31 de enero del año siguiente[cite: 19, 45]."},
+            {q: "¿Cuántos días de vacaciones se adquieren por antigüedad acumulada?", a: "A los 15 años: 23 días; 20 años: 24 días; 25 años: 25 días; 30 o más años: 26 días hábiles[cite: 20, 45]."},
+            {q: "¿Qué condiciones regulan la licencia por asuntos propios?", a: "Personal con al menos 1 año de servicios efectivos. Máximo 3 meses cada 2 años, sin sueldo. Computa para antigüedad[cite: 21, 45]."},
+            {q: "¿Qué permisos corresponden por matrimonio, nacimiento de hijo y traslado de domicilio?", a: "Matrimonio o registro de pareja de hecho: 15 días naturales. Nacimiento/adopción: 2 días. Traslado dentro de la misma localidad: 1 día; distinta localidad: 2 días[cite: 21, 22, 45]."},
+            {q: "¿Cuánto dura el permiso por fallecimiento, accidente o enfermedad grave de familiar de 1er grado?", a: "3 días hábiles si es en la misma localidad, y 5 días hábiles si se produce en distinta localidad. Puede sumarse 1 mes adicional no retribuido si fallece cónyuge/pareja/hijos[cite: 21, 22, 45]."},
+            {q: "¿Y en caso de familiar de 2º grado (consanguinidad o afinidad)?", a: "2 días hábiles si es en la misma localidad y 4 días hábiles si es en distinta localidad[cite: 22, 45]."},
+            {q: "¿Cuáles son los permisos de las trabajadoras gestantes?", a: "Exámenes prenatales indispensables y permiso retribuido desde la semana 37 del embarazo (semana 35 en caso de gestación múltiple) hasta el parto[cite: 23, 45]."},
+            {q: "¿Cuántos días por asuntos particulares corresponden?", a: "Hasta 6 días al año natural (disfrutables hasta el 31 enero). Se añaden 2 días extra al cumplir el sexto trienio, e incrementan 1 día adicional por cada trienio desde el octavo[cite: 23, 46]."},
+            {q: "¿Qué componentes integran la estructura retributiva?", a: "Salario base, pagas extraordinarias, retribuciones personales (antigüedad, complementos unificación), complementos salariales (puesto, nocturnidad, disponibilidad, residencia) y percepciones no salariales[cite: 24, 50]."},
+            {q: "¿En qué meses se devengan las pagas extraordinarias y qué cuantía tienen?", a: "El primer día hábil de junio y diciembre, en la cuantía de una mensualidad de salario base, antigüedad y complemento personal consolidado[cite: 25, 50]."},
+            {q: "¿Cuáles son algunos ejemplos de faltas leves?", a: "Falta de asistencia sin causa de 1 o 2 días al mes, leve incorrección con el público, retraso injustificado, o incumplir el horario de 3 a 5 ocasiones al mes[cite: 25, 52]."},
+            {q: "¿Qué se considera falta grave?", a: "Falta de disciplina, desconsideración grave, abandono de puesto, simulación de enfermedad, falta de asistencia de 3 a 4 días en un mes, incumplimiento de jornada entre 6 y 10 veces al mes (>10 horas)[cite: 25, 26, 52]."},
+            {q: "¿Cuáles son ejemplos de faltas muy graves?", a: "Transgresión buena fe, embriaguez habitual que repercuta, falta no justificada de 5 o más días al mes, e incumplir horario más de 10 ocasiones al mes o >20 al trimestre[cite: 27, 52]."},
+            {q: "¿Qué sanciones corresponden a faltas leves?", a: "Apercibimiento por escrito o suspensión de empleo y sueldo de hasta dos días[cite: 27, 52]."},
+            {q: "¿Qué sanciones se prevén para faltas graves?", a: "Suspensión de empleo y sueldo de 3 días a 3 meses, y demérito (inhabilitación para promoción/provisión de hasta 1 año)[cite: 27, 52]."},
+            {q: "¿Qué sanciones se aplican a faltas muy graves?", a: "Despido disciplinario, suspensión de empleo y sueldo de 3 meses y un día a 2 años, traslado forzoso sin indemnización por 3 años, o demérito de 1 año y un día a 5 años[cite: 28, 52]."},
+            {q: "¿Cuáles son los plazos de prescripción de las faltas?", a: "Muy graves: 3 años. Graves: 2 años. Leves: 6 meses (se cuenta desde que se cometió)[cite: 29, 52]."},
+            {q: "¿Cuáles son los plazos de prescripción de las sanciones?", a: "Sanciones por faltas muy graves: 3 años. Graves: 2 años. Leves: 1 año (se cuenta desde la firmeza en vía administrativa)[cite: 29, 52]."},
+            {q: "¿Qué órganos asumen la representación colectiva?", a: "Delegados de personal (centros con menos de 50 trabajadores) y Comités de empresa (50 trabajadores o más)[cite: 30, 53]."},
+            {q: "¿Qué crédito de horas mensuales tienen los representantes?", a: "Hasta 100 trab: 15h. De 101-250: 20h. De 251-500: 30h. De 501-750: 35h. De 751 en adelante: 40h. Pueden acumularse en uno o varios miembros[cite: 31, 53]."}
+        ];
+
+        // DATOS: TEST (10 arrays de 20 preguntas)
+        const examenes = [
+            // TEST 1: Conceptos, Derechos y Deberes
+            [
+                {q: "El art. 15.1.c de la Ley 30/1984 establece que se exceptúan de la regla general de cobertura por funcionarios y podrán desempeñarse por personal laboral:", o: ["Aquellos puestos con participación directa en potestades públicas.", "Los puestos correspondientes a oficios, vigilancia, custodia y áreas de mantenimiento.", "Puestos de Alta Dirección.", "Todos los puestos del INGESA, exclusivamente."], a: 1, e: "Se exceptúan los oficios, vigilancia, custodia, artes gráficas, protección civil, etc. Las potestades públicas están reservadas a funcionarios[cite: 4]."},
+                {q: "En todo caso, ¿qué funciones están prohibidas para el personal laboral?", o: ["Mantenimiento y oficios.", "Funciones auxiliares en el extranjero.", "Ejercicio de potestades públicas o salvaguarda de intereses generales.", "A y B son correctas."], a: 2, e: "Según el art. 9.2 TREBEP, el ejercicio de funciones que impliquen la participación directa o indirecta en el ejercicio de potestades públicas corresponde exclusivamente a funcionarios[cite: 4]."},
+                {q: "Los sistemas selectivos de personal laboral fijo regulados en el TREBEP son:", o: ["Solo oposición.", "Oposición, concurso-oposición y concurso de valoración de méritos.", "Libre designación o concurso.", "Todas son correctas."], a: 1, e: "El art. 61.7 TREBEP señala oposición, concurso-oposición o concurso de valoración de méritos[cite: 5]."},
+                {q: "Para personal de los grupos M3 y M2, ¿de cuánto tiempo es el periodo de prueba?", o: ["Un mes.", "15 días laborables.", "Tres meses.", "Seis meses."], a: 2, e: "La duración del periodo de prueba es de 3 meses para M3 y M2, 1 mes para demás, y 15 días laborables sin titulación[cite: 18]."},
+                {q: "¿Cuántos miembros conforman como mínimo el órgano de selección?", o: ["Tres miembros.", "Cuatro representantes de la Administración y tres de los trabajadores.", "Cinco miembros sindicales.", "Siete representantes de la Administración."], a: 1, e: "Mínimo cuatro representantes de la Administración (uno Presidente y otro Secretario) y tres de los trabajadores[cite: 17]."},
+                {q: "En el periodo de prueba, ¿puede ponerse fin a la relación laboral con derecho a indemnización?", o: ["Sí, por parte del trabajador con 1 mes por año.", "Sí, por ambas partes.", "No, sin que ninguna de las partes tenga derecho a indemnización.", "Depende del grupo profesional."], a: 2, e: "Cualquiera de las partes puede poner fin sin derecho a indemnización[cite: 18]."},
+                {q: "¿Cuál de los siguientes es un derecho básico de los trabajadores?", o: ["Derecho a la libre sindicación.", "Derecho a la ocupación efectiva.", "Derecho a no ser discriminado.", "Derecho a la prevención de riesgos."], a: 0, e: "La libre sindicación es un derecho básico. Los demás son derechos derivados de la relación de trabajo[cite: 7]."},
+                {q: "Contribuir a la mejora de la productividad es:", o: ["Un derecho básico.", "Un deber básico.", "Un deber de conducta del empleado público.", "Una recomendación del Convenio."], a: 1, e: "Contribuir a la mejora de la productividad se tipifica expresamente como un deber básico del TRLET[cite: 8]."},
+                {q: "Las bolsas de trabajo de estructura provincial para contratar laborales no permanentes tienen una vigencia que no podrá superar:", o: ["Un año.", "Tres años, salvo prórroga.", "Cinco años.", "Dos años."], a: 1, e: "La vigencia en ningún caso superará tres años, salvo prórroga por la Dirección General de Función Pública[cite: 6]."},
+                {q: "En cuanto al pacto de no competencia post-contractual (TRLET), no podrá tener una duración superior a:", o: ["Tres años para los técnicos y 1 año para los demás.", "Dos años para los técnicos y seis meses para los demás.", "Seis meses para los técnicos y un mes para el resto.", "No existe pacto posible en las AAPP."], a: 1, e: "No podrá tener una duración superior a 2 años para los técnicos y 6 meses para los demás[cite: 10]."},
+                {q: "Sobre el pacto de permanencia derivado de especialización, la duración máxima será de:", o: ["Un año.", "Dos años.", "Tres años.", "Cinco años."], a: 1, e: "El acuerdo de permanencia tras recibir especialización no será superior a dos años[cite: 10]."},
+                {q: "¿Cuál de estos principios forma parte del Código de Conducta de los empleados públicos?", o: ["Maximización del beneficio.", "Austeridad.", "Discrecionalidad absoluta.", "Todas son correctas."], a: 1, e: "El Código de Conducta incluye, entre otros, ejemplaridad, austeridad, honradez y confidencialidad[cite: 9]."},
+                {q: "Según el art. 16 de la Ley 53/1984 de incompatibilidades:", o: ["No podrá autorizarse compatibilidad al personal laboral con el personal directivo.", "El laboral puede ser directivo a media jornada.", "Solo se autoriza en caso de M1.", "Es libremente compatible."], a: 0, e: "No podrá autorizarse o reconocerse compatibilidad al personal (...) con el personal directivo[cite: 10]."},
+                {q: "La imparcialidad y profesionalidad de los órganos de selección es:", o: ["Un deber de conducta.", "Un principio rector para el acceso al empleo público.", "Una recomendación sindical.", "No figura en el TREBEP."], a: 1, e: "El art. 55 TREBEP lo recoge como principio rector de acceso[cite: 5]."},
+                {q: "¿Puede el personal laboral temporal formar parte de los órganos de selección?", o: ["Sí, en todo caso.", "Sí, si tiene titulación M3.", "No, bajo ningún concepto.", "A y B son correctas."], a: 2, e: "El IV Convenio especifica: 'No podrá formar parte de los órganos de selección el personal laboral temporal'[cite: 17]."},
+                {q: "Cuando la prestación de trabajo no esté regulada por la Función Pública, las AAPP asumen el rol de:", o: ["Empresario definido por el TRLET.", "Agente colaborador.", "Empresa temporal de empleo.", "Sindicato unitario."], a: 0, e: "Asumen asimilación al concepto de empresario del Estatuto de los Trabajadores[cite: 3]."},
+                {q: "En el Régimen de la Seguridad Social, el personal civil no funcionario de la AGE está incluido en:", o: ["Régimen Especial Agrario.", "Régimen General de la Seguridad Social.", "Clases Pasivas.", "Mutualidad General de Funcionarios Civiles."], a: 1, e: "El art. 136.2.k del texto refundido de LGSS los incluye en el Régimen General[cite: 4]."},
+                {q: "¿Qué sucede antes de formalizar los contratos de los procesos selectivos?", o: ["Los aspirantes perciben un anticipo económico.", "Se debe justificar requisitos e informe de aptitud.", "Los aspirantes no tienen derecho a percepción económica alguna.", "El periodo de prueba ya computa."], a: 2, e: "Hasta que no se formalicen, no tendrán derecho a percepción económica alguna[cite: 6]."},
+                {q: "Para ser encuadrado en un grupo igual o superior, el órgano de selección si está compuesto por funcionarios, debe:", o: ["Pertenecer al grupo de titulación equivalente igual o superior.", "Pertenecer al cuerpo directivo.", "Poseer la especialidad concreta.", "A y C son correctas."], a: 0, e: "En el supuesto de funcionarios deberán pertenecer al grupo de titulación equivalente igual o superior[cite: 17]."},
+                {q: "¿Los ciudadanos tienen derecho al acceso al empleo público según qué principios constitucionales?", o: ["Libertad y transparencia.", "Igualdad, mérito y capacidad.", "Afinidad y antigüedad.", "Competencia y agilidad."], a: 1, e: "Igualdad, mérito y capacidad, como principios constitucionales (art. 55 TREBEP)[cite: 4]."}
+            ],
+            // TEST 2: IV Convenio: Ámbito y Clasificación
+            [
+                {q: "¿A cuál de los siguientes aplica el IV Convenio Colectivo Único?", o: ["Al personal laboral prestando servicios en el exterior.", "Al personal del Consejo de Seguridad Nuclear.", "Al profesorado de religión.", "Al personal de alta dirección."], a: 1, e: "Aplica al Consejo de Seguridad Nuclear. El resto están excluidos en el art. 1.[cite: 11]."},
+                {q: "¿Qué entidad se considera parte del ámbito de aplicación del Convenio?", o: ["El INGESA (Servicios Centrales y Periféricos).", "La Agencia Española de Protección de Datos.", "El Museo Nacional Centro de Arte Reina Sofía.", "Todas las respuestas son correctas."], a: 3, e: "Todas ellas se incluyen en el ámbito del IV Convenio[cite: 11, 37]."},
+                {q: "Para integrar un nuevo colectivo al Convenio con posterioridad a su entrada en vigor:", o: ["Basta la firma del Ministro.", "La mayoría del colectivo debe manifestar conformidad individual o mediante representantes.", "Se exige Real Decreto.", "No se pueden incluir nuevos colectivos."], a: 1, e: "Exige que la mayoría del colectivo afectado manifieste su conformidad (individualmente o por representantes)[cite: 11]."},
+                {q: "El IV Convenio, en relación a la conciliación de vida personal, familiar y laboral:", o: ["La considera una herramienta para lograr incremento de retribuciones.", "La configura como principio básico de RRHH de la AGE.", "No la menciona.", "Se aplica solo a los grupos M3 y M2."], a: 1, e: "Constituye un principio básico de la política de RRHH de la AGE como herramienta preferente[cite: 12]."},
+                {q: "El sistema de clasificación se estructura en:", o: ["Subgrupos, áreas y ministerios.", "Grupos profesionales, familias profesionales y especialidades.", "Categorías básicas y superiores.", "Niveles salariales 1 a 30."], a: 1, e: "Se estructura en grupos profesionales, familias profesionales y/o especialidades[cite: 13]."},
+                {q: "¿Qué agrupa el 'Grupo profesional'?", o: ["Competencias y especificaciones técnicas concretas.", "Titulaciones, cualificaciones y oficios por afinidad.", "Las aptitudes profesionales, titulaciones y el contenido general de la prestación laboral.", "Todas son correctas."], a: 2, e: "Agrupa unitariamente las aptitudes, titulaciones y contenido general[cite: 13]."},
+                {q: "¿Qué determina la 'especialidad'?", o: ["El nivel MECES.", "El contenido concreto de la prestación laboral estableciendo el perfil del puesto.", "Las familias profesionales afines.", "A y B son correctas."], a: 1, e: "La especialidad determina el contenido concreto de la prestación laboral y establece el perfil profesional de cada puesto[cite: 13, 40]."},
+                {q: "El Grupo M3 se corresponde con:", o: ["Bachiller o Técnico.", "Nivel 3 del Marco Español de Cualificaciones para la Educación Superior.", "Sin titulación.", "ESO."], a: 1, e: "M3: Título clasificado en el Nivel 3 del MECES o equivalentes[cite: 13, 40]."},
+                {q: "El Grupo E1 corresponde a:", o: ["Nivel 1 del MECES.", "Bachillerato.", "Graduado en ESO o Título Profesional Básico o equivalentes.", "Sin titulación."], a: 2, e: "Grupo E1: Graduado en ESO o Título Profesional Básico o equivalentes[cite: 13, 40]."},
+                {q: "El Grupo E0 exige:", o: ["EGB.", "Certificado de escolaridad.", "Sin titulación prevista en el sistema educativo.", "Graduado Escolar."], a: 2, e: "Grupo E0: Sin titulación prevista en el sistema educativo[cite: 13, 40]."},
+                {q: "Si un puesto de M1 se corresponde con una titulación de Formación Profesional de Grado Superior, la especialidad:", o: ["Será generalista.", "Determinará la titulación exigida para el ingreso.", "No es obligatoria.", "La decide el trabajador."], a: 1, e: "La especialidad determinará la titulación o titulaciones exigidas para el ingreso[cite: 14]."},
+                {q: "¿Quién define las familias profesionales?", o: ["El IV Convenio en su Anexo 1.", "La autoridad competente dentro del Sistema Nacional de Cualificaciones y Formación Profesional.", "Cada Ministerio por orden departamental.", "Los sindicatos en el Comité de Empresa."], a: 1, e: "Serán las definidas por la autoridad competente dentro del Sistema Nacional de Cualificaciones[cite: 14]."},
+                {q: "El grupo E2 se vincula con la titulación de:", o: ["Bachiller o Técnico (FP Grado Medio).", "Grado Universitario.", "Máster.", "Educación Primaria."], a: 0, e: "Grupo E2: Título de Bachiller o Técnico o equivalentes[cite: 13, 14]."},
+                {q: "¿A quiénes aplica la exclusión del art. 1.3.d del Convenio?", o: ["A los laborales de Justicia.", "A personal con contrato de la Ley 9/2017 de Contratos del Sector Público.", "Al AEPD.", "A personal fijo-discontinuo."], a: 1, e: "Queda excluido el personal cuya relación de servicios se derive de un contrato normado por contratación administrativa (Ley 9/2017)[cite: 11]."},
+                {q: "¿La clasificación profesional del IV Convenio se puede modificar?", o: ["No, bajo ningún concepto.", "Sí, libremente por el órgano de Recursos Humanos.", "Solo a través de los procedimientos previstos en el mismo Convenio.", "Únicamente por orden del Ministro de Hacienda."], a: 2, e: "Solo podrá modificarse a través de los procedimientos previstos en el mismo (IV Convenio)[cite: 13]."},
+                {q: "Para el resto de puestos de los grupos E2 y E1 (no vinculados a FP o Cualificación):", o: ["Se eliminan del sistema.", "La especialidad la crea la Comisión Ejecutiva de la CECIR, previa aprobación de la Comisión Paritaria.", "Dependen del BOE.", "Las tres son falsas."], a: 1, e: "La creación de la especialidad se lleva a cabo por la Comisión Ejecutiva de la Comisión Interministerial de Retribuciones (CECIR), previa aprobación Paritaria[cite: 14, 15]."},
+                {q: "Sobre el principio de igualdad en el Convenio:", o: ["Es secundario a la eficiencia técnica.", "Constituye un principio básico transversal y criterio interpretativo.", "Se limita a las retribuciones.", "No aplica en puestos M3."], a: 1, e: "Constituye un principio básico que informa con carácter transversal y es criterio interpretativo[cite: 12]."},
+                {q: "El acoso sexual y por razón de sexo se trata mediante:", o: ["El despido directo sin expediente.", "Acuerdos y Protocolo de Acoso vigentes en cada momento.", "La Ley de Prevención local.", "El Estatuto de los Funcionarios."], a: 1, e: "La protección se ajustará a lo dispuesto en los correspondientes Acuerdos y Protocolo de Acoso vigentes[cite: 12]."},
+                {q: "¿A quién corresponde emitir el informe favorable de Costes de Personal ante la inclusión de nuevos colectivos al ámbito de aplicación?", o: ["Subsecretaría.", "Dirección General de Costes de Personal y Pensiones Públicas y la D.G. de la Función Pública.", "Secretaría General Técnica.", "Comisión Negociadora."], a: 1, e: "Previo informe favorable de la Dirección General de Costes de Personal y Pensiones Públicas, y D.G. Función Pública[cite: 11]."},
+                {q: "La conciliación afecta particularmente a tres materias. ¿Cuáles?", o: ["Jornada/permisos, Provisión/movilidad, y Formación/perfeccionamiento.", "Vacaciones, jubilación y ceses.", "Representación sindical, dietas y ropa.", "Estructura retributiva, pagas extra y productividad."], a: 0, e: "Afecta a jornada/permisos, provisión/movilidad, y formación/perfeccionamiento[cite: 12]."}
+            ],
+            // TEST 3: Provisión y Selección
+            [
+                {q: "El concurso abierto y permanente es:", o: ["Un sistema extraordinario.", "El sistema ordinario de provisión de vacantes y movilidad para el laboral fijo.", "Solo aplicable al grupo M3.", "Un mecanismo sancionador."], a: 1, e: "Constituye el sistema ordinario de provisión y movilidad[cite: 18, 42]."},
+                {q: "Antes de incluir un puesto en una convocatoria de ingreso libre:", o: ["Debe haberse ofertado previamente en concurso abierto y permanente o en promoción interna.", "Basta con aprobar los presupuestos.", "Debe cesar al interino.", "Se adjudica a un temporal."], a: 0, e: "Deberá haberse ofertado previamente en concurso abierto o promoción interna[cite: 16]."},
+                {q: "Los sistemas de provisión tenderán a ser:", o: ["Inclusivos solo en un Ministerio.", "Interdepartamentales.", "Provinciales exclusivamente.", "Restrictivos por género."], a: 1, e: "Los sistemas de provisión previstos serán interdepartamentales[cite: 16, 42]."},
+                {q: "En el concurso abierto y permanente, ¿cuántas resoluciones anuales hay?", o: ["Una.", "Dos.", "Tres.", "Cuatro."], a: 3, e: "Tendrá cuatro resoluciones anuales de carácter interdepartamental[cite: 19, 42]."},
+                {q: "¿Cuánto tiempo debe permanecerse en el último puesto obtenido (regla general) para participar en el concurso abierto?", o: ["1 año.", "2 años.", "3 años.", "5 años."], a: 1, e: "Mínimo dos años en el último puesto obtenido con carácter definitivo[cite: 19, 42]."},
+                {q: "¿Cuándo se excepciona la regla de 2 años para participar en el concurso abierto y permanente?", o: ["Si piden excedencia voluntaria.", "Si solicitan un puesto en la misma Secretaría de Estado/Departamento.", "Si tienen discapacidad.", "Nunca se excepciona."], a: 1, e: "Salvo que soliciten puesto ubicado en la misma Secretaría de Estado, o en su defecto Departamento/Organismo[cite: 19]."},
+                {q: "En los procesos de promoción puede participar el personal laboral fijo con un tiempo de servicios de:", o: ["1 año en el grupo superior.", "2 años efectivos en el grupo profesional inmediatamente inferior y cumplir titulación.", "3 años en cualquier grupo.", "5 años en el mismo Ministerio."], a: 1, e: "Dos años de servicios efectivos en dicho grupo profesional inferior y cumplir requisitos de titulación[cite: 16, 42]."},
+                {q: "Para el paso del grupo E0 al E1 por promoción interna sin la titulación exigida:", o: ["Es completamente imposible.", "Deben tener más de 10 años de antigüedad en el puesto (salvo si es habilitante).", "Basta con 5 años de antigüedad.", "Se aprueba automáticamente al quinto trienio."], a: 1, e: "Se permitirá para fijos que, no teniendo la titulación, hayan cumplido más de 10 años, salvo requisito habilitante[cite: 17, 42]."},
+                {q: "En las pruebas selectivas de ingreso, el órgano competente eleva la propuesta que:", o: ["Podrá exceder del número de plazas convocadas si hay empates.", "En ningún caso podrá exceder del número de plazas convocadas.", "Puede doblar las plazas en la AGE.", "No tiene límite."], a: 1, e: "En ningún caso podrá exceder del número de plazas convocadas[cite: 6, 18]."},
+                {q: "La liquidación retributiva por días se lleva a cabo en el mes en que:", o: ["Se inicia una licencia sin derecho a retribución.", "Se ingresa al primer destino.", "Se cesa en el servicio activo.", "Todas las respuestas son correctas."], a: 3, e: "Se lleva a cabo en primer destino/reingreso, inicio de licencia sin sueldo y mes de cese en servicio activo[cite: 16]."},
+                {q: "Las plazas destinadas a promoción interna que no se cubran:", o: ["Se pierden.", "Se acumulan al turno libre.", "Quedan congeladas.", "Van a una bolsa del Ministerio de Trabajo."], a: 1, e: "Se acumulan al turno libre[cite: 42]."},
+                {q: "La reserva de plazas en la oferta pública para personas con discapacidad es de:", o: ["Un 2%.", "Un 5%.", "Mínimo un 7% de las vacantes.", "Mínimo un 10%."], a: 2, e: "Se reserva un mínimo del 7% de vacantes convocadas[cite: 42]."},
+                {q: "¿Cuál de estos méritos suele ser valorable en el concurso abierto y permanente?", o: ["Antigüedad y conocimientos de lenguas oficiales.", "Méritos profesionales.", "Traslado obligatorio previo a un centro en distinta localidad.", "Todas son correctas."], a: 3, e: "Todos estos méritos son baremables en el CAP[cite: 42]."},
+                {q: "La provisión de puestos por Violencia de Género otorga un derecho al traslado. Si se efectúa en distinta localidad, ¿cuál es el plazo de incorporación?", o: ["3 días hábiles.", "1 mes.", "10 días.", "No hay plazo."], a: 1, e: "1 mes si hay cambio de residencia, 3 días hábiles si no lo hay[cite: 43]."},
+                {q: "En una permuta, ¿cuánto tiempo debe transcurrir para autorizar otra permuta entre trabajadores?", o: ["2 años.", "3 años.", "5 años.", "No hay plazo restrictivo."], a: 2, e: "En 5 años no se autoriza otra permutación[cite: 43]."},
+                {q: "¿Qué sucede con la permuta si uno de los trabajadores se jubila voluntariamente en los 2 años siguientes?", o: ["Se anula.", "Sigue vigente para el que se queda.", "Pasa al concurso.", "Tiene sanción disciplinaria."], a: 0, e: "Se anula si se jubila voluntariamente en los 2 años siguientes[cite: 43]."},
+                {q: "Si hay traslado de puesto con cambio de residencia ordinario (no violencia de género), el plazo incorporativo es:", o: ["Tres días hábiles.", "Quince días naturales.", "Un mes.", "Dos meses."], a: 2, e: "Si hay cambio de residencia o reingreso, 1 mes (regla de incorporación)[cite: 42]."},
+                {q: "En caso de protección a la salud por discapacidad, se justifica cambio de puesto por una minusvalía del:", o: ["20%.", "Igual o superior al 33%.", "50%.", "65%."], a: 1, e: "Se motiva por discapacidad en grado igual o superior al 33%[cite: 43]."},
+                {q: "En ingreso libre y promoción, la fase de Oposición, ¿qué valora?", o: ["La experiencia profesional.", "Conocimientos y capacidades (incorporando prueba práctica).", "Solo la antigüedad.", "Titulaciones académicas."], a: 1, e: "Oposición = valora conocimientos e incorpora prueba práctica para valorar capacidades[cite: 43]."},
+                {q: "Durante un cambio de puesto, en los 3 días o 1 mes de incorporación, ¿qué devenga el trabajador?", o: ["Nada, se paraliza su contrato.", "Totalidad de retribuciones fijas mensuales.", "Solo salario base.", "Solo trienios."], a: 1, e: "Tiene derecho a la totalidad de retribuciones devengadas con carácter fijo mensual[cite: 16]."}
+            ],
+            // TEST 4: Vacaciones, Licencias y Permisos I
+            [
+                {q: "¿Cuántos días hábiles de vacaciones corresponden con 15 años de servicio?", o: ["22.", "23.", "24.", "25."], a: 1, e: "Con 15 años: 23 días hábiles[cite: 20, 45]."},
+                {q: "¿A partir de cuántos años de servicio se alcanzan los 26 días hábiles de vacaciones?", o: ["20.", "25.", "30 o más.", "Nunca."], a: 2, e: "Con 30 o más años de servicio se obtienen 26 días hábiles[cite: 20, 45]."},
+                {q: "El disfrute obligatorio de las vacaciones del año natural finaliza el:", o: ["31 de diciembre del año natural.", "15 de enero del año siguiente.", "31 de enero del año siguiente.", "31 de marzo."], a: 2, e: "Se disfrutan obligatoriamente dentro del año natural y hasta el 31 de enero del año siguiente[cite: 19, 45]."},
+                {q: "A efectos de vacaciones de los trabajadores del IV Convenio Único, los sábados:", o: ["Son hábiles.", "No son considerados hábiles, salvo horarios especiales.", "Son recuperables.", "Computan medio día."], a: 1, e: "Los sábados no son considerados días hábiles, salvo horarios especiales[cite: 19, 45]."},
+                {q: "Si la baja por maternidad coincide con el periodo vacacional:", o: ["Se pierden las vacaciones.", "Se reduce a la mitad.", "Queda interrumpido y se disfrutan finalizado el permiso de maternidad.", "A y B son correctas."], a: 2, e: "Queda interrumpido y se pueden disfrutar finalizado el periodo, incluso en el año siguiente[cite: 20, 45]."},
+                {q: "Las vacaciones se disfrutan en periodos mínimos de:", o: ["2 días consecutivos.", "5 días hábiles consecutivos (por regla general).", "10 días consecutivos.", "15 días naturales."], a: 1, e: "En períodos mínimos de cinco días hábiles consecutivos[cite: 20]."},
+                {q: "El permiso por matrimonio es de:", o: ["15 días hábiles.", "15 días naturales.", "1 mes.", "20 días naturales."], a: 1, e: "Quince días naturales en caso de matrimonio[cite: 21, 45]."},
+                {q: "En caso de fallecimiento de un familiar de primer grado en la misma localidad, corresponden:", o: ["3 días hábiles.", "5 días hábiles.", "2 días hábiles.", "4 días hábiles."], a: 0, e: "3 días hábiles misma localidad (si es distinta, 5 días)[cite: 21, 45]."},
+                {q: "En caso de fallecimiento de un familiar de segundo grado en distinta localidad, corresponden:", o: ["2 días hábiles.", "3 días hábiles.", "4 días hábiles.", "5 días hábiles."], a: 2, e: "Para segundo grado: 2 días (misma loc) y 4 días (distinta loc)[cite: 22, 45]."},
+                {q: "Para obtener una licencia sin sueldo por asuntos propios se requiere haber cumplido:", o: ["Al menos 6 meses de servicio.", "Al menos 1 año de servicios efectivos.", "Tres años.", "Ser personal fijo-discontinuo exclusivamente."], a: 1, e: "Personal que haya cumplido al menos 1 año de servicios efectivos[cite: 21, 45]."},
+                {q: "La duración acumulada de la licencia por asuntos propios no podrá exceder de:", o: ["3 meses cada año.", "3 meses cada dos años.", "6 meses cada 3 años.", "1 año ininterrumpido."], a: 1, e: "Su duración acumulada no podrá exceder de tres meses cada dos años[cite: 21, 45]."},
+                {q: "El permiso por traslado de domicilio en la misma localidad es de:", o: ["1 día.", "2 días.", "3 días.", "4 días."], a: 0, e: "1 día misma localidad, 2 días en distinta localidad[cite: 22, 45]."},
+                {q: "La denegación de una licencia sin sueldo por asuntos propios deberá resolverse en:", o: ["10 días.", "20 días desde su recepción.", "1 mes.", "No hay plazo."], a: 1, e: "En el plazo de 20 días desde su recepción, de lo contrario silencio positivo (estimada)[cite: 21]."},
+                {q: "El permiso adicional no retribuido por fallecimiento de cónyuge o hijos puede durar hasta:", o: ["Un mes.", "Dos meses.", "15 días.", "Tres meses."], a: 0, e: "Permiso adicional no retribuido de una duración no superior a un mes[cite: 22, 45]."},
+                {q: "¿Qué grados de consanguinidad se aplican según el Código Civil en línea colateral para los hermanos?", o: ["Primer grado.", "Segundo grado.", "Tercer grado.", "Cuarto grado."], a: 1, e: "En colateral a hermanos comprende el parentesco hasta el segundo grado[cite: 22]."},
+                {q: "Las parejas de hecho acreditadas, a efectos de permisos:", o: ["Solo se equiparan para el matrimonio.", "Derivan las mismas relaciones de afinidad que el matrimonio.", "No tienen derecho a permiso por defunción.", "Solo aplican para excedencias."], a: 1, e: "De las situaciones de pareja de hecho derivarán las mismas relaciones de afinidad[cite: 22]."},
+                {q: "¿Cuántos días de permiso corresponden por nacimiento, acogimiento o adopción de hijo?", o: ["1 día.", "2 días.", "3 días.", "15 días."], a: 1, e: "Dos días por nacimiento de hija o hijo[cite: 21, 45]."},
+                {q: "En el cumplimiento de un deber inexcusable de carácter personal, no puede superarse:", o: ["La cuarta parte de horas laborales al mes.", "La quinta parte de las horas laborales en cómputo trimestral.", "El 50% de la jornada diaria.", "10 horas al año."], a: 1, e: "Sin que pueda superarse la quinta parte de las horas laborales en cómputo trimestral[cite: 22]."},
+                {q: "Si en un deber público el trabajador percibe retribución o indemnización:", o: ["La retiene íntegramente.", "Se descontará el importe del salario a que tuviera derecho.", "Solo declara un 20%.", "No importa."], a: 1, e: "Se descontará el importe de la misma del salario a que tuviera derecho[cite: 22]."},
+                {q: "La licencia para misión en países de desarrollo en voluntariado social dura como máximo:", o: ["1 año cada 5 años (max 3 meses seguidos).", "1 año continuo.", "2 años por vida.", "6 meses cada 4 años."], a: 0, e: "Máximo 1 año cada 5 años, periodo máximo de disfrute continuo 3 meses[cite: 21]."}
+            ],
+            // TEST 5: Permisos II y Jornada
+            [
+                {q: "Las trabajadoras gestantes disfrutan de permiso retribuido desde:", o: ["Día uno de la semana 39.", "Día uno de la semana 37 del embarazo.", "El mismo día del parto.", "Semana 20."], a: 1, e: "A partir del día primero de la semana 37 del embarazo y hasta el parto[cite: 23, 45]."},
+                {q: "En caso de gestación múltiple, dicho permiso inicia:", o: ["Semana 35.", "Semana 33.", "Semana 37.", "No varía."], a: 0, e: "En gestación múltiple, este permiso podrá iniciarse el primer día de la semana 35[cite: 23, 45]."},
+                {q: "En adopción internacional, el desplazamiento previo de los padres puede conceder hasta:", o: ["1 mes íntegro.", "2 meses de permiso percibiendo exclusivamente las retribuciones básicas.", "3 meses.", "1 mes y medio."], a: 1, e: "Hasta 2 meses percibiendo exclusivamente retribuciones básicas[cite: 23, 46]."},
+                {q: "El permiso general de asuntos particulares (moscosos) concede hasta:", o: ["4 días naturales.", "6 días cada año natural.", "8 días.", "10 días."], a: 1, e: "Hasta 6 días cada año natural[cite: 23, 46]."},
+                {q: "Se obtienen dos días adicionales de asuntos particulares al cumplir:", o: ["El octavo trienio.", "El sexto trienio.", "El segundo trienio.", "A los 15 años."], a: 1, e: "Dos días adicionales desde el cumplimiento del sexto trienio[cite: 23, 46]."},
+                {q: "A partir del octavo trienio, el permiso de asuntos particulares se incrementa en:", o: ["2 días por trienio.", "1 día adicional por trienio cumplido.", "No incrementa más.", "3 días."], a: 1, e: "Incrementándose en 1 día adicional por cada trienio a partir del octavo[cite: 23, 46]."},
+                {q: "¿Qué sucede con los días 24 y 31 de diciembre?", o: ["Se consideran hábiles completos.", "Dan derecho a permiso retribuido en la jornada. Si cae festivo, se compensa.", "Se acumulan en vacaciones obligatoriamente.", "A y C son correctas."], a: 1, e: "Los días 24 y 31 dic. Si coincide en festivo o fin de semana, el calendario permite su compensación adecuada[cite: 23, 24, 46]."},
+                {q: "Por nacimiento de hijo prematuro/hospitalizado, el personal puede ausentarse:", o: ["Hasta 4 horas.", "Hasta un máximo de 2 horas diarias (retribuidas).", "Sin límite.", "Pierde sueldo por cada hora."], a: 1, e: "Ausentarse hasta un máximo de dos horas diarias percibiendo retribuciones íntegras[cite: 23, 46]."},
+                {q: "Para hijos con discapacidad física, psíquica o sensorial, ¿cuánta flexibilidad horaria diaria existe?", o: ["1 hora.", "2 horas diarias.", "Media jornada.", "30 minutos."], a: 1, e: "Tendrán 2 horas de flexibilidad horaria diaria a fin de conciliar los horarios[cite: 23, 46]."},
+                {q: "La lactancia para hijo menor de 12 meses, según Estatuto/TREBEP permite ausentarse:", o: ["Dos horas sin división.", "Una hora de ausencia (con división en 2 fracciones) o reducción alternativa de 1 hora.", "Tres horas.", "Media hora al inicio."], a: 1, e: "1 hora ausencia (división en 2 fracciones) o reducción de jornada en 1 hora alternativamente[cite: 46]."},
+                {q: "¿La jornada general del personal laboral es de?", o: ["35 horas semanales.", "37 horas y media semanales (1.642 h/año).", "40 horas.", "36 horas."], a: 1, e: "37 horas y media semanales (1.642 h/año)[cite: 44]."},
+                {q: "Si la jornada continua diaria es de un mínimo de 5 horas y media, la pausa será de:", o: ["15 minutos.", "20 minutos.", "30 minutos.", "1 hora."], a: 2, e: "Pausa de 30 minutos si la jornada continua es de mínimo 5 h y media[cite: 44]."},
+                {q: "El horario de jornada reducida continua en la AGE garantiza:", o: ["75% de las retribuciones (5h diarias).", "50% de las retribuciones.", "No hay reducción de sueldo.", "90%."], a: 0, e: "Jornada reducida continua e ininterrumpida de 5h diarias con 75% de retribuciones[cite: 44]."},
+                {q: "Las horas extraordinarias para el Convenio Único están limitadas a un máximo de:", o: ["80 horas/año.", "60 horas/año.", "40 horas/año.", "100 horas/año."], a: 1, e: "Máximo: 60 horas/año. Se compensan con días de descanso preferentemente[cite: 44]."},
+                {q: "El cuidado de un familiar en 1er grado con enfermedad muy grave permite reducción de hasta:", o: ["El 25% de la jornada.", "El 50% de la jornada.", "El 75%.", "No permite reducción."], a: 1, e: "Cuidado de familiar en 1er grado: reducción hasta el 50% de la jornada[cite: 44]."},
+                {q: "Al promocionar a un nuevo grupo (sin cambio de residencia), existe un permiso retribuido de incorporación de:", o: ["Un mes.", "Tres días hábiles.", "Quince días.", "No hay permiso extra."], a: 1, e: "Derecho a permiso retribuido de 3 días hábiles si no implica cambio de residencia, o de un mes si lo comporta[cite: 24, 46]."},
+                {q: "El calendario laboral se aprueba anualmente:", o: ["Antes del 28 de febrero.", "El 1 de enero.", "En diciembre del año anterior.", "En Semana Santa."], a: 0, e: "El calendario (fijación diaria y semanal) se aprueba antes del 28 de febrero[cite: 44]."},
+                {q: "Si asiste a técnicas de fecundación asistida, el permiso es por:", o: ["Una hora estricta.", "Dos horas.", "El tiempo necesario para su realización (justificado).", "No está contemplado."], a: 2, e: "Derecho a ausentarse por el tiempo necesario para su realización y justificación[cite: 22, 45]."},
+                {q: "El permiso por adopción internacional retribuye EXCLUSIVAMENTE:", o: ["Retribuciones íntegras.", "Retribuciones básicas.", "Salario base sin trienios.", "Pagas extra."], a: 1, e: "Percibiendo exclusivamente las retribuciones básicas, hasta 2 meses[cite: 23]."},
+                {q: "Cuando la naturaleza del servicio impide librar 24 y 31 de diciembre:", o: ["Se pierden.", "El calendario laboral establecerá fórmulas para compensación adecuada.", "Se pagan triple.", "Se deniega el permiso definitivamente."], a: 1, e: "Establecerá fórmulas que permitan la compensación adecuada al régimen aplicable[cite: 23, 24]."}
+            ],
+            // TEST 6: Retribuciones y Excedencias/Suspensión
+            [
+                {q: "La estructura retributiva del Convenio Único incluye los siguientes complementos salariales:", o: ["Antigüedad.", "Puesto de trabajo, por cantidad o calidad, y de residencia.", "Indemnizaciones.", "Sueldo base."], a: 1, e: "Los complementos salariales son: de puesto de trabajo, de cantidad/calidad de trabajo y de residencia[cite: 24, 50]."},
+                {q: "La 'antigüedad' y los 'complementos personales' tienen la consideración de:", o: ["Salario base.", "Percepciones no salariales.", "Otras retribuciones de carácter personal.", "Suplidos."], a: 2, e: "Pertenecen al grupo de 'Otras retribuciones de carácter personal'[cite: 24, 50]."},
+                {q: "¿Cada cuánto tiempo se abona un nuevo importe fijo por antigüedad en el Convenio Único?", o: ["Cada 2 años.", "Cuando se cumplan 3 o múltiplos de 3 años de servicios (trienios).", "Cada 5 años.", "Cada 1 año."], a: 1, e: "Se abona cuando se cumplan 3 o múltiplos de 3 años de relación laboral[cite: 24, 50]."},
+                {q: "El valor de las horas extra, salario base y complementos personales se actualizará anualmente con efectos del:", o: ["1 de abril.", "1 de julio.", "1 de enero.", "1 de septiembre."], a: 2, e: "Se actualizarán anualmente con efectos de 1 de enero en el porcentaje de incremento general[cite: 24]."},
+                {q: "Las indemnizaciones y suplidos son:", o: ["Retribuciones en especie.", "Complementos salariales.", "Percepciones no salariales.", "Pagas extra."], a: 2, e: "Se catalogan como percepciones no salariales[cite: 24, 50]."},
+                {q: "¿Qué cuantía tiene una paga extraordinaria del Convenio Único?", o: ["Doble del salario base.", "Solo salario base.", "Mensualidad de salario base, antigüedad y, si procede, complemento personal consolidado.", "Media mensualidad."], a: 2, e: "Mensualidad de salario base, antigüedad y complemento personal consolidado[cite: 25, 50]."},
+                {q: "En el complemento de puesto, la Modalidad A retribuye:", o: ["Manejo de fondos.", "Responsabilidad/Mando/Jefatura.", "Nocturnidad.", "Condiciones adversas."], a: 1, e: "La Modalidad A del complemento de puesto premia Responsabilidad/Mando/Jefatura[cite: 50]."},
+                {q: "La Modalidad C del complemento de puesto retribuye:", o: ["Atención directa al público.", "Condiciones adversas.", "Manejo de fondos públicos.", "Obra."], a: 2, e: "La Modalidad C corresponde a Manejo de fondos públicos[cite: 50]."},
+                {q: "Si la prestación del servicio público en el puesto es continua las 24 h, nos encontramos ante el complemento de turnicidad modalidad:", o: ["Modalidad A.", "Modalidad B.", "Modalidad C.", "Modalidad Especial."], a: 0, e: "De turnicidad Modalidad A: Servicios continuos 24 h[cite: 50]."},
+                {q: "La prestación excepcional por encima de la jornada de trabajo corresponde a:", o: ["Disponibilidad horaria.", "Prolongación de jornada (límite 40 h semanales).", "Productividad.", "Complemento de nocturnidad."], a: 1, e: "Prolongación de jornada se define para servicios por encima de la jornada con límite a 40h/semana[cite: 51]."},
+                {q: "La suspensión con reserva de puesto por nacimiento dura como máximo general:", o: ["12 semanas ininterrumpidas.", "16 semanas ininterrumpidas.", "20 semanas.", "6 meses."], a: 1, e: "Máximo 16 semanas ininterrumpidas (con ampliaciones por parto múltiple, discapacidad, etc)[cite: 47]."},
+                {q: "La excedencia por cuidado de familiares atiende hasta el:", o: ["1er grado.", "2º grado.", "3er grado.", "Cualquier pariente."], a: 1, e: "Ascendientes/Descendientes hasta el 2º grado[cite: 48]."},
+                {q: "La duración máxima de la excedencia por cuidado de familiares es:", o: ["Indefinida.", "1 año.", "Máxima 3 años por regla general (5 años en discapacidad).", "6 meses."], a: 2, e: "Máxima de 3 años, y 5 años en caso de discapacidad[cite: 48]."},
+                {q: "En la excedencia voluntaria por interés particular para personal fijo, el periodo mínimo es de:", o: ["1 mes.", "2 meses.", "4 meses.", "No hay mínimo."], a: 2, e: "Periodo mínimo de 4 meses, duración máxima indefinida[cite: 48]."},
+                {q: "Para solicitar excedencia por agrupación familiar:", o: ["No se necesita antigüedad previa.", "Ambos cónyuges deben estar en el sector público.", "Su duración mínima es de 2 años.", "Todas las respuestas son correctas."], a: 3, e: "Sin antigüedad previa, mínimo 2 años, máximo indefinido, cónyuges en sector público[cite: 48]."},
+                {q: "Si un trabajador ingresa en privación de libertad (prisión provisional), ¿qué situación le corresponde?", o: ["Despido automático.", "Excedencia forzosa.", "Suspensión de contrato con reserva de puesto (sin sentencia firme).", "Interrupción definitiva."], a: 2, e: "Suspensión con reserva si no hay sentencia firme[cite: 47]."},
+                {q: "¿Qué ocurre con los derechos económicos durante la excedencia voluntaria por interés particular?", o: ["Se cobra el 50%.", "No devenga derechos económicos, ni cuenta para antigüedad/promoción.", "Cuenta para trienios.", "Se cobra solo salario base."], a: 1, e: "No devenga derechos económicos y no cuenta para antigüedad y promoción[cite: 48]."},
+                {q: "¿La excedencia por aplicación de normativa de incompatibilidades exige antigüedad previa?", o: ["Sí, un año.", "Sí, 5 años.", "No necesita antigüedad previa.", "Solo para interinos."], a: 2, e: "No necesita antigüedad previa[cite: 48]."},
+                {q: "La reserva de puesto en la excedencia por cuidado de hijos (duración máxima 3 años) dura:", o: ["Todo el tiempo (3 años) el mismo puesto exacto.", "2 primeros años el mismo puesto, y luego uno del mismo grupo/familia.", "Solo 6 meses.", "No hay reserva."], a: 1, e: "2 primeros años reserva el mismo puesto. El resto, un puesto de mismo grupo/especialidad[cite: 48]."},
+                {q: "En suspensión con reserva de puesto por servicios temporales en una organización internacional, el plazo para pedir reincorporación es:", o: ["1 mes.", "15 días.", "6 meses.", "No hay plazo."], a: 0, e: "Reincorporación en 1 mes. Si no lo hace, pasa a excedencia por interés particular[cite: 47]."}
+            ],
+            // TEST 7: Régimen Disciplinario - Faltas
+            [
+                {q: "¿Dónde se encuentra el régimen disciplinario que prevalece si hay contradicción con el Convenio?", o: ["En el TRLET exclusivamente.", "En el TREBEP.", "En el Código Penal.", "En la Ley de Incompatibilidades."], a: 1, e: "Se aplicará el TREBEP en todo lo que contradiga al Convenio. En vacío, TRLET y Convenio[cite: 25, 34]."},
+                {q: "La no comunicación con la debida antelación de la falta al trabajo por causa justificada (salvo imposibilidad) se califica como:", o: ["Falta muy grave.", "Falta grave.", "Falta leve.", "No es falta."], a: 2, e: "Tipificada como falta leve en el Convenio[cite: 25]."},
+                {q: "La falta de asistencia al trabajo sin causa justificada de 1 o 2 días al mes es falta:", o: ["Leve.", "Grave.", "Muy grave.", "Atípica."], a: 0, e: "Falta leve: 1 o 2 días al mes[cite: 25]."},
+                {q: "El incumplimiento del horario de trabajo de 3 a 5 ocasiones al mes se considera falta:", o: ["Leve.", "Grave.", "Muy grave.", "Excedencia forzosa."], a: 0, e: "Es leve si es entre 3 y 5 ocasiones al mes[cite: 25]."},
+                {q: "La desconsideración grave con los ciudadanos y ciudadanas es falta:", o: ["Leve.", "Grave.", "Muy grave.", "Depende del perjuicio económico."], a: 1, e: "La desconsideración grave con ciudadanos o compañeros es una falta grave[cite: 26]."},
+                {q: "Faltar al trabajo sin causa justificada 3 o 4 días en un periodo de un mes es falta:", o: ["Leve.", "Grave.", "Muy grave.", "Extinción disciplinaria."], a: 1, e: "Falta grave: 3 o 4 días al mes[cite: 26]."},
+                {q: "El abandono del puesto de trabajo durante la jornada sin causa justificada es:", o: ["Falta leve.", "Falta grave.", "Falta muy grave.", "Siempre es despido."], a: 1, e: "Es una de las causas tipificadas como falta grave[cite: 26]."},
+                {q: "La simulación de enfermedad o accidente, ¿qué tipo de falta es?", o: ["Muy grave.", "Grave.", "Leve.", "Inadmisible."], a: 1, e: "Se tipifica como falta grave la simulación de enfermedad o accidente[cite: 26]."},
+                {q: "La utilización indebida de datos de los que se tenga conocimiento por razón de trabajo es falta:", o: ["Muy grave (siempre).", "Grave.", "Leve.", "Penal y no administrativa."], a: 1, e: "La utilización o difusión indebidas de datos o asuntos se tipifica como grave[cite: 26]."},
+                {q: "Intervenir en un procedimiento administrativo cuando se dé una causa de abstención es falta:", o: ["Muy grave.", "Grave.", "Leve.", "Permitida bajo informe."], a: 1, e: "Se considera falta grave según el art. 4.7.1 b) del Convenio[cite: 26]."},
+                {q: "La transgresión de la buena fe contractual, así como el abuso de confianza es falta:", o: ["Muy grave.", "Grave.", "Leve.", "De desobediencia."], a: 0, e: "Esta acción es una falta muy grave[cite: 27]."},
+                {q: "Faltar al trabajo no justificada durante 5 o más días al mes constituye una falta:", o: ["Leve.", "Grave.", "Muy grave.", "Causal para permiso."], a: 2, e: "Falta muy grave: 5 o más días al mes[cite: 27]."},
+                {q: "Incumplir no justificadamente el horario durante más de 10 ocasiones al mes o más de 20 al trimestre es:", o: ["Falta muy grave.", "Falta grave.", "Falta leve.", "No es falta."], a: 0, e: "Más de 10 ocasiones al mes o >20 trimestre = muy grave[cite: 27]."},
+                {q: "La embriaguez habitual o toxicomanía, si repercuten negativamente en el trabajo, se considera:", o: ["Enfermedad y nunca falta.", "Falta muy grave.", "Falta grave.", "Falta leve."], a: 1, e: "Tipificada como falta muy grave si repercute negativamente en el trabajo[cite: 27]."},
+                {q: "El acceso indebido a activos de información o redes que haya sido restringido en administración electrónica, se considera:", o: ["Falta leve.", "Falta grave.", "Falta muy grave.", "Carencia técnica."], a: 1, e: "Tipificada expresamente como falta grave[cite: 26]."},
+                {q: "La disminución continuada y voluntaria en el rendimiento del trabajo normal o pactado es falta:", o: ["Leve.", "Grave.", "Muy grave.", "Un factor de estrés."], a: 1, e: "Tipificada como falta grave[cite: 26]."},
+                {q: "El falseamiento voluntario de datos e informaciones con ánimo de falsificación o uso de medios para lucro:", o: ["Falta grave.", "Falta muy grave.", "Falta leve.", "Excedencia forzosa."], a: 1, e: "Es falta muy grave el uso económico o falseamiento voluntario[cite: 27]."},
+                {q: "El incumplimiento grave de obligaciones de prevención de riesgos (sin causar riesgo de salud a otro) es falta:", o: ["Grave.", "Muy grave.", "Leve.", "A y B."], a: 0, e: "Incumplimiento grave es falta grave. Incumplimiento MUY grave (riesgos para la salud de otros) es falta muy grave[cite: 26, 27]."},
+                {q: "Encubrir las faltas graves/muy graves de un subordinado tolerándolas desde un rango jerárquico superior, es falta:", o: ["Leve.", "Grave.", "Muy grave.", "Solidaria."], a: 2, e: "La tolerancia o encubrimiento de jerarcas sobre graves/muy graves de subordinados es muy grave[cite: 27]."},
+                {q: "Faltar al respeto a compañeros o superiores es falta:", o: ["Leve.", "Grave.", "Muy grave.", "Eximente."], a: 1, e: "La falta de disciplina o del respeto debido es falta grave[cite: 25]."}
+            ],
+            // TEST 8: Régimen Disciplinario - Sanciones y Órganos
+            [
+                {q: "La sanción de 'apercibimiento por escrito' corresponde a:", o: ["Faltas muy graves.", "Faltas graves.", "Faltas leves.", "Cualquier falta."], a: 2, e: "El apercibimiento se impone por faltas leves[cite: 27]."},
+                {q: "La suspensión de empleo y sueldo de hasta 2 días es sanción de:", o: ["Faltas leves.", "Faltas graves.", "Faltas muy graves.", "Nunca se suspende sueldo en AGE."], a: 0, e: "Es sanción impuesta por faltas leves[cite: 27]."},
+                {q: "La sanción de suspensión de empleo y sueldo de 3 días a 3 meses recae sobre:", o: ["Faltas leves.", "Faltas graves.", "Faltas muy graves.", "Expedientes atípicos."], a: 1, e: "Es sanción para faltas graves[cite: 27]."},
+                {q: "El despido disciplinario, que comporta inhabilitación para nuevo contrato en misma categoría, se impone por:", o: ["Faltas muy graves.", "Faltas graves repetidas 2 veces.", "Faltas leves acumuladas.", "No existe el despido en personal laboral."], a: 0, e: "Es la máxima sanción por faltas muy graves[cite: 28]."},
+                {q: "La suspensión de empleo y sueldo de 3 meses y un día a 2 años es una sanción por:", o: ["Faltas graves.", "Faltas muy graves.", "Abandono leve.", "Demérito."], a: 1, e: "Es una sanción aplicable a las faltas muy graves[cite: 28]."},
+                {q: "El traslado forzoso con o sin cambio de localidad sin indemnización, dura un tiempo de:", o: ["1 año.", "2 años.", "3 años.", "5 años."], a: 2, e: "La sanción de traslado forzoso tiene una duración de tres años (por faltas muy graves)
