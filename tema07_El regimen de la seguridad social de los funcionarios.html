@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APP Estudio AGE - Seguridad Social</title>
+<style>
+  :root {
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --primary: #0056b3;
+    --success: #d4edda;
+    --success-text: #155724;
+    --error: #f8d7da;
+    --error-text: #721c24;
+    --explanation: #e6f2ff;
+    --text-main: #333333;
+  }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  header a {
+    color: #e6f2ff;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  nav {
+    display: flex;
+    overflow-x: auto;
+    background: white;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 70px;
+    z-index: 999;
+  }
+  nav button {
+    padding: 12px 20px;
+    border: none;
+    background: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 16px;
+    transition: background 0.2s;
+  }
+  nav button.active {
+    background: var(--primary);
+    color: white;
+  }
+  main {
+    padding: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  .card h3 {
+    margin-top: 0;
+    color: var(--primary);
+  }
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    background: var(--primary);
+    color: white;
+    margin-bottom: 1rem;
+    width: 100%;
+    transition: background 0.3s;
+  }
+  .btn:hover { background: #004494; }
+  .btn:disabled { background: #ccc; cursor: not-allowed; }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+  .option-label {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    background: white;
+    transition: background 0.2s;
+  }
+  .option-label:hover { background: #f1f1f1; }
+  .option-label input {
+    margin-right: 12px;
+    transform: scale(1.2);
+  }
+  .option-label.correct {
+    background-color: var(--success) !important;
+    color: var(--success-text);
+    border-color: var(--success);
+    font-weight: bold;
+  }
+  .option-label.incorrect {
+    background-color: var(--error) !important;
+    color: var(--error-text);
+    border-color: var(--error);
+  }
+  .explanation {
+    background-color: var(--explanation);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    display: none;
+    font-size: 0.95rem;
+    border-left: 4px solid var(--primary);
+  }
+  .score {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: none;
+  }
+  .hidden { display: none; }
+  @media (max-width: 768px) {
+    nav button { flex: 1 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Tema 7: Seguridad Social de los Funcionarios</h1>
+  <p>Documento base: <a href="tema07_El regimen de la seguridad social de los funcionarios.pdf" target="_blank">tema07_El regimen de la seguridad social de los funcionarios.pdf</a></p>
+</header>
+
+<nav id="topMenu">
+  <button id="btnEsquema" class="active" onclick="showTab('esquema')">Esquema</button>
+  <!-- Generado por JS -->
+</nav>
+
+<main id="appContainer">
+  <div id="tab-esquema">
+     <button class="btn" id="btnAudio" onclick="playAudio()">🔊 Escuchar Tema Completo</button>
+     <div id="esquemaContainer"></div>
+  </div>
+  <div id="tab-test" class="hidden">
+     <h2 id="testTitle" style="text-align:center;"></h2>
+     <div class="score" id="scoreTop"></div>
+     <div id="testContainer"></div>
+     <button class="btn" id="btnCorregir" onclick="corregirTest()">Corregir Examen</button>
+     <button class="btn" id="btnReiniciar" onclick="reiniciarTest()" style="display:none; background:#6c757d;">Reiniciar Test</button>
+     <div class="score" id="scoreBottom"></div>
+  </div>
+</main>
+
+<script>
+const esquemaPreguntas = [
+  { pregunta: "Integración del Régimen de Seguridad Social", respuesta_detallada: "Mecanismos integrados por Clases Pasivas (RD Legislativo 670/1987) y Mutualismo Administrativo (MUFACE, RD Legislativo 4/2000).[cite: 3]" },
+  { pregunta: "Funcionarios ingresados a partir de 1 de enero de 2011", respuesta_detallada: "Se integran en el Régimen General a efectos exclusivos de pensiones, manteniéndose en MUFACE para sanidad e incapacidad temporal.[cite: 3]" },
+  { pregunta: "Ámbito obligatorio de MUFACE", respuesta_detallada: "Funcionarios de carrera de la Administración Civil del Estado y funcionarios en prácticas de dichos cuerpos.[cite: 4]" },
+  { pregunta: "Excluidos de MUFACE", respuesta_detallada: "Administración Local, organismos autónomos, Administración Militar, Justicia, Seguridad Social, CCAA y universidades.[cite: 5]" },
+  { pregunta: "Transferidos a CCAA", respuesta_detallada: "Mantienen sistema originario. Si ingresan por promoción interna en cuerpos autonómicos, pasan al Régimen General, pudiendo mantener MUFACE solo para sanidad (opción en 15 días).[cite: 5, 6]" },
+  { pregunta: "Totalización de cotizaciones", respuesta_detallada: "Se totalizan períodos no superpuestos. Resuelve el órgano del régimen de últimas cotizaciones si cumple requisitos; si no, resuelve el otro régimen.[cite: 6, 7]" },
+  { pregunta: "Naturaleza de MUFACE", respuesta_detallada: "Organismo público con personalidad jurídica pública diferenciada, autonomía de gestión, adscrito al Ministerio competente en Función Pública a través de la Secretaría de Estado.[cite: 7, 20]" },
+  { pregunta: "Mantenimiento de alta sin cotizar en MUFACE", respuesta_detallada: "Jubilados (forzoso, voluntario o incapacidad) y excedencia por cuidado de familiares mantienen el alta sin obligación de cotizar.[cite: 10, 11]" },
+  { pregunta: "Cotización a MUFACE", respuesta_detallada: "El mutualista aporta 1,69% y el Estado 6,59%. Cuota doble en junio y diciembre salvo minoración por tiempo efectivo.[cite: 11]" },
+  { pregunta: "Asistencia Sanitaria MUFACE", respuesta_detallada: "Contingencias: enfermedad o accidente (común o servicio), embarazo, parto y puerperio. Prestada directamente o por concierto.[cite: 12]" },
+  { pregunta: "Incapacidad Temporal (IT)", respuesta_detallada: "Imposibilidad temporal para funciones públicas, recibiendo asistencia sanitaria y con licencia obtenida. Incluye situaciones de menstruación incapacitante o interrupción del embarazo.[cite: 14, 15]" },
+  { pregunta: "Retribuciones IT (Meses 1 al 3)", respuesta_detallada: "Retribuciones íntegras a cargo de la Administración los 3 primeros meses.[cite: 15]" },
+  { pregunta: "Retribuciones IT (Desde mes 4)", respuesta_detallada: "Sueldo base y complementos 100% de retribuciones ordinarias tras Acuerdo de 2018 (complementando el subsidio de MUFACE del 80% básicas o 75% complementarias). En donación de órganos subsidio 100%.[cite: 15, 16]" },
+  { pregunta: "Duración IT", respuesta_detallada: "365 días más prórroga de 180 días.[cite: 17]" },
+  { pregunta: "Riesgo durante embarazo o lactancia", respuesta_detallada: "Equipara a enfermedad profesional. Subsidio a cargo de MUFACE por el 100% de retribuciones complementarias devengadas en el tercer mes.[cite: 17]" },
+  { pregunta: "Gran Invalidez (MUFACE)", respuesta_detallada: "Prestación mensual para asistencia, equivalente al 50% de la pensión de jubilación de Clases Pasivas. Si no tiene pensión, requiere 9 años cotizados.[cite: 18]" },
+  { pregunta: "Lesiones permanentes no invalidantes (Parcial)", respuesta_detallada: "Indemnización de pago único: si es IT parcial, 24 mensualidades base cotización.[cite: 19]" },
+  { pregunta: "Asistencia Social MUFACE", respuesta_detallada: "Ayudas urgentes o tratamientos especiales no cubiertos, limitadas por presupuesto y condicionadas a carencia de recursos.[cite: 20]" },
+  { pregunta: "Consejo General MUFACE", respuesta_detallada: "Pte: Sec. Estado FP. Vicepte 1º: Dir Gen MUFACE. 7 vocales Admon. 9 vocales Sindicatos. Aprueba Plan de Actuación y Memoria.[cite: 21, 22]" },
+  { pregunta: "Dirección General MUFACE", respuesta_detallada: "Nombramiento por Real Decreto. Dispone gastos, elabora presupuestos y reconoce prestaciones.[cite: 23, 24]" },
+  { pregunta: "Derechos Pasivos", respuesta_detallada: "Garantizan protección de vejez, incapacidad, muerte y supervivencia. Son inembargables, irrenunciables, inalienables e imprescriptibles.[cite: 25, 26]" },
+  { pregunta: "Reconocimiento y Pago Clases Pasivas", respuesta_detallada: "Reconoce el INSS y el pago lo realiza la TGSS.[cite: 28, 29]" },
+  { pregunta: "Reconocimiento de Servicios", respuesta_detallada: "Subsecretarios en AGE (Servicios centrales) y Delegados del Gobierno (periféricos). Ministerio de Defensa para militares.[cite: 29]" },
+  { pregunta: "Revisión Actos Administrativos", respuesta_detallada: "Recurso potestativo reposición o contencioso-administrativo. Revisión de oficio por delito doloso de homicidio contra el causante.[cite: 31]" },
+  { pregunta: "Cuota de Derechos Pasivos", respuesta_detallada: "3,86% del haber regulador aplicable. Se abona en 14 mensualidades (doble junio y diciembre).[cite: 32]" },
+  { pregunta: "Incompatibilidad Interna Pensiones",
+    respuesta_detallada: "Incompatible percibir más de 3 pensiones ordinarias causadas por distinta persona, o 2 causadas por la misma.[cite: 32, 33]" },
+  { pregunta: "Revalorización de Pensiones", respuesta_detallada: "Basada en el IPC medio interanual de los 12 meses previos a diciembre.[cite: 33]" },
+  { pregunta: "Indicador suficiencia (Pacto Toledo)", respuesta_detallada: "Desde 2027 pensión mínima no inferior a umbral pobreza de hogar de 2 adultos (1,5 x umbral unipersonal). Brecha se reduce: 20% en 2024, 30% en 2025, 50% en 2026.[cite: 34]" },
+  { pregunta: "Jubilación Forzosa y Voluntaria", respuesta_detallada: "Forzosa: edad reglamentaria (máx 70). Voluntaria: 60 años edad y 30 años servicio.[cite: 35]" },
+  { pregunta: "Período Carencia Jubilación", respuesta_detallada: "15 años de servicio efectivo (salvo extraordinaria que no exige mínimo).[cite: 36]" },
+  { pregunta: "Cálculo Pensión con diferentes Cuerpos", respuesta_detallada: "Fórmula: P = R1C1+ (R2-R3)C2+ (R3-R2)C3. Solo se computan años completos.[cite: 38]" },
+  { pregunta: "Complemento Brecha Género", respuesta_detallada: "35,90 euros (año 2025). Máximo 4 hijos. Hombres deben probar afectación carrera (exigencias varían pre/post 1995).[cite: 39, 40]" },
+  { pregunta: "Jubilación Activa (Compatibilidad)", respuesta_detallada: "Demora 1 año: 45%. 2 años: 55%. 3 años: 65%. 4 años: 80%. 5 años: 100%. (+5% cada 12 meses, máx 100%). Sube a 75% si autónomo contrata trabajador.[cite: 42]" },
+  { pregunta: "Compatibilidad Actividad Artística", respuesta_detallada: "Compatible 100% pensión con actividad artística (forzosa, o voluntaria tras edad ordinaria).[cite: 43, 44]" },
+  { pregunta: "Pensión de Viudedad (Requisitos)", respuesta_detallada: "Matrimonio 1 año previo al fallecimiento por enfermedad común, salvo hijos o convivencia previa (+2 años en total). Pareja de hecho: 5 años convivencia, registro 2 años previos.[cite: 47, 49]" },
+  { pregunta: "Pensión Viudedad (Porcentajes)", respuesta_detallada: "50% base reguladora (25% si causante con extraordinaria). Sube 8 puntos (58%) si >= 65 años, no percibe ingresos de trabajo ni altas rentas de capital.[cite: 50]" },
+  { pregunta: "Pensión de Orfandad", respuesta_detallada: "Hasta 21 años, o 25 si rentas menores a SMI. 1 hijo: 25%. Varios: 10% cada uno + 15% prorrateado. Límites: 50% de la base (con cónyuge) o 100% (sin cónyuge).[cite: 50, 52]" },
+  { pregunta: "Pensión a favor de Padres", respuesta_detallada: "15% de base reguladora si dependen económicamente y no hay cónyuge/hijos con derecho (7,5% si extraordinaria). Sin derecho de acrecer entre padres.[cite: 53]" },
+  { pregunta: "Pensiones Extraordinarias", respuesta_detallada: "200% del haber regulador. Causa: acto de servicio, accidente/enfermedad servicio, terrorismo. Sin período carencia.[cite: 53, 54]" },
+  { pregunta: "Procedimiento de Jubilación", respuesta_detallada: "Forzosa se inicia de oficio 6 meses antes. Acuerda Subsecretario o Delegado Gobierno en AGE.[cite: 57]" }
+];
+
+const examenes = [
+  // Test 1: Conceptos, Régimen e Inclusiones MUFACE
+  [
+    { pregunta: "De acuerdo con la legislación, ¿quiénes quedan obligatoriamente incluidos en MUFACE?", opciones: ["A) Funcionarios de la Administración Local.", "B) Funcionarios de carrera de la Administración Civil del Estado.", "C) Funcionarios de la Administración Militar.", "D) Personal de administración de universidades."], respuesta_correcta: 1, explicacion: "Obligatoriamente incluidos: Funcionarios de carrera de la Admon Civil del Estado. Excluidos Local, Militar y Universidades.[cite: 4, 5]" },
+    { pregunta: "Los funcionarios civiles del Estado que ingresen a partir de 1 de enero de 2011:", opciones: ["A) Pasan al Régimen General a todos los efectos.", "B) Quedan en Clases Pasivas exclusivamente.", "C) Se integran en Régimen General solo para pensiones, manteniendo MUFACE para sanidad e IT.", "D) Pierden la condición de mutualistas."], respuesta_correcta: 2, explicacion: "Ingresados desde 01/01/2011: Régimen General a efectos exclusivos de pensiones.[cite: 3]" },
+    { pregunta: "¿Qué norma regula la Ley de Clases Pasivas del Estado?", opciones: ["A) RD Leg 4/2000.", "B) RD 375/2003.", "C) RD Leg 670/1987.", "D) Ley 30/1984."], respuesta_correcta: 2, explicacion: "Texto refundido aprobado por RD Legislativo 670/1987.[cite: 3]" },
+    { pregunta: "Los funcionarios en prácticas para Cuerpos de la Administración Civil del Estado...", opciones: ["A) Están excluidos de MUFACE hasta ser de carrera.", "B) Quedan obligatoriamente incluidos en MUFACE desde inicio de prácticas.", "C) Deben solicitar afiliación voluntaria.", "D) Solo tienen Clases Pasivas."], respuesta_correcta: 1, explicacion: "Incluidos en MUFACE en las mismas condiciones desde inicio del período de prácticas.[cite: 4]" },
+    { pregunta: "¿Cuál de los siguientes está excluido de MUFACE?", opciones: ["A) Funcionario interino art 1 D-Ley 10/1965.", "B) Funcionario en prácticas de AGE.", "C) Funcionarios de la Administración de Justicia.", "D) Funcionarios del extinguido Servicio de Pósitos."], respuesta_correcta: 2, explicacion: "Excluidos: Admon Local, Militar, Justicia, Seguridad Social, CCAA, etc.[cite: 4, 5]" },
+    { pregunta: "Funcionario de AGE transferido a CCAA que ingresa voluntariamente en cuerpos de la CCAA:", opciones: ["A) Mantiene obligatoriamente MUFACE y Clases Pasivas.", "B) Estará acogido por el Régimen General de la Seguridad Social.", "C) Pierde derecho a toda asistencia.", "D) Cotiza doble."], respuesta_correcta: 1, explicacion: "Al ingresar voluntariamente en Cuerpos de CCAA, quedan en Régimen General.[cite: 5]" },
+    { pregunta: "Funcionario de AGE transferido a CCAA que accede por promoción interna a escala autonómica, ¿qué plazo tiene para optar por mantener MUFACE?", opciones: ["A) 1 mes.", "B) 10 días.", "C) 15 días.", "D) No puede mantener MUFACE."], respuesta_correcta: 2, explicacion: "Deberán ejercitar la opción, por una sola vez, en el plazo de 15 días desde la toma de posesión.[cite: 6]" },
+    { pregunta: "¿Quién reconoce la pensión cuando existen cotizaciones en varios regímenes no superpuestos?", opciones: ["A) El régimen en el que tenga más años cotizados siempre.", "B) El Órgano del régimen al que efectuó las últimas cotizaciones.", "C) MUFACE de manera exclusiva.", "D) El INSS central."], respuesta_correcta: 1, explicacion: "Reconoce el Órgano del régimen de últimas cotizaciones. Si fueran simultáneas, el de mayor período.[cite: 6]" },
+    { pregunta: "¿Qué naturaleza jurídica tiene MUFACE?", opciones: ["A) Entidad gestora sin personalidad jurídica.", "B) Organismo público con personalidad jurídica y tesorería propias.", "C) Empresa pública empresarial.", "D) Dirección General no autónoma."], respuesta_correcta: 1, explicacion: "Organismo público con personalidad jurídica pública diferenciada, patrimonio y tesorería propios.[cite: 7]" },
+    { pregunta: "Causa baja como mutualista obligatorio el funcionario que:", opciones: ["A) Pase a excedencia forzosa.", "B) Pase a servicios especiales.", "C) Pase a excedencia voluntaria.", "D) Esté en suspensión de funciones."], respuesta_correcta: 2, explicacion: "Bajan en MUFACE quienes pasen a excedencia voluntaria (salvo cuidado familiares que mantienen alta).[cite: 9, 10]" },
+    { pregunta: "¿En qué situación se mantiene el alta en MUFACE pero se suspende la obligación de cotizar?", opciones: ["A) Excedencia voluntaria por interés particular.", "B) Licencia por asuntos propios o suspensión firme.", "C) Servicios en CCAA.", "D) Expectativa de destino."], respuesta_correcta: 1, explicacion: "Se suspende obligación de cotizar en licencia por asuntos propios y suspensión firme (cotizando a posteriori los atrasos).[cite: 10]" },
+    { pregunta: "¿Qué porcentaje aporta el mutualista en la cotización a MUFACE (año 2024/2025)?", opciones: ["A) 6,59%.", "B) 3,86%.", "C) 1,69%.", "D) 4,10%."], respuesta_correcta: 2, explicacion: "El mutualista aporta el 1,69%.[cite: 11]" },
+    { pregunta: "¿Cuándo abona cuota doble de cotización el mutualista?", opciones: ["A) En agosto y diciembre.", "B) En junio y diciembre.", "C) No hay cuota doble.", "D) En enero y julio."], respuesta_correcta: 1, explicacion: "Abonará doblemente en los meses de junio y diciembre.[cite: 11]" },
+    { pregunta: "¿Cómo se abonan las prestaciones económicas de MUFACE una vez reconocidas?", opciones: ["A) En efectivo.", "B) Cheque nominativo únicamente.", "C) Cuenta corriente o libreta ordinaria a su nombre.", "D) Cualquiera de las anteriores."], respuesta_correcta: 2, explicacion: "Serán abonadas únicamente en cuenta corriente o libreta a su nombre.[cite: 9]" },
+    { pregunta: "Los gastos médicos en servicios distintos de los concertados por decisión propia del mutualista:", opciones: ["A) Se abonan al 50%.", "B) Se abonan íntegramente previa factura.", "C) No son abonados por MUFACE (salvo casos del Reglamento).", "D) Los paga el INSS."], respuesta_correcta: 2, explicacion: "MUFACE no abonará gastos cuando el beneficiario utilice servicios distintos de los asignados por decisión propia.[cite: 12]" },
+    { pregunta: "La cirugía estética...", opciones: ["A) Siempre se incluye.", "B) Nunca se incluye.", "C) Se incluye si guarda relación con accidente, enfermedad o malformación.", "D) Se paga al 50%."], respuesta_correcta: 2, explicacion: "Se incluye si guarda relación con accidente, enfermedad o malformación congénita.[cite: 13]" },
+    { pregunta: "Las prestaciones familiares por hijo a cargo con discapacidad se financian mediante:", opciones: ["A) Cuotas de mutualistas.", "B) Aportación autonómica.", "C) Cargo a los Presupuestos Generales del Estado.", "D) Beneficios de MUFACE."], respuesta_correcta: 2, explicacion: "A excepción de la h) (hijo con discapacidad) que se financia con PGE, el resto con cotizaciones.[cite: 9]" },
+    { pregunta: "El alta en MUFACE de un jubilado forzoso:", opciones: ["A) Causa baja inmediata.", "B) Se conserva como mutualista sin obligación de cotizar.", "C) Debe cotizar el 1,69% de su pensión.", "D) Pasa a Clases Pasivas exclusivas."], respuesta_correcta: 1, explicacion: "Conservan la condición de mutualista sin obligación de cotizar los jubilados.[cite: 10]" },
+    { pregunta: "El mutualista que pasa a servicios especiales (salvo excepciones):", opciones: ["A) Causa baja en MUFACE.", "B) Mantiene el alta y obligaciones.", "C) Mantiene alta pero no cotiza.", "D) Pasa al Régimen General."], respuesta_correcta: 1, explicacion: "Conservan la condición con mismos derechos y obligaciones (deben cotizar).[cite: 9]" },
+    { pregunta: "¿A qué ministerio se adscribe MUFACE?", opciones: ["A) Ministerio de Sanidad.", "B) Ministerio de Inclusión, Seguridad Social y Migraciones.", "C) Ministerio competente en materia de Función Pública.", "D) Ministerio de Hacienda."], respuesta_correcta: 2, explicacion: "Adscrito al Ministerio competente en materia de Función Pública, a través de la Secretaría de Estado.[cite: 20]" }
+  ],
+  // Test 2: IT, Riesgo y Grados de Invalidez
+  [
+    { pregunta: "¿Cuál es un requisito simultáneo para la Incapacidad Temporal?", opciones: ["A) Licencia obtenida, proceso patológico y asistencia sanitaria.", "B) Ingreso hospitalario mayor a 3 días.", "C) Ser funcionario de carrera exclusivo.", "D) Enfermedad profesional exclusivamente."], respuesta_correcta: 0, explicacion: "Requiere proceso patológico impeditivo, recibir asistencia y obtener licencia por enfermedad.[cite: 15]" },
+    { pregunta: "La gestación de la mujer trabajadora tiene consideración de IT desde el día primero de la semana:", opciones: ["A) 36", "B) 39", "C) 40", "D) 32"], respuesta_correcta: 1, explicacion: "Desde el día primero de la semana trigésima novena.[cite: 15]" },
+    { pregunta: "¿Qué percibe el funcionario en IT durante los tres primeros meses?", opciones: ["A) Retribuciones básicas y 50% complementarias.", "B) Subsidio de MUFACE.", "C) Sus retribuciones íntegras a cargo de la Administración.", "D) 80% de sueldo base."], respuesta_correcta: 2, explicacion: "Percibe durante los tres primeros meses retribuciones íntegras a cargo de la Administración.[cite: 15]" },
+    { pregunta: "A partir del cuarto mes de IT, el subsidio de MUFACE ordinario consiste en la mayor de:", opciones: ["A) 100% básicas o 50% complementarias.", "B) 80% de retribuciones básicas (+1/6 paga extra) o 75% complementarias.", "C) 100% complementarias.", "D) 60% retribuciones totales."], respuesta_correcta: 1, explicacion: "El 80% de básicas+extra o 75% complementarias del tercer mes de licencia.[cite: 15]" },
+    { pregunta: "Tras el Acuerdo de 2018 (RD 956/2018), a partir del 4º mes de IT, en global el funcionario cobra:", opciones: ["A) Solo el subsidio MUFACE.", "B) El 100% de sus retribuciones ordinarias (sumando Admon + MUFACE).", "C) Retribuciones básicas + 50% complementarias.", "D) El 75% de sus retribuciones totales."], respuesta_correcta: 1, explicacion: "Acuerdo 23 julio 2018: las retribuciones a percibir durante el período sean del 100% (Administración complementa al subsidio MUFACE).[cite: 16]" },
+    { pregunta: "En IT por donación de órganos, el subsidio de MUFACE a partir del cuarto mes es:", opciones: ["A) Igual al ordinario.", "B) 100% de retribuciones básicas.", "C) 100% de retribuciones complementarias.", "D) 100% retribuciones totales a cargo MUFACE."], respuesta_correcta: 2, explicacion: "100% de retribuciones complementarias devengadas desde el tercer mes.[cite: 15]" },
+    { pregunta: "La duración máxima legal general de la IT (con prórroga) es:", opciones: ["A) 365 días.", "B) 365 días + 180 días de prórroga.", "C) 730 días.", "D) Indefinida."], respuesta_correcta: 1, explicacion: "Duración: 365 días más una prórroga de 180 días más.[cite: 17]" },
+    { pregunta: "En riesgo durante el embarazo, el subsidio de MUFACE a partir de la licencia es:", opciones: ["A) 75% retribuciones complementarias.", "B) 100% retribuciones complementarias devengadas en el 3º mes.", "C) 80% retribuciones básicas.", "D) Retribuciones básicas íntegras."], respuesta_correcta: 1, explicacion: "Consistirá en subsidio MUFACE igual al 100% retribuciones complementarias devengadas en 3º mes.[cite: 17]" },
+    { pregunta: "¿Qué prestaciones son incompatibles entre sí?", opciones: ["A) IT e incapacidad permanente.", "B) Riesgo embarazo y riesgo lactancia.", "C) IT, riesgo embarazo y riesgo lactancia son incompatibles entre sí.", "D) Subsidio e indemnización."], respuesta_correcta: 2, explicacion: "Son incompatibles entre sí las prestaciones por IT, riesgo embarazo y riesgo lactancia.[cite: 17]" },
+    { pregunta: "Incapacidad Permanente Parcial para la función habitual requiere:", opciones: ["A) Jubilación forzosa.", "B) Reducción anatómica o funcional determinada que alcance valores legales.", "C) Asistencia de tercera persona.", "D) Cese definitivo del trabajo."], respuesta_correcta: 1, explicacion: "Cuando sufra limitación que alcance los valores del 194.3 TRLGSS.[cite: 18]" },
+    { pregunta: "La Gran Invalidez requiere, por ejemplo:", opciones: ["A) Limitación del 33%.", "B) Necesitar silla de ruedas para trayectos largos.", "C) Pérdida total de visión de ambos ojos o necesidad de asistencia para actos esenciales.", "D) Edad mayor a 65 años."], respuesta_correcta: 2, explicacion: "Pérdida visión ambos ojos, extremidades esenciales, o necesidad de asistencia para actos esenciales de la vida.[cite: 18]" },
+    { pregunta: "La prestación económica mensual por Gran Invalidez a cargo de MUFACE es:", opciones: ["A) 100% del haber regulador.", "B) 50% de la pensión de jubilación de Clases Pasivas.", "C) 14 pagas del SMI.", "D) Equivalente a las retribuciones básicas."], respuesta_correcta: 1, explicacion: "Equivalente al 50% de la pensión de jubilación del Régimen de Clases Pasivas.[cite: 18]" },
+    { pregunta: "Si el mutualista gran inválido no causa pensión de Clases Pasivas, ¿qué período de cotización necesita?", opciones: ["A) 5 años.", "B) 9 años.", "C) 15 años.", "D) Ninguno."], respuesta_correcta: 1, explicacion: "Tendrá que acreditar un período previo de cotización de nueve años.[cite: 18]" },
+    { pregunta: "Las lesiones permanentes no invalidantes derivadas de accidente de servicio otorgan derecho a:", opciones: ["A) Subsidio mensual vitalicio.", "B) Pago por una sola vez según baremo o 24 mensualidades si es IT Parcial.", "C) Incremento del 20% en nómina.", "D) Jubilación anticipada."], respuesta_correcta: 1, explicacion: "Abono por una sola vez: baremo RGSS o 24 mensualidades base cotización si es Incapacidad Permanente Parcial.[cite: 19]" },
+    { pregunta: "¿Cuántas pagas tiene la prestación por Gran Invalidez de MUFACE?", opciones: ["A) 12 mensualidades.", "B) 12 ordinarias y 2 extraordinarias.", "C) Pago único.", "D) Trimestral."], respuesta_correcta: 1, explicacion: "Prestación mensual, incluidas dos pagas extraordinarias al año.[cite: 18]" },
+    { pregunta: "Extingue el derecho al subsidio por IT:", opciones: ["A) La jubilación forzosa.", "B) Transcurso de 3 meses.", "C) La reducción de retribuciones.", "D) Todas las anteriores."], respuesta_correcta: 0, explicacion: "Se extingue por finalización licencia, declaración jubilación, fallecimiento, nueva IT, agotamiento duración, incomparecencia a reconocimientos médicos.[cite: 16]" },
+    { pregunta: "¿Denegará o anulará la prestación económica de IT si el beneficiario trabaja por cuenta ajena?", opciones: ["A) No, se reduce al 50%.", "B) Sí, cuando realice cualquier trabajo por cuenta ajena o propia.", "C) Solo si gana más del SMI.", "D) No afecta."], respuesta_correcta: 1, explicacion: "Se denegará o anulará cuando realice cualquier trabajo o actividad por cuenta ajena o propia.[cite: 16]" },
+    { pregunta: "Las prestaciones familiares de MUFACE incluyen ayudas por parto múltiple, que consisten en:", opciones: ["A) Pago mensual hasta 18 años.", "B) Prestación económica de pago único.", "C) Aumento de grado consolidado.", "D) Subsidio de guardería anual."], respuesta_correcta: 1, explicacion: "Ayudas en casos de parto múltiple, de pago único.[cite: 19]" },
+    { pregunta: "Para ayudas asistenciales (Asistencia social MUFACE), el límite es:", opciones: ["A) El SMI.", "B) Los créditos que a tal fin se consignen en el presupuesto de gastos de MUFACE.", "C) 10.000 euros.", "D) 25% del haber regulador."], respuesta_correcta: 1, explicacion: "Límite: créditos consignados en presupuesto; su concesión no puede comprometer recursos del ejercicio siguiente.[cite: 20]" },
+    { pregunta: "Una de estas NO es prestación básica del Mutualismo (según listado de art 12):", opciones: ["A) Asistencia sanitaria.", "B) Préstamos hipotecarios sin interés.", "C) Subsidio IT.", "D) Servicios sociales."], respuesta_correcta: 1, explicacion: "Art. 12 no incluye préstamos hipotecarios; incluye sanidad, IT, indemnizaciones, familia, asis. social.[cite: 8]" }
+  ],
+  // Test 3: Órganos de MUFACE
+  [
+    { pregunta: "¿Quién ostenta la Presidencia del Consejo General de MUFACE?", opciones: ["A) La persona titular del Ministerio competente en Función Pública.", "B) La persona titular de la Secretaría de Estado de Función Pública.", "C) El Director General de MUFACE.", "D) Un representante sindical electo."], respuesta_correcta: 1, explicacion: "La persona titular de la Secretaría de Estado de FP ostentará la Presidencia del Consejo.[cite: 21]" },
+    { pregunta: "¿Cuántos representantes de la Administración Civil del Estado hay en el Consejo General?", opciones: ["A) 7", "B) 9", "C) 15", "D) 5"], respuesta_correcta: 0, explicacion: "Siete representantes de la Administración Civil del Estado.[cite: 21]" },
+    { pregunta: "¿Cuántos representantes designados por los sindicatos integran el Consejo General?", opciones: ["A) 7", "B) 9", "C) 12", "D) 5"], respuesta_correcta: 1, explicacion: "Nueve representantes designados por los Sindicatos.[cite: 21]" },
+    { pregunta: "La Vicepresidencia Segunda del Consejo General recae en:", opciones: ["A) Director General de MUFACE.", "B) Elegido de entre los representantes de los funcionarios.", "C) El Ministro.", "D) Secretario General de MUFACE."], respuesta_correcta: 1, explicacion: "Los 9 representantes de funcionarios elegirán, de entre ellos, al Vicepresidente segundo.[cite: 22]" },
+    { pregunta: "Quién aprueba el Plan de Actuación de MUFACE?", opciones: ["A) Comisión Permanente.", "B) Consejo General.", "C) Director General.", "D) Ministerio de Sanidad."], respuesta_correcta: 1, explicacion: "Atribución del Consejo General: Aprobar el Plan de Actuación de MUFACE.[cite: 22]" },
+    { pregunta: "El Presidente de la Comisión Permanente de MUFACE es:", opciones: ["A) El Secretario de Estado de FP.", "B) La persona al frente de la Dirección General de MUFACE.", "C) Un vocal sindical.", "D) El Secretario General de MUFACE."], respuesta_correcta: 1, explicacion: "La persona al frente de la Dirección General de MUFACE ostentará su Presidencia.[cite: 22]" },
+    { pregunta: "¿Quién actúa como Secretario, con voz pero sin voto, del Consejo General?", opciones: ["A) El Interventor Delegado.", "B) La persona titular de la Secretaría General de MUFACE.", "C) Un subdirector general.", "D) El Vocal más joven."], respuesta_correcta: 1, explicacion: "Actuará como Secretaria (voz sin voto) la persona titular de la Secretaría General.[cite: 22]" },
+    { pregunta: "Los órganos de participación en el control y vigilancia de MUFACE son:", opciones: ["A) Consejo General, Comisión Permanente y Comisiones Provinciales.", "B) Dirección General y Subdirecciones.", "C) Direcciones Provinciales y Centrales.", "D) Secretaría de Estado y Ministerio."], respuesta_correcta: 0, explicacion: "De participación: Consejo General, Comisión Permanente, Comisiones Provinciales.[cite: 21]" },
+    { pregunta: "¿Qué órgano promueve las normas que en el ámbito del Mutualismo correspondan a MUFACE?", opciones: ["A) Consejo General.", "B) Dirección General de MUFACE.", "C) Comisión Permanente.", "D) Comisión Provincial."], respuesta_correcta: 1, explicacion: "Es atribución de la Dirección General promover normas y aprobar instrucciones.[cite: 23]" },
+    { pregunta: "¿Quién nombra a la persona titular de la Dirección General de MUFACE?", opciones: ["A) El Rey a propuesta del Presidente del Gobierno.", "B) Por Real Decreto, a propuesta del Ministerio competente en Función Pública.", "C) El Consejo General por mayoría absoluta.", "D) Resolución del INSS."], respuesta_correcta: 1, explicacion: "Nombrada por Real Decreto, a propuesta del Ministerio en Función Pública.[cite: 23]" },
+    { pregunta: "Disponer los gastos y ordenar los pagos de la MUFACE es función de:", opciones: ["A) Dirección General de MUFACE.", "B) Consejo General.", "C) TGSS.", "D) Intervención General del Estado."], respuesta_correcta: 0, explicacion: "Atribución de Dirección General: Disponer los gastos y ordenar los pagos.[cite: 23]" },
+    { pregunta: "Las Comisiones Provinciales de MUFACE se reunirán al menos:", opciones: ["A) Mensualmente.", "B) Bimestralmente.", "C) Semestralmente.", "D) Anualmente."], respuesta_correcta: 1, explicacion: "La Comisión Provincial se reunirá, al menos, bimestralmente.[cite: 25]" },
+    { pregunta: "¿Quién preside la Comisión Provincial de MUFACE?", opciones: ["A) El Subdelegado del Gobierno.", "B) El Director del Servicio Provincial de MUFACE.", "C) El Delegado Sindical mayoritario.", "D) El Secretario Provincial."], respuesta_correcta: 1, explicacion: "El Director del Servicio de MUFACE, que será el Presidente de la Comisión.[cite: 24]" },
+    { pregunta: "La estructura de la Dirección General NO incluye con nivel de Subdirección General a:", opciones: ["A) Secretaría General.", "B) Departamento de Gestión Económica y Financiera.", "C) Departamento de Inspección Médica.", "D) Departamento de Prestaciones Sociales."], respuesta_correcta: 2, explicacion: "Estructura: Secretaría General, Dpto Económica Financiera, Prestaciones Sanitarias, Prestaciones Sociales.[cite: 23]" },
+    { pregunta: "Celebrar los conciertos para prestación asistencia sanitaria corresponde a:", opciones: ["A) Consejo de Ministros.", "B) Consejo General.", "C) Dirección General de MUFACE.", "D) Comisiones Provinciales."], respuesta_correcta: 2, explicacion: "Dirección General: Celebrar contratos y conciertos de colaboración.[cite: 24]" },
+    { pregunta: "Definir criterios para la concesión de ayudas por asistencia social en la provincia corresponde a:", opciones: ["A) Dirección General.", "B) Comisiones Provinciales.", "C) Delegación del Gobierno.", "D) Ayuntamientos."], respuesta_correcta: 1, explicacion: "Atribución Comisiones Provinciales: Definir criterios para ayudas asistencia social provinciales.[cite: 25]" },
+    { pregunta: "Informar de los proyectos de disposiciones de carácter general que modifiquen prestaciones corresponde a:", opciones: ["A) Comisión Permanente.", "B) Consejo General.", "C) Dirección General.", "D) Ministerio Fiscal."], respuesta_correcta: 1, explicacion: "Atribución Consejo General: Informar proyectos de disposiciones que establezcan prestaciones.[cite: 22]" },
+    { pregunta: "Resolver afiliación, altas y bajas de mutualistas corresponde a:", opciones: ["A) INSS.", "B) TGSS.", "C) Dirección General de MUFACE.", "D) Comisión Permanente."], respuesta_correcta: 2, explicacion: "Atribución Dirección General: Resolver afiliación, altas y bajas.[cite: 24]" },
+    { pregunta: "¿Quién ostenta la representación legal de MUFACE?", opciones: ["A) Presidente del Consejo General.", "B) Director General.", "C) Subsecretario del Ministerio.", "D) Ministro."], respuesta_correcta: 1, explicacion: "El Director General asume la representación legal del Organismo.[cite: 23]" },
+    { pregunta: "El número de representantes de la Administración en la Comisión Provincial será:", opciones: ["A) Igual al de funcionarios.", "B) Inferior en uno al de representantes de los funcionarios.", "C) 3 vocales.", "D) Mayoría absoluta."], respuesta_correcta: 1, explicacion: "Inferior en uno al de los representantes de los funcionarios.[cite: 24]" }
+  ],
+  // Test 4: Clases Pasivas (Órganos, Normas, Características)
+  [
+    { pregunta: "El reconocimiento de prestaciones de Clases Pasivas corresponde hoy a:", opciones: ["A) MUFACE.", "B) Dirección General de Personal.", "C) Instituto Nacional de la Seguridad Social (INSS).", "D) Tesorería General."], respuesta_correcta: 2, explicacion: "El reconocimiento corresponde al INSS.[cite: 28]" },
+    { pregunta: "El pago material de las prestaciones de Clases Pasivas corresponde a:", opciones: ["A) INSS.", "B) TGSS (Tesorería General de la Seguridad Social).", "C) MUFACE.", "D) Agencia Tributaria."], respuesta_correcta: 1, explicacion: "La ordenación y el pago material corresponde a la TGSS.[cite: 29]" },
+    { pregunta: "En materia de Clases Pasivas, si no hay resolución expresa una vez superado el plazo máximo:", opciones: ["A) Silencio positivo.", "B) Silencio administrativo desestimatorio.", "C) Caducidad de expediente.", "D) Retroactividad automática."], respuesta_correcta: 1, explicacion: "Se entenderá desestimada la petición por silencio administrativo.[cite: 29]" },
+    { pregunta: "Los derechos pasivos NO son:", opciones: ["A) Irrenunciables.", "B) Imprescriptibles.", "C) Embargables.", "D) Inalienables."], respuesta_correcta: 2, explicacion: "Son inembargables, irrenunciables e inalienables y también imprescriptibles.[cite: 26]" },
+    { pregunta: "La retroactividad máxima de los efectos económicos al solicitar el reconocimiento es de:", opciones: ["A) 1 mes.", "B) 3 meses.", "C) 6 meses.", "D) 1 año."], respuesta_correcta: 1, explicacion: "Retroactividad máxima de 3 meses a contar desde día 1 mes sig a solicitud.[cite: 26]" },
+    { pregunta: "Los haberes pasivos devengados y no percibidos por el causante fallecido:", opciones: ["A) Se pierden para siempre.", "B) Pasan al Tesoro Público.", "C) Se abonarán a los herederos por derecho civil a instancia de parte.", "D) Financian orfandad exclusivamente."], respuesta_correcta: 2, explicacion: "Se abonarán a los herederos por derecho civil.[cite: 27]" },
+    { pregunta: "Plazo de los herederos para reclamar haberes devengados y no percibidos:", opciones: ["A) 1 año.", "B) 3 años.", "C) 4 años.", "D) 5 años."], respuesta_correcta: 3, explicacion: "Dentro del plazo de cinco años a contar desde el día siguiente al fallecimiento.[cite: 27]" },
+    { pregunta: "El personal interino incluido en Clases Pasivas debe ser de ingreso anterior a:", opciones: ["A) 1 enero 1985.", "B) 1 enero 1965.", "C) 1 enero 2011.", "D) 31 diciembre 1990."], respuesta_correcta: 1, explicacion: "El personal interino de ingreso anterior al 1 de enero de 1965.[cite: 28]" },
+    { pregunta: "El cómputo en Régimen Clases Pasivas de los servicios reconocidos es competencia exclusiva de:", opciones: ["A) INSS.", "B) TGSS.", "C) El Ministerio adscrito.", "D) MUFACE."], respuesta_correcta: 0, explicacion: "El cómputo de los servicios a efectos de CP es competencia exclusiva del INSS.[cite: 30]" },
+    { pregunta: "Para reconocer servicios en la Administración Civil del Estado (Servicios Centrales) el órgano competente es:", opciones: ["A) Ministro.", "B) Subsecretario del Departamento.", "C) Delegado del Gobierno.", "D) Director General."], respuesta_correcta: 1, explicacion: "Subsecretarios en servicios centrales; Delegados Gobierno en periféricos.[cite: 29]" },
+    { pregunta: "Acuerdos del INSS en materia Clases Pasivas, ¿ponen fin a la vía administrativa?", opciones: ["A) No, cabe alzada ante Ministerio.", "B) Sí, ponen fin, cabe recurso potestativo reposición o contencioso.", "C) Sí, pero solo cabe contencioso.", "D) No cabe recurso."], respuesta_correcta: 1, explicacion: "Pondrán fin a la vía administrativa; previo al contencioso cabe potestativo de reposición.[cite: 31]" },
+    { pregunta: "La Administración podrá revisar actos a favor de familiares si hay condena firme por:", opciones: ["A) Estafa al causante.", "B) Delito culposo de tráfico.", "C) Delito doloso de homicidio cuando víctima es el causante.", "D) Violencia de género a terceros."], respuesta_correcta: 2, explicacion: "Revisión si hay condena firme por delito doloso de homicidio donde la víctima es causante.[cite: 31, 46]" },
+    { pregunta: "Regla de Incompatibilidad Interna ordinaria:", opciones: ["A) Límite de 4 pensiones.", "B) Incompatible percibir >3 pensiones causadas por diferente persona, o >1 por la misma persona.", "C) Incompatible >3 pensiones causadas por diferente persona, o 2 o más causadas por la misma.", "D) No hay incompatibilidad."], respuesta_correcta: 2, explicacion: "Incompatible >3 por diferente persona; o 2 o más causadas por la misma.[cite: 32, 33]" },
+    { pregunta: "¿De cuánto es la Cuota de Derechos Pasivos general?", opciones: ["A) 1,69%", "B) 3,86%", "C) 6,59%", "D) 4,10%"], respuesta_correcta: 1, explicacion: "Tipo porcentual del 3,86% del haber regulador.[cite: 32]" },
+    { pregunta: "¿En qué meses se devenga cuota doble de derechos pasivos?", opciones: ["A) Junio y Diciembre.", "B) Mayo y Noviembre.", "C) Agosto y Diciembre.", "D) Ninguno."], respuesta_correcta: 0, explicacion: "Se abonará doblemente en los meses de junio y diciembre.[cite: 32]" },
+    { pregunta: "Las pensiones de clases pasivas se revalorizan anualmente aplicando:", opciones: ["A) Salario Mínimo Interprofesional.", "B) El valor medio tasas variación interanual IPC de 12 meses previos a diciembre.", "C) 2% fijo.", "D) Incremento retribuciones públicas."], respuesta_correcta: 1, explicacion: "Valor medio de tasas variación IPC 12 meses previos a diciembre del año anterior.[cite: 33]" },
+    { pregunta: "¿Qué sucede si el IPC interanual medio resulta negativo para revalorizar?", opciones: ["A) Bajan las pensiones.", "B) Las pensiones no variarán al comienzo del año.", "C) Se resta el porcentaje de la paga extra.", "D) Sube un 0.25%."], respuesta_correcta: 1, explicacion: "Si el valor medio fuera negativo, el importe de las pensiones no variará.[cite: 33]" },
+    { pregunta: "Las pensiones no contributivas, según Pacto Toledo y Ley, incrementan adicionalmente con referencia al umbral de pobreza de hogar unipersonal multiplicado por:", opciones: ["A) 1.5", "B) 1.0", "C) 0.75", "D) 2.0"], respuesta_correcta: 2, explicacion: "Referencia de multiplicar por 0,75 el umbral de pobreza unipersonal.[cite: 34]" },
+    { pregunta: "¿Desde cuándo se devengan las pensiones de jubilación?", opciones: ["A) Día del hecho causante.", "B) Primer día del mes siguiente al de la jubilación.", "C) Primer día hábil del mes.", "D) En enero del año siguiente."], respuesta_correcta: 1, explicacion: "Desde el primer día del mes siguiente al de la jubilación o retiro.[cite: 32]" },
+    { pregunta: "La pérdida de nacionalidad española en el pensionista:", opciones: ["A) Causa pérdida de derechos pasivos.", "B) Obliga a pagar cuotas extranjeras.", "C) No supondrá pérdida de derechos pasivos.", "D) Reduce la pensión al 50%."], respuesta_correcta: 2, explicacion: "La pérdida de nacionalidad española no supondrá pérdida de derechos pasivos.[cite: 32]" }
+  ],
+  // Test 5: Jubilación (Requisitos, Cálculo)
+  [
+    { pregunta: "La jubilación forzosa se declara al cumplir la edad legal y como máximo a los:", opciones: ["A) 65 años.", "B) 67 años.", "C) 70 años.", "D) 72 años."], respuesta_correcta: 2, explicacion: "Automáticamente al cumplir edad, como máximo hasta los 70 años.[cite: 35]" },
+    { pregunta: "Requisitos de la jubilación voluntaria del funcionario:", opciones: ["A) 65 años y 35 años servicio.", "B) 60 años edad y 30 años de servicios efectivos.", "C) 62 años edad y 20 de servicio.", "D) Sin límite de edad si tiene 35 años servicio."], respuesta_correcta: 1, explicacion: "Tener cumplidos 60 años y reconocidos 30 años de servicios efectivos al Estado.[cite: 35]" },
+    { pregunta: "Período de carencia exigido para pensión de jubilación ordinaria:", opciones: ["A) 5 años.", "B) 10 años.", "C) 15 años efectivos.", "D) 20 años efectivos."], respuesta_correcta: 2, explicacion: "Deberá haber completado 15 años de servicios efectivos al Estado.[cite: 36]" },
+    { pregunta: "Período de carencia exigido para pensión extraordinaria (en acto de servicio):", opciones: ["A) 15 años.", "B) 10 años.", "C) No se exigirá período de carencia.", "D) 5 años."], respuesta_correcta: 2, explicacion: "No se exigirá cuando la pensión fuere extraordinaria.[cite: 36]" },
+    { pregunta: "En 2025, el haber regulador para el Subgrupo A1 es:", opciones: ["A) 31.015,26 €.", "B) 40.383,55 €.", "C) 51.311,65 €.", "D) 35.362,35 €."], respuesta_correcta: 2, explicacion: "A1 es 51.311,65 €.[cite: 36]" },
+    { pregunta: "Haber regulador en 2025 para el Subgrupo C1 es:", opciones: ["A) 24.538,21 €.", "B) 31.015,26 €.", "C) 35.362,35 €.", "D) 20.920,79 €."], respuesta_correcta: 1, explicacion: "C1 es 31.015,26 €.[cite: 36]" },
+    { pregunta: "Con 35 años o más de servicio el porcentaje del haber regulador es:", opciones: ["A) 81,73%", "B) 90%", "C) 100%", "D) 96,35%"], respuesta_correcta: 2, explicacion: "35 y más -> 100,00%.[cite: 37]" },
+    { pregunta: "Con 15 años de servicio el porcentaje aplicado al haber regulador es:", opciones: ["A) 26,92%", "B) 24,45%", "C) 50,00%", "D) 30,57%"], respuesta_correcta: 0, explicacion: "15 años servicio -> 26,92%.[cite: 37]" },
+    { pregunta: "Fórmula de cálculo si prestó servicio en distintos cuerpos P = R1C1+...", opciones: ["A) (R1-R2)C2.", "B) (R2-R1)C2 + (R3-R2)C3.", "C) (R2-R3)C2 + (R3-R2)C3.", "D) R2C2 + R3C3."], respuesta_correcta: 2, explicacion: "Fórmula: P = R1C1+ (R2-R3)C2+ (R3-R2)C3...[cite: 38]" },
+    { pregunta: "Para determinar porcentaje de años trabajados en distintos Cuerpos:", opciones: ["A) Se cuentan años y meses exactos.", "B) Fracciones superiores al año se computan en servicios prestados a continuación.", "C) Se promedia el total.", "D) Todo exceso se pierde desde el primer grupo."], respuesta_correcta: 1, explicacion: "Fracciones superiores al año se computan en servicios a continuación hasta el último.[cite: 38]" },
+    { pregunta: "El complemento de brecha de género:", opciones: ["A) Se abona en 12 pagas.", "B) Sustituye al de aportación demográfica y repara perjuicios por cuidado de hijos.", "C) Solo lo cobran mujeres.", "D) Es un porcentaje del haber."], respuesta_correcta: 1, explicacion: "Sustituye por aportación demográfica para reparar perjuicio en carrera por cuidados.[cite: 38]" },
+    { pregunta: "¿Un hombre puede cobrar complemento por brecha de género?", opciones: ["A) No, solo mujeres.", "B) Sí, si cumple requisitos como viudedad (con orfandad) o afectación a carrera (ceses/reducciones).", "C) Sí, automáticamente al tener hijos.", "D) Solo en adopción."], respuesta_correcta: 1, explicacion: "Pueden tener derecho cumpliendo requisitos de viudedad con orfandad o afectación a carrera.[cite: 39]" },
+    { pregunta: "En caso de progenitores del mismo sexo que soliciten el complemento:", opciones: ["A) Se deniega a ambos.", "B) Lo cobran al 50%.", "C) Se reconoce al que haya solicitado en primer lugar si las pensiones coinciden.", "D) Se decide por sorteo."], respuesta_correcta: 2, explicacion: "Se reconocerá al que haya solicitado en primer lugar si coinciden los importes.[cite: 38]" },
+    { pregunta: "El complemento por brecha de género tiene un límite de:", opciones: ["A) 2 hijos.", "B) 3 hijos.", "C) 4 veces el importe fijado por hijo (4 hijos).", "D) Sin límite."], respuesta_correcta: 2, explicacion: "Limitada a cuatro veces el importe mensual fijado.[cite: 40]" },
+    { pregunta: "Cuantía mensual del complemento brecha género en 2025 por hijo:", opciones: ["A) 25 €", "B) 35,90 €", "C) 50 €", "D) 45,50 €"], respuesta_correcta: 1, explicacion: "Establecida en 35,90 euros mensuales por hijo en 2025.[cite: 40]" },
+    { pregunta: "¿Se considera servicio efectivo al Estado el Servicio Militar Obligatorio?", opciones: ["A) Siempre.", "B) A veces.", "C) No se entenderá como servicio al Estado.", "D) Sí, a efectos trienios."], respuesta_correcta: 2, explicacion: "No se entenderá como servicios el servicio militar ni la prestación sustitutoria.[cite: 41]" },
+    { pregunta: "Jubilación Activa general (Demora de 1 año), ¿qué porcentaje de pensión percibe?", opciones: ["A) 45%", "B) 50%", "C) 55%", "D) 100%"], respuesta_correcta: 0, explicacion: "Demora 1 año: 45%.[cite: 42]" },
+    { pregunta: "Para cobrar el 100% en Jubilación Activa, el funcionario debe haber demorado:", opciones: ["A) 3 años.", "B) 4 años.", "C) 5 años.", "D) Solo si es autónomo sin empleados."], respuesta_correcta: 2, explicacion: "Si se demora 5 años será del 100%.[cite: 42]" },
+    { pregunta: "Un perceptor de jubilación por incapacidad permanente compatible con otro trabajo distinto (más 20 años de servicio AGE):", opciones: ["A) Cobra 100%.", "B) Se reduce la pensión al 75%.", "C) Se reduce al 55%.", "D) No puede trabajar."], respuesta_correcta: 1, explicacion: "Se reducirá al 75% si se acreditan más de 20 años; al 55% si son menos de 20.[cite: 44]" },
+    { pregunta: "¿Puede suspenderse cautelarmente pensión a favor de familiares por indicios racionales de homicidio doloso contra el causante?", opciones: ["A) No.", "B) Sí, hasta sentencia o resolución firme.", "C) Solo con sentencia firme.", "D) Suspende el INEM."], respuesta_correcta: 1, explicacion: "INSS suspenderá cautelarmente si hay resolución judicial de la que deriven indicios.[cite: 46]" }
+  ],
+  // Test 6: Viudedad
+  [
+    { pregunta: "Pensión de viudedad si causante muere por enfermedad común tras matrimonio:", opciones: ["A) Exige siempre 2 años matrimonio.", "B) Requiere matrimonio 1 año antes del fallecimiento (salvo hijos o convivencia 2 años global).", "C) Exige 5 años previos.", "D) Sin límite temporal."], respuesta_correcta: 1, explicacion: "Requerirá 1 año antelación; no exigible si hijos o convivencia total superó 2 años.[cite: 47, 48]" },
+    { pregunta: "Cónyuge que no reúne requisito temporal para viudedad por enfermedad común:", opciones: ["A) Pierde toda protección.", "B) Tendrá derecho a prestación temporal de igual cuantía por 2 años.", "C) Prestación por 5 años.", "D) Pago único 12 mensualidades."], respuesta_correcta: 1, explicacion: "Prestación temporal de igual cuantía con duración de 2 años.[cite: 48]" },
+    { pregunta: "Derecho a viudedad de divorciados:", opciones: ["A) Automático siempre.", "B) Solo si hay hijos.", "C) Requiere ser acreedor de pensión compensatoria extinguida a la muerte del causante.", "D) Requiere 10 años matrimonio previo."], respuesta_correcta: 2, explicacion: "Se requiere que sean acreedoras de pensión compensatoria extinguida a la muerte.[cite: 48]" },
+    { pregunta: "Divorciada sin pensión compensatoria pero víctima violencia de género momento divorcio:", opciones: ["A) No tiene derecho.", "B) Tiene derecho a pensión de viudedad en todo caso.", "C) Solo prestación temporal.", "D) Solo pago único."], respuesta_correcta: 1, explicacion: "Tienen derecho las mujeres víctimas violencia género aunque no tengan compensatoria.[cite: 48]" },
+    { pregunta: "En concurrencia de divorciado y nuevo cónyuge superviviente, ¿qué se garantiza al nuevo cónyuge?", opciones: ["A) 50%", "B) 100%", "C) Se reparte a medias exactas.", "D) Al menos el 40% a favor del superviviente."], respuesta_correcta: 3, explicacion: "Garantizándose en todo caso el 40% al cónyuge superviviente o pareja de hecho.[cite: 48]" },
+    { pregunta: "Pareja de hecho (pensión vitalicia) requiere convivencia ininterrumpida de:", opciones: ["A) 2 años.", "B) 3 años.", "C) 5 años (salvo hijos en común).", "D) 10 años."], respuesta_correcta: 2, explicacion: "Convivencia ininterrumpida no inferior a cinco años (salvo hijos en común).[cite: 49]" },
+    { pregunta: "Inscripción registro de Pareja de Hecho o documento público:", opciones: ["A) No es necesario.", "B) Antelación mínima 2 años a fecha fallecimiento.", "C) Antelación 5 años.", "D) Mismo día sirve."], respuesta_correcta: 1, explicacion: "Debe producirse con antelación mínima de 2 años respecto fallecimiento.[cite: 49]" },
+    { pregunta: "Extinción del derecho a pensión viudedad:", opciones: ["A) Cumplir 65 años.", "B) Encontrar empleo.", "C) Contraer nuevo matrimonio o constituir nueva pareja de hecho.", "D) Cobrar herencia."], respuesta_correcta: 2, explicacion: "El derecho se extinguirá cuando contraiga matrimonio o constituya pareja de hecho.[cite: 50]" },
+    { pregunta: "Base reguladora pensión viudedad:", opciones: ["A) Sueldo neto del funcionario.", "B) 80% haber regulador.", "C) Pensión jubilación/retiro del causante.", "D) 100% cotizado MUFACE."], respuesta_correcta: 2, explicacion: "Constituida por la pensión de retiro o jubilación del causante.[cite: 50]" },
+    { pregunta: "Porcentaje general pensión viudedad ordinaria:", opciones: ["A) 25%", "B) 50%", "C) 60%", "D) 75%"], respuesta_correcta: 1, explicacion: "Porcentaje fijo del 50%.[cite: 50]" },
+    { pregunta: "Porcentaje viudedad si el causante fallece tras inutilización acto servicio con pensión extraordinaria:", opciones: ["A) 50%", "B) 25%", "C) 100%", "D) 75%"], respuesta_correcta: 1, explicacion: "Este porcentaje será del 25% si el causante fallece tras inutilidad en acto servicio.[cite: 50]" },
+    { pregunta: "El porcentaje de viudedad sube 8 o 4 puntos si el beneficiario:", opciones: ["A) Tiene 50 años.", "B) Tiene 65 años o más, sin otra pensión ni empleo, y bajas rentas.", "C) Tiene hijos.", "D) Demuestra dependencia."], respuesta_correcta: 1, explicacion: "Mayores de 65, sin pensión ni trabajo ni altas rentas capital, incrementan en 8 o 4 puntos.[cite: 50]" },
+    { pregunta: "Orfandad general ampara a menores de:", opciones: ["A) 18 años.", "B) 21 años.", "C) 26 años.", "D) 25 años sin excepciones."], respuesta_correcta: 1, explicacion: "Menores de 21 años, o incapacitados.[cite: 50]" },
+    { pregunta: "Orfandad hasta 25 años es posible si:", opciones: ["A) Estudia en extranjero.", "B) Ingresos propios inferiores al SMI.", "C) Solo si es huérfano absoluto.", "D) Es hijo único."], respuesta_correcta: 1, explicacion: "Hasta 25 si no trabaja o ingresos inferiores al SMI.[cite: 50]" },
+    { pregunta: "La adopción del huérfano (regla general):", opciones: ["A) Mantiene pensión.", "B) Extingue pensión con efectos 1º mes siguiente a resolución judicial.", "C) Lo reduce al 50%.", "D) Permite cobrar 2 orfandades."], respuesta_correcta: 1, explicacion: "Dará lugar a la extinción a partir del día 1 mes siguiente a la resolución judicial.[cite: 51]" },
+    { pregunta: "Porcentaje orfandad para 1 hijo:", opciones: ["A) 10%", "B) 15%", "C) 25%", "D) 50%"], respuesta_correcta: 2, explicacion: "Porcentaje del 25% si existe un solo hijo.[cite: 52]" },
+    { pregunta: "Porcentaje orfandad para varios hijos:", opciones: ["A) 25% cada uno.", "B) 10% cada uno + 15% prorrateado.", "C) 15% a repartir.", "D) 50% para el mayor."], respuesta_correcta: 1, explicacion: "10% si hay varios, incrementándose en suma prorrateada de un 15%.[cite: 52]" },
+    { pregunta: "Límite pensión orfandad existiendo viudedad:", opciones: ["A) 25%", "B) 50%", "C) 100%", "D) 118%"], respuesta_correcta: 1, explicacion: "No superará el 50% si existe cónyuge supérstite, o 100% si no existe.[cite: 52]" },
+    { pregunta: "Pensión a favor de padres (Porcentaje general):", opciones: ["A) 15%", "B) 20%", "C) 10%", "D) 25%"], respuesta_correcta: 0, explicacion: "Porcentaje fijo del 15%.[cite: 53]" },
+    { pregunta: "Condición para pensión de padres:", opciones: ["A) 65 años edad.", "B) Dependencia económica y no existir cónyuge/hijos con derecho.", "C) Vivir juntos.", "D) Ser únicos herederos."], respuesta_correcta: 1, explicacion: "Dependieran económicamente y no existan cónyuge o hijos con derecho.[cite: 53]" }
+  ],
+  // Test 7: Pensiones Extraordinarias e Incompatibilidades
+  [
+    { pregunta: "Hecho causante pensión extraordinaria jubilación:", opciones: ["A) Cumplir 65 años.", "B) Incapacidad permanente por acto de servicio o consecuencia del mismo.", "C) Despido disciplinario improcedente.", "D) Cese como Alto Cargo."], respuesta_correcta: 1, explicacion: "Incapacidad permanente producida en acto servicio o consecuencia.[cite: 53]" },
+    { pregunta: "Competencia exclusiva para concesión pensión extraordinaria:", opciones: ["A) Ministerio Defensa.", "B) INSS.", "C) TGSS.", "D) Consejo Ministros."], respuesta_correcta: 1, explicacion: "Competencia exclusiva del INSS la concesión o no de pensión extraordinaria.[cite: 54]" },
+    { pregunta: "Período mínimo cotización (carencia) para extraordinaria:", opciones: ["A) 15 años.", "B) 10 años.", "C) 5 años.", "D) No se exige período mínimo."], respuesta_correcta: 3, explicacion: "Cualquiera que sea el tiempo de servicios prestados al Estado (no se exige).[cite: 54]" },
+    { pregunta: "Pensión extraordinaria por acto terrorismo ampara orfandad a menores de:", opciones: ["A) 21 años.", "B) 23 años (o 25 si ingresos < SMI).", "C) 18 años.", "D) 26 años."], respuesta_correcta: 1, explicacion: "Menores de 23 años, ampliables a 25 en caso ingresos < SMI.[cite: 54]" },
+    { pregunta: "Base reguladora para pensión extraordinaria de jubilación:", opciones: ["A) 100% haber regulador.", "B) 150% haber regulador.", "C) 200% haber regulador.", "D) 250% haber regulador."], respuesta_correcta: 2, explicacion: "Base reguladora en todo caso es el 200% del haber regulador.[cite: 54]" },
+    { pregunta: "Compatibilidad pensión extraordinaria derivada de terrorismo:", opciones: ["A) Compatible con todo.", "B) Incompatible con ordinaria y extraordinaria (sin motivación terrorista) por mismos hechos.", "C) Compatible al 50%.", "D) Incompatible solo si trabaja en sector público."], respuesta_correcta: 1, explicacion: "Incompatible con ordinaria o extraordinaria por los mismos hechos.[cite: 54]" },
+    { pregunta: "Pensión de jubilación Clases Pasivas e incompatibilidad sector público:", opciones: ["A) Incompatible con puesto de trabajo o alto cargo en sector público.", "B) Compatible siempre.", "C) Compatible si gana menos del SMI.", "D) Incompatible salvo Profesores Asociados."], respuesta_correcta: 0, explicacion: "Incompatibles con desempeño puesto trabajo o alto cargo en sector público.[cite: 41]" },
+    { pregunta: "Excepción a incompatibilidad en sector público (Ley 53/1984 art 19 y D.A. 9ª):", opciones: ["A) Limpiadores.", "B) Profesores universitarios eméritos y ciertos cargos electivos sin retribución periódica.", "C) Ministros.", "D) Todos los interinos."], respuesta_correcta: 1, explicacion: "Excepciones: profesores eméritos y cargos electivos asambleas sin retribución periódica.[cite: 41, 53]" },
+    { pregunta: "Si el funcionario a jubilar no pertenece a servicios centrales, ¿quién acuerda la jubilación (AGE)?", opciones: ["A) Delegado o Subdelegado Gobierno correspondiente.", "B) Subsecretario del Ministerio.", "C) Alcalde.", "D) Ministro de Función Pública."], respuesta_correcta: 0, explicacion: "Delegado o Subdelegado del Gobierno si está en servicios periféricos.[cite: 56]" },
+    { pregunta: "Acuerda jubilación voluntaria de funcionario Cuerpos AGE:", opciones: ["A) Delegado Gobierno.", "B) Subsecretario del Departamento Ministerial.", "C) Jefatura Provincial.", "D) Tesorería."], respuesta_correcta: 1, explicacion: "Subsecretario del Dpto al que esté adscrito el Cuerpo.[cite: 56]" },
+    { pregunta: "Jubilación de Registradores de la Propiedad:", opciones: ["A) Subsecretario Justicia.", "B) Dirección General de Registros y Notariado.", "C) Consejo General Poder Judicial.", "D) Ministro de Justicia."], respuesta_correcta: 1, explicacion: "Persona titular de Dirección General de Registros y Notariado.[cite: 57]" },
+    { pregunta: "Jubilación forzosa de carrera de la Administración de Justicia (Carrera Judicial):", opciones: ["A) Ministerio Fiscal.", "B) CGPJ (Consejo General Poder Judicial).", "C) INSS.", "D) Subsecretario Justicia."], respuesta_correcta: 1, explicacion: "El Consejo General del Poder Judicial si pertenece a la carrera judicial.[cite: 57]" },
+    { pregunta: "Iniciación de procedimiento jubilación forzosa:", opciones: ["A) A instancia parte 1 mes antes.", "B) De oficio 6 meses antes fecha cumplimiento edad.", "C) Automática el día del cumpleaños.", "D) 3 meses antes de oficio."], respuesta_correcta: 1, explicacion: "Se iniciará de oficio 6 meses antes de la fecha.[cite: 57]" },
+    { pregunta: "Jubilación Cuerpos Docentes Universitarios es competencia de:", opciones: ["A) Ministerio Universidades.", "B) Rector de la Universidad del último destino.", "C) Consejero Comunidad Autónoma.", "D) Claustro universitario."], respuesta_correcta: 1, explicacion: "Rector de la Universidad que corresponda al último destino.[cite: 57]" },
+    { pregunta: "Órgano transitorio para reconocimiento pensiones (D.T. 2ª RD 501/2024) hasta asunción total por INSS:", opciones: ["A) Subdirección General de Gestión de Clases Pasivas (DGOSS).", "B) TGSS Provincial.", "C) Intervención General.", "D) Delegaciones Economía."], respuesta_correcta: 0, explicacion: "DG Ordenación Seg. Social (Subdirección Gestión Clases Pasivas) hasta integración en INSS.[cite: 57, 58]" },
+    { pregunta: "El personal interino incluido en Clases Pasivas para pensión usa como haber regulador:", opciones: ["A) 50% de A1.", "B) El del Cuerpo o Escala homologable desde punto de vista funcional.", "C) El SMI.", "D) Grupo C1 siempre."], respuesta_correcta: 1, explicacion: "Correspondientes al Cuerpo homologable funcionalmente a la plaza desempeñada.[cite: 55]" },
+    { pregunta: "¿Tiene derecho a pensión el beneficiario que comete homicidio doloso contra el causante?", opciones: ["A) Sí, al 50%.", "B) No, no podrá tener la condición de beneficiario.", "C) Sí, tras cumplir condena.", "D) Sí, si tiene menores a cargo."], respuesta_correcta: 1, explicacion: "No podrá tener la condición de beneficiario (o si está cobrando debe devolver).[cite: 46]" },
+    { pregunta: "¿Se exige periodo de carencia para pensión de viudedad?", opciones: ["A) Sí, 5 años.", "B) Sí, 15 años.", "C) No será preciso que el causante haya completado ningún periodo mínimo.", "D) Solo en interinos."], respuesta_correcta: 2, explicacion: "No será preciso que el causante haya completado período mínimo.[cite: 45]" },
+    { pregunta: "¿Qué sucede si aparecen derechohabientes sobrevenidos/desconocidos con posterioridad al señalamiento?", opciones: ["A) Modifica con efecto retroactivo de 5 años.", "B) Efectos económicos cuentan desde día 1 mes siguiente a su solicitud (reintegrando el anterior beneficiario).", "C) Se les deniega el derecho.", "D) Cobran ambos el 100%."], respuesta_correcta: 1, explicacion: "Efectos desde día 1 mes siguiente solicitud. El titular anterior debe reintegrar lo percibido en más.[cite: 45, 46]" },
+    { pregunta: "Un ex Ministro tiene el reconocimiento de sus servicios pasivos en competencia de:", opciones: ["A) Presidencia del Gobierno.", "B) Ministerio de Hacienda.", "C) Ministerio competente Relaciones con las Cortes y Secretariado Gobierno.", "D) Rey de España."], respuesta_correcta: 2, explicacion: "Ministerio competente Relaciones Cortes y Secretariado del Gobierno.[cite: 30]" }
+  ],
+  // Test 8, 9, 10 ... I will pack them efficiently to complete the 10 array sets constraint.
+  // Test 8
+  [
+    { pregunta: "En MUFACE, el mutualista jubilado:", opciones: ["A) Cotiza 1.69%.", "B) Cotiza 3.86%.", "C) No está obligado a cotizar.", "D) Pierde asistencia sanitaria."], respuesta_correcta: 2, explicacion: "Excepción mutualistas jubilados y excedencia familiares: sin obligación cotizar.[cite: 11]" },
+    { pregunta: "¿Cuándo se devenga cuota doble de MUFACE?", opciones: ["A) Nunca.", "B) Mayo y Diciembre.", "C) Junio y Diciembre.", "D) Agosto."], respuesta_correcta: 2, explicacion: "Abonará doblemente junio y diciembre.[cite: 11]" },
+    { pregunta: "¿El beneficiario de MUFACE participa económicamente en la farmacia ambulatoria?", opciones: ["A) No, es gratis.", "B) Participa pago de cantidad porcentual por receta o medicamento.", "C) Paga el 100% siempre.", "D) Solo a partir 4º mes IT."], respuesta_correcta: 1, explicacion: "Beneficiarios participan mediante pago de cantidad porcentual por receta.[cite: 13]" },
+    { pregunta: "Preparación al parto en MUFACE:", opciones: ["A) No cubierta.", "B) Cubierta por asistencia sanitaria nacimiento.", "C) Copago 50%.", "D) Exclusivo Seguridad Social laboral."], respuesta_correcta: 1, explicacion: "Asistencia sanitaria por nacimiento comprende la preparación al parto.[cite: 14]" },
+    { pregunta: "Prestaciones MUFACE que NO se financian con cotizaciones:", opciones: ["A) IT.", "B) Familiares hijo a cargo con discapacidad.", "C) Gran invalidez.", "D) Sanidad."], respuesta_correcta: 1, explicacion: "Hijo con discapacidad a cargo PGE, no cotizaciones.[cite: 9]" },
+    { pregunta: "¿Quién expide documento de afiliación a Mutualidad?", opciones: ["A) Seguridad Social.", "B) MUFACE.", "C) Subsecretaría.", "D) INAP."], respuesta_correcta: 1, explicacion: "Expedido por MUFACE.[cite: 9]" },
+    { pregunta: "Funcionario en prácticas que no llega a ser carrera:", opciones: ["A) Mantiene MUFACE 5 años.", "B) Causa baja en la mutualidad.", "C) Pasa a excedente forzoso MUFACE.", "D) Mantiene MUFACE vitalicio."], respuesta_correcta: 1, explicacion: "Si no alcanzan carrera, causan baja.[cite: 4]" },
+    { pregunta: "¿Cubre MUFACE psicoterapia?", opciones: ["A) No.", "B) Sí, en régimen ambulatorio.", "C) Solo internados graves.", "D) Solo por acto terrorista."], respuesta_correcta: 1, explicacion: "Incluye asistencia psiquiátrica ambulatoria (psicoterapia ind, grupo, familiar).[cite: 13]" },
+    { pregunta: "Transporte sanitario y oxigenoterapia a domicilio en MUFACE son:", opciones: ["A) Básicas Atención Primaria.", "B) Prestaciones complementarias.", "C) Excluidas.", "D) De asistencia social."], respuesta_correcta: 1, explicacion: "Consideradas prestaciones complementarias.[cite: 13]" },
+    { pregunta: "La situación de riesgo por lactancia natural (MUFACE):", opciones: ["A) Tiene consideración equivalente a IT común.", "B) Misma consideración que IT derivada de enfermedad profesional.", "C) IT laboral sin cobro.", "D) 6 meses forzosos."], respuesta_correcta: 1, explicacion: "Misma consideración situación IT derivada de enfermedad profesional.[cite: 17]" },
+    { pregunta: "Órgano MUFACE que aprueba la memoria anual:", opciones: ["A) Consejo General.", "B) Comisión Permanente.", "C) Dirección General.", "D) Secretaría Estado."], respuesta_correcta: 0, explicacion: "Atribución Consejo General: Aprobar memoria anual.[cite: 22]" },
+    { pregunta: "Dirigir los servicios administrativos y técnicos MUFACE:", opciones: ["A) Subdirección.", "B) Presidencia Gobierno.", "C) Dirección General.", "D) Consejo General."], respuesta_correcta: 2, explicacion: "Atribución Dirección General: Dirigir servicios adm y técnicos.[cite: 23]" },
+    { pregunta: "¿Qué Ministerio asume MUFACE según RD 210/2024?", opciones: ["A) Hacienda.", "B) Interior.", "C) Ministerio para la Transformación Digital y de la Función Pública.", "D) Sanidad."], respuesta_correcta: 2, explicacion: "Ministerio Transformación Digital y FP.[cite: 21]" },
+    { pregunta: "¿Clases Pasivas concede asistencia sanitaria?", opciones: ["A) Sí.", "B) No, presta cobertura económica.", "C) Solo medicinas.", "D) Solo en el extranjero."], respuesta_correcta: 1, explicacion: "Prestaciones económicas pago periódico. Sanidad es Mutualismo.[cite: 31, 59, 60]" },
+    { pregunta: "Plazo de excedencia cuidado familiares mutualista para dejar de cotizar:", opciones: ["A) No cotiza mientras esté en excedencia.", "B) Cotiza primer año solo.", "C) Cotiza 3 meses.", "D) Es baja obligatoria definitiva."], respuesta_correcta: 0, explicacion: "Mantiene alta sin obligación de cotizar.[cite: 11]" },
+    { pregunta: "¿Funcionario suspenso provisionalmente en MUFACE?", opciones: ["A) Baja.", "B) Alta y conserva condición mutualista.", "C) Baja cautelar 3 meses.", "D) Traslado a RGSS."], respuesta_correcta: 1, explicacion: "Conserva la condición de mutualista en suspensión provisional o firme de funciones.[cite: 9]" },
+    { pregunta: "¿Los Cuerpos docentes univesitarios están en MUFACE o Clases Pasivas?", opciones: ["A) Ambos.", "B) MUFACE solo.", "C) Están en Clases Pasivas, no en MUFACE obligatoriamente (pertenecen a otro sistema).", "D) Ninguno."], respuesta_correcta: 2, explicacion: "Clases Pasivas los cita en órganos (Rector jubila); MUFACE los cita solo excepcionalmente en disposiciones (excluidos personal adm/servicios).[cite: 5, 57]" },
+    { pregunta: "¿Funcionario en licencia asuntos propios (MUFACE)?", opciones: ["A) Baja definitiva.", "B) Alta cotizando normal.", "C) Alta suspendiendo obligación de cotizar durante licencia.", "D) Alta pagando 200% cuota."], respuesta_correcta: 2, explicacion: "Suspendida la obligación de cotizar durante la licencia por asuntos propios.[cite: 10]" },
+    { pregunta: "¿El haber regulador lo fija MUFACE o LPGE?", opciones: ["A) MUFACE.", "B) TGSS.", "C) LPGE anualmente.", "D) INSS."], respuesta_correcta: 2, explicacion: "LPGE (Ley Presupuestos Generales Estado) para cada ejercicio económico.[cite: 11]" },
+    { pregunta: "Fallecimiento de mutualista durante IT:", opciones: ["A) Extingue derecho al subsidio.", "B) Concede 3 meses más de cobro.", "C) Pasa la IT al cónyuge.", "D) Suspende cautelar IT."], respuesta_correcta: 0, explicacion: "Extingue derecho prestación económica IT por fallecimiento.[cite: 16]" }
+  ],
+  // Test 9 (Mixing Clases Pasivas specific facts)
+  [
+    { pregunta: "Pensión jubilación por 18 años servicio (Porcentaje del Regulador):", opciones: ["A) 37,88%", "B) 41,54%", "C) 34,23%", "D) 26,92%"], respuesta_correcta: 0, explicacion: "18 años -> 37,88%.[cite: 37]" },
+    { pregunta: "Pensión jubilación por 20 años de servicio (Porcentaje):", opciones: ["A) 50,00%", "B) 45,19%", "C) 41,54%", "D) 37,88%"], respuesta_correcta: 1, explicacion: "20 años -> 45,19%.[cite: 37]" },
+    { pregunta: "¿Puede complementarse a mínimos la pensión de Clases Pasivas si el pensionista reside en el extranjero permanentemente?", opciones: ["A) Sí, sin problema.", "B) No, siempre que residan en territorio español.", "C) Solo UE.", "D) Solo con convenio bilataral."], respuesta_correcta: 1, explicacion: "Podrán complementarse... siempre que sus beneficiarios residan en territorio español.[cite: 33]" },
+    { pregunta: "Complemento brecha de género es incompatible con:", opciones: ["A) Pensión de jubilación.", "B) Percepción del mismo complemento en favor del otro progenitor por mismo causante/hijo.", "C) Mínimos de viudedad.", "D) Límite máximo de pensión."], respuesta_correcta: 1, explicacion: "Si el otro solicita, se reconoce al que tenga pensiones menor cuantía o prioridades legales. Solo 1 por hijo.[cite: 38]" },
+    { pregunta: "Para calcular brecha género por totalización períodos a prorrata internacional:", opciones: ["A) Importe íntegro.", "B) No se abona.", "C) Se aplica la prorrata a la pensión teórica del complemento.", "D) Doble complemento."], respuesta_correcta: 2, explicacion: "El importe real será el resultado de aplicar la prorrata.[cite: 40]" },
+    { pregunta: "¿Computa el complemento de brecha de género para el límite máximo de pensiones?", opciones: ["A) Sí.", "B) No será tenido en cuenta en aplicación límite máximo.", "C) Solo el 50%.", "D) Solo en orfandad."], respuesta_correcta: 1, explicacion: "No será tenido en cuenta en aplicación del límite máximo pensiones.[cite: 40]" },
+    { pregunta: "¿Y tiene consideración rendimiento de trabajo para complemento de mínimos?", opciones: ["A) Sí.", "B) No, no tendrá consideración rendimiento para mínimos.", "C) Sí, al 100%.", "D) Tributa IRPF solo mínimos."], respuesta_correcta: 1, explicacion: "No tendrá consideración de ingreso/rendimiento trabajo orden a determinar mínimos.[cite: 40]" },
+    { pregunta: "El beneficiario de jubilación activa compatibilizando (Ley 11/2024):", opciones: ["A) Genera incremento complemento brecha género extra.", "B) No causará complemento a mínimos mientras compatibilice.", "C) Deja de ser pensionista.", "D) Cobrará 200% haber."], respuesta_correcta: 1, explicacion: "No causará derecho a complementos para pensiones < mínima durante compatibilidad.[cite: 43]" },
+    { pregunta: "¿Orfandad es vitalicia si?", opciones: ["A) Tiene más de 30 años sin estudios.", "B) Se incapacita para todo trabajo antes de los 25 (o 21 en regla general sin estudios/rentas).", "C) Gana salario base.", "D) Si es hijo único forzoso."], respuesta_correcta: 1, explicacion: "Si se incapacitase antes de 25 años, orfandad vitalicia.[cite: 51]" },
+    { pregunta: "Orfandad causada por víctima violencia género a manos de distinto progenitor (fallecida por 3º):", opciones: ["A) Sin derecho.", "B) Incremento 70% u orfandad absoluta si rentas < 75% SMI anual.", "C) Baja 50%.", "D) Pierde patria potestad el tercero."], respuesta_correcta: 1, explicacion: "Derecho orfandad absoluta si ingresos < 75% SMI.[cite: 52]" },
+    { pregunta: "¿Un huérfano puede cobrar orfandades del padre y de la madre fallecidos en Clases Pasivas?", opciones: ["A) Sí, sumando ambas bases limitadas a su haber respectivo, respetando reglas orfandad absoluta.", "B) No, rige incompatibilidad 1 pensión.", "C) Solo si mueren a la vez.", "D) Orfandad es única por núcleo."], respuesta_correcta: 0, explicacion: "Causadas por diferente persona puede percibir simultáneas (límite 3 ordinarias dist persona).[cite: 32]" },
+    { pregunta: "Incapacidad permanente para el servicio o inutilidad exige:", opciones: ["A) Dictamen no vinculante.", "B) Dictamen preceptivo y vinculante órgano médico correspondiente.", "C) Acuerdo sindical.", "D) Autorización forense."], respuesta_correcta: 1, explicacion: "Acuerdo con dictamen preceptivo y vinculante del órgano médico.[cite: 36]" },
+    { pregunta: "¿Si trabajo 15 años en E y 5 en C2, P = ...?", opciones: ["A) C2 directo.", "B) Fórmula: R(E)*C(20) + (R(C2)-R(E))*C(5).", "C) R1C1+ (R2-R3)...", "D) Fórmula R1C1+ (R2-R1)C2."], respuesta_correcta: 3, explicacion: "Fórmula aplica base inicial por % total + saltos diferencia bases. (R2-R1 en fórmula general PDF adaptado, auque PDF cita (R2-R3) errata aparente pero literlidad: P = R1C1+ (R2-R3)C2+ (R3-R2)C3...).[cite: 38]" },
+    { pregunta: "En la fórmula del PDF literalmente dice: P = R1C1 + (R2-R3)C2 + ... ¿Qué significa C1?", opciones: ["A) Años totalizados en cuerpo A.", "B) Porcentaje de años transcurridos acceso primer cuerpo hasta jubilación.", "C) Cuota mensual.", "D) Base reguladora."], respuesta_correcta: 1, explicacion: "C1, C2... porcentajes correspondientes años completos desde acceso 1º cuerpo hasta jubilación.[cite: 38]" },
+    { pregunta: "El devengo mensual cuota derechos pasivos es anual dividido entre:", opciones: ["A) 12", "B) 14", "C) 15", "D) 10"], respuesta_correcta: 1, explicacion: "Dividiendo por catorce la anual.[cite: 32]" },
+    { pregunta: "El titular pensión clases pasivas percibirá:", opciones: ["A) 12 mensualidades y 2 extra de igual cuantía ordinarias (junio/diciembre).", "B) 14 sin extras.", "C) 12 extras incluidas.", "D) Trimestrales."], respuesta_correcta: 0, explicacion: "12 mensualidades ordinarias y 2 extraordinarias de la misma cuantía.[cite: 32]" },
+    { pregunta: "Pensiones excepcionales:", opciones: ["A) Son las de acto de servicio.", "B) Reconocidas en virtud de Ley a persona determinada.", "C) Jefes Estado.", "D) INSS discrecional."], respuesta_correcta: 1, explicacion: "Reconocen en virtud de ley a persona determinada el derecho.[cite: 32]" },
+    { pregunta: "El personal transferido a CCAA causa Clases Pasivas si:", opciones: ["A) Era AGE con anterioridad 2011 y no integró cuerpo CCAA exclusiv.", "B) Ya no puede.", "C) Siempre Régimen General exclusiv.", "D) CCAA es autónoma pensiones."], respuesta_correcta: 0, explicacion: "Ámbito protección: los mencionados transferidos como consecuencia...[cite: 28]" },
+    { pregunta: "Pensión jubilación funcionario con jornada reducida último año:", opciones: ["A) Mantiene regulador base 100%.", "B) Regulador se minora proporcional a la importancia económica reducción.", "C) No afecta.", "D) Se reduce 50% pensión."], respuesta_correcta: 1, explicacion: "Regulador se minorará proporcionalmente a importancia económica reducción.[cite: 36]" },
+    { pregunta: "Si jubilación forzosa es edad, la voluntaria es:", opciones: ["A) Cumplir 60 edad + 30 servicios.", "B) Edad solo.", "C) Servicios solo.", "D) Aprobación jefatura."], respuesta_correcta: 0, explicacion: "60 años edad y reconocidos 30 de servicio.[cite: 35]" }
+  ],
+  // Test 10
+  [
+    { pregunta: "¿Un huérfano adoptado puede generar 2 pensiones orfandad por adoptantes si fallece otro?", opciones: ["A) Sí.", "B) Será incompatible con la que venía percibiendo, debiendo optar.", "C) Suma ambas sin límite.", "D) Pierde ambas automáticamente."], respuesta_correcta: 1, explicacion: "Incompatible nueva pensión orfandad con la que venía percibiendo; debe optar.[cite: 51]" },
+    { pregunta: "Beneficiario viudedad, si su pensión compensatoria judicial extinta era menor a la base pensión:", opciones: ["A) Se paga viudedad 100% igual.", "B) Se disminuirá la viudedad hasta alcanzar cuantía pensión compensatoria.", "C) Suma ambas.", "D) Se cancela la viudedad."], respuesta_correcta: 1, explicacion: "Aquella se disminuirá hasta alcanzar la cuantía de la compensatoria.[cite: 49]" },
+    { pregunta: "Las retenciones a mutualista pasivo exento por excedencia cuidados familia:", opciones: ["A) 1.69%.", "B) 0% (exento cuota).", "C) 3.86%.", "D) Cuota fija mínima."], respuesta_correcta: 1, explicacion: "Están exentos de cotizar a MUFACE los excedencia cuidado familia.[cite: 11]" },
+    { pregunta: "¿Qué porcentaje de haber regulador para Grupo E y Agrupaciones en 2025?", opciones: ["A) 31.015,26", "B) 20.920,79", "C) 24.538,21", "D) 35.362,35"], respuesta_correcta: 1, explicacion: "E y Agrupaciones profesionales: 20.920,79 €.[cite: 36]" },
+    { pregunta: "¿Qué porcentaje regulador Grupo B 2025?", opciones: ["A) 40.383,55", "B) 35.362,35", "C) 31.015,26", "D) 51.311,65"], respuesta_correcta: 1, explicacion: "B: 35.362,35 €.[cite: 36]" },
+    { pregunta: "Con 25 años de servicio, ¿qué porcentaje regulador aplica Clases Pasivas?", opciones: ["A) 59,81%", "B) 63,46%", "C) 67,11%", "D) 70,77%"], respuesta_correcta: 1, explicacion: "25 años de servicio -> 63,46%.[cite: 37]" },
+    { pregunta: "¿Con cuántos años se alcanza 100% haber regulador?", opciones: ["A) 30", "B) 32", "C) 35", "D) 40"], respuesta_correcta: 2, explicacion: "35 y más -> 100,00%.[cite: 37]" },
+    { pregunta: "En la compatibilidad de Jubilación con trabajo artístico cuenta ajena (forzosa):", opciones: ["A) Cotizan en términos art 153 ter TRLGSS.", "B) No cotizan.", "C) Cotizan doble a MUFACE.", "D) Pierden la artística."], respuesta_correcta: 0, explicacion: "Causarán alta y cotizarán términos art 153 ter y 310 bis LGSS.[cite: 44]" },
+    { pregunta: "Incompatibilidad pensión jubilación voluntaria artística 100% requiere:", opciones: ["A) Solo forzosa lo permite.", "B) Acceder a partir momento cumplan edad ordinaria.", "C) Nunca posible.", "D) Aprobar examen específico."], respuesta_correcta: 1, explicacion: "Voluntarias pueden acceder a compatibilidad a partir momento cumplan la edad.[cite: 43]" },
+    { pregunta: "Prestaciones MUFACE reconocidas antes 01/01/2011, abonadas por habilitados:", opciones: ["A) 5% deducción legal.", "B) Abonarán sin practicar deducción alguna sobre prestación.", "C) Exigen firma mensual en sede física.", "D) Cobran en efectivo obligatoriamente."], respuesta_correcta: 1, explicacion: "Obligados a abonar el importe íntegro... sin practicar deducción alguna.[cite: 9]" },
+    { pregunta: "El devengo mensual de MUFACE se obtiene:", opciones: ["A) Dividiendo base anual por 12.", "B) Dividiendo base anual por 14 y aplicando el porcentaje.", "C) Sumando complementarias.", "D) Restando IRPF antes cálculo."], respuesta_correcta: 1, explicacion: "Dividiendo por 14 cantidad de aplicar a base anual el tipo porcentual.[cite: 11]" },
+    { pregunta: "Procedimiento de jubilación por incapacidad permanente de un Subsecretario AGE:", opciones: ["A) De oficio o a instancia parte.", "B) Exclusivo de oficio.", "C) Solo dictamen fiscal.", "D) Lo aprueba la Mutualidad."], respuesta_correcta: 0, explicacion: "Se declarará de oficio o a instancia de parte.[cite: 36]" },
+    { pregunta: "Para suspender MUFACE (servicios especiales en UE o intl):", opciones: ["A) Debe solicitar excedencia.", "B) Puede optar por suspender alta si amparado en régimen organización (sin traspaso).", "C) Renunciar al funcionariado.", "D) Cotizar Clases Pasivas obligatoriamente en UE."], respuesta_correcta: 1, explicacion: "Posibilidad de optar por suspender el alta mientras dure situación y amparado régimen intl.[cite: 10]" },
+    { pregunta: "¿Un funcionario de justicia transferido a CCAA ampara Clases Pasivas?", opciones: ["A) Sí, art 3.1 transferidos CCAA mantienen originario.", "B) No, todos a la Seguridad Social.", "C) Solo si se colegia.", "D) Exclusivo MUGEJU siempre."], respuesta_correcta: 0, explicacion: "El personal transferido (mencionados en 3.1) continúan en Clases Pasivas.[cite: 27, 28]" },
+    { pregunta: "¿Quién gestiona la unidad de pensiones de viudedad de un militar retirado?", opciones: ["A) INSS reconoce, TGSS paga (tras las reformas Clases Pasivas AGE).", "B) Instituto Social Marina.", "C) MUFACE Militar (ISFAS).", "D) BBVA."], respuesta_correcta: 0, explicacion: "INSS reconoce y TGSS paga (personal de art 3.1, que incluye militar profesional).[cite: 27, 28, 29]" },
+    { pregunta: "¿Si suspenden pensión a padres tutores por indicios homicidio causante de orfandad?", opciones: ["A) Se abona a la cuenta del Ayuntamiento.", "B) Se pone en conocimiento del Ministerio Fiscal.", "C) Se archiva indefinidamente.", "D) El Juez lo gasta en costas."], respuesta_correcta: 1, explicacion: "Se pondrá conocimiento del Ministerio Fiscal existencia pensión y resolución judicial para instar medidas en tutores/menores.[cite: 47]" },
+    { pregunta: "Asistencia psiquiátrica MUFACE comprende:", opciones: ["A) Hospitalización aguda y crónica, y ambulatorio.", "B) Solo agudos.", "C) No cubre psiquiatría.", "D) Psicoanálisis de larga duración obligatorio."], respuesta_correcta: 0, explicacion: "Ambulatorio (psicoterapia) y hospitalización procesos agudos y crónicos.[cite: 13]" },
+    { pregunta: "MUFACE no facilita sanidad a familiares si:", opciones: ["A) Están casados.", "B) Tienen sanidad por el INSS u otro organismo público como asegurados/SNS.", "C) Son menores de 18.", "D) Son adoptados recientes."], respuesta_correcta: 1, explicacion: "Incompatible con condición de asegurado/beneficiario asistencia SNS reconocida por otros organismos.[cite: 12]" },
+    { pregunta: "Recién nacido (no alta inmediata):", opciones: ["A) Desasistido 1 mes.", "B) Asistencia garantizada durante primeros 15 días desde el parto si madre es mutualista/beneficiaria.", "C) Pagan de bolsillo.", "D) Obliga inscribir en el minuto 1."], respuesta_correcta: 1, explicacion: "Se facilita durante los primeros 15 días desde momento del parto o adopción.[cite: 12]" },
+    { pregunta: "Pensión en favor padres, si causante en inutilidad por servicio:", opciones: ["A) 7.5% reguladora.", "B) 15% reguladora.", "C) 50% reguladora.", "D) 25% reguladora."], respuesta_correcta: 0, explicacion: "Será del 7,5% si hubiere señalado extraordinaria (frente al 15% ordinario).[cite: 53]" }
+  ]
+];
+
+// Generar botones de Test dinámicamente
+const topMenu = document.getElementById('topMenu');
+examenes.forEach((_, i) => {
+    let btn = document.createElement('button');
+    btn.id = 'btnTest' + i;
+    btn.innerText = `Test ${i + 1}`;
+    btn.onclick = () => showTab('test', i);
+    topMenu.appendChild(btn);
+});
+
+// Lógica Tabs
+let currentTest = -1;
+let synth = window.speechSynthesis;
+let isSpeaking = false;
+
+function showTab(tabId, testIndex = -1) {
+    if(isSpeaking) playAudio(); // detener audio si cambiamos
+    document.getElementById('tab-esquema').classList.add('hidden');
+    document.getElementById('tab-test').classList.add('hidden');
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+
+    if(tabId === 'esquema') {
+        document.getElementById('tab-esquema').classList.remove('hidden');
+        document.getElementById('btnEsquema').classList.add('active');
+    } else {
+        document.getElementById('tab-test').classList.remove('hidden');
+        document.getElementById('btnTest' + testIndex).classList.add('active');
+        loadTest(testIndex);
+    }
+}
+
+// Inyectar Esquema
+const esqContainer = document.getElementById('esquemaContainer');
+esquemaPreguntas.forEach((q, i) => {
+    esqContainer.innerHTML += `
+      <div class="card">
+        <h3>${i+1}. ${q.pregunta}</h3>
+        <p>${q.respuesta_detallada}</p>
+      </div>`;
+});
+
+// Función de Audio TTS
+function playAudio() {
+    if(isSpeaking) {
+        synth.cancel();
+        isSpeaking = false;
+        document.getElementById('btnAudio').innerText = "🔊 Escuchar Tema Completo";
+        return;
+    }
+    let textToSpeak = "Esquema de estudio. Tema 7: Seguridad Social de los Funcionarios. ";
+    esquemaPreguntas.forEach((q, i) => {
+        textToSpeak += `Punto ${i+1}. ${q.pregunta}. Respuesta: ${q.respuesta_detallada.replace(/\/g, '')}. `; // Clean citations from TTS
+    });
+    
+    let utterThis = new SpeechSynthesisUtterance(textToSpeak);
+    utterThis.lang = 'es-ES';
+    synth.speak(utterThis);
+    isSpeaking = true;
+    document.getElementById('btnAudio').innerText = "⏹ Detener Audio";
+    utterThis.onend = () => {
+        isSpeaking = false;
+        document.getElementById('btnAudio').innerText = "🔊 Escuchar Tema Completo";
+    };
+}
+
+// Lógica de Test
+const testContainer = document.getElementById('testContainer');
+const testTitle = document.getElementById('testTitle');
+let respuestasUsuario = [];
+
+function loadTest(index) {
+    currentTest = index;
+    respuestasUsuario = new Array(20).fill(null);
+    testTitle.innerText = `Test ${index + 1}: Examen Oficial Simulado`;
+    testContainer.innerHTML = '';
+    
+    document.getElementById('scoreTop').style.display = 'none';
+    document.getElementById('scoreBottom').style.display = 'none';
+    document.getElementById('btnCorregir').style.display = 'block';
+    document.getElementById('btnReiniciar').style.display = 'none';
+
+    examenes[index].forEach((q, qIndex) => {
+        let optionsHTML = '';
+        q.opciones.forEach((opt, oIndex) => {
+            optionsHTML += `
+              <label class="option-label" id="lbl-${qIndex}-${oIndex}">
+                <input type="radio" name="q${qIndex}" value="${oIndex}" onclick="selectOption(${qIndex}, ${oIndex})">
+                <span>${opt}</span>
+              </label>
+            `;
+        });
+        
+        testContainer.innerHTML += `
+          <div class="card" id="qcard-${qIndex}">
+            <h4>${qIndex + 1}. ${q.pregunta}</h4>
+            <div class="options">
+               ${optionsHTML}
+            </div>
+            <div class="explanation" id="exp-${qIndex}">
+               <strong>Respuesta correcta:</strong> ${q.opciones[q.respuesta_correcta]}<br><br>
+               <strong>Motivación legal:</strong> ${q.explicacion}
+            </div>
+          </div>
+        `;
+    });
+}
+
+function selectOption(qIndex, oIndex) {
+    respuestasUsuario[qIndex] = oIndex;
+}
+
+function corregirTest() {
+    let aciertos = 0;
+    let fallos = 0;
+    let blanco = 0;
+    const testActual = examenes[currentTest];
+
+    // Bloquear inputs
+    document.querySelectorAll('#testContainer input[type=radio]').forEach(inp => inp.disabled = true);
+
+    testActual.forEach((q, qIndex) => {
+        let respUser = respuestasUsuario[qIndex];
+        let correctIdx = q.respuesta_correcta;
+
+        // Pintar correcta real siempre (verde)
+        document.getElementById(`lbl-${qIndex}-${correctIdx}`).classList.add('correct');
+
+        if (respUser === null) {
+            blanco++;
+            // Mostrar explicación
+            document.getElementById(`exp-${qIndex}`).style.display = 'block';
+        } else if (respUser === correctIdx) {
+            aciertos++;
+        } else {
+            fallos++;
+            // Pintar la fallada en rojo
+            document.getElementById(`lbl-${qIndex}-${respUser}`).classList.add('incorrect');
+            // Mostrar explicación
+            document.getElementById(`exp-${qIndex}`).style.display = 'block';
+        }
+    });
+
+    // Calcular nota AGE típica (aciertos - (fallos/3) o similar, mostraremos formato claro)
+    let notaText = `Resultado: ${aciertos} Aciertos, ${fallos} Errores, ${blanco} En blanco.`;
+    
+    let st = document.getElementById('scoreTop');
+    let sb = document.getElementById('scoreBottom');
+    st.innerText = notaText;
+    sb.innerText = notaText;
+    st.style.display = 'block';
+    sb.style.display = 'block';
+    
+    document.getElementById('btnCorregir').style.display = 'none';
+    document.getElementById('btnReiniciar').style.display = 'block';
+    
+    // Auto-scroll up
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reiniciarTest() {
+    loadTest(currentTest);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Iniciar app
+showTab('esquema');
+</script>
+</body>
+</html>
