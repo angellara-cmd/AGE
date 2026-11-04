@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oposiciones AGE - Tema 6: Incompatibilidades y Régimen Disciplinario</title>
+<style>
+    :root {
+        --bg-main: #f8f9fa;
+        --card-bg: #ffffff;
+        --text-color: #212529;
+        --primary: #0d6efd;
+        --primary-hover: #0b5ed7;
+        --correct-bg: #d4edda;
+        --correct-text: #155724;
+        --incorrect-bg: #f8d7da;
+        --incorrect-text: #721c24;
+        --expl-bg: #e6f2ff;
+        --expl-text: #004085;
+        --shadow: 0 4px 6px rgba(0,0,0,0.05);
+        --font-main: system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+        font-family: var(--font-main);
+        background-color: var(--bg-main);
+        color: var(--text-color);
+        line-height: 1.6;
+        font-size: 16px;
+    }
+
+    header {
+        background-color: var(--card-bg);
+        padding: 20px;
+        text-align: center;
+        box-shadow: var(--shadow);
+    }
+
+    header h1 { font-size: 1.5rem; margin-bottom: 10px; }
+    
+    .doc-links a {
+        color: var(--primary);
+        text-decoration: none;
+        margin: 0 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    nav.sticky-nav {
+        position: sticky;
+        top: 0;
+        background: var(--card-bg);
+        z-index: 1000;
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        gap: 10px;
+    }
+
+    nav button {
+        background: var(--bg-main);
+        border: 1px solid #dee2e6;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--text-color);
+        min-height: 44px;
+        transition: all 0.3s;
+    }
+
+    nav button.active, nav button:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+    }
+
+    main {
+        max-width: 768px;
+        margin: 0 auto;
+        padding: 20px 15px;
+    }
+
+    .audio-btn {
+        display: block;
+        width: 100%;
+        background-color: #198754;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        cursor: pointer;
+        min-height: 48px;
+    }
+
+    .audio-btn:hover { background-color: #157347; }
+
+    .card {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+    }
+
+    .card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        color: var(--primary);
+    }
+
+    .pregunta-test {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .pregunta-test p { font-weight: 600; margin-bottom: 15px; }
+
+    .opcion-label {
+        display: flex;
+        align-items: center;
+        background: var(--bg-main);
+        padding: 12px 20px;
+        margin: 8px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid #dee2e6;
+        min-height: 48px;
+        transition: background 0.2s;
+    }
+
+    .opcion-label:hover { background: #e9ecef; }
+    .opcion-label input { margin-right: 15px; transform: scale(1.2); }
+
+    .correct {
+        background-color: var(--correct-bg) !important;
+        color: var(--correct-text) !important;
+        border-color: #c3e6cb !important;
+    }
+
+    .incorrect {
+        background-color: var(--incorrect-bg) !important;
+        color: var(--incorrect-text) !important;
+        border-color: #f5c6cb !important;
+    }
+
+    .explicacion {
+        background-color: var(--expl-bg);
+        color: var(--expl-text);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 0.95rem;
+        display: none;
+        border-left: 4px solid var(--primary);
+    }
+
+    .acciones-test {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .acciones-test button {
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        color: #fff;
+    }
+
+    .btn-corregir { background-color: var(--primary); }
+    .btn-reiniciar { background-color: #6c757d; }
+    
+    .puntuacion {
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 15px;
+        background: var(--card-bg);
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    @media (min-width: 768px) {
+        .acciones-test { flex-direction: row; }
+        .acciones-test button { flex: 1; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Tema 6: Incompatibilidades y Régimen Disciplinario</h1>
+    <div class="doc-links">
+        <a href="tema06_Esquema incompatibilidades.pdf" target="_blank">📄 Esq. Incompatibilidades</a>
+        <a href="tema06_Esquema regimen disciplinario.pdf" target="_blank">📄 Esq. Disciplinario</a>
+        <a href="tema06_Las incompatibilidades.pdf" target="_blank">📄 Tema 6 Completo</a>
+    </div>
+</header>
+
+<nav class="sticky-nav" id="mainNav"></nav>
+<main id="appContent"></main>
+
+<script>
+    // ---------------- DATOS ESTRUCTURADOS ----------------
+    const esquemaPreguntas = [
+        { p: "¿Cuál es el ámbito de aplicación de la Ley 53/1984 de Incompatibilidades?", r: "Afecta a todo el personal de las AAPP (cualquiera que sea su relación de empleo) y al personal de organismos, entes y empresas dependientes, incluyendo empresas con participación pública superior al 50% y personal retribuido por arancel[cite: 1, 11]." },
+        { p: "¿Es compatible el desempeño de un puesto en el sector público con la pensión de jubilación?", r: "Como regla general, es incompatible. La pensión quedará en suspenso. Excepcionalmente, en el ámbito laboral, es compatible la pensión de jubilación parcial con un puesto a tiempo parcial[cite: 11, 12]." },
+        { p: "¿Qué excepciones principales existen para ejercer una segunda actividad pública?", r: "Funciones docentes o sanitarias, cargos electivos (Parlamento autonómico o Corp. Locales si no son retribuidos), investigación o asesoramiento no permanente no retribuido, y los determinados por Consejo de Ministros u Órgano de Gobierno CCAA[cite: 1, 12, 13]." },
+        { p: "¿Cuáles son los límites retributivos al desempeñar un segundo puesto público?", r: "La suma no puede exceder la remuneración de un Director General, ni superar la del puesto principal más un porcentaje: 30% (A1), 35% (A2), 40% (C1), 45% (C2), 50% (Agrup. Prof.). Superarlo requiere acuerdo expreso[cite: 4, 14]." },
+        { p: "¿A cuántos Consejos de Administración puede pertenecer como máximo un empleado público?", r: "No se podrá pertenecer a más de dos Consejos de Administración u Órganos de Gobierno de empresas, salvo autorización excepcional[cite: 14]." },
+        { p: "¿Cuál es el plazo para resolver la autorización de compatibilidad de un segundo puesto público?", r: "El plazo es de 4 meses desde la presentación de la solicitud. El silencio es positivo. La resolución corresponde al Ministerio competente (ahora Oficina de Conflictos de Intereses en AGE)[cite: 4, 14]." },
+        { p: "¿Qué límite horario existe para autorizar una actividad privada si el puesto público es a jornada completa?", r: "No podrá reconocerse compatibilidad para actividades privadas si requiere presencia efectiva igual o superior a la mitad de la jornada semanal ordinaria, salvo que la pública sea a tiempo parcial. La suma nunca puede igualar o superar 40h semanales[cite: 15, 16]." },
+        { p: "¿Qué actividades privadas están expresamente prohibidas?", r: "Las relacionadas con asuntos en los que esté interviniendo o haya intervenido en los últimos 2 años; pertenencia a Consejos de empresas relacionadas con el Departamento; contratistas de obras/servicios con el sector público o participación >10% en ellas[cite: 2, 16]." },
+        { p: "¿Cuál es el plazo para resolver el reconocimiento de compatibilidad con una actividad privada?", r: "El plazo es de 2 meses, mediante resolución motivada, siendo el silencio positivo[cite: 4, 17]." },
+        { p: "¿Qué ocurre con el complemento específico y la compatibilidad privada?", r: "No cabe compatibilidad si el complemento específico supera el 30% de la retribución básica (excluyendo antigüedad). No obstante, los funcionarios pueden solicitar la reducción de dicho importe para adecuarlo y poder compatibilizar[cite: 17, 18]." },
+        { p: "¿Qué plazo tiene un funcionario para optar si accede a un nuevo puesto público incompatible con el anterior?", r: "Tendrá que optar por uno de ellos dentro del plazo de toma de posesión. Si no lo hace, se entiende que opta por el nuevo puesto, quedando en el otro en excedencia voluntaria[cite: 2, 19]." },
+        { p: "¿Qué límite de horas existe para la preparación de opositores o impartición de cursos como actividad exceptuada?", r: "No pueden suponer más de 75 horas al año para ser consideradas actividades exceptuadas que no requieren reconocimiento previo[cite: 3, 19]." },
+        { p: "Enumera otras actividades exceptuadas del régimen de incompatibilidades.", r: "Administración del patrimonio personal/familiar; participación en Tribunales calificadores; creación literaria, artística o científica no sujeta a relación de empleo; participación ocasional en medios de comunicación[cite: 3, 19, 20]." },
+        { p: "¿Dónde se regulan los regímenes disciplinarios del personal de la Administración?", r: "Básicamente en el Título VII del TREBEP (arts. 93 a 98). De forma complementaria en AGE: Ley 30/1984 y RD 33/1986. Al personal laboral se le aplica el TREBEP y subsidiariamente la legislación laboral/convenios[cite: 5, 21]." },
+        { p: "¿Quiénes son los sujetos responsables en el régimen disciplinario?", r: "Los funcionarios o personal laboral infractores, los inductores y quienes encubran faltas consumadas graves o muy graves (cuando derive daño grave)[cite: 5, 24]." },
+        { p: "¿Cuáles son los principios del ejercicio de la potestad disciplinaria?", r: "Legalidad/tipicidad, Irretroactividad (salvo disposiciones favorables), Proporcionalidad, Culpabilidad y Presunción de inocencia[cite: 5, 26]." },
+        { p: "¿Qué faltas se consideran 'Muy Graves' relacionadas con los deberes constitucionales?", r: "Incumplimiento del deber de respeto a la Constitución y Estatutos de Autonomía; y toda discriminación o acoso (moral, sexual, raza, religión, etc.)[cite: 6, 21]." },
+        { p: "¿Es falta muy grave el abandono del servicio?", r: "Sí, el abandono del servicio, así como no hacerse cargo voluntariamente de las tareas encomendadas, es falta muy grave[cite: 6, 21]." },
+        { p: "¿Qué tipo de falta es la desobediencia abierta a las órdenes de un superior?", r: "Es falta muy grave, salvo que constituyan infracción manifiesta del Ordenamiento jurídico[cite: 6, 22]." },
+        { p: "¿Qué infracción supone el incumplimiento de las normas sobre incompatibilidades?", r: "Es falta muy grave cuando dé lugar a una situación de incompatibilidad. Si solo se incumplen plazos/procedimientos sin mantener la incompatibilidad, es falta grave[cite: 6, 22, 23]." },
+        { p: "¿Dónde se tipifican las faltas graves y leves?", r: "El TREBEP establece que serán determinadas por Ley (Cortes/Asambleas) o convenios colectivos. Supletoriamente, mientras no se desarrollen, rige el RD 33/1986[cite: 6, 22]." },
+        { p: "¿Qué tipo de falta es la grave falta de consideración con los administrados o superiores?", r: "Falta grave[cite: 6, 23]." },
+        { p: "¿Cuántas horas de incumplimiento injustificado de jornada suponen falta grave?", r: "El incumplimiento injustificado de la jornada que acumulado suponga un mínimo de 10 horas al mes[cite: 6, 23]." },
+        { p: "¿Qué ocurre ante la tercera falta injustificada de asistencia en un periodo de tres meses?", r: "Se considera falta grave, siempre que las dos anteriores hubiesen sido sancionadas como falta leve[cite: 6, 23]." },
+        { p: "¿Qué tipo de falta es la ausencia injustificada de 1 día?", r: "Es falta leve, según el RD 33/1986[cite: 6, 24]." },
+        { p: "¿Qué sanciones disciplinarias pueden imponerse según el TREBEP?", r: "Separación del servicio (solo MG), Despido (laborales, solo MG), Suspensión de funciones (máx. 6 años), Traslado forzoso, Demérito, Apercibimiento (solo L)[cite: 8, 25]." },
+        { p: "¿A quién corresponde imponer la sanción de separación del servicio?", r: "Al Ministro del Departamento[cite: 30]." },
+        { p: "¿Quién incoa (inicia) un procedimiento disciplinario?", r: "De oficio, por acuerdo del órgano competente (Subsecretario en todo caso, o Directores Generales / Delegados del Gobierno en sus ámbitos)[cite: 7, 27]." },
+        { p: "¿Qué figuras se nombran en el acuerdo de incoación?", r: "Un Instructor (funcionario de igual o superior grupo/subgrupo) y, excepcionalmente, un Secretario (en casos de gran complejidad o trascendencia)[cite: 7, 27]." },
+        { p: "¿Cuál es el plazo para formular el Pliego de Cargos?", r: "El Instructor dispone de 1 mes, prorrogable, a partir de la incoación[cite: 7, 28]." },
+        { p: "¿Qué plazos tiene el inculpado para contestar al Pliego de Cargos y para el trámite de Vista?", r: "10 días para contestar al Pliego de Cargos (y proponer prueba) y otros 10 días en el trámite de Vista del expediente (tras la fase de prueba) para alegaciones[cite: 7, 28, 29]." },
+        { p: "¿Cuánto dura el periodo de prueba en un expediente disciplinario?", r: "1 mes[cite: 7, 28]." },
+        { p: "¿Cuál es el plazo para dictar resolución sancionadora tras recibir la propuesta?", r: "10 días (hábiles), salvo si la sanción es de separación del servicio[cite: 7, 29]." },
+        { p: "¿En qué plazo deben ejecutarse las sanciones disciplinarias?", r: "En el plazo máximo de 1 mes, salvo causa justificada fijada en la resolución[cite: 7, 30]." },
+        { p: "¿Qué características tiene la suspensión provisional como medida preventiva?", r: "Puede acordarse por máx. 6 meses (salvo paralización imputable al interesado). Se perciben retribuciones básicas y prestación familiar. Si resulta inocente, se le restituyen los haberes completos y el tiempo computa como servicio activo[cite: 7, 32]." },
+        { p: "¿Cómo se extingue la responsabilidad disciplinaria?", r: "Por cumplimiento de la sanción, muerte, amnistía, indulto, o prescripción de la falta o sanción[cite: 8, 32]." },
+        { p: "¿Cuáles son los plazos de prescripción de las FALTAS (infracciones)?", r: "Muy Graves: 3 años. Graves: 2 años. Leves: 6 meses (desde que se cometió)[cite: 8, 33]." },
+        { p: "¿Cuáles son los plazos de prescripción de las SANCIONES?", r: "Muy Graves: 3 años. Graves: 2 años. Leves: 1 año (desde la firmeza de la resolución)[cite: 8, 33]." },
+        { p: "¿Dónde se anotan las sanciones disciplinarias?", r: "En el Registro Central de Personal[cite: 7, 33]." },
+        { p: "¿Cuándo se cancelan las anotaciones de sanciones?", r: "De oficio o a instancia de parte: a los 6 meses (leves), 2 años (graves) o 6 años (muy graves) de su cumplimiento[cite: 33]." }
+    ];
+
+    const examenes = [
+        // TEST 1: Incompatibilidades - Conceptos Generales
+        [
+            {q: "¿Qué ley regula las Incompatibilidades del Personal de las AAPP?", o: ["Ley 30/1984", "Ley 53/1984", "TREBEP", "RD 33/1986"], c: 1, e: "Ley 53/1984, de 26 de diciembre[cite: 1, 9]."},
+            {q: "¿Afecta la Ley 53/1984 al personal de empresas con capital público mayor al 50%?", o: ["No", "Sí, a todo el personal", "Solo al personal directivo", "Solo a funcionarios"], c: 1, e: "Afecta a empresas con participación directa o indirecta superior al 50%[cite: 11]."},
+            {q: "El desempeño de un puesto público es, por regla general:", o: ["Compatible con otro en el sector público", "Incompatible con la percepción de pensión de jubilación", "Compatible con pensión si es grupo A1", "Ninguna es correcta"], c: 1, e: "Incompatible con la percepción de la pensión de jubilación[cite: 11]."},
+            {q: "¿Es compatible la pensión de jubilación parcial con un puesto laboral a tiempo parcial?", o: ["Sí, por excepción en el ámbito laboral", "No, nunca", "Solo para docentes", "Solo en Sanidad"], c: 0, e: "Por excepción, en el ámbito laboral, será compatible[cite: 12]."},
+            {q: "La autorización de compatibilidad requiere:", o: ["Solo razones económicas", "Previa y expresa autorización en razón del interés público", "Petición del interesado sin más", "Resolución en 6 meses"], c: 1, e: "Previa y expresa autorización en razón del interés público[cite: 11]."},
+            {q: "Funciones docentes y sanitarias se consideran:", o: ["Actividades públicas compatibles (con autorización)", "Prohibidas", "Privadas", "Solo aplicables a corporaciones locales"], c: 0, e: "Son actividades públicas compatibles[cite: 1]."},
+            {q: "¿Es compatible ser miembro de una Asamblea Legislativa autonómica?", o: ["Sí, pero no se puede percibir retribución por ambas actividades (salvo dietas)", "No, es incompatible siempre", "Sí, y se cobran ambos sueldos", "Solo si se trabaja a tiempo parcial"], c: 0, e: "Solo podrá percibirse la retribución de una, sin perjuicio de dietas[cite: 13]."},
+            {q: "Los miembros de Corporaciones Locales con dedicación parcial:", o: ["No cobran nada", "Pueden percibir retribución si la desempeñan fuera de su jornada", "Tienen dedicación exclusiva obligatoria", "Son incompatibles"], c: 1, e: "Pueden percibir retribuciones siempre que se desempeñe fuera de jornada Admon[cite: 1, 13]."},
+            {q: "Límite retributivo: La suma de dos puestos públicos no excederá la de un:", o: ["Subsecretario", "Ministro", "Director General", "Presidente del Gobierno"], c: 2, e: "No podrá exceder las remuneraciones para el cargo de Director general[cite: 4, 14]."},
+            {q: "¿Qué porcentaje se incrementa al puesto principal para un funcionario Subgrupo A1?", o: ["25%", "30%", "40%", "50%"], c: 1, e: "Un 30% para Subgrupo A1[cite: 14]."},
+            {q: "¿Qué porcentaje aplica para funcionarios C1?", o: ["30%", "35%", "40%", "45%"], c: 2, e: "Un 40% para C1[cite: 14]."},
+            {q: "¿Y para C2?", o: ["30%", "40%", "45%", "50%"], c: 2, e: "Un 45% para C2[cite: 14]."},
+            {q: "Para pertenecer a más de 2 Consejos de Administración se requiere:", o: ["Autorización excepcional del órgano competente", "Ser Subgrupo A1", "No se puede en ningún caso", "Declaración responsable"], c: 0, e: "Salvo que excepcionalmente se autorice por el órgano administrativo competente (Gobierno en AGE)[cite: 14]."},
+            {q: "Las pagas extra, si se tienen dos puestos públicos:", o: ["Se cobran dobles", "Solo podrán percibirse en uno de los dos puestos", "Se prorratean", "Depende del Ministerio"], c: 1, e: "Solo podrán percibirse en uno de los dos puestos[cite: 4, 14]."},
+            {q: "Servicios prestados en el segundo puesto público:", o: ["Computan para trienios", "No computan a efectos de trienios ni derechos pasivos", "Computan solo para pasivos", "Solo computan al 50%"], c: 1, e: "No se computan a efectos de trienios ni de derechos pasivos[cite: 4, 14]."},
+            {q: "Plazo para resolver autorización de compatibilidad en sector público:", o: ["2 meses", "3 meses", "4 meses", "6 meses"], c: 2, e: "En el plazo de 4 meses[cite: 4, 14]."},
+            {q: "Si la Administración no resuelve en plazo la compatibilidad pública:", o: ["Silencio negativo", "Caducidad", "Silencio positivo", "Se archiva"], c: 2, e: "Teniendo en cuenta que el silencio será positivo[cite: 14]."},
+            {q: "¿A quién están delegadas las competencias de incompatibilidades en la AGE actualmente?", o: ["Director Gral. Función Pública", "Oficina de Conflictos de Intereses", "Consejo de Ministros", "INAP"], c: 1, e: "Delegadas en la persona titular de la Dirección de la Oficina de Conflictos de Intereses[cite: 14, 15]."},
+            {q: "¿Superar los límites retributivos (30-50%) en cómputo anual requiere?", o: ["Acuerdo expreso del Gobierno / Órgano competente CC.AA.", "Ley de Cortes", "Solo autorización del jefe inmediato", "Es imposible"], c: 0, e: "Requiere en cada caso acuerdo expreso del Gobierno / CCAA / Pleno[cite: 14]."},
+            {q: "Actividades de asesoramiento científico no permanente, ¿son compatibles?", o: ["Sí, excepcionalmente", "No, nunca", "Solo si es privado", "A y C son correctas"], c: 0, e: "Excepcionalmente podrá autorizarse... de asesoramiento científico o técnico[cite: 1, 13]."}
+        ],
+        // TEST 2: Incompatibilidades - Actividades Privadas
+        [
+            {q: "¿Qué condición general tiene la compatibilidad privada?", o: ["Ser retribuida", "No impedir o menoscabar el cumplimiento de los deberes e imparcialidad", "Realizarse de noche", "Aprobación sindical"], c: 1, e: "Cuando no impidan o menoscaben el estricto cumplimiento de los deberes... imparcialidad[cite: 1, 15]."},
+            {q: "Si la actividad privada requiere igual o más de media jornada ordinaria:", o: ["Está prohibida", "Solo autorizable si la pública es a tiempo parcial", "Se aprueba automáticamente", "No hay límite horario"], c: 1, e: "Solo podrán autorizarse cuando la actividad pública sea de prestación a tiempo parcial[cite: 15]."},
+            {q: "¿Se autoriza actividad privada si la suma con 2 puestos públicos llega a 40h?", o: ["Sí", "Solo si es investigación", "No, si la suma de los públicos es igual o superior a 40h", "Depende del Ministerio"], c: 2, e: "No podrá reconocerse... siempre que la suma de ambos puestos sea igual o sup. a la máxima permitida (40h)[cite: 16]."},
+            {q: "Trabajar privadamente en asuntos donde el funcionario ha intervenido en los últimos 2 años:", o: ["Es compatible", "Está prohibido", "Requiere licencia", "Solo prohibido a directivos"], c: 1, e: "Prohibido: desempeñadas en asuntos en los que... se haya intervenido en los 2 últimos años[cite: 2, 16]."},
+            {q: "Pertenecer al Consejo de Administración de empresa relacionada con su Departamento:", o: ["Permitido", "Prohibido", "Permitido si es sin ánimo de lucro", "Solo para A1"], c: 1, e: "Prohibida la pertenencia a Consejos... relacionada con las que gestione el Departamento[cite: 2, 16]."},
+            {q: "Desempeñar cargos en empresas concesionarias/contratistas del sector público:", o: ["Permitido al 100%", "Permitido con autorización", "Prohibido", "Solo permitido a C2"], c: 2, e: "Prohibido el desempeño... cargos en empresas concesionarias, contratistas[cite: 2, 16]."},
+            {q: "¿Qué porcentaje de participación prohíbe tener en empresas contratistas?", o: ["> 5%", "> 10%", "> 25%", "> 50%"], c: 1, e: "La participación superior al 10% en las empresas a que se refiere el apartado anterior[cite: 2, 16]."},
+            {q: "Realizar servicios de gestoría administrativa por parte de un funcionario:", o: ["Es compatible", "Es incompatible", "Solo con silencio positivo", "Depende si es titular"], c: 1, e: "Incompatible... el desempeño de servicios de gestoría administrativa[cite: 16]."},
+            {q: "El ejercicio de Procurador para el funcionario:", o: ["Es compatible", "Es incompatible", "Permitido en tardes", "Solo para personal laboral"], c: 1, e: "Incompatible... el ejercicio de la profesión de Procurador[cite: 16]."},
+            {q: "Funcionario de contratación trabajando en empresa que provee a su unidad:", o: ["Autorizable", "Prohibido", "Falta leve", "Totalmente legal"], c: 1, e: "Incompatible personal en unidades de contratación... en empresas que realicen suministros gestionados por dichas unidades[cite: 17]."},
+            {q: "Plazo de resolución compatibilidad actividad privada:", o: ["1 mes", "2 meses", "3 meses", "4 meses"], c: 1, e: "Resolución motivada a dictar en el plazo de 2 meses[cite: 4, 17]."},
+            {q: "Sentido del silencio en solicitud de actividad privada:", o: ["Negativo", "Positivo", "Caduca", "Se inadmite"], c: 1, e: "Siendo el silencio positivo[cite: 17]."},
+            {q: "El complemento específico limita la compatibilidad privada si supera el:", o: ["20%", "25%", "30%", "35%"], c: 2, e: "Cuya cuantía no supere el 30% de su retribución básica[cite: 18]."},
+            {q: "¿Aplica la antigüedad en el cálculo del 30% del complemento específico?", o: ["Sí, toda", "No, se excluye", "Solo los trienios consolidados", "Solo quinquenios"], c: 1, e: "Excluidos los conceptos que tengan su origen en la antigüedad[cite: 18]."},
+            {q: "¿Pueden los funcionarios A1/A2 solicitar reducción de su complemento específico?", o: ["Sí, salvo altos cargos y niveles 29-30", "No, nunca", "Sí todos", "Solo los C1"], c: 0, e: "Podrán solicitar... la reducción. Se excluye altos cargos y niveles 29 y 30[cite: 18]."},
+            {q: "Si se deniega la compatibilidad pero el funcionario ejerce igual:", o: ["Es falta leve", "Es falta grave o muy grave según el caso", "No pasa nada", "Debe devolver el sueldo"], c: 1, e: "Las correspondientes faltas serán calificadas... grave o muy grave[cite: 18]."},
+            {q: "Desempeñar dos puestos incompatibles entre sí, ¿qué falta es?", o: ["Leve", "Grave", "Muy Grave", "No es falta"], c: 2, e: "El desempeño de dos puestos incompatibles entre sí es falta muy grave[cite: 18]."},
+            {q: "Incumplir los plazos en incompatibilidades, sin mantener la situación, es falta:", o: ["Leve", "Grave", "Muy Grave", "Atípica"], c: 1, e: "Si incumple procedimiento/plazos tan solo será falta grave[cite: 18]."},
+            {q: "¿Se puede modificar el horario del puesto principal para ejercer la privada?", o: ["Sí", "No", "Solo 1 hora", "Si lo aprueba el Subsecretario"], c: 1, e: "El reconocimiento de compatibilidad no podrá modificar la jornada y horario[cite: 18]."},
+            {q: "Si alguien accede a nuevo puesto y resulta incompatible con el anterior, plazo para optar:", o: ["10 días del plazo de toma de posesión", "1 mes", "5 días", "20 días"], c: 0, e: "Optar por uno de ellos dentro del plazo de toma de posesión (10 primeros días)[cite: 19]."}
+        ],
+        // TEST 3: Incompatibilidades - Excepciones
+        [
+            {q: "Administrar el patrimonio familiar es una actividad:", o: ["Prohibida", "Compatible con autorización", "Exceptuada (no requiere autorización)", "Infracción grave"], c: 2, e: "Actividades exceptuadas: derivadas de la Administración del patrimonio personal o familiar[cite: 19]."},
+            {q: "Límite horario para cursos en centros oficiales exceptuados:", o: ["50 horas/año", "75 horas/año", "100 horas/año", "150 horas/año"], c: 1, e: "Cuando no tengan carácter permanente ni supongan más de 75 horas al año[cite: 3, 19]."},
+            {q: "Preparar opositores como actividad exceptuada tiene un máximo de:", o: ["30h anuales", "75h anuales", "100h anuales", "No tiene límite"], c: 1, e: "Preparación acceso a la función pública: máximo en 75 horas al año[cite: 3, 19]."},
+            {q: "Participar en Tribunales selectivos de las AAPP es:", o: ["Actividad exceptuada", "Requiere compatibilidad", "Incompatible", "Falta leve"], c: 0, e: "Actividades exceptuadas... Participación en Tribunales calificadores[cite: 3, 19]."},
+            {q: "Pertenecer a Juntas Rectoras de Mutualidades no retribuidas:", o: ["Requiere permiso de 2 meses", "Actividad exceptuada", "Falta grave", "Requiere permiso 4 meses"], c: 1, e: "Actividad exceptuada: Juntas Rectoras... siempre que no sean retribuidos[cite: 19]."},
+            {q: "La producción y creación literaria, para estar exceptuada:", o: ["Debe originarse por relación de empleo", "No debe originarse como consecuencia de relación de empleo", "Debe ser gratuita", "Está prohibida"], c: 1, e: "Exceptuada: creación literaria... siempre que no se originen como consecuencia de una relación de empleo[cite: 3, 20]."},
+            {q: "Participación ocasional en coloquios en medios de comunicación:", o: ["Actividad exceptuada", "Requiere compatibilidad privada", "Incompatible", "Requiere compatibilidad pública"], c: 0, e: "Exceptuadas: participación ocasional en coloquios y programas[cite: 3, 20]."},
+            {q: "Si se ejerce opción por el nuevo puesto, ¿cómo queda en el antiguo?", o: ["Servicios especiales", "Excedencia voluntaria", "Expectativa de destino", "Jubilado"], c: 1, e: "Se entenderá que opta por el nuevo puesto, quedando en el otro en excedencia voluntaria[cite: 2, 19]."},
+            {q: "¿Qué ocurre si no opta en plazo entre dos puestos?", o: ["Pierde ambos", "Queda en el antiguo", "Se entiende opta por el nuevo", "Falta muy grave inmediata"], c: 2, e: "A falta de opción... se entenderá que opta por el nuevo puesto[cite: 2, 19]."},
+            {q: "Si alguien accede al puesto público pero tenía privada que requiere compatibilidad:", o: ["Tiene 6 meses para pedirla", "Debe pedirla o cesar antes de tomar posesión", "Es compatible por defecto", "La privada pasa a pública"], c: 1, e: "Deberá obtener esta o cesar en la actividad privada antes de comenzar el ejercicio[cite: 19]."},
+            {q: "Las resoluciones de compatibilidad, ¿dónde se inscriben?", o: ["BOE", "Registro Civil", "Registro de Personal", "No se inscriben"], c: 2, e: "Se inscribirán en los Registros de Personal correspondientes[cite: 14, 18]."},
+            {q: "¿La actividad de investigación sanitaria está permitida para personal docente universitario?", o: ["No, nunca", "Sí, a tiempo parcial cumpliendo la ley", "Solo si no es retribuido", "Solo en verano"], c: 1, e: "Podrá autorizarse compatibilidad... sector público sanitario... a tiempo parcial[cite: 12]."},
+            {q: "Un Catedrático de Música puede trabajar a tiempo parcial en sector cultural de admon local:", o: ["Sí, es un supuesto legal expreso", "No", "Solo gratis", "Sí, a jornada completa"], c: 0, e: "Podrá autorizarse la compatibilidad... en el sector público cultural al profesorado de Enseñanzas Artísticas[cite: 12]."},
+            {q: "Quienes realicen funciones de informe en la Admon, ¿pueden prestar esos mismos servicios profesionalmente?", o: ["Sí", "No, sean remunerados o no", "Solo si es gratis", "Solo con silencio positivo"], c: 1, e: "Incompatible... con servicios profesionales, remunerados o no[cite: 16]."},
+            {q: "Un Arquitecto funcionario, ¿puede visar obras sometidas a licencia de su propio organismo?", o: ["Sí", "No, es incompatible", "Solo en CC.AA.", "Sí, si lo autoriza el jefe"], c: 1, e: "Incompatible... respecto de las actividades sometidas a autorización/licencia de su Departamento[cite: 17]."},
+            {q: "Un Letrado de la Admon, ¿puede ejercer la abogacía frente a la Administración del Estado?", o: ["Sí, en lo penal", "No, incompatible en exclusiva", "Sí, con permiso de 2 meses", "Sí, si no cobra"], c: 1, e: "Incompatible... el ejercicio de la Abogacía en defensa de intereses frente a la Admon[cite: 16]."},
+            {q: "Invocar condición de funcionario para actividad comercial:", o: ["Permitido si es verdad", "No se podrá invocar o hacer uso", "Solo en propaganda escrita", "Obligatorio"], c: 1, e: "No se podrá invocar o hacer uso de una condición pública para el ejercicio de actividad mercantil[cite: 21]."},
+            {q: "Si hay cambio de puesto público pero ya tenía compatibilidad privada:", o: ["Se mantiene automáticamente", "Queda sin efecto automáticamente, hay que pedir nuevo reconocimiento", "Dura 3 años", "Solo hay que avisar"], c: 1, e: "Quedará automáticamente sin efecto en caso de cambio de puesto... se solicite nuevo reconocimiento[cite: 18, 19]."},
+            {q: "Las retribuciones totales de 2 puestos públicos (Regla Gral):", o: ["No suman nada", "No exceden de Dir Gral", "Se multiplican por 2", "No tienen límite si son distintos ministerios"], c: 1, e: "No podrá exceder de las remuneraciones... Director general[cite: 4, 14]."},
+            {q: "Si se impone falta grave por no ir al trabajo escudándose en la 2ª actividad:", o: ["Se revoca automáticamente la compatibilidad", "Multa de 500€", "Nada", "Pierde la segunda actividad solo un año"], c: 0, e: "Quedando automáticamente revocada la autorización si se califica falta grave o muy grave[cite: 18]."}
+        ],
+        // TEST 4: Faltas Disciplinarias MUY GRAVES
+        [
+            {q: "El régimen disciplinario básico de empleados públicos se regula en:", o: ["Ley 30/1984", "TREBEP", "Código Penal", "Ley 39/2015"], c: 1, e: "Título VII del TREBEP (art. 93 a 98)[cite: 5, 21]."},
+            {q: "Inducir a otro a cometer falta disciplinaria:", o: ["Incurre en la misma responsabilidad", "Incurre en falta leve", "No es sancionable", "Solo aplica a jefes"], c: 0, e: "Incurrirán en la misma responsabilidad que estos[cite: 5, 24]."},
+            {q: "Encubrir una falta consumada muy grave con daño a la Admon:", o: ["Incurre en responsabilidad", "No es falta", "Es delito penal siempre", "Aplica solo a A1"], c: 0, e: "Incurrirán en responsabilidad... quienes encubrieren las faltas consumadas muy graves o graves[cite: 5, 24]."},
+            {q: "Toda discriminación por razón de origen, religión, sexo o acoso es falta:", o: ["Leve", "Grave", "Muy Grave", "Según el daño"], c: 2, e: "Faltas muy graves: Toda actuación que suponga discriminación... y el acoso[cite: 6, 21]."},
+            {q: "El abandono del servicio es falta:", o: ["Muy Grave", "Grave", "Leve", "Grave si es 1 día"], c: 0, e: "Faltas muy graves: El abandono del servicio[cite: 6, 21]."},
+            {q: "Adoptar acuerdos manifiestamente ilegales causando perjuicio grave:", o: ["Falta grave", "Falta muy grave", "Falta leve", "Ninguna"], c: 1, e: "Faltas muy graves: La adopción de acuerdos manifiestamente ilegales que causen perjuicio grave[cite: 6, 21]."},
+            {q: "Violar la imparcialidad influyendo en procesos electorales:", o: ["Muy grave", "Grave", "Leve", "No tipificado"], c: 0, e: "Faltas muy graves: La violación de la imparcialidad... para influir en procesos electorales[cite: 6, 22]."},
+            {q: "Desobediencia abierta a las órdenes de un superior es:", o: ["Falta Grave siempre", "Muy Grave, salvo que la orden sea infracción manifiesta", "Leve si no hay daño", "No es falta si hay huelga"], c: 1, e: "Falta muy grave: desobediencia abierta... salvo que constituyan infracción manifiesta del Ordenamiento[cite: 6, 22]."},
+            {q: "Prevalerse de condición de empleado para beneficio indebido:", o: ["Grave", "Muy Grave", "Leve", "Penal"], c: 1, e: "Falta muy grave: La prevalencia de la condición... para obtener un beneficio indebido[cite: 6, 22]."},
+            {q: "Incumplir los servicios esenciales en caso de huelga:", o: ["Falta leve", "Falta grave", "Falta muy grave", "Falta sindical"], c: 2, e: "Falta muy grave: El incumplimiento de la obligación de atender los servicios esenciales en caso de huelga[cite: 6, 22]."},
+            {q: "Incomparecer sin justificar a Comisión Investigación Cortes/Asambleas:", o: ["Leve", "Muy grave", "Grave", "Solo si llama el Senado"], c: 1, e: "Falta muy grave: La incomparecencia injustificada en las Comisiones de Investigación[cite: 6, 22]."},
+            {q: "El acoso laboral está tipificado expresamente como:", o: ["Del
