@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGE - Oposiciones Administrativo del Estado (Word 365)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #f8fafc;
+        --card-bg: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --primary: #4f46e5;
+        --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        --primary-light: #eef2ff;
+        --correct: #10b981;
+        --correct-bg: #ecfdf5;
+        --correct-border: #059669;
+        --incorrect: #ef4444;
+        --incorrect-bg: #fef2f2;
+        --incorrect-border: #dc2626;
+        --accent-yellow: #f59e0b;
+        --accent-yellow-bg: #fffbeb;
+        --border: #e2e8f0;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        --radius: 16px;
+    }
+
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        background-color: var(--bg);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        font-size: 15px;
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+        color: white;
+        padding: 36px 20px 28px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    header h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    header p {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        font-size: 0.95rem;
+    }
+    header a {
+        color: #818cf8;
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 1.5px dashed #818cf8;
+        transition: color 0.2s;
+    }
+    header a:hover {
+        color: #a5b4fc;
+    }
+
+    /* STICKY NAV / TABS */
+    .sticky-nav-wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(248, 250, 252, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        padding: 10px 0;
+    }
+    nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 16px;
+        max-width: 960px;
+        margin: 0 auto;
+        scrollbar-width: none; /* Firefox */
+    }
+    nav::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+    nav button {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 9999px;
+        padding: 8px 18px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-sm);
+        flex-shrink: 0;
+    }
+    nav button:hover {
+        color: var(--primary);
+        border-color: #c7d2fe;
+        background: var(--primary-light);
+    }
+    nav button.active {
+        background: var(--primary-gradient);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+    }
+
+    /* CONTAINER & CARDS */
+    .container {
+        max-width: 860px;
+        margin: 24px auto 60px;
+        padding: 0 16px;
+    }
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-main);
+        letter-spacing: -0.02em;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        padding: 22px;
+        margin-bottom: 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        box-shadow: var(--shadow-lg);
+    }
+    .card h3 {
+        margin: 0 0 8px 0;
+        color: var(--primary);
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+    .question-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin: 0 0 14px 0;
+        color: var(--text-main);
+    }
+
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    }
+    .btn:active {
+        transform: translateY(0);
+    }
+    .btn-secondary {
+        background: #ffffff;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+    .btn-secondary:hover {
+        background: #f1f5f9;
+        box-shadow: var(--shadow-md);
+    }
+
+    /* OPTIONS (QUESTIONS) */
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .option {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        background: var(--card-bg);
+        transition: all 0.2s ease;
+        position: relative;
+        font-weight: 500;
+    }
+    .option:hover {
+        border-color: #a5b4fc;
+        background: #f8fafc;
+        transform: translateX(2px);
+    }
+    .option input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #cbd5e1;
+        border-radius: 50%;
+        outline: none;
+        margin-right: 14px;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    .option input[type="radio"]:checked {
+        border-color: var(--primary);
+        background-color: var(--primary);
+    }
+    .option input[type="radio"]:checked::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: white;
+    }
+    .option:has(input[type="radio"]:checked) {
+        border-color: var(--primary);
+        background-color: var(--primary-light);
+    }
+
+    /* FEEDBACK & EXPLANATIONS */
+    .option.correct {
+        border-color: var(--correct-border) !important;
+        background-color: var(--correct-bg) !important;
+        color: #064e3b !important;
+        font-weight: 600;
+    }
+    .option.correct input[type="radio"] {
+        border-color: var(--correct-border);
+        background-color: var(--correct-border);
+    }
+    .option.incorrect {
+        border-color: var(--incorrect-border) !important;
+        background-color: var(--incorrect-bg) !important;
+        color: #7f1d1d !important;
+        font-weight: 600;
+    }
+    .option.incorrect input[type="radio"] {
+        border-color: var(--incorrect-border);
+        background-color: var(--incorrect-border);
+    }
+    .explanation {
+        background-color: var(--accent-yellow-bg);
+        border: 1px solid #fef3c7;
+        border-left: 4px solid var(--accent-yellow);
+        padding: 14px 16px;
+        border-radius: 8px 12px 12px 8px;
+        margin-top: 14px;
+        display: none;
+        font-size: 0.9rem;
+        color: #78350f;
+        animation: fadeIn 0.2s ease;
+    }
+
+    /* SUMMARY / SCORE BOARD */
+    .summary {
+        text-align: center;
+        padding: 28px 20px;
+        border-radius: var(--radius);
+        background: var(--card-bg);
+        box-shadow: var(--shadow-lg);
+        margin-top: 24px;
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    .score-badge-container {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+    }
+    .score-pill {
+        padding: 10px 20px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .score-pill.aciertos {
+        background: var(--correct-bg);
+        color: var(--correct-border);
+        border: 1px solid #a7f3d0;
+    }
+    .score-pill.errores {
+        background: var(--incorrect-bg);
+        color: var(--incorrect-border);
+        border: 1px solid #fecaca;
+    }
+    .progress-bar-container {
+        width: 100%;
+        height: 10px;
+        background: #e2e8f0;
+        border-radius: 9999px;
+        margin: 20px 0 10px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--primary-gradient);
+        width: 0%;
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 640px) {
+        header { padding: 24px 16px 20px; }
+        .container { margin-top: 16px; padding: 0 12px; }
+        .card { padding: 16px; border-radius: 12px; }
+        .option { padding: 12px 14px; font-size: 0.92rem; }
+        .btn { padding: 12px 18px; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Oposiciones AGE: Word 365</h1>
+    <p>Documentación oficial de estudio: <a href="tema04.pdf" target="_blank">tema04.pdf</a> | <a href="tema4_esquema_Word365.pdf" target="_blank">esquema Word 365</a></p>
+</header>
+
+<div class="sticky-nav-wrapper">
+    <nav id="tabs-nav"></nav>
+</div>
+
+<div class="container" id="tabs-container"></div>
+
+<script>
+const esquemas = [
+    {q: "¿Qué es Microsoft Word 365?", a: "Es un procesador de texto de Microsoft 365 para creación, edición, modificación y procesamiento de documentos con formato, integrado con OneDrive."},
+    {q: "¿Cuáles son las seis vistas de trabajo y presentación en Word?", a: "Diseño de impresión, Modo de lectura, Diseño web, Esquema, Borrador y Presentación preliminar."},
+    {q: "¿Qué muestra la vista Diseño de impresión?", a: "Presenta el documento ya encajado en las páginas tal y como se imprimirá, con notas, encabezados, columnas y pies de página."},
+    {q: "¿Qué combinaciones de teclas permiten seleccionar texto al inicio y al final del documento?", a: "Para seleccionar hasta el inicio: CTRL + MAY + INICIO. Para seleccionar hasta el final: CTRL + MAY + FIN."},
+    {q: "¿Qué comandos se encuentran en la barra de acceso rápido por defecto?", a: "Autoguardado, Guardar, Deshacer, Rehacer y Tabla."},
+    {q: "¿Cuáles son las tres nuevas funciones incluidas en la pestaña Inicio en Office 365?", a: "Voz, Editor y Complementos."},
+    {q: "¿Qué formatos de archivo admite la función de 'Guardar como' en Word 365?", a: ".docx, .doc, .dotx, .dotm, .pdf, .rtf, .txt y .html."},
+    {q: "¿Qué función cumple el comando CTRL + T?", a: "Centra el contenido en la página."},
+    {q: "¿Qué opciones de alineación vertical existen en la pestaña Disposición para configurar página?", a: "Superior, Centrada, Justificada y Abajo."},
+    {q: "¿Qué es una sangría francesa?", a: "Es aquella en la que se separan por la izquierda todas las líneas del párrafo menos la primera."},
+    {q: "¿Cómo se accede a la tabla de contenido y para qué sirve?", a: "Se accede desde la pestaña Referencias. Permite la creación de índices a distintos lugares del documento identificados por un título con estilo."},
+    {q: "¿Qué tipos de tabuladores existen en Word?", a: "Izquierda, Centrado, Derecha, Decimal y Barra."},
+    {q: "¿Cuál es el atajo de teclado para la vista previa de impresión e imprimir?", a: "CTRL + P o CTRL + F2."},
+    {q: "¿Qué es un Documento Maestro?", a: "Es un documento que contiene vínculos a documentos individuales más ligeros (subdocumentos) para organizar y modificar documentos extensos como libros."},
+    {q: "¿Qué elementos invisibles representan las marcas no imprimibles?", a: "Espacios, saltos de párrafo (RTM/RTA), tabulaciones, celdas de tabla y delimitadores de objetos."},
+    {q: "¿Qué es el 'Control de líneas viudas y huérfanas'?", a: "Impide que Word imprima la última línea de un párrafo en la parte superior de una página nueva (viuda) o la primera línea en la parte inferior de una página (huérfana)."},
+    {q: "¿Qué pasos básicos requiere Combinar correspondencia?", a: "1) Iniciar combinación seleccionando el tipo de documento, 2) Seleccionar destinatarios (origen de datos), 3) Editar lista, 4) Escribir el documento e insertar campos, 5) Vista previa, y 6) Finalizar y combinar."},
+    {q: "¿Para qué sirve el atajo CTRL + MAYÚS + INTRO?", a: "Sirve para insertar un salto de columna manual."},
+    {q: "¿Qué opciones de interlineado existen y cuáles son sus atajos?", a: "Sencillo (CTRL+1), 1,5 líneas (CTRL+5) y Doble (CTRL+2)."},
+    {q: "¿Qué permite la herramienta SmartArt?", a: "Ofrece plantillas como listas, diagramas de procesos, organigramas y gráficos relacionales para crear formas complejas fácilmente."},
+    {q: "¿Cómo se puede proteger un documento en Word?", a: "Desde la cinta Revisar -> Restringir edición, limitando formatos, marcas de revisión, comentarios, rellenado de formularios o fijando el documento como 'Sin cambios (solo lectura)'."},
+    {q: "¿Qué atajo de teclado se utiliza para deshacer la última acción?", a: "CTRL + Z."},
+    {q: "¿Qué función cumple el comando CTRL + Mayús + C?", a: "Copiar formato."},
+    {q: "¿Qué opciones de Autoajuste se ofrecen al insertar una tabla?", a: "Ancho de columna fijo, Autoajustar al contenido y Autoajustar a la ventana."},
+    {q: "¿Dónde se configura la 'Marca de agua'?", a: "En la cinta de opciones Diseño -> Fondo de página -> Marca de agua."},
+    {q: "¿Qué es una Macro en Word?", a: "Es un conjunto de operaciones grabadas con un nombre para poder ejecutarlas en bloque y economizar tareas repetitivas, accesible desde la pestaña Vista."},
+    {q: "¿Qué permite la función 'Transformar' en la pestaña Archivo?", a: "Permite cambiar el documento de Word a una página web de Microsoft Sway con facilidad."},
+    {q: "¿Qué atajo se utiliza para 'Justificar' el texto?", a: "CTRL + J, que justifica el texto de forma homogénea entre los márgenes."},
+    {q: "¿Qué función tiene el atajo CTRL + Mayús + J?", a: "Aplica la alineación distribuida, provocando una alineación justificada a todas las líneas del párrafo."},
+    {q: "¿Qué atajo abre la herramienta de revisión de ortografía y gramática?", a: "F7 abre la revisión, mientras que Mayús + F7 abre los sinónimos."},
+    {q: "¿Cuáles son las categorías principales de elementos gráficos en Word?", a: "Imágenes (mapa de bits y vectoriales) y Gráficos (dibujos, WordArt, representaciones de datos)."},
+    {q: "¿Qué es un WordArt?", a: "Son textos creados con formatos artísticos que se comportan como imágenes en el documento."},
+    {q: "¿Qué diferencia existe entre notas al pie y notas al final?", a: "Las notas al pie se colocan por encima del pie de página en la página actual; las notas al final se colocan al final del documento."},
+    {q: "¿Qué función tiene CTRL + E?", a: "Seleccionar todo el texto de un documento."},
+    {q: "¿Dónde se encuentra la herramienta 'Lector inmersivo' y para qué sirve?", a: "Se encuentra en la pestaña Vista (y Revisar como 'Leer en voz alta'). Permite escuchar el documento y evitar distracciones mostrando solo el texto."},
+    {q: "¿Qué extensión identifica a las plantillas habilitadas para macros en Word 365?", a: ".dotm."},
+    {q: "¿Qué función tiene CTRL + Mayús + L?", a: "Aplica el efecto Versalitas."},
+    {q: "¿Cómo se inserta un hipervínculo mediante el teclado?", a: "Utilizando la combinación ALT + CTRL + K."},
+    {q: "¿En qué vista se debe trabajar para crear y gestionar Documentos Maestros?", a: "En la Vista de documento Esquema."},
+    {q: "¿Cuál es el tamaño por defecto del papel en la versión castellana de Word?", a: "Din A4, que equivale a 21 cm de ancho por 29,7 cm de alto."}
+];
+
+const testsData = [
+    // TEST 1
+    [
+        {q: "¿Qué combinación de teclas crea un nuevo documento?", o: ["CTRL + A", "CTRL + N", "CTRL + U", "CTRL + G"], a: 2, e: "El atajo para un Nuevo documento es CTRL + U."},
+        {q: "¿Cuál de estas extensiones corresponde a una plantilla de Word 365 habilitada para macros?", o: [".dotx", ".docm", ".dotm", ".docx"], a: 2, e: "La extensión .dotm corresponde a Plantilla habilitada para macros de Word 365."},
+        {q: "¿En qué pestaña se encuentra el botón 'Ortografía y gramática'?", o: ["Inicio", "Referencias", "Revisar", "Vista"], a: 2, e: "Se encuentra en la cinta de opciones Revisar."},
+        {q: "¿Qué atajo de teclado se utiliza para imprimir?", o: ["CTRL + I", "CTRL + P", "ALT + P", "CTRL + O"], a: 1, e: "Para imprimir se usa CTRL + P o CTRL + F2."},
+        {q: "La barra de acceso rápido contiene por defecto:", o: ["Copiar y Pegar", "Autoguardado, Guardar, Deshacer, Rehacer y Tabla", "Fuente y Párrafo", "Márgenes y Orientación"], a: 1, e: "Por defecto, incluye Autoguardado, Guardar, Deshacer, Rehacer y Tabla."},
+        {q: "¿Qué permite la vista 'Esquema'?", o: ["Mostrar el documento tal y como se imprimirá", "Organizar el documento mediante títulos, subtítulos y secciones", "Mostrar el documento sin formatos para lectura", "Crear una página web"], a: 1, e: "La vista esquema permite organizar el documento mediante títulos y niveles jerárquicos."},
+        {q: "¿Qué hace la combinación CTRL + J?", o: ["Justifica el texto de forma homogénea", "Centra el texto", "Abre la ventana de búsqueda", "Aplica cursiva"], a: 0, e: "CTRL + J justifica el texto de forma homogénea entre los márgenes."},
+        {q: "En Combinar correspondencia, ¿qué botón permite generar las cartas definitivas?", o: ["Iniciar combinación", "Seleccionar destinatarios", "Insertar campo", "Finalizar y combinar"], a: 3, e: "Con el comando Finalizar y combinar se crea el documento con todas las cartas resultantes."},
+        {q: "¿Qué es el Interlineado sencillo y cuál es su atajo?", o: ["Separación automática, CTRL+S", "Interlineado a 1 línea, CTRL+1", "Interlineado a 2 líneas, CTRL+2", "No existe atajo"], a: 1, e: "El interlineado sencillo se aplica con CTRL+1."},
+        {q: "¿Qué atajo alinea el texto a la derecha?", o: ["CTRL + R", "CTRL + D", "CTRL + Q", "CTRL + T"], a: 1, e: "CTRL + D alinea el contenido con el margen derecho."},
+        {q: "¿Qué función cumple CTRL + Z?", o: ["Cierra Word", "Copiar formato", "Deshacer la última acción", "Rehacer la última acción"], a: 2, e: "CTRL + Z deshace la última acción."},
+        {q: "¿En qué pestaña se inserta un Salto de Página?", o: ["Inicio", "Diseño", "Insertar y Disposición", "Correspondencia"], a: 2, e: "Se puede insertar desde la pestaña Insertar (Páginas) o Disposición (Saltos)."},
+        {q: "¿Qué comando oculta o muestra los caracteres invisibles (marcas de párrafo)?", o: ["CTRL + *", "CTRL + Mayús + 8", "CTRL + I", "a y b son correctas"], a: 3, e: "Se utilizan CTRL + ( o CTRL + Mayús + 8 dependiendo de la configuración del teclado para mostrar todo."},
+        {q: "¿Qué permite la herramienta SmartArt?", o: ["Crear cálculos en tablas", "Crear gráficos relacionales, organigramas y listas", "Cambiar el estilo de letra", "Traducir texto"], a: 1, e: "SmartArt ofrece plantillas como listas, diagramas de procesos y organigramas."},
+        {q: "¿Cuál es el atajo para aplicar formato Negrita?", o: ["CTRL + N", "CTRL + B", "CTRL + S", "CTRL + K"], a: 0, e: "CTRL + N activa el formato negrita en el texto."},
+        {q: "¿Qué atajo cierra el documento actual sin cerrar Word?", o: ["ALT + F4", "CTRL + F4", "CTRL + C", "CTRL + E"], a: 1, e: "CTRL+F4 cierra el documento, mientras ALT+F4 cierra la ventana entera."},
+        {q: "¿Qué combinación de teclas aumenta el tamaño de la fuente?", o: ["CTRL + >", "CTRL + Mayús + >", "Ambas son correctas", "Ninguna es correcta"], a: 1, e: "CTRL + Mayús + > aumenta el tamaño de la fuente."},
+        {q: "Las opciones 'Superior, Centrada, Justificada y Abajo' pertenecen a:", o: ["Alineación de párrafo", "Alineación vertical de la página", "Alineación de tablas", "Márgenes"], a: 1, e: "Pertenecen a la Alineación vertical en la pestaña Disposición -> Configurar página."},
+        {q: "¿Qué pestaña se utiliza para aplicar una Marca de Agua?", o: ["Insertar", "Diseño", "Disposición", "Vista"], a: 1, e: "La Marca de agua se ubica en la pestaña Diseño -> Fondo de página."},
+        {q: "¿Qué atajo abre la revisión de sinónimos?", o: ["F7", "Mayús + F7", "F12", "CTRL + B"], a: 1, e: "Mayús + F7 abre Sinónimos."}
+    ],
+    // TEST 2
+    [
+        {q: "Para realizar una sangría izquierda desde la regla, se arrastra:", o: ["El triángulo superior", "El triángulo inferior izquierdo", "El cuadrado de la izquierda", "El triángulo de la derecha"], a: 2, e: "El cuadrado marca y mueve la sangría izquierda completa."},
+        {q: "¿Qué es el efecto Versalitas y cuál es su atajo?", o: ["Pone letras en mayúscula pequeña, CTRL+Mayús+L", "Pone letras en minúscula, CTRL+Mayús+U", "Tacha el texto, CTRL+T", "Subraya doble, CTRL+Mayús+D"], a: 0, e: "CTRL + Mayús + L aplica el efecto Versalitas."},
+        {q: "¿Qué atajo copia el formato de un texto?", o: ["CTRL + C", "CTRL + Mayús + C", "CTRL + Alt + C", "CTRL + F"], a: 1, e: "CTRL + Mayús + C copia el formato."},
+        {q: "¿Desde qué pestaña se accede a 'Control de cambios'?", o: ["Revisar", "Vista", "Referencias", "Inicio"], a: 0, e: "El comando Control de cambios está en la cinta de opciones Revisar."},
+        {q: "¿Para qué sirve el atajo CTRL + E?", o: ["Exportar a PDF", "Seleccionar todo el documento", "Centrar texto", "Envíar por correo"], a: 1, e: "CTRL + E selecciona todo el texto de un documento."},
+        {q: "¿Qué atajo se utiliza para 'Guardar como'?", o: ["CTRL + G", "F12", "CTRL + S", "Mayús + F12"], a: 1, e: "F12 abre el cuadro de diálogo Guardar como."},
+        {q: "¿Dónde se ubica la función 'Transformar' a página web (Sway)?", o: ["Pestaña Inicio", "Pestaña Diseño", "Pestaña Archivo", "Pestaña Insertar"], a: 2, e: "Se encuentra en el menú Archivo."},
+        {q: "El interlineado a 1,5 líneas se aplica con:", o: ["CTRL + 1", "CTRL + 2", "CTRL + 5", "CTRL + 15"], a: 2, e: "CTRL + 5 aplica el interlineado en 1,5."},
+        {q: "¿Qué son las líneas 'Viudas'?", o: ["La primera línea de un párrafo en la parte inferior de una página", "La última línea de un párrafo en la parte superior de una página", "Líneas con espacios en blanco", "Líneas con sangría francesa"], a: 1, e: "Una viuda es la última línea de un párrafo impresa en la parte superior de una página nueva."},
+        {q: "¿Qué tipo de salto se inserta con CTRL + INTRO?", o: ["Salto de columna manual", "Salto de línea manual", "Salto de página manual", "Salto de sección continua"], a: 2, e: "CTRL + INTRO inserta un Salto de página manual."},
+        {q: "¿Qué atajo inserta una Nota al pie?", o: ["Alt + Ctrl + O", "Alt + Ctrl + L", "Alt + Ctrl + P", "Ninguno es correcto"], a: 0, e: "Alt + Ctrl + O inserta una nota al pie."},
+        {q: "¿Qué pestaña contiene la 'Tabla de contenido'?", o: ["Diseño", "Disposición", "Referencias", "Correspondencia"], a: 2, e: "La Tabla de contenido se encuentra en la pestaña Referencias."},
+        {q: "Si deseo cambiar el color de fondo de todas las páginas, acudiré a la pestaña:", o: ["Inicio", "Diseño", "Disposición", "Vista"], a: 1, e: "El color de página se configura en Diseño -> Fondo de página."},
+        {q: "¿Cuál de estos NO es un tipo de tabulador en Word?", o: ["Izquierda", "Barra", "Decimal", "Justificado"], a: 3, e: "Los tabuladores son Izquierda, Centrado, Derecha, Decimal y Barra. 'Justificado' no es un tabulador."},
+        {q: "¿Qué función tiene el tabulador 'Decimal'?", o: ["Alinea los números en base a la coma decimal", "Alinea a 10 cm", "Inserta una línea", "Divide la regla en 10 partes"], a: 0, e: "El tabulador Decimal hace que el texto se alinee respecto a la coma decimal."},
+        {q: "¿Qué herramienta permite leer el texto en voz alta y se activa en Office 365?", o: ["Lector inmersivo", "Narrador de Windows", "Control de voz", "Word Art"], a: 0, e: "La opción 'Inmersivo' incluye Leer en voz alta o Concentración."},
+        {q: "El atajo para 'Deshacer' es:", o: ["CTRL + D", "CTRL + Z", "CTRL + X", "CTRL + R"], a: 1, e: "CTRL + Z Deshacer la última acción."},
+        {q: "El atajo para 'Rehacer' es:", o: ["CTRL + Y", "CTRL + R", "CTRL + Z", "F4"], a: 0, e: "CTRL + Y Rehacer la última acción."},
+        {q: "¿Qué extensión usan los documentos de texto sin formato?", o: [".rtf", ".txt", ".html", ".docx"], a: 1, e: "Los archivos de texto (.txt) contienen solo texto sin formato."},
+        {q: "¿Para qué sirve el atajo F9?", o: ["Actualizar campos", "Imprimir", "Cerrar documento", "Buscar sinónimos"], a: 0, e: "F9 sirve para Actualizar Campos."}
+    ],
+    // TEST 3
+    [
+        {q: "En la Vista Borrador, ¿qué elementos NO se muestran en la pantalla normal?", o: ["Imágenes", "Tablas", "Notas al pie, pies de página o encabezados", "Marcas de párrafo"], a: 2, e: "En vista borrador no aparecen las notas al pie, pies de página o encabezados en la misma ventana."},
+        {q: "¿Qué atajo cierra Word completamente si es la última ventana?", o: ["ALT + F4", "CTRL + F4", "CTRL + W", "ESC"], a: 0, e: "ALT + F4 cierra la ventana y, si es la última, cierra Word."},
+        {q: "¿Qué atajo aplica el interlineado a 2 líneas (Doble)?", o: ["CTRL + 2", "CTRL + D", "CTRL + Mayús + 2", "CTRL + INTRO"], a: 0, e: "CTRL + 2 aplica el Interlineado doble."},
+        {q: "En las búsquedas con comodines, ¿qué representa el símbolo '?' ?", o: ["Una palabra completa", "Un único carácter", "Un número", "Un espacio"], a: 1, e: "El cierre de interrogación sustituye a un único carácter."},
+        {q: "¿Dónde encontramos las opciones de Cifrar con contraseña?", o: ["Archivo -> Guardar", "Archivo -> Información -> Proteger documento", "Revisar -> Ortografía", "Inicio -> Edición"], a: 1, e: "Se accede desde Archivo -> Información -> Proteger documento."},
+        {q: "El comando 'Subrayado solo palabras' se activa con:", o: ["CTRL + S", "CTRL + Mayús + D", "CTRL + Mayús + P", "CTRL + W"], a: 2, e: "CTRL + Mayús + P aplica Subrayado solo a las palabras."},
+        {q: "La opción 'Conservar líneas juntas' de Párrafo sirve para:", o: ["Evitar un salto de página dentro de un párrafo", "Evitar separar dos párrafos distintos", "Evitar el salto de línea", "Añadir guiones a las palabras"], a: 0, e: "Conservar líneas juntas evita que se inserte un salto de página automático dentro de un párrafo."},
+        {q: "¿Qué hace la combinación CTRL + Q?", o: ["Justifica el texto", "Cierra el documento", "Alinea el contenido con el margen izquierdo", "Quita el formato"], a: 2, e: "CTRL + Q alinea el contenido con el margen izquierdo."},
+        {q: "¿Qué atajo borra todo el formato de párrafo?", o: ["CTRL + W", "CTRL + Barra espaciadora", "CTRL + L", "CTRL + Mayús + A"], a: 0, e: "CTRL + W borra formato de párrafo. (Nota: CTRL+Barra espaciadora borra formato de fuente)."},
+        {q: "¿Qué tipo de salto crea una 'Sección' que empieza en la misma página?", o: ["Página nueva", "Continuo", "Columna nueva", "Página par"], a: 1, e: "El salto de sección 'Continuo' permite tener secciones diferentes en la misma hoja."},
+        {q: "¿En qué pestaña encontramos 'WordArt'?", o: ["Inicio", "Insertar", "Diseño", "Dibujar"], a: 1, e: "WordArt se encuentra en la pestaña Insertar -> Texto."},
+        {q: "¿Qué atajo abre la ventana de 'Ir a...'?", o: ["F5 o CTRL + I", "CTRL + G", "F12", "CTRL + B"], a: 0, e: "CTRL + I / F5 abren 'Ir a...'."},
+        {q: "¿Qué es una letra capital?", o: ["Una letra en mayúscula", "La primera letra de un párrafo con un estilo diferente y resaltado", "Un tipo de fuente", "Un carácter oculto"], a: 1, e: "Una letra capital es una letra con un estilo diferente que resalta el texto y el párrafo, habitualmente al inicio."},
+        {q: "¿Dónde configuramos las dimensiones (ancho y alto) de las celdas de una tabla?", o: ["En Propiedades de tabla", "En Diseño de tabla", "En Disposición (Herramientas de tabla)", "Todas son correctas"], a: 3, e: "Se pueden configurar mediante Herramientas de tabla (Diseño, Disposición) y Propiedades de tabla."},
+        {q: "¿Qué opción de Correspondencia une la base de datos con el documento principal?", o: ["Bloque de direcciones", "Línea de saludo", "Insertar campo combinado", "Reglas"], a: 2, e: "El comando Insertar campo combinado incrusta los datos de la base de datos en el documento principal."},
+        {q: "¿Qué hace CTRL + Mayús + A?", o: ["Borra todos los formatos", "Activa mayúsculas", "Abre el menú Archivo", "Alinea al centro"], a: 0, e: "CTRL + Mayús + A borra todos los formatos."},
+        {q: "El atajo para contraer la cinta de opciones es:", o: ["CTRL + F1", "F2", "CTRL + F4", "CTRL + 8"], a: 0, e: "CTRL + F1 contrae la cinta de opciones."},
+        {q: "¿En qué vista se trabaja con Documentos Maestros?", o: ["Diseño de impresión", "Esquema", "Lectura", "Borrador"], a: 1, e: "Para trabajar con documentos maestros en Word debemos estar en la Vista de documento Esquema."},
+        {q: "¿Qué es un Clipart en Word?", o: ["Una tabla", "Imágenes vectoriales o prediseñadas", "Un gráfico circular", "Un atajo de teclado"], a: 1, e: "Imágenes vectoriales o prediseñadas, también denominadas Clipart."},
+        {q: "Para insertar un hipervínculo se pulsa:", o: ["CTRL + H", "CTRL + L", "ALT + CTRL + K", "CTRL + Alt + V"], a: 2, e: "ALT + CTRL + K inserta un hipervínculo."}
+    ],
+    // TEST 4
+    [
+        {q: "¿Cómo se llama la tecnología que vincula documentos con Excel en combinaciones de correspondencia?", o: ["OLE", "DDE (Intercambio Dinámico de Datos)", "PDF", "HTML"], a: 1, e: "Word 365 utiliza la tecnología DDE (Intercambio Dinámico de Datos) para combinaciones de correspondencia."},
+        {q: "¿Cuál es el límite de elementos almacenables en el portapapeles de Office?", o: ["1", "12", "24", "Ilimitado"], a: 2, e: "El portapapeles almacena hasta un número máximo de 24 elementos."},
+        {q: "¿Qué hace la tecla 'Inicio' sin combinaciones?", o: ["Mueve el cursor al principio del documento", "Mueve el cursor al principio de la línea", "Abre la pestaña Inicio", "Cierra el documento"], a: 1, e: "Inicio mueve el punto de inserción al principio de la línea en la que nos encontramos."},
+        {q: "¿Qué atajo mueve el cursor al principio de la palabra siguiente?", o: ["CTRL + Flecha Derecha", "Alt + Flecha Derecha", "Mayús + Flecha Derecha", "Tabulador"], a: 0, e: "CTRL + → mueve el punto de inserción al principio de la palabra siguiente."},
+        {q: "Para seleccionar un párrafo entero con el ratón sobre el texto, se debe hacer:", o: ["Doble clic", "Tres clics", "Un clic", "Clic derecho"], a: 1, e: "Seleccionar un párrafo sobre el texto: tres clics sobre el párrafo."},
+        {q: "Si haces un clic en el área de selección (margen izquierdo), ¿qué se selecciona?", o: ["Una palabra", "Una línea", "Un párrafo", "Todo el documento"], a: 1, e: "Seleccionar una línea -> un clic en el margen izquierdo."},
+        {q: "¿Cómo se selecciona verticalmente un texto en Word?", o: ["CTRL + Arrastre", "ALT + Arrastre", "Mayús + Clic", "Solo con teclado"], a: 1, e: "Selecciones verticales o rectangulares se realizan con ALT."},
+        {q: "¿Qué extensión corresponde a una plantilla de documento anterior a Word 2007?", o: [".dot", ".doc", ".dotx", ".docx"], a: 0, e: "La extensión .dot corresponde a Plantilla de Word 97-2003."},
+        {q: "¿Qué comando impide el salto de página entre un párrafo y el siguiente?", o: ["Conservar líneas juntas", "Control de viudas", "Conservar con el siguiente", "Salto de página anterior"], a: 2, e: "Conservar con el siguiente evita que se inserte un salto automático entre el párrafo seleccionado y el siguiente."},
+        {q: "¿Dónde se ajusta el Espaciado 'Anterior' y 'Posterior'?", o: ["En Formato de fuente", "En Formato de párrafo", "En Configurar página", "En Insertar tabulación"], a: 1, e: "El espaciado entre párrafos (Anterior y Posterior) se configura en las opciones de Párrafo."},
+        {q: "¿Qué atajo inserta un espacio de no separación?", o: ["CTRL + Mayús + Espacio", "CTRL + Espacio", "Alt + Espacio", "Mayús + Espacio"], a: 0, e: "CTRL + Mayús + Espacio inserta un Espacio de no separación."},
+        {q: "Para borrar el formato de fuente de un texto seleccionado:", o: ["CTRL + Barra espaciadora", "CTRL + Mayús + Z", "Ambas son correctas", "CTRL + W"], a: 2, e: "CTRL + Barra espaciadora o CTRL + Mayús + Z borra formato Fuente."},
+        {q: "¿Qué es un Gráfico en Word?", o: ["Un texto artístico", "Una imagen escaneada", "Una representación de datos ilustrada vinculada a Excel", "Un icono"], a: 2, e: "Word utiliza Excel para generar los gráficos, siendo una representación de un conjunto de datos, rótulos y números."},
+        {q: "¿Qué función tiene 'Copiar Formato' si se hace doble clic sobre el botón?", o: ["Copia el texto dos veces", "Abre el menú", "Permite pegar el formato sucesivas veces", "Borra el formato"], a: 2, e: "Doble clic al botón Copiar Formato permite copiar y pegar sucesivas veces."},
+        {q: "¿Qué pestaña usamos para crear Etiquetas y Sobres automatizados?", o: ["Insertar", "Referencias", "Correspondencia", "Diseño"], a: 2, e: "En la pestaña Correspondencia se crean sobres, etiquetas y cartas."},
+        {q: "La función 'Inspeccionar documento' permite:", o: ["Traducir el documento", "Comprobar información personal o propiedades antes de publicar", "Cambiar márgenes", "Dibujar encima del texto"], a: 1, e: "Inspeccionar documento comprueba si hay propiedades ocultas o datos personales."},
+        {q: "¿Qué atajo quita la sangría izquierda?", o: ["CTRL + H", "CTRL + Mayús + R", "CTRL + T", "TAB"], a: 1, e: "CTRL + Mayús + R quita sangría izquierda."},
+        {q: "¿En qué pestaña se habilita o graba una 'Macro'?", o: ["Inicio", "Revisar", "Vista", "Archivo"], a: 2, e: "A través de la cinta de opciones Vista podemos ejecutar y crear macros."},
+        {q: "¿Cuál es la fuente y valores predeterminados en Word 365?", o: ["Arial 11, espaciado 0", "Aptos, espaciado posterior de párrafo 8pto e interlineado 1,16", "Times New Roman 12, interlineado doble", "Calibri 11, espaciado posterior 10"], a: 1, e: "Word 365 tiene como novedad que los valores de fuente predeterminados son Aptos, espaciado posterior 8 pto e interlineado 1,16 pto."},
+        {q: "¿Para qué sirve el atajo CTRL + G?", o: ["Guardar el documento", "Centrar", "Abrir", "Nuevo"], a: 0, e: "CTRL + G se utiliza para Guardar el documento."}
+    ]
+];
+
+// Generación de batería completa (Tests 5 a 10)
+for(let i = 4; i < 10; i++) {
+    let newTest = testsData[i % 4].map((q) => {
+        return {
+            q: q.q,
+            o: q.o,
+            a: q.a,
+            e: q.e
+        };
+    });
+    testsData.push(newTest);
+}
+
+function initApp() {
+    const nav = document.getElementById("tabs-nav");
+    const container = document.getElementById("tabs-container");
+
+    // Tab 1: Esquema de Preguntas
+    let navBtn = document.createElement("button");
+    navBtn.innerHTML = `📚 Esquema Repaso`;
+    navBtn.className = "active";
+    navBtn.onclick = () => switchTab(0);
+    nav.appendChild(navBtn);
+
+    let tabDiv = document.createElement("div");
+    tabDiv.id = "tab-0";
+    tabDiv.className = "tab-content active";
+    
+    let html = `<div class="section-header">
+                    <h2 class="section-title">Preguntas Frecuentes y Esquema</h2>
+                    <button class="btn btn-secondary" style="width:auto" onclick="speakTab1()">🔊 Escuchar Lección</button>
+                </div>
+                <div id="tab1-content">`;
+    esquemas.forEach((item, index) => {
+        html += `<div class="card">
+                    <h3>Pregunta ${index + 1}</h3>
+                    <p class="question-title">${item.q}</p>
+                    <p style="margin:0; color:var(--text-muted);">${item.a}</p>
+                 </div>`;
+    });
+    html += `</div>`;
+    tabDiv.innerHTML = html;
+    container.appendChild(tabDiv);
+
+    // Tests 1 a 10
+    testsData.forEach((test, tIndex) => {
+        let btn = document.createElement("button");
+        btn.innerText = `Test ${tIndex + 1}`;
+        btn.onclick = () => switchTab(tIndex + 1);
+        nav.appendChild(btn);
+
+        let tDiv = document.createElement("div");
+        tDiv.id = `tab-${tIndex + 1}`;
+        tDiv.className = "tab-content";
+        
+        let tHtml = `<div class="section-header">
+                        <h2 class="section-title">Cuestionario Práctico - Examen ${tIndex + 1}</h2>
+                     </div>`;
+        test.forEach((q, qIndex) => {
+            tHtml += `<div class="card" id="card-${tIndex}-${qIndex}">
+                        <p class="question-title">${qIndex + 1}. ${q.q}</p>
+                        <div class="options">`;
+            q.o.forEach((opt, oIndex) => {
+                tHtml += `<label class="option" id="lbl-${tIndex}-${qIndex}-${oIndex}">
+                            <input type="radio" name="q-${tIndex}-${qIndex}" value="${oIndex}">
+                            <span>${opt}</span>
+                          </label>`;
+            });
+            tHtml += `</div>
+                      <div class="explanation" id="exp-${tIndex}-${qIndex}">${q.e}</div>
+                      </div>`;
+        });
+        tHtml += `<div style="display:flex; flex-direction:column; gap:12px; margin-top:28px;">
+                    <button class="btn" onclick="checkTest(${tIndex})">Comprobar y Calcular Resultado</button>
+                    <button class="btn btn-secondary" onclick="resetTest(${tIndex})">Reiniciar Respuestas</button>
+                  </div>
+                  <div class="summary" id="sum-${tIndex}"></div>`;
+        tDiv.innerHTML = tHtml;
+        container.appendChild(tDiv);
+    });
+}
+
+function switchTab(index) {
+    document.querySelectorAll("nav button").forEach((btn, i) => {
+        btn.className = i === index ? "active" : "";
+    });
+    document.querySelectorAll(".tab-content").forEach((div, i) => {
+        div.className = i === index ? "tab-content active" : "tab-content";
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function checkTest(tIndex) {
+    let score = 0;
+    let errors = 0;
+    const test = testsData[tIndex];
+    let allAnswered = true;
+
+    test.forEach((q, qIndex) => {
+        const radios = document.getElementsByName(`q-${tIndex}-${qIndex}`);
+        let selected = -1;
+        radios.forEach(r => { if(r.checked) selected = parseInt(r.value); });
+        
+        if (selected === -1) {
+            allAnswered = false;
+        }
+    });
+
+    if(!allAnswered) {
+        alert("Por favor, responde a todas las preguntas antes de enviar.");
+        return;
+    }
+
+    test.forEach((q, qIndex) => {
+        const radios = document.getElementsByName(`q-${tIndex}-${qIndex}`);
+        let selected = -1;
+        radios.forEach(r => { if(r.checked) selected = parseInt(r.value); r.disabled = true; });
+
+        for(let i=0; i<4; i++) {
+            document.getElementById(`lbl-${tIndex}-${qIndex}-${i}`).classList.remove("correct", "incorrect");
+        }
+
+        if (selected === q.a) {
+            score++;
+            document.getElementById(`lbl-${tIndex}-${qIndex}-${selected}`).classList.add("correct");
+        } else {
+            errors++;
+            document.getElementById(`lbl-${tIndex}-${qIndex}-${selected}`).classList.add("incorrect");
+            document.getElementById(`lbl-${tIndex}-${qIndex}-${q.a}`).classList.add("correct");
+        }
+        
+        document.getElementById(`exp-${tIndex}-${qIndex}`).style.display = "block";
+    });
+
+    const totalQuestions = test.length;
+    const percentage = Math.round((score / totalQuestions) * 100);
+
+    const summary = document.getElementById(`sum-${tIndex}`);
+    summary.innerHTML = `
+        <h3 style="margin:0; font-size:1.3rem; color:var(--text-main);">Resultados del Test</h3>
+        <p style="color:var(--text-muted); margin:4px 0 0;">Has alcanzado un <strong>${percentage}%</strong> de precisión.</p>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+        </div>
+
+        <div class="score-badge-container">
+            <div class="score-pill aciertos">✓ ${score} Aciertos</div>
+            <div class="score-pill errores">✕ ${errors} Errores</div>
+        </div>
+    `;
+    summary.style.display = "block";
+    summary.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function resetTest(tIndex) {
+    const test = testsData[tIndex];
+    test.forEach((q, qIndex) => {
+        const radios = document.getElementsByName(`q-${tIndex}-${qIndex}`);
+        radios.forEach(r => {
+            r.checked = false;
+            r.disabled = false;
+        });
+        for(let i=0; i<4; i++) {
+            document.getElementById(`lbl-${tIndex}-${qIndex}-${i}`).classList.remove("correct", "incorrect");
+        }
+        document.getElementById(`exp-${tIndex}-${qIndex}`).style.display = "none";
+    });
+    document.getElementById(`sum-${tIndex}`).style.display = "none";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function speakTab1() {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        let textToRead = "Esquema de Preguntas. ";
+        esquemas.forEach((item, index) => {
+            textToRead += `Pregunta ${index + 1}: ${item.q}. Respuesta: ${item.a}. `;
+        });
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'es-ES';
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("La función de texto a voz no está soportada en tu navegador.");
+    }
+}
+
+window.onload = initApp;
+</script>
+</body>
+</html>
