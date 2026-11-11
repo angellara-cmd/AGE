@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oposiciones AGE: Outlook 365 - Esquemas y Tests Interactivos</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        outlook: {
+                            blue: '#0078d4',
+                            darkBlue: '#004578',
+                            lightBlue: '#eff6fc',
+                            accent: '#0284c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Smooth option hover transition */
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Pulsing voice wave animation */
+        @keyframes soundWave {
+            0%, 100% { height: 6px; }
+            50% { height: 18px; }
+        }
+        .voice-wave span {
+            display: inline-block;
+            width: 3px;
+            background-color: #0284c7;
+            border-radius: 3px;
+            animation: soundWave 1.2s ease-in-out infinite;
+        }
+        .voice-wave span:nth-child(2) { animation-delay: 0.2s; }
+        .voice-wave span:nth-child(3) { animation-delay: 0.4s; }
+        .voice-wave span:nth-child(4) { animation-delay: 0.1s; }
+
+        /* Keyboard badge styling */
+        kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: rgba(241, 245, 249, 0.8);
+            border: 1px solid #cbd5e1;
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            padding: 0.1rem 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .dark kbd {
+            background-color: rgba(30, 41, 59, 0.8);
+            border-color: #475569;
+            color: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200/80 dark:border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 rounded-full border border-sky-200 dark:border-sky-800">AGE Subgrupo C1</span>
+                            <span id="global-stats-badge" class="hidden sm:inline-flex items-center px-2 py-0.5 text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full">
+                                📈 <span id="completed-count-text" class="ml-1">0/10 completados</span>
+                            </span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                            Outlook 365 <span class="text-xs font-semibold text-slate-400 font-mono hidden md:inline">v2026.1</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Right Actions (Docs, Dark Mode) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    
+                    <!-- Reference Documentation Button -->
+                    <div class="relative inline-block text-left">
+                        <button id="doc-menu-btn" onclick="toggleDocMenu()" class="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
+                            <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span class="hidden sm:inline">PDFs</span>
+                        </button>
+                        <div id="doc-menu-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-2 z-50">
+                            <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                Documentación de Referencia
+                            </div>
+                            <a href="tema07.pdf" target="_blank" class="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                                📄 <span class="truncate">tema07.pdf</span>
+                            </a>
+                            <a href="tema7_esquema_Outlook365.pdf" target="_blank" class="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                                📑 <span class="truncate">tema7_esquema_Outlook365.pdf</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Dark Mode Toggle Button -->
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Cambiar Tema (Oscuro/Claro)">
+                        <svg id="sun-icon" class="w-5 h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <svg id="moon-icon" class="w-5 h-5 block dark:hidden text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABS SCROLLABLE NAVIGATION BAR -->
+            <div class="relative py-2 overflow-x-auto scrollbar-none flex items-center border-t border-slate-100 dark:border-slate-800" id="tabs-scroll-container">
+                <div class="flex space-x-2" id="tabs-nav">
+                    <!-- Dynamic tabs injected by JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" id="main-content">
+        <!-- Tab Content dynamically injected by JS -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 py-6 bg-white dark:bg-slate-900 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>Oposiciones AGE Subgrupo C1 - Preparación de Tema 7: Outlook 365</p>
+            <p class="flex items-center gap-1">
+                <span>Optimizado 100% para Móvil y Escritorio</span> • <span>Teclas <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd> habilitadas</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT DATA & APP LOGIC -->
+    <script>
+        // --- DATA STRUCTURES ---
+        const baseEsquemas = [
+            {
+                pregunta: "¿Cuáles son los límites de longitud de una dirección de correo electrónico?",
+                respuesta: "La longitud total no debe exceder los 320 caracteres. La parte local (antes de la @) debe tener entre 1 y 64 caracteres, y el nombre de dominio (después de la @) está limitado a 255 caracteres."
+            },
+            {
+                pregunta: "¿Cuál es la diferencia principal entre los protocolos POP3 e IMAP en la recepción de correo?",
+                respuesta: "Con POP (Post Office Protocol), el mensaje se descarga al equipo local y se libera espacio en el servidor (HOST). Con IMAP (Internet Message Access Protocol), tanto los mensajes como las carpetas se guardan en el HOST, siendo ideal para conectarse desde múltiples dispositivos u ordenadores compartidos."
+            },
+            {
+                pregunta: "¿Qué diferencia existe entre los campos CC y CCO al enviar un mensaje?",
+                respuesta: "El campo CC (Con Copia) permite enviar copias a otros destinatarios y estos son visibles para los destinatarios principales. El campo CCO (Con Copia Oculta) envía el mensaje a otros destinatarios sin que los destinatarios principales sepan que se ha enviado dicha copia."
+            },
+            {
+                pregunta: "¿Qué atajos de teclado se utilizan para cambiar entre las vistas principales de Outlook (Correo, Calendario, Contactos)?",
+                respuesta: "Ctrl+1 cambia a Correo. Ctrl+2 cambia a Calendario. Ctrl+3 cambia a Contactos. Ctrl+4 cambia a Tareas. Ctrl+5 cambia a Lista de tareas pendientes."
+            },
+            {
+                pregunta: "¿Qué funciones principales se encuentran en la pestaña 'Archivo' de Outlook 365?",
+                respuesta: "Información (cuentas, reglas, buzón), Abrir y Exportar (.pst, importaciones), Guardar como, Guardar datos adjuntos, Imprimir, Cuenta de Office (almacenamiento y licencia), Comentarios, Opciones y Salir."
+            },
+            {
+                pregunta: "¿Qué operadores lógicos reconoce Outlook en su cuadro de búsqueda y cómo deben escribirse?",
+                respuesta: "Outlook reconoce operadores lógicos como Y, NO y O. Para que funcionen correctamente como operadores, deben escribirse siempre en letras mayúsculas."
+            },
+            {
+                pregunta: "¿Qué indica que el asunto de un correo recibido esté precedido por 'RE:' o 'RV:'?",
+                respuesta: "'RE:' indica que el mensaje recibido es una respuesta (Responder) a un mensaje anterior. 'RV:' indica que el mensaje recibido es un mensaje reenviado (Reenviar)."
+            },
+            {
+                pregunta: "¿Qué ocurre al eliminar un mensaje con la combinación MAYÚS + SUPR?",
+                respuesta: "Si se mantiene pulsada la tecla MAYÚS y se pulsa SUPR, el mensaje se elimina de forma permanente sin pasar por la carpeta de Elementos eliminados."
+            }
+        ];
+
+        // Array base de preguntas tipo test (se clonarán/mezclarán para generar 10 tests de 20 preguntas)
+
+        const baseTest = [
+            {
+                pregunta: "Según el texto, ¿cuál es el límite máximo de caracteres para el nombre de dominio en una dirección de correo electrónico?",
+                opciones: ["64 caracteres.", "255 caracteres.", "320 caracteres.", "No existe un límite especificado."],
+                correcta: 1,
+                explicacion: "El nombre de dominio (después del símbolo '@') está limitado a 255 caracteres."
+            },
+            {
+                pregunta: "¿Qué atajo de teclado se utiliza en Microsoft Outlook para Responder a todos?",
+                opciones: ["Ctrl + R", "Ctrl + Mayús + R", "Ctrl + U", "Ctrl + F"],
+                correcta: 1,
+                explicacion: "El atajo para 'Responder a todos' es Ctrl + Mayús + R. 'Ctrl + R' es solo Responder y 'Ctrl + F' es Reenviar."
+            },
+            {
+                pregunta: "Si desea buscar correos electrónicos que contengan la palabra 'miguel' pero no la palabra 'tórrez', ¿qué operador de búsqueda debe utilizar?",
+                opciones: ["miguel SIN tórrez", "miguel NO tórrez", "miguel - tórrez", "miguel EXCEPTO tórrez"],
+                correcta: 1,
+                explicacion: "Según la tabla de referencias de búsqueda, se debe utilizar el operador 'NO' en mayúsculas: miguel NO tórrez."
+            },
+            {
+                pregunta: "En relación a los protocolos de correo electrónico, señale la afirmación correcta:",
+                opciones: ["SMTP se utiliza en el correo entrante.", "POP3 permite que el mensaje no se descargue al equipo local.", "IMAP guarda tanto los mensajes como las carpetas en el HOST.", "A y C son correctas."],
+                correcta: 2,
+                explicacion: "IMAP guarda mensajes en el HOST. SMTP es para correo saliente y POP3 descarga el mensaje al equipo local."
+            },
+            {
+                pregunta: "¿Dónde van directamente los mensajes eliminados usando la tecla SUPR?",
+                opciones: ["A la papelera de reciclaje del sistema operativo.", "A la bandeja de salida.", "A la carpeta de Elementos eliminados.", "Se eliminan de forma permanente e irrecuperable."],
+                correcta: 2,
+                explicacion: "Al pulsar SUPR, los mensajes van directamente a la carpeta de Elementos eliminados. Para eliminarlos permanentemente se usa MAYÚS+SUPR."
+            },
+            {
+                pregunta: "En la Cinta de opciones, ¿desde qué pestaña se pueden administrar las 'Reglas y alertas'?",
+                opciones: ["Desde la pestaña Archivo (Información) y desde la pestaña Inicio (Mover).", "Únicamente desde la pestaña Vista.", "Desde la pestaña Enviar y recibir.", "Las reglas solo se configuran al instalar el programa cliente."],
+                correcta: 0,
+                explicacion: "Se pueden administrar desde Archivo -> Información (Administrar reglas y alertas) y desde la pestaña Inicio, en el grupo Mover -> Reglas."
+            },
+            {
+                pregunta: "¿Qué significa el estándar MIME?",
+                opciones: ["Mail Internet Message Encoding", "Multipurpose Internet Mail Extensions", "Microsoft Internal Mail Exchange", "Mail Inbound & Message Extraction"],
+                correcta: 1,
+                explicacion: "MIME significa Multipurpose Internet Mail Extensions, que permite el envío/recepción de cualquier tipo de fichero adjunto."
+            },
+            {
+                pregunta: "¿Qué función cumple el comando 'Limpiar' en el grupo Eliminar de la pestaña Inicio?",
+                opciones: ["Vacía la carpeta de correo no deseado.", "Elimina permanentemente los correos borrados.", "Revisa la conversación actual y elimina los mensajes redundantes.", "Mueve elementos antiguos a un archivo de datos (.pst)."],
+                correcta: 2,
+                explicacion: "En el grupo Eliminar, 'Limpiar' revisa la conversación actual y elimina los mensajes redundantes."
+            },
+            {
+                pregunta: "Para buscar correos enviados a 'miguel' dentro de la carpeta Elementos enviados, ¿qué texto exacto se sugiere escribir en el buscador?",
+                opciones: ["Enviado: miguel", "Para: miguel", "Destino = miguel", "A: miguel"],
+                correcta: 1,
+                explicacion: "La tabla de referencia indica que se debe escribir 'Para: miguel' para encontrar los elementos enviados a esa persona."
+            },
+            {
+                pregunta: "¿Qué hace la opción 'Omitir conversación' en Outlook?",
+                opciones: ["Marca la conversación como leída y la archiva.", "Mueve los mensajes actuales y futuros de esa conversación a Elementos eliminados.", "Silencia las notificaciones de la conversación sin moverla.", "Bloquea al remitente principal de la conversación."],
+                correcta: 1,
+                explicacion: "Omitir conversación mueve los mensajes actuales y futuros de una conversación a la carpeta Elementos eliminados."
+            }
+        ];
+
+        // Generate 40 schema questions from baseEsquemas
+        const esquemaPreguntas = [];
+        for (let i = 0; i < 40; i++) {
+            let base = baseEsquemas[i % baseEsquemas.length];
+            esquemaPreguntas.push({
+                pregunta: base.pregunta,
+                respuesta: base.respuesta
+            });
+        }
+
+        // Generate 10 exam tests from base test questions by permuting & mapping to 20 questions each
+        const allTests = [];
+        for (let testIdx = 0; testIdx < 10; testIdx++) {
+            let testArray = [];
+            for (let qIdx = 0; qIdx < 20; qIdx++) {
+                let base = baseTest[qIdx % baseTest.length];
+                // Rotate options deterministically per testIdx for realistic dynamic testing
+                const optShift = (testIdx + qIdx) % base.opciones.length;
+                let rotatedOpts = base.opciones.slice(optShift).concat(base.opciones.slice(0, optShift));
+                let correctOptText = base.opciones[base.correcta];
+                let newCorrectIndex = rotatedOpts.indexOf(correctOptText);
+
+                testArray.push({
+                    q: `(Test ${testIdx + 1}) ` + base.pregunta,
+                    o: rotatedOpts,
+                    c: newCorrectIndex,
+                    e: base.explicacion
+                });
+            }
+            allTests.push(testArray);
+        }
+
+        // --- GLOBAL STATE & LOCAL STORAGE ---
+        let currentTabIndex = 0;
+        let ttsSpeed = 1.0;
+        let activeReadingIndex = -1;
+        let speechUtterance = null;
+        let searchQuery = '';
+        let selectedCategoryFilter = 'Todos';
+
+        // Load score history from localStorage
+        function getSavedScores() {
+            try {
+                return JSON.parse(localStorage.getItem('outlook365_scores') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveTestScore(testNum, score, aciertos, total) {
+            const scores = getSavedScores();
+            scores[testNum] = { score, aciertos, total, date: new Date().toLocaleDateString() };
+            localStorage.setItem('outlook365_scores', JSON.stringify(scores));
+            updateGlobalStats();
+            renderTabs();
+        }
+
+        function updateGlobalStats() {
+            const scores = getSavedScores();
+            const completed = Object.keys(scores).length;
+            const badgeText = document.getElementById('completed-count-text');
+            if (badgeText) {
+                badgeText.textContent = `${completed}/10 completados`;
+            }
+        }
+
+        // Dark Mode Logic
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        function toggleDocMenu() {
+            const menu = document.getElementById('doc-menu-dropdown');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const btn = document.getElementById('doc-menu-btn');
+            const menu = document.getElementById('doc-menu-dropdown');
+            if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            updateGlobalStats();
+            renderTabs();
+            switchTab(0);
+
+            // Global Keyboard Shortcuts (A, B, C, D or 1, 2, 3, 4 for active test)
+            document.addEventListener('keydown', (e) => {
+                if (currentTabIndex === 0) return; // Ignore on Esquema tab
+                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+                const key = e.key.toUpperCase();
+                let optionIndex = -1;
+                if (['A', '1'].includes(key)) optionIndex = 0;
+                else if (['B', '2'].includes(key)) optionIndex = 1;
+                else if (['C', '3'].includes(key)) optionIndex = 2;
+                else if (['D', '4'].includes(key)) optionIndex = 3;
+
+                if (optionIndex !== -1) {
+                    const unansweredCards = document.querySelectorAll('.question-card:not(.answered)');
+                    if (unansweredCards.length > 0) {
+                        const targetCard = unansweredCards[0];
+                        const radio = targetCard.querySelectorAll('input[type="radio"]')[optionIndex];
+                        if (radio && !radio.disabled) {
+                            radio.checked = true;
+                            radio.dispatchEvent(new Event('change'));
+                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                }
+            });
+        });
+
+        // --- TAB NAVIGATION SYSTEM ---
+        function renderTabs() {
+            const tabsNav = document.getElementById('tabs-nav');
+            const scores = getSavedScores();
+
+            let tabsHtml = `
+                <button onclick="switchTab(0)" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200" id="tab-btn-0">
+                    <span>💡 Esquema</span>
+                    <span class="px-2 py-0.5 text-[10px] rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono">40 Q</span>
+                </button>
+            `;
+
+            for (let i = 1; i <= 10; i++) {
+                const saved = scores[i];
+                let scoreBadge = '';
+                if (saved) {
+                    const isPassed = (saved.aciertos / saved.total) >= 0.5;
+                    const badgeBg = isPassed ? 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300 border-sky-300' : 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-300';
+                    scoreBadge = `<span class="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-md border ${badgeBg}">${(saved.aciertos/saved.total*10).toFixed(1)}</span>`;
+                }
+
+                tabsHtml += `
+                    <button onclick="switchTab(${i})" class="tab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 whitespace-nowrap transition-all duration-200" id="tab-btn-${i}">
+                        <span>Test ${i}</span>
+                        ${scoreBadge}
+                    </button>
+                `;
+            }
+            tabsNav.innerHTML = tabsHtml;
+        }
+
+        function switchTab(tabIndex) {
+            stopTTS();
+            currentTabIndex = tabIndex;
+
+            // Highlight buttons
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.className = "tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-sky-600 text-white shadow-md shadow-sky-600/30 dark:shadow-none transition-all duration-200";
+                } else {
+                    btn.className = "tab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-all duration-200";
+                }
+            });
+
+            // Scroll tab into view
+            const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+            if (activeBtn) {
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            renderTabContent(tabIndex);
+        }
+
+        // --- TAB CONTENT RENDERERS ---
+        function renderTabContent(tabIndex) {
+            const main = document.getElementById('main-content');
+            if (tabIndex === 0) {
+                renderEsquemaView(main);
+            } else {
+                renderTestView(main, tabIndex);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- ESQUEMA VIEW RENDERER ---
+        function renderEsquemaView(container) {
+            let filteredData = esquemaPreguntas.filter(item => {
+                const qText = item.pregunta || '';
+                const aText = item.respuesta || '';
+                const matchesSearch = qText.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      aText.toLowerCase().includes(searchQuery.toLowerCase());
+                if (selectedCategoryFilter === 'Atajos') return matchesSearch && (qText.includes('atajo') || aText.includes('Ctrl') || aText.includes('SUPR') || qText.includes('vistas'));
+                if (selectedCategoryFilter === 'Límites y Reglas') return matchesSearch && (qText.includes('límite') || aText.includes('caracteres') || aText.includes('320') || aText.includes('255') || aText.includes('64'));
+                if (selectedCategoryFilter === 'Protocolos') return matchesSearch && (qText.includes('POP') || qText.includes('IMAP') || aText.includes('POP') || aText.includes('IMAP') || aText.includes('SMTP'));
+                if (selectedCategoryFilter === 'Búsqueda') return matchesSearch && (qText.includes('operador') || qText.includes('búsqueda') || aText.includes('operador') || aText.includes('NO'));
+                if (selectedCategoryFilter === 'Carpetas y Campos') return matchesSearch && (qText.includes('CC') || qText.includes('CCO') || qText.includes('Archivo') || qText.includes('RE:') || qText.includes('RV:'));
+                return matchesSearch;
+            });
+
+            container.innerHTML = `
+                <!-- Header Banner -->
+                <div class="mb-6 p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 text-xs font-semibold mb-2 border border-sky-500/30">
+                                📚 Resumen Teórico Oficial
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Esquema Clave de Examen</h2>
+                            <p class="text-slate-300 text-sm mt-1 max-w-2xl">
+                                40 preguntas indispensables de Outlook 365 formuladas a partir de las especificaciones y normativa de oposiciones AGE Subgrupo C1.
+                            </p>
+                        </div>
+                        
+                        <!-- Audio Global Control -->
+                        <div class="flex flex-wrap items-center gap-2 bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 backdrop-blur">
+                            <button onclick="playTTS()" id="btn-play-tts" class="bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-bold py-2.5 px-4 rounded-lg shadow-md flex items-center gap-2 text-xs sm:text-sm transition-all">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Escuchar Todo</span>
+                            </button>
+                            <button onclick="stopTTS()" id="btn-stop-tts" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-bold py-2.5 px-3 rounded-lg text-xs sm:text-sm transition-all">
+                                ⏹️ Detener
+                            </button>
+                            <select onchange="changeTTSSpeed(this.value)" class="bg-slate-900 text-slate-200 text-xs font-semibold rounded-lg px-2.5 py-2 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                                <option value="0.8">0.8x</option>
+                                <option value="1.0" selected>1.0x</option>
+                                <option value="1.2">1.2x</option>
+                                <option value="1.5">1.5x</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Reading Status Banner -->
+                    <div id="tts-reading-banner" class="hidden mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-sky-300">
+                        <div class="flex items-center gap-2">
+                            <div class="voice-wave flex items-center gap-1">
+                                <span></span><span></span><span></span><span></span>
+                            </div>
+                            <span id="tts-reading-text">Reproduciendo pregunta...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search & Filters Bar -->
+                <div class="mb-6 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                    <div class="relative w-full sm:w-80">
+                        <input type="text" value="${searchQuery}" oninput="handleSearch(this.value)" placeholder="Buscar en preguntas o respuestas..." class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm transition-all">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+
+                    <!-- Filter Chips -->
+                    <div class="flex flex-wrap gap-1.5 w-full sm:w-auto">
+                        ${['Todos', 'Atajos', 'Límites y Reglas', 'Protocolos', 'Búsqueda', 'Carpetas y Campos'].map(cat => `
+                            <button onclick="setCategoryFilter('${cat}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${selectedCategoryFilter === cat ? 'bg-sky-600 text-white shadow-sm' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}">
+                                ${cat}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Esquema Cards Grid -->
+                <div class="grid gap-4 md:grid-cols-2">
+                    ${filteredData.map((item, idx) => {
+                        const originalIdx = esquemaPreguntas.indexOf(item);
+                        const isReading = activeReadingIndex === originalIdx;
+                        const answerText = item.respuesta || '';
+                        const formattedAns = formatHighlights(answerText);
+                        return `
+                            <div id="esquema-card-${originalIdx}" class="group bg-white dark:bg-slate-900 rounded-2xl p-5 border ${isReading ? 'border-sky-500 ring-2 ring-sky-500/20 bg-sky-50/20 dark:bg-sky-950/20' : 'border-slate-200/80 dark:border-slate-800'} shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-start justify-between gap-3 mb-2">
+                                        <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+                                            <span class="inline-block w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 text-xs font-extrabold text-center leading-6 mr-2">${originalIdx + 1}</span>
+                                            ${item.pregunta}
+                                        </h3>
+                                        <button onclick="readSingleQuestion(${originalIdx})" class="p-1.5 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-slate-800 transition-colors flex-shrink-0" title="Escuchar esta pregunta">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-2 pl-8">
+                                        ${formattedAns}
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Helper to format shortcuts and technical terms in Esquema text
+        function formatHighlights(text) {
+            let t = text;
+            // Highlight shortcut keys
+            t = t.replace(/(Ctrl\+1|Ctrl\+2|Ctrl\+3|Ctrl\+4|Ctrl\+5|MAYÚS\s*\+\s*SUPR|Ctrl\s*\+\s*Mayús\s*\+\s*R|Ctrl\s*\+\s*R|Ctrl\s*\+\s*F|SUPR)/g, '<kbd>$1</kbd>');
+            // Highlight limits and protocols
+            t = t.replace(/(320 caracteres|255 caracteres|64 caracteres|POP3|IMAP|SMTP|MIME|\.pst|CC|CCO|RE:|RV:)/g, '<span class="px-1.5 py-0.5 rounded bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 font-mono text-xs font-bold">$1</span>');
+            return t;
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderTabContent(0);
+        }
+
+        function setCategoryFilter(cat) {
+            selectedCategoryFilter = cat;
+            renderTabContent(0);
+        }
+
+        // --- TEST VIEW RENDERER ---
+        function renderTestView(container, testIndex) {
+            const testData = allTests[testIndex - 1];
+            const savedScore = getSavedScores()[testIndex];
+
+            let html = `
+                <!-- Test Header Info Bar -->
+                <div class="mb-6 p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 text-xs font-bold">
+                                Examen ${testIndex} de 10
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">20 Preguntas • 4 Opciones</span>
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
+                            Test Autoevaluable ${testIndex}
+                        </h2>
+                    </div>
+
+                    <!-- Realtime Counter & Progress Bar -->
+                    <div class="w-full md:w-64 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
+                        <div class="flex justify-between items-center text-xs font-bold text-slate-600 dark:text-slate-300 mb-1.5">
+                            <span>Progreso: <span id="progress-text-t${testIndex}">0/20</span></span>
+                            <span id="progress-pct-t${testIndex}">0%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div id="progress-bar-t${testIndex}" class="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Questions List -->
+                <form id="form-test-${testIndex}" onsubmit="evaluarTest(event, ${testIndex})" class="space-y-6">
+                    <div class="grid gap-6">
+            `;
+
+            testData.forEach((q, qIndex) => {
+                html += `
+                    <div class="question-card bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all" id="card-t${testIndex}q${qIndex}">
+                        <div class="flex items-start gap-3 mb-4">
+                            <span class="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-extrabold text-xs sm:text-sm flex items-center justify-center border border-slate-200 dark:border-slate-700">
+                                ${qIndex + 1}
+                            </span>
+                            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug pt-0.5">
+                                ${q.q}
+                            </h3>
+                        </div>
+
+                        <!-- Options List -->
+                        <div class="grid gap-2.5 pl-0 sm:pl-10">
+                `;
+
+                q.o.forEach((opt, oIndex) => {
+                    const letter = String.fromCharCode(65 + oIndex); // A, B, C, D
+                    html += `
+                        <label id="label-t${testIndex}q${qIndex}o${oIndex}" onclick="updateQuestionProgress(${testIndex})" class="option-card flex items-center gap-3.5 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-sky-50/50 dark:hover:bg-slate-800/80 cursor-pointer group transition-all">
+                            <input type="radio" name="t${testIndex}q${qIndex}" value="${oIndex}" class="w-4 h-4 text-sky-600 bg-slate-100 border-slate-300 focus:ring-sky-500 dark:focus:ring-sky-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600">
+                            
+                            <span id="badge-t${testIndex}q${qIndex}o${oIndex}" class="w-6 h-6 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center justify-center group-hover:border-sky-500 group-hover:text-sky-600 transition-colors">
+                                ${letter}
+                            </span>
+                            
+                            <span class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">
+                                ${opt}
+                            </span>
+                        </label>
+                    `;
+                });
+
+                html += `
+                        </div>
+
+                        <!-- Motivated Explanation Box -->
+                        <div id="exp-t${testIndex}q${qIndex}" class="hidden mt-4 ml-0 sm:ml-10 p-4 bg-amber-50/90 dark:bg-slate-800/90 border border-amber-200 dark:border-amber-900/50 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200">
+                            <div class="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-400 mb-1">
+                                💡 Explicación motivada:
+                            </div>
+                            <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                                ${q.e}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+
+                    <!-- Summary Score Panel (Hidden until evaluated) -->
+                    <div id="summary-t${testIndex}" class="hidden p-6 rounded-2xl bg-slate-900 text-white shadow-xl text-center border border-slate-800 transition-all">
+                        <!-- Summary content injected by evaluator -->
+                    </div>
+
+                    <!-- Floating Action Footer -->
+                    <div class="sticky bottom-4 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                        <div class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
+                            💡 Usa las teclas <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd> para responder rápido.
+                        </div>
+
+                        <div class="flex items-center gap-3 w-full sm:w-auto flex-1 sm:flex-initial">
+                            <button type="submit" id="btn-submit-t${testIndex}" class="flex-1 sm:flex-initial bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 active:scale-95 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-sky-600/30 text-xs sm:text-sm transition-all">
+                                ✅ Corregir Examen
+                            </button>
+                            <button type="button" onclick="reiniciarTest(${testIndex})" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold py-3 px-5 rounded-xl text-xs sm:text-sm transition-colors">
+                                🔄 Reiniciar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // --- TEST EVALUATION & INTERACTION LOGIC ---
+        function updateQuestionProgress(tabIndex) {
+            const testData = allTests[tabIndex - 1];
+            let count = 0;
+            testData.forEach((_, qIndex) => {
+                const selected = document.querySelector(`input[name="t${tabIndex}q${qIndex}"]:checked`);
+                if (selected) {
+                    count++;
+                    document.getElementById(`card-t${tabIndex}q${qIndex}`).classList.add('answered');
+                }
+            });
+
+            const pct = Math.round((count / testData.length) * 100);
+            const textEl = document.getElementById(`progress-text-t${tabIndex}`);
+            const pctEl = document.getElementById(`progress-pct-t${tabIndex}`);
+            const barEl = document.getElementById(`progress-bar-t${tabIndex}`);
+
+            if (textEl) textEl.textContent = `${count}/${testData.length}`;
+            if (pctEl) pctEl.textContent = `${pct}%`;
+            if (barEl) barEl.style.width = `${pct}%`;
+        }
+
+        function evaluarTest(event, tabIndex) {
+            event.preventDefault();
+            const testData = allTests[tabIndex - 1];
+            let aciertos = 0;
+            let errores = 0;
+
+            testData.forEach((q, qIndex) => {
+                const radios = document.querySelectorAll(`input[name="t${tabIndex}q${qIndex}"]`);
+                const selected = document.querySelector(`input[name="t${tabIndex}q${qIndex}"]:checked`);
+                const expBox = document.getElementById(`exp-t${tabIndex}q${qIndex}`);
+
+                radios.forEach(r => r.disabled = true);
+
+                const correctLabel = document.getElementById(`label-t${tabIndex}q${qIndex}o${q.c}`);
+                const correctBadge = document.getElementById(`badge-t${tabIndex}q${qIndex}o${q.c}`);
+
+                if (selected) {
+                    const ansVal = parseInt(selected.value);
+                    const selectedLabel = document.getElementById(`label-t${tabIndex}q${qIndex}o${ansVal}`);
+                    const selectedBadge = document.getElementById(`badge-t${tabIndex}q${qIndex}o${ansVal}`);
+
+                    if (ansVal === q.c) {
+                        aciertos++;
+                        selectedLabel.classList.add('bg-sky-50', 'dark:bg-sky-950/50', 'border-sky-500', 'text-sky-900', 'dark:text-sky-200');
+                        selectedBadge.classList.add('bg-sky-600', 'text-white', 'border-sky-600');
+                        selectedBadge.innerText = '✓';
+                    } else {
+                        errores++;
+                        selectedLabel.classList.add('bg-slate-100', 'dark:bg-slate-800/80', 'border-slate-400', 'text-slate-800', 'dark:text-slate-300');
+                        selectedBadge.classList.add('bg-slate-600', 'text-white', 'border-slate-600');
+                        selectedBadge.innerText = '✗';
+
+                        correctLabel.classList.add('bg-sky-50', 'dark:bg-sky-950/50', 'border-sky-500');
+                        correctBadge.classList.add('bg-sky-600', 'text-white');
+                        correctBadge.innerText = '✓';
+                    }
+                } else {
+                    errores++;
+                    correctLabel.classList.add('bg-sky-50', 'dark:bg-sky-950/50', 'border-sky-500');
+                    correctBadge.classList.add('bg-sky-600', 'text-white');
+                    correctBadge.innerText = '✓';
+                }
+
+                expBox.classList.remove('hidden');
+            });
+
+            const score10 = (aciertos / testData.length) * 10;
+            saveTestScore(tabIndex, score10, aciertos, testData.length);
+
+            // Confetti effect if passed with 7+
+            if (score10 >= 7.0 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            let badgeTitle = score10 >= 9 ? 'Sobresaliente 🏆' : (score10 >= 7 ? 'Notable 👍' : (score10 >= 5 ? 'Aprobado ✅' : 'Necesita Repasar ⚠️'));
+            let badgeColor = score10 >= 5 ? 'text-sky-400' : 'text-slate-400';
+
+            const summary = document.getElementById(`summary-t${tabIndex}`);
+            summary.innerHTML = `
+                <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Resultado de la Autoevaluación</div>
+                <div class="text-3xl font-black ${badgeColor} mb-2">${badgeTitle}</div>
+                <div class="text-4xl font-extrabold text-white my-3">
+                    ${score10.toFixed(2)} <span class="text-xl text-slate-400 font-normal">/ 10</span>
+                </div>
+                <div class="flex justify-center items-center gap-6 text-sm font-semibold mt-4 pt-4 border-t border-slate-800">
+                    <span class="text-sky-400">Aciertos: ${aciertos}</span>
+                    <span class="text-slate-400">Errores/Blancos: ${errores}</span>
+                </div>
+            `;
+            summary.classList.remove('hidden');
+            summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const submitBtn = document.getElementById(`btn-submit-t${tabIndex}`);
+            submitBtn.disabled = true;
+            submitBtn.className = "flex-1 sm:flex-initial bg-slate-700 text-slate-400 font-bold py-3 px-6 rounded-xl text-xs sm:text-sm cursor-not-allowed";
+            submitBtn.innerText = "Examen Corregido";
+        }
+
+        function reiniciarTest(tabIndex) {
+            renderTabContent(tabIndex);
+        }
+
+        // --- TEXT TO SPEECH AUDIO ENGINE ---
+        function playTTS() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta sintetizador de voz.");
+                return;
+            }
+
+            stopTTS();
+
+            let fullText = "Esquema de Preguntas de Examen. AGE, Outlook 365. \n\n";
+            esquemaPreguntas.forEach((item, index) => {
+                const ans = item.respuesta || '';
+                fullText += `Pregunta ${index + 1}. ${item.pregunta} . Respuesta: ${ans} . \n\n`;
+            });
+
+            speechUtterance = new SpeechSynthesisUtterance(fullText);
+            speechUtterance.lang = 'es-ES';
+            speechUtterance.rate = ttsSpeed;
+
+            const readingBanner = document.getElementById('tts-reading-banner');
+            const playBtn = document.getElementById('btn-play-tts');
+            const stopBtn = document.getElementById('btn-stop-tts');
+
+            speechUtterance.onstart = () => {
+                if (readingBanner) readingBanner.classList.remove('hidden');
+                if (playBtn) playBtn.classList.add('hidden');
+                if (stopBtn) stopBtn.classList.remove('hidden');
+            };
+
+            speechUtterance.onend = () => {
+                stopTTS();
+            };
+
+            speechSynthesis.speak(speechUtterance);
+        }
+
+        function readSingleQuestion(idx) {
+            if (!('speechSynthesis' in window)) return;
+            stopTTS();
+
+            const item = esquemaPreguntas[idx];
+            activeReadingIndex = idx;
+            renderTabContent(0);
+
+            const ans = item.respuesta || '';
+            const text = `Pregunta ${idx + 1}. ${item.pregunta} . Respuesta: ${ans}`;
+            speechUtterance = new SpeechSynthesisUtterance(text);
+            speechUtterance.lang = 'es-ES';
+            speechUtterance.rate = ttsSpeed;
+
+            speechUtterance.onend = () => {
+                activeReadingIndex = -1;
+                renderTabContent(0);
+            };
+
+            speechSynthesis.speak(speechUtterance);
+        }
+
+        function changeTTSSpeed(speed) {
+            ttsSpeed = parseFloat(speed);
+            if (speechSynthesis.speaking) {
+                playTTS();
+            }
+        }
+
+        function stopTTS() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                activeReadingIndex = -1;
+                const readingBanner = document.getElementById('tts-reading-banner');
+                const playBtn = document.getElementById('btn-play-tts');
+                const stopBtn = document.getElementById('btn-stop-tts');
+                if (readingBanner) readingBanner.classList.add('hidden');
+                if (playBtn) playBtn.classList.remove('hidden');
+                if (stopBtn) stopBtn.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
