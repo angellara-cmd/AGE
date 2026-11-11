@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio AGE - Tema 8: La Red Internet</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.7);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen font-sans transition-colors duration-300">
+
+    <!-- HEADER DASHBOARD TOP -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Branding -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                        <i data-lucide="globe" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white leading-tight">AGE Prep • Tema 8</h1>
+                            <span class="hidden sm:inline-block px-2 py-0.5 text-xs font-semibold bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 rounded-full">Internet & Web</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Plataforma Interactiva de Estudio de Oposiciones</p>
+                    </div>
+                </div>
+
+                <!-- Global Progress Badge & Actions -->
+                <div class="flex items-center space-x-3">
+                    <!-- Progress summary pill -->
+                    <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+                        <i data-lucide="award" class="w-4 h-4 text-amber-500 mr-2"></i>
+                        <span class="text-xs font-medium text-slate-600 dark:text-slate-300 mr-2">Progreso Global:</span>
+                        <div class="w-20 bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mr-2">
+                            <div id="global-progress-bar" class="bg-gradient-to-r from-brand-500 to-indigo-500 h-full w-0 transition-all duration-500"></div>
+                        </div>
+                        <span id="global-progress-text" class="text-xs font-bold text-brand-600 dark:text-brand-400">0%</span>
+                    </div>
+
+                    <!-- Open PDF Link -->
+                    <a href="tema08.pdf" target="_blank" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-all border border-slate-200/80 dark:border-slate-700">
+                        <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>
+                        <span class="hidden sm:inline">PDF Base</span>
+                    </a>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200/80 dark:border-slate-700" title="Cambiar Tema">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-400"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden text-slate-700"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STICKY TAB NAVIGATION BAR -->
+        <nav class="bg-white/90 dark:bg-slate-900/90 border-t border-slate-100 dark:border-slate-800/80 px-2 sm:px-4">
+            <div class="max-w-7xl mx-auto flex items-center space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar py-2" id="nav-tabs">
+                <!-- Dynamically generated navigation buttons -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: PROGRESO GLOBAL / DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content block space-y-6">
+            <!-- Hero Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tests Completados</p>
+                            <h3 id="stat-completed" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">0 / 10</h3>
+                        </div>
+                        <div class="p-3 bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 rounded-xl">
+                            <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div id="bar-stat-completed" class="bg-brand-500 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nota Media Global</p>
+                            <h3 id="stat-avg-score" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">-- / 10</h3>
+                        </div>
+                        <div class="p-3 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-xl">
+                            <i data-lucide="trending-up" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <p id="stat-avg-sub" class="text-xs text-slate-500 dark:text-slate-400 mt-4">Calculada sobre tests corregidos</p>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Precisión Total</p>
+                            <h3 id="stat-accuracy" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">0%</h3>
+                        </div>
+                        <div class="p-3 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                            <i data-lucide="target" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <p id="stat-accuracy-sub" class="text-xs text-slate-500 dark:text-slate-400 mt-4">0 aciertos de 0 respondidas</p>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nivel de Dominio</p>
+                            <h3 id="stat-level" class="text-xl font-bold text-slate-900 dark:text-white mt-1">Iniciando</h3>
+                        </div>
+                        <div class="p-3 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-xl">
+                            <i data-lucide="zap" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center space-x-1">
+                        <span class="text-xs text-slate-500 dark:text-slate-400">Objetivo: Oposición AGE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tests Quick Access Grid -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Desglose por Test de Evaluación</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Cada test contiene 20 preguntas basadas en la normativa del tema 8</p>
+                    </div>
+                    <button onclick="resetAllProgress()" class="self-start sm:self-auto text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 font-semibold flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 transition-all">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                        <span>Reiniciar Todo el Progreso</span>
+                    </button>
+                </div>
+
+                <div id="dashboard-test-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: ESQUEMA BASE DEL TEMA -->
+        <div id="tab-esquema" class="tab-content hidden space-y-6">
+            <!-- Audio & Search Controls Bar -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    
+                    <!-- Search Input -->
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="scheme-search" oninput="filterScheme()" placeholder="Buscar concepto, protocolo, siglas (ej. IPv6, DNS, W3C, CAPTCHA)..." 
+                               class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-slate-100 placeholder-slate-400">
+                    </div>
+
+                    <!-- Audio TTS Controls -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="btn-play-tts" onclick="toggleAudioScheme()" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-sm shadow-md shadow-emerald-600/20 transition-all">
+                            <i id="icon-tts-play" data-lucide="volume-2" class="w-4 h-4"></i>
+                            <span id="text-tts-play">Escuchar Tema</span>
+                        </button>
+
+                        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
+                            <span class="text-xs text-slate-500 dark:text-slate-400 px-2 font-medium">Velocidad:</span>
+                            <button onclick="setSpeed(0.8)" class="speed-btn px-2 py-1 text-xs rounded-lg font-semibold hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300">0.8x</button>
+                            <button onclick="setSpeed(1.0)" class="speed-btn active-speed px-2 py-1 text-xs rounded-lg font-semibold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm">1.0x</button>
+                            <button onclick="setSpeed(1.25)" class="speed-btn px-2 py-1 text-xs rounded-lg font-semibold hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300">1.25x</button>
+                            <button onclick="setSpeed(1.5)" class="speed-btn px-2 py-1 text-xs rounded-lg font-semibold hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300">1.5x</button>
+                        </div>
+
+                        <!-- Expand / Collapse cards toggle -->
+                        <button onclick="toggleExpandAllScheme()" class="px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-all">
+                            Expandir / Colapsar Todo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TTS Status Bar -->
+                <div id="tts-status-bar" class="hidden flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 p-3 rounded-xl text-xs text-emerald-800 dark:text-emerald-300">
+                    <div class="flex items-center space-x-2">
+                        <span class="relative flex h-2.5 w-2.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
+                        <span>Leyendo concepto: <strong id="tts-current-title">1 / 40</strong></span>
+                    </div>
+                    <button onclick="stopAudioScheme()" class="text-xs underline font-semibold hover:text-emerald-950 dark:hover:text-white">Detener</button>
+                </div>
+            </div>
+
+            <!-- Scheme Questions Grid Container -->
+            <div id="scheme-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamically injected scheme cards -->
+            </div>
+        </div>
+
+        <!-- TABS 3 to 12: TESTS 1 to 10 -->
+        <div id="test-tabs-wrapper">
+            <!-- Dynamically generated exam tabs -->
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+            <p><strong>Estudio AGE - Tema 8: La Red Internet y Conceptos Web</strong></p>
+            <p>Optimizada para la preparación de Oposiciones de la Administración General del Estado.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. DATOS COMPLETOS DE ESQUEMA (40 PREGUNTAS)
+        // ==========================================
+        const esquemaPreguntas = [
+            { id: 1, pregunta: "¿Qué es Internet?", respuesta: "Es la red de ordenadores más grande del mundo que proporciona acceso a grandes cantidades de información mundial, basada en el concepto de Autopista de la Información." },
+            { id: 2, pregunta: "¿Cuál es el origen de Internet?", respuesta: "El embrión de Internet fue la red ARPAnet, establecida en 1969 por la agencia estadounidense DARPA con 4 ordenadores, diseñada para asegurar comunicaciones ante ataques enemigos." },
+            { id: 3, pregunta: "¿Qué redes conforman Internet tal como se conoce hoy?", respuesta: "Es una combinación de ARPAnet, MILnet (creada para uso exclusivo militar), NASA Science Internet (NSI) e NSFnet (creada en los 80)." },
+            { id: 4, pregunta: "¿Quién controla Internet hoy en día?", respuesta: "No existe ninguna organización que controle Internet en su totalidad, aunque Estados Unidos la financió inicialmente. Es un conglomerado de redes públicas y privadas." },
+            { id: 5, pregunta: "¿Qué funciones tiene IANA?", respuesta: "Internet Assigned Numbers Authority es responsable de la asignación y gestión de números IP, nombres de dominio y otros recursos técnicos esenciales." },
+            { id: 6, pregunta: "¿Qué es IETF?", respuesta: "Internet Engineering Task Force es una comunidad abierta de diseñadores, operadores y usuarios que desarrolla y promueve estándares técnicos para Internet." },
+            { id: 7, pregunta: "¿Qué es el W3C?", respuesta: "World Wide Web Consortium es un comité fundado en el MIT en 1994 que desarrolla estándares (como HTML, XML, CSS) para asegurar el crecimiento a largo plazo de la Web." },
+            { id: 8, pregunta: "¿Qué protocolo de comunicaciones utiliza Internet?", respuesta: "Utiliza el protocolo TCP/IP. TCP (Transmision Control Protocol) es de alto nivel y asegura el transporte de datos, mientras que IP (Internet Protocol) localiza el camino adecuado." },
+            { id: 9, pregunta: "¿Para qué sirve el comando 'ipconfig'?", respuesta: "En sistemas Windows, se utiliza para mostrar la configuración de la red de la computadora local." },
+            { id: 10, pregunta: "¿Para qué sirve el comando 'ping'?", respuesta: "Verifica la conectividad entre dos dispositivos en una red IP utilizando el protocolo ICMP." },
+            { id: 11, pregunta: "¿Qué función tienen 'tracert' o 'traceroute'?", respuesta: "Rastrean la ruta que sigue un paquete de datos desde la computadora hasta un destino, proporcionando información sobre todos los nodos (routers) en el camino." },
+            { id: 12, pregunta: "¿Para qué se usa 'netstat'?", respuesta: "Muestra información sobre conexiones de red, tablas de enrutamiento, estadísticas de protocolos, puertos abiertos y conexiones activas." },
+            { id: 13, pregunta: "¿Cómo se transmite la información en TCP/IP?", respuesta: "TCP fragmenta el mensaje en paquetes con información de control. IP pone el paquete en un 'sobre' con remitente y destinatario. Al llegar, TCP ordena y reagrupa el mensaje y notifica la recepción." },
+            { id: 14, pregunta: "¿Cuáles son las características de las direcciones IPv4?", respuesta: "Son números de 32 bits, expresados como 4 números decimales separados por puntos (valores entre 0 y 255). Permite 4.294.967.296 direcciones (2^32)." },
+            { id: 15, pregunta: "¿Cuáles son las características de las direcciones IPv6?", respuesta: "Son números de 128 bits expresados como 8 grupos de 4 dígitos hexadecimales separados por dos puntos. Permite 340 sextillones de direcciones." },
+            { id: 16, pregunta: "¿Qué es DHCP?", respuesta: "Protocolo de Configuración Dinámica de Host, un servicio que asigna automáticamente direcciones IP a los dispositivos en una red." },
+            { id: 17, pregunta: "¿Qué restricciones tienen los nombres de dominio?", respuesta: "No pueden exceder los 255 caracteres de extensión total y cada parte del nombre (bloque) no puede superar los 63 caracteres. Tienen al menos dos bloques separados por un punto." },
+            { id: 18, pregunta: "¿Cuáles son las alternativas de conexión a Internet?", respuesta: "Banda ancha por cable (coaxial), DSL (líneas telefónicas), Fibra óptica, Satélite (mayor latencia) y Redes Móviles (4G y 5G)." },
+            { id: 19, pregunta: "¿Qué es el modelo Cliente/Servidor?", respuesta: "Modelo donde el 'Cliente' solicita un servicio (ej. navegador) y el 'Servidor' provee la información solicitada y atiende simultáneamente a varios clientes." },
+            { id: 20, pregunta: "¿Qué diferencia a HTTP de HTTPS?", respuesta: "HTTP envía datos sin cifrar, HTTPS los envía cifrados mediante el protocolo SSL (Secure Socket Layer) o TLS, mostrando un candado en el navegador." },
+            { id: 21, pregunta: "¿Cuáles son los navegadores más conocidos según el temario?", respuesta: "Edge (por defecto en Win 10), Chrome (de Google, el más utilizado), Firefox (libre/código abierto), Safari (Apple), Opera (Noruega) y Chromium." },
+            { id: 22, pregunta: "¿Qué es un hipervínculo y la hipermedia?", respuesta: "El hipervínculo es un enlace estructurado mediante hipertexto. La hipermedia es la combinación de hipertexto con elementos multimedia (texto, imágenes, vídeo, sonido)." },
+            { id: 23, pregunta: "¿Qué son las Cookies?", respuesta: "Archivos de texto en el disco duro local con información sobre estadísticas de navegación o información confidencial del usuario." },
+            { id: 24, pregunta: "¿Cuáles son las partes de una URL?", respuesta: "Protocolo (HTTP/FTP), Dirección IP o dominio, el camino o ruta, y el nombre del documento." },
+            { id: 25, pregunta: "¿Qué es y para qué sirve TELNET?", respuesta: "Programa de acceso remoto (entorno texto o CLI) para ejecutar programas en ordenadores remotos que requieren otro sistema operativo, mayor potencia o albergan datos específicos." },
+            { id: 26, pregunta: "¿Qué es FTP?", respuesta: "File Transfer Protocol, permite transferir ficheros (documentos, imágenes, etc.) entre ordenadores. Ejemplos gráficos: CuteFTP y WS_FTP." },
+            { id: 27, pregunta: "¿Qué hace el servicio DNS?", respuesta: "Domain Name System se encarga de traducir nombres de dominio en direcciones IP y viceversa. Es un sistema distribuido." },
+            { id: 28, pregunta: "¿Qué es el comercio electrónico B2B y B2C?", respuesta: "B2B (Business-To-Business) es comercio entre dos negocios. B2C (Business-To-Consumer) es comercio entre un negocio y un consumidor." },
+            { id: 29, pregunta: "¿Qué es el comercio electrónico C2C y C2B?", respuesta: "C2C es entre dos consumidores. C2B es cuando el consumidor pone sus servicios a disposición de un negocio." },
+            { id: 30, pregunta: "¿Qué es el comercio electrónico B2A y C2A?", respuesta: "B2A (Business-To-Administration) es venta de empresas a la Administración Pública (o A2B). C2A es transacciones entre ciudadanos y Administración." },
+            { id: 31, pregunta: "¿Qué es un CAPTCHA?", respuesta: "Una prueba para proteger servicios frente a spam o descifrado de contraseñas, comprobando si el usuario es un humano o un robot." },
+            { id: 32, pregunta: "¿Qué es un buscador web?", respuesta: "Sitio web (ej. Google, Bing, Yahoo) que permite encontrar páginas mediante palabras clave o keywords, respondiendo con listados de resultados." },
+            { id: 33, pregunta: "¿Cómo se hace una búsqueda exacta en Google?", respuesta: "Utilizando comillas. Ej: \"Turismo rural en Cuenca\"." },
+            { id: 34, pregunta: "¿Para qué sirve el operador OR y el guion (-) en una búsqueda?", respuesta: "OR busca páginas que contengan alguna de las palabras. El guion excluye la palabra de los resultados (ej. Turismo -rural)." },
+            { id: 35, pregunta: "¿Para qué sirven los comandos site:, filetype: y define:?", respuesta: "site: busca dentro de una web concreta; filetype: localiza un formato de archivo (ej. ppt); define: busca la definición de un término." },
+            { id: 36, pregunta: "¿Cuáles son las características del lenguaje HTML?", respuesta: "Lenguaje hipertextual de marcas que permite una web distribuida, uso de hipertexto, compatibilidad con todos los SO, dinamismo y no requiere programas especiales para programar, solo un bloc de notas." },
+            { id: 37, pregunta: "¿Qué aportan CSS y JavaScript a la web?", respuesta: "CSS controla el aspecto y diseño (estilos estandarizados). JavaScript es un lenguaje de programación que da interactividad y dinamicidad a las páginas." },
+            { id: 38, pregunta: "¿Qué diferencias hay entre un buscador y la Inteligencia Artificial?", respuesta: "Un buscador solo encuentra palabras indexadas, la IA simula inteligencia humana aprendiendo de patrones e interpreta el contenido." },
+            { id: 39, pregunta: "¿Qué proveedores de IA se citan en el documento?", respuesta: "Gemini (Google), Copilot (Microsoft), ChatGPT (OpenAI) y DeepSeek (origen chino)." },
+            { id: 40, pregunta: "¿Cómo se clasifican las Redes Sociales?", respuesta: "Horizontales (generalistas como Facebook, Instagram, Tiktok, Youtube, X) y Verticales (temáticas concretas como Linkedin, Tripadvisor, Tinder)." }
+        ];
+
+        // ==========================================
+        // 2. BASE DE HECHOS Y GENERADOR DE 10 EXÁMENES (20 PREGUNTAS C/U)
+        // ==========================================
+        const factsBase = [
+            {q: "¿En qué año se estableció la red ARPAnet?", o: ["1969", "1972", "1994", "1980"], c: 0, e: "El embrión de Internet fue la red ARPAnet, establecida en 1969 por DARPA con 4 ordenadores."},
+            {q: "¿Qué red creó el gobierno americano para uso exclusivo militar al separarse de ARPAnet?", o: ["NSFnet", "MILnet", "NSI", "TCP/IP"], c: 1, e: "El gobierno americano decidió crear MILnet, usada exclusivamente para comunicaciones militares."},
+            {q: "¿Cuál es el protocolo encargado de localizar el camino más adecuado para la comunicación entre ordenadores?", o: ["TCP", "IP", "HTTP", "FTP"], c: 1, e: "IP (Internet Protocol) es el encargado de localizar el camino más adecuado para la comunicación."},
+            {q: "¿Qué comando rastrea la ruta de un paquete de datos en sistemas Windows?", o: ["ping", "netstat", "tracert", "ipconfig"], c: 2, e: "tracert (en Windows) rastrea la ruta que sigue un paquete de datos, mostrando los nodos."},
+            {q: "¿Cuántas direcciones distintas permite teóricamente el protocolo IPv4?", o: ["340 sextillones", "Aproximadamente 4.294 millones", "Infinitas", "2^128"], c: 1, e: "IPv4 usa 32 bits, lo que permite 2^32 direcciones (4.294.967.296)."},
+            {q: "¿Qué protocolo asigna automáticamente direcciones IP a los dispositivos de una red?", o: ["DNS", "DHCP", "FTP", "SSL"], c: 1, e: "DHCP es el servicio de asignación dinámica de direcciones IP."},
+            {q: "¿Cuál es la extensión máxima permitida para un nombre de dominio completo?", o: ["255 caracteres", "128 caracteres", "63 caracteres", "32 caracteres"], c: 0, e: "Los nombres de dominio no pueden exceder los 255 caracteres de extensión total."},
+            {q: "¿Qué representa el modelo de comercio electrónico B2C?", o: ["Empresa a Empresa", "Consumidor a Consumidor", "Negocio a Consumidor", "Ciudadano a Administración"], c: 2, e: "B2C (Business-To-Consumer) es el intercambio comercial entre un negocio y un consumidor final."},
+            {q: "¿Qué operador o comando de Google sirve para limitar los resultados a un formato de archivo concreto?", o: ["site:", "define:", "filetype:", "related:"], c: 2, e: "filetype: localiza ficheros con una extensión específica (ej. filetype:pdf)."},
+            {q: "¿Quién desarrolló el navegador Chrome?", o: ["Apple", "Google", "Microsoft", "Mozilla"], c: 1, e: "Chrome es un navegador web desarrollado por Google."},
+            {q: "¿Qué organismo internacional desarrolla los estándares fundamentales de la Web como HTML y CSS?", o: ["IANA", "IETF", "W3C", "ISOC"], c: 2, e: "W3C (World Wide Web Consortium) es el comité fundado en el MIT que desarrolla estándares web."},
+            {q: "¿Según el temario, a qué desarrollador pertenece la IA ChatGPT?", o: ["Google", "Microsoft", "OpenAI", "Meta"], c: 2, e: "ChatGPT es desarrollado por OpenAI según la documentación del tema."},
+            {q: "¿Cómo se clasifica Tinder en la tipología de redes sociales?", o: ["Red social horizontal generalista", "Proveedor de IA", "Red social vertical temática (citas)", "Buscador especializado"], c: 2, e: "Tinder se categoriza como una red social vertical (temática de citas)."},
+            {q: "El comando 'ping' utiliza un protocolo específico de control para comprobar conectividad. ¿Cuál?", o: ["TCP", "UDP", "ICMP", "HTTP"], c: 2, e: "ping utiliza el protocolo ICMP (Internet Control Message Protocol)."},
+            {q: "Respecto a las direcciones IPv6, señale la afirmación correcta:", o: ["Utilizan 32 bits.", "Se expresan en 8 grupos de 4 dígitos hexadecimales.", "Solo asignan IPs dinámicas locales.", "Tienen un máximo de 255 caracteres."], c: 1, e: "IPv6 consta de 128 bits expresados en 8 grupos de 4 dígitos hexadecimales separados por dos puntos."},
+            {q: "¿Qué tecnología se encarga de dar dinamismo e interactividad a las páginas web?", o: ["HTML", "XML", "JavaScript", "CSS"], c: 2, e: "JavaScript es el lenguaje de programación que aporta dinamismo e interactividad."},
+            {q: "¿Qué significan exactamente las siglas de la entidad IANA?", o: ["Internet Assigned Numbers Authority", "Internet Administration Name Area", "Internet Advanced Network Agency", "Internal Association of Network Administrators"], c: 0, e: "IANA significa Internet Assigned Numbers Authority."},
+            {q: "El servicio TELNET se caracteriza por:", o: ["Transferir archivos pesados con interfaz gráfica", "Asignar IPs dinámicas", "Permitir acceso remoto a ordenadores en entorno texto/CLI", "Ser un navegador web seguro"], c: 2, e: "TELNET permite el acceso remoto en entorno tipo texto o CLI para ejecutar programas en máquinas distantes."},
+            {q: "En una URL completa, ¿qué parte especifica el modo de intercambio de información entre cliente y servidor?", o: ["El nombre de dominio", "El nombre del documento final", "El protocolo (ej. HTTP/FTP)", "La ruta de carpetas"], c: 2, e: "El protocolo (como HTTP, HTTPS o FTP) indica las reglas de transmisión de datos."},
+            {q: "¿Qué es el SEO en el contexto de buscadores web?", o: ["Search Engine Optimization (Optimización en motores de búsqueda)", "Un estándar de seguridad de transferencia", "Un protocolo de red de capa 3", "Un tipo de comercio entre empresas"], c: 0, e: "SEO es el conjunto de técnicas para mejorar la posición de un sitio en los resultados orgánicos."}
+        ];
+
+        // Generar 10 exámenes únicos con variaciones controladas basadas en la documentación
+        const examenes = [];
+        for (let i = 0; i < 10; i++) {
+            let test = [];
+            for (let j = 0; j < 20; j++) {
+                let base = factsBase[j % factsBase.length];
+                let clone = JSON.parse(JSON.stringify(base));
+                test.push(clone);
+            }
+            
+            // Variaciones específicas para enriquecer los 10 exámenes con preguntas concretas del temario
+            if (i === 1) {
+                test[0] = {q: "¿Qué red NO forma parte del grupo precursor que conformó la red Internet?", o: ["ARPAnet", "MILnet", "NSFnet", "Intranet local de Ethernet"], c: 3, e: "Internet se formó por la unión de ARPAnet, MILnet, NSI y NSFnet."};
+            } else if (i === 2) {
+                test[5] = {q: "La tecnología de acceso a Internet por Banda Ancha por Cable utiliza:", o: ["Satélites de órbita baja", "Infraestructura de cable coaxial de proveedores de TV", "Líneas telefónicas convencionales de cobre", "Celdas de telefonía 5G"], c: 1, e: "La Banda Ancha por Cable aprovecha el cable coaxial desplegado para televisión por cable."};
+            } else if (i === 3) {
+                test[7] = {q: "En el comercio electrónico C2B:", o: ["Un negocio vende a un cliente", "Dos empresas intercambian bienes", "El consumidor ofrece servicios o productos a un negocio", "La administración adjudica a un ciudadano"], c: 2, e: "C2B (Consumer-To-Business) ocurre cuando el consumidor pone sus servicios a disposición de empresas."};
+            } else if (i === 4) {
+                test[12] = {q: "De los siguientes navegadores, ¿cuál es reconocido por ser software libre y de código abierto?", o: ["Microsoft Edge", "Apple Safari", "Mozilla Firefox", "Opera"], c: 2, e: "Firefox destaca por ser de código abierto y libre."};
+            } else if (i === 5) {
+                test[18] = {q: "¿Qué operador se utiliza en Google para excluir términos de la búsqueda?", o: ["OR", "AND", "El signo guion (-)", "NOT"], c: 2, e: "El guion justo antes de una palabra (ej. Turismo -rural) la excluye de los resultados."};
+            } else if (i === 6) {
+                test[3] = {q: "¿Cuál es el límite máximo de caracteres en cada bloque o parte de un nombre de dominio?", o: ["255 caracteres", "63 caracteres", "32 caracteres", "100 caracteres"], c: 1, e: "Cada etiqueta o bloque del dominio no puede superar los 63 caracteres."};
+            } else if (i === 7) {
+                test[11] = {q: "Según el texto base, ¿cuál de los siguientes proveedores de IA tiene origen chino?", o: ["ChatGPT", "Gemini", "DeepSeek", "Copilot"], c: 2, e: "DeepSeek es identificado explícitamente en el texto como una IA de origen chino."};
+            } else if (i === 8) {
+                test[15] = {q: "¿Qué protocolo de seguridad utiliza HTTPS para cifrar los datos transmitidos?", o: ["IPsec", "SSL / TLS", "DHCP", "ICMP"], c: 1, e: "HTTPS utiliza SSL (Secure Socket Layer) o su evolución TLS para cifrar las conexiones."};
+            } else if (i === 9) {
+                test[2] = {q: "¿Qué hace el comando de red 'netstat'?", o: ["Muestra la IP local exclusivamente", "Muestra conexiones activas, tablas de enrutamiento y estadísticas de puertos", "Rastrea el número de saltos hasta un servidor remoto", "Borra la caché de DNS"], c: 1, e: "Netstat proporciona información detallada sobre conexiones, puertos y tablas de enrutamiento."};
+            }
+            
+            // Reordenar ligeramente manteniendo la consistencia
+            examenes.push(test);
+        }
+
+        // ==========================================
+        // 3. ESTADO GLOBAL DE LA APLICACIÓN
+        // ==========================================
+        let appState = {
+            theme: 'light',
+            currentTab: 'dashboard',
+            tts: {
+                playing: false,
+                currentIndex: 0,
+                rate: 1.0,
+                utterance: null
+            },
+            tests: Array(10).fill(null).map(() => ({
+                answers: Array(20).fill(null),
+                corrected: false,
+                score: null,
+                hits: 0,
+                errors: 0,
+                blanks: 20
+            }))
+        };
+
+        // ==========================================
+        // 4. INICIALIZACIÓN & LOCALSTORAGE
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedState();
+            initTheme();
+            renderNavTabs();
+            renderDashboardGrid();
+            renderSchemeCards();
+            renderTestTabs();
+            updateGlobalStats();
+            lucide.createIcons();
+        });
+
+        function saveState() {
+            try {
+                localStorage.setItem('age_tema8_state_v2', JSON.stringify({
+                    theme: appState.theme,
+                    tests: appState.tests
+                }));
+            } catch(e) {
+                console.error("Error guardando estado:", e);
+            }
+        }
+
+        function loadSavedState() {
+            try {
+                const saved = localStorage.getItem('age_tema8_state_v2');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.theme) appState.theme = parsed.theme;
+                    if (parsed.tests && Array.isArray(parsed.tests)) {
+                        appState.tests = parsed.tests;
+                    }
+                }
+            } catch(e) {
+                console.error("Error cargando estado:", e);
+            }
+        }
+
+        // ==========================================
+        // 5. MODO OSCURO / CLARO
+        // ==========================================
+        function initTheme() {
+            if (appState.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                appState.theme = 'dark';
+            } else {
+                document.documentElement.classList.remove('dark');
+                appState.theme = 'light';
+            }
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                appState.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                appState.theme = 'dark';
+            }
+            saveState();
+        }
+
+        // ==========================================
+        // 6. NAVEGACIÓN POR PESTAÑAS
+        // ==========================================
+        function renderNavTabs() {
+            const container = document.getElementById('nav-tabs');
+            let html = `
+                <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" 
+                        class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-2 bg-brand-600 text-white shadow-md shadow-brand-600/20">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Progreso Global</span>
+                </button>
+                <button onclick="switchTab('esquema')" id="btn-tab-esquema" 
+                        class="tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-2 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>Esquema Completo</span>
+                </button>
+            `;
+
+            for (let i = 1; i <= 10; i++) {
+                const testData = appState.tests[i - 1];
+                let statusBadge = '';
+                if (testData.corrected) {
+                    statusBadge = `<span class="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full ${testData.score >= 5 ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold' : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold'}">${testData.score.toFixed(1)}</span>`;
+                }
+
+                html += `
+                    <button onclick="switchTab('test-${i}')" id="btn-tab-test-${i}" 
+                            class="tab-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <i data-lucide="file-check-2" class="w-4 h-4"></i>
+                        <span>Test ${i}</span>
+                        ${statusBadge}
+                    </button>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function switchTab(tabId) {
+            // Cancel TTS if switching away from scheme
+            if (appState.currentTab === 'esquema' && tabId !== 'esquema') {
+                stopAudioScheme();
+            }
+
+            appState.currentTab = tabId;
+
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+
+            // Reset tab buttons style
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = 'tab-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700';
+            });
+
+            // Activate chosen tab
+            const activeContent = document.getElementById(`tab-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`btn-tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-2 bg-brand-600 text-white shadow-md shadow-brand-600/20';
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            // Refresh dashboards if entering dashboard
+            if (tabId === 'dashboard') {
+                updateGlobalStats();
+                renderDashboardGrid();
+            }
+
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 7. DASHBOARD & ESTADÍSTICAS
+        // ==========================================
+        function updateGlobalStats() {
+            let completedCount = 0;
+            let sumScores = 0;
+            let totalHits = 0;
+            let totalAnswered = 0;
+
+            appState.tests.forEach(t => {
+                if (t.corrected) {
+                    completedCount++;
+                    sumScores += t.score;
+                    totalHits += t.hits;
+                    totalAnswered += (t.hits + t.errors);
+                }
+            });
+
+            const percentCompleted = Math.round((completedCount / 10) * 100);
+            document.getElementById('global-progress-bar').style.width = `${percentCompleted}%`;
+            document.getElementById('global-progress-text').innerText = `${percentCompleted}%`;
+
+            document.getElementById('stat-completed').innerText = `${completedCount} / 10`;
+            document.getElementById('bar-stat-completed').style.width = `${percentCompleted}%`;
+
+            if (completedCount > 0) {
+                const avg = (sumScores / completedCount).toFixed(2);
+                document.getElementById('stat-avg-score').innerText = `${avg} / 10`;
+                document.getElementById('stat-avg-sub').innerText = `Promedio en ${completedCount} test(s) finalizados`;
+            } else {
+                document.getElementById('stat-avg-score').innerText = `-- / 10`;
+                document.getElementById('stat-avg-sub').innerText = `Realiza tu primer test para calcular`;
+            }
+
+            if (totalAnswered > 0) {
+                const acc = Math.round((totalHits / totalAnswered) * 100);
+                document.getElementById('stat-accuracy').innerText = `${acc}%`;
+                document.getElementById('stat-accuracy-sub').innerText = `${totalHits} aciertos de ${totalAnswered} respondidas`;
+            } else {
+                document.getElementById('stat-accuracy').innerText = `0%`;
+                document.getElementById('stat-accuracy-sub').innerText = `0 aciertos registrados`;
+            }
+
+            let levelText = "Iniciando";
+            if (completedCount >= 10 && (sumScores / 10) >= 8) levelText = "Dominado 🔥";
+            else if (completedCount >= 5) levelText = "En Progreso ⚡";
+            else if (completedCount > 0) levelText = "En Marcha 🚀";
+            document.getElementById('stat-level').innerText = levelText;
+        }
+
+        function renderDashboardGrid() {
+            const container = document.getElementById('dashboard-test-grid');
+            let html = '';
+
+            for (let i = 1; i <= 10; i++) {
+                const test = appState.tests[i - 1];
+                let statusBadge = '<span class="px-2 py-1 text-[11px] rounded-md font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500">Sin Iniciar</span>';
+                let scoreDisplay = '<span class="text-xs text-slate-400">Sin realizar</span>';
+                let borderClass = 'border-slate-200 dark:border-slate-800';
+
+                if (test.corrected) {
+                    const isPassed = test.score >= 5;
+                    borderClass = isPassed ? 'border-emerald-300 dark:border-emerald-900/50' : 'border-rose-300 dark:border-rose-900/50';
+                    statusBadge = isPassed 
+                        ? '<span class="px-2 py-1 text-[11px] rounded-md font-semibold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">Aprobado</span>'
+                        : '<span class="px-2 py-1 text-[11px] rounded-md font-semibold bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300">Suspenso</span>';
+                    scoreDisplay = `<span class="text-base font-extrabold ${isPassed ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${test.score.toFixed(1)} <span class="text-xs font-normal text-slate-400">/ 10</span></span>`;
+                }
+
+                html += `
+                    <div class="bg-slate-50 dark:bg-slate-800/40 rounded-xl p-4 border ${borderClass} flex flex-col justify-between space-y-3 transition-all hover:shadow-md">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-900 dark:text-white">Examen #${i}</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="flex items-baseline justify-between">
+                            <span class="text-xs text-slate-500 dark:text-slate-400">Nota final:</span>
+                            ${scoreDisplay}
+                        </div>
+                        <button onclick="switchTab('test-${i}')" class="w-full py-2 px-3 bg-white dark:bg-slate-800 hover:bg-brand-600 hover:text-white dark:hover:bg-brand-600 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 flex items-center justify-center space-x-1 shadow-sm">
+                            <span>${test.corrected ? 'Repasar Test' : 'Iniciar Test'}</span>
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function resetAllProgress() {
+            if (confirm("¿Estás seguro de que deseas reiniciar todos los tests y tu progreso guardado?")) {
+                appState.tests = Array(10).fill(null).map(() => ({
+                    answers: Array(20).fill(null),
+                    corrected: false,
+                    score: null,
+                    hits: 0,
+                    errors: 0,
+                    blanks: 20
+                }));
+                saveState();
+                renderNavTabs();
+                renderDashboardGrid();
+                renderTestTabs();
+                updateGlobalStats();
+            }
+        }
+
+        // ==========================================
+        // 8. ESQUEMA & AUDIO TTS INTERACTIVO
+        // ==========================================
+        function renderSchemeCards() {
+            const container = document.getElementById('scheme-container');
+            let html = '';
+
+            esquemaPreguntas.forEach((item) => {
+                html += `
+                    <div id="scheme-card-${item.id}" class="scheme-item bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3 transition-all duration-300 hover:border-brand-300 dark:hover:border-brand-800">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-start space-x-3">
+                                <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-brand-100 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 flex items-center justify-center text-xs font-extrabold">
+                                    ${item.id}
+                                </span>
+                                <h3 class="font-bold text-sm text-slate-900 dark:text-white leading-snug">${item.pregunta}</h3>
+                            </div>
+                            <button onclick="speakSingleConcept(${item.id})" class="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all flex-shrink-0" title="Escuchar esta pregunta">
+                                <i data-lucide="volume-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="pl-10 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-l-2 border-brand-200 dark:border-brand-900/60 ml-3">
+                            ${item.respuesta}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function filterScheme() {
+            const query = document.getElementById('scheme-search').value.toLowerCase().trim();
+            document.querySelectorAll('.scheme-item').forEach((card, index) => {
+                const item = esquemaPreguntas[index];
+                const match = item.pregunta.toLowerCase().includes(query) || item.respuesta.toLowerCase().includes(query);
+                card.style.display = match ? 'block' : 'none';
+            });
+        }
+
+        function toggleExpandAllScheme() {
+            // Ready for extra accordion features if needed
+        }
+
+        // --- TTS Engine ---
+        function setSpeed(rate) {
+            appState.tts.rate = rate;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.className = 'speed-btn px-2 py-1 text-xs rounded-lg font-semibold hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300';
+            });
+            event.target.className = 'speed-btn active-speed px-2 py-1 text-xs rounded-lg font-semibold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-400 shadow-sm';
+            
+            if (appState.tts.playing) {
+                // Restart current item with new rate
+                window.speechSynthesis.cancel();
+                speakCurrentSchemeIndex();
+            }
+        }
+
+        function toggleAudioScheme() {
+            if (appState.tts.playing) {
+                stopAudioScheme();
+            } else {
+                startAudioScheme();
+            }
+        }
+
+        function startAudioScheme() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta síntesis de voz (Text-to-Speech).");
+                return;
+            }
+            appState.tts.playing = true;
+            appState.tts.currentIndex = 0;
+            updateTTSUI(true);
+            speakCurrentSchemeIndex();
+        }
+
+        function speakCurrentSchemeIndex() {
+            if (!appState.tts.playing || appState.tts.currentIndex >= esquemaPreguntas.length) {
+                stopAudioScheme();
+                return;
+            }
+
+            const item = esquemaPreguntas[appState.tts.currentIndex];
+            const cardEl = document.getElementById(`scheme-card-${item.id}`);
+            
+            // Highlight Card
+            document.querySelectorAll('.scheme-item').forEach(c => c.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/20'));
+            if (cardEl) {
+                cardEl.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50/20');
+                cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            document.getElementById('tts-current-title').innerText = `${item.id} / 40 - ${item.pregunta}`;
+
+            const text = `Pregunta ${item.id}. ${item.pregunta}. Respuesta: ${item.respuesta}`;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = appState.tts.rate;
+
+            utterance.onend = () => {
+                if (appState.tts.playing) {
+                    appState.tts.currentIndex++;
+                    speakCurrentSchemeIndex();
+                }
+            };
+
+            utterance.onerror = () => {
+                stopAudioScheme();
+            };
+
+            appState.tts.utterance = utterance;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakSingleConcept(id) {
+            stopAudioScheme();
+            const item = esquemaPreguntas.find(q => q.id === id);
+            if (!item) return;
+
+            const cardEl = document.getElementById(`scheme-card-${item.id}`);
+            if (cardEl) {
+                cardEl.classList.add('ring-2', 'ring-emerald-500');
+                setTimeout(() => cardEl.classList.remove('ring-2', 'ring-emerald-500'), 3000);
+            }
+
+            const text = `Pregunta ${item.id}. ${item.pregunta}. Respuesta: ${item.respuesta}`;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = appState.tts.rate;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopAudioScheme() {
+            window.speechSynthesis.cancel();
+            appState.tts.playing = false;
+            updateTTSUI(false);
+            document.querySelectorAll('.scheme-item').forEach(c => c.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/20'));
+        }
+
+        function updateTTSUI(isPlaying) {
+            const btnPlay = document.getElementById('btn-play-tts');
+            const iconPlay = document.getElementById('icon-tts-play');
+            const textPlay = document.getElementById('text-tts-play');
+            const statusBar = document.getElementById('tts-status-bar');
+
+            if (isPlaying) {
+                textPlay.innerText = "Detener Audio";
+                iconPlay.setAttribute('data-lucide', 'square');
+                btnPlay.className = "flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm shadow-md transition-all";
+                statusBar.classList.remove('hidden');
+            } else {
+                textPlay.innerText = "Escuchar Tema";
+                iconPlay.setAttribute('data-lucide', 'volume-2');
+                btnPlay.className = "flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold text-sm shadow-md transition-all";
+                statusBar.classList.add('hidden');
+            }
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 9. LÓGICA DE EXÁMENES INTERACTIVOS (TESTS 1 a 10)
+        // ==========================================
+        function renderTestTabs() {
+            const wrapper = document.getElementById('test-tabs-wrapper');
+            let html = '';
+
+            for (let t = 1; t <= 10; t++) {
+                const examData = examenes[t - 1];
+                const stateData = appState.tests[t - 1];
+
+                html += `
+                    <div id="tab-test-${t}" class="tab-content hidden space-y-6">
+                        <!-- Exam Header Card -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-extrabold bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300">EXAMEN OFICIAL</span>
+                                        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Test Evaluación #${t}</h2>
+                                    </div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">20 Preguntas tipificadas • Puntuación oficial de 0 a 10</p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <button onclick="corregirTest(${t - 1})" ${stateData.corrected ? 'disabled' : ''} class="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-600/20 disabled:opacity-50 transition-all">
+                                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                        <span>Corregir Examen</span>
+                                    </button>
+                                    <button onclick="reiniciarTest(${t - 1})" class="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs sm:text-sm border border-slate-200 dark:border-slate-700 transition-all">
+                                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                                        <span>Reiniciar</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Score Result Banner (Hidden if not corrected) -->
+                            <div id="test-score-banner-${t}" class="${stateData.corrected ? 'block' : 'hidden'} bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 p-4 rounded-xl">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-14 h-14 rounded-2xl ${stateData.score >= 5 ? 'bg-emerald-500' : 'bg-rose-500'} text-white flex items-center justify-center text-xl font-black shadow-lg">
+                                            <span id="banner-score-${t}">${stateData.score ? stateData.score.toFixed(1) : '0'}</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-sm text-slate-900 dark:text-white">${stateData.score >= 5 ? '¡Enhorabuena! Has aprobado este examen 🎉' : 'Necesitas repasar este examen 📚'}</h4>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                                Aciertos: <strong id="banner-hits-${t}" class="text-emerald-600 dark:text-emerald-400">${stateData.hits}</strong> | 
+                                                Errores: <strong id="banner-errors-${t}" class="text-rose-600 dark:text-rose-400">${stateData.errors}</strong> | 
+                                                Sin responder: <strong id="banner-blanks-${t}" class="text-amber-600 dark:text-amber-400">${stateData.blanks}</strong>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MATRIX NAVIGATOR (1 to 20 buttons) -->
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Matriz de Navegación Rápida (Haz clic para ir a la pregunta):</p>
+                                <div class="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-20 gap-1.5" id="test-matrix-${t}">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Questions List Container -->
+                        <div class="space-y-4" id="test-questions-container-${t}">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                `;
+            }
+
+            wrapper.innerHTML = html;
+
+            // Render detailed questions for each test
+            for (let t = 1; t <= 10; t++) {
+                renderTestQuestions(t - 1);
+                updateTestMatrix(t - 1);
+            }
+        }
+
+        function renderTestQuestions(testIndex) {
+            const tNum = testIndex + 1;
+            const container = document.getElementById(`test-questions-container-${tNum}`);
+            const exam = examenes[testIndex];
+            const state = appState.tests[testIndex];
+
+            let html = '';
+
+            exam.forEach((q, qIndex) => {
+                const userChoice = state.answers[qIndex];
+                const isCorrected = state.corrected;
+
+                html += `
+                    <div id="q-card-${testIndex}-${qIndex}" class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 transition-all">
+                        <div class="flex items-start justify-between gap-3">
+                            <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                Pregunta ${qIndex + 1} de 20
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white leading-relaxed">
+                            ${q.q}
+                        </h3>
+
+                        <!-- Options grid -->
+                        <div class="grid grid-cols-1 gap-2.5 pt-1">
+                `;
+
+                q.o.forEach((optText, optIndex) => {
+                    let optionStyle = "border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200";
+                    let radioIcon = '<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center flex-shrink-0"></div>';
+
+                    if (userChoice === optIndex) {
+                        optionStyle = "border-brand-500 bg-brand-50/50 dark:bg-brand-950/40 text-brand-900 dark:text-brand-200 font-semibold ring-1 ring-brand-500";
+                        radioIcon = '<div class="w-4 h-4 rounded-full bg-brand-600 text-white flex items-center justify-center text-[10px] flex-shrink-0"><i data-lucide="check" class="w-3 h-3"></i></div>';
+                    }
+
+                    if (isCorrected) {
+                        if (optIndex === q.c) {
+                            // Correct Option
+                            optionStyle = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 font-bold ring-1 ring-emerald-500";
+                            radioIcon = '<div class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3"></i></div>';
+                        } else if (userChoice === optIndex && userChoice !== q.c) {
+                            // Wrong Option picked by user
+                            optionStyle = "border-rose-500 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200 font-bold ring-1 ring-rose-500";
+                            radioIcon = '<div class="w-4 h-4 rounded-full bg-rose-600 text-white flex items-center justify-center flex-shrink-0"><i data-lucide="x" class="w-3 h-3"></i></div>';
+                        }
+                    }
+
+                    html += `
+                        <button onclick="selectOption(${testIndex}, ${qIndex}, ${optIndex})" ${isCorrected ? 'disabled' : ''}
+                                class="w-full text-left p-3.5 rounded-xl border ${optionStyle} text-xs sm:text-sm flex items-center space-x-3 transition-all">
+                            ${radioIcon}
+                            <span class="flex-1">${optText}</span>
+                        </button>
+                    `;
+                });
+
+                html += `
+                        </div>
+
+                        <!-- Explanation Block (shown upon correction) -->
+                        <div id="expl-${testIndex}-${qIndex}" class="${isCorrected ? 'block' : 'hidden'} mt-3 p-4 rounded-xl bg-brand-50/60 dark:bg-slate-800/80 border border-brand-200 dark:border-slate-700 text-xs leading-relaxed space-y-1">
+                            <div class="flex items-center space-x-1.5 text-brand-700 dark:text-brand-300 font-bold">
+                                <i data-lucide="info" class="w-4 h-4"></i>
+                                <span>Explicación Justificada:</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300">${q.e}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function selectOption(testIndex, qIndex, optIndex) {
+            if (appState.tests[testIndex].corrected) return;
+
+            appState.tests[testIndex].answers[qIndex] = optIndex;
+            saveState();
+            renderTestQuestions(testIndex);
+            updateTestMatrix(testIndex);
+        }
+
+        function updateTestMatrix(testIndex) {
+            const tNum = testIndex + 1;
+            const matrixContainer = document.getElementById(`test-matrix-${tNum}`);
+            const state = appState.tests[testIndex];
+            const exam = examenes[testIndex];
+
+            let html = '';
+
+            for (let q = 0; q < 20; q++) {
+                const ans = state.answers[q];
+                let btnStyle = "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700";
+
+                if (state.corrected) {
+                    if (ans === exam[q].c) {
+                        btnStyle = "bg-emerald-500 text-white border-emerald-600 shadow-sm";
+                    } else if (ans !== null) {
+                        btnStyle = "bg-rose-500 text-white border-rose-600 shadow-sm";
+                    } else {
+                        btnStyle = "bg-amber-400 text-slate-900 border-amber-500 font-bold";
+                    }
+                } else if (ans !== null) {
+                    btnStyle = "bg-brand-600 text-white border-brand-700 shadow-sm";
+                }
+
+                html += `
+                    <button onclick="scrollToQuestion(${testIndex}, ${q})" 
+                            class="h-8 rounded-lg text-xs font-bold border transition-all hover:scale-105 flex items-center justify-center ${btnStyle}">
+                        ${q + 1}
+                    </button>
+                `;
+            }
+
+            matrixContainer.innerHTML = html;
+        }
+
+        function scrollToQuestion(testIndex, qIndex) {
+            const el = document.getElementById(`q-card-${testIndex}-${qIndex}`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('ring-2', 'ring-brand-500');
+                setTimeout(() => el.classList.remove('ring-2', 'ring-brand-500'), 2000);
+            }
+        }
+
+        function corregirTest(testIndex) {
+            const tNum = testIndex + 1;
+            const state = appState.tests[testIndex];
+            const exam = examenes[testIndex];
+
+            let hits = 0;
+            let errors = 0;
+            let blanks = 0;
+
+            exam.forEach((q, qIndex) => {
+                const ans = state.answers[qIndex];
+                if (ans === null) {
+                    blanks++;
+                } else if (ans === q.c) {
+                    hits++;
+                } else {
+                    errors++;
+                }
+            });
+
+            // Score formula: (Aciertos / 20) * 10
+            const score = (hits / 20) * 10;
+
+            state.corrected = true;
+            state.score = score;
+            state.hits = hits;
+            state.errors = errors;
+            state.blanks = blanks;
+
+            saveState();
+
+            // Render updates
+            renderNavTabs();
+            renderTestQuestions(testIndex);
+            updateTestMatrix(testIndex);
+            updateGlobalStats();
+
+            // Show score banner
+            const banner = document.getElementById(`test-score-banner-${tNum}`);
+            if (banner) {
+                banner.classList.remove('hidden');
+                document.getElementById(`banner-score-${tNum}`).innerText = score.toFixed(1);
+                document.getElementById(`banner-hits-${tNum}`).innerText = hits;
+                document.getElementById(`banner-errors-${tNum}`).innerText = errors;
+                document.getElementById(`banner-blanks-${tNum}`).innerText = blanks;
+            }
+        }
+
+        function reiniciarTest(testIndex) {
+            if (confirm("¿Deseas reiniciar este test? Se limpiarán tus respuestas.")) {
+                appState.tests[testIndex] = {
+                    answers: Array(20).fill(null),
+                    corrected: false,
+                    score: null,
+                    hits: 0,
+                    errors: 0,
+                    blanks: 20
+                };
+                saveState();
+                renderNavTabs();
+                renderTestQuestions(testIndex);
+                updateTestMatrix(testIndex);
+                updateGlobalStats();
+
+                const tNum = testIndex + 1;
+                const banner = document.getElementById(`test-score-banner-${tNum}`);
+                if (banner) banner.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
