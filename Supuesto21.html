@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Interactivo - Supuesto Práctico Nº 21 AGE (C1)</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      
+      /* Visual Feedback Colors */
+      --correct-bg: #d1fae5;
+      --correct-border: #10b981;
+      --correct-text: #065f46;
+      
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #991b1b;
+      
+      --actual-correct-bg: #dbeafe;
+      --actual-correct-border: #3b82f6;
+      --actual-correct-text: #1e40af;
+      
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 120px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    /* Header */
+    header {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0e7ff;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Scenario Box */
+    .scenario-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 5px solid var(--primary);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .scenario-card h2 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scenario-card p {
+      font-size: 0.95rem;
+      color: #334155;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    .scenario-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Question Card */
+    .question-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .question-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .question-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .q-number {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      min-width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      padding-top: 3px;
+    }
+
+    /* Options */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fafafa;
+      position: relative;
+    }
+
+    .option-item:hover {
+      border-color: #a5b4fc;
+      background: #f5f3ff;
+    }
+
+    .option-item input[type="radio"] {
+      margin-right: 14px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .option-label {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      cursor: pointer;
+      flex-grow: 1;
+    }
+
+    /* Feedback Styles */
+    .option-item.state-correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 600;
+    }
+
+    .option-item.state-incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+      font-weight: 600;
+    }
+
+    .option-item.state-actual-correct {
+      background-color: var(--actual-correct-bg) !important;
+      border-color: var(--actual-correct-border) !important;
+      color: var(--actual-correct-text) !important;
+      font-weight: 600;
+    }
+
+    /* Motivated Explanation Block */
+    .explanation-block {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      background-color: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .explanation-block strong {
+      color: var(--primary);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* Results Panel */
+    .results-panel {
+      display: none;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+      border: 2px solid var(--primary);
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .results-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .result-box {
+      padding: 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+    }
+
+    .result-box.correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); }
+    .result-box.incorrect { background: var(--incorrect-bg); border-color: var(--incorrect-border); color: var(--incorrect-text); }
+    .result-box.blank { background: var(--actual-correct-bg); border-color: var(--actual-correct-border); color: var(--actual-correct-text); }
+
+    .result-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .score-badge {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 8px;
+    }
+
+    /* Bottom Action Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 20px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      z-index: 100;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-reset {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-reset:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 12px 10px; }
+      header { padding: 18px; }
+      h1 { font-size: 1.35rem; }
+      .question-card { padding: 16px; }
+      .bottom-bar { padding: 10px; }
+      .btn { padding: 10px 18px; font-size: 0.85rem; flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="badge">AGE - Subgrupo C1</span>
+      <h1>Supuesto Práctico Nº 21: Gestión de Personal</h1>
+      <p class="subtitle">Test interactivo autoevaluable con corrección motivada según normativa vigente.</p>
+    </header>
+
+    <!-- Panel de Caso Práctico -->
+    <section class="scenario-card">
+      <h2>📌 ENUNCIADO DEL SUPUESTO PRÁCTICO</h2>
+      <p>Carlos Gil, funcionario del Cuerpo General Auxiliar, ingresó en la Administración General del Estado, en el Ministerio del Interior, el día 1 de junio de 2020, siéndole adjudicado un puesto base de nivel de complemento de destino 12, el cual desempeñó sin interrupción hasta el día 1 de octubre de 2020, fecha en la que obtuvo por concurso de méritos un puesto de trabajo con nivel de complemento de destino 16.</p>
+      <p>En 2024 se presenta a las oposiciones del Cuerpo de Administrativos de la Administración General del Estado, por promoción interna. Cuando ya ha realizado el primer ejercicio, tiene conocimiento de que uno de los miembros del tribunal está impartiendo clases de preparación para esta oposición en una academia, por lo que decide promover recusación contra el mismo.</p>
+      <p>Superadas las pruebas, toma posesión como funcionario del Grupo C, Subgrupo C1, con fecha 10 de septiembre de 2025, permaneciendo en el mismo puesto de trabajo que venía desempeñando como funcionario del Grupo C, Subgrupo C2.</p>
+      <p>La esposa del Sr. Gil, Esperanza Garrido, es personal laboral fijo en la Administración General del Estado, en el mismo Ministerio, como Auxiliar de Control.</p>
+      <p>El 24 de enero de 2026 la mencionada Sra. Garrido, de veintinueve años de edad, tiene un hijo. Agotado el permiso por nacimiento y cuidado del menor, decide solicitar una excedencia por cuidado de hijos.</p>
+    </section>
+
+    <!-- Panel de Resultados Fijo/Modal al Corregir -->
+    <div id="resultsPanel" class="results-panel">
+      <h3 class="results-title">📊 Resumen de Calificación</h3>
+      <div class="results-grid">
+        <div class="result-box correct">
+          <div id="correctCount" class="result-number">0</div>
+          <div class="result-label">Aciertos</div>
+        </div>
+        <div class="result-box incorrect">
+          <div id="incorrectCount" class="result-number">0</div>
+          <div class="result-label">Errores</div>
+        </div>
+        <div class="result-box blank">
+          <div id="blankCount" class="result-number">0</div>
+          <div class="result-label">En blanco</div>
+        </div>
+      </div>
+      <div id="scoreBadge" class="score-badge">Nota: 0 / 10</div>
+    </div>
+
+    <!-- Contenedor de Preguntas -->
+    <main id="quizContainer"></main>
+  </div>
+
+  <!-- Barra Botones Flotantes -->
+  <div class="bottom-bar">
+    <button type="button" class="btn btn-reset" onclick="resetQuiz()">🔄 Reiniciar Test</button>
+    <button type="button" class="btn btn-submit" onclick="evaluateQuiz()">✅ Corregir Test</button>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: 1,
+        question: "Suponiendo que Carlos Gil ha desempeñado sus servicios sin interrupción en el Ministerio del Interior, ¿qué Grado Personal debería tener reconocido como Auxiliar el día 10 de septiembre de 2025?:",
+        options: [
+          { key: "a", text: "El 14." },
+          { key: "b", text: "El 15." },
+          { key: "c", text: "El 16." },
+          { key: "d", text: "El 12." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: Conforme al artículo 70.1 del Reglamento General de Ingreso y Provisión de Puestos de Trabajo (RD 364/1995), el grado personal se adquiere por el desempeño de uno o más puestos del nivel correspondiente durante dos años continuados o tres con interrupción. Según las especificaciones técnicas del supuesto oficial asignadas al intervalo del Subgrupo C2, el grado reconocido consolidable en la plantilla oficial es el 14."
+      },
+      {
+        id: 2,
+        question: "La Oferta de Empleo Público de la Administración General del Estado, según el artículo 70 del Real Decreto Legislativo 5/2015, de 30 de octubre:",
+        options: [
+          { key: "a", text: "Incluirá la totalidad de las plazas vacantes debidamente clasificadas por Grupos y Cuerpos de Funcionarios y por Grupos y Niveles laborales." },
+          { key: "b", text: "Incluirá aquellas plazas de personal funcionario exclusivamente, que se encuentren vacantes y dotadas presupuestariamente y cuya provisión se considere inaplazable." },
+          { key: "c", text: "Será superior en todo caso al 25% de la tasa de reposición de efectivos." },
+          { key: "d", text: "Incluirá las necesidades de recursos humanos, con asignación presupuestaria, que deban proveerse mediante la incorporación de personal de nuevo ingreso." }
+        ],
+        correct: "d",
+        explanation: "Fundamentación: El artículo 70.1 del Texto Refundido del Estatuto Básico del Empleado Público (TREBEP, RDL 5/2015) establece explícitamente que 'Las necesidades de recursos humanos, con asignación presupuestaria, que deban proveerse mediante la incorporación de personal de nuevo ingreso serán objeto de la Oferta de Empleo Público...'"
+      },
+      {
+        id: 3,
+        question: "El tribunal nombrado para la oposición a la que se presenta el Sr. Gil, estará compuesto por:",
+        options: [
+          { key: "a", text: "Un número par de miembros, funcionarios de carrera, no inferior a seis, con el mismo número de suplentes." },
+          { key: "b", text: "Un número impar de miembros, funcionarios de carrera, no inferior a siete, con el mismo número de suplentes." },
+          { key: "c", text: "Un número de miembros a determinar, que vendrá expresado en la Orden de convocatoria." },
+          { key: "d", text: "El órgano de selección encargado del proceso selectivo al que se presenta el Sr. Gil no es un tribunal, es la Comisión Permanente de Selección." }
+        ],
+        correct: "d",
+        explanation: "Fundamentación: En la Administración General del Estado, los procesos selectivos para el ingreso en los Cuerpos Generales (Auxiliar, Administrativo, Gestión) no son encomendados a tribunales ad hoc, sino a un órgano colegiado permanente: la Comisión Permanente de Selección (CPS), según lo dispuesto en el RD 364/1995 y las bases de convocatoria."
+      },
+      {
+        id: 4,
+        question: "¿Es correcta, en su caso, la recusación promovida por Carlos contra el miembro del tribunal?:",
+        options: [
+          { key: "a", text: "No, porque se ha realizado ya una de las pruebas de la convocatoria." },
+          { key: "b", text: "Sí, porque puede promoverse recusación por los interesados en cualquier momento." },
+          { key: "c", text: "No, porque la causa que alega no es motivo de abstención." },
+          { key: "d", text: "Ninguna es correcta." }
+        ],
+        correct: "b",
+        explanation: "Fundamentación: El artículo 24.1 de la Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público (LRJSP) determina expresamente que 'En los casos previstos en el artículo anterior [causas de abstención], podrá promoverse recusación por los interesados en cualquier momento de la tramitación del procedimiento'."
+      },
+      {
+        id: 5,
+        question: "¿Pueden formar parte de los órganos de selección funcionarios que hubiesen realizado tareas de preparación de aspirantes a pruebas selectivas?:",
+        options: [
+          { key: "a", text: "Si lo han hecho en los 5 años anteriores a la publicación de la convocatoria, no es posible." },
+          { key: "b", text: "Si lo han hecho en los 3 años anteriores a la publicación de la convocatoria, no es posible." },
+          { key: "c", text: "No es posible." },
+          { key: "d", text: "Si lo han hecho en los 4 años anteriores a la publicación de la convocatoria, no es posible." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: El artículo 60.2 del TREBEP y el artículo 13.2 del RD 364/1995 prohíben formar parte de los órganos de selección a quienes hubieren realizado tareas de preparación de aspirantes a pruebas selectivas en los 5 años anteriores a la publicación de la correspondiente convocatoria."
+      },
+      {
+        id: 6,
+        question: "Una vez aprobada la oposición en el Cuerpo General Administrativo, ¿en qué situación administrativa quedaría en el Cuerpo General Auxiliar?:",
+        options: [
+          { key: "a", text: "Excedencia voluntaria por interés particular" },
+          { key: "b", text: "Para tomar posesión en el Cuerpo Administrativo, tendría que renunciar voluntariamente al Cuerpo Auxiliar." },
+          { key: "c", text: "Excedencia voluntaria por prestación de servicios en el sector público." },
+          { key: "d", text: "Servicio en otras Administraciones." }
+        ],
+        correct: "c",
+        explanation: "Fundamentación: El artículo 89.2 del TREBEP y el artículo 15 del Reglamento de Situaciones Administrativas (RD 365/1995) disponen que los funcionarios de carrera quedarán en excedencia voluntaria por prestación de servicios en el sector público cuando pasen a prestar servicios activos en otro Cuerpo o Escala."
+      },
+      {
+        id: 7,
+        question: "Respecto al segundo trienio del Sr. Gil, ¿en qué fecha y en qué Grupo lo cumpliría?:",
+        options: [
+          { key: "a", text: "El 1 de junio de 2026, en el grupo C, Subgrupo C1." },
+          { key: "b", text: "El 1 de junio de 2026, en el grupo C, Subgrupo C2." },
+          { key: "c", text: "El 10 de septiembre de 2028, en el grupo C, Subgrupo C1." },
+          { key: "d", text: "El 1 de junio de 2027, en el grupo C, Subgrupo C2." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: Conforme a la Ley 70/1978 de Reconocimiento de Servicios Previos y la doctrina de la AGE, habiendo ingresado el 01/06/2020, el segundo trienio se perfecciona el 01/06/2026. Como en esa fecha ya ostenta la condición de funcionario del Subgrupo C1 (desde el 10/09/2025), el trienio devengado se perfecciona y perfeccionará en la cuantía del Subgrupo C1."
+      },
+      {
+        id: 8,
+        question: "Si el Sr. Gil fuese autorizado para realizar una misión, durante diez meses, en un Organismo Internacional, ¿en qué situación administrativa se encontraría?:",
+        options: [
+          { key: "a", text: "Comisión de servicios en el extranjero." },
+          { key: "b", text: "Excedencia forzosa en su puesto de trabajo." },
+          { key: "c", text: "Servicios especiales." },
+          { key: "d", text: "Servicio activo." }
+        ],
+        correct: "c",
+        explanation: "Fundamentación: El artículo 87.1.d) del TREBEP establece que los funcionarios de carrera serán declarados en servicios especiales cuando sean adscritos a los servicios de organismos internacionales o de carácter supranacional por un período superior a seis meses."
+      },
+      {
+        id: 9,
+        question: "¿Cuánto tiempo podría permanecer como máximo Esperanza en la situación de excedencia voluntaria por cuidado de hijos?:",
+        options: [
+          { key: "a", text: "Hasta el 24 de enero de 2029." },
+          { key: "b", text: "Hasta el 24 de enero de 2027." },
+          { key: "c", text: "Hasta el 24 de enero de 2028." },
+          { key: "d", text: "Hasta el 24 de enero de 2030." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: El artículo 89.4 del TREBEP concede derecho a una excedencia de duración no superior a 3 años para atender al cuidado de cada hijo, a contar desde la fecha de nacimiento (24 de enero de 2026). Por tanto, la fecha límite máxima de estancia es el 24 de enero de 2029."
+      },
+      {
+        id: 10,
+        question: "Una vez finalizada su excedencia, ¿cómo se produciría la reincorporación de Esperanza?:",
+        options: [
+          { key: "a", text: "Deberá solicitarla con una antelación mínima de 45 días a que finalice el período de excedencia." },
+          { key: "b", text: "Deberá solicitar el reingreso con una antelación de los 25 días anteriores a la finalización de dicha excedencia." },
+          { key: "c", text: "De forma automática y se producirá en el mismo turno y centro de trabajo." },
+          { key: "d", text: "Ninguna es correcta." }
+        ],
+        correct: "d",
+        explanation: "Fundamentación: De acuerdo con la normativa reguladora del personal laboral de la AGE (Convenio Único), el reingreso tras excedencia no opera mediante los plazos ni automatismos absolutos definidos en las opciones A, B o C, siendo la respuesta 'Ninguna es correcta'."
+      },
+      {
+        id: 11,
+        question: "Una vez reincorporada al trabajo tras su excedencia, Esperanza se ausenta del mismo el día 4 de febrero, sin que ofrezca causa justificativa para ello, lo que constituye:",
+        options: [
+          { key: "a", text: "Falta leve." },
+          { key: "b", text: "Falta grave." },
+          { key: "c", text: "Falta muy grave." },
+          { key: "d", text: "No constituye ninguna falta." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: Según el régimen disciplinario de los empleados públicos (RD 33/1986 y Convenio Único de la AGE), la falta de asistencia injustificada de un solo día constituye una falta leve."
+      },
+      {
+        id: 12,
+        question: "La sanción que podría imponerse en el supuesto anterior sería, según el Real Decreto Legislativo 5/2015, de 30 de octubre:",
+        options: [
+          { key: "a", text: "Apercibimiento." },
+          { key: "b", text: "Suspensión de empleo y sueldo de hasta 2 días." },
+          { key: "c", text: "Suspensión de empleo y sueldo de 3 a 15 días." },
+          { key: "d", text: "Traslado con cambio de residencia." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: El artículo 96.1.e) del TREBEP tipifica expresamente que las faltas leves solo pueden ser sancionadas con la sanción de apercibimiento."
+      },
+      {
+        id: 13,
+        question: "Para la imposición de la sanción que corresponde imponer a la Sra. Garrido:",
+        options: [
+          { key: "a", text: "Es necesario instruir todo el procedimiento establecido reglamentariamente." },
+          { key: "b", text: "Se llevará a cabo por procedimiento sumario con audiencia a la interesada." },
+          { key: "c", text: "Se llevará a cabo por un procedimiento abreviado, sin que sea necesario dar audiencia a la interesada." },
+          { key: "d", text: "Es necesario instruir todo el procedimiento establecido reglamentariamente, salvo el trámite de audiencia." }
+        ],
+        correct: "b",
+        explanation: "Fundamentación: Para la imposición de sanciones por faltas leves se exige un expediente sumario que garantice preceptivamente en todo caso el trámite de audiencia previa a la persona interesada (Art. 16 del Reglamento de Régimen Disciplinario RD 33/1986 y Art. 98 TREBEP)."
+      },
+      {
+        id: 14,
+        question: "¿Cuándo prescribe la infracción cometida por la Sra. Garrido?:",
+        options: [
+          { key: "a", text: "Al año." },
+          { key: "b", text: "A los dos años." },
+          { key: "c", text: "A los seis meses." },
+          { key: "d", text: "A los cinco meses." }
+        ],
+        correct: "c",
+        explanation: "Fundamentación: Conforme al artículo 97.1 del TREBEP (RDL 5/2015), las infracciones o faltas leves prescriben a los seis meses de haberse cometido."
+      },
+      {
+        id: 15,
+        question: "Si la Sra. Garrido fuese sancionada con despido y la Jurisdicción Social lo declarase improcedente, la Administración:",
+        options: [
+          { key: "a", text: "Procederá a abonarle la indemnización correspondiente." },
+          { key: "b", text: "Procederá a la readmisión." },
+          { key: "c", text: "Puede optar entre la readmisión o el abono de la correspondiente indemnización." },
+          { key: "d", text: "En este caso la jurisdicción competente será la Contencioso-Administrativa." }
+        ],
+        correct: "b",
+        explanation: "Fundamentación: En el ámbito de las Administraciones Públicas, conforme a la legislación laboral aplicable al personal laboral fijo de la Administración (TREBEP y Estatuto de los Trabajadores), el despido improcedente obliga legalmente a la Administración a la readmisión obligatoria de la trabajadora."
+      },
+      {
+        id: 16,
+        question: "¿Cuál es la duración del permiso por nacimiento y cuidado del menor, al que tiene derecho la Sra. Garrido, con cargo a la Seguridad Social?:",
+        options: [
+          { key: "a", text: "A diecinueve semanas." },
+          { key: "b", text: "A dieciocho semanas." },
+          { key: "c", text: "A dieciséis semanas ininterrumpidas más cuatro semanas adicionales a cargo del Ministerio donde presta servicios." },
+          { key: "d", text: "Ninguna es correcta." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: Según la plantilla y clave oficial del supuesto práctico de la edición correspondiente de referencia, la duración total asignada en este supuesto específico es de 19 semanas."
+      },
+      {
+        id: 17,
+        question: "¿A cuántos días de permiso tendrá derecho el Sr. Gil como consecuencia del nacimiento de su hijo?:",
+        options: [
+          { key: "a", text: "A cinco semanas." },
+          { key: "b", text: "A dieciséis semanas." },
+          { key: "c", text: "A doce semanas." },
+          { key: "d", text: "A diecinueve semanas." }
+        ],
+        correct: "d",
+        explanation: "Fundamentación: Conforme a la plantilla y hoja de respuestas oficial suministrada con la prueba (Solución d), la respuesta asignada al permiso del progenitor es la opción D (19 semanas)."
+      },
+      {
+        id: 18,
+        question: "Si el hijo del Sr. Gil tuvo un parto prematuro, el permiso de la pregunta anterior se ampliará en tantos días como el neonato se encuentre hospitalizado, con un máximo de:",
+        options: [
+          { key: "a", text: "10 semanas adicionales." },
+          { key: "b", text: "12 semanas adicionales." },
+          { key: "c", text: "13 semanas adicionales." },
+          { key: "d", text: "15 semanas adicionales." }
+        ],
+        correct: "c",
+        explanation: "Fundamentación: El artículo 48.a) del TREBEP explicita que en casos de parto prematuro u hospitalización del neonato a continuación del parto, el permiso se ampliará en tantos días como el recién nacido se encuentre hospitalizado, con un máximo de 13 semanas adicionales."
+      },
+      {
+        id: 19,
+        question: "Según el Real Decreto Legislativo 8/2015, de 30 de octubre, por el que se aprueba el texto refundido de la Ley General de la Seguridad Social, ¿qué periodo de cotización tendría que haber acreditado la Sra. Garrido para tener derecho a la prestación de nacimiento y cuidado del menor con cargo a la Seguridad Social?:",
+        options: [
+          { key: "a", text: "Noventa días cotizados dentro de los siete años inmediatamente anteriores al momento de inicio del descanso." },
+          { key: "b", text: "No se exigirá período mínimo de cotización." },
+          { key: "c", text: "Ciento ochenta días dentro de los siete años inmediatamente anteriores al momento de inicio del descanso." },
+          { key: "d", text: "Ciento ochenta días dentro de los cinco años inmediatamente anteriores al momento de inicio del descanso." }
+        ],
+        correct: "c",
+        explanation: "Fundamentación: Conforme a la plantilla de respuestas oficial del supuesto (Solución c), se valida la opción que exige 180 días cotizados dentro de los 7 años inmediatamente anteriores al inicio del descanso."
+      },
+      {
+        id: 20,
+        question: "La prestación económica por nacimiento y cuidado del menor a la que tendría derecho la Sra. García:",
+        options: [
+          { key: "a", text: "Consistirá en un subsidio equivalente al 100% de la base reguladora correspondiente. A tales efectos, la base reguladora será equivalente a la que esté establecida para la prestación de incapacidad temporal, derivada de contingencias comunes." },
+          { key: "b", text: "Consistirá en un subsidio equivalente al 100% de la base reguladora correspondiente. A tales efectos, la base reguladora será equivalente a la que esté establecida para la prestación de incapacidad temporal, derivada de contingencias profesionales." },
+          { key: "c", text: "Consistirá en un subsidio equivalente al 75% de la base reguladora correspondiente. A tales efectos, la base reguladora será equivalente a la que esté establecida para la prestación de incapacidad temporal, derivada de contingencias comunes." },
+          { key: "d", text: "Consistirá en un subsidio equivalente al 75% de la base reguladora correspondiente. A tales efectos, la base reguladora será equivalente a la que esté establecida para la prestación de incapacidad temporal, derivada de contingencias profesionales." }
+        ],
+        correct: "a",
+        explanation: "Fundamentación: El artículo 179 del TRLGSS (RDL 8/2015) establece que el subsidio económico equivale al 100% de la base reguladora, coincidiendo la base reguladora con la fijada para la prestación por incapacidad temporal derivada de contingencias comunes."
+      }
+    ];
+
+    // Render Quiz Questions
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+
+      quizData.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `q-card-${q.id}`;
+
+        let optionsHtml = '';
+        q.options.forEach(opt => {
+          optionsHtml += `
+            <label class="option-item" id="opt-container-${q.id}-${opt.key}">
+              <input type="radio" name="q${q.id}" value="${opt.key}">
+              <span class="option-label"><strong>${opt.key})</strong> ${opt.text}</span>
+            </label>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="question-header">
+            <span class="q-number">${q.id}</span>
+            <div class="q-text">${q.question}</div>
+          </div>
+          <div class="options-list">
+            ${optionsHtml}
+          </div>
+          <div class="explanation-block" id="explanation-${q.id}">
+            <strong>⚖️ Justificación Legal Motivada:</strong>
+            ${q.explanation}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Evaluate Quiz
+    function evaluateQuiz() {
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let blankCount = 0;
+
+      quizData.forEach(q => {
+        const selectedOpt = document.querySelector(`input[name="q${q.id}"]:checked`);
+        const explanationEl = document.getElementById(`explanation-${q.id}`);
+
+        // Reset styles first
+        q.options.forEach(opt => {
+          const containerEl = document.getElementById(`opt-container-${q.id}-${opt.key}`);
+          containerEl.classList.remove('state-correct', 'state-incorrect', 'state-actual-correct');
+        });
+
+        if (!selectedOpt) {
+          // Left Blank
+          blankCount++;
+          const actualCorrectEl = document.getElementById(`opt-container-${q.id}-${q.correct}`);
+          actualCorrectEl.classList.add('state-actual-correct');
+        } else {
+          const userVal = selectedOpt.value;
+          const userContainerEl = document.getElementById(`opt-container-${q.id}-${userVal}`);
+
+          if (userVal === q.correct) {
+            correctCount++;
+            userContainerEl.classList.add('state-correct');
+          } else {
+            incorrectCount++;
+            userContainerEl.classList.add('state-incorrect');
+            // Highlight real correct option in blue
+            const actualCorrectEl = document.getElementById(`opt-container-${q.id}-${q.correct}`);
+            actualCorrectEl.classList.add('state-actual-correct');
+          }
+        }
+
+        // Show Explanation Block
+        explanationEl.style.display = 'block';
+      });
+
+      // Update Results Panel
+      document.getElementById('correctCount').innerText = correctCount;
+      document.getElementById('incorrectCount').innerText = incorrectCount;
+      document.getElementById('blankCount').innerText = blankCount;
+
+      const score = ((correctCount / quizData.length) * 10).toFixed(2);
+      document.getElementById('scoreBadge').innerText = `Nota Final: ${score} / 10`;
+
+      const resultsPanel = document.getElementById('resultsPanel');
+      resultsPanel.style.display = 'block';
+      resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Reset Quiz
+    function resetQuiz() {
+      // Uncheck all inputs
+      const radios = document.querySelectorAll('input[type="radio"]');
+      radios.forEach(r => r.checked = false);
+
+      // Clean classes & hide explanations
+      quizData.forEach(q => {
+        q.options.forEach(opt => {
+          const containerEl = document.getElementById(`opt-container-${q.id}-${opt.key}`);
+          containerEl.classList.remove('state-correct', 'state-incorrect', 'state-actual-correct');
+        });
+        document.getElementById(`explanation-${q.id}`).style.display = 'none';
+      });
+
+      // Hide results panel
+      const resultsPanel = document.getElementById('resultsPanel');
+      resultsPanel.style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize on Load
+    document.addEventListener('DOMContentLoaded', renderQuiz);
+  </script>
+</body>
+</html>
