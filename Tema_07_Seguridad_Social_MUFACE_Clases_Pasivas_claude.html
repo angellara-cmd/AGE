@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Tema 7 · Seguridad Social de los funcionarios · MUFACE y Clases Pasivas · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">T7</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE</small>
+      <b>MUFACE y Clases Pasivas</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+  <style>
+    .calc{padding:22px}
+    .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+    .calc label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .calc select,.calc input{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .calc input[type=range]{padding:0;accent-color:var(--a1)}
+    .calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+    .calc-out div{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .calc-out b{display:block;font:800 1.3rem Sora,system-ui,sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .calc-out span{font-size:.84rem;color:var(--muted)}
+    .calc-bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin:6px 0 14px}
+    .calc-bar i{display:block;height:100%;background:var(--grad);border-radius:99px;transition:width .3s var(--ease)}
+    .calc-note{margin-top:12px;font-size:.88rem;color:var(--muted)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Tema 7 · Gestión de personal</span>
+    <h1>Seguridad Social de los funcionarios: <span>MUFACE y Clases Pasivas</span></h1>
+    <p>Resumen de alto rendimiento del manual (RDLeg 4/2000, RD 375/2003 y RDLeg 670/1987), con cifras actualizadas a 2026, una <strong>calculadora de pensión de Clases Pasivas</strong> con la tabla oficial de porcentajes, esquemas autocorregibles, fichas y test con penalización.</p>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">17</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">55</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('mapa').scrollIntoView({behavior:'smooth'})">Ir a la calculadora ↓</button>
+      <button class="btn btn-g" data-go="esquemas">Practicar esquemas →</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="section-title" id="mapa">
+    <div><span class="kicker">Practica con números</span><h2>Calculadora de pensión ordinaria de jubilación</h2></div>
+    <p>Para quien ha estado siempre en el mismo cuerpo: haber regulador × porcentaje según los años completos de servicio.</p>
+  </div>
+  <div class="card calc">
+    <div class="calc-grid">
+      <label>Grupo o subgrupo
+        <select id="pc-g"></select></label>
+      <label>Ejercicio de los haberes reguladores
+        <select id="pc-y"><option value="2026" selected>2026 (RDL 16/2025, vigente)</option><option value="2025">2025 (RD 35/2025, el del manual)</option></select></label>
+      <label>Años completos de servicio: <span id="pc-yv">30</span>
+        <input id="pc-a" type="range" min="1" max="40" value="30"></label>
+    </div>
+    <div class="calc-bar"><i id="pc-bar"></i></div>
+    <div class="calc-out">
+      <div><b id="pc-pct">—</b><span>Porcentaje del haber regulador</span></div>
+      <div><b id="pc-anual">—</b><span>Pensión anual</span></div>
+      <div><b id="pc-mes">—</b><span>Cada una de las 14 pagas</span></div>
+      <div><b id="pc-viu">—</b><span>Viudedad derivada (50 %, por paga)</span></div>
+      <div><b id="pc-orf">—</b><span>Orfandad, un hijo (25 %, por paga)</span></div>
+    </div>
+    <p class="calc-note" id="pc-msg"></p>
+    <p class="calc-note">Ejercicio orientativo: no incluye el complemento de brecha de género, la fórmula para varios cuerpos ni las pensiones extraordinarias. Los ingresados desde el 1-1-2011 no están en Clases Pasivas: su jubilación es del Régimen General.</p>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave del tema</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>1-1-2011</b><span>Los que ingresan desde esa fecha van al Régimen General para pensiones; siguen en MUFACE para sanidad e IT</span></div>
+    <div class="num"><b>1,69 % · 6,59 %</b><span>Cotización a MUFACE: mutualista · Estado (4,10 % por activo + 2,49 % por pensionista), según el manual</span></div>
+    <div class="num"><b>3,86 %</b><span>Cuota de derechos pasivos sobre el haber regulador</span></div>
+    <div class="num"><b>÷ 14</b><span>Cuotas y pensiones mensuales: se divide el importe anual entre 14 (doble en junio y diciembre)</span></div>
+    <div class="num"><b>3 meses · 4.º mes</b><span>IT: retribuciones íntegras a cargo de la Administración · desde el 4.º mes, subsidio de MUFACE</span></div>
+    <div class="num"><b>80 % · 75 %</b><span>Subsidio de IT: lo mayor entre el 80 % de las básicas (+⅙ de paga extra) y el 75 % de las complementarias</span></div>
+    <div class="num"><b>365 + 180 días</b><span>Duración máxima de la incapacidad temporal</span></div>
+    <div class="num"><b>100 %</b><span>Subsidio por riesgo en embarazo o lactancia y por donación de órganos: 100 % de las complementarias</span></div>
+    <div class="num"><b>50 % · 9 años</b><span>Gran invalidez: 50 % de la pensión para el cuidador · 9 años de cotización si no hay pensión de Clases Pasivas</span></div>
+    <div class="num"><b>24 mensualidades</b><span>Indemnización por incapacidad permanente parcial, por una sola vez</span></div>
+    <div class="num"><b>9 + 9</b><span>Consejo General de MUFACE: Presidente, Vicepresidente 1.º, 7 de la Administración y 9 sindicales</span></div>
+    <div class="num"><b>15 años</b><span>Carencia para la pensión ordinaria de jubilación (sin carencia en las extraordinarias)</span></div>
+    <div class="num"><b>60 + 30</b><span>Jubilación voluntaria: 60 años de edad y 30 de servicios</span></div>
+    <div class="num"><b>35 años = 100 %</b><span>Tabla de porcentajes: 15 años, 26,92 %; 30 años, 81,73 %; 35 o más, 100 %</span></div>
+    <div class="num"><b>C1: 31.852,67 €</b><span>Haber regulador anual del C1 en 2026 (31.015,26 € en 2025, el dato del manual)</span></div>
+    <div class="num"><b>36,90 € · máx. 4</b><span>Complemento de brecha de género en 2026, por hijo (el manual da 35,90 €, de 2025)</span></div>
+    <div class="num"><b>3 meses · 5 años</b><span>Retroactividad máxima de los efectos económicos · plazo para reclamar haberes de un fallecido</span></div>
+    <div class="num"><b>50 · 25 · 15 %</b><span>Viudedad · orfandad (un hijo) · padres, sobre la pensión del causante</span></div>
+    <div class="num"><b>21 · 25 años</b><span>Orfandad: menores de 21 · hasta 25 si no trabajan o ganan menos del SMI</span></div>
+    <div class="num"><b>200 %</b><span>Pensiones extraordinarias: base del 200 % del haber regulador</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El régimen especial de los funcionarios</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>Idea general</h3><small>Dos mecanismos de cobertura y la fecha clave de 2011</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span><strong>Clases Pasivas</strong> (RDLeg 670/1987): pensiones de jubilación, viudedad, orfandad y en favor de los padres</span><i>+</i><span><strong>Mutualismo administrativo</strong> (RDLeg 4/2000 y RD 375/2003), gestionado por <strong>MUFACE</strong>: sanidad, IT, incapacidad, familia y servicios sociales</span></div>
+        <ul>
+          <li>Hay que fijarse en el <strong>cuerpo</strong> (los funcionarios de la Administración de la Seguridad Social y de organismos públicos están en el Régimen General) y en la <strong>fecha de ingreso</strong>.</li>
+          <li>Quien ingresa desde el <strong>1 de enero de 2011</strong> (RDL 13/2010) sigue en MUFACE para <strong>asistencia sanitaria e IT</strong>, pero sus <strong>pensiones</strong> son del <strong>Régimen General</strong>, no de Clases Pasivas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Quién está en MUFACE y quién no</h3><small>Ámbito del mutualismo administrativo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Incluidos obligatoriamente</th><th>Excluidos (tienen sus propias normas)</th></tr>
+          <tr><td>Funcionarios de carrera de la Administración Civil del Estado; <strong>funcionarios en prácticas</strong> (desde el inicio de las prácticas, con baja si no llegan a ser de carrera); interinos del Decreto-Ley 10/1965 y otros colectivos especiales (Pósitos, Patronato Antituberculoso, civiles en la Administración Militar que optaron, catedráticos de plazas vinculadas que se desvinculan…). Pueden incorporarse opcionalmente algunos colectivos procedentes de la Administración Militar y ciertos pensionistas.</td>
+            <td>Funcionarios de la Administración <strong>Local</strong>; de <strong>organismos autónomos</strong>; de la Administración <strong>Militar</strong>; de la Administración de <strong>Justicia</strong>; de la Administración de la <strong>Seguridad Social</strong>; de nuevo ingreso y en prácticas de las <strong>CCAA</strong>; transferidos que ingresan voluntariamente en cuerpos de la CA; y el PAS propio de las universidades.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.3</span><span class="bt"><h3>Transferidos a las CCAA y cómputo recíproco</h3><small>RD 691/1991</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Los <strong>transferidos</strong> conservan su régimen de Seguridad Social, y la CA asume las obligaciones del Estado. Si ingresan voluntariamente en cuerpos de la CA, pasan al Régimen General.</li>
+          <li>Si acceden por <strong>promoción interna</strong> a cuerpos de la CA (o a escalas de OOAA), entran en el Régimen General, pero pueden <strong>seguir en MUFACE</strong> optando una sola vez en <strong>15 días</strong> desde la toma de posesión. Eso no les devuelve a Clases Pasivas.</li>
+          <li><strong>Cómputo recíproco</strong>: los periodos cotizados en distintos regímenes, si no se superponen, se suman (a petición del interesado) para tener derecho y para el porcentaje. Reconoce la pensión el régimen de las <strong>últimas cotizaciones</strong>; si fueron simultáneas, el de <strong>mayor periodo</strong>. Si en ese régimen no se cumplen los requisitos, resuelve el otro.</li>
+          <li>Se aplica a militares, Justicia, Cortes y Tribunal Constitucional, y solo a pensiones de igual naturaleza. Quedan fuera la jubilación parcial y las prestaciones a nietos, hermanos, abuelos e hijos sin derecho a orfandad.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:18px 0 2px">Parte 2 · MUFACE y el mutualismo administrativo</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Naturaleza y prestaciones</h3><small>Organismo público adscrito a Función Pública</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>MUFACE es un <strong>organismo público</strong> con personalidad jurídica, patrimonio y tesorería propios y autonomía de gestión, adscrito al Ministerio de Función Pública a través de la <strong>Secretaría de Estado de Función Pública</strong>. Se rige como un organismo autónomo; el manual cita la Ley 6/1997, hoy sustituida por la Ley 40/2015.</li>
+          <li>Tiene el mismo tratamiento fiscal que el Estado, beneficio de pobreza ante los tribunales y franquicia postal. Es la entidad gestora equivalente al INSS, el IMSERSO y el INGESA.</li>
+          <li><strong>Prestaciones</strong> (art. 12 RDLeg 4/2000): asistencia sanitaria; subsidio por IT y por riesgo en el embarazo o la lactancia; prestaciones recuperadoras por incapacidad permanente; remuneración del cuidador del gran inválido; indemnizaciones por lesiones; servicios sociales; asistencia social; prestaciones por <strong>hijo a cargo con discapacidad</strong> (financiadas con los <strong>PGE</strong>; las demás, con cotizaciones); y ayudas por parto múltiple.</li>
+          <li>Se pagan solo en cuenta a nombre del beneficiario. Los habilitados de Clases Pasivas deben entregar el importe íntegro, cobrando sus comisiones aparte.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Afiliación, bajas y cotización</h3><small>Quién sigue de alta y quién cotiza</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Alta obligatoria al <strong>tomar posesión</strong> (o al iniciar las prácticas), al ser rehabilitado o al reingresar. El documento de afiliación lo expide MUFACE, con un número permanente.</li>
+          <li><strong>Siguen de alta con los mismos derechos</strong>: servicios especiales, servicio en CCAA, expectativa de destino, excedencia forzosa, excedencia por cuidado de familiares y suspensión provisional o firme. Los <strong>jubilados</strong> siguen de alta, pero sin cotizar.</li>
+          <li><strong>Baja obligatoria</strong>: excedencia voluntaria (salvo cuidado de familiares); pérdida de la condición de funcionario; transferencia de derechos a la UE; afiliación obligatoria al régimen de las Fuerzas Armadas. Quien está en servicios especiales en la UE u organismos internacionales con previsión propia puede <strong>suspender</strong> el alta.</li>
+          <li><strong>No cotizan</strong>: los jubilados y los excedentes por cuidado de hijos o familiares. Se <strong>suspende</strong> la obligación de cotizar en la <strong>licencia por asuntos propios</strong> y en la <strong>suspensión firme</strong>; después se paga una cuota corriente y otra atrasada cada mes (o todo en 1 mes si se pasa a excedencia, con vía de apremio si no se paga).</li>
+          <li><strong>Base</strong>: el haber regulador del grupo que fijen los PGE. <strong>Tipos</strong> (PGE 2023 prorrogados): mutualista <strong>1,69 %</strong>; Estado <strong>6,59 %</strong> (4,10 % por activo + 2,49 % por pensionista). La cuota mensual es la anual entre <strong>14</strong>, doble en junio y diciembre. En las licencias sin sueldo no se reduce.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>Asistencia sanitaria</h3><small>Contenido, forma de prestación y beneficiarios</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Cubre la enfermedad común o profesional, el accidente común o en acto de servicio, y el embarazo, parto y puerperio. Alcanza a mutualistas, jubilados y sus beneficiarios.</li>
+          <li>Ser beneficiario de MUFACE es <strong>incompatible</strong> con serlo del Sistema Nacional de Salud por otro título. El recién nacido, adoptado o acogido está cubierto los <strong>15 primeros días</strong> aunque aún no sea beneficiario.</li>
+          <li>MUFACE la presta <strong>directamente o por concierto</strong> con entidades públicas o privadas (preferentemente con la Seguridad Social). No paga los servicios distintos de los asignados que se usen por decisión propia.</li>
+          <li><strong>Contenido</strong> análogo al del Régimen General: atención primaria, especializada (incluida psiquiátrica y cirugía estética ligada a accidente, enfermedad o malformación), farmacia (con aportación porcentual por receta) y prestaciones complementarias (transporte sanitario, oxigenoterapia, dietoterapia y ortoprótesis).</li>
+          <li>En accidente en acto de servicio o enfermedad profesional, además, toda clase de prótesis y órtesis.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.4</span><span class="bt"><h3>Incapacidad temporal y riesgo durante el embarazo o la lactancia</h3><small>Quién paga y cuánto</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Requisitos</strong> (art. 88 RD 375/2003): proceso que impida temporalmente trabajar, asistencia sanitaria de MUFACE y <strong>licencia por enfermedad</strong>. También es IT la menstruación incapacitante secundaria, la interrupción del embarazo y la gestación desde la <strong>semana 39</strong>.</li>
+        </ul>
+        <div class="flow"><span><strong>Meses 1 a 3</strong>: retribuciones <strong>íntegras</strong> a cargo de la Administración (100 %, por el acuerdo de la Mesa General de 2018)</span><i>→</i><span><strong>Desde el 4.º mes</strong>: básicas (Administración) + <strong>subsidio de MUFACE</strong>, fijo e invariable</span></div>
+        <ul>
+          <li><strong>Subsidio</strong>: la cifra mayor entre el <strong>80 %</strong> de las básicas (con ⅙ de paga extra) y el <strong>75 %</strong> de las complementarias del tercer mes. Por <strong>donación de órganos</strong>, el 100 % de las complementarias. La suma nunca supera lo cobrado en el tercer mes.</li>
+          <li><strong>Duración</strong>: <strong>365 días + 180</strong> de prórroga.</li>
+          <li><strong>Extinción</strong>: fin de la licencia, jubilación, fallecimiento, nueva IT, agotamiento del plazo o incomparecencia a reconocimientos. Se deniega o suspende por fraude o por trabajar, y puede suspenderse si se rechaza el tratamiento.</li>
+          <li><strong>Riesgo durante el embarazo o la lactancia</strong>: cuando no es posible cambiar de puesto. Se trata como la IT por enfermedad profesional (sin carencia), con un subsidio del <strong>100 % de las complementarias</strong>. IT y riesgo son incompatibles entre sí.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.5</span><span class="bt"><h3>Incapacidad permanente, familia y servicios sociales</h3><small>Gran invalidez, lesiones no invalidantes y ayudas</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Incapacidad permanente</strong>: reducciones graves tras el tratamiento y el alta, aunque la recuperación sea incierta. Deriva siempre de una IT. La <strong>parcial</strong> es la limitación para las funciones del cuerpo en los grados del art. 194.3 TRLGSS.</li>
+          <li><strong>Gran invalidez</strong>: jubilado por incapacidad que pierde la visión de ambos ojos, las dos extremidades superiores o inferiores, o necesita ayuda para los actos esenciales. Prestación mensual (con 2 pagas extra) del <strong>50 %</strong> de su pensión para pagar al cuidador. Sin pensión de Clases Pasivas, exige <strong>9 años</strong> de cotización.</li>
+          <li><strong>Lesiones permanentes no invalidantes</strong> (en acto de servicio o por enfermedad profesional): indemnización única según el baremo del Régimen General; si suponen incapacidad permanente parcial, <strong>24 mensualidades</strong> de la base de cotización (con las pagas extra prorrateadas).</li>
+          <li><strong>Familia</strong>: prestación periódica por hijo a cargo con discapacidad; ayudas de pago único por parto múltiple (subsidio especial y prestación económica).</li>
+          <li><strong>Servicios sociales</strong>: acción formativa, asistencia al pensionista, prestaciones por fallecimiento y programas sociosanitarios.</li>
+          <li><strong>Asistencia social</strong>: ayudas a quien carece de recursos (tratamientos excepcionales, falta de prestaciones, gastos urgentes), limitadas al crédito del ejercicio.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.6</span><span class="bt"><h3>Órganos de MUFACE</h3><small>RD 577/1997</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Órgano</th><th>Composición</th><th>Funciones clave</th></tr>
+          <tr><td><strong>Consejo General</strong></td><td>Preside el <strong>Secretario de Estado de Función Pública</strong>; Vicepresidente 1.º, el Director General de MUFACE; <strong>7</strong> representantes de la Administración y <strong>9</strong> sindicales (mutualistas), que eligen al Vicepresidente 2.º. Secretario: el Secretario General de MUFACE, con voz sin voto</td><td>Aprobar el plan de actuación y la memoria; informar el presupuesto, las cuentas y las normas sobre prestaciones; fijar criterios de asistencia sanitaria</td></tr>
+          <tr><td><strong>Comisión Permanente</strong></td><td>Preside el Director General; representantes de la Administración (uno menos que los sindicales) y un vocal por sindicato</td><td>Velar por los acuerdos del Consejo; informar convocatorias de prestaciones anuales</td></tr>
+          <tr><td><strong>Dirección General</strong></td><td>Director nombrado y cesado libremente por <strong>Real Decreto</strong>. Unidades: Secretaría General y Departamentos de Gestión Económica, Prestaciones Sanitarias y Prestaciones Sociales; un servicio en cada provincia, Ceuta y Melilla</td><td>Representar, dirigir y gestionar; resolver afiliaciones; reconocer prestaciones; concertar la asistencia; enajenar bienes con informe del Consejo y autorización del Consejo de Ministros</td></tr>
+          <tr><td><strong>Comisiones Provinciales</strong></td><td>Preside el Director del Servicio Provincial; la Administración, uno menos que los vocales sindicales</td><td>Aplicar los acuerdos en la provincia y fijar criterios de asistencia social. Se reúnen al menos cada <strong>dos meses</strong></td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:18px 0 2px">Parte 3 · Clases Pasivas del Estado</h3>
+
+    <details class="blk">
+      <summary><span class="bn">3.1</span><span class="bt"><h3>Concepto, caracteres y ejercicio de los derechos pasivos</h3><small>RDLeg 670/1987</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Protege frente a la <strong>vejez, la incapacidad, la muerte y la supervivencia</strong>. «Clases pasivas» son las personas que cobran las pensiones. Solo por <strong>ley</strong> pueden crearse o modificarse derechos pasivos.</li>
+          <li>Los derechos pasivos son <strong>inembargables, irrenunciables, inalienables e imprescriptibles</strong>.</li>
+          <li>Los instan los interesados o sus representantes desde el día siguiente al hecho causante. La retroactividad máxima de los efectos económicos es de <strong>3 meses</strong> desde el primer día del mes siguiente a la solicitud.</li>
+          <li>Si el interesado fallece durante el procedimiento, se termina y se paga a los herederos. Los haberes devengados y no cobrados se reclaman en <strong>5 años</strong> desde el fallecimiento.</li>
+          <li>Si hay prestaciones incompatibles, se <strong>opta</strong> por la más conveniente.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.2</span><span class="bt"><h3>Ámbito personal, órganos y recursos</h3><small>INSS, TGSS y reconocimiento de servicios</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Cubiertos</strong>: funcionarios civiles de carrera del Estado; militares profesionales; funcionarios de Justicia, Cortes y otros órganos constitucionales; interinos anteriores a 1965; transferidos a las CCAA; funcionarios en prácticas; ex Presidentes, Vicepresidentes y Ministros. Solo una <strong>ley</strong> puede ampliarlo o restringirlo. Quien accede desde el <strong>1-1-2011</strong> va al Régimen General (salvo los ex altos cargos de la letra i).</li>
+          <li><strong>Reconocimiento y concesión</strong>: el <strong>INSS</strong>. Si no resuelve en plazo, el silencio es <strong>desestimatorio</strong>. Propuesta de pago y créditos: el INSS. Ordenación y <strong>pago material</strong>: la <strong>TGSS</strong>. Hasta la integración completa, la Subdirección General de Gestión de Clases Pasivas sigue adscrita a la DG de Ordenación de la Seguridad Social (RD 501/2024).</li>
+          <li><strong>Reconocimiento de servicios</strong>: los Subsecretarios (servicios centrales) y los Delegados del Gobierno (periféricos); la DG de Personal de Defensa; las CCAA y EELL; el CGPJ o el Ministerio de Justicia; las Cortes; y la entidad gestora correspondiente para las cotizaciones. El cómputo final es exclusivo del INSS.</li>
+          <li><strong>Recursos</strong>: los acuerdos del INSS <strong>ponen fin a la vía administrativa</strong>; cabe reposición potestativa y recurso contencioso-administrativo. Revisión de oficio según la Ley 39/2015. Se puede revisar en cualquier momento la pensión de quien sea condenado por homicidio doloso del causante.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.3</span><span class="bt"><h3>Régimen general de las prestaciones</h3><small>Clases, devengo, cuota y revalorización</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Prestaciones <strong>solo económicas y periódicas</strong>: jubilación o retiro, viudedad, orfandad y en favor de los padres.</li>
+          <li><strong>Ordinarias</strong> o <strong>extraordinarias</strong> (lesión, muerte o desaparición en acto de servicio). <strong>Excepcionales</strong>: las que una ley reconoce a una persona concreta.</li>
+          <li><strong>Devengo</strong>: el día 1 del mes siguiente a la jubilación o al fallecimiento (o a la pérdida de aptitud del viudo o los huérfanos, en la de los padres). Hay 12 mensualidades más <strong>2 extraordinarias</strong> en junio y diciembre.</li>
+          <li><strong>Cuota de derechos pasivos</strong>: <strong>3,86 %</strong> del haber regulador, en 14 pagas (doble en junio y diciembre), retenida en nómina.</li>
+          <li>Perder la nacionalidad <strong>no</strong> hace perder los derechos pasivos.</li>
+          <li><strong>Incompatibilidad interna</strong>: no se pueden cobrar más de <strong>3</strong> pensiones ordinarias causadas por personas distintas, ni <strong>2</strong> causadas por la misma persona. <strong>No duplicidad</strong>: por unos mismos servicios, se opta entre la pensión de Clases Pasivas y la de otro régimen.</li>
+          <li><strong>Revalorización</strong> anual según la media del IPC (si es negativa, no baja). En 2026, <strong>+2,7 %</strong>. Hay complementos a mínimos para residentes en España y un tope máximo de pensión (3.359,60 €/mes en 2026).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.4</span><span class="bt"><h3>Pensión de jubilación o retiro</h3><small>Hecho causante, carencia, haberes y cálculo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Tipos</strong>: <strong>forzosa</strong>, automática a la edad legal (como máximo, 70 años); <strong>voluntaria</strong>, con <strong>60 años y 30 de servicios</strong>; por <strong>incapacidad permanente</strong>, de oficio o a instancia, con dictamen <strong>preceptivo y vinculante</strong> del órgano médico.</li>
+          <li><strong>Carencia</strong>: <strong>15 años</strong> de servicios efectivos; no se exige en las extraordinarias.</li>
+          <li>Si se trabajó con jornada reducida un año o más, el haber regulador se reduce proporcionalmente.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Grupo</th><th>Haber regulador 2025 (manual)</th><th>Haber regulador 2026 (vigente)</th></tr>
+          <tr><td>A1</td><td>51.311,65 €</td><td>52.697,06 €</td></tr>
+          <tr><td>A2</td><td>40.383,55 €</td><td>41.473,91 €</td></tr>
+          <tr><td>B</td><td>35.362,35 €</td><td>36.317,13 €</td></tr>
+          <tr><td><strong>C1</strong></td><td><strong>31.015,26 €</strong></td><td><strong>31.852,67 €</strong></td></tr>
+          <tr><td>C2</td><td>24.538,21 €</td><td>25.200,74 €</td></tr>
+          <tr><td>E y Agrupaciones profesionales</td><td>20.920,79 €</td><td>21.485,65 €</td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Cálculo con un solo cuerpo</strong>: pensión anual = haber regulador × porcentaje de la tabla según los años completos (15 años, 26,92 %; 20, 45,19 %; 25, 63,46 %; 30, 81,73 %; <strong>35 o más, 100 %</strong>). Se divide entre <strong>14</strong>.</li>
+          <li><strong>Varios cuerpos</strong>: P = R1·C1 + (R2 − R1)·C2 + (R3 − R2)·C3… Las fracciones de año se suman al cuerpo siguiente, y la del último se pierde.</li>
+          <li><strong>Servicios efectivos</strong>: servicio activo, servicios especiales, excedencia forzosa, cotizaciones a otros regímenes no simultáneas… No cuenta el servicio militar obligatorio ni la prestación social sustitutoria.</li>
+          <li><strong>Complemento de brecha de género</strong>: para mujeres con hijos que cobran jubilación, incapacidad permanente o viudedad (no la jubilación voluntaria). Los hombres, solo con requisitos de perjuicio en la carrera o viudedad con hijos huérfanos pensionistas. Es uno por hijo, hasta <strong>4</strong>, en 14 pagas: 35,90 €/mes en 2025 (manual) y <strong>36,90 €</strong> en 2026. No cuenta para el tope de pensión.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.5</span><span class="bt"><h3>Incompatibilidades y jubilación activa</h3><small>Trabajo y pensión tras el RDL 11/2024</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Regla</strong>: la jubilación es incompatible con un puesto o alto cargo en el sector público, con cualquier remuneración pública y con una actividad que dé alta en un régimen de Seguridad Social. Hay excepciones de la Ley 53/1984 (art. 19 y DA 9.ª) y para cargos electivos no retribuidos.</li>
+          <li><strong>Jubilación activa</strong> (solo la <strong>forzosa por edad</strong>, si se accedió al menos 1 año después de esa edad): se cobra un porcentaje según la demora: 1 año, <strong>45 %</strong>; 2, <strong>55 %</strong>; 3, <strong>65 %</strong>; 4, <strong>80 %</strong>; 5, <strong>100 %</strong>. Sube <strong>5 puntos</strong> por cada 12 meses de jubilación activa. Si es autónomo con un trabajador indefinido, el <strong>75 %</strong> con 1 a 3 años de demora.</li>
+          <li><strong>Actividad artística</strong> y autores: compatible al <strong>100 %</strong> con la jubilación forzosa (con la voluntaria, desde que se cumple la edad).</li>
+          <li><strong>Incapacidad permanente</strong>: incompatible con trabajar, salvo en una actividad distinta si no se está incapacitado para toda profesión. Entonces se cobra el <strong>75 %</strong> (más de 20 años de servicios) o el <strong>55 %</strong> (menos de 20).</li>
+          <li>La pensión se <strong>suspende por meses completos</strong>, desde el día 1 del mes siguiente al inicio de la actividad (desde ese mismo mes si empieza el día 1).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.6</span><span class="bt"><h3>Pensiones en favor de familiares: reglas generales y viudedad</h3><small>Sin carencia; cónyuges, exparejas y parejas de hecho</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Se causan con el <strong>fallecimiento</strong> (la declaración de ausencia no basta; hace falta la de fallecimiento). <strong>No se exige carencia</strong>. Rige la igualdad entre sexos y filiaciones.</li>
+          <li>Si aparecen beneficiarios nuevos, sus efectos empiezan el mes siguiente a su solicitud. El condenado por <strong>homicidio doloso</strong> del causante no puede ser beneficiario, y el INSS suspende cautelarmente el pago si hay indicios.</li>
+          <li><strong>Viudedad</strong>: cónyuge superviviente. Si la muerte es por enfermedad común anterior al matrimonio, se exige <strong>1 año</strong> de matrimonio, salvo hijos comunes o más de <strong>2 años</strong> sumando la convivencia previa. Si no se cumple, hay una <strong>prestación temporal de 2 años</strong>.</li>
+          <li><strong>Separados o divorciados</strong>: si no se han vuelto a casar ni tienen otra pareja y cobraban <strong>pensión compensatoria</strong> (la viudedad no la supera). Las víctimas de violencia de género, aunque no la cobren. Si concurren varios, se reparte en proporción al tiempo convivido, con un <strong>40 %</strong> garantizado al cónyuge o pareja actual.</li>
+          <li><strong>Pareja de hecho</strong>: convivencia de <strong>5 años</strong> (salvo hijos comunes) e inscripción o documento público con <strong>2 años</strong> de antelación; si falta este requisito, prestación temporal. Se extingue al casarse o formar nueva pareja.</li>
+          <li><strong>Cuantía</strong>: <strong>50 %</strong> de la pensión del causante (<strong>25 %</strong> si este cobraba una extraordinaria). Se suman <strong>8</strong> (o 4) puntos si el beneficiario tiene 65 años o más, no tiene otra pensión, no trabaja y sus rentas no superan el límite.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.7</span><span class="bt"><h3>Orfandad y pensión en favor de los padres</h3><small>Edades, porcentajes y topes</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Orfandad</strong>: hijos <strong>menores de 21 años</strong> o incapacitados para todo trabajo. Hasta los <strong>25</strong> si no trabajan o ganan menos del SMI (y hasta el curso siguiente si estudian). Si se incapacitan antes de los 25, es <strong>vitalicia</strong>. La adopción del huérfano la extingue (con excepciones para huérfanos por violencia contra la mujer).</li>
+          <li><strong>Cuantía</strong>: <strong>25 %</strong> si hay un solo hijo; si hay varios, <strong>10 %</strong> cada uno más un <strong>15 %</strong> que se reparte entre todos. Tope conjunto: <strong>50 %</strong> si hay cónyuge y <strong>100 %</strong> si no (25 % y 50 % si la pensión del causante era extraordinaria). <strong>No hay derecho de acrecer</strong>.</li>
+          <li><strong>Orfandad absoluta y violencia contra la mujer</strong>: incremento de hasta el <strong>70 %</strong> si la renta por persona no supera el 75 % del SMI; conjunto de hasta el <strong>118 %</strong>.</li>
+          <li>Es incompatible con un puesto o alto cargo en el sector público, con excepciones.</li>
+          <li><strong>Padres</strong>: si dependían económicamente del causante y no hay cónyuge ni hijos con derecho (o cuando estos lo pierden). Cuantía: <strong>15 %</strong> (<strong>7,5 %</strong> si la pensión del causante era extraordinaria), sin derecho de acrecer.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.8</span><span class="bt"><h3>Pensiones extraordinarias, interinos y procedimiento de jubilación</h3><small>Acto de servicio, base doble y órganos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Extraordinarias</strong>: incapacidad, fallecimiento o desaparición <strong>en acto de servicio</strong> o como consecuencia de él. <strong>Sin carencia</strong>. La base es el <strong>200 %</strong> del haber regulador y hay derecho de acrecer. Su concesión es competencia exclusiva del INSS. Son incompatibles con las ordinarias por los mismos hechos.</li>
+          <li>Si el acto es de <strong>terrorismo</strong>: orfandad hasta los <strong>23 años</strong> (25 si no hay ingresos suficientes).</li>
+          <li><strong>Interinos y en prácticas</strong>: causan pensiones con el haber regulador del cuerpo homologable (interinos) o del propio cuerpo (en prácticas).</li>
+          <li><strong>Procedimiento de jubilación</strong> (Resolución de 29-12-1995): la forzosa se inicia de oficio <strong>6 meses antes</strong> de cumplir la edad.</li>
+          <li><strong>Quién la acuerda</strong>: forzosa e incapacidad, el <strong>Subsecretario</strong> (servicios centrales) o el <strong>Delegado o Subdelegado del Gobierno</strong> (periféricos). Voluntaria, el Subsecretario del Ministerio del cuerpo (o la <strong>DGFP</strong> para cuerpos de Función Pública). Si no está en activo, el Subsecretario de su último destino; si está en una CA, el órgano que esta designe. Justicia: CGPJ o Secretario de Estado de Justicia. Universidad: el <strong>Rector</strong>. Registradores: la DG de Registros. Jubilación voluntaria incentivada: la <strong>DGFP</strong>.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>2011: dos sistemas</b>Si ingresó desde el 1-1-2011: MUFACE para sanidad e IT, pero el Régimen General para la pensión.</div>
+    <div class="trap"><b>Excedencia voluntaria = baja</b>Salvo la de cuidado de familiares, que sigue de alta sin cotizar, igual que los jubilados.</div>
+    <div class="trap"><b>Asuntos propios y suspensión firme</b>Se suspende la cotización, pero la deuda se paga después (cuota corriente + cuota atrasada).</div>
+    <div class="trap"><b>IT: 3 meses íntegros</b>El subsidio de MUFACE empieza el 4.º mes: lo mayor entre el 80 % de las básicas y el 75 % de las complementarias.</div>
+    <div class="trap"><b>Silencio negativo en Clases Pasivas</b>Si el INSS no resuelve en plazo, se entiende desestimada. Sus acuerdos ponen fin a la vía administrativa.</div>
+    <div class="trap"><b>Carencia solo en jubilación ordinaria</b>15 años para la jubilación ordinaria; ninguna en las pensiones en favor de familiares ni en las extraordinarias.</div>
+    <div class="trap"><b>Prescripción: no prescriben</b>Los derechos pasivos son imprescriptibles, pero los haberes del fallecido se reclaman en 5 años y la retroactividad es de 3 meses.</div>
+    <div class="trap"><b>50 · 25 · 15</b>Viudedad 50 %, orfandad 25 % (un hijo) y padres 15 %, sobre la pensión del causante. Con pensión extraordinaria: 25 % y 7,5 %.</div>
+    <div class="trap"><b>MUFACE: 7 + 9</b>Consejo General: 7 representantes de la Administración y 9 sindicales, más Presidente (SEFP) y Vicepresidente 1.º (Director General).</div>
+    <div class="trap"><b>Cifras de 2026</b>Haber regulador C1, 31.852,67 €; brecha de género, 36,90 €. El manual trae las de 2025 (31.015,26 € y 35,90 €).</div>
+  </div>
+</section>
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap"><p>Tema 7 · El régimen de la Seguridad Social de los funcionarios. MUFACE y Clases Pasivas · Oposiciones C1 AGE. Fuente: temario del Tema 7 aportado por el usuario (RDLeg 4/2000, RD 375/2003, RDLeg 670/1987); cifras de 2026 según el RDL 16/2025 (haberes reguladores y complemento de brecha de género). Material de estudio; contrasta siempre con la normativa vigente.</p></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Tema 7 · Calculadora de pensión de Clases Pasivas ===== */
+const PCT=[0,1.24,2.55,3.88,5.31,6.83,8.43,10.11,11.88,13.73,15.67,17.71,19.86,22.10,24.45,26.92,30.57,34.23,37.88,41.54,45.19,48.84,52.52,56.15,59.81,63.46,67.11,70.77,74.42,78.08,81.73,85.38,89.04,92.69,96.35,100];
+const HR={2025:{A1:51311.65,A2:40383.55,B:35362.35,C1:31015.26,C2:24538.21,"E/AP":20920.79},
+          2026:{A1:52697.06,A2:41473.91,B:36317.13,C1:31852.67,C2:25200.74,"E/AP":21485.65}};
+const PMAX=47034.40;
+(function(){
+  const g=document.getElementById("pc-g");if(!g)return;
+  ["A1","A2","B","C1","C2","E/AP"].forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=k;if(k==="C1")o.selected=true;g.appendChild(o)});
+  const y=document.getElementById("pc-y"),a=document.getElementById("pc-a");
+  const eur=n=>n.toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €";
+  function calc(){
+    const yrs=+a.value,hr=HR[y.value][g.value],pct=PCT[Math.min(35,yrs)];
+    document.getElementById("pc-yv").textContent=yrs;
+    document.getElementById("pc-bar").style.width=pct+"%";
+    let anual=hr*pct/100,capped=false;
+    if(y.value==="2026"&&anual>PMAX){anual=PMAX;capped=true}
+    const ok=yrs>=15;
+    document.getElementById("pc-pct").textContent=pct.toFixed(2).replace(".",",")+" %";
+    document.getElementById("pc-anual").textContent=ok?eur(anual):"Sin derecho";
+    document.getElementById("pc-mes").textContent=ok?eur(anual/14):"—";
+    document.getElementById("pc-viu").textContent=eur(anual/14*0.5);
+    document.getElementById("pc-orf").textContent=eur(anual/14*0.25);
+    document.getElementById("pc-msg").textContent=(ok?`Haber regulador ${g.value} (${y.value}): ${eur(hr)} × ${pct.toFixed(2).replace(".",",")} %.`:`Con ${yrs} años no hay pensión ordinaria de jubilación: la carencia es de 15 años. Las pensiones en favor de familiares no exigen carencia, por eso se muestran.`)+(capped?" Se aplica el tope máximo de pensión pública de 2026 (47.034,40 €/año).":"")+(yrs>35?" A partir de 35 años el porcentaje ya es el 100 %.":"");
+  }
+  [g,y,a].forEach(el=>el.addEventListener("input",calc));calc();
+})();
+
+/* ===== Fichas ===== */
+const DATA={fichas:[
+ {p:"¿Qué dos mecanismos integran el régimen especial de los funcionarios civiles del Estado?",r:"El Régimen de Clases Pasivas (RDLeg 670/1987), que da las pensiones, y el mutualismo administrativo gestionado por MUFACE (RDLeg 4/2000 y RD 375/2003)."},
+ {p:"¿Qué cambió para quienes ingresan desde el 1 de enero de 2011?",r:"Siguen en MUFACE para la asistencia sanitaria y la IT, pero a efectos de pensiones quedan en el Régimen General de la Seguridad Social, no en Clases Pasivas (art. 20.1 RDL 13/2010)."},
+ {p:"¿Quiénes están incluidos obligatoriamente en MUFACE?",r:"Los funcionarios de carrera de la Administración Civil del Estado; los funcionarios en prácticas de esos cuerpos (desde el inicio de las prácticas); y colectivos especiales como los interinos del Decreto-Ley 10/1965."},
+ {p:"¿Qué funcionarios están excluidos de MUFACE?",r:"Los de la Administración Local, organismos autónomos, Administración Militar, Justicia y Seguridad Social; los de nuevo ingreso y en prácticas de las CCAA; los transferidos que ingresan voluntariamente en cuerpos de la CA; y el PAS propio de las universidades."},
+ {p:"¿Qué ocurre con el funcionario en prácticas que no llega a ser de carrera?",r:"Causa baja en MUFACE, salvo que ya fuera mutualista antes."},
+ {p:"¿Qué régimen tienen los funcionarios transferidos a las CCAA?",r:"Conservan su régimen de Seguridad Social y la CA asume las obligaciones del Estado. Si ingresan voluntariamente en cuerpos de la CA, pasan al Régimen General."},
+ {p:"¿Puede seguir en MUFACE quien promociona a un cuerpo de la CA o a una escala de un OA?",r:"Pasa obligatoriamente al Régimen General, pero puede mantener la condición de mutualista optando una sola vez en 15 días desde la toma de posesión. Eso no le incluye en Clases Pasivas."},
+ {p:"¿Qué es el cómputo recíproco de cotizaciones?",r:"La suma, a petición del interesado, de periodos no superpuestos cotizados en distintos regímenes, para tener derecho a la pensión y fijar el porcentaje (RD 691/1991). Resuelve el régimen de las últimas cotizaciones; si fueron simultáneas, el de mayor periodo."},
+ {p:"¿Qué naturaleza tiene MUFACE?",r:"Es un organismo público con personalidad jurídica pública, patrimonio y tesorería propios y autonomía de gestión, adscrito al Ministerio de Función Pública a través de la Secretaría de Estado de Función Pública. Tiene el tratamiento fiscal del Estado."},
+ {p:"¿Qué prestaciones da el mutualismo administrativo (art. 12 RDLeg 4/2000)?",r:"Asistencia sanitaria; subsidio por IT y por riesgo en el embarazo o la lactancia; prestaciones recuperadoras por incapacidad permanente; remuneración del cuidador del gran inválido; indemnizaciones por lesiones; servicios sociales; asistencia social; prestación por hijo a cargo con discapacidad; y ayudas por parto múltiple."},
+ {p:"¿Qué prestación de MUFACE se financia con los PGE y no con cotizaciones?",r:"La prestación familiar por hijo a cargo con discapacidad."},
+ {p:"¿En qué situaciones se mantiene el alta en MUFACE con los mismos derechos?",r:"Servicios especiales, servicio en CCAA, expectativa de destino, excedencia forzosa, excedencia por cuidado de familiares y suspensión provisional o firme. Los jubilados siguen de alta, pero sin cotizar."},
+ {p:"¿Quién causa baja obligatoria en MUFACE?",r:"Quien pasa a excedencia voluntaria (salvo cuidado de familiares), quien pierde la condición de funcionario, quien transfiere sus derechos al régimen de la UE y quien se afilia obligatoriamente al régimen de las Fuerzas Armadas."},
+ {p:"¿Quién no está obligado a cotizar a MUFACE?",r:"Los mutualistas jubilados y los excedentes por cuidado de hijos o familiares. La obligación se suspende en la licencia por asuntos propios y en la suspensión firme; después se paga lo debido."},
+ {p:"¿Cuáles son los tipos de cotización a MUFACE según el manual?",r:"El mutualista, el 1,69 %; el Estado, el 6,59 % (4,10 % por activo y 2,49 % por pensionista exento), según la LPGE 2023 prorrogada. La base es el haber regulador del grupo."},
+ {p:"¿Cómo se calcula la cuota mensual a MUFACE?",r:"Se aplica el tipo a la base anual y se divide entre 14; se paga doble en junio y diciembre. Si la paga extra se reduce por no estar todo el semestre en activo, la cuota se reduce igual. En las licencias sin sueldo no se reduce."},
+ {p:"¿Cómo presta MUFACE la asistencia sanitaria?",r:"Directamente o mediante conciertos con entidades públicas o privadas, preferentemente con la Seguridad Social. No paga los servicios distintos de los asignados que se usen por decisión propia."},
+ {p:"¿Es compatible ser beneficiario de MUFACE y del Sistema Nacional de Salud?",r:"No: ser beneficiario a cargo de un mutualista es incompatible con serlo del SNS por otro título. El recién nacido, adoptado o acogido está cubierto los 15 primeros días."},
+ {p:"¿Qué requisitos tiene la incapacidad temporal en MUFACE?",r:"Que un proceso patológico o una lesión impida temporalmente trabajar, recibir asistencia sanitaria de MUFACE y tener licencia por enfermedad (art. 88 RD 375/2003)."},
+ {p:"¿Qué cobra un funcionario en IT?",r:"Los 3 primeros meses, las retribuciones íntegras a cargo de la Administración (100 % por el acuerdo de 2018). Desde el 4.º mes, las básicas a cargo de la Administración y un subsidio de MUFACE fijo e invariable."},
+ {p:"¿Cuánto es el subsidio de IT de MUFACE?",r:"La cifra mayor entre el 80 % de las retribuciones básicas (con ⅙ de paga extra) y el 75 % de las complementarias del tercer mes. Por donación de órganos, el 100 % de las complementarias. La suma nunca supera lo cobrado en el tercer mes."},
+ {p:"¿Cuánto dura como máximo la IT?",r:"365 días, prorrogables 180 días más."},
+ {p:"¿Cuándo se extingue el derecho a la prestación por IT?",r:"Al terminar la licencia, por jubilación, fallecimiento, una nueva IT, agotamiento de la duración máxima o incomparecencia injustificada a reconocimientos. Se deniega o suspende por fraude o por trabajar."},
+ {p:"¿Qué cobra la funcionaria en riesgo durante el embarazo o la lactancia?",r:"Los mismos derechos que en la IT, pero el subsidio de MUFACE es el 100 % de las retribuciones complementarias del tercer mes. Se trata como enfermedad profesional, sin carencia."},
+ {p:"¿Qué es la gran invalidez y qué prestación tiene?",r:"La del jubilado por incapacidad que pierde la vista de ambos ojos, las dos extremidades superiores o inferiores, o necesita ayuda para los actos esenciales. Recibe al mes (con 2 pagas extra) el 50 % de su pensión para pagar al cuidador. Sin pensión de Clases Pasivas, necesita 9 años cotizados."},
+ {p:"¿Qué indemnización hay por lesiones permanentes no invalidantes?",r:"Una sola vez: la cantidad del baremo del Régimen General o, si constituyen incapacidad permanente parcial, 24 mensualidades de la base de cotización."},
+ {p:"¿Qué servicios sociales presta MUFACE?",r:"Acción formativa, asistencia al pensionista, prestaciones por fallecimiento y programas sociosanitarios. La asistencia social da ayudas a quien carece de recursos, dentro del crédito del ejercicio."},
+ {p:"¿Cómo se compone el Consejo General de MUFACE?",r:"Preside el Secretario de Estado de Función Pública; Vicepresidente 1.º, el Director General de MUFACE; 7 representantes de la Administración; 9 representantes sindicales mutualistas, que eligen al Vicepresidente 2.º. Secretario: el Secretario General, con voz sin voto."},
+ {p:"¿Qué hace la Comisión Permanente de MUFACE?",r:"Presidida por el Director General, vela por los acuerdos del Consejo General, propone medidas e informa las convocatorias de prestaciones anuales y los asuntos que le someta la Dirección."},
+ {p:"¿Cómo se nombra al Director General de MUFACE y qué hace?",r:"Se nombra y cesa libremente por Real Decreto, a propuesta del Ministro de Función Pública. Representa, dirige y gestiona; resuelve afiliaciones; reconoce prestaciones; celebra conciertos; elabora el presupuesto y la memoria."},
+ {p:"¿Cada cuánto se reúnen las Comisiones Provinciales de MUFACE y qué hacen?",r:"Al menos cada dos meses. Aplican los acuerdos en la provincia y definen los criterios de las ayudas de asistencia social."},
+ {p:"¿Qué riesgos cubre el Régimen de Clases Pasivas?",r:"Vejez, incapacidad, muerte y supervivencia, con pensiones de jubilación o retiro, viudedad, orfandad y en favor de los padres."},
+ {p:"¿Qué caracteres tienen los derechos pasivos?",r:"Son inembargables, irrenunciables, inalienables e imprescriptibles; solo nacen, se transmiten y se extinguen por las causas de la ley."},
+ {p:"¿Qué retroactividad tienen los efectos económicos de los derechos pasivos?",r:"Como máximo, 3 meses desde el primer día del mes siguiente a la solicitud."},
+ {p:"¿En qué plazo reclaman los herederos los haberes devengados y no cobrados?",r:"En 5 años desde el día siguiente al fallecimiento; después prescriben."},
+ {p:"¿Quién reconoce y quién paga las pensiones de Clases Pasivas?",r:"Las reconoce el INSS, que también gestiona los créditos y propone los pagos. Ordena el pago y lo realiza materialmente la TGSS."},
+ {p:"¿Qué efecto tiene el silencio en el reconocimiento de derechos pasivos?",r:"Desestimatorio: si no hay resolución expresa en plazo, se entiende denegada."},
+ {p:"¿Qué recursos caben contra los acuerdos del INSS en Clases Pasivas?",r:"Ponen fin a la vía administrativa: recurso potestativo de reposición ante el INSS y recurso contencioso-administrativo."},
+ {p:"¿Quién reconoce los servicios prestados en la Administración Civil del Estado?",r:"Los Subsecretarios (servicios centrales y OOAA) y los Delegados del Gobierno (servicios periféricos). El cómputo final en Clases Pasivas es exclusivo del INSS."},
+ {p:"¿Cuánto es la cuota de derechos pasivos?",r:"El 3,86 % del haber regulador, dividido en 14 pagas (doble en junio y diciembre) y retenido en nómina."},
+ {p:"¿Cuándo se devengan las pensiones?",r:"El primer día del mes siguiente a la jubilación (o al fallecimiento, en viudedad y orfandad). Se cobran 12 mensualidades más 2 extraordinarias en junio y diciembre."},
+ {p:"¿Cuál es la incompatibilidad interna de pensiones de Clases Pasivas?",r:"No se pueden cobrar más de 3 pensiones ordinarias causadas por personas distintas, ni 2 o más causadas por la misma persona."},
+ {p:"¿Cuáles son los tipos de jubilación en Clases Pasivas?",r:"Forzosa (automática a la edad legal, como máximo a los 70); voluntaria (60 años y 30 de servicios); y por incapacidad permanente para el servicio (de oficio o a instancia, con dictamen médico preceptivo y vinculante)."},
+ {p:"¿Cuál es el periodo de carencia de la pensión de jubilación?",r:"15 años de servicios efectivos al Estado. No se exige en la pensión extraordinaria ni en las pensiones en favor de familiares."},
+ {p:"¿Cómo se calcula la pensión con servicios en un solo cuerpo?",r:"Se aplica al haber regulador el porcentaje de la tabla según los años completos (15 años, 26,92 %; 30, 81,73 %; 35 o más, 100 %). La pensión mensual es la anual entre 14."},
+ {p:"¿Cómo se calcula con servicios en varios cuerpos?",r:"P = R1·C1 + (R2 − R1)·C2 + (R3 − R2)·C3…, donde R son los haberes reguladores de cada cuerpo y C los porcentajes de los años desde el acceso a cada uno hasta la jubilación."},
+ {p:"¿Cuál es el haber regulador del C1?",r:"31.852,67 € anuales en 2026 (RDL 16/2025); el manual recoge el de 2025: 31.015,26 €."},
+ {p:"¿Qué es el complemento para la reducción de la brecha de género?",r:"Un complemento por hijo (hasta 4) para mujeres con pensión de jubilación, incapacidad o viudedad (no voluntaria), y para hombres con requisitos de perjuicio en la carrera. En 2026, 36,90 €/mes por hijo, en 14 pagas."},
+ {p:"¿Es compatible la pensión de jubilación con trabajar?",r:"Por regla general, no. La jubilación activa solo cabe en la forzosa por edad si se accedió al menos 1 año después: 45 % con 1 año de demora, 55 % con 2, 65 % con 3, 80 % con 4 y 100 % con 5, más 5 puntos por cada año en jubilación activa. La actividad artística es compatible al 100 %."},
+ {p:"¿Puede trabajar quien cobra una pensión por incapacidad permanente?",r:"Solo en una actividad distinta si no está incapacitado para toda profesión: la pensión se reduce al 75 % (más de 20 años de servicios) o al 55 % (menos de 20)."},
+ {p:"¿Qué requisitos tiene la pensión de viudedad?",r:"Ser cónyuge superviviente. Si la muerte deriva de una enfermedad común anterior al matrimonio, 1 año de matrimonio (salvo hijos comunes o más de 2 años sumando la convivencia). Si no, prestación temporal de 2 años. Cuantía: 50 % de la pensión del causante."},
+ {p:"¿Cuándo tiene derecho a viudedad la pareja de hecho?",r:"Con convivencia estable e ininterrumpida de 5 años (salvo hijos comunes) y con la pareja inscrita o constituida en documento público al menos 2 años antes del fallecimiento."},
+ {p:"¿Qué ocurre con la viudedad si hay varios beneficiarios por divorcio?",r:"Se reparte en proporción al tiempo convivido con el causante, garantizando el 40 % al cónyuge o pareja superviviente."},
+ {p:"¿Quién tiene derecho a la pensión de orfandad y cuánto es?",r:"Los hijos menores de 21 años o incapacitados (hasta 25 si no tienen ingresos suficientes). Un hijo, 25 %; varios, 10 % cada uno más un 15 % repartido. Tope: 50 % con cónyuge y 100 % sin él."},
+ {p:"¿Cuándo se paga la pensión en favor de los padres y cuánto es?",r:"Si dependían económicamente del causante y no hay cónyuge ni hijos con derecho. Es el 15 % de la pensión del causante (7,5 % si era extraordinaria), sin derecho de acrecer."},
+ {p:"¿Qué caracteriza a las pensiones extraordinarias?",r:"Se causan por incapacidad, muerte o desaparición en acto de servicio; no exigen carencia; su base es el 200 % del haber regulador; tienen derecho de acrecer y las concede solo el INSS."},
+ {p:"¿Quién acuerda la jubilación forzosa de un funcionario de la AGE?",r:"El Subsecretario del Departamento si está en servicios centrales, o el Delegado o Subdelegado del Gobierno si está en servicios periféricos. El procedimiento se inicia de oficio 6 meses antes de la edad."},
+ {p:"¿Qué datos del manual están desactualizados o tienen erratas?",r:"Haberes reguladores y complemento de brecha de 2025 (hoy, los de 2026: C1 31.852,67 € y 36,90 €). La fórmula de varios cuerpos tiene una errata: es (R2 − R1)·C2, no (R2 − R3)·C2. MUFACE ya no se rige por la Ley 6/1997, sino por la Ley 40/2015."}
+]};
+
+/* ===== Tests ===== */
+const T1=[
+ {q:"El régimen especial de Seguridad Social de los funcionarios civiles del Estado está integrado por:",o:["El Régimen General y MUFACE.","El Régimen de Clases Pasivas y el mutualismo administrativo.","ISFAS y MUGEJU.","El INSS y la TGSS."],c:1,e:"Clases Pasivas (pensiones) y MUFACE (mutualismo)."},
+ {q:"Los funcionarios de la Administración Civil del Estado ingresados desde el 1 de enero de 2011:",o:["Siguen en Clases Pasivas.","Están en el Régimen General a efectos de pensiones, pero mantienen MUFACE para sanidad e IT.","Salen de MUFACE.","Eligen régimen."],c:1,e:"Art. 20.1 RDL 13/2010."},
+ {q:"Los funcionarios en prácticas se afilian a MUFACE con efectos desde:",o:["La toma de posesión como funcionarios de carrera.","El inicio del periodo de prácticas.","La publicación de la lista de aprobados.","La solicitud de la oposición."],c:1,e:"Salvo que ya fueran mutualistas."},
+ {q:"Están excluidos del mutualismo administrativo los funcionarios de:",o:["La Administración Civil del Estado.","La Administración Local.","Los cuerpos generales de la AGE.","En prácticas de la AGE."],c:1,e:"También los de OOAA, Militar, Justicia y Seguridad Social."},
+ {q:"Los funcionarios de la Administración de Justicia:",o:["Están en MUFACE.","Están excluidos de MUFACE (tienen su propia mutualidad).","Están en ISFAS.","No tienen mutualidad."],c:1,e:"Se rigen por sus normas específicas."},
+ {q:"El personal de administración y servicios propio de las universidades:",o:["Está en MUFACE.","Está excluido del mutualismo administrativo de MUFACE.","Está en Clases Pasivas.","Opta libremente."],c:1,e:"RD 375/2003."},
+ {q:"Los funcionarios transferidos a las CCAA:",o:["Pasan al Régimen General.","Continúan con su régimen de Seguridad Social, asumiendo la CA las obligaciones del Estado.","Pierden MUFACE.","Pasan a MUGEJU."],c:1,e:"Salvo que ingresen voluntariamente en cuerpos de la CA."},
+ {q:"Un funcionario transferido que promociona a un cuerpo de la CA puede seguir en MUFACE si opta en el plazo de:",o:["1 mes.","15 días desde la toma de posesión.","3 meses.","10 días hábiles."],c:1,e:"Por una sola vez, sin volver a Clases Pasivas."},
+ {q:"En el cómputo recíproco de cotizaciones, la pensión la reconoce:",o:["Siempre el INSS.","El régimen al que se hicieron las últimas cotizaciones.","El de mayor cuantía.","El que elija el interesado."],c:1,e:"Si fueron simultáneas, el de mayor periodo cotizado."},
+ {q:"El cómputo recíproco de cotizaciones exige que los periodos:",o:["Se superpongan.","No se superpongan.","Sean de más de 15 años.","Sean del mismo régimen."],c:1,e:"RD 691/1991."},
+ {q:"Queda excluida del cómputo recíproco:",o:["La pensión de jubilación.","La pensión de jubilación parcial del sistema de la Seguridad Social.","La pensión de viudedad.","La de incapacidad."],c:1,e:"Y las prestaciones a nietos, hermanos, abuelos e hijos sin orfandad."},
+ {q:"Los funcionarios de la Administración de la Seguridad Social están encuadrados en:",o:["MUFACE y Clases Pasivas.","El Régimen General de la Seguridad Social.","ISFAS.","MUGEJU."],c:1,e:"Igual que los de organismos públicos."},
+ {q:"Los funcionarios de nuevo ingreso y en prácticas de las CCAA:",o:["Se afilian a MUFACE.","Están excluidos de MUFACE.","Están en Clases Pasivas.","Optan."],c:1,e:"RD 375/2003."},
+ {q:"Quien promociona a una escala de un organismo autónomo:",o:["Mantiene obligatoriamente Clases Pasivas.","Queda en el Régimen General, pudiendo mantener la condición de mutualista.","Pierde la condición de funcionario.","Pasa a ISFAS."],c:1,e:"Según el manual."},
+ {q:"El cómputo recíproco de cotizaciones se regula en:",o:["El RD 375/2003.","El RD 691/1991.","El RDLeg 4/2000.","La Ley 30/1984."],c:1,e:"Se extiende también a militares, Justicia, Cortes y Tribunal Constitucional."},
+ {q:"Los funcionarios de organismos autónomos:",o:["Están en MUFACE.","Están excluidos del mutualismo administrativo de MUFACE.","Están en MUGEJU.","Están en Clases Pasivas siempre."],c:1,e:"RD 375/2003."},
+ {q:"La totalización de periodos en distintos regímenes sirve para:",o:["Cobrar dos pensiones.","Adquirir el derecho a pensión y determinar el porcentaje aplicable.","Aumentar la cotización.","Jubilarse antes de los 60."],c:1,e:"RD 691/1991."},
+ {q:"Si en el régimen de las últimas cotizaciones no se cumplen los requisitos:",o:["Se deniega.","Resuelve el otro régimen, aplicando sus normas y la totalización.","Se archiva.","Decide el juez."],c:1,e:"RD 691/1991."},
+ {q:"La legislación básica del mutualismo administrativo es:",o:["La Ley 53/1984.","El RDLeg 4/2000 y el RD 375/2003.","El RDLeg 670/1987.","El RD 33/1986."],c:1,e:"El RDLeg 670/1987 es el de Clases Pasivas."},
+ {q:"Los interinos del art. 1 del Decreto-Ley 10/1965:",o:["Están excluidos.","Están incluidos en el mutualismo administrativo.","Están en el Régimen General.","Están en MUGEJU."],c:1,e:"Supuesto especial de encuadramiento."}
+];
+
+const T2=[
+ {q:"MUFACE está adscrita al Ministerio competente en función pública a través de:",o:["La Subsecretaría.","La Secretaría de Estado de Función Pública.","La DGFP.","El INSS."],c:1,e:"Es un organismo público con autonomía de gestión."},
+ {q:"MUFACE tiene, en materia fiscal:",o:["El tratamiento de una sociedad.","El mismo tratamiento fiscal que el Estado.","Exención parcial.","Tributación ordinaria."],c:1,e:"Art. 4 RDLeg 4/2000."},
+ {q:"La prestación de MUFACE financiada con cargo a los PGE es:",o:["La asistencia sanitaria.","La prestación familiar por hijo a cargo con discapacidad.","El subsidio de IT.","La asistencia social."],c:1,e:"Las demás se financian con cotizaciones."},
+ {q:"El funcionario conserva el alta en MUFACE con los mismos derechos en:",o:["Excedencia por interés particular.","Expectativa de destino.","Excedencia por agrupación familiar.","Pérdida de la condición."],c:1,e:"También en servicios especiales, servicio en CCAA, excedencia forzosa, cuidado de familiares y suspensión."},
+ {q:"Causa baja obligatoria en MUFACE quien pasa a:",o:["Suspensión firme.","Excedencia voluntaria por interés particular.","Excedencia forzosa.","Servicios especiales."],c:1,e:"Salvo la excedencia por cuidado de familiares."},
+ {q:"Los mutualistas jubilados:",o:["Causan baja.","Conservan la condición de mutualista sin obligación de cotizar.","Cotizan al 1,69 %.","Cotizan el doble."],c:1,e:"RDLeg 4/2000."},
+ {q:"La obligación de cotizar a MUFACE queda suspendida durante:",o:["Las vacaciones.","La licencia por asuntos propios y la suspensión firme.","La IT.","Los permisos por nacimiento."],c:1,e:"Después se pagan cuota corriente y cuota atrasada."},
+ {q:"Si desde la suspensión firme pasa a excedencia voluntaria, las cotizaciones adeudadas se ingresan en:",o:["10 días.","1 mes desde la notificación de la liquidación.","3 meses.","6 meses."],c:1,e:"Si no, vía de apremio."},
+ {q:"La base de cotización a MUFACE es:",o:["El salario real.","El haber regulador fijado en la LPGE para cada grupo.","El sueldo base.","El SMI."],c:1,e:"Art. 10 RDLeg 4/2000."},
+ {q:"Según el manual, el tipo de cotización del mutualista es:",o:["3,86 %.","1,69 %.","6,59 %.","4,70 %."],c:1,e:"El Estado aporta el 6,59 %."},
+ {q:"La cuota mensual a MUFACE se obtiene dividiendo la anual entre:",o:["12.","14.","13.","11."],c:1,e:"Se paga doble en junio y diciembre."},
+ {q:"Las cuotas de los periodos de licencia sin retribución:",o:["Se reducen a la mitad.","No se reducen.","No se pagan.","Las paga el Estado."],c:1,e:"RDLeg 4/2000."},
+ {q:"Preside el Consejo General de MUFACE:",o:["El Director General de MUFACE.","El titular de la Secretaría de Estado de Función Pública.","El Ministro.","Un representante sindical."],c:1,e:"El Director General es Vicepresidente 1.º."},
+ {q:"El número de representantes sindicales en el Consejo General de MUFACE es:",o:["7.","9.","5.","12."],c:1,e:"Y 7 de la Administración."},
+ {q:"El Vicepresidente 2.º del Consejo General lo eligen:",o:["El Ministro.","Los representantes de los funcionarios, de entre ellos.","El Director General.","El Consejo de Ministros."],c:1,e:"RD 577/1997."},
+ {q:"La Comisión Permanente de MUFACE la preside:",o:["El Secretario de Estado.","El Director General de MUFACE.","Un sindicalista.","El Secretario General."],c:1,e:"RD 577/1997."},
+ {q:"El Director General de MUFACE es nombrado y separado:",o:["Por Orden ministerial.","Libremente por Real Decreto, a propuesta del Ministro de Función Pública.","Por el Consejo General.","Por concurso."],c:1,e:"RD 577/1997."},
+ {q:"Para enajenar bienes de MUFACE que ya no son útiles se necesita:",o:["Solo la decisión del Director.","Informe del Consejo General y autorización del Consejo de Ministros.","Autorización del Ministro de Hacienda.","Subasta judicial."],c:1,e:"RD 577/1997."},
+ {q:"Las Comisiones Provinciales de MUFACE se reúnen, al menos:",o:["Mensualmente.","Bimestralmente.","Trimestralmente.","Anualmente."],c:1,e:"RD 577/1997."},
+ {q:"Corresponde a las Comisiones Provinciales:",o:["Aprobar el presupuesto.","Definir los criterios de las ayudas de asistencia social en la provincia.","Nombrar al Director.","Fijar la cotización."],c:1,e:"Con sujeción a los créditos asignados."}
+];
+
+const T3=[
+ {q:"Las contingencias cubiertas por la asistencia sanitaria de MUFACE incluyen:",o:["Solo la enfermedad común.","Enfermedad común o profesional, accidente común o en acto de servicio, y embarazo, parto y puerperio.","Solo el accidente de trabajo.","Solo la hospitalización."],c:1,e:"RDLeg 4/2000."},
+ {q:"MUFACE presta la asistencia sanitaria:",o:["Solo directamente.","Directamente o por concierto, preferentemente con instituciones de la Seguridad Social.","Solo con aseguradoras privadas.","A través del INSS."],c:1,e:"RDLeg 4/2000."},
+ {q:"Ser beneficiario de MUFACE a cargo de un mutualista es, respecto del Sistema Nacional de Salud por otro título:",o:["Compatible.","Incompatible.","Opcional.","Acumulable."],c:1,e:"RDLeg 4/2000."},
+ {q:"El recién nacido de una mutualista tiene asistencia de MUFACE, aunque no sea beneficiario, durante:",o:["1 mes.","15 días.","3 meses.","1 año."],c:1,e:"También en adopción o acogimiento."},
+ {q:"La cirugía estética se incluye en la asistencia por enfermedad común si:",o:["Siempre.","Guarda relación con accidente, enfermedad o malformación congénita.","La pide el mutualista.","Nunca."],c:1,e:"Art. 74 RD 375/2003."},
+ {q:"En la prestación farmacéutica, los beneficiarios:",o:["No pagan nada.","Participan con una cantidad porcentual por receta o por medicamento.","Pagan el 100 %.","Pagan una cuota fija mensual."],c:1,e:"RD 375/2003."},
+ {q:"Para estar en IT en MUFACE se requiere, entre otras cosas:",o:["Solo la baja médica.","Haber obtenido una licencia por enfermedad.","Llevar 1 año cotizando.","Autorización sindical."],c:1,e:"Y recibir asistencia de MUFACE."},
+ {q:"Es situación especial de IT la gestación desde el primer día de la semana:",o:["37.","39.","35.","40."],c:1,e:"Art. 169.1.a TRLGSS."},
+ {q:"Durante los tres primeros meses de IT, el funcionario percibe:",o:["El 75 %.","Sus retribuciones íntegras a cargo de la Administración.","El subsidio de MUFACE.","Las básicas."],c:1,e:"Tras el acuerdo de la Mesa General de 2018, el 100 %."},
+ {q:"El subsidio de IT de MUFACE empieza a percibirse:",o:["Desde el primer día.","A partir del cuarto mes.","Al sexto mes.","Al año."],c:1,e:"Junto a las básicas a cargo de la Administración."},
+ {q:"El subsidio de IT de MUFACE consiste en la mayor de dos cantidades: el 80 % de las básicas (+⅙ de paga extra) o:",o:["El 50 % de las complementarias.","El 75 % de las complementarias del tercer mes.","El 100 % del sueldo.","El 60 % del total."],c:1,e:"Art. 90 RD 375/2003 (según el manual)."},
+ {q:"En la IT por donación de órganos, el subsidio de MUFACE es:",o:["El 75 % de las complementarias.","El 100 % de las retribuciones complementarias.","El 80 % de las básicas.","Nada."],c:1,e:"Nueva contingencia protegida."},
+ {q:"La duración máxima de la IT es de:",o:["12 meses.","365 días, prorrogables 180 más.","18 meses improrrogables.","24 meses."],c:1,e:"Según el manual."},
+ {q:"La suma de lo que paga la Administración y el subsidio durante la IT:",o:["Puede superar lo cobrado en activo.","No puede superar lo cobrado en el tercer mes de licencia.","Es siempre el 80 %.","Es libre."],c:1,e:"RD 375/2003."},
+ {q:"NO es causa de extinción del derecho a la prestación por IT:",o:["La jubilación.","El fallecimiento.","Disfrutar las vacaciones.","La incomparecencia injustificada a los reconocimientos."],c:2,e:"Las vacaciones no extinguen la IT."},
+ {q:"Se deniega, anula o suspende la prestación de IT cuando el beneficiario:",o:["Va al médico privado.","Trabaja por cuenta propia o ajena, o actúa con fraude.","Se cambia de domicilio.","Tiene hijos."],c:1,e:"RD 375/2003."},
+ {q:"La situación de riesgo durante el embarazo se considera, a efectos de MUFACE, como:",o:["IT por enfermedad común.","IT derivada de enfermedad profesional.","Accidente común.","Permiso retribuido."],c:1,e:"Sin periodos mínimos de cotización."},
+ {q:"En el riesgo durante el embarazo o la lactancia, el subsidio de MUFACE es:",o:["El 75 % de las complementarias.","El 100 % de las retribuciones complementarias del tercer mes.","El 80 % de las básicas.","El 50 %."],c:1,e:"RD 375/2003."},
+ {q:"Las prestaciones por IT, riesgo en el embarazo y riesgo en la lactancia son:",o:["Acumulables.","Incompatibles entre sí.","Compatibles al 50 %.","Sucesivas automáticamente."],c:1,e:"No se reconoce la nueva hasta que se extinga la anterior."},
+ {q:"No es situación protegida de riesgo durante el embarazo el riesgo:",o:["Derivado del puesto de trabajo.","No relacionado con los agentes o condiciones del puesto.","Químico del laboratorio.","Por radiaciones."],c:1,e:"RD 375/2003."}
+];
+
+const T4=[
+ {q:"La incapacidad permanente debe derivarse, cualquiera que sea su causa, de:",o:["Un accidente.","Una situación de incapacidad temporal.","Una sentencia.","Una sanción."],c:1,e:"Tras el tratamiento y el alta médica."},
+ {q:"No impide calificar una incapacidad como permanente:",o:["La curación total.","Que la recuperación de la capacidad sea médicamente incierta o a largo plazo.","El alta voluntaria.","La jubilación previa."],c:1,e:"RD 375/2003."},
+ {q:"Es gran invalidez:",o:["La pérdida de un ojo.","La pérdida total de la visión de ambos ojos.","La pérdida de un dedo.","Una IT de un año."],c:1,e:"También la pérdida de las dos extremidades superiores o inferiores."},
+ {q:"La prestación para el cuidador del gran inválido equivale al:",o:["25 % de la pensión.","50 % de la pensión de jubilación.","100 % del SMI.","75 % del haber."],c:1,e:"Mensual, con dos pagas extra, a cargo de MUFACE."},
+ {q:"Si el gran inválido no tiene pensión de Clases Pasivas, para la prestación necesita acreditar una cotización previa de:",o:["5 años.","9 años.","15 años.","2 años."],c:1,e:"RD 375/2003."},
+ {q:"La indemnización por lesiones permanentes no invalidantes se abona:",o:["Mensualmente.","Por una sola vez.","Anualmente.","En 14 pagas."],c:1,e:"Según el baremo o 24 mensualidades."},
+ {q:"Si las lesiones constituyen incapacidad permanente parcial, la indemnización equivale a:",o:["12 mensualidades.","24 mensualidades de la base de cotización.","36 mensualidades.","6 mensualidades."],c:1,e:"Art. 110 RD 375/2003."},
+ {q:"Las indemnizaciones por lesiones no invalidantes exigen que las lesiones se deban a:",o:["Cualquier causa.","Enfermedad profesional o acto de servicio (o como consecuencia de él).","Un accidente doméstico.","Una enfermedad común."],c:1,e:"RDLeg 4/2000."},
+ {q:"Las ayudas por parto múltiple de MUFACE son:",o:["De pago periódico.","De pago único (subsidio especial y prestación económica).","Mensuales hasta los 3 años.","Préstamos."],c:1,e:"RD 375/2003."},
+ {q:"La prestación familiar por hijo a cargo con discapacidad es de pago:",o:["Único.","Periódico.","Trimestral.","Anual voluntario."],c:1,e:"RD 375/2003."},
+ {q:"Es un servicio social de MUFACE:",o:["La IT.","La asistencia al pensionista.","La gran invalidez.","El parto múltiple."],c:1,e:"Junto con la acción formativa, las prestaciones por fallecimiento y los programas sociosanitarios."},
+ {q:"Para obtener ayudas de asistencia social de MUFACE hay que acreditar:",o:["10 años de cotización.","Que se carece de recursos suficientes.","Ser jubilado.","Ser A1."],c:1,e:"Con el límite del crédito presupuestario."},
+ {q:"La concesión de ayudas de asistencia social no puede comprometer:",o:["Fondos del Estado.","Recursos del ejercicio siguiente.","Fondos sindicales.","Cuotas de los mutualistas."],c:1,e:"RDLeg 4/2000."},
+ {q:"La incapacidad permanente parcial del mutualista se declara cuando la limitación alcanza los valores del:",o:["Art. 194.3 TRLGSS.","Art. 30 de la Ley de Clases Pasivas.","RD 33/1986.","TREBEP."],c:0,e:"Hasta su desarrollo reglamentario, la DT 26.ª."},
+ {q:"Las prestaciones de MUFACE que exigen pago se abonan:",o:["En efectivo.","Únicamente en una cuenta o libreta a nombre del beneficiario.","Por cheque siempre.","A través del habilitado con comisión incluida."],c:1,e:"RDLeg 4/2000."},
+ {q:"Los habilitados de Clases Pasivas que cobran prestaciones de MUFACE de sus mandantes deben:",o:["Descontar su comisión.","Abonar el importe íntegro y cobrar sus comisiones por separado.","Retener el IRPF.","Ingresarlo en MUFACE."],c:1,e:"Para prestaciones reconocidas antes de 2011."},
+ {q:"Las prestaciones recuperadoras de MUFACE se dan por incapacidad permanente:",o:["Parcial.","Total, absoluta y gran invalidez.","Solo absoluta.","Temporal."],c:1,e:"Art. 12 RDLeg 4/2000."},
+ {q:"En la asistencia por accidente en acto de servicio se incluye, además:",o:["Solo la atención primaria.","Toda clase de prótesis y órtesis relacionadas con el proceso.","Solo la farmacia.","Nada más que en la común."],c:1,e:"Art. 76 RD 375/2003."},
+ {q:"Las prestaciones del Reglamento del Mutualismo implantadas actualmente son:",o:["Las complementarias.","Las básicas.","Ambas.","Ninguna."],c:1,e:"Según el manual."},
+ {q:"La asistencia sanitaria de MUFACE alcanza a:",o:["Solo a los mutualistas en activo.","A los mutualistas, los jubilados mutualistas y los beneficiarios de ambos.","Solo a los beneficiarios.","A cualquier familiar."],c:1,e:"RDLeg 4/2000."}
+];
+
+const T5=[
+ {q:"El Régimen de Clases Pasivas protege frente a:",o:["La IT.","La vejez, la incapacidad, la muerte y la supervivencia.","El desempleo.","Los accidentes laborales."],c:1,e:"Mediante pensiones."},
+ {q:"Los derechos pasivos son:",o:["Embargables.","Inembargables, irrenunciables, inalienables e imprescriptibles.","Renunciables.","Transmisibles por contrato."],c:1,e:"RDLeg 670/1987."},
+ {q:"Solo pueden establecerse derechos pasivos distintos de los del texto refundido mediante:",o:["Real Decreto.","Ley.","Orden ministerial.","Convenio."],c:1,e:"RDLeg 670/1987."},
+ {q:"La retroactividad máxima de los efectos económicos del reconocimiento de derechos pasivos es de:",o:["1 mes.","3 meses desde el primer día del mes siguiente a la solicitud.","6 meses.","1 año."],c:1,e:"RDLeg 670/1987."},
+ {q:"Los herederos pueden reclamar los haberes devengados y no cobrados por el fallecido en el plazo de:",o:["1 año.","5 años desde el día siguiente al fallecimiento.","3 meses.","10 años."],c:1,e:"Después prescribe."},
+ {q:"Ante prestaciones incompatibles, el interesado:",o:["Pierde todas.","Puede optar por la que estime más conveniente.","Cobra la mayor automáticamente.","Cobra la mitad de cada una."],c:1,e:"Derecho de opción."},
+ {q:"El reconocimiento de derechos pasivos y la concesión de pensiones corresponde a:",o:["MUFACE.","El Instituto Nacional de la Seguridad Social.","La DGFP.","El Ministerio de Hacienda."],c:1,e:"Art. 11 RDLeg 670/1987."},
+ {q:"Si no hay resolución expresa en plazo en un procedimiento de Clases Pasivas, el silencio es:",o:["Estimatorio.","Desestimatorio.","Inexistente.","Positivo parcial."],c:1,e:"Art. 11 RDLeg 670/1987."},
+ {q:"El pago material de las pensiones de Clases Pasivas lo hace:",o:["El INSS.","La Tesorería General de la Seguridad Social.","MUFACE.","El Banco de España."],c:1,e:"El INSS reconoce y propone los pagos."},
+ {q:"Los acuerdos del INSS en materia de Clases Pasivas:",o:["Admiten alzada.","Ponen fin a la vía administrativa; cabe reposición potestativa y contencioso.","Se recurren ante el TEAC.","No son recurribles."],c:1,e:"Art. 14 RDLeg 670/1987."},
+ {q:"Reconocen los servicios prestados en servicios periféricos de la Administración Civil del Estado:",o:["Los Subsecretarios.","Los Delegados del Gobierno.","El INSS.","La DGFP."],c:1,e:"El cómputo final es exclusivo del INSS."},
+ {q:"Las prestaciones de Clases Pasivas son exclusivamente:",o:["Sanitarias.","Económicas y de pago periódico.","En especie.","De pago único."],c:1,e:"RDLeg 670/1987."},
+ {q:"Son pensiones extraordinarias las causadas:",o:["Por jubilación voluntaria.","En acto de servicio o como consecuencia de él.","Por ley para una persona concreta.","Antes de los 60 años."],c:1,e:"Las excepcionales son las reconocidas por ley a una persona determinada."},
+ {q:"La pensión de jubilación se devenga:",o:["El día de la jubilación.","El primer día del mes siguiente al de la jubilación.","Al mes siguiente de solicitarla.","El 1 de enero."],c:1,e:"RDLeg 670/1987."},
+ {q:"La cuota de derechos pasivos es del:",o:["1,69 %.","3,86 % del haber regulador.","6,59 %.","4,70 %."],c:1,e:"Se paga en 14 cuotas."},
+ {q:"La pérdida de la nacionalidad española por el funcionario:",o:["Extingue los derechos pasivos.","No supone la pérdida de los derechos pasivos.","Los reduce a la mitad.","Suspende la pensión."],c:1,e:"Tampoco si la pierden los familiares."},
+ {q:"No pueden percibirse simultáneamente más de cuántas pensiones ordinarias de Clases Pasivas causadas por distintas personas:",o:["2.","3.","4.","5."],c:1,e:"Y no dos o más causadas por la misma persona."},
+ {q:"Si una misma prestación de servicios genera pensión en Clases Pasivas y en otro régimen:",o:["Se cobran ambas.","Hay que optar por una (principio de no duplicidad).","Se suman.","Se cobra la menor."],c:1,e:"Art. 10 RDLeg 670/1987."},
+ {q:"Si la media del IPC fuera negativa, las pensiones al comienzo del año:",o:["Bajan.","No varían.","Suben un 1 %.","Se congelan dos años."],c:1,e:"Revalorización según el IPC medio."},
+ {q:"Los complementos a mínimos de las pensiones de Clases Pasivas exigen:",o:["Tener 70 años.","Residir en territorio español y no superar el límite de ingresos.","Ser viudo.","Haber cotizado 35 años."],c:1,e:"RDLeg 670/1987."}
+];
+
+const T6=[
+ {q:"La jubilación forzosa se declara automáticamente al cumplir la edad legal, como máximo a los:",o:["65.","67.","70.","72."],c:2,e:"RDLeg 670/1987."},
+ {q:"La jubilación voluntaria exige:",o:["55 años y 35 de servicios.","60 años y 30 años de servicios efectivos al Estado.","65 años y 15.","62 años y 25."],c:1,e:"Salvo anticipación por ley."},
+ {q:"La jubilación por incapacidad permanente requiere el dictamen del órgano médico, que es:",o:["Facultativo.","Preceptivo y vinculante.","Preceptivo no vinculante.","Opcional."],c:1,e:"Art. 28.2.c RDLeg 670/1987."},
+ {q:"El periodo de carencia para la pensión ordinaria de jubilación es de:",o:["10 años.","15 años.","20 años.","30 años."],c:1,e:"No se exige en la extraordinaria."},
+ {q:"Según el manual, el haber regulador del subgrupo C1 en 2025 era de:",o:["24.538,21 €.","31.015,26 €.","35.362,35 €.","40.383,55 €."],c:1,e:"En 2026 es de 31.852,67 €."},
+ {q:"Con 30 años de servicio en el mismo cuerpo, el porcentaje del haber regulador es:",o:["70,77 %.","81,73 %.","89,04 %.","100 %."],c:1,e:"Tabla del RDLeg 670/1987."},
+ {q:"Se alcanza el 100 % del haber regulador con:",o:["30 años.","33 años.","35 o más años.","40 años."],c:2,e:"Tabla del RDLeg 670/1987."},
+ {q:"Con 15 años de servicio, el porcentaje es:",o:["15 %.","26,92 %.","30,57 %.","20 %."],c:1,e:"Mínimo para tener derecho a la pensión ordinaria."},
+ {q:"La pensión mensual se obtiene dividiendo la anual entre:",o:["12.","14.","13.","15."],c:1,e:"12 mensualidades más 2 extraordinarias."},
+ {q:"Para quien ha estado en varios cuerpos, la fórmula correcta es:",o:["P = R1·C1 + R2·C2.","P = R1·C1 + (R2 − R1)·C2 + (R3 − R2)·C3…","P = (R1 + R2)·C.","P = R último × C total."],c:1,e:"El manual escribe por errata (R2 − R3)·C2."},
+ {q:"El haber regulador de quien ha trabajado con jornada reducida un año o más:",o:["No cambia.","Se reduce proporcionalmente.","Se duplica.","Se fija en el mínimo."],c:1,e:"RDLeg 670/1987."},
+ {q:"No se considera servicio efectivo al Estado:",o:["Los servicios especiales.","La excedencia forzosa.","El servicio militar obligatorio.","Las cotizaciones no simultáneas a otro régimen."],c:2,e:"Tampoco la prestación social sustitutoria."},
+ {q:"En 2026, el complemento para la reducción de la brecha de género es de:",o:["35,90 € mensuales por hijo.","36,90 € mensuales por hijo, hasta 4.","30 € por hijo.","50 € por hijo."],c:1,e:"El manual da 35,90 € (2025)."},
+ {q:"El complemento de brecha de género NO se reconoce con la pensión de:",o:["Jubilación forzosa.","Incapacidad permanente.","Viudedad.","Jubilación voluntaria."],c:3,e:"Están excluidas las pensiones de jubilación voluntaria."},
+ {q:"El complemento de brecha de género se cobra en:",o:["12 pagas.","14 pagas, con la pensión.","Un pago único.","2 pagas."],c:1,e:"Y no cuenta para el tope de pensión."},
+ {q:"La jubilación activa en Clases Pasivas solo cabe con la jubilación:",o:["Voluntaria.","Forzosa por edad, si se accedió al menos 1 año después de esa edad.","Por incapacidad.","Extraordinaria."],c:1,e:"RDL 11/2024."},
+ {q:"Con 3 años de demora en el acceso a la pensión, la jubilación activa permite cobrar el:",o:["45 %.","55 %.","65 %.","80 %."],c:2,e:"1 año 45 %, 2 años 55 %, 3 años 65 %, 4 años 80 %, 5 años 100 %."},
+ {q:"En la jubilación activa, el porcentaje aumenta por cada 12 meses ininterrumpidos en:",o:["2 puntos.","5 puntos.","10 puntos.","No aumenta."],c:1,e:"Hasta el 100 %."},
+ {q:"La pensión por incapacidad permanente de quien trabaja en otra actividad con más de 20 años de servicios se reduce al:",o:["55 %.","75 %.","50 %.","80 %."],c:1,e:"Con menos de 20 años, al 55 %."},
+ {q:"La pensión afectada por una incompatibilidad se suspende:",o:["Por días.","Por meses completos, desde el día 1 del mes siguiente al inicio de la actividad.","Por años.","Desde la solicitud."],c:1,e:"Si la actividad empieza el día 1, desde ese mismo mes."}
+];
+
+const T7=[
+ {q:"Las pensiones en favor de familiares exigen al causante un periodo de carencia de:",o:["15 años.","Ninguno.","5 años.","1 año."],c:1,e:"RDLeg 670/1987."},
+ {q:"La declaración de ausencia legal del causante:",o:["Genera la pensión.","No genera derechos; solo la declaración de fallecimiento.","Genera la mitad.","Genera la de orfandad."],c:1,e:"RDLeg 670/1987."},
+ {q:"Si el fallecimiento deriva de una enfermedad común anterior al matrimonio, se exige un matrimonio de al menos:",o:["6 meses.","1 año (salvo hijos comunes o más de 2 años sumando la convivencia).","2 años.","5 años."],c:1,e:"RDLeg 670/1987."},
+ {q:"Si el cónyuge no cumple el requisito de duración del matrimonio, tiene derecho a:",o:["Nada.","Una prestación temporal de 2 años, de igual cuantía.","La mitad de la pensión.","Una indemnización única."],c:1,e:"RDLeg 670/1987."},
+ {q:"La pareja de hecho tiene derecho a viudedad si acredita una convivencia ininterrumpida de al menos:",o:["2 años.","5 años (salvo hijos comunes).","1 año.","10 años."],c:1,e:"Y su inscripción con 2 años de antelación."},
+ {q:"Si concurren varios beneficiarios por divorcio, se garantiza al cónyuge superviviente el:",o:["25 %.","40 %.","50 %.","60 %."],c:1,e:"El resto, en proporción al tiempo convivido."},
+ {q:"La pensión de viudedad es el:",o:["25 %.","50 % de la pensión del causante.","75 %.","100 %."],c:1,e:"25 % si el causante tenía una pensión extraordinaria."},
+ {q:"La viudedad se incrementa en 8 puntos si el beneficiario, entre otros requisitos:",o:["Tiene hijos.","Tiene 65 o más años, no cobra otra pensión ni trabaja y no supera el límite de rentas.","Es funcionario.","Tiene menos de 50 años."],c:1,e:"RDLeg 670/1987."},
+ {q:"Tienen derecho a la pensión de orfandad los hijos menores de:",o:["18 años.","21 años (25 si no tienen ingresos suficientes).","23 años.","26 años."],c:1,e:"Y los incapacitados para todo trabajo."},
+ {q:"Con un solo huérfano, la pensión de orfandad es el:",o:["10 %.","15 %.","25 % de la pensión del causante.","50 %."],c:2,e:"Con varios, 10 % cada uno más un 15 % repartido."},
+ {q:"El importe conjunto de las pensiones de orfandad, si hay cónyuge superviviente, no puede superar el:",o:["25 %.","50 % de la base reguladora.","75 %.","100 %."],c:1,e:"Sin cónyuge, el 100 %."},
+ {q:"En la pensión de orfandad:",o:["Hay derecho de acrecer.","No existe derecho de acrecer.","Acrece al cónyuge.","Acrece a los padres."],c:1,e:"RDLeg 670/1987."},
+ {q:"La adopción del huérfano pensionista:",o:["No afecta.","Extingue la pensión desde el primer día del mes siguiente a la resolución judicial.","La duplica.","La suspende un año."],c:1,e:"Con excepciones para huérfanos por violencia contra la mujer."},
+ {q:"La pensión en favor de los padres es el:",o:["10 %.","15 % de la pensión del causante.","25 %.","50 %."],c:1,e:"7,5 % si la pensión del causante era extraordinaria."},
+ {q:"Los padres tienen derecho a pensión si:",o:["Siempre.","Dependían económicamente del causante y no hay cónyuge ni hijos con derecho.","Son mayores de 65 años.","Lo solicitan en 1 mes."],c:1,e:"O cuando estos pierdan el derecho."},
+ {q:"En las pensiones extraordinarias, la base reguladora es el:",o:["100 % del haber regulador.","200 % del haber regulador.","150 %.","50 %."],c:1,e:"Y se permite el derecho de acrecer."},
+ {q:"La concesión o no de una pensión extraordinaria es competencia exclusiva de:",o:["MUFACE.","El INSS.","El Ministro.","El Subsecretario."],c:1,e:"RDLeg 670/1987."},
+ {q:"En las pensiones extraordinarias por terrorismo, la orfandad alcanza a los hijos menores de:",o:["21 años.","23 años.","18 años.","25 años siempre."],c:1,e:"Y hasta 25 sin ingresos suficientes."},
+ {q:"El procedimiento de jubilación forzosa por edad se inicia de oficio:",o:["1 mes antes.","6 meses antes de cumplir la edad.","3 meses antes.","1 año antes."],c:1,e:"Resolución de 29-12-1995."},
+ {q:"La jubilación forzosa de un funcionario de la AGE destinado en servicios periféricos provinciales la acuerda:",o:["El Subsecretario.","El Subdelegado del Gobierno.","El INSS.","MUFACE."],c:1,e:"En servicios regionales, el Delegado del Gobierno."}
+];
+
+const T8=[
+ {q:"Un C1 ingresó en 2005 y se jubila en 2026. ¿Qué régimen paga su pensión de jubilación?",o:["El Régimen General.","Clases Pasivas: ingresó antes del 1-1-2011.","MUFACE.","Ninguno."],c:1,e:"El cambio solo afecta a quienes ingresan desde 2011."},
+ {q:"Una C1 ingresó en 2015. ¿Dónde tiene la asistencia sanitaria y dónde la pensión?",o:["Ambas en MUFACE.","Sanidad en MUFACE y pensión en el Régimen General.","Ambas en el Régimen General.","Sanidad en el SNS y pensión en Clases Pasivas."],c:1,e:"RDL 13/2010."},
+ {q:"Un funcionario C1 (antiguo régimen) se jubila en 2026 con 30 años en el mismo cuerpo. ¿Pensión anual aproximada?",o:["31.852,67 €.","26.033 € (31.852,67 × 81,73 %).","22.500 €.","15.926 €."],c:1,e:"Haber regulador 2026 × 81,73 %."},
+ {q:"Con 12 años de servicios, ¿tiene pensión ordinaria de jubilación?",o:["Sí, el 19,86 %.","No: no cumple la carencia de 15 años.","Sí, el 50 %.","Sí, si es voluntaria."],c:1,e:"Sí la tendrían sus familiares, que no exigen carencia."},
+ {q:"Un funcionario de 61 años con 28 años de servicios pide la jubilación voluntaria. ¿Procede?",o:["Sí.","No: necesita 30 años de servicios efectivos.","Sí, con el 50 %.","Solo si es incentivada."],c:1,e:"60 años y 30 de servicios."},
+ {q:"Un mutualista lleva 4 meses de IT. ¿Quién le paga?",o:["La Administración, el 100 %.","La Administración las básicas y MUFACE un subsidio.","Solo MUFACE.","El INSS."],c:1,e:"El subsidio de MUFACE empieza el 4.º mes."},
+ {q:"Un funcionario pasa a excedencia por interés particular. ¿Qué pasa con MUFACE?",o:["Sigue de alta cotizando.","Causa baja como mutualista obligatorio.","Sigue de alta sin cotizar.","Pasa a beneficiario."],c:1,e:"Excedencia voluntaria = baja (salvo cuidado de familiares)."},
+ {q:"Una funcionaria en excedencia por cuidado de su hija. ¿Qué pasa con MUFACE?",o:["Causa baja.","Sigue de alta sin obligación de cotizar.","Cotiza el doble.","Pasa al Régimen General."],c:1,e:"RDLeg 4/2000."},
+ {q:"Un funcionario disfruta 2 meses de licencia por asuntos propios. ¿Y la cotización?",o:["Se pierde.","Se suspende y después la paga (cuota corriente más atrasada).","La paga el Estado.","Se reduce a la mitad."],c:1,e:"RDLeg 4/2000."},
+ {q:"Fallece un funcionario con pensión teórica de 2.000 €/mes, con cónyuge y dos hijos de 10 y 12 años. ¿Cuánto cobra cada huérfano?",o:["500 € cada uno.","350 € cada uno (10 % + 7,5 % del 15 % repartido).","200 € cada uno.","1.000 € cada uno."],c:1,e:"10 % = 200 € + la mitad del 15 % (150 €) = 350 €; el total (35 %) no supera el tope del 50 % con cónyuge."},
+ {q:"En el mismo caso, ¿cuánto cobra el cónyuge viudo?",o:["500 €.","1.000 € (50 %).","2.000 €.","700 €."],c:1,e:"50 % de la pensión del causante."},
+ {q:"Fallece un funcionario soltero y sin hijos cuya madre dependía de él. Pensión teórica de 2.000 €. ¿Pensión de la madre?",o:["1.000 €.","300 € (15 %).","500 €.","150 €."],c:1,e:"15 % de la pensión del causante."},
+ {q:"Un huérfano de 23 años, estudiante sin ingresos. ¿Tiene pensión de orfandad?",o:["No: se pierde a los 21.","Sí: hasta los 25 si no trabaja o gana menos del SMI.","Solo si es incapaz.","Solo con pensión extraordinaria."],c:1,e:"RDLeg 670/1987."},
+ {q:"Una mujer con 3 hijos se jubila forzosamente en 2026. ¿Complemento de brecha de género?",o:["35,90 €/mes.","110,70 €/mes (3 × 36,90 €).","147,60 €/mes.","Nada."],c:1,e:"36,90 € por hijo, hasta 4."},
+ {q:"Un pensionista de Clases Pasivas por jubilación forzosa se jubiló justo al cumplir la edad y quiere trabajar. ¿Jubilación activa?",o:["Sí, al 45 %.","No: debe haber accedido a la pensión al menos un año después de cumplir la edad.","Sí, al 100 %.","Sí, si es artista o no."],c:1,e:"Salvo la actividad artística, compatible al 100 %."},
+ {q:"Fallece un mutualista y a la semana nace su hijo, que aún no es beneficiario. ¿Tiene asistencia de MUFACE?",o:["No.","Sí, durante los 15 primeros días.","Sí, un año.","Solo si es prematuro."],c:1,e:"Si la madre es mutualista o beneficiaria."},
+ {q:"Un pensionista cobra viudedad, orfandad y una pensión propia, causadas por tres personas distintas. ¿Puede cobrar una cuarta de otra persona?",o:["Sí.","No: el máximo es 3 pensiones ordinarias causadas por distintas personas.","Sí, si es extraordinaria.","Sí, con la mitad."],c:1,e:"Incompatibilidad interna."},
+ {q:"Un funcionario muere en acto de servicio con 8 años de servicio. ¿Pensión para su viuda?",o:["No, por falta de carencia.","Sí: pensión extraordinaria, sin carencia, sobre el 200 % del haber regulador.","Solo la prestación temporal.","Solo la de MUFACE."],c:1,e:"Las extraordinarias no exigen carencia."},
+ {q:"Una solicitud de pensión de Clases Pasivas no se resuelve en plazo. El interesado debe entender:",o:["Que está concedida.","Que está desestimada por silencio.","Que caduca.","Que se prorroga."],c:1,e:"Art. 11 RDLeg 670/1987."},
+ {q:"Un pensionista por incapacidad permanente (25 años de servicio) empieza a trabajar en otra actividad compatible el día 15 de marzo. ¿Desde cuándo se le reduce la pensión al 75 %?",o:["15 de marzo.","1 de abril.","1 de marzo.","1 de enero."],c:1,e:"Por meses completos, desde el día 1 del mes siguiente."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🧭",name:"Ámbito y encuadramiento",desc:"Mecanismos de cobertura, inclusión y exclusión, transferidos y cómputo recíproco.",qs:T1},
+ {id:"t2",ic:"🏥",name:"MUFACE: afiliación, cotización y órganos",desc:"Altas, bajas, cotización y estructura orgánica.",qs:T2},
+ {id:"t3",ic:"🩺",name:"Asistencia sanitaria e IT",desc:"Contenido sanitario, IT, subsidios y riesgo en el embarazo o la lactancia.",qs:T3},
+ {id:"t4",ic:"♿",name:"Incapacidad permanente y otras prestaciones",desc:"Gran invalidez, lesiones, familia, servicios sociales y asistencia social.",qs:T4},
+ {id:"t5",ic:"📜",name:"Clases Pasivas: régimen general",desc:"Caracteres, órganos, recursos, devengo, cuota e incompatibilidades.",qs:T5},
+ {id:"t6",ic:"👴",name:"Pensión de jubilación",desc:"Tipos, carencia, haberes, cálculo, brecha de género y jubilación activa.",qs:T6},
+ {id:"t7",ic:"👪",name:"Familiares, extraordinarias y procedimiento",desc:"Viudedad, orfandad, padres, extraordinarias y órganos de jubilación.",qs:T7},
+ {id:"t8",ic:"🧮",name:"Casos prácticos con cifras",desc:"Cálculos de pensiones, IT, cotización y encuadramiento.",qs:T8}
+];
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+/* ===== Esquemas autocorregibles ===== */
+const ESQ=[
+ {id:"e1",title:"Los dos pilares del régimen especial",intro:"Qué cubre cada mecanismo y qué cambió en 2011.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Seguridad Social de los funcionarios civiles del Estado</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Clases Pasivas</b>Norma: {{0}}.<br>Cubre: {{1}}.<br>Gestiona y reconoce: {{2}}.</div>
+   <div class="sch-box alt"><b>Mutualismo administrativo</b>Normas: {{3}}.<br>Cubre: {{4}}.<br>Gestiona: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Desde el 1-1-2011</b>Pensiones en {{6}}; sanidad e IT en {{7}}.</div></div>`,
+  blanks:[
+   {o:["RDLeg 670/1987","RDLeg 4/2000","RD 375/2003","Ley 53/1984"],why:"Texto refundido de la Ley de Clases Pasivas del Estado."},
+   {o:["vejez, incapacidad, muerte y supervivencia","sanidad","IT","desempleo"],why:"Mediante pensiones."},
+   {o:["el INSS","MUFACE","la DGFP","el Ministerio de Hacienda"],why:"Art. 11 RDLeg 670/1987; el pago material lo hace la TGSS."},
+   {o:["RDLeg 4/2000 y RD 375/2003","RDLeg 670/1987","Ley 30/1984","RD 33/1986"],why:"Ley de Seguridad Social de los funcionarios y su Reglamento."},
+   {o:["sanidad, IT, incapacidad, familia y servicios sociales","solo pensiones","desempleo","jubilación"],why:"Art. 12 RDLeg 4/2000."},
+   {o:["MUFACE","el INSS","el SEPE","el ISFAS"],why:"Mutualidad General de Funcionarios Civiles del Estado."},
+   {o:["el Régimen General","Clases Pasivas","MUFACE","ISFAS"],why:"Art. 20.1 RDL 13/2010."},
+   {o:["MUFACE","el SNS","el INSS","el ISFAS"],why:"Siguen siendo mutualistas."}
+  ]},
+ {id:"e2",title:"¿Dentro o fuera de MUFACE?",intro:"Clasifica cada colectivo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ámbito del mutualismo administrativo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Colectivos</b>Funcionario de carrera de la AGE: {{0}}<br>En prácticas de un cuerpo de la AGE: {{1}}<br>Funcionario de un ayuntamiento: {{2}}<br>Funcionario de Justicia: {{3}}</div>
+   <div class="sch-box alt"><b>Más colectivos</b>Funcionario de la Administración de la SS: {{4}}<br>PAS propio de una universidad: {{5}}<br>Interino del DL 10/1965: {{6}}<br>Funcionario de la Administración Militar: {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Incluido","Excluido"],why:"Incluido obligatoriamente."},
+   {o:["Incluido","Excluido"],why:"Desde el inicio de las prácticas."},
+   {o:["Excluido","Incluido"],why:"La Administración Local tiene sus propias normas."},
+   {o:["Excluido","Incluido"],why:"Tienen su propia mutualidad."},
+   {o:["Excluido","Incluido"],why:"Encuadrados en el Régimen General."},
+   {o:["Excluido","Incluido"],why:"RD 375/2003."},
+   {o:["Incluido","Excluido"],why:"Supuesto especial de encuadramiento."},
+   {o:["Excluido","Incluido"],why:"Tienen su propio régimen."}
+  ]},
+ {id:"e3",title:"Alta, baja y cotización en MUFACE",intro:"Qué ocurre según la situación administrativa.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Situación y MUFACE</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Situaciones</b>Servicios especiales: {{0}}<br>Excedencia forzosa: {{1}}<br>Excedencia por interés particular: {{2}}<br>Cuidado de familiares: {{3}}</div>
+   <div class="sch-box alt"><b>Más situaciones</b>Jubilado: {{4}}<br>Licencia por asuntos propios: {{5}}<br>Suspensión firme: {{6}}<br>Pérdida de la condición: {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Alta y cotiza","Baja","Alta sin cotizar","Cotización suspendida"],why:"Se conservan los derechos y las obligaciones."},
+   {o:["Alta y cotiza","Baja","Alta sin cotizar","Cotización suspendida"],why:"RDLeg 4/2000."},
+   {o:["Baja","Alta y cotiza","Alta sin cotizar","Cotización suspendida"],why:"Excedencia voluntaria = baja obligatoria."},
+   {o:["Alta sin cotizar","Baja","Alta y cotiza","Cotización suspendida"],why:"Excepción a la baja por excedencia voluntaria."},
+   {o:["Alta sin cotizar","Baja","Alta y cotiza","Cotización suspendida"],why:"Conservan la condición sin obligación de cotizar."},
+   {o:["Cotización suspendida","Baja","Alta sin cotizar","Alta y cotiza"],why:"Después se pagan cuota corriente y atrasada."},
+   {o:["Cotización suspendida","Baja","Alta sin cotizar","Alta y cotiza"],why:"Igual que la licencia por asuntos propios."},
+   {o:["Baja","Alta sin cotizar","Cotización suspendida","Alta y cotiza"],why:"Cualquiera que sea la causa."}
+  ]},
+ {id:"e4",title:"Cotización a MUFACE y cuota de derechos pasivos",intro:"Tipos y forma de pago (según el manual).",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Lo que se descuenta en la nómina</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>MUFACE</b>Base: {{0}}.<br>Mutualista: {{1}}. Estado: {{2}}.</div>
+   <div class="sch-box alt"><b>Clases Pasivas</b>Cuota de derechos pasivos: {{3}} del haber regulador.</div>
+  </div>
+  <div class="sch-box"><b>Común</b>Cuota mensual: anual entre {{4}}; doble en {{5}}.</div></div>`,
+  blanks:[
+   {o:["el haber regulador del grupo (LPGE)","el sueldo real","el SMI","el sueldo base"],why:"Art. 10 RDLeg 4/2000."},
+   {o:["1,69 %","3,86 %","6,59 %","4,70 %"],why:"LPGE 2023 prorrogada, según el manual."},
+   {o:["6,59 %","1,69 %","3,86 %","2,49 %"],why:"4,10 % por activo y 2,49 % por pensionista."},
+   {o:["3,86 %","1,69 %","6,59 %","4,10 %"],why:"Art. 23 RDLeg 670/1987."},
+   {o:["14","12","13","15"],why:"Hay dos pagas extraordinarias."},
+   {o:["junio y diciembre","enero y julio","marzo y septiembre","solo diciembre"],why:"Por las pagas extraordinarias."}
+  ]},
+ {id:"e5",title:"Ordena: la incapacidad temporal en el tiempo",intro:"Coloca las etapas de una IT larga.",type:"order",
+  items:[
+   {t:"Licencia por enfermedad y asistencia sanitaria de MUFACE",why:"Requisitos para estar en situación de IT (art. 88 RD 375/2003)."},
+   {t:"Meses 1 a 3: retribuciones íntegras a cargo de la Administración",why:"Al 100 % por el acuerdo de la Mesa General de 2018."},
+   {t:"Desde el 4.º mes: básicas + subsidio de MUFACE (80 % de las básicas o 75 % de las complementarias)",why:"Subsidio fijo e invariable."},
+   {t:"A los 365 días: prórroga de hasta 180 días",why:"Duración máxima de la IT."},
+   {t:"Alta o jubilación por incapacidad permanente para el servicio",why:"La incapacidad permanente deriva siempre de una IT."}
+  ]},
+ {id:"e6",title:"Subsidios de MUFACE",intro:"Cuánto paga MUFACE en cada situación.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Subsidios desde el 4.º mes</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>IT común</b>Lo mayor entre {{0}} y {{1}}.</div>
+   <div class="sch-box alt"><b>Riesgo embarazo o lactancia</b>{{2}}.<br><b>Donación de órganos</b>{{3}}.</div>
+  </div>
+  <div class="sch-box"><b>Límites</b>Duración: {{4}}. La suma nunca supera {{5}}.</div></div>`,
+  blanks:[
+   {o:["80 % de las básicas (+⅙ de paga extra)","100 % de las básicas","50 % de las básicas","75 % de las básicas"],why:"Correspondientes al tercer mes de licencia."},
+   {o:["75 % de las complementarias","100 % de las complementarias","50 % de las complementarias","80 % de las complementarias"],why:"Devengadas en el tercer mes."},
+   {o:["100 % de las complementarias","75 % de las complementarias","80 % de las básicas","nada"],why:"Se trata como enfermedad profesional."},
+   {o:["100 % de las complementarias","75 %","50 %","nada"],why:"Nueva contingencia protegida."},
+   {o:["365 + 180 días","12 meses","18 meses","2 años"],why:"Según el manual."},
+   {o:["lo cobrado en el tercer mes","el SMI","el doble del sueldo","el haber regulador"],why:"RD 375/2003."}
+  ]},
+ {id:"e7",title:"Incapacidad permanente y otras prestaciones",intro:"Cifras de la gran invalidez, las lesiones y la familia.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Prestaciones de MUFACE</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Gran invalidez</b>Prestación para el cuidador: {{0}}.<br>Sin pensión de Clases Pasivas: {{1}} de cotización.</div>
+   <div class="sch-box alt"><b>Lesiones no invalidantes</b>Si son incapacidad parcial: {{2}}.<br>Pago: {{3}}.</div>
+   <div class="sch-box"><b>Familia</b>Hijo con discapacidad: pago {{4}}, financiado con {{5}}.<br>Parto múltiple: pago {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["50 % de la pensión","25 %","100 %","75 %"],why:"Mensual, con dos pagas extra."},
+   {o:["9 años","15 años","5 años","2 años"],why:"RD 375/2003."},
+   {o:["24 mensualidades","12 mensualidades","36 mensualidades","6 mensualidades"],why:"De la base de cotización."},
+   {o:["una sola vez","mensual","anual","en 14 pagas"],why:"Indemnización a tanto alzado."},
+   {o:["periódico","único","trimestral","voluntario"],why:"Prestación familiar periódica."},
+   {o:["los PGE","las cotizaciones","los sindicatos","las CCAA"],why:"La única que no se financia con cotizaciones."},
+   {o:["único","periódico","mensual","anual"],why:"Subsidio especial y prestación económica."}
+  ]},
+ {id:"e8",title:"Órganos de MUFACE",intro:"Composición y presidencia.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">RD 577/1997</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Consejo General</b>Presidente: {{0}}.<br>Vicepresidente 1.º: {{1}}.<br>Administración: {{2}}. Sindicatos: {{3}}.</div>
+   <div class="sch-box alt"><b>Otros órganos</b>Comisión Permanente, la preside: {{4}}.<br>Director General, nombrado por: {{5}}.<br>Comisiones Provinciales, se reúnen: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["Secretario de Estado de Función Pública","Ministro","Director General","un sindicalista"],why:"RD 577/1997."},
+   {o:["Director General de MUFACE","Secretario General","Subsecretario","un sindicalista"],why:"El Vicepresidente 2.º lo eligen los sindicales."},
+   {o:["7","9","5","3"],why:"Designados por el Ministro de Función Pública."},
+   {o:["9","7","5","12"],why:"Según los resultados electorales; deben ser mutualistas."},
+   {o:["el Director General","el Secretario de Estado","el Ministro","el Secretario General"],why:"RD 577/1997."},
+   {o:["Real Decreto","Orden ministerial","el Consejo General","concurso"],why:"Libremente, a propuesta del Ministro."},
+   {o:["al menos bimestralmente","mensualmente","trimestralmente","anualmente"],why:"RD 577/1997."}
+  ]},
+ {id:"e9",title:"Clases Pasivas: caracteres, órganos y plazos",intro:"Las reglas generales del régimen.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Régimen general de Clases Pasivas</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Derechos pasivos</b>Caracteres: {{0}}.<br>Retroactividad máxima: {{1}}.<br>Herederos reclaman en: {{2}}.</div>
+   <div class="sch-box alt"><b>Órganos</b>Reconoce: {{3}}. Pago material: {{4}}.<br>Silencio: {{5}}.<br>Recurso: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["inembargables, irrenunciables, inalienables e imprescriptibles","embargables y renunciables","transmisibles","prescriptibles a 5 años"],why:"RDLeg 670/1987."},
+   {o:["3 meses","1 año","6 meses","1 mes"],why:"Desde el día 1 del mes siguiente a la solicitud."},
+   {o:["5 años","1 año","3 meses","10 años"],why:"Desde el día siguiente al fallecimiento."},
+   {o:["el INSS","MUFACE","la DGFP","el Subsecretario"],why:"Art. 11 RDLeg 670/1987."},
+   {o:["la TGSS","el INSS","el Banco de España","Hacienda"],why:"Art. 12 RDLeg 670/1987."},
+   {o:["desestimatorio","estimatorio","no hay","caducidad"],why:"Art. 11 RDLeg 670/1987."},
+   {o:["reposición potestativa y contencioso","alzada","reclamación económica","ninguno"],why:"Los acuerdos del INSS ponen fin a la vía administrativa."}
+  ]},
+ {id:"e10",title:"Pensión de jubilación",intro:"Tipos, carencia y cálculo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Jubilación o retiro</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Tipos</b>Forzosa: como máximo a los {{0}}.<br>Voluntaria: {{1}}.<br>Incapacidad: dictamen {{2}}.</div>
+   <div class="sch-box alt"><b>Cálculo</b>Carencia: {{3}}.<br>15 años: {{4}}; 30 años: {{5}}; 100 % con {{6}}.<br>Haber regulador C1 (2026): {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["70 años","65 años","67 años","72 años"],why:"Art. 28.2.a RDLeg 670/1987."},
+   {o:["60 años y 30 de servicios","65 y 15","55 y 35","62 y 25"],why:"Art. 28.2.b RDLeg 670/1987."},
+   {o:["preceptivo y vinculante","facultativo","no vinculante","innecesario"],why:"Del órgano médico competente."},
+   {o:["15 años","10 años","20 años","ninguna"],why:"No se exige en las extraordinarias."},
+   {o:["26,92 %","15 %","30,57 %","45,19 %"],why:"Tabla de porcentajes."},
+   {o:["81,73 %","74,42 %","89,04 %","100 %"],why:"Tabla de porcentajes."},
+   {o:["35 años o más","30 años","40 años","33 años"],why:"Tabla de porcentajes."},
+   {o:["31.852,67 €","31.015,26 €","25.200,74 €","36.317,13 €"],why:"RDL 16/2025; el manual trae 31.015,26 € (2025)."}
+  ]},
+ {id:"e11",title:"Ordena: porcentajes de la jubilación activa",intro:"De menor a mayor demora en el acceso a la pensión.",type:"order",
+  items:[
+   {t:"1 año de demora · 45 %",why:"Solo en la jubilación forzosa con acceso al menos 1 año después de la edad."},
+   {t:"2 años · 55 %",why:"RDL 11/2024."},
+   {t:"3 años · 65 %",why:"Si es autónomo con un trabajador indefinido, el 75 % con 1 a 3 años de demora."},
+   {t:"4 años · 80 %",why:"RDL 11/2024."},
+   {t:"5 años · 100 %",why:"Además, +5 puntos por cada 12 meses en jubilación activa, hasta el 100 %."}
+  ]},
+ {id:"e12",title:"Pensiones en favor de familiares",intro:"Porcentajes sobre la pensión del causante.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Viudedad, orfandad y padres</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Viudedad</b>Ordinaria: {{0}}; con pensión extraordinaria del causante: {{1}}.<br>Garantía con varios beneficiarios: {{2}}.</div>
+   <div class="sch-box alt"><b>Orfandad</b>Un hijo: {{3}}. Varios: {{4}}.<br>Tope con cónyuge: {{5}}.<br>Edad: {{6}}.</div>
+   <div class="sch-box"><b>Padres</b>Cuantía: {{7}}.<br>Carencia del causante: {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["50 %","25 %","40 %","100 %"],why:"Sobre la pensión de retiro o jubilación del causante."},
+   {o:["25 %","50 %","15 %","10 %"],why:"Si el causante tenía una pensión extraordinaria."},
+   {o:["40 %","50 %","25 %","60 %"],why:"Al cónyuge o pareja superviviente."},
+   {o:["25 %","10 %","15 %","50 %"],why:"Si hay un solo hijo."},
+   {o:["10 % cada uno + 15 % repartido","25 % cada uno","50 % a repartir","15 % cada uno"],why:"RDLeg 670/1987."},
+   {o:["50 %","100 %","25 %","75 %"],why:"Sin cónyuge, el 100 %."},
+   {o:["menores de 21 (25 sin ingresos)","menores de 18","menores de 23","sin límite"],why:"O incapacitados para todo trabajo."},
+   {o:["15 % (7,5 % si era extraordinaria)","25 %","10 %","50 %"],why:"Sin derecho de acrecer."},
+   {o:["ninguna","15 años","5 años","1 año"],why:"Las pensiones en favor de familiares no exigen carencia."}
+  ]},
+ {id:"e13",title:"Requisitos de la viudedad",intro:"Matrimonio, divorcio y pareja de hecho.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">¿Quién cobra viudedad?</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Matrimonio</b>Por enfermedad común anterior: {{0}} de matrimonio (salvo {{1}}).<br>Si no se cumple: {{2}}.</div>
+   <div class="sch-box alt"><b>Separado o divorciado</b>Requisito: cobrar {{3}}.<br>Excepción: {{4}}.</div>
+   <div class="sch-box"><b>Pareja de hecho</b>Convivencia: {{5}}.<br>Inscripción con antelación de {{6}}.<br>Se extingue al {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["1 año","2 años","5 años","6 meses"],why:"Si la muerte deriva de una enfermedad común no sobrevenida tras el matrimonio."},
+   {o:["hijos comunes o 2 años sumando la convivencia","tener más de 65 años","ser funcionario","nada"],why:"RDLeg 670/1987."},
+   {o:["prestación temporal de 2 años","nada","media pensión","indemnización única"],why:"De igual cuantía que la viudedad."},
+   {o:["pensión compensatoria","SMI","pensión de alimentos","nada"],why:"Que se extinga con la muerte del causante."},
+   {o:["víctimas de violencia de género","mayores de 65","con hijos","funcionarias"],why:"Aunque no cobren pensión compensatoria."},
+   {o:["5 años (salvo hijos comunes)","2 años","1 año","10 años"],why:"Estable, notoria e ininterrumpida."},
+   {o:["2 años","1 año","5 años","6 meses"],why:"En registro o documento público."},
+   {o:["casarse o formar nueva pareja","cumplir 65","trabajar","cambiar de domicilio"],why:"RDLeg 670/1987."}
+  ]},
+ {id:"e14",title:"Pensiones extraordinarias y procedimiento de jubilación",intro:"Acto de servicio y órganos competentes.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Extraordinarias y jubilación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Extraordinarias</b>Causa: {{0}}.<br>Carencia: {{1}}. Base: {{2}}.<br>Concede: {{3}}.</div>
+   <div class="sch-box alt"><b>Procedimiento de jubilación</b>Forzosa: se inicia {{4}}.<br>Servicios centrales: {{5}}.<br>Voluntaria de cuerpos de Función Pública: {{6}}.<br>Cuerpos docentes universitarios: {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["acto de servicio o como consecuencia de él","jubilación voluntaria","ley singular","cualquier accidente"],why:"Lesión, muerte o desaparición en acto de servicio."},
+   {o:["ninguna","15 años","5 años","30 años"],why:"Cualquiera que sea el tiempo de servicios."},
+   {o:["200 % del haber regulador","100 %","150 %","50 %"],why:"Y con derecho de acrecer."},
+   {o:["el INSS, en exclusiva","MUFACE","el Subsecretario","el Ministro"],why:"RDLeg 670/1987."},
+   {o:["de oficio 6 meses antes","a instancia 1 mes antes","de oficio 1 año antes","el día del cumpleaños"],why:"Resolución de 29-12-1995."},
+   {o:["el Subsecretario","el Delegado del Gobierno","el INSS","la DGFP"],why:"En periféricos, el Delegado o Subdelegado del Gobierno."},
+   {o:["la DGFP","el Subsecretario","el INSS","el Ministro"],why:"Cuerpos adscritos al Ministerio de Función Pública."},
+   {o:["el Rector","el Ministro de Universidades","el Subsecretario","el INSS"],why:"De la universidad del último destino."}
+  ]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("t7c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("t7c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
