@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Tema 4 · Adquisición y pérdida · Situaciones administrativas · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">T4</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE</small>
+      <b>Adquisición, pérdida y situaciones</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+  <style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill small{opacity:.7;font-weight:700;margin-left:4px}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}.facet:nth-child(5) b{color:var(--a2)}
+    .facet ul{margin:4px 0 0 16px}.facet li{margin:3px 0}
+    .sit-sup{margin-top:14px}
+    .sit-sup summary{cursor:pointer;font-weight:700;color:var(--a1);font-size:.92rem}
+    .sit-sup ul{margin:8px 0 0 18px;font-size:.92rem}.sit-sup li{margin:4px 0}
+    .sit-warn{margin-top:12px}
+    .matrix td:first-child{white-space:nowrap}
+  </style>
+  <div class="hero">
+    <span class="kicker">Tema 4 · Gestión de personal</span>
+    <h1>Adquisición y pérdida de la condición de funcionario y <span>situaciones administrativas</span></h1>
+    <p>Resumen de alto rendimiento del manual oficial (TREBEP, Ley 30/1984 y RD 365/1995) e <strong>incorporación interactiva de tu esquema de situaciones administrativas</strong>, más esquemas autocorregibles con explicación, fichas y baterías de test con la penalización habitual del C1.</p>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">10</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">15</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">60</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('mapa').scrollIntoView({behavior:'smooth'})">Ver mapa de situaciones ↓</button>
+      <button class="btn btn-g" data-go="esquemas">Practicar esquemas →</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="section-title" id="mapa">
+    <div><span class="kicker">Tu esquema, ahora interactivo</span><h2>Mapa de situaciones administrativas</h2></div>
+    <p>Elige una situación: declaración, duración, retribución, derechos y reingreso.</p>
+  </div>
+  <div class="sit-pills" id="sit-pills"></div>
+  <div class="card sit-card" id="sit-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Comparativa rápida</span><h2>Matriz: ¿cobra?, ¿computa?, ¿reserva puesto?</h2></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl matrix">
+    <tr><th>Situación</th><th>Retribución</th><th>Computa (trienios, carrera, SS)</th><th>Reserva de puesto</th></tr>
+    <tr><td><strong>Servicio activo</strong></td><td>Todas las del puesto</td><td>Sí</td><td>—</td></tr>
+    <tr><td><strong>Servicios especiales</strong></td><td>Las del cargo + <strong>trienios</strong></td><td>Sí (ascensos, trienios, promoción interna, SS)</td><td>Reingreso garantizado en la misma localidad</td></tr>
+    <tr><td><strong>Servicio en otras AAPP</strong></td><td>Las del puesto de destino</td><td>Sí, como servicio activo en origen</td><td>—</td></tr>
+    <tr><td><strong>Exc. interés particular</strong></td><td>Ninguna</td><td>No</td><td>No</td></tr>
+    <tr><td><strong>Exc. agrupación familiar</strong></td><td>Ninguna</td><td>No</td><td>No</td></tr>
+    <tr><td><strong>Exc. cuidado de familiares</strong></td><td>Ninguna</td><td>Sí (trienios, carrera, SS)</td><td>El mismo puesto 2 años; después, puesto en la misma localidad y retribución</td></tr>
+    <tr><td><strong>Exc. violencia de género, sexual o terrorista</strong></td><td>Íntegras los <strong>2 primeros meses</strong></td><td>Sí, durante la reserva</td><td>6 meses (prorrogables de 3 en 3 hasta 18)</td></tr>
+    <tr><td><strong>Exc. sector público</strong></td><td>Ninguna (cobra en el otro puesto)</td><td>No</td><td>No</td></tr>
+    <tr><td><strong>Exc. voluntaria incentivada</strong></td><td>Indemnización: 1 mensualidad por año (máx. 12)</td><td>No</td><td>No</td></tr>
+    <tr><td><strong>Expectativa de destino</strong></td><td>Básicas + CD del grado + <strong>50 % del CE</strong></td><td>Equiparada a servicio activo</td><td>—</td></tr>
+    <tr><td><strong>Excedencia forzosa</strong></td><td>Básicas + prestación por hijo a cargo</td><td>Trienios y derechos pasivos</td><td>No</td></tr>
+    <tr><td><strong>Suspensión provisional</strong></td><td>Básicas + prestación por hijo a cargo</td><td>Si no se confirma, como servicio activo</td><td>Sí</td></tr>
+    <tr><td><strong>Suspensión firme</strong></td><td>Ninguna</td><td>No</td><td>Pierde el puesto si supera 6 meses</td></tr>
+  </table></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave del tema</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>15 días · 1 mes</b><span>Toma de posesión · si cambia la localidad de residencia</span></div>
+    <div class="num"><b>65 → 70</b><span>Jubilación forzosa · prolongación máxima en el servicio activo</span></div>
+    <div class="num"><b>2 m · 1 m · 15 d</b><span>Prolongación: solicitarla 2 meses antes · resolver en 1 mes · silencio positivo a falta de 15 días</span></div>
+    <div class="num"><b>3 meses</b><span>Antelación para poner fin a la prolongación · y para presentar la renuncia</span></div>
+    <div class="num"><b>½ → 60 % · ⅔ → 80 %</b><span>Cesación progresiva de actividades: jornada → retribución</span></div>
+    <div class="num"><b>60 años + 30</b><span>Jubilación voluntaria en Clases Pasivas (y la incentivada)</span></div>
+    <div class="num"><b>2 meses (+)</b><span>Plazo para resolver la renuncia; silencio <strong>estimatorio</strong></span></div>
+    <div class="num"><b>6 meses</b><span>Duración del procedimiento de rehabilitación</span></div>
+    <div class="num"><b>2 años</b><span>Espera para volver a pedir la rehabilitación tras inhabilitación denegada</span></div>
+    <div class="num"><b>&gt; 6 meses</b><span>Misión en organismos internacionales → servicios especiales</span></div>
+    <div class="num"><b>1 mes</b><span>Pedir el reingreso al perder la condición de servicios especiales</span></div>
+    <div class="num"><b>5 años · ≥ 2</b><span>Interés particular: servicios previos · permanencia mínima (sin máximo)</span></div>
+    <div class="num"><b>2 – 15 años</b><span>Excedencia por agrupación familiar</span></div>
+    <div class="num"><b>≤ 3 años · 2 años</b><span>Cuidado de familiares · reserva del mismo puesto</span></div>
+    <div class="num"><b>6 m → 18 m · 2 m</b><span>Violencia: reserva de puesto (prórrogas de 3 meses) · retribuciones íntegras</span></div>
+    <div class="num"><b>5 años · 12 mens.</b><span>Excedencia incentivada · indemnización máxima</span></div>
+    <div class="num"><b>1 año · 50 %</b><span>Expectativa de destino · porcentaje del complemento específico</span></div>
+    <div class="num"><b>6 meses · 6 años</b><span>Suspensión: provisional máxima · firme por sanción disciplinaria máxima</span></div>
+    <div class="num"><b>1 año</b><span>Plazo para convocar el puesto ocupado por adscripción provisional</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Adquisición y pérdida de la condición</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>Adquisición de la condición de funcionario</h3><small>Cuatro requisitos sucesivos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span>1 · Superar el proceso selectivo</span><i>→</i><span>2 · Nombramiento publicado en el BOE</span><i>→</i><span>3 · Acatamiento de la Constitución (y del Estatuto de Autonomía)</span><i>→</i><span>4 · Toma de posesión</span></div>
+        <ul>
+          <li><strong>Proceso selectivo</strong>: oposición, concurso-oposición o, solo por ley y excepcionalmente, concurso.</li>
+          <li><strong>Nombramiento</strong>: lo hace el <strong>Secretario de Estado de Función Pública</strong>, que también expide el título administrativo; se publica en el BOE.</li>
+          <li><strong>Toma de posesión</strong>: en <strong>15 días naturales</strong> desde la publicación (<strong>1 mes</strong> si cambia la localidad de residencia). La da el <strong>Subsecretario</strong> (servicios centrales y sus OOAA) o el <strong>Delegado del Gobierno</strong> (servicios periféricos).</li>
+          <li>En la diligencia de toma de posesión el interesado declara que <strong>no incurre en incompatibilidad</strong>.</li>
+          <li>Quien no acredite los requisitos tras el proceso no puede ser nombrado y se anulan sus actuaciones.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Pérdida de la condición y rehabilitación</h3><small>Cinco causas y cuándo cabe volver</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Causa</th><th>Claves</th><th>¿Rehabilitación?</th></tr>
+          <tr><td><strong>Renuncia</strong></td><td>Por escrito y aceptada expresamente por la <strong>SEFP</strong>. No se acepta si hay expediente disciplinario, auto de procesamiento o de apertura de juicio oral. No impide volver a ingresar por un nuevo proceso selectivo.</td><td>No (se reingresa por oposición)</td></tr>
+          <tr><td><strong>Pérdida de la nacionalidad</strong></td><td>Española o de la UE o tratados, si se tuvo en cuenta para el nombramiento, salvo que a la vez se adquiera otra válida</td><td><strong>Se concede</strong> al recuperarla</td></tr>
+          <tr><td><strong>Jubilación total</strong></td><td>Voluntaria, forzosa o por incapacidad permanente</td><td><strong>Se concede</strong> si se recupera la capacidad</td></tr>
+          <tr><td><strong>Separación del servicio</strong> firme</td><td>Sanción por falta muy grave. Es definitiva: impide reingresar en cualquier Administración</td><td>No</td></tr>
+          <tr><td><strong>Inhabilitación</strong> absoluta o especial firme</td><td>La absoluta afecta a todos los empleos; la especial, a los que fije la sentencia</td><td><strong>Excepcional</strong> (silencio desestimatorio)</td></tr>
+        </table></div>
+        <p>Perder la condición de funcionario <strong>no supone perder los derechos pasivos</strong> ya causados.</p>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.3</span><span class="bt"><h3>La jubilación</h3><small>Forzosa, voluntaria, incentivada y por incapacidad</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Forzosa</strong>: se declara de oficio a los <strong>65 años</strong>. En el Régimen General de la SS, a la edad de la pensión contributiva sin coeficiente reductor.
+            <ul>
+              <li><strong>Prolongación</strong> en el servicio activo hasta los <strong>70</strong>. La resolución debe ser motivada; según la STS de 18-1-2021, la denegación puede ser discrecional, pero justificada.</li>
+              <li><strong>Procedimiento en la AGE</strong> (Resolución de 31-12-1996): se solicita con <strong>2 meses</strong> de antelación y se resuelve en <strong>1 mes</strong>. La denegación solo puede basarse en la edad o en presentarla fuera de plazo. Si a falta de <strong>15 días</strong> no hay resolución, el silencio es <strong>estimatorio</strong>. Para terminarla hay que avisar con <strong>3 meses</strong>.</li>
+              <li><strong>Cesación progresiva</strong> (DA 5.ª RD 365/1995), a partir de los 65: jornada a la mitad (60 % de retribución) o a dos tercios (80 %).</li>
+            </ul></li>
+          <li><strong>Voluntaria</strong>: con los requisitos del régimen aplicable. En <strong>Clases Pasivas</strong>, <strong>60 años y 30 de servicios</strong>, con los últimos 5 años en Clases Pasivas si se suman cotizaciones de otros regímenes.</li>
+          <li><strong>Voluntaria incentivada</strong>: para funcionarios en expectativa de destino o excedencia forzosa por un Plan de Empleo, con <strong>60 años y 30 de servicios</strong>. Da derecho a una indemnización única. La acuerda el <strong>Ministerio de FP</strong>.</li>
+          <li><strong>Por incapacidad permanente</strong>: de oficio o a instancia, cuando el interesado no puede ejercer las funciones de su cuerpo. Si se recupera, la rehabilitación se concede.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Jubilación</th><th>Órgano competente</th></tr>
+          <tr><td>Forzosa y por incapacidad</td><td>Subsecretario (servicios centrales) · Delegado del Gobierno (periféricos)</td></tr>
+          <tr><td>Voluntaria</td><td>Subsecretario (DG de la Función Pública si el cuerpo depende de la SEFP)</td></tr>
+          <tr><td>Voluntaria incentivada</td><td>Ministerio competente en función pública</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.4</span><span class="bt"><h3>Renuncia, nacionalidad, separación e inhabilitación</h3><small>Procedimiento de renuncia (Resolución de 9 de mayo de 2022)</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Renuncia</strong>:
+            <ul>
+              <li>Se solicita ante la <strong>SG de Gestión de Procedimientos de Personal</strong> con <strong>3 meses</strong> de antelación.</li>
+              <li>Hay un <strong>informe en 10 días</strong> sobre expedientes disciplinarios, autos y vacaciones o días pendientes.</li>
+              <li>Se resuelve en <strong>2 meses</strong> y el silencio es <strong>estimatorio</strong>.</li>
+            </ul></li>
+          <li><strong>Nacionalidad</strong>: perder la que sirvió para el nombramiento supone perder la condición, salvo que se adquiera a la vez otra válida. Si se recupera, la rehabilitación se concede.</li>
+          <li><strong>Separación del servicio</strong>: sanción por falta muy grave, definitiva. Impide volver, porque es requisito de acceso no haber sido separado.</li>
+          <li><strong>Inhabilitación</strong> firme: la absoluta, para todos los cargos; la especial, para los que fije la sentencia. La rehabilitación es <strong>excepcional</strong>, según las circunstancias y la entidad del delito.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.5</span><span class="bt"><h3>Procedimiento de rehabilitación</h3><small>Iniciación, instrucción y terminación</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Inicio</strong>: a instancia del interesado, ante el órgano que resuelve. Se acompaña de:
+            <ul>
+              <li>Recuperación de la nacionalidad: <strong>certificación literal de nacimiento</strong>.</li>
+              <li>Recuperación de la capacidad: <strong>reconocimiento del Equipo de Valoración de Incapacidades del INSS</strong>.</li>
+              <li>Inhabilitación cumplida: prueba de la <strong>extinción de la responsabilidad penal o civil</strong>.</li>
+            </ul></li>
+          <li><strong>Instrucción</strong>:
+            <ul>
+              <li>Subsanación en <strong>10 días</strong>.</li>
+              <li>En la inhabilitación se valoran la conducta y los antecedentes, el daño causado, la relación entre delito y cargo, la gravedad, el tiempo transcurrido y los informes. Es preceptivo el informe de la <strong>Subsecretaría</strong> que declaró la pérdida.</li>
+              <li>Vista del expediente: <strong>15 días</strong>.</li>
+            </ul></li>
+          <li><strong>Terminación</strong>:
+            <ul>
+              <li>Duración: <strong>6 meses</strong>.</li>
+              <li>Resuelven el <strong>Subsecretario o el Delegado del Gobierno</strong> (nacionalidad o incapacidad) y el <strong>Consejo de Ministros</strong> (inhabilitación; instruye la DGFP).</li>
+              <li>Se asigna un puesto <strong>provisional</strong>. La resolución se motiva si es desestimatoria o en caso de inhabilitación, y la desestimación agota la vía administrativa (contencioso).</li>
+              <li>El tiempo intermedio <strong>no computa a ningún efecto</strong>. Tras una denegación por inhabilitación, no se puede volver a pedir hasta <strong>2 años</strong> después.</li>
+            </ul></li>
+          <li><strong>Toma de posesión</strong>:
+            <ul>
+              <li>Con vacante: <strong>1 mes</strong>.</li>
+              <li>Sin vacante: en nómina en 1 mes cobra básicas, CD del grado y 2/3 del CE de un puesto 2 niveles inferior; cuando surja puesto, toma posesión en <strong>3 días hábiles</strong>.</li>
+              <li>Si no toma posesión, pasa a excedencia voluntaria por interés particular.</li>
+            </ul></li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:18px 0 2px">Parte 2 · Situaciones administrativas</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Clasificación y reglas generales</h3><small>Art. 85 TREBEP y Ley 30/1984</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>TREBEP (art. 85)</th><th>Además, en la AGE (Ley 30/1984 y RD 365/1995)</th></tr>
+          <tr><td>Servicio activo · Servicios especiales · Servicio en otras AAPP · Excedencia · Suspensión de funciones</td><td>Excedencia voluntaria por prestar servicios en el sector público · Expectativa de destino · Excedencia forzosa · Excedencia voluntaria incentivada</td></tr>
+        </table></div>
+        <ul>
+          <li>Las leyes de FP pueden crear otras situaciones por razones organizativas o de exceso de personal, o por acceso a otros cuerpos.</li>
+          <li>Los cambios de situación se comunican <strong>siempre al Registro Central de Personal</strong> y pueden hacerse <strong>sin reingreso previo</strong> al servicio activo.</li>
+          <li>Si la nueva situación tiene reserva de puesto, el funcionario puede <strong>concursar</strong> sin salir de ella, y se le reserva un puesto de igual nivel y retribución en el mismo Ministerio y municipio.</li>
+          <li>El <strong>personal laboral</strong> se rige por el Estatuto de los Trabajadores y su convenio.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Servicio activo y servicios especiales</h3><small>Arts. 86 y 87 TREBEP y RD 365/1995</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <p><strong>Servicio activo</strong>: quien presta servicios como funcionario y no le corresponde otra situación. Incluye, entre otros supuestos:</p>
+        <ul>
+          <li>La <strong>comisión de servicios</strong> y el estar <strong>a disposición</strong> del Subsecretario o del Delegado del Gobierno.</li>
+          <li>Los <strong>gabinetes</strong> con nivel dentro del intervalo de su cuerpo, si opta por esta situación.</li>
+          <li>Las Cortes Generales y el Tribunal de Cuentas.</li>
+          <li>Diputado autonómico <strong>sin retribución periódica</strong>, si opta por esta situación.</li>
+          <li>Concejal <strong>sin dedicación exclusiva retribuida</strong>.</li>
+          <li>El plazo posesorio.</li>
+          <li>Las <strong>dos primeras fases</strong> de reasignación de efectivos.</li>
+          <li>La <strong>cesación progresiva</strong> de actividades.</li>
+        </ul>
+        <p><strong>Servicios especiales</strong>: miembro del Gobierno o alto cargo, misión <strong>de más de 6 meses</strong> en el extranjero o en un organismo internacional, cargos asimilados a alto cargo, Tribunal Constitucional, Defensor del Pueblo o Tribunal de Cuentas (por libre designación), <strong>diputado o senador</strong>, diputado autonómico <strong>retribuido</strong>, cargo local con dedicación exclusiva retribuida, CGPJ, órganos constitucionales, <strong>eventual</strong> que no opta por el servicio activo, funcionario internacional, asesor de grupo parlamentario y <strong>reservista</strong> activado. Según el RD 365/1995, también: gabinetes fuera del intervalo, cargo político incompatible, Parlamento Europeo, Subsecretario, SGT o Director General, y Director Insular.</p>
+        <ul>
+          <li>La declara el <strong>Subsecretario</strong> del Departamento de destino, de oficio o a instancia, con efectos desde el hecho causante.</li>
+          <li>Cobra las retribuciones <strong>del cargo</strong> y conserva los <strong>trienios</strong> (si no puede pagarlos el cargo, los paga el último Departamento, junto con la cuota de la SS).</li>
+          <li>El tiempo <strong>computa</strong> para ascensos, trienios, promoción interna, SS y los 5 años de la excedencia por interés particular.</li>
+          <li><strong>Reingreso</strong>:
+            <ul>
+              <li>Debe pedirse en <strong>1 mes</strong> desde que pierde la condición; si no, pasa a excedencia voluntaria por interés particular.</li>
+              <li>Si su puesto anterior era de libre designación, se le da uno provisional de igual nivel en el mismo municipio; en los demás casos, uno definitivo de igual nivel en el mismo Ministerio y municipio.</li>
+              <li>Los parlamentarios siguen en servicios especiales hasta que se constituyen las nuevas Cámaras.</li>
+            </ul></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>Servicio en otras AAPP y excedencias</h3><small>Art. 88 y 89 TREBEP y Ley 30/1984</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <p><strong>Servicio en otras AAPP</strong>: por transferencia o por provisión de puestos en otra Administración.</p>
+        <ul>
+          <li><strong>Transferidos</strong>: están en servicio activo en la CA, que respeta su grupo y sus derechos. Mantienen los derechos en la Administración de origen. Su separación la acuerda la CA <strong>previo dictamen del Consejo de Estado</strong>.</li>
+          <li><strong>Por concurso o libre designación</strong>: se rigen por la legislación de destino, pero conservan la condición de funcionario de origen y pueden concursar allí; el tiempo computa como servicio activo. Su separación la acuerda el <strong>Ministro</strong> de adscripción del cuerpo, tras expediente incoado por la CA.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Excedencia</th><th>Requisito</th><th>Duración</th></tr>
+          <tr><td><strong>Interés particular</strong></td><td><strong>5 años</strong> de servicios inmediatamente anteriores; condicionada a las necesidades del servicio; no cabe con expediente disciplinario. También se declara de oficio si no se pide el reingreso.</td><td>Mínimo <strong>2 años</strong>, sin máximo</td></tr>
+          <tr><td><strong>Agrupación familiar</strong></td><td>Sin antigüedad. El cónyuge reside en otra localidad con un puesto definitivo (funcionario o laboral fijo; incluso en la UE u organismos internacionales).</td><td><strong>2 a 15 años</strong></td></tr>
+          <tr><td><strong>Cuidado de familiares</strong></td><td>Hijo (desde el nacimiento o la resolución) o familiar hasta el 2.º grado que no pueda valerse. Un periodo por sujeto causante; la nueva excedencia pone fin a la anterior.</td><td>Hasta <strong>3 años</strong></td></tr>
+          <tr><td><strong>Violencia de género o sexual</strong></td><td>Sin antigüedad ni permanencia mínima</td><td>Lo necesario; reserva de puesto 6 meses, ampliable hasta 18</td></tr>
+          <tr><td><strong>Violencia terrorista</strong></td><td>Daños o amenaza (Ley 29/2011), reconocidos por <strong>Interior</strong> o por sentencia firme</td><td>Mientras sea necesaria</td></tr>
+          <tr><td><strong>Servicios en el sector público</strong> (Ley 30/1984)</td><td>Activo en otro cuerpo (sin compatibilidad) o laboral fijo en el sector público. No vale ser interino o temporal.</td><td>Mientras dure; reingreso en 1 mes desde el cese</td></tr>
+          <tr><td><strong>Incentivada</strong></td><td>Dos primeras fases de reasignación, o expectativa de destino o excedencia forzosa por un Plan de Empleo. La declara la SEFP.</td><td><strong>5 años</strong>, sin trabajar en el sector público</td></tr>
+        </table></div>
+        <p class="note"><b>Andalucía:</b> la Ley 5/2023 añade la excedencia por incompatibilidad y la excedencia con reserva de puesto (10 años de servicios; de 6 meses a 1 año), sin equivalente en la legislación estatal.</p>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.4</span><span class="bt"><h3>Expectativa de destino, excedencia forzosa, suspensión y reingreso</h3><small>Ley 30/1984, art. 90 TREBEP y art. 29 bis Ley 30/1984</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Expectativa de destino</strong>:
+            <ul>
+              <li>Para quien no obtiene puesto en las dos primeras fases de reasignación. Queda adscrito al Ministerio de FP y la declara la <strong>SEFP</strong>.</li>
+              <li>Dura como máximo <strong>1 año</strong>; después pasa a excedencia forzosa.</li>
+              <li>Obligaciones: aceptar puestos similares en la <strong>provincia</strong>, concursar y hacer cursos. Incumplirlas lleva a la excedencia forzosa.</li>
+              <li>Cobra básicas, CD del grado y el <strong>50 % del CE</strong>. En lo demás se equipara al servicio activo.</li>
+            </ul></li>
+          <li><strong>Excedencia forzosa</strong>:
+            <ul>
+              <li>Causas: a) viene de la expectativa de destino (al año o por incumplir); la declara la <strong>SEFP</strong>. b) Tras una suspensión firme, si el reingreso no se concede en <strong>6 meses</strong>; la declaran los <strong>Departamentos</strong> o la DGFP.</li>
+              <li>Obligaciones: aceptar puestos y concursar; incumplirlas lleva a la excedencia por interés particular. No puede trabajar en el sector público; si lo hace, pasa a excedencia por servicios en el sector público.</li>
+              <li>Cobra básicas y la prestación por hijo a cargo, y computa para trienios y derechos pasivos.</li>
+            </ul></li>
+          <li><strong>Suspensión provisional</strong>:
+            <ul>
+              <li>Medida cautelar en un expediente disciplinario: máximo <strong>6 meses</strong>, salvo paralización imputable al interesado. En un procedimiento judicial dura lo que la prisión o las medidas del juez, sin perder el puesto aunque pase de 6 meses.</li>
+              <li>Cobra básicas y la prestación por hijo (nada si hay rebeldía). Si la suspensión pasa a firme, devuelve lo cobrado; si no, se le restituye y el tiempo computa como servicio activo.</li>
+              <li>El tiempo se abona para cumplir la firme. El Subsecretario puede acordarla ante un procesamiento.</li>
+            </ul></li>
+          <li><strong>Suspensión firme</strong>:
+            <ul>
+              <li>Por sentencia penal o por sanción disciplinaria (esta, máximo <strong>6 años</strong>). Priva de funciones y de todos los derechos, y no puede trabajar en ninguna Administración.</li>
+              <li>Si supera <strong>6 meses</strong>, pierde el puesto.</li>
+              <li>Reingreso: pedirlo <strong>1 mes antes</strong> de que acabe (efectos desde la extinción de la responsabilidad). Si no lo pide, pasa a excedencia por interés particular; si no se le concede en 6 meses, a excedencia forzosa.</li>
+            </ul></li>
+          <li><strong>Reingreso sin reserva</strong> (art. 29 bis Ley 30/1984): por concurso, libre designación, reasignación o <strong>adscripción provisional</strong>. El puesto ocupado provisionalmente se convoca en <strong>1 año</strong> y el funcionario está obligado a pedirlo.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Rehabilitación: obligada o excepcional</b>Si se recupera la nacionalidad o la capacidad, la rehabilitación «le será concedida». Tras una inhabilitación es excepcional, la decide el Consejo de Ministros y el silencio es negativo.</div>
+    <div class="trap"><b>Silencio estimatorio</b>Es positivo en la renuncia (2 meses) y en la prolongación del servicio activo (a falta de 15 días).</div>
+    <div class="trap"><b>Concejal o diputado autonómico</b>Si cobra con dedicación o retribución periódica, servicios especiales; si no, servicio activo.</div>
+    <div class="trap"><b>Interés particular sin máximo</b>En la AGE, mínimo 2 años y sin máximo. El máximo de 15 años es de la agrupación familiar.</div>
+    <div class="trap"><b>Cuidado de familiares sí computa</b>Computa para trienios, carrera y SS y reserva el puesto 2 años. Interés particular y agrupación familiar no computan.</div>
+    <div class="trap"><b>Expectativa de destino</b>Básicas, CD del grado y el 50 % del CE, con un máximo de 1 año; después, excedencia forzosa.</div>
+    <div class="trap"><b>Suspensión: 6 meses y 6 años</b>La provisional dura como máximo 6 meses; la firme supera 6 meses y se pierde el puesto; la disciplinaria no pasa de 6 años.</div>
+    <div class="trap"><b>¿Quién declara?</b>La SEFP: excedencia incentivada, expectativa de destino y forzosa por reasignación. El Subsecretario: servicios especiales.</div>
+  </div>
+</section>
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap"><p>Tema 4 · Adquisición y pérdida de la condición de funcionario · Situaciones administrativas · Oposiciones C1 AGE. Fuentes: temario del Tema 4 y esquema «Situaciones administrativas» aportados por el usuario (TREBEP, Ley 30/1984, RD 365/1995). Material de estudio; contrasta siempre con la normativa vigente.</p></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Tema 4 · Mapa interactivo de situaciones (esquema del usuario + manual) ===== */
+const SIT=[
+ {g:"TREBEP",id:"activo",n:"Servicio activo",norm:"Art. 86 TREBEP · RD 365/1995",
+  def:"Quienes presten servicios en su condición de funcionarios, cualquiera que sea la Administración u organismo en que estén destinados, y no les corresponda quedar en otra situación.",
+  f:{Declaración:"Situación ordinaria: no requiere declaración específica.",Duración:"Mientras se presten servicios como funcionario.",Retribución:"Todas las del puesto (básicas y complementarias).","Derechos y cómputo":"Todos los derechos inherentes a la condición de funcionario, con sus deberes y responsabilidades.",Reingreso:"—"},
+  sup:["Puesto adscrito a funcionarios en la RPT, o en Corporaciones Locales o Universidades.","Comisión de servicios.","Gabinetes (Presidencia, Ministros, SE) con nivel dentro del intervalo del cuerpo, si opta por esta situación; gabinetes de Delegados del Gobierno.","Cortes Generales o Tribunal de Cuentas, si no corresponde otra situación.","Diputado autonómico sin retribución periódica que opte por esta situación.","Miembro de Corporación Local sin cargo retribuido y de dedicación exclusiva.","A disposición del Subsecretario, Director de OA o Delegado del Gobierno.","Durante el plazo posesorio tras obtener otro puesto.","Dos primeras fases de reasignación de efectivos.","Servicios en organismos por exigencia legal de ser funcionario.","Cesación progresiva de actividades."]},
+ {g:"TREBEP",id:"especiales",n:"Servicios especiales",norm:"Art. 87 TREBEP · art. 29.2 Ley 30/1984 · RD 365/1995",
+  def:"Funcionarios que pasan a desempeñar altas responsabilidades políticas, institucionales, internacionales o representativas.",
+  f:{Declaración:"El Subsecretario del Departamento donde presta servicios, de oficio o a instancia, con efectos desde el hecho causante.",Duración:"Mientras dure el hecho causante. Al perder la condición: reingreso en 1 mes o excedencia voluntaria por interés particular. Los parlamentarios siguen hasta que se constituyen las nuevas Cámaras.",Retribución:"Las del puesto o cargo que desempeñe, no las de funcionario, más los trienios que tenga reconocidos (si no pueden pagarse por el cargo, los abona el último Departamento, igual que la cuota de la SS).","Derechos y cómputo":"Computa a efectos de ascensos, trienios, promoción interna, Seguridad Social y los 5 años de la excedencia por interés particular. No se aplica a quien ejerce el derecho de transferencia a las instituciones de la UE.",Reingreso:"Derecho a reingresar, al menos, en la misma localidad y con las retribuciones de su nivel consolidado. Si venía de libre designación, puesto provisional de igual nivel en el mismo municipio; en otro caso, definitivo de igual nivel en el mismo Ministerio y municipio. Lo concede el Departamento de destino."},
+  sup:["Miembros del Gobierno o de gobiernos autonómicos, instituciones de la UE u organizaciones internacionales, o altos cargos.","Misión de más de 6 meses en organismos internacionales, gobiernos extranjeros o cooperación.","Cargos en organismos asimilados a alto cargo.","Tribunal Constitucional, Defensor del Pueblo o Tribunal de Cuentas (libre designación).","Diputado o senador, o diputado autonómico con retribución periódica.","Cargos locales electivos retribuidos y con dedicación exclusiva; órganos superiores y directivos municipales.","CGPJ o consejos de justicia autonómicos; órganos constitucionales o estatutarios.","Personal eventual (confianza o asesoramiento político) que no opta por el servicio activo.","Funcionario de organizaciones internacionales; asesor de grupos parlamentarios; reservista voluntario activado.","RD 365/1995: gabinetes fuera del intervalo, cargo político incompatible, Parlamento Europeo, comisionados parlamentarios autonómicos, Subsecretarios, SGT y Directores Generales, Directores Insulares y Alta Inspección de Educación."]},
+ {g:"TREBEP",id:"otras",n:"Servicio en otras AAPP",norm:"Art. 88 TREBEP · art. 11 RD 365/1995",
+  def:"Funcionarios que, por transferencia o por procedimientos de provisión de puestos, obtienen destino en otra Administración Pública.",
+  f:{Declaración:"Según el esquema, el Subsecretario del Departamento donde presta servicios.",Duración:"Mientras dure el hecho causante.",Retribución:"La del puesto de trabajo en el que presta servicios.","Derechos y cómputo":"Transferidos: servicio activo en la CA, que respeta su grupo y sus derechos; conservan los derechos en origen. Por provisión: legislación de destino, conservan la condición de funcionario de origen, pueden concursar allí y el tiempo computa como servicio activo en origen.",Reingreso:"Se reconocen los progresos de carrera según los convenios de Conferencia Sectorial (o, en su defecto, la Administración de reingreso). Si se cesa o suprime el puesto, la Administración de destino asigna otro."},
+  sup:["Separación del servicio de los transferidos: el órgano de la CA, previo dictamen del Consejo de Estado.","Separación del servicio de los destinados por provisión: el Ministro de adscripción del cuerpo, previa incoación del expediente por la CA."]},
+ {g:"Excedencias TREBEP",id:"interes",n:"Exc. voluntaria por interés particular",norm:"Art. 89 TREBEP · Ley 30/1984",
+  def:"Excedencia a petición, tras 5 años de servicios, o declarada de oficio cuando no se pide el reingreso en plazo.",
+  f:{Declaración:"A petición (subordinada a las necesidades del servicio) o de oficio. No puede declararse si hay expediente disciplinario abierto.",Duración:"En la AGE, mínimo 2 años continuados, sin límite máximo.",Retribución:"No devenga retribuciones.","Derechos y cómputo":"No computa a efectos de ascensos, trienios ni Seguridad Social.",Reingreso:"Sin reserva de puesto: concurso, libre designación o adscripción provisional."},
+  sup:["Requisito a instancia de parte: 5 años de servicios efectivos inmediatamente anteriores en cualquier Administración (computan los prestados como funcionario de carrera, en prácticas, interino, eventual o con contrato).","De oficio: cuando, terminada la causa de otra situación, no se pide el reingreso en plazo (no se exige antigüedad)."]},
+ {g:"Excedencias TREBEP",id:"agrupacion",n:"Exc. por agrupación familiar",norm:"Art. 89 TREBEP · RD 365/1995",
+  def:"Para funcionarios cuyo cónyuge reside en otra localidad por desempeñar allí un puesto definitivo.",
+  f:{Declaración:"A instancia del funcionario, sin requisito de antigüedad.",Duración:"Mínimo 2 años y máximo 15 en la AGE; antes de los 15 hay que pedir el reingreso.",Retribución:"No devenga retribuciones.","Derechos y cómputo":"No computa a efectos de ascensos, trienios ni Seguridad Social.",Reingreso:"Si no se pide antes de terminar el periodo máximo: excedencia voluntaria por interés particular de oficio."},
+  sup:["El cónyuge debe ocupar un puesto definitivo como funcionario de carrera o laboral fijo en cualquier Administración, organismo, órgano constitucional o del Poder Judicial, la UE u organizaciones internacionales."]},
+ {g:"Excedencias TREBEP",id:"cuidado",n:"Exc. por cuidado de familiares",norm:"Art. 89.4 TREBEP",
+  def:"Hasta 3 años por cada hijo (naturaleza, adopción, guarda o acogimiento) o familiar a cargo hasta el 2.º grado.",
+  f:{Declaración:"A instancia del funcionario; es un derecho individual. Si dos funcionarios lo generan por el mismo sujeto, la Administración puede limitar el ejercicio simultáneo.",Duración:"No superior a 3 años. Para un hijo, desde el nacimiento o la resolución judicial o administrativa; para un familiar, desde el inicio del disfrute. Un periodo por sujeto causante; una nueva excedencia pone fin a la anterior.",Retribución:"No devenga retribuciones.","Derechos y cómputo":"Computa a efectos de trienios, carrera y Seguridad Social (y para la excedencia por interés particular). Puede participar en cursos de formación.",Reingreso:"Reserva del mismo puesto al menos 2 años; después, puesto en la misma localidad y retribución. Debe pedir el reingreso antes de terminar; si no, excedencia por interés particular."},
+  sup:["Familiar: hasta el 2.º grado de consanguinidad o afinidad que por edad, accidente, enfermedad o discapacidad no pueda valerse por sí mismo y no tenga actividad retribuida."]},
+ {g:"Excedencias TREBEP",id:"violencia",n:"Exc. por violencia de género o sexual",norm:"Art. 89.5 TREBEP",
+  def:"Para hacer efectiva la protección o la asistencia social integral de la funcionaria víctima.",
+  f:{Declaración:"A instancia de la funcionaria, sin tiempo mínimo de servicios.",Duración:"Sin plazo de permanencia mínimo.",Retribución:"Retribuciones íntegras (y prestaciones por hijo a cargo) durante los 2 primeros meses.","Derechos y cómputo":"Durante la reserva, computa a efectos de antigüedad, carrera y Seguridad Social.",Reingreso:"Reserva del puesto los 6 primeros meses, prorrogable por periodos de 3 meses hasta un máximo de 18 si lo exigen las actuaciones judiciales."},
+  sup:["El esquema la denomina «violencia de género sobre la mujer funcionaria»; el TREBEP vigente incluye también la violencia sexual."]},
+ {g:"Excedencias TREBEP",id:"terrorista",n:"Exc. por violencia terrorista",norm:"Art. 89.6 TREBEP · Ley 29/2011",
+  def:"Funcionarios con daños físicos o psíquicos por actividad terrorista o amenazados.",
+  f:{Declaración:"A instancia del funcionario, previo reconocimiento del Ministerio del Interior o sentencia judicial firme.",Duración:"El tiempo necesario para la protección y asistencia social integral (por las secuelas o por la amenaza).",Retribución:"Igual que la de violencia de género: íntegras los 2 primeros meses.","Derechos y cómputo":"En las mismas condiciones que la de violencia de género o sexual.",Reingreso:"Igual que la de violencia de género: reserva de 6 meses, prorrogable hasta 18."},
+  sup:[]},
+ {g:"Ley 30/1984",id:"sectorpub",n:"Exc. por servicios en el sector público",norm:"Art. 29.3.a Ley 30/1984 · RD 365/1995",
+  def:"Funcionarios en servicio activo en otro cuerpo, o que pasan a ser laborales fijos en el sector público, sin corresponderles otra situación.",
+  f:{Declaración:"De oficio o a instancia del funcionario.",Duración:"Mientras dure la relación de servicios que la originó.",Retribución:"No devenga retribuciones como excedente (cobra en el otro puesto).","Derechos y cómputo":"El esquema añade que el periodo de servicios en organismos o entidades del sector público computa a efectos de trienios.",Reingreso:"Tras el cese en el otro puesto, pedir el reingreso en 1 mes; si no, excedencia voluntaria por interés particular."},
+  sup:["No procede si se obtuvo la compatibilidad.","Ser funcionario interino o laboral temporal no da acceso a esta situación."]},
+ {g:"Ley 30/1984",id:"incentivada",n:"Exc. voluntaria incentivada",norm:"Art. 29.6 Ley 30/1984",
+  def:"Para funcionarios afectados por reasignación de efectivos (dos primeras fases) o en expectativa de destino o excedencia forzosa por un Plan de Empleo.",
+  f:{Declaración:"La Secretaría de Estado de Función Pública (el esquema cita al antiguo «Ministerio para las AAPP»), a solicitud del funcionario.",Duración:"5 años. No puede trabajar en el sector público bajo ninguna relación.",Retribución:"Indemnización de 1 mensualidad de las retribuciones periódicas del último puesto por año completo de servicios, con un máximo de 12. Se excluyen las pagas extraordinarias y la productividad.","Derechos y cómputo":"No computa (excedencia sin retribución).",Reingreso:"Si no lo pide en el mes siguiente al fin de los 5 años, el Departamento la declara en excedencia voluntaria por interés particular."},
+  sup:[]},
+ {g:"Ley 30/1984",id:"expectativa",n:"Expectativa de destino",norm:"Art. 29.5 Ley 30/1984",
+  def:"Funcionarios afectados por reasignación de efectivos que no obtienen puesto en las dos primeras fases.",
+  f:{Declaración:"La SEFP declara la situación y su cese y gestiona al personal, que queda adscrito al Ministerio de FP.",Duración:"Máximo 1 año; después, excedencia forzosa.",Retribución:"Básicas, CD del grado personal (o del nivel del puesto) y el 50 % del CE que percibía.","Derechos y cómputo":"En todo lo demás, incluidas las incompatibilidades, se equipara al servicio activo.",Reingreso:"Obligaciones: aceptar puestos similares en la provincia, concursar a puestos adecuados en la provincia y hacer los cursos (INAP). Incumplirlas lleva a la excedencia forzosa."},
+  sup:["Puestos de similares características: los que se parecen en forma de provisión y retribuciones."]},
+ {g:"Ley 30/1984",id:"forzosa",n:"Excedencia forzosa",norm:"Art. 29.6 Ley 30/1984 · RD 365/1995",
+  def:"a) Procedente de la expectativa de destino (al año o por incumplir obligaciones). b) Tras suspensión firme, si el reingreso no se concede en 6 meses.",
+  f:{Declaración:"a) La SEFP. b) Los Departamentos de adscripción del cuerpo (o la DGFP para los cuerpos del Ministerio de FP).",Duración:"Hasta el reingreso obligatorio.",Retribución:"Básicas y, en su caso, prestaciones familiares por hijo a cargo.","Derechos y cómputo":"Computa a efectos de trienios y derechos pasivos. No puede trabajar en el sector público; si lo hace, pasa a excedencia por servicios en el sector público.",Reingreso:"Debe aceptar los puestos y concursar (procedente de expectativa: puestos similares). Incumplirlo lleva a la excedencia voluntaria por interés particular."},
+  sup:[]},
+ {g:"Suspensión de funciones",id:"suspprov",n:"Suspensión provisional",norm:"Art. 98 TREBEP · RD 365/1995",
+  def:"Medida cautelar durante un expediente disciplinario o un procedimiento judicial.",
+  f:{Declaración:"De oficio. El Subsecretario puede acordarla como medida preventiva ante un procesamiento.",Duración:"Expediente disciplinario: máximo 6 meses, salvo paralización imputable al interesado. Procedimiento judicial: lo que dure la prisión provisional o las medidas del juez, sin perder el puesto. (El esquema dice «3 meses prorrogables»; el manual y el TREBEP fijan 6 meses.)",Retribución:"Básicas y prestaciones por hijo a cargo; nada si hay incomparecencia o rebeldía.","Derechos y cómputo":"Si no se declara firme, el tiempo computa como servicio activo y se restituyen las diferencias. Si pasa a firme, devuelve lo cobrado y el tiempo se abona para cumplirla.",Reingreso:"Si no hay sanción firme, reincorporación inmediata a su puesto."},
+  sup:[]},
+ {g:"Suspensión de funciones",id:"suspfirme",n:"Suspensión firme",norm:"Art. 90 TREBEP · RD 365/1995",
+  def:"Por sentencia en causa criminal o por sanción disciplinaria firme.",
+  f:{Declaración:"De oficio, por resolución disciplinaria o sentencia judicial.",Duración:"La de la pena o sanción; por sanción disciplinaria, máximo 6 años.",Retribución:"Ninguna: queda privado de todos los derechos inherentes a la condición.","Derechos y cómputo":"No puede prestar servicios en ninguna Administración ni en sus organismos. Si la suspensión supera 6 meses, pierde el puesto.",Reingreso:"Pedirlo 1 mes antes de que termine; efectos desde la extinción de la responsabilidad. Si no lo pide, excedencia voluntaria por interés particular; si no se le concede en 6 meses, excedencia forzosa."},
+  sup:[]}
+];
+(function(){
+  const pills=document.getElementById("sit-pills"),card=document.getElementById("sit-card");
+  if(!pills)return;
+  const icons={Declaración:"📝",Duración:"⏱️",Retribución:"💶","Derechos y cómputo":"✅",Reingreso:"↩️"};
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  let html="",last="";
+  SIT.forEach((s,i)=>{if(s.g!==last){html+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}
+    html+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});
+  pills.innerHTML=html;
+  function show(i){const s=SIT[i];
+    card.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div>
+    <div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${icons[k]||"•"} ${e(k)}</b>${e(v)}</div>`).join("")}</div>
+    ${s.sup.length?`<details class="sit-sup" ${s.sup.length<4?"open":""}><summary>Supuestos y detalles (${s.sup.length})</summary><ul>${s.sup.map(x=>`<li>${e(x)}</li>`).join("")}</ul></details>`:""}`;
+    card.style.animation="none";card.offsetHeight;card.style.animation="";
+    pills.querySelectorAll(".sit-pill").forEach(b=>b.classList.toggle("on",+b.dataset.i===i));}
+  pills.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(b)show(+b.dataset.i)});
+  show(0);
+})();
+
+/* ===== Fichas ===== */
+const DATA={fichas:[
+ {p:"¿Qué requisitos sucesivos exige adquirir la condición de funcionario de carrera?",r:"1) Superar el proceso selectivo. 2) Nombramiento por el órgano competente, publicado en el diario oficial (BOE). 3) Acatamiento de la Constitución y, en su caso, del Estatuto de Autonomía y del resto del ordenamiento. 4) Toma de posesión en plazo."},
+ {p:"¿Quién nombra a los funcionarios de carrera en la AGE?",r:"El Secretario de Estado de Función Pública, que también expide los títulos administrativos. Los nombramientos se publican en el BOE."},
+ {p:"¿Cuál es el plazo de toma de posesión y quién la da?",r:"15 días naturales desde la publicación del nombramiento (1 mes si supone cambio de localidad de residencia). La dan los Subsecretarios (servicios centrales y sus OOAA) y los Delegados del Gobierno (servicios periféricos regionales y provinciales)."},
+ {p:"¿Qué debe constar en la diligencia de toma de posesión?",r:"La manifestación del interesado de no desempeñar ningún puesto o actividad pública incompatible ni actividad privada incompatible o sujeta a reconocimiento de compatibilidad."},
+ {p:"¿Cuáles son las causas de pérdida de la condición de funcionario?",r:"Renuncia, pérdida de la nacionalidad, jubilación total, separación del servicio firme y pena principal o accesoria de inhabilitación absoluta o especial firme."},
+ {p:"¿En qué casos se concede siempre la rehabilitación?",r:"Cuando la pérdida se debió a la pérdida de la nacionalidad o a la jubilación por incapacidad permanente y ha desaparecido la causa objetiva (recuperación de la nacionalidad o de la capacidad): «le será concedida»."},
+ {p:"¿Cómo se rehabilita a quien fue condenado a inhabilitación?",r:"Con carácter excepcional, a petición del interesado, atendiendo a las circunstancias y entidad del delito. Si no se resuelve expresamente en plazo, se entiende desestimada."},
+ {p:"¿Perder la condición de funcionario supone perder los derechos pasivos?",r:"No. No supone la pérdida de los derechos pasivos que se hubieran causado para sí o para los familiares."},
+ {p:"¿A qué edad se jubila forzosamente un funcionario y hasta cuándo puede prolongar?",r:"A los 65 años, de oficio. Puede solicitar la prolongación en el servicio activo como máximo hasta los 70. En el Régimen General de la SS, la edad será la de la pensión contributiva sin coeficiente reductor."},
+ {p:"¿Puede la Administración denegar la prolongación del servicio activo?",r:"Debe resolver de forma motivada. Según la STS de 18-1-2021, la denegación puede basarse en cualquier circunstancia apreciada discrecionalmente, pero debe justificarse para que no sea arbitraria."},
+ {p:"¿Cómo es el procedimiento de prolongación en la AGE?",r:"Solicitud con al menos 2 meses de antelación a la edad de jubilación; resolución en 1 mes. La denegación solo puede basarse en la falta del requisito de edad o en la presentación fuera de plazo. Si a falta de 15 días no hay resolución, se entiende estimada."},
+ {p:"¿Cómo se pone fin a la prolongación del servicio activo?",r:"A instancia del funcionario, mediante comunicación al órgano competente con una antelación mínima de 3 meses a la fecha de jubilación solicitada."},
+ {p:"¿Qué es la cesación progresiva de actividades?",r:"Para quienes prolongan el servicio activo desde los 65 años (DA 5.ª RD 365/1995): reducción de jornada a la mitad o a dos tercios, cobrando el 60 % o el 80 % de la retribución respectivamente. Es una modalidad de servicio activo."},
+ {p:"¿Qué exige la jubilación voluntaria en Clases Pasivas?",r:"60 años de edad y 30 años de servicios efectivos al Estado. Si se computan cotizaciones de otros regímenes, los últimos 5 años de servicios deben estar en Clases Pasivas (desde 2011)."},
+ {p:"¿Qué es la jubilación voluntaria incentivada?",r:"La pueden pedir los funcionarios en expectativa de destino o excedencia forzosa por un Plan de Empleo, con 60 años y 30 de servicios. Da derecho a una indemnización única fijada por el Gobierno. La acuerda el Ministerio competente en función pública."},
+ {p:"¿Quién acuerda cada tipo de jubilación?",r:"Forzosa e incapacidad: Subsecretario (servicios centrales) o Delegado del Gobierno (periféricos). Voluntaria: Subsecretario (DGFP si el cuerpo depende de la SEFP). Voluntaria incentivada: Ministerio de función pública."},
+ {p:"¿Cuándo no se puede aceptar la renuncia?",r:"Cuando el funcionario está sujeto a expediente disciplinario o se ha dictado contra él auto de procesamiento o de apertura de juicio oral por algún delito."},
+ {p:"¿Quién acepta la renuncia y qué procedimiento sigue?",r:"La SEFP. Según la Resolución de 9 de mayo de 2022: solicitud con 3 meses de antelación; informe del Ministerio u organismo en 10 días; resolución en 2 meses; silencio estimatorio. La renuncia no impide volver a ingresar por un proceso selectivo."},
+ {p:"¿Qué efectos tiene la separación del servicio?",r:"Es una sanción por falta muy grave que produce la pérdida definitiva de la condición; no cabe nuevo ingreso, porque es requisito de acceso no haber sido separado de ninguna Administración."},
+ {p:"¿Qué diferencia hay entre inhabilitación absoluta y especial?",r:"La absoluta firme produce la pérdida de la condición respecto de todos los empleos o cargos; la especial, solo respecto de los especificados en la sentencia."},
+ {p:"¿Qué documentación acompaña la solicitud de rehabilitación?",r:"Nacionalidad: certificación literal de nacimiento. Incapacidad: reconocimiento del Equipo de Valoración de Incapacidades del INSS (u órgano autonómico). Inhabilitación: acreditación de la extinción de la responsabilidad penal o civil."},
+ {p:"¿Quién resuelve la rehabilitación y en qué plazo?",r:"En 6 meses. Nacionalidad o incapacidad: Subsecretarios o Delegados del Gobierno según el último destino. Inhabilitación: Consejo de Ministros (instruye la SEFP a través de la DGFP), con informe preceptivo de la Subsecretaría que declaró la pérdida."},
+ {p:"¿Qué efectos tiene la rehabilitación?",r:"Se asigna un puesto provisional del cuerpo. El periodo entre la pérdida y la rehabilitación no computa a ningún efecto. Si se deniega una rehabilitación por inhabilitación, no puede volver a pedirse hasta pasados 2 años."},
+ {p:"¿Qué ocurre si al rehabilitar no hay vacante?",r:"En el plazo de 1 mes cobra básicas, CD del grado personal y 2/3 del CE de un puesto 2 niveles inferior a su grado. Cuando surja puesto, toma posesión en 3 días hábiles; si no lo hace, excedencia voluntaria por interés particular."},
+ {p:"¿Qué situaciones prevé el art. 85 TREBEP?",r:"Servicio activo, servicios especiales, servicio en otras Administraciones Públicas, excedencia y suspensión de funciones."},
+ {p:"¿Qué situaciones añade en la AGE la Ley 30/1984?",r:"Excedencia voluntaria por prestación de servicios en el sector público, expectativa de destino, excedencia forzosa y excedencia voluntaria incentivada."},
+ {p:"¿Cómo se producen los cambios de situación administrativa?",r:"Deben comunicarse siempre al Registro Central de Personal y pueden hacerse sin reingreso previo al servicio activo si se reúnen los requisitos. Si la nueva situación da derecho a reserva, se puede concursar sin salir de ella."},
+ {p:"¿Cuándo está un funcionario en servicio activo?",r:"Cuando presta servicios como funcionario en cualquier Administración y no le corresponde otra situación. Incluye, entre otros, la comisión de servicios, el plazo posesorio, las dos primeras fases de reasignación de efectivos y la cesación progresiva de actividades."},
+ {p:"¿Un diputado autonómico funcionario está en servicio activo o en servicios especiales?",r:"En servicios especiales si percibe retribuciones periódicas por la función; si no las percibe, puede optar por permanecer en servicio activo."},
+ {p:"¿Y un concejal funcionario?",r:"En servicio activo, salvo que desempeñe cargo retribuido y con dedicación exclusiva, en cuyo caso pasa a servicios especiales."},
+ {p:"¿Qué misión en el extranjero da lugar a servicios especiales?",r:"La autorizada por periodo determinado superior a seis meses en organismos internacionales, gobiernos o entidades públicas extranjeras o programas de cooperación internacional."},
+ {p:"¿Qué cobra un funcionario en servicios especiales?",r:"Las retribuciones del puesto o cargo que desempeña, no las de funcionario, sin perjuicio de los trienios reconocidos. Si los trienios no pueden pagarse con cargo a ese presupuesto, los abona el último Departamento en activo (igual que la cuota de SS)."},
+ {p:"¿A qué efectos computa el tiempo en servicios especiales?",r:"Ascensos, reconocimiento de trienios, promoción interna, derechos en el régimen de Seguridad Social y cómputo de los 5 años para la excedencia por interés particular. No se aplica a quien ejercita el derecho de transferencia al régimen de la UE."},
+ {p:"¿Qué puesto se asigna al reingresar desde servicios especiales?",r:"Si el puesto anterior era de libre designación, uno provisional de igual nivel y similares retribuciones en el mismo municipio. En los restantes casos, uno definitivo de igual nivel en el mismo Ministerio y municipio. Si venía de una situación sin reserva, no hay reserva."},
+ {p:"¿Qué plazo hay para pedir el reingreso desde servicios especiales?",r:"1 mes desde que se pierde la condición; si no, excedencia voluntaria por interés particular con efectos desde ese día. Los parlamentarios pueden seguir hasta la constitución de las nuevas Cámaras."},
+ {p:"¿Qué distingue a transferidos y destinados por provisión en otras AAPP?",r:"Los transferidos se integran como funcionarios propios de la CA (servicio activo allí) y conservan sus derechos en origen. Los destinados por provisión se rigen por la legislación de destino, pero conservan la condición de funcionario de origen y pueden concursar allí."},
+ {p:"¿Quién acuerda la separación del servicio de los funcionarios en otras AAPP?",r:"Transferidos: el órgano de la CA, previo dictamen del Consejo de Estado. Destinados por provisión: el Ministro del Departamento de adscripción del cuerpo, previa incoación del expediente por la CA."},
+ {p:"¿Qué modalidades de excedencia recoge el art. 89 TREBEP?",r:"Voluntaria por interés particular, voluntaria por agrupación familiar, por cuidado de familiares, por razón de violencia de género o sexual y por razón de violencia terrorista."},
+ {p:"¿Qué requisitos y duración tiene la excedencia por interés particular en la AGE?",r:"A solicitud: 5 años de servicios efectivos inmediatamente anteriores, subordinada a las necesidades del servicio y no si hay expediente disciplinario. Permanencia mínima de 2 años continuados, sin máximo. No cobra ni computa."},
+ {p:"¿Qué servicios computan para los 5 años de la excedencia por interés particular?",r:"Según el acuerdo de la CSP de 13 de julio de 1995, los prestados como funcionario de carrera, en prácticas, interino, eventual o bajo contrato laboral o administrativo, y en situaciones como servicios especiales, otras AAPP, cuidado de familiares, expectativa, excedencia forzosa o suspensión provisional no confirmada."},
+ {p:"¿Cuándo se declara de oficio la excedencia por interés particular?",r:"Cuando, finalizada la causa que motivó el pase a una situación distinta del servicio activo, no se solicita el reingreso en el plazo reglamentario (no se exige antigüedad)."},
+ {p:"¿Qué es la excedencia por agrupación familiar?",r:"Sin requisito de antigüedad, para funcionarios cuyo cónyuge resida en otra localidad desempeñando un puesto definitivo como funcionario de carrera o laboral fijo. En la AGE dura entre 2 y 15 años; no cobra ni computa."},
+ {p:"¿Cómo funciona la excedencia por cuidado de familiares?",r:"Hasta 3 años por cada hijo o familiar a cargo (2.º grado). Periodo único por sujeto causante; una nueva pone fin a la anterior. Computa a efectos de trienios, carrera y SS; reserva del puesto al menos 2 años y después puesto en la misma localidad y retribución."},
+ {p:"¿Qué derechos tiene la excedencia por violencia de género o sexual?",r:"Sin tiempo mínimo de servicios ni de permanencia. Reserva del puesto 6 meses, prorrogable por periodos de 3 meses hasta 18. Computa a efectos de antigüedad, carrera y SS. Retribuciones íntegras los 2 primeros meses."},
+ {p:"¿Quién puede pedir la excedencia por violencia terrorista?",r:"Funcionarios que hayan sufrido daños físicos o psíquicos por actividad terrorista o estén amenazados (Ley 29/2011), previo reconocimiento del Ministerio del Interior o sentencia firme. En las mismas condiciones que la de violencia de género, mientras sea necesaria."},
+ {p:"¿Cuándo procede la excedencia por prestación de servicios en el sector público?",r:"Cuando el funcionario está en servicio activo en otro cuerpo (sin compatibilidad) o pasa a ser laboral fijo en el sector público. No vale el interino o laboral temporal. Tras el cese, reingreso en 1 mes o excedencia por interés particular."},
+ {p:"¿Qué es la excedencia voluntaria incentivada?",r:"Para afectados por reasignación (dos primeras fases) o en expectativa de destino o excedencia forzosa por un Plan de Empleo. La declara la SEFP; dura 5 años sin poder trabajar en el sector público; indemnización de 1 mensualidad por año (máx. 12)."},
+ {p:"¿Qué es la expectativa de destino?",r:"Situación de quienes no obtienen puesto en las dos primeras fases de reasignación. Máximo 1 año (después, excedencia forzosa). La declara la SEFP. Cobra básicas, CD del grado y el 50 % del CE; en lo demás, equivale al servicio activo."},
+ {p:"¿Qué obligaciones tienen los funcionarios en expectativa de destino?",r:"Aceptar puestos de características similares en la provincia, participar en los concursos de puestos adecuados en esa provincia y en los cursos de capacitación (INAP). Incumplirlas determina el pase a excedencia forzosa."},
+ {p:"¿Cuáles son las causas de excedencia forzosa?",r:"a) Para los que están en expectativa de destino: el transcurso del año o el incumplimiento de obligaciones (la declara la SEFP). b) Cuando, tras una suspensión firme, se solicita el reingreso y no se concede en 6 meses (la declaran los Departamentos o la DGFP)."},
+ {p:"¿Qué cobra y qué computa el excedente forzoso?",r:"Retribuciones básicas y, en su caso, prestaciones familiares por hijo a cargo. Computa a efectos de trienios y derechos pasivos. No puede trabajar en el sector público (si lo hace, excedencia por servicios en el sector público)."},
+ {p:"¿Cuánto dura la suspensión provisional?",r:"Como medida cautelar en un expediente disciplinario, no puede exceder de 6 meses, salvo paralización imputable al interesado. Durante un procedimiento judicial, lo que dure la prisión provisional u otras medidas; en ese caso, aunque pase de 6 meses no supone perder el puesto."},
+ {p:"¿Qué cobra el suspenso provisional y qué pasa después?",r:"Básicas y prestaciones por hijo (nada si hay incomparecencia o rebeldía). Si se eleva a firme, devuelve lo percibido; si no, se le restituyen las diferencias, se computa como servicio activo y se reincorpora de inmediato."},
+ {p:"¿Qué efectos tiene la suspensión firme?",r:"Priva del ejercicio de las funciones y de todos los derechos; impide prestar servicios en cualquier Administración. Si excede de 6 meses, determina la pérdida del puesto. La disciplinaria no puede exceder de 6 años."},
+ {p:"¿Cómo se reingresa tras una suspensión firme?",r:"Hay que pedirlo con 1 mes de antelación al fin de la suspensión; los efectos son desde la extinción de la responsabilidad. Si no se pide, excedencia voluntaria por interés particular; si no se concede en 6 meses, excedencia forzosa."},
+ {p:"¿Cómo se reingresa sin reserva de puesto?",r:"Por concurso, libre designación o, para expectativa y excedencia forzosa, por reasignación. También por adscripción provisional; el puesto se convoca en 1 año y el funcionario debe solicitarlo (art. 29 bis Ley 30/1984)."},
+ {p:"¿Qué datos del esquema no coinciden con el manual?",r:"Suspensión provisional: el esquema dice 3 meses prorrogables y el manual y el TREBEP, máximo 6 meses. El esquema atribuye la incentivada y la forzosa al antiguo «Ministerio para las AAPP»; hoy, la SEFP. Las Ideas clave del manual citan un máximo de 15 años en interés particular, pero en la AGE no hay máximo (los 15 años son de la agrupación familiar)."}
+]};
+
+/* ===== Tests ===== */
+const T1=[
+ {q:"¿Cuál NO es un requisito para adquirir la condición de funcionario de carrera?",o:["Superación del proceso selectivo.","Nombramiento publicado en el diario oficial.","Acatamiento de la Constitución.","Afiliación a MUFACE previa."],c:3,e:"Requisitos: proceso selectivo, nombramiento, acatamiento y toma de posesión."},
+ {q:"El nombramiento de funcionarios de carrera en la AGE corresponde a:",o:["El Ministro del Departamento.","El Secretario de Estado de Función Pública.","El Subsecretario.","El Tribunal."],c:1,e:"También expide los títulos administrativos."},
+ {q:"El plazo de toma de posesión es de:",o:["1 mes en todo caso.","15 días naturales desde la publicación (1 mes si cambia la localidad de residencia).","20 días hábiles.","3 días."],c:1,e:"RDL 6/2023."},
+ {q:"Da posesión a los funcionarios destinados en servicios periféricos:",o:["El Subsecretario.","El Delegado del Gobierno.","El Director General.","El alcalde."],c:1,e:"Subsecretarios en servicios centrales y sus OOAA."},
+ {q:"En la diligencia de toma de posesión el interesado debe manifestar:",o:["Su afiliación sindical.","No desempeñar puesto o actividad incompatible.","Su domicilio fiscal.","Su grado personal."],c:1,e:"Pública o privada sujeta a compatibilidad."},
+ {q:"¿Cuál NO es causa de pérdida de la condición de funcionario?",o:["Renuncia.","Pérdida de la nacionalidad.","Excedencia voluntaria por interés particular.","Jubilación total."],c:2,e:"La excedencia es una situación administrativa, no causa de pérdida."},
+ {q:"La pérdida de la condición de funcionario:",o:["Supone la pérdida de los derechos pasivos.","No supone la pérdida de los derechos pasivos causados.","Exige devolver los trienios.","Extingue la pensión de viudedad."],c:1,e:"Art. 63 y ss. TREBEP."},
+ {q:"En caso de pérdida por jubilación por incapacidad permanente, desaparecida la causa, la rehabilitación:",o:["Es excepcional.","Le será concedida a solicitud del interesado.","Requiere ley.","No es posible."],c:1,e:"Igual que si se recupera la nacionalidad."},
+ {q:"La rehabilitación de quien perdió la condición por inhabilitación penal:",o:["Es automática.","Puede concederse con carácter excepcional; el silencio es desestimatorio.","Está prohibida.","Tiene silencio estimatorio."],c:1,e:"Según las circunstancias y entidad del delito."},
+ {q:"La jubilación forzosa se declara de oficio al cumplir:",o:["60 años.","65 años.","67 años.","70 años."],c:1,e:"Con posibilidad de prolongación hasta los 70."},
+ {q:"La prolongación de la permanencia en el servicio activo puede llegar como máximo hasta:",o:["67 años.","68 años.","70 años.","72 años."],c:2,e:"Ley 30/1984 y TREBEP."},
+ {q:"La solicitud de prolongación debe presentarse con una antelación mínima de:",o:["1 mes.","2 meses a la fecha de cumplimiento de la edad.","3 meses.","15 días."],c:1,e:"Resolución de la SEFP de 31-12-1996."},
+ {q:"Si no hay resolución sobre la prolongación cuando faltan 15 días para la jubilación:",o:["Se entiende desestimada.","Se entiende estimada por silencio administrativo.","Se jubila de oficio.","Se prorroga un mes el plazo."],c:1,e:"Silencio estimatorio."},
+ {q:"Para poner fin a la prolongación, el funcionario debe comunicarlo con una antelación mínima de:",o:["1 mes.","2 meses.","3 meses.","15 días."],c:2,e:"A la fecha de jubilación solicitada."},
+ {q:"En la cesación progresiva de actividades, con jornada reducida a la mitad se percibe:",o:["El 50 %.","El 60 % de las retribuciones.","El 80 %.","El 100 %."],c:1,e:"A dos tercios de jornada, el 80 %."},
+ {q:"En Clases Pasivas, la jubilación voluntaria exige:",o:["55 años y 25 de servicios.","60 años y 30 años de servicios efectivos.","65 años y 15 años.","62 años y 35 años."],c:1,e:"Además, desde 2011, los últimos 5 años en Clases Pasivas si se computan otros regímenes."},
+ {q:"La jubilación voluntaria incentivada la acuerda:",o:["El Subsecretario.","El Ministerio competente en función pública.","El Delegado del Gobierno.","El INSS."],c:1,e:"Para funcionarios en expectativa de destino o excedencia forzosa por Plan de Empleo."},
+ {q:"La jubilación voluntaria (no incentivada) de un funcionario de un cuerpo dependiente de la SEFP la acuerda:",o:["El Subsecretario.","El Director General de la Función Pública.","El Consejo de Ministros.","El Delegado del Gobierno."],c:1,e:"En los demás casos, el Subsecretario del Departamento."},
+ {q:"La jubilación por incapacidad permanente se declara:",o:["Solo de oficio.","De oficio o a instancia de parte.","Solo a instancia de parte.","Por el juez."],c:1,e:"Cuando el interesado no puede ejercer las funciones de su cuerpo o escala."},
+ {q:"Según la STS de 18-1-2021, la denegación de la prolongación en el servicio activo:",o:["Está prohibida.","Puede fundarse en cualquier circunstancia apreciada discrecionalmente, debidamente justificada.","Solo cabe por enfermedad.","Debe autorizarla el Consejo de Ministros."],c:1,e:"La Administración debe justificar adecuadamente su actuación."}
+];
+
+const T2=[
+ {q:"La renuncia a la condición de funcionario debe:",o:["Ser verbal.","Manifestarse por escrito y ser aceptada expresamente por la Administración.","Publicarse en el BOE por el interesado.","Notificarse al juez."],c:1,e:"Art. 64 TREBEP."},
+ {q:"NO podrá aceptarse la renuncia cuando:",o:["El funcionario tenga menos de 5 años de servicio.","Esté sujeto a expediente disciplinario o se haya dictado auto de procesamiento o de apertura de juicio oral.","Esté en excedencia.","Sea interino."],c:1,e:"Art. 64.2 TREBEP."},
+ {q:"La renuncia a la condición de funcionario la acepta en la AGE:",o:["El Subsecretario.","La Secretaría de Estado de Función Pública.","El Ministro.","El Delegado del Gobierno."],c:1,e:"Corresponde a la SEFP."},
+ {q:"La renuncia:",o:["Inhabilita para volver a ingresar.","No inhabilita para ingresar de nuevo mediante el procedimiento de selección.","Exige esperar 5 años.","Supone perder los derechos pasivos."],c:1,e:"Art. 64.3 TREBEP."},
+ {q:"Según la Resolución de 9 de mayo de 2022, la solicitud de renuncia debe presentarse con una antelación de al menos:",o:["1 mes.","3 meses a la fecha efectiva.","15 días.","6 meses."],c:1,e:"Ante la SG de Gestión de Procedimientos de Personal."},
+ {q:"El plazo para resolver la renuncia y el sentido del silencio son:",o:["1 mes; desestimatorio.","2 meses; estimatorio.","3 meses; desestimatorio.","6 meses; estimatorio."],c:1,e:"Desde la entrada de la solicitud."},
+ {q:"La pérdida de la nacionalidad tenida en cuenta para el nombramiento NO produce la pérdida de la condición cuando:",o:["El funcionario lleva 10 años.","Simultáneamente se adquiere la nacionalidad de otro Estado que posibilite el acceso.","Lo autoriza el Ministro.","Es funcionario A1."],c:1,e:"Art. 65 TREBEP."},
+ {q:"La separación del servicio es una sanción por:",o:["Falta leve.","Falta grave.","Falta muy grave.","Cualquier falta."],c:2,e:"Tiene carácter definitivo."},
+ {q:"Tras la separación del servicio:",o:["Puede reingresarse a los 6 años.","No cabe nuevo ingreso, porque es requisito no haber sido separado de ninguna Administración.","Se rehabilita automáticamente.","Puede ser laboral fijo en la misma Administración."],c:1,e:"Pérdida definitiva."},
+ {q:"La inhabilitación especial firme produce la pérdida de la condición respecto de:",o:["Todos los empleos o cargos.","Los empleos o cargos especificados en la sentencia.","Ninguno.","Solo los cargos electivos."],c:1,e:"La absoluta afecta a todos."},
+ {q:"El procedimiento de rehabilitación se inicia:",o:["De oficio.","A instancia del interesado.","Por el Ministerio Fiscal.","Por el Consejo de Ministros."],c:1,e:"Ante el órgano competente para resolver."},
+ {q:"En la rehabilitación por recuperación de la capacidad debe aportarse:",o:["Certificado de nacimiento.","Reconocimiento del Equipo de Valoración de Incapacidades del INSS (u órgano autonómico).","Certificado de antecedentes penales.","Informe del Tribunal."],c:1,e:"Puede añadirse otra documentación médica."},
+ {q:"En la rehabilitación por recuperación de la nacionalidad debe aportarse:",o:["Pasaporte.","Certificación literal de nacimiento expedida por el Registro Civil.","DNI.","Informe del Ministerio del Interior."],c:1,e:"Documentación prevista."},
+ {q:"La duración del procedimiento de rehabilitación es de:",o:["3 meses.","6 meses.","1 año.","2 meses."],c:1,e:"Seis meses."},
+ {q:"La rehabilitación tras inhabilitación judicial la resuelve:",o:["El Subsecretario.","El Consejo de Ministros.","El Delegado del Gobierno.","El juez."],c:1,e:"La instruye la SEFP a través de la DGFP."},
+ {q:"En la rehabilitación por inhabilitación es preceptivo el informe de:",o:["El Consejo de Estado.","La Subsecretaría del Departamento que declaró la pérdida.","El Tribunal Supremo.","La CSP."],c:1,e:"Junto con otros criterios de valoración."},
+ {q:"El periodo entre la pérdida de la condición y la rehabilitación:",o:["Computa a todos los efectos.","No es computable a ningún efecto.","Computa solo para trienios.","Computa para derechos pasivos."],c:1,e:"Ni trienios, ni derechos pasivos, ni grado."},
+ {q:"Tras una resolución desestimatoria de rehabilitación por inhabilitación, puede volver a pedirse:",o:["Inmediatamente.","Transcurridos 2 años desde la resolución.","A los 5 años.","Nunca."],c:1,e:"Nueva petición tras 2 años."},
+ {q:"Al funcionario rehabilitado se le asigna:",o:["Un puesto definitivo de su elección.","Un puesto provisional de su cuerpo o escala.","Su antiguo puesto en todo caso.","Una plaza de interino."],c:1,e:"Por Subsecretarios o Delegados según el último destino."},
+ {q:"Si al rehabilitar no hay vacante, cuando surja un puesto el funcionario debe tomar posesión en:",o:["1 mes.","3 días hábiles.","15 días naturales.","10 días."],c:1,e:"Si no lo hace, excedencia voluntaria por interés particular desde la resolución."}
+];
+
+const T3=[
+ {q:"¿Cuál NO es una situación administrativa del art. 85 TREBEP?",o:["Servicios especiales.","Servicio en otras AAPP.","Expectativa de destino.","Suspensión de funciones."],c:2,e:"La expectativa de destino la regula la Ley 30/1984 en la AGE."},
+ {q:"¿Cuál de estas situaciones NO está en el TREBEP pero sí en la Ley 30/1984?",o:["Excedencia por cuidado de familiares.","Excedencia forzosa.","Servicio activo.","Excedencia por violencia de género."],c:1,e:"También la expectativa de destino, la incentivada y la de servicios en el sector público."},
+ {q:"Los cambios de situación administrativa:",o:["No se comunican.","Se comunican siempre al Registro Central de Personal y pueden hacerse sin reingreso previo.","Exigen reingreso previo siempre.","Los aprueba el Consejo de Ministros."],c:1,e:"Siempre que se reúnan los requisitos."},
+ {q:"Un funcionario en comisión de servicios está en situación de:",o:["Servicios especiales.","Servicio activo.","Servicio en otras AAPP.","Excedencia."],c:1,e:"RD 365/1995."},
+ {q:"Un funcionario que accede a concejal sin dedicación exclusiva retribuida está en:",o:["Servicios especiales.","Servicio activo.","Excedencia voluntaria.","Suspensión."],c:1,e:"Con dedicación exclusiva retribuida, servicios especiales."},
+ {q:"Un funcionario elegido Diputado o Senador de las Cortes Generales pasa a:",o:["Servicio activo.","Servicios especiales.","Excedencia por interés particular.","Excedencia forzosa."],c:1,e:"Art. 87 TREBEP."},
+ {q:"Un funcionario en las dos primeras fases de reasignación de efectivos está en:",o:["Expectativa de destino.","Servicio activo.","Excedencia forzosa.","Servicios especiales."],c:1,e:"Si no obtiene puesto en ellas, pasa a expectativa de destino."},
+ {q:"Pasa a servicios especiales el funcionario autorizado para una misión en organismos internacionales por periodo superior a:",o:["3 meses.","6 meses.","1 año.","2 años."],c:1,e:"Art. 87.1.b TREBEP."},
+ {q:"El funcionario designado como personal eventual de confianza que no opta por el servicio activo pasa a:",o:["Excedencia.","Servicios especiales.","Servicio en otras AAPP.","Suspensión."],c:1,e:"Art. 87 TREBEP."},
+ {q:"La situación de servicios especiales la declara:",o:["La SEFP.","El Subsecretario del Departamento donde esté destinado el funcionario.","El Ministro de Hacienda.","El Delegado del Gobierno."],c:1,e:"De oficio o a instancia, con efectos desde el hecho causante."},
+ {q:"En servicios especiales, el funcionario percibe:",o:["Sus retribuciones de funcionario.","Las retribuciones del puesto o cargo que desempeñe, sin perjuicio de los trienios reconocidos.","Nada.","Las básicas y la mitad del CE."],c:1,e:"Art. 87.2 TREBEP."},
+ {q:"El tiempo en servicios especiales NO computa a efectos de:",o:["Trienios.","Ascensos.","Promoción interna.","Ninguno de los anteriores: computa a todos ellos."],c:3,e:"Computa para ascensos, trienios, promoción interna y SS."},
+ {q:"Quien pierde la condición que motivó los servicios especiales debe pedir el reingreso en:",o:["15 días.","1 mes.","3 meses.","6 meses."],c:1,e:"Si no, excedencia voluntaria por interés particular."},
+ {q:"Un funcionario que ocupaba un puesto de libre designación antes de pasar a servicios especiales, al reingresar recibirá:",o:["Su antiguo puesto definitivo.","Con carácter provisional, un puesto de igual nivel y similares retribuciones en el mismo municipio.","Cualquier puesto del cuerpo.","Un puesto en expectativa."],c:1,e:"Art. 7 RD 365/1995."},
+ {q:"Los Diputados que pierden la condición por disolución de las Cámaras:",o:["Deben reingresar en 1 mes.","Pueden permanecer en servicios especiales hasta la nueva constitución.","Pasan a excedencia.","Pasan a suspensión."],c:1,e:"Excepción al plazo de 1 mes."},
+ {q:"Los funcionarios transferidos a una CA:",o:["Están en excedencia en la AGE.","Están en servicio activo en la CA y mantienen sus derechos en la Administración de origen.","Pierden la condición.","Están en servicios especiales."],c:1,e:"Art. 88 TREBEP."},
+ {q:"La separación del servicio de un funcionario transferido la acuerda:",o:["El Ministro de origen.","El órgano competente de la CA, previo dictamen del Consejo de Estado.","El Consejo de Ministros.","El Tribunal Supremo."],c:1,e:"Manual del tema."},
+ {q:"La separación de un funcionario de la AGE destinado en una CA por concurso la acuerda:",o:["La CA.","El Ministro del Departamento de adscripción del cuerpo, previa incoación del expediente por la CA.","El Consejo de Estado.","La SEFP."],c:1,e:"Art. 11 RD 365/1995."},
+ {q:"El tiempo en servicio en otras AAPP por provisión de puestos computa:",o:["No computa.","Como servicio activo en su cuerpo o escala de origen.","Solo para trienios.","Como excedencia."],c:1,e:"Art. 88 TREBEP."},
+ {q:"Al reingresar desde otra Administración, el reconocimiento de la carrera se hace conforme a:",o:["Lo que decida el funcionario.","Los Convenios de Conferencia Sectorial; en su defecto, la Administración de reingreso.","El Tribunal de Cuentas.","Ninguna regla."],c:1,e:"Art. 88.4 TREBEP."}
+];
+
+const T4=[
+ {q:"¿Cuál NO es una modalidad de excedencia del art. 89 TREBEP?",o:["Por interés particular.","Por agrupación familiar.","Voluntaria incentivada.","Por violencia terrorista."],c:2,e:"La incentivada es de la Ley 30/1984."},
+ {q:"Para solicitar la excedencia por interés particular hay que haber prestado servicios efectivos durante:",o:["3 años.","5 años inmediatamente anteriores.","10 años.","1 año."],c:1,e:"En cualquiera de las AAPP."},
+ {q:"En la AGE, la permanencia mínima en excedencia por interés particular es de:",o:["1 año.","2 años continuados, sin límite máximo.","5 años.","2 años, con máximo de 15."],c:1,e:"El máximo de 15 es de la agrupación familiar."},
+ {q:"La excedencia por interés particular NO podrá declararse cuando:",o:["El funcionario sea A1.","Se le instruya expediente disciplinario.","Lleve 6 años.","Tenga hijos."],c:1,e:"Además queda subordinada a las necesidades del servicio."},
+ {q:"En excedencia por interés particular:",o:["Se cobran las básicas.","No se devengan retribuciones ni computa a efectos de ascensos, trienios y SS.","Computa para trienios.","Hay reserva de puesto 2 años."],c:1,e:"Art. 89.2 TREBEP."},
+ {q:"La excedencia por agrupación familiar exige:",o:["5 años de servicios.","Que el cónyuge resida en otra localidad desempeñando un puesto definitivo como funcionario de carrera o laboral fijo.","Tener hijos menores.","Ser A1."],c:1,e:"Sin requisito de antigüedad."},
+ {q:"En la AGE, la excedencia por agrupación familiar dura:",o:["Entre 1 y 5 años.","Entre 2 y 15 años.","Hasta 3 años.","Sin límite."],c:1,e:"Antes de los 15 hay que pedir el reingreso."},
+ {q:"La excedencia por cuidado de familiares tiene una duración no superior a:",o:["2 años.","3 años.","5 años.","1 año."],c:1,e:"Por cada sujeto causante."},
+ {q:"El periodo de excedencia por cuidado de hijo se computa desde:",o:["La solicitud.","La fecha de nacimiento o, en su caso, de la resolución judicial o administrativa.","Fin de la baja por nacimiento.","El inicio del curso escolar."],c:1,e:"Art. 89.4 TREBEP."},
+ {q:"En la excedencia por cuidado de familiares, el puesto se reserva al menos durante:",o:["6 meses.","1 año.","2 años.","3 años."],c:2,e:"Después, a un puesto en la misma localidad y de igual retribución."},
+ {q:"El tiempo de excedencia por cuidado de familiares computa a efectos de:",o:["Nada.","Trienios, carrera y derechos en el régimen de SS.","Solo trienios.","Solo SS."],c:1,e:"También puede participar en cursos de formación."},
+ {q:"Si un nuevo sujeto causante origina una nueva excedencia por cuidado:",o:["Se suman ambas.","El inicio del nuevo periodo pone fin al que se venía disfrutando.","No se puede pedir.","Hay que reingresar antes."],c:1,e:"Periodo único por sujeto causante."},
+ {q:"La excedencia por violencia de género o sexual exige:",o:["5 años de servicios.","No exige tiempo mínimo de servicios ni plazo de permanencia.","2 años de permanencia.","Sentencia firme siempre."],c:1,e:"Art. 89.5 TREBEP."},
+ {q:"En la excedencia por violencia de género, la reserva del puesto es de:",o:["2 años.","6 meses, prorrogable por periodos de 3 meses hasta un máximo de 18.","1 año.","3 meses."],c:1,e:"Cuando las actuaciones judiciales lo exijan."},
+ {q:"Durante los 2 primeros meses de excedencia por violencia de género, la funcionaria percibe:",o:["Nada.","Las retribuciones íntegras y, en su caso, las prestaciones por hijo a cargo.","El 50 %.","Solo las básicas."],c:1,e:"Art. 89.5 TREBEP."},
+ {q:"La excedencia por violencia terrorista requiere:",o:["Denuncia policial solo.","El previo reconocimiento del Ministerio del Interior o sentencia judicial firme.","Informe médico.","Autorización de la SEFP."],c:1,e:"Ley 29/2011."},
+ {q:"La excedencia por prestación de servicios en el sector público procede cuando el funcionario:",o:["Es nombrado interino en otro cuerpo.","Está en servicio activo en otro cuerpo (sin compatibilidad) o es laboral fijo en el sector público.","Trabaja en una empresa privada.","Es eventual."],c:1,e:"El interino o temporal no habilita."},
+ {q:"Tras cesar en el otro puesto, el excedente por servicios en el sector público debe pedir el reingreso en:",o:["15 días.","1 mes.","3 meses.","6 meses."],c:1,e:"Si no, excedencia voluntaria por interés particular."},
+ {q:"La excedencia por interés particular se declara de oficio cuando:",o:["El funcionario lo pide.","Finalizada la causa de otra situación, no se solicita el reingreso en plazo.","Hay expediente disciplinario.","Cumple 65 años."],c:1,e:"En ese caso no se exige antigüedad."},
+ {q:"Según el acuerdo de la CSP de 13-7-1995, para los 5 años de la excedencia por interés particular computan los servicios prestados como:",o:["Solo funcionario de carrera.","Funcionario de carrera, en prácticas, interino, eventual o con contrato laboral o administrativo.","Solo en la AGE.","Solo en el mismo cuerpo."],c:1,e:"Y determinadas situaciones como servicios especiales o cuidado de familiares."}
+];
+
+const T5=[
+ {q:"La excedencia voluntaria incentivada puede solicitarse por los funcionarios:",o:["Con 10 años de servicio.","En las dos primeras fases de reasignación, o en expectativa de destino o excedencia forzosa por un Plan de Empleo.","En servicios especiales.","En suspensión."],c:1,e:"Ley 30/1984."},
+ {q:"La excedencia voluntaria incentivada la declara:",o:["El Subsecretario.","La Secretaría de Estado de Función Pública.","El Delegado del Gobierno.","El Consejo de Ministros."],c:1,e:"El esquema cita al antiguo Ministerio para las AAPP."},
+ {q:"La duración de la excedencia voluntaria incentivada es de:",o:["2 años.","5 años.","1 año.","15 años."],c:1,e:"Sin poder trabajar en el sector público."},
+ {q:"La indemnización por excedencia voluntaria incentivada es de:",o:["20 días por año.","1 mensualidad de retribuciones periódicas por año de servicio, máximo 12 (sin pagas extra ni productividad).","33 días por año.","6 mensualidades fijas."],c:1,e:"Del último puesto desempeñado."},
+ {q:"Si al acabar la incentivada no se pide el reingreso dentro del mes siguiente:",o:["Se prorroga.","El Departamento le declara en excedencia voluntaria por interés particular.","Pierde la condición.","Pasa a excedencia forzosa."],c:1,e:"Ley 30/1984."},
+ {q:"Pasan a expectativa de destino los funcionarios que:",o:["Lo solicitan.","No obtienen puesto en las dos primeras fases de reasignación de efectivos.","Son sancionados.","Cumplen 65 años."],c:1,e:"Quedan adscritos al Ministerio de FP."},
+ {q:"La duración máxima de la expectativa de destino es:",o:["6 meses.","1 año.","2 años.","5 años."],c:1,e:"Después, excedencia forzosa."},
+ {q:"En expectativa de destino se percibe:",o:["Nada.","Básicas, CD del grado personal y el 50 % del complemento específico.","Íntegras.","Solo básicas."],c:1,e:"En lo demás se equipara al servicio activo."},
+ {q:"¿Cuál es una obligación del funcionario en expectativa de destino?",o:["Aceptar puestos en cualquier provincia.","Aceptar puestos de características similares en la provincia donde estaba destinado.","No hacer cursos.","Pedir la jubilación."],c:1,e:"También concursar en la provincia y hacer cursos."},
+ {q:"El incumplimiento de las obligaciones en expectativa de destino determina el pase a:",o:["Excedencia por interés particular.","Excedencia forzosa.","Suspensión.","Servicio activo."],c:1,e:"Ley 30/1984."},
+ {q:"La declaración y cese en expectativa de destino corresponden a:",o:["El Subsecretario.","La Secretaría de Estado de Función Pública.","El Delegado del Gobierno.","La CSP."],c:1,e:"Que gestiona al personal afectado."},
+ {q:"¿Cuál es causa de excedencia forzosa?",o:["Pedirlo voluntariamente.","Cumplir el año en expectativa de destino o incumplir sus obligaciones.","Estar en servicios especiales.","Cuidar a un hijo."],c:1,e:"Y tras suspensión firme si el reingreso no se concede en 6 meses."},
+ {q:"Tras la suspensión firme, si se solicita el reingreso y no se concede en 6 meses, el funcionario pasa a:",o:["Excedencia voluntaria por interés particular.","Excedencia forzosa.","Expectativa de destino.","Servicio activo."],c:1,e:"Con efectos desde la extinción de la responsabilidad."},
+ {q:"En excedencia forzosa se percibe:",o:["Nada.","Retribuciones básicas y, en su caso, prestaciones por hijo a cargo.","El 50 % del CE.","Íntegras."],c:1,e:"Computa a efectos de trienios y derechos pasivos."},
+ {q:"Si un excedente forzoso obtiene un puesto en el sector público:",o:["Lo compatibiliza.","Pasa a excedencia voluntaria por prestación de servicios en el sector público.","Pierde la condición.","Sigue en excedencia forzosa."],c:1,e:"No puede desempeñar puestos en el sector público."},
+ {q:"El incumplimiento de las obligaciones del excedente forzoso lleva a:",o:["Expectativa de destino.","Excedencia voluntaria por interés particular.","Suspensión.","Separación."],c:1,e:"Ley 30/1984."},
+ {q:"La excedencia forzosa derivada de suspensión firme la declaran, para cuerpos no adscritos al Ministerio de FP:",o:["La SEFP.","Los Departamentos Ministeriales de adscripción del cuerpo.","El Consejo de Ministros.","Los Delegados del Gobierno."],c:1,e:"La DGFP para los cuerpos adscritos al Ministerio de FP."},
+ {q:"El tiempo en excedencia forzosa computa a efectos de:",o:["Nada.","Trienios y derechos pasivos.","Grado personal.","Productividad."],c:1,e:"Manual del tema."},
+ {q:"La expectativa de destino, a efectos de incompatibilidades:",o:["Libera de ellas.","Se equipara al servicio activo.","Es como la excedencia.","No hay régimen."],c:1,e:"A los restantes efectos, incluidas las incompatibilidades."},
+ {q:"Los funcionarios en expectativa de destino deben participar en los cursos de capacitación promovidos por:",o:["Los sindicatos.","El INAP y los centros de formación reconocidos.","Las universidades.","Las CCAA."],c:1,e:"Ley 30/1984."}
+];
+
+const T6=[
+ {q:"La suspensión provisional como medida cautelar en un expediente disciplinario no podrá exceder de:",o:["3 meses.","6 meses, salvo paralización del procedimiento imputable al interesado.","1 año.","2 meses."],c:1,e:"El esquema dice «3 meses prorrogables»; el manual y el TREBEP fijan 6 meses."},
+ {q:"Si la suspensión provisional se acuerda durante un procedimiento judicial y excede de 6 meses:",o:["Se pierde el puesto.","No supone la pérdida del puesto de trabajo.","Se convierte en firme.","Se cobra el 100 %."],c:1,e:"Dura lo que la prisión provisional u otras medidas del juez."},
+ {q:"El suspenso provisional percibe:",o:["Nada.","Las retribuciones básicas y, en su caso, las prestaciones por hijo a cargo.","Íntegras.","El 50 %."],c:1,e:"Nada en caso de incomparecencia o rebeldía."},
+ {q:"Si la suspensión provisional se eleva a definitiva:",o:["Se cobra la diferencia.","El funcionario deberá devolver lo percibido durante la provisional.","Se olvida.","Se computa como servicio activo."],c:1,e:"Manual del tema."},
+ {q:"Si la suspensión no se declara firme:",o:["Se pierde el puesto.","El tiempo computa como servicio activo y se le restituyen los derechos económicos.","Pasa a excedencia.","Debe reingresar por concurso."],c:1,e:"Reincorporación inmediata a su puesto."},
+ {q:"El tiempo de suspensión provisional:",o:["No computa nada.","Es de abono para el cumplimiento de la suspensión firme.","Se duplica.","Computa como excedencia."],c:1,e:"Manual del tema."},
+ {q:"Puede acordar como medida preventiva la suspensión provisional de funcionarios sometidos a procesamiento:",o:["El Delegado del Gobierno.","El Subsecretario del Departamento.","El juez exclusivamente.","La SEFP."],c:1,e:"Si no la adoptó la autoridad judicial."},
+ {q:"La suspensión firme se impone por:",o:["Decisión del superior jerárquico.","Sentencia en causa criminal o sanción disciplinaria.","Acuerdo sindical.","Resolución del Tribunal de Cuentas."],c:1,e:"Art. 90 TREBEP."},
+ {q:"La suspensión firme por sanción disciplinaria no puede exceder de:",o:["3 años.","6 años.","10 años.","1 año."],c:1,e:"Con abono de la suspensión provisional."},
+ {q:"La suspensión determina la pérdida del puesto cuando excede de:",o:["3 meses.","6 meses.","1 año.","2 años."],c:1,e:"Art. 90.2 TREBEP."},
+ {q:"Durante la suspensión firme, el funcionario:",o:["Puede trabajar en otra Administración.","No podrá prestar servicios en ninguna Administración ni en sus organismos.","Cobra las básicas.","Puede concursar."],c:1,e:"Art. 90.3 TREBEP."},
+ {q:"Quien perdió su puesto por suspensión firme debe solicitar el reingreso:",o:["Al terminar la suspensión.","Con 1 mes de antelación a la finalización de la suspensión.","3 meses antes.","No puede reingresar."],c:1,e:"Efectos desde la extinción de la responsabilidad."},
+ {q:"Si tras la suspensión firme no se solicita el reingreso en plazo:",o:["Pasa a excedencia forzosa.","Se le declara de oficio en excedencia voluntaria por interés particular.","Pierde la condición.","Se prorroga la suspensión."],c:1,e:"Con efectos desde la fecha de finalización de la sanción."},
+ {q:"El reingreso de funcionarios sin reserva de puesto se efectúa, según el art. 29 bis Ley 30/1984:",o:["Por oposición.","Por concurso, libre designación, reasignación (expectativa o forzosa) o adscripción provisional.","Automáticamente.","Por sorteo."],c:1,e:"Vigente hasta el desarrollo del art. 91 TREBEP."},
+ {q:"El puesto asignado por adscripción provisional se convocará para su provisión definitiva en el plazo máximo de:",o:["6 meses.","1 año.","2 años.","3 meses."],c:1,e:"Y el funcionario debe solicitarlo."},
+ {q:"Según el art. 91 TREBEP, el reingreso al servicio activo:",o:["Lo regula cada funcionario.","Se regulará reglamentariamente, respetando el derecho a la reserva de puesto cuando proceda.","Está prohibido.","Requiere ley orgánica."],c:1,e:"Mientras tanto, art. 29 bis Ley 30/1984."},
+ {q:"El funcionario declarado en suspensión firme queda privado de:",o:["Solo las retribuciones.","El ejercicio de sus funciones y de todos los derechos inherentes a la condición.","Los trienios.","Nada."],c:1,e:"Art. 90.1 TREBEP."},
+ {q:"Un funcionario en suspensión provisional no comparece y es declarado en rebeldía. ¿Qué cobra?",o:["Las básicas.","No se le acreditará haber alguno.","El 50 %.","Íntegras."],c:1,e:"Manual del tema."},
+ {q:"Según el esquema, la declaración de la suspensión de funciones se produce:",o:["A instancia del funcionario.","De oficio, por resolución disciplinaria o sentencia judicial.","Por el Consejo de Ministros.","Por la CSP."],c:1,e:"Esquema de situaciones administrativas."},
+ {q:"La Ley 5/2023 andaluza regula, sin paralelo estatal, la excedencia:",o:["Por cuidado de hijos.","Por incompatibilidad y la excedencia con reserva de puesto.","Por agrupación familiar.","Incentivada."],c:1,e:"La de reserva exige 10 años de servicios y dura de 6 meses a 1 año."}
+];
+
+const T7=[
+ {q:"Un funcionario de 64 años quiere prolongar su servicio. Cumple 65 el 1 de junio. ¿Hasta cuándo puede presentar la solicitud?",o:["Hasta el 1 de mayo.","Hasta el 1 de abril (2 meses antes).","Hasta el 1 de junio.","Hasta el 15 de mayo."],c:1,e:"Con una antelación mínima de 2 meses a la fecha de jubilación forzosa."},
+ {q:"Presentó la solicitud el 1 de marzo y el 17 de mayo no hay resolución (cumple 65 el 1 de junio). ¿Qué ocurre?",o:["Se jubila.","Se entiende estimada por silencio (faltan 15 días).","Se desestima.","Se suspende el plazo."],c:1,e:"Silencio estimatorio cuando faltan 15 días."},
+ {q:"Un funcionario de 66 años con jornada reducida a dos tercios por cesación progresiva cobra:",o:["El 60 %.","El 80 %.","El 66 %.","El 100 %."],c:1,e:"Mitad de jornada → 60 %; dos tercios → 80 %."},
+ {q:"Un funcionario de Clases Pasivas tiene 60 años y 28 de servicios. ¿Puede jubilarse voluntariamente?",o:["Sí.","No: necesita 30 años de servicios efectivos.","Sí, con penalización.","Solo si es incentivada."],c:1,e:"60 años y 30 de servicios."},
+ {q:"Una funcionaria quiere renunciar con efectos del 1 de octubre. ¿Hasta cuándo puede presentar la solicitud?",o:["Hasta el 1 de septiembre.","Hasta el 1 de julio (3 meses antes).","Hasta el 30 de septiembre.","Hasta el 1 de agosto."],c:1,e:"Al menos 3 meses de antelación (Resolución de 9 de mayo de 2022)."},
+ {q:"La solicitud de renuncia entró el 1 de marzo y no hay resolución el 2 de mayo. ¿Efecto?",o:["Desestimada.","Estimada (silencio positivo en 2 meses).","Caducada.","Pendiente."],c:1,e:"Silencio estimatorio de la renuncia."},
+ {q:"Un funcionario con 4 años de servicio pide la excedencia por interés particular. ¿Procede?",o:["Sí.","No: se exigen 5 años de servicios inmediatamente anteriores.","Sí, con informe.","Solo por 2 años."],c:1,e:"Requisito de 5 años."},
+ {q:"Una funcionaria con 2 años de servicio cuyo marido ha obtenido plaza definitiva de funcionario en otra ciudad pide excedencia. ¿Cuál procede?",o:["Interés particular.","Agrupación familiar (no exige antigüedad).","Cuidado de familiares.","Ninguna."],c:1,e:"Sin requisito de antigüedad."},
+ {q:"Un funcionario en excedencia por cuidado de hijo desde hace 30 meses. ¿Qué reserva tiene?",o:["El mismo puesto.","Un puesto en la misma localidad y de igual retribución (pasaron los 2 años de reserva del mismo puesto).","Ninguna.","Cualquier puesto del cuerpo."],c:1,e:"Los 2 primeros años, el mismo puesto; después, misma localidad y retribución."},
+ {q:"Durante la excedencia por cuidado de su hijo nace otro hijo y pide nueva excedencia. ¿Qué ocurre con la primera?",o:["Se suman.","El inicio de la nueva pone fin a la anterior.","Se suspende la nueva.","No puede pedirla."],c:1,e:"Periodo único por sujeto causante."},
+ {q:"Una funcionaria víctima de violencia de género pide excedencia. ¿Cuánto cobra en los 3 primeros meses?",o:["Íntegras los 3 meses.","Íntegras los 2 primeros meses; nada el tercero.","Las básicas.","Nada."],c:1,e:"Retribuciones íntegras durante los 2 primeros meses."},
+ {q:"La misma funcionaria necesita mantener la reserva más allá de 6 meses por actuaciones judiciales. ¿Hasta cuándo puede llegar?",o:["12 meses.","18 meses, en prórrogas de 3 meses.","24 meses.","Sin límite."],c:1,e:"Máximo 18 meses."},
+ {q:"Un funcionario es nombrado Director General en un Ministerio. ¿Situación?",o:["Servicio activo.","Servicios especiales (RD 365/1995).","Excedencia.","Otras AAPP."],c:1,e:"Subsecretarios, SGT y Directores Generales: servicios especiales."},
+ {q:"Un funcionario C1 trabaja en un gabinete ministerial en un puesto de nivel dentro del intervalo de su cuerpo. ¿Situación?",o:["Siempre servicios especiales.","Servicio activo o servicios especiales, según opte.","Excedencia.","Siempre servicio activo."],c:1,e:"Si el nivel está fuera del intervalo, servicios especiales."},
+ {q:"Un funcionario en servicios especiales cesa como alto cargo el 10 de marzo. ¿Hasta cuándo puede pedir el reingreso?",o:["10 de abril (1 mes).","10 de marzo.","10 de junio.","Sin plazo."],c:0,e:"1 mes; si no, excedencia voluntaria por interés particular desde el 10 de marzo."},
+ {q:"Un funcionario en expectativa de destino rechaza un puesto similar en su provincia. ¿Qué ocurre?",o:["Nada.","Pasa a excedencia forzosa.","Pasa a excedencia por interés particular.","Pierde la condición."],c:1,e:"Incumplir las obligaciones lleva a la excedencia forzosa."},
+ {q:"Un excedente forzoso procedente de expectativa incumple la obligación de concursar. ¿Qué ocurre?",o:["Vuelve a expectativa.","Pasa a excedencia voluntaria por interés particular.","Suspensión.","Nada."],c:1,e:"Ley 30/1984."},
+ {q:"Un funcionario con 8 años de servicios efectivos pasa a excedencia incentivada. ¿Qué indemnización le corresponde?",o:["12 mensualidades.","8 mensualidades (1 por año completo).","4 mensualidades.","Ninguna."],c:1,e:"1 mensualidad por año completo, con un máximo de 12."},
+ {q:"Un funcionario es sancionado con 9 meses de suspensión firme. ¿Conserva su puesto?",o:["Sí.","No: la suspensión de más de 6 meses determina la pérdida del puesto.","Sí, si es A1.","Depende del Subsecretario."],c:1,e:"Art. 90.2 TREBEP."},
+ {q:"Su suspensión termina el 1 de diciembre. Pide el reingreso el 1 de noviembre y no se le concede hasta pasados 6 meses desde el fin de la responsabilidad. ¿Situación?",o:["Excedencia voluntaria por interés particular.","Excedencia forzosa, con efectos desde la extinción de la responsabilidad.","Expectativa de destino.","Servicio activo."],c:1,e:"Si no se concede el reingreso en 6 meses."}
+];
+
+const T8=[
+ {q:"¿Qué cobra un funcionario en expectativa de destino respecto del complemento específico?",o:["El 100 %.","El 50 %.","El 80 %.","Nada."],c:1,e:"Más las básicas y el CD del grado."},
+ {q:"¿Qué situación computa a efectos de trienios, carrera y SS y además reserva el mismo puesto 2 años?",o:["Excedencia por interés particular.","Excedencia por cuidado de familiares.","Excedencia por agrupación familiar.","Excedencia forzosa."],c:1,e:"Art. 89.4 TREBEP."},
+ {q:"¿En qué situación se cobran las retribuciones del cargo más los trienios?",o:["Servicio en otras AAPP.","Servicios especiales.","Expectativa de destino.","Excedencia forzosa."],c:1,e:"Art. 87.2 TREBEP."},
+ {q:"¿En qué dos situaciones se perciben solo básicas y prestación por hijo a cargo?",o:["Expectativa y servicios especiales.","Excedencia forzosa y suspensión provisional.","Cuidado de familiares e interés particular.","Agrupación familiar y servicio activo."],c:1,e:"Según el manual y el esquema."},
+ {q:"¿Qué excedencia la declara la Secretaría de Estado de Función Pública?",o:["Por cuidado de familiares.","Voluntaria incentivada.","Por agrupación familiar.","Por interés particular."],c:1,e:"Y la expectativa de destino y la forzosa procedente de expectativa."},
+ {q:"¿Qué situación tiene un máximo de 1 año?",o:["Excedencia incentivada.","Expectativa de destino.","Excedencia por cuidado.","Servicios especiales."],c:1,e:"Luego, excedencia forzosa."},
+ {q:"¿Qué situación tiene una duración fija de 5 años?",o:["Excedencia por interés particular.","Excedencia voluntaria incentivada.","Agrupación familiar.","Expectativa de destino."],c:1,e:"Ley 30/1984."},
+ {q:"¿Qué excedencia exige 5 años de servicios previos?",o:["Agrupación familiar.","Interés particular (a solicitud).","Violencia de género.","Cuidado de familiares."],c:1,e:"Las demás del TREBEP no exigen antigüedad."},
+ {q:"¿En qué situación el funcionario se rige por la legislación de la Administración de destino conservando la condición en la de origen?",o:["Servicios especiales.","Servicio en otras AAPP por provisión de puestos.","Excedencia por sector público.","Suspensión."],c:1,e:"Art. 88 TREBEP."},
+ {q:"Un funcionario es nombrado Subdelegado del Gobierno y no opta por el servicio activo. Según el esquema, su situación es:",o:["Servicio activo.","Servicios especiales.","Excedencia.","Otras AAPP."],c:1,e:"Esquema de situaciones administrativas."},
+ {q:"¿Qué órgano declara el pase a servicios especiales?",o:["La SEFP.","El Subsecretario del Departamento de destino.","El Gobierno.","La DGFP."],c:1,e:"Y concede el reingreso el Departamento al que vaya a ser destinado."},
+ {q:"¿Qué situación se equipara al servicio activo a todos los demás efectos, incluidas las incompatibilidades?",o:["Excedencia forzosa.","Expectativa de destino.","Excedencia incentivada.","Suspensión provisional."],c:1,e:"Ley 30/1984."},
+ {q:"Un funcionario es elegido miembro del Parlamento Europeo. Situación:",o:["Servicio activo.","Servicios especiales.","Excedencia por interés particular.","Otras AAPP."],c:1,e:"RD 365/1995."},
+ {q:"Un funcionario es activado como reservista voluntario en las FAS. Situación:",o:["Servicio activo.","Servicios especiales.","Excedencia.","Suspensión."],c:1,e:"Art. 87 TREBEP."},
+ {q:"Un funcionario de la AGE gana un concurso en una CA. Situación en la AGE:",o:["Excedencia voluntaria.","Servicio en otras AAPP.","Servicios especiales.","Servicio activo."],c:1,e:"Art. 88 TREBEP."},
+ {q:"Un funcionario C2 aprueba la oposición a C1 y toma posesión en el nuevo cuerpo. En el cuerpo C2 queda en:",o:["Servicio activo.","Excedencia voluntaria por prestación de servicios en el sector público.","Servicios especiales.","Expectativa."],c:1,e:"Salvo que obtenga compatibilidad."},
+ {q:"¿Cuál de estas excedencias NO da derecho a reserva de puesto?",o:["Cuidado de familiares.","Violencia de género.","Interés particular.","Violencia terrorista."],c:2,e:"Tampoco la agrupación familiar."},
+ {q:"¿Qué órgano resuelve la rehabilitación por recuperación de la nacionalidad para un funcionario de servicios periféricos?",o:["Consejo de Ministros.","El Delegado del Gobierno.","La SEFP.","El Ministro."],c:1,e:"Subsecretario o Delegado según el último destino."},
+ {q:"¿Qué procedimiento tiene silencio desestimatorio?",o:["La renuncia.","La rehabilitación tras inhabilitación.","La prolongación del servicio activo.","Ninguno."],c:1,e:"La renuncia y la prolongación tienen silencio estimatorio."},
+ {q:"¿En qué excedencia la Administración puede limitar el ejercicio simultáneo si dos funcionarios generan el derecho por el mismo sujeto?",o:["Interés particular.","Cuidado de familiares.","Agrupación familiar.","Incentivada."],c:1,e:"Por razones justificadas relacionadas con el funcionamiento de los servicios."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🎓",name:"Adquisición y jubilación",desc:"Requisitos de adquisición, causas de pérdida y modalidades de jubilación.",qs:T1},
+ {id:"t2",ic:"🚪",name:"Renuncia, separación e inhabilitación",desc:"Renuncia, nacionalidad, separación, inhabilitación y rehabilitación.",qs:T2},
+ {id:"t3",ic:"🏛️",name:"Activo, servicios especiales y otras AAPP",desc:"Clasificación, supuestos y efectos de las tres primeras situaciones.",qs:T3},
+ {id:"t4",ic:"🏖️",name:"Excedencias del TREBEP",desc:"Interés particular, agrupación familiar, cuidado de familiares, violencia y sector público.",qs:T4},
+ {id:"t5",ic:"🔁",name:"Incentivada, expectativa y forzosa",desc:"Situaciones de la Ley 30/1984 ligadas a la reasignación de efectivos.",qs:T5},
+ {id:"t6",ic:"⛔",name:"Suspensión de funciones y reingreso",desc:"Suspensión provisional y firme, reingreso y excedencias andaluzas.",qs:T6},
+ {id:"t7",ic:"🧮",name:"Casos prácticos con fechas y cifras",desc:"Supuestos de plazos, cómputos y cambios de situación.",qs:T7},
+ {id:"t8",ic:"🗺️",name:"Repaso del esquema de situaciones",desc:"Preguntas cruzadas a partir del mapa: retribución, cómputo, reserva y órganos.",qs:T8}
+];
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+/* ===== Esquemas autocorregibles ===== */
+const SITOPTS=["Servicio activo","Servicios especiales","Servicio en otras AAPP","Excedencia voluntaria"];
+const ESQ=[
+ {id:"e1",title:"Ordena: adquisición de la condición",intro:"Coloca los requisitos sucesivos para adquirir la condición de funcionario de carrera.",type:"order",
+  items:[
+   {t:"Superación del proceso selectivo",why:"Mediante oposición, concurso-oposición o, solo por ley y excepcionalmente, concurso."},
+   {t:"Nombramiento por la SEFP, publicado en el BOE",why:"El Secretario de Estado de Función Pública nombra y expide el título administrativo."},
+   {t:"Acatamiento de la Constitución (y del Estatuto de Autonomía)",why:"Y del resto del ordenamiento jurídico."},
+   {t:"Toma de posesión en 15 días naturales (1 mes si hay cambio de residencia)",why:"Ante el Subsecretario (servicios centrales) o el Delegado del Gobierno (periféricos), declarando no incurrir en incompatibilidad."}
+  ]},
+ {id:"e2",title:"Pérdida de la condición y rehabilitación",intro:"Causas, efectos y si cabe volver.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Pérdida de la condición de funcionario</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Causas</b>Renuncia: la acepta {{0}}.<br>No se acepta si hay {{1}}.<br>Separación: por falta {{2}}; es {{3}}.<br>Inhabilitación especial: afecta a {{4}}.</div>
+   <div class="sch-box alt"><b>Rehabilitación</b>Nacionalidad o incapacidad recuperadas: {{5}}.<br>Inhabilitación: {{6}}; la resuelve {{7}}.<br>Derechos pasivos ya causados: {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["la SEFP","el Subsecretario","el Ministro","el Delegado del Gobierno"],why:"La renuncia la acepta la Secretaría de Estado de Función Pública."},
+   {o:["expediente disciplinario o auto de procesamiento o de juicio oral","menos de 5 años de servicio","excedencia","hijos menores"],why:"No puede aceptarse con expediente disciplinario o auto de procesamiento o apertura de juicio oral."},
+   {o:["muy grave","grave","leve","cualquiera"],why:"La separación del servicio es sanción por falta muy grave."},
+   {o:["definitiva (no cabe nuevo ingreso)","temporal (6 años)","revisable a 2 años","provisional"],why:"Es requisito de acceso no haber sido separado de ninguna Administración."},
+   {o:["los empleos o cargos que fije la sentencia","todos los empleos","ninguno","solo cargos electos"],why:"La absoluta afecta a todos; la especial, a los especificados en la sentencia."},
+   {o:["se concede («le será concedida»)","excepcional","imposible","por ley"],why:"Desaparecida la causa objetiva, la rehabilitación se concede."},
+   {o:["excepcional, con silencio desestimatorio","automática","prohibida","con silencio estimatorio"],why:"Se concede excepcionalmente según las circunstancias y la entidad del delito."},
+   {o:["el Consejo de Ministros","el Subsecretario","el juez","la SEFP"],why:"Resuelve el Consejo de Ministros e instruye la SEFP a través de la DGFP."},
+   {o:["se conservan","se pierden","se reducen a la mitad","se suspenden"],why:"La pérdida de la condición no supone perder los derechos pasivos causados."}
+  ]},
+ {id:"e3",title:"Jubilación",intro:"Modalidades, edades, plazos y órganos competentes.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Jubilación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Forzosa y prolongación</b>Edad: {{0}}. Prolongación: hasta {{1}}.<br>Solicitud: {{2}} antes. Resolución: {{3}}.<br>Silencio: {{4}}. Fin de la prolongación: avisar con {{5}}.</div>
+   <div class="sch-box alt"><b>Voluntaria e incentivada</b>Clases Pasivas: {{6}}.<br>Cesación progresiva (½ jornada): {{7}}.<br>Incentivada: la acuerda {{8}}.<br>Forzosa en servicios periféricos: la declara {{9}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["65 años","67 años","60 años","70 años"],why:"La jubilación forzosa se declara de oficio a los 65 años."},
+   {o:["70 años","67 años","72 años","68 años"],why:"La prolongación puede llegar como máximo a los 70."},
+   {o:["2 meses","1 mes","3 meses","15 días"],why:"La solicitud se presenta con una antelación mínima de 2 meses."},
+   {o:["1 mes","2 meses","15 días","3 meses"],why:"Se resuelve en 1 mes desde la entrada en el registro."},
+   {o:["estimatorio a falta de 15 días","desestimatorio","no hay silencio","estimatorio al mes"],why:"Si faltan 15 días y no hay resolución, se entiende estimada."},
+   {o:["3 meses de antelación","1 mes","15 días","6 meses"],why:"La comunicación para terminar la prolongación debe hacerse con 3 meses de antelación."},
+   {o:["60 años y 30 de servicios","65 años y 15","55 años y 35","62 años y 25"],why:"En Clases Pasivas se exigen 60 años y 30 de servicios efectivos."},
+   {o:["60 % de retribución","50 %","80 %","100 %"],why:"Jornada a la mitad, 60 %; a dos tercios, 80 %."},
+   {o:["el Ministerio de función pública","el Subsecretario","el Delegado del Gobierno","el INSS"],why:"La jubilación voluntaria incentivada la acuerda el Ministerio competente en función pública."},
+   {o:["el Delegado del Gobierno","el Subsecretario","la SEFP","el Ministro"],why:"La forzosa y por incapacidad: Subsecretario en servicios centrales y Delegado del Gobierno en periféricos."}
+  ]},
+ {id:"e4",title:"Renuncia y procedimiento de rehabilitación",intro:"Plazos de la Resolución de 9 de mayo de 2022 y del procedimiento de rehabilitación.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Plazos de renuncia y rehabilitación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Renuncia</b>Solicitud: {{0}} antes.<br>Informe: {{1}}.<br>Resolución: {{2}}; silencio {{3}}.</div>
+   <div class="sch-box alt"><b>Rehabilitación</b>Subsanación: {{4}}.<br>Vista del expediente: {{5}}.<br>Duración: {{6}}.<br>Toma de posesión sin vacante, al surgir puesto: {{7}}.<br>Nueva petición tras una denegación por inhabilitación: {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["3 meses","1 mes","15 días","6 meses"],why:"La solicitud de renuncia se presenta con al menos 3 meses de antelación a la fecha efectiva."},
+   {o:["10 días","15 días","1 mes","5 días"],why:"El informe del Ministerio u organismo se emite en 10 días."},
+   {o:["2 meses","1 mes","3 meses","6 meses"],why:"Resolución en 2 meses desde la entrada de la solicitud."},
+   {o:["estimatorio","desestimatorio","no hay","caducidad"],why:"El silencio tiene efectos estimatorios de la renuncia."},
+   {o:["10 días","15 días","1 mes","5 días"],why:"Se requiere al interesado para que presente la documentación en 10 días."},
+   {o:["15 días","10 días","1 mes","3 días"],why:"La vista del expediente para alegaciones tiene un plazo máximo de 15 días."},
+   {o:["6 meses","3 meses","1 año","2 meses"],why:"El procedimiento de rehabilitación dura seis meses."},
+   {o:["3 días hábiles","1 mes","15 días","10 días"],why:"Sin vacante, cuando surge un puesto debe tomar posesión en 3 días hábiles."},
+   {o:["2 años","1 año","5 años","6 meses"],why:"No puede pedirse de nuevo hasta pasados 2 años desde la desestimación."}
+  ]},
+ {id:"e5",title:"¿Activo o servicios especiales?",intro:"Asigna la situación administrativa a cada supuesto.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">¿En qué situación está?</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Supuestos</b>En comisión de servicios: {{0}}<br>Diputado o senador: {{1}}<br>Concejal sin dedicación exclusiva retribuida: {{2}}<br>Misión de 8 meses en la ONU: {{3}}<br>Dos primeras fases de reasignación: {{4}}</div>
+   <div class="sch-box alt"><b>Más supuestos</b>Director General: {{5}}<br>Destinado en una CA por concurso: {{6}}<br>Activo en otro cuerpo de la AGE: {{7}}<br>Cesación progresiva de actividades: {{8}}<br>Asesor de grupo parlamentario: {{9}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Servicio activo","Servicios especiales","Servicio en otras AAPP","Excedencia voluntaria"],why:"La comisión de servicios es un supuesto de servicio activo."},
+   {o:["Servicios especiales","Servicio activo","Servicio en otras AAPP","Excedencia voluntaria"],why:"Acceder a Diputado o Senador de las Cortes Generales lleva a servicios especiales."},
+   {o:["Servicio activo","Servicios especiales","Servicio en otras AAPP","Excedencia voluntaria"],why:"Solo el cargo local retribuido y con dedicación exclusiva lleva a servicios especiales."},
+   {o:["Servicios especiales","Servicio activo","Servicio en otras AAPP","Excedencia voluntaria"],why:"Una misión de más de 6 meses en organismos internacionales: servicios especiales."},
+   {o:["Servicio activo","Servicios especiales","Servicio en otras AAPP","Excedencia voluntaria"],why:"En las dos primeras fases de reasignación se sigue en servicio activo."},
+   {o:["Servicios especiales","Servicio activo","Servicio en otras AAPP","Excedencia voluntaria"],why:"Según el RD 365/1995, Subsecretarios, SGT y Directores Generales están en servicios especiales."},
+   {o:["Servicio en otras AAPP","Servicio activo","Servicios especiales","Excedencia voluntaria"],why:"Obtener destino en otra Administración por provisión de puestos."},
+   {o:["Excedencia voluntaria","Servicio activo","Servicios especiales","Servicio en otras AAPP"],why:"Excedencia voluntaria por prestación de servicios en el sector público (Ley 30/1984)."},
+   {o:["Servicio activo","Servicios especiales","Excedencia voluntaria","Servicio en otras AAPP"],why:"La cesación progresiva de actividades es un supuesto de servicio activo."},
+   {o:["Servicios especiales","Servicio activo","Servicio en otras AAPP","Excedencia voluntaria"],why:"Los asesores de grupos parlamentarios están en servicios especiales (art. 87 TREBEP)."}
+  ]},
+ {id:"e6",title:"Servicios especiales (ficha del esquema)",intro:"Declaración, duración, retribución, derechos y reingreso.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Servicios especiales · art. 87 TREBEP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Declaración</b>{{0}}</div>
+   <div class="sch-box alt"><b>Duración</b>{{1}}. Al perder la condición: reingreso en {{2}}; si no, {{3}}.</div>
+   <div class="sch-box"><b>Retribución</b>{{4}}</div>
+   <div class="sch-box alt"><b>Derechos</b>Computa para {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Reingreso</b>Derecho, al menos, a la {{6}}. Si venía de libre designación: puesto {{7}}.</div></div>`,
+  blanks:[
+   {o:["El Subsecretario del Departamento de destino","La SEFP","El Delegado del Gobierno","El Consejo de Ministros"],why:"Lo declara el Subsecretario del Departamento donde presta servicios."},
+   {o:["Mientras dure el hecho causante","5 años","1 año","2 años mínimo"],why:"La situación dura mientras se mantenga la condición que la originó."},
+   {o:["1 mes","15 días","3 meses","6 meses"],why:"El reingreso debe pedirse en 1 mes desde la pérdida de la condición."},
+   {o:["excedencia voluntaria por interés particular","excedencia forzosa","suspensión","expectativa de destino"],why:"De oficio, excedencia voluntaria por interés particular desde que perdió la condición."},
+   {o:["Las del cargo, más los trienios","Las de funcionario","Ninguna","Las básicas"],why:"Percibe las retribuciones del puesto o cargo, no las de funcionario, sin perjuicio de los trienios."},
+   {o:["ascensos, trienios, promoción interna y SS","nada","solo trienios","solo SS"],why:"También computa para los 5 años de la excedencia por interés particular."},
+   {o:["misma localidad, con las retribuciones del nivel consolidado","misma provincia","cualquier localidad","mismo puesto siempre"],why:"Reingreso, al menos, en la misma localidad y con las retribuciones de la carrera consolidada."},
+   {o:["provisional de igual nivel en el mismo municipio","definitivo en cualquier lugar","el mismo puesto","ninguno"],why:"Art. 7 RD 365/1995: provisional, de igual nivel y similares retribuciones, en el mismo municipio."}
+  ]},
+ {id:"e7",title:"Servicio en otras AAPP",intro:"Transferidos frente a destinados por provisión.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Servicio en otras AAPP · art. 88 TREBEP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Transferidos</b>Situación en la CA: {{0}}.<br>Derechos en origen: {{1}}.<br>Separación: {{2}}.</div>
+   <div class="sch-box alt"><b>Por provisión de puestos</b>Legislación aplicable: {{3}}.<br>Condición: {{4}}.<br>Separación: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Comunes</b>Retribución: {{6}}. Reingreso: reconocimiento de la carrera según {{7}}.</div></div>`,
+  blanks:[
+   {o:["servicio activo","servicios especiales","excedencia","expectativa"],why:"Los transferidos se integran como funcionarios propios y están en servicio activo en la CA."},
+   {o:["los mantienen como si estuvieran en activo","los pierden","se suspenden","solo trienios"],why:"Mantienen todos sus derechos en la Administración de origen."},
+   {o:["la CA, previo dictamen del Consejo de Estado","el Ministro de origen","el Gobierno","la SEFP"],why:"La separación la acuerda el órgano de la CA, previo dictamen del Consejo de Estado."},
+   {o:["la de la Administración de destino","la de origen","ambas","ninguna"],why:"Se rigen por la legislación de la Administración en la que están destinados."},
+   {o:["conservan la de funcionario de origen y pueden concursar allí","la pierden","la suspenden","pasan a laborales"],why:"Conservan su condición y el derecho a participar en las convocatorias de origen."},
+   {o:["el Ministro de adscripción, tras expediente incoado por la CA","la CA","el Consejo de Estado","el Delegado"],why:"Art. 11 RD 365/1995."},
+   {o:["la del puesto de destino","las de origen","ninguna","básicas"],why:"Según el esquema, perciben la del puesto donde prestan servicios."},
+   {o:["convenios de Conferencia Sectorial","el Tribunal","la CSP","el interesado"],why:"Según los convenios de Conferencia Sectorial; en su defecto, lo hace la Administración de reingreso."}
+  ]},
+ {id:"e8",title:"Excedencias del TREBEP: requisitos y duración",intro:"Las cinco modalidades del art. 89 y sus reglas en la AGE.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Excedencias · art. 89 TREBEP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Interés particular</b>Requisito: {{0}}.<br>Duración en la AGE: {{1}}.<br>No cabe si hay {{2}}.</div>
+   <div class="sch-box alt"><b>Agrupación familiar</b>Requisito: {{3}}.<br>Duración: {{4}}.</div>
+   <div class="sch-box"><b>Cuidado de familiares</b>Duración: {{5}}.<br>Familiares: hasta el {{6}} grado.</div>
+   <div class="sch-box alt"><b>Violencia</b>Antigüedad exigida: {{7}}.<br>Terrorista: reconocimiento de {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["5 años de servicios inmediatamente anteriores","3 años","10 años","ninguno"],why:"A solicitud, se exigen 5 años de servicios efectivos inmediatamente anteriores."},
+   {o:["mínimo 2 años, sin máximo","2 a 15 años","máximo 3 años","5 años"],why:"En la AGE, mínimo 2 años continuados y sin límite máximo."},
+   {o:["expediente disciplinario","hijos","otro empleo","deudas"],why:"No puede declararse mientras se instruya expediente disciplinario."},
+   {o:["cónyuge con puesto definitivo en otra localidad","5 años","hijo menor","ninguno"],why:"El cónyuge debe residir en otra localidad con un puesto definitivo como funcionario de carrera o laboral fijo."},
+   {o:["2 a 15 años","mínimo 2, sin máximo","3 años","1 año"],why:"En la AGE, mínimo 2 años y máximo 15."},
+   {o:["no superior a 3 años","2 años","5 años","1 año"],why:"No superior a 3 años por cada sujeto causante."},
+   {o:["2.º","1.º","3.º","4.º"],why:"Familiar a cargo hasta el segundo grado de consanguinidad o afinidad."},
+   {o:["ninguna","5 años","2 años","1 año"],why:"No se exige tiempo mínimo de servicios ni plazo de permanencia."},
+   {o:["Interior o sentencia firme","la SEFP","el Delegado del Gobierno","un médico"],why:"Previo reconocimiento del Ministerio del Interior o sentencia judicial firme."}
+  ]},
+ {id:"e9",title:"Excedencias: efectos y reserva",intro:"Qué excedencias computan, cuáles reservan puesto y cuáles pagan.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Efectos de las excedencias</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Cuidado de familiares</b>Computa: {{0}}.<br>Reserva del mismo puesto: {{1}}; después, {{2}}.</div>
+   <div class="sch-box alt"><b>Violencia de género o sexual</b>Reserva: {{3}}, ampliable hasta {{4}}.<br>Retribuciones íntegras: {{5}}.</div>
+   <div class="sch-box"><b>Interés particular y agrupación familiar</b>Retribución: {{6}}. Cómputo: {{7}}.</div>
+   <div class="sch-box alt"><b>Incentivada</b>Duración: {{8}}. Indemnización: {{9}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["trienios, carrera y SS","nada","solo trienios","solo SS"],why:"El tiempo de excedencia por cuidado computa a efectos de trienios, carrera y SS."},
+   {o:["al menos 2 años","6 meses","3 años","1 año"],why:"El puesto se reserva, al menos, durante 2 años."},
+   {o:["puesto en la misma localidad y retribución","ninguna reserva","cualquier puesto","puesto provisional"],why:"Después, la reserva es a un puesto en la misma localidad y de igual retribución."},
+   {o:["6 meses","2 años","3 meses","1 año"],why:"Durante los seis primeros meses hay reserva del puesto."},
+   {o:["18 meses (prórrogas de 3)","24 meses","12 meses","sin límite"],why:"Prorrogable por periodos de 3 meses hasta un máximo de 18."},
+   {o:["2 primeros meses","6 meses","1 mes","toda la excedencia"],why:"Retribuciones íntegras y prestaciones por hijo durante los 2 primeros meses."},
+   {o:["ninguna","básicas","íntegras","50 %"],why:"No devengan retribuciones."},
+   {o:["no computa","computa para trienios","computa para todo","solo SS"],why:"No computa a efectos de ascensos, trienios ni SS."},
+   {o:["5 años","2 años","1 año","15 años"],why:"La excedencia voluntaria incentivada dura cinco años."},
+   {o:["1 mensualidad por año, máx. 12","20 días por año","6 meses fijos","nada"],why:"Una mensualidad de retribuciones periódicas por año completo, con un máximo de 12 (sin pagas extra ni productividad)."}
+  ]},
+ {id:"e10",title:"Expectativa de destino y excedencia forzosa",intro:"Las situaciones ligadas a la reasignación de efectivos (Ley 30/1984).",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Reasignación de efectivos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Expectativa de destino</b>Origen: no obtener puesto en {{0}}.<br>Duración máxima: {{1}}.<br>Retribución: básicas + CD del grado + {{2}}.<br>Ámbito de las obligaciones: {{3}}.<br>Si las incumple: {{4}}.<br>La declara: {{5}}.</div>
+   <div class="sch-box alt"><b>Excedencia forzosa</b>Causa b): tras suspensión firme, reingreso no concedido en {{6}}.<br>Retribución: {{7}}.<br>Computa: {{8}}.<br>Si incumple sus obligaciones: {{9}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["las dos primeras fases","la primera fase","tres fases","el concurso"],why:"Pasan a expectativa quienes no obtienen puesto en las dos primeras fases de reasignación."},
+   {o:["1 año","6 meses","2 años","5 años"],why:"Máximo un año; después, excedencia forzosa."},
+   {o:["50 % del CE","100 % del CE","80 % del CE","nada del CE"],why:"Perciben el 50 % del complemento específico."},
+   {o:["la provincia de destino","toda España","la CA","el municipio"],why:"Aceptar puestos similares y concursar en la provincia donde estaban destinados."},
+   {o:["excedencia forzosa","excedencia por interés particular","suspensión","servicio activo"],why:"El incumplimiento determina el pase a la excedencia forzosa."},
+   {o:["la SEFP","el Subsecretario","el Delegado","el Gobierno"],why:"La Secretaría de Estado de Función Pública declara la situación y su cese."},
+   {o:["6 meses","1 mes","1 año","3 meses"],why:"Si el reingreso no se concede en 6 meses desde la extinción de la responsabilidad."},
+   {o:["básicas + prestación por hijo","íntegras","50 % del CE","nada"],why:"Retribuciones básicas y, en su caso, prestaciones por hijo a cargo."},
+   {o:["trienios y derechos pasivos","nada","grado personal","productividad"],why:"Se computa a efectos de derechos pasivos y de trienios."},
+   {o:["excedencia voluntaria por interés particular","expectativa","suspensión","separación"],why:"El incumplimiento de las obligaciones lleva a la excedencia voluntaria por interés particular."}
+  ]},
+ {id:"e11",title:"Suspensión de funciones",intro:"Provisional frente a firme.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Suspensión · arts. 90 y 98 TREBEP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Provisional</b>Máximo en expediente disciplinario: {{0}}.<br>Retribución: {{1}}.<br>Si pasa a firme: {{2}}.<br>Si no pasa a firme: {{3}}.</div>
+   <div class="sch-box alt"><b>Firme</b>Origen: {{4}}.<br>Máximo por sanción disciplinaria: {{5}}.<br>Pérdida del puesto si excede de {{6}}.<br>Reingreso: pedirlo {{7}} antes del fin.<br>Si no se concede en 6 meses: {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["6 meses","3 meses prorrogables","1 año","2 meses"],why:"No puede exceder de 6 meses, salvo paralización imputable al interesado (el esquema dice 3 meses prorrogables; manda el manual)."},
+   {o:["básicas + prestación por hijo","nada","íntegras","50 %"],why:"Retribuciones básicas y, en su caso, prestaciones por hijo a cargo."},
+   {o:["devuelve lo percibido","cobra la diferencia","nada","computa como activo"],why:"Si se eleva a definitiva, debe devolver lo percibido."},
+   {o:["computa como activo y se restituyen las diferencias","pierde el puesto","excedencia","nada"],why:"Se computa como servicio activo, con reincorporación inmediata y restitución económica."},
+   {o:["sentencia criminal o sanción disciplinaria","decisión del jefe","acuerdo sindical","Tribunal de Cuentas"],why:"La suspensión firme se impone por sentencia en causa criminal o por sanción disciplinaria."},
+   {o:["6 años","3 años","10 años","1 año"],why:"La suspensión firme por sanción disciplinaria no puede exceder de seis años."},
+   {o:["6 meses","3 meses","1 año","1 mes"],why:"La suspensión de más de seis meses determina la pérdida del puesto."},
+   {o:["1 mes","15 días","3 meses","6 meses"],why:"Se pide con un mes de antelación a la finalización de la suspensión."},
+   {o:["excedencia forzosa","interés particular","servicio activo","expectativa"],why:"Si no se concede el reingreso en 6 meses, excedencia forzosa con efectos desde la extinción de la responsabilidad."}
+  ]},
+ {id:"e12",title:"Matriz de retribuciones (del esquema)",intro:"Asigna a cada situación lo que cobra.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">¿Qué se cobra en cada situación?</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Situaciones</b>Servicios especiales: {{0}}<br>Servicio en otras AAPP: {{1}}<br>Expectativa de destino: {{2}}<br>Excedencia forzosa: {{3}}</div>
+   <div class="sch-box alt"><b>Más situaciones</b>Suspensión provisional: {{4}}<br>Suspensión firme: {{5}}<br>Interés particular: {{6}}<br>Violencia de género (inicio): {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["las del cargo + trienios","básicas + CD + 50 % del CE","básicas + prestación por hijo","nada"],why:"Retribuciones del puesto o cargo, más los trienios reconocidos."},
+   {o:["las del puesto de destino","las del cargo + trienios","básicas + prestación por hijo","nada"],why:"La del puesto de trabajo donde presta los servicios."},
+   {o:["básicas + CD + 50 % del CE","las del cargo + trienios","básicas + prestación por hijo","nada"],why:"Básicas, CD del grado y el 50 % del complemento específico."},
+   {o:["básicas + prestación por hijo","básicas + CD + 50 % del CE","las del cargo + trienios","nada"],why:"Básicas y, en su caso, prestaciones familiares por hijo a cargo."},
+   {o:["básicas + prestación por hijo","nada","las del cargo + trienios","íntegras"],why:"Básicas y prestaciones por hijo a cargo (nada si hay rebeldía)."},
+   {o:["nada","básicas + prestación por hijo","íntegras","50 %"],why:"Queda privado de todos los derechos inherentes a la condición."},
+   {o:["nada","básicas","íntegras","50 % del CE"],why:"No devenga retribuciones."},
+   {o:["íntegras los 2 primeros meses","nada","básicas","las del cargo"],why:"Retribuciones íntegras y prestaciones por hijo durante los dos primeros meses."}
+  ]},
+ {id:"e13",title:"¿Quién declara cada situación?",intro:"Órganos competentes según el manual y el esquema.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Órganos competentes</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Situaciones</b>Servicios especiales: {{0}}<br>Excedencia incentivada: {{1}}<br>Expectativa de destino: {{2}}<br>Forzosa tras suspensión (cuerpo de un Ministerio): {{3}}</div>
+   <div class="sch-box alt"><b>Otros actos</b>Aceptar la renuncia: {{4}}<br>Jubilación incentivada: {{5}}<br>Rehabilitación tras inhabilitación: {{6}}<br>Suspensión provisional ante un procesamiento: {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["el Subsecretario","la SEFP","el Departamento","el Consejo de Ministros"],why:"Declara los servicios especiales el Subsecretario del Departamento de destino."},
+   {o:["la SEFP","el Subsecretario","el Departamento","el Delegado"],why:"Corresponde a la Secretaría de Estado de Función Pública (el esquema cita el antiguo Ministerio para las AAPP)."},
+   {o:["la SEFP","el Subsecretario","el Departamento","la DGFP"],why:"La SEFP declara la expectativa de destino y su cese y gestiona al personal."},
+   {o:["el Departamento de adscripción del cuerpo","la SEFP","el Subsecretario","el Consejo de Ministros"],why:"Los Departamentos de adscripción del cuerpo (la DGFP para los cuerpos del Ministerio de FP)."},
+   {o:["la SEFP","el Subsecretario","el Ministro","el Delegado"],why:"La SEFP acepta la renuncia a la condición de funcionario."},
+   {o:["el Ministerio de función pública","el Subsecretario","el INSS","el Delegado"],why:"El Ministerio competente en función pública acuerda la jubilación voluntaria incentivada."},
+   {o:["el Consejo de Ministros","el Subsecretario","la SEFP","el juez"],why:"Resuelve el Consejo de Ministros e instruye la DGFP."},
+   {o:["el Subsecretario","el Ministro","la SEFP","el Delegado"],why:"El Subsecretario puede acordarla si no la adoptó el juez; puede durar todo el procesamiento."}
+  ]},
+ {id:"e14",title:"Ordena: de la reasignación a la excedencia forzosa",intro:"Recorrido de un funcionario afectado por la reasignación de efectivos que no obtiene puesto.",type:"order",
+  items:[
+   {t:"Primera fase de reasignación (sigue en servicio activo)",why:"Durante las dos primeras fases de reasignación de efectivos se mantiene en servicio activo."},
+   {t:"Segunda fase de reasignación (sigue en servicio activo)",why:"En las dos primeras fases puede además pedir la excedencia voluntaria incentivada."},
+   {t:"Expectativa de destino (máximo 1 año; básicas + CD + 50 % del CE)",why:"Sin puesto en las dos primeras fases, pasa a expectativa de destino, adscrito al Ministerio de FP."},
+   {t:"Excedencia forzosa (básicas + prestación por hijo)",why:"Pasado el año o incumplidas las obligaciones, excedencia forzosa, que declara la SEFP."},
+   {t:"Si incumple sus obligaciones: excedencia voluntaria por interés particular",why:"El incumplimiento de las obligaciones del excedente forzoso lleva a la excedencia voluntaria por interés particular."}
+  ]},
+ {id:"e15",title:"Reingreso al servicio activo",intro:"Plazos de reingreso y consecuencias de no pedirlo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Reingreso</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Plazos</b>Desde servicios especiales: {{0}}<br>Desde excedencia por sector público: {{1}}<br>Desde la incentivada: {{2}}<br>Desde suspensión firme: {{3}}</div>
+   <div class="sch-box alt"><b>Si no se pide</b>Consecuencia general: {{4}}<br>Agrupación familiar: pedirlo {{5}}</div>
+  </div>
+  <div class="sch-box"><b>Sin reserva (art. 29 bis Ley 30/1984)</b>Vías: concurso, libre designación, reasignación o {{6}}. Ese puesto se convoca en {{7}} y el funcionario {{8}}.</div></div>`,
+  blanks:[
+   {o:["1 mes desde que pierde la condición","15 días","3 meses","6 meses"],why:"Un mes desde que pierde la condición que la motivó."},
+   {o:["1 mes desde el cese","3 meses","15 días","sin plazo"],why:"Tras el cese en el otro puesto, en el plazo máximo de un mes."},
+   {o:["dentro del mes siguiente al fin de los 5 años","3 meses antes","15 días","sin plazo"],why:"Dentro del mes siguiente al final de los cinco años."},
+   {o:["1 mes antes del fin de la suspensión","al terminar","3 meses después","6 meses antes"],why:"Con un mes de antelación a la finalización de la suspensión."},
+   {o:["excedencia voluntaria por interés particular","excedencia forzosa","pérdida de la condición","suspensión"],why:"De oficio, excedencia voluntaria por interés particular."},
+   {o:["antes de cumplirse los 15 años","a los 2 años","en 1 mes","sin plazo"],why:"Antes de terminar el periodo máximo de 15 años."},
+   {o:["adscripción provisional","sorteo","oposición","libre elección"],why:"También por adscripción provisional, según las necesidades del servicio."},
+   {o:["1 año","6 meses","2 años","3 meses"],why:"El puesto asignado provisionalmente se convoca en el plazo máximo de un año."},
+   {o:["debe solicitarlo","puede renunciar","queda excluido","no participa"],why:"Está obligado a participar solicitando el puesto que ocupa provisionalmente."}
+  ]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("t4c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("t4c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
