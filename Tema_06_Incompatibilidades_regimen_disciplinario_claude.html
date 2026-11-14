@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Tema 6 · Incompatibilidades y régimen disciplinario · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">T6</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE</small>
+      <b>Incompatibilidades y disciplina</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+  <style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill b{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--info-bg);font-size:.72rem;margin-right:6px}
+    .sit-pill.on b{background:rgba(255,255,255,.25)}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}
+    .calc{padding:22px}
+    .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+    .calc label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .calc select,.calc input{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+    .calc-out div{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .calc-out b{display:block;font:800 1.35rem Sora,system-ui,sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .calc-out span{font-size:.84rem;color:var(--muted)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Tema 6 · Gestión de personal</span>
+    <h1>Incompatibilidades y <span>régimen disciplinario</span>: faltas, sanciones y procedimiento</h1>
+    <p>Resumen de alto rendimiento del manual (Ley 53/1984, RD 598/1985, TREBEP y RD 33/1986), con un <strong>mapa interactivo del expediente disciplinario</strong>, una <strong>calculadora del límite retributivo</strong> por segundo puesto, esquemas autocorregibles, fichas y test con penalización.</p>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">14</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">55</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('mapa').scrollIntoView({behavior:'smooth'})">Ver mapa del expediente ↓</button>
+      <button class="btn btn-g" data-go="esquemas">Practicar esquemas →</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="section-title" id="mapa">
+    <div><span class="kicker">Paso a paso</span><h2>Mapa del expediente disciplinario</h2></div>
+    <p>Recorre las fases: quién actúa, en qué plazo y qué no se puede olvidar.</p>
+  </div>
+  <div class="sit-pills" id="sit-pills"></div>
+  <div class="card sit-card" id="sit-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Practica con números</span><h2>Calculadora: límite por dos puestos públicos</h2></div>
+    <p>Art. 7 Ley 53/1984: la suma no puede superar la retribución del puesto principal más un porcentaje según el subgrupo, ni la de un Director General.</p>
+  </div>
+  <div class="card calc">
+    <div class="calc-grid">
+      <label>Subgrupo del puesto principal
+        <select id="calc-g">
+          <option value="30">A1 · +30 %</option><option value="35">A2 · +35 %</option>
+          <option value="40" selected>C1 · +40 %</option><option value="45">C2 · +45 %</option>
+          <option value="50">Agrupaciones profesionales · +50 %</option>
+        </select></label>
+      <label>Retribución anual del puesto principal (dedicación ordinaria, €)
+        <input id="calc-p" type="number" inputmode="decimal" min="0" step="100" value="24000"></label>
+      <label>Retribución anual del segundo puesto (€)
+        <input id="calc-s" type="number" inputmode="decimal" min="0" step="100" value="12000"></label>
+    </div>
+    <div class="calc-out">
+      <div><b id="calc-max">—</b><span>Tope conjunto (sin contar el de Director General)</span></div>
+      <div><b id="calc-sum">—</b><span>Suma que pretendes cobrar</span></div>
+      <div><b id="calc-ok">—</b><span id="calc-msg">Resultado</span></div>
+    </div>
+    <p style="margin-top:12px;font-size:.88rem;color:var(--muted)">Superar el tope en cómputo anual exige un acuerdo expreso del Gobierno, del órgano competente de la CA o del Pleno de la Corporación Local, por especial interés del servicio. Las pagas extraordinarias y las prestaciones familiares solo se cobran en uno de los puestos.</p>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave del tema</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>&gt; 50 %</b><span>Participación pública en una empresa para que su personal quede sujeto a la Ley 53/1984</span></div>
+    <div class="num"><b>30 · 35 · 40 · 45 · 50 %</b><span>Incremento máximo sobre el puesto principal: A1 · A2 · C1 · C2 · AP</span></div>
+    <div class="num"><b>4 meses · 2 meses</b><span>Resolver la compatibilidad pública · la privada (silencio positivo en ambas, según el manual)</span></div>
+    <div class="num"><b>2 consejos</b><span>Máximo de Consejos de Administración u órganos de gobierno de empresas públicas</span></div>
+    <div class="num"><b>40 h</b><span>Si la suma de jornadas pública llega a 40 h semanales, no cabe actividad privada</span></div>
+    <div class="num"><b>2 años · 10 %</b><span>Prohibidos los asuntos en que se intervino en los últimos 2 años · participación &gt; 10 % en contratistas</span></div>
+    <div class="num"><b>30 %</b><span>Un CE superior al 30 % de las básicas (sin antigüedad) impide la compatibilidad privada</span></div>
+    <div class="num"><b>10 días</b><span>Para pedir la compatibilidad dentro del plazo de toma de posesión (que se prorroga)</span></div>
+    <div class="num"><b>75 h/año</b><span>Cursos en centros de formación de funcionarios · preparación de oposiciones (exceptuadas)</span></div>
+    <div class="num"><b>10 h/mes</b><span>Incumplimiento de jornada acumulado que es falta grave</span></div>
+    <div class="num"><b>3.ª falta en 3 meses</b><span>Ausencia injustificada que es grave si las dos anteriores se sancionaron como leves</span></div>
+    <div class="num"><b>6 años · 3 años</b><span>Suspensión de funciones: muy grave de 3 a 6 años · grave hasta 3 años</span></div>
+    <div class="num"><b>3 años · 1 año</b><span>Sin destino en la localidad de origen tras el traslado forzoso: muy grave · grave</span></div>
+    <div class="num"><b>1 m · 10 d · 1 m</b><span>Pliego de cargos (prorrogable) · contestación · periodo de prueba</span></div>
+    <div class="num"><b>10 días</b><span>Vista del expediente · propuesta · alegaciones · resolución (salvo separación)</span></div>
+    <div class="num"><b>1 mes</b><span>Plazo máximo para ejecutar la sanción</span></div>
+    <div class="num"><b>6 meses</b><span>Máximo de suspensión provisional en un expediente · paralización que reactiva la prescripción</span></div>
+    <div class="num"><b>3 a · 2 a · 6 m</b><span>Prescripción de faltas: muy graves · graves · leves</span></div>
+    <div class="num"><b>3 a · 2 a · 1 a</b><span>Prescripción de sanciones: muy graves · graves · leves</span></div>
+    <div class="num"><b>6 a · 2 a · 6 m</b><span>Cancelación de anotaciones: muy graves · graves · leves</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Incompatibilidades</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>Normativa y ámbito de aplicación</h3><small>Ley 53/1984 y RD 598/1985</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Normas: <strong>Ley 53/1984</strong>, de 26 de diciembre, y su desarrollo, el <strong>RD 598/1985</strong>, de 30 de abril.</li>
+          <li>Afecta a <strong>todo el personal</strong> de las AAPP, sea cual sea su relación de empleo, y al de sus organismos, entes y empresas, incluidas las empresas con participación pública <strong>superior al 50 %</strong> y el personal retribuido por <strong>arancel</strong>.</li>
+          <li>Los <strong>altos cargos</strong> (hasta Director General) se rigen por la <strong>Ley 3/2015</strong>. Desde Subdirector General hacia abajo se aplica la Ley 53/1984.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Actividades públicas: regla general y excepciones</h3><small>Un solo puesto y una sola remuneración pública</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span>Regla: <strong>incompatible</strong> un segundo puesto en el sector público, por sí o por sustitución</span><i>→</i><span>Ni <strong>más de una remuneración</strong> pública, ni optar por las de puestos incompatibles</span><i>→</i><span>Excepción: <strong>autorización previa y expresa</strong>, por interés público, sin cambiar jornada ni horario</span></div>
+        <ul>
+          <li><strong>Pensión de jubilación</strong>: un puesto en el sector público es incompatible con la pensión de Clases Pasivas o de la SS. La pensión queda <strong>en suspenso</strong> mientras se trabaja (sin afectar a sus actualizaciones). Excepción: en el ámbito laboral, jubilación parcial con trabajo a tiempo parcial.</li>
+          <li><strong>Supuestos excepcionales</strong>:
+            <ul>
+              <li>Docencia e investigación universitaria con un puesto sanitario o investigador público, ambos a tiempo parcial (y a la inversa); profesores de escuelas de enfermería; profesorado de enseñanzas artísticas en el sector cultural; profesorado de FP en centros integrados.</li>
+              <li>Investigación no permanente o asesoramiento científico o técnico concreto, acreditado por concurso público o por exigir cualificaciones especiales.</li>
+              <li>Personal investigador en sociedades creadas o participadas por su organismo (Ley 14/2011).</li>
+              <li><strong>Cargos electivos</strong>: diputados autonómicos (salvo que cobren retribución periódica o la Asamblea fije la incompatibilidad) y concejales (salvo cargo retribuido y con dedicación exclusiva). Solo se cobra una retribución, más dietas e indemnizaciones; con dedicación parcial local, se puede cobrar por ella fuera de la jornada.</li>
+              <li>Por <strong>interés público</strong>, si lo determina el Consejo de Ministros por Real Decreto (o el Gobierno autonómico): solo en régimen <strong>laboral, a tiempo parcial y de duración determinada</strong>.</li>
+            </ul></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.3</span><span class="bt"><h3>Segundo puesto público: límites y autorización</h3><small>Topes retributivos, trienios y órgano competente</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Subgrupo del puesto principal</th><th>Incremento máximo</th></tr>
+          <tr><td>A1</td><td><strong>30 %</strong></td></tr>
+          <tr><td>A2</td><td><strong>35 %</strong></td></tr>
+          <tr><td><strong>C1</strong></td><td><strong>40 %</strong></td></tr>
+          <tr><td>C2</td><td><strong>45 %</strong></td></tr>
+          <tr><td>Agrupaciones profesionales</td><td><strong>50 %</strong></td></tr>
+        </table></div>
+        <ul>
+          <li>La suma no puede superar la retribución del puesto principal (en dedicación ordinaria) incrementada en ese porcentaje, <strong>ni</strong> la prevista en los PGE para un <strong>Director General</strong>. Superarla exige acuerdo expreso del Gobierno, del órgano de la CA o del Pleno de la Corporación.</li>
+          <li>La autorización se <strong>inscribe en el Registro de Personal</strong>: sin inscripción no se cobra.</li>
+          <li>El segundo puesto <strong>no computa</strong> para trienios ni derechos pasivos. Pagas extra y prestaciones familiares, <strong>solo en uno</strong> de los puestos.</li>
+          <li>No se puede pertenecer a más de <strong>2 Consejos de Administración</strong> u órganos de gobierno de empresas, salvo autorización (en la AGE, del Gobierno).</li>
+          <li><strong>Resolución</strong>: el Ministerio de función pública, a propuesta de la Subsecretaría, en <strong>4 meses</strong>; el manual indica silencio positivo. Hoy la competencia corresponde a la <strong>Oficina de Conflictos de Intereses</strong> (RD 210/2024), por delegación en su Director (Orden TDF/469/2024).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.4</span><span class="bt"><h3>Actividades privadas</h3><small>Compatibles en principio, salvo las prohibidas</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Regla</strong>: se permiten si no impiden cumplir los deberes ni comprometen la imparcialidad o independencia. Requieren <strong>reconocimiento previo de compatibilidad</strong>.</li>
+          <li>Si la actividad privada exige presencia durante <strong>la mitad o más</strong> de la jornada semanal ordinaria, solo se autoriza si el puesto público es <strong>a tiempo parcial</strong>.</li>
+          <li>No se reconoce si ya hay un segundo puesto público y la suma de jornadas alcanza las <strong>40 h semanales</strong>.</li>
+          <li><strong>Prohibidas por la Ley</strong>: asuntos en los que se interviene, se intervino en los <strong>últimos 2 años</strong> o se intervendrá; Consejos de Administración de empresas relacionadas con el Departamento; cargos en concesionarias, contratistas, arrendatarias o empresas con participación o aval público; y participación <strong>superior al 10 %</strong> en esas empresas.</li>
+          <li><strong>Prohibidas por el RD 598/1985 (art. 11)</strong>: gestoría administrativa; procurador o actividades con presencia ante los tribunales en horario; servicios profesionales a los que se accede por el puesto; abogacía de Jefes de Unidades de Recursos y Letrados frente a la Administración; personal de contratación con empresas proveedoras; arquitectos, ingenieros y titulados en actividades sujetas al control de su organismo o que coincidan en horario; personal sanitario en conciertos con la SS.</li>
+          <li><strong>Reconocimiento</strong>: resolución motivada en <strong>2 meses</strong>, con silencio positivo según el manual. Competente: el Ministerio de función pública (a propuesta del Subsecretario), el órgano de la CA o el Pleno de la Corporación. En la AGE, por delegación, el Director de la <strong>Oficina de Conflictos de Intereses</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.5</span><span class="bt"><h3>Disposiciones comunes</h3><small>Complemento específico, faltas y toma de posesión</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Nunca</strong> se autoriza compatibilidad a quien cobra complementarias con <strong>factor de incompatibilidad</strong>, al retribuido por arancel ni al <strong>personal directivo</strong> (incluido el de alta dirección). El profesorado universitario a tiempo completo se considera de especial dedicación.</li>
+          <li>Sí cabe la actividad privada si el <strong>complemento específico no supera el 30 %</strong> de las retribuciones básicas, sin contar la antigüedad. Los funcionarios pueden pedir que se les <strong>reduzca el CE</strong> para cumplirlo: A1 y A2 por el RDL 20/2012 (salvo gabinetes y niveles 29 y 30); C1, C2 y E por la Resolución de 20-12-2011.</li>
+          <li>Desempeñar dos puestos incompatibles es <strong>falta muy grave</strong>; incumplir solo plazos o procedimiento, <strong>falta grave</strong>.</li>
+          <li>La compatibilidad <strong>no modifica la jornada ni el horario</strong> y queda <strong>sin efecto automáticamente</strong> si se cambia de puesto público. Se inscribe en el Registro de Personal.</li>
+          <li>La actividad compatible no excusa la asistencia ni la diligencia. Si se sanciona una falta grave o muy grave, la compatibilidad queda <strong>revocada automáticamente</strong>.</li>
+          <li>En la <strong>toma de posesión</strong> se declara no ocupar otro puesto público ni hacer actividad privada incompatible:
+            <ul>
+              <li>Si los dos puestos públicos son incompatibles, se opta dentro del plazo posesorio; si no se opta, se entiende elegido <strong>el nuevo</strong>.</li>
+              <li>Si son compatibles, se pide la autorización en los <strong>10 primeros días</strong> del plazo posesorio, que se prorroga hasta que se resuelve.</li>
+              <li>Con actividad privada: obtener la compatibilidad o cesar en ella antes de empezar (pedida en los 10 primeros días, se prorroga el plazo).</li>
+              <li>Si solo se cambia de puesto con compatibilidad privada previa, basta con pedir un nuevo reconocimiento antes de tomar posesión.</li>
+            </ul></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.6</span><span class="bt"><h3>Actividades exceptuadas</h3><small>No necesitan autorización ni reconocimiento</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Administrar el <strong>patrimonio personal o familiar</strong>.</li>
+          <li>Cursos o conferencias en centros oficiales de formación de funcionarios o profesorado, no permanentes ni habituales, de <strong>hasta 75 h/año</strong>.</li>
+          <li><strong>Preparar oposiciones</strong> (RD 598/1985: hasta <strong>75 h/año</strong>).</li>
+          <li>Ser miembro de <strong>tribunales</strong> de pruebas selectivas.</li>
+          <li>Participación del personal docente en exámenes o evaluaciones distintas de las habituales.</li>
+          <li>Presidir o formar parte de juntas rectoras de mutualidades o patronatos de funcionarios, si <strong>no es retribuido</strong>.</li>
+          <li><strong>Producción y creación</strong> literaria, artística, científica y técnica, y sus publicaciones, si no nacen de una relación de empleo.</li>
+          <li>Participación <strong>ocasional</strong> en medios de comunicación, y colaboración o asistencia ocasional a congresos y cursos profesionales.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:18px 0 2px">Parte 2 · Régimen disciplinario</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Faltas muy graves (art. 95.2 TREBEP)</h3><small>Las únicas que enumera el TREBEP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <p>Falta disciplinaria es cualquier incumplimiento de los deberes del funcionario. Las faltas son muy graves, graves o leves.</p>
+        <ul>
+          <li>Incumplir el deber de respeto a la Constitución y a los Estatutos de Autonomía.</li>
+          <li>Discriminación por cualquier circunstancia, y acoso por razón de sexo, origen, religión, discapacidad, edad, orientación o identidad; acoso moral y sexual.</li>
+          <li><strong>Abandono del servicio</strong> o no hacerse cargo voluntariamente de las tareas.</li>
+          <li>Acuerdos <strong>manifiestamente ilegales</strong> que causen <strong>perjuicio grave</strong>.</li>
+          <li>Publicación o uso indebido de documentación o información conocida por el cargo; <strong>negligencia</strong> en la custodia de <strong>secretos oficiales</strong> que provoque su difusión.</li>
+          <li><strong>Notorio</strong> incumplimiento de las funciones esenciales.</li>
+          <li>Usar las facultades del cargo para influir en procesos electorales.</li>
+          <li><strong>Desobediencia abierta</strong> a órdenes de un superior (salvo infracción manifiesta del ordenamiento).</li>
+          <li>Prevalerse de la condición de empleado público para obtener un beneficio indebido.</li>
+          <li>Obstaculizar libertades públicas y derechos sindicales; coartar el derecho de <strong>huelga</strong>; no atender los <strong>servicios esenciales</strong> en huelga.</li>
+          <li>Incumplir las normas de incompatibilidades <strong>cuando dé lugar a una situación de incompatibilidad</strong>.</li>
+          <li>No comparecer sin justificación ante las <strong>Comisiones de Investigación</strong> de las Cortes o de las Asambleas autonómicas.</li>
+          <li><strong>Acoso laboral</strong>.</li>
+          <li>Las que tipifique una ley estatal o autonómica (o un convenio colectivo para el personal laboral).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Faltas graves y leves (RD 33/1986)</h3><small>Vigentes mientras no haya leyes de función pública</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <p>El TREBEP fija los criterios para las graves (legalidad vulnerada, daño al interés público y descrédito de la Administración), pero la lista sigue en el <strong>RD 33/1986</strong>.</p>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Faltas graves</th><th>Faltas leves</th></tr>
+          <tr><td>Falta de obediencia debida; abuso de autoridad; delito doloso relacionado con el servicio que cause daño; tolerancia de los superiores con faltas graves o muy graves; grave desconsideración; daños graves en locales, material o documentos; intervenir habiendo causa de abstención; informes o acuerdos manifiestamente ilegales con perjuicio (no muy grave); falta de rendimiento; no guardar sigilo con perjuicio o provecho propio; incumplir <strong>plazos o procedimiento</strong> de incompatibilidades sin mantener la incompatibilidad; incumplir la jornada <strong>10 h al mes</strong> acumuladas; <strong>3.ª falta</strong> de asistencia en 3 meses con las dos anteriores sancionadas como leves; grave perturbación del servicio; atentado grave a la dignidad de los funcionarios; grave desconsideración con los administrados; <strong>evadir el control horario</strong>.</td>
+            <td>Incumplir el horario sin justificación (si no es grave); <strong>1 día</strong> de falta de asistencia injustificada; incorrección con el público, superiores, compañeros o subordinados; descuido o negligencia; incumplir deberes cuando no sea falta grave o muy grave.</td></tr>
+        </table></div>
+        <ul>
+          <li>El «mes» va del día 1 al último día de cada uno de los doce meses del año.</li>
+          <li>Las ausencias de las víctimas de violencia de género se consideran justificadas en los términos que fijen los servicios sociales o de salud.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>Responsables y sanciones</h3><small>Catálogo del TREBEP y graduación del RD 33/1986</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Quien <strong>induce</strong> a cometer una falta incurre en la <strong>misma</strong> responsabilidad. Quien <strong>encubre</strong> faltas muy graves o graves consumadas también responde, si se deriva un daño grave.</li>
+          <li>Al personal laboral se le aplica el TREBEP y, en lo no previsto, la legislación laboral.</li>
+          <li><strong>Sanciones del TREBEP</strong>: separación del servicio (solo por faltas muy graves; para los interinos, revocación del nombramiento); despido disciplinario del laboral (solo muy graves; inhabilita para un contrato con funciones similares); suspensión firme (máx. <strong>6 años</strong>); traslado forzoso; <strong>demérito</strong> (penaliza carrera, promoción o movilidad); <strong>apercibimiento</strong>; y las que fije una ley.</li>
+          <li>Graduación: intencionalidad, descuido o negligencia; daño al interés público; reiteración o reincidencia; y grado de participación.</li>
+          <li>Si se declara improcedente el despido del <strong>laboral fijo</strong> por falta muy grave, procede la <strong>readmisión</strong>.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Falta (AGE)</th><th>Sanciones</th><th>Impone</th></tr>
+          <tr><td><strong>Muy grave</strong></td><td>Separación; suspensión de <strong>3 a 6 años</strong>; traslado con cambio de residencia, sin volver a la localidad en <strong>3 años</strong></td><td>Separación: el <strong>Ministro</strong>. Suspensión y traslado: el <strong>Subsecretario</strong></td></tr>
+          <tr><td><strong>Grave</strong></td><td>Suspensión de <strong>hasta 3 años</strong>; traslado con cambio de residencia, sin volver en <strong>1 año</strong></td><td>Subsecretario</td></tr>
+          <tr><td><strong>Leve</strong></td><td><strong>Apercibimiento</strong></td><td>Subsecretario, Director General o Delegado del Gobierno</td></tr>
+        </table></div>
+        <ul>
+          <li>Las faltas de incompatibilidades por actividades en varios Ministerios las sanciona el Ministerio de función pública.</li>
+          <li>Las Juntas o Delegados de Personal son informados de todas las sanciones por faltas <strong>muy graves</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.4</span><span class="bt"><h3>Principios de la potestad disciplinaria</h3><small>Art. 94 TREBEP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Principios: <strong>legalidad y tipicidad</strong>; <strong>irretroactividad</strong> de lo desfavorable y retroactividad de lo favorable; <strong>proporcionalidad</strong>; <strong>culpabilidad</strong>; <strong>presunción de inocencia</strong>.</li>
+          <li>Faltas muy graves y graves: solo mediante el procedimiento establecido. Faltas leves: <strong>procedimiento sumario con audiencia</strong> al interesado.</li>
+          <li>Fase instructora y fase sancionadora en <strong>órganos distintos</strong>. Impulso <strong>de oficio</strong>. Eficacia, celeridad y economía procesal.</li>
+          <li>Si hay indicios de delito, se <strong>suspende</strong> el expediente y se comunica al <strong>Ministerio Fiscal</strong>. Los hechos probados por sentencia firme vinculan a la Administración.</li>
+          <li>Puede hacerse antes una <strong>información reservada</strong>. La responsabilidad disciplinaria es independiente de la civil y la penal.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.5</span><span class="bt"><h3>El expediente: iniciación e instrucción</h3><small>Incoación, instructor, pliego de cargos, prueba y propuesta</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Inicio</strong>: siempre <strong>de oficio</strong>, por iniciativa propia, orden superior, moción razonada de los subordinados o denuncia (al denunciante se le comunica la incoación).</li>
+          <li>Si el expedientado es <strong>representante sindical</strong> o de personal (o lo fue en el último año, o es candidato), se notifica a su sección, Junta o central para que sean oídos.</li>
+          <li><strong>Incoan</strong>: el Subsecretario (siempre), los Directores Generales (su personal) y los Delegados del Gobierno (en su territorio).</li>
+          <li><strong>Instructor</strong>: funcionario de grupo o subgrupo <strong>igual o superior</strong> al del expedientado. <strong>Secretario</strong> (funcionario), solo si la complejidad lo exige. Abstención y recusación: las resuelve quien los nombró en <strong>3 días</strong>.</li>
+          <li><strong>Pliego de cargos</strong>: en <strong>1 mes</strong> (prorrogable) desde la incoación; hechos en párrafos separados y numerados, falta presunta y posibles sanciones; propuesta sobre la suspensión provisional. Contestación en <strong>10 días</strong>, en la que se piden las pruebas.</li>
+          <li><strong>Prueba</strong>: <strong>1 mes</strong>. La denegación motivada de pruebas <strong>no es recurrible</strong>. El instructor debe intervenir en todas las pruebas; no lo puede sustituir el secretario.</li>
+          <li><strong>Vista del expediente</strong>: <strong>10 días</strong> para alegar, con copia completa si la pide.</li>
+          <li><strong>Propuesta de resolución</strong>: en <strong>10 días</strong>; se notifica y hay <strong>10 días</strong> para alegar. Después se envía al órgano que incoó, que la remite al que resuelve o pide más diligencias.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.6</span><span class="bt"><h3>Resolución y ejecución</h3><small>Plazos, contenido, inejecución y suspensión</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Se resuelve en <strong>10 días</strong> desde que el órgano recibe el expediente, <strong>salvo separación del servicio</strong>.</li>
+          <li>Resolución <strong>motivada</strong>; no puede aceptar <strong>hechos distintos</strong> de los del pliego y la propuesta, aunque sí una distinta valoración jurídica. Debe fijar la falta, su tipificación, el responsable, la sanción y qué pasa con las medidas provisionales.</li>
+          <li>Se notifica con indicación de los recursos, y también al denunciante.</li>
+          <li><strong>Ejecución</strong>: en <strong>1 mes</strong>, salvo causa justificada.</li>
+          <li><strong>Inejecución</strong>: la acuerda el Ministro de función pública. <strong>Suspensión temporal</strong> de la ejecución (por menos tiempo que su prescripción): el órgano que resolvió. En la separación del servicio, ambas corresponden al <strong>Consejo de Ministros</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.7</span><span class="bt"><h3>Suspensión provisional</h3><small>Medida cautelar en expedientes y procesos judiciales</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Finalidad</strong>: asegurar la eficacia de la resolución final; se acuerda por resolución motivada. No puede causar perjuicios irreparables.</li>
+          <li><strong>Duración</strong>: en el expediente, máximo <strong>6 meses</strong>, salvo paralización imputable al interesado. En un proceso judicial, lo que dure la prisión provisional u otras medidas; aunque supere 6 meses <strong>no se pierde el puesto</strong>.</li>
+          <li><strong>Retribuciones</strong>: básicas y, en su caso, prestaciones por hijo a cargo.</li>
+          <li>Si resulta <strong>culpable</strong>: devuelve lo cobrado y el tiempo <strong>se abona</strong> para cumplir la suspensión firme. Si resulta <strong>inocente</strong>: se le paga la diferencia y el tiempo computa como servicio activo.</li>
+          <li><strong>Órganos</strong>: en el expediente, quien lo incoó. Ante un <strong>procesamiento</strong>, el <strong>Subsecretario</strong> puede acordarla si no lo hizo el juez, y puede durar todo el procesamiento.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.8</span><span class="bt"><h3>Extinción, prescripción y cancelación</h3><small>Plazos que no hay que confundir</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Extinción</strong>: cumplimiento de la sanción, muerte, prescripción de la falta o de la sanción, indulto y amnistía. Si durante el expediente se pierde la condición de funcionario, se declara extinguido y se archiva, salvo que un interesado pida continuar.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Gravedad</th><th>Prescripción de la falta</th><th>Prescripción de la sanción</th><th>Cancelación de la anotación</th></tr>
+          <tr><td><strong>Muy grave</strong></td><td>3 años</td><td>3 años</td><td>6 años</td></tr>
+          <tr><td><strong>Grave</strong></td><td>2 años</td><td>2 años</td><td>2 años</td></tr>
+          <tr><td><strong>Leve</strong></td><td>6 meses</td><td><strong>1 año</strong></td><td>6 meses</td></tr>
+        </table></div>
+        <ul>
+          <li>La falta prescribe desde que se comete (o desde que cesa, si es continuada). La sanción, desde la <strong>firmeza</strong> de la resolución (o, según el RD 33/1986, desde que se quebranta).</li>
+          <li>La incoación <strong>interrumpe</strong> la prescripción, que vuelve a correr si el expediente está paralizado <strong>más de 6 meses</strong> por causa no imputable al inculpado.</li>
+          <li>Las sanciones se anotan en el <strong>Registro Central de Personal</strong>. Se cancelan de oficio o a instancia, contando desde su <strong>cumplimiento</strong>. Las canceladas, o las que pudieron serlo, <strong>no cuentan para la reincidencia</strong>.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Público frente a privado</b>Dos puestos públicos: incompatibles salvo excepción. Público y privado: compatibles salvo prohibición, con reconocimiento previo.</div>
+    <div class="trap"><b>C1 = 40 %</b>El porcentaje sube según baja el subgrupo: A1 30, A2 35, C1 40, C2 45, AP 50. Además, nunca más que un Director General.</div>
+    <div class="trap"><b>4 meses frente a 2 meses</b>La compatibilidad pública se resuelve en 4 meses; la privada, en 2.</div>
+    <div class="trap"><b>Si no opta, el nuevo</b>Con dos puestos públicos incompatibles, si no opta en el plazo posesorio se entiende que elige el nuevo.</div>
+    <div class="trap"><b>Muy grave o grave en incompatibilidades</b>Estar en situación de incompatibilidad es muy grave; incumplir solo plazos o procedimiento, grave.</div>
+    <div class="trap"><b>Desobediencia abierta frente a falta de obediencia</b>La desobediencia abierta es muy grave; la falta de obediencia debida, grave.</div>
+    <div class="trap"><b>Leves: 6 meses y 1 año</b>La falta leve prescribe a los 6 meses, pero la sanción leve prescribe al año. Su anotación se cancela a los 6 meses.</div>
+    <div class="trap"><b>Separación: Ministro y sin plazo de 10 días</b>La separación la impone el Ministro y no está sujeta al plazo de 10 días; su inejecución la acuerda el Consejo de Ministros.</div>
+    <div class="trap"><b>Instructor y secretario</b>El instructor, de grupo igual o superior y obligatorio; el secretario, solo si hace falta.</div>
+    <div class="trap"><b>Siempre de oficio</b>Aunque haya denuncia, el expediente se inicia de oficio; al denunciante se le comunica la incoación y la resolución.</div>
+  </div>
+</section>
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap"><p>Tema 6 · Las incompatibilidades. Régimen disciplinario: faltas, sanciones y procedimiento · Oposiciones C1 AGE. Fuente: temario del Tema 6 aportado por el usuario (Ley 53/1984, RD 598/1985, TREBEP, RD 33/1986). Material de estudio; contrasta siempre con la normativa vigente.</p></footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Tema 6 · Mapa del expediente disciplinario ===== */
+const EXP=[
+ {g:"Antes de empezar",n:"Información reservada",def:"Trámite potestativo, previo a la incoación, para valorar si hay motivos para abrir un expediente.",
+  f:{"Quién":"El órgano competente para incoar.","Plazo":"No fijado.","Claves":"Es opcional. Las faltas leves no necesitan expediente: se sancionan por procedimiento sumario con audiencia al interesado."}},
+ {g:"Iniciación",n:"Incoación",def:"El procedimiento se inicia siempre de oficio, por iniciativa propia, orden superior, moción razonada de los subordinados o denuncia.",
+  f:{"Quién":"El Subsecretario (siempre); los Directores Generales (su personal); los Delegados del Gobierno (en su territorio).","Plazo":"Interrumpe la prescripción de la falta, que vuelve a correr si el expediente se paraliza más de 6 meses por causa no imputable al inculpado.","Claves":"Se notifica al expedientado, al instructor, al secretario y al denunciante. Si es representante sindical o de personal (o lo fue en el último año, o es candidato), también a su sección, Junta o central."}},
+ {g:"Iniciación",n:"Instructor y secretario",def:"Se nombran en la misma resolución de incoación.",
+  f:{"Quién":"Instructor: funcionario de grupo o subgrupo igual o superior al del expedientado (obligatorio). Secretario: funcionario, solo si la complejidad lo exige.","Plazo":"La abstención y la recusación se plantean ante quien los nombró, que resuelve en 3 días.","Claves":"Si el instructor es de otro Departamento, hace falta autorización previa de su Subsecretario. Se aplican las causas de abstención de la Ley 40/2015."}},
+ {g:"Iniciación",n:"Suspensión provisional",def:"Medida cautelar para asegurar la eficacia de la resolución, adoptada por resolución motivada.",
+  f:{"Quién":"En el expediente, el órgano que lo incoó. Ante un procesamiento, el Subsecretario, si no la acordó el juez.","Plazo":"Máximo 6 meses en el expediente (salvo paralización imputable al interesado). En un proceso judicial, lo que duren la prisión u otras medidas, sin perder el puesto.","Claves":"Cobra básicas y prestaciones por hijo. Si se confirma, devuelve lo cobrado y el tiempo se abona; si no, se le restituye y computa como servicio activo."}},
+ {g:"Instrucción",n:"Primeras actuaciones",def:"Declaración del presunto inculpado y solicitud de informes.",
+  f:{"Quién":"El instructor.","Plazo":"Antes del pliego de cargos.","Claves":"Todos los órganos de la Administración están obligados a facilitar al instructor los informes y antecedentes necesarios."}},
+ {g:"Instrucción",n:"Pliego de cargos",def:"La acusación: hechos imputados, falta presuntamente cometida y posibles sanciones.",
+  f:{"Quién":"El instructor.","Plazo":"1 mes (prorrogable) desde la incoación. Contestación del inculpado: 10 días.","Claves":"Redactado de forma clara y precisa, en párrafos separados y numerados. El instructor propone mantener o levantar la suspensión provisional. Al contestar, el inculpado pide las pruebas."}},
+ {g:"Instrucción",n:"Periodo de prueba",def:"Práctica de las pruebas admitidas o acordadas de oficio.",
+  f:{"Quién":"El instructor, que debe intervenir en todas (no lo sustituye el secretario).","Plazo":"1 mes.","Claves":"La denegación de pruebas innecesarias debe motivarse y no es recurrible. Se notifica al funcionario el lugar, la fecha y la hora."}},
+ {g:"Instrucción",n:"Vista del expediente",def:"Se pone el expediente de manifiesto al inculpado.",
+  f:{"Quién":"El instructor.","Plazo":"10 días para alegar y aportar documentos.","Claves":"Se le da copia completa del expediente si la pide."}},
+ {g:"Instrucción",n:"Propuesta de resolución",def:"El instructor fija los hechos, su valoración jurídica, la falta, la responsabilidad y la sanción propuesta.",
+  f:{"Quién":"El instructor; después el órgano que incoó la remite al que resuelve, o pide más diligencias.","Plazo":"10 días para formularla y 10 días para que el inculpado alegue.","Claves":"Debe motivar, en su caso, por qué se denegaron pruebas."}},
+ {g:"Terminación",n:"Resolución",def:"Pone fin al procedimiento, de forma motivada.",
+  f:{"Quién":"Separación: el Ministro. Suspensión y traslado: el Subsecretario. Apercibimiento: el Subsecretario, el Director General o el Delegado del Gobierno.","Plazo":"10 días desde que se recibe el expediente, salvo la separación del servicio.","Claves":"No puede aceptar hechos distintos de los del pliego y la propuesta, aunque sí valorarlos de otra forma. Se notifica con indicación de los recursos, también al denunciante."}},
+ {g:"Terminación",n:"Ejecución",def:"Cumplimiento de la sanción impuesta.",
+  f:{"Quién":"Inejecución: el Ministro de función pública. Suspensión temporal: el órgano que resolvió. Si es separación, ambas: el Consejo de Ministros.","Plazo":"Máximo 1 mes, salvo causa justificada en la resolución.","Claves":"La suspensión temporal de la ejecución debe ser por menos tiempo que la prescripción; de oficio o a instancia, con causa fundada."}},
+ {g:"Después",n:"Anotación y cancelación",def:"La sanción se anota en el Registro Central de Personal, con la falta que la motivó.",
+  f:{"Quién":"Se cancela de oficio o a instancia del interesado.","Plazo":"Desde el cumplimiento: 6 meses (leves), 2 años (graves) y 6 años (muy graves).","Claves":"Las sanciones canceladas, o que pudieron serlo, no cuentan para la reincidencia."}}
+];
+(function(){
+  const pills=document.getElementById("sit-pills"),card=document.getElementById("sit-card");
+  if(pills){
+    let html="",last="";
+    EXP.forEach((s,i)=>{if(s.g!==last){html+=`<div class="sit-group">${s.g}</div>`;last=s.g}
+      html+=`<button class="sit-pill${i?"":" on"}" data-i="${i}"><b>${i+1}</b>${s.n}</button>`});
+    pills.innerHTML=html;
+    const icons={"Quién":"👤","Plazo":"⏱️","Claves":"🔑"};
+    function show(i){const s=EXP[i];
+      card.innerHTML=`<span class="kicker">Fase ${i+1} de ${EXP.length} · ${s.g}</span><h3>${s.n}</h3><div class="norm">TREBEP (arts. 93-98) y RD 33/1986</div><div class="def">${s.def}</div>
+      <div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${icons[k]} ${k}</b>${v}</div>`).join("")}</div>
+      <div class="row" style="margin-top:14px">${i?`<button class="btn btn-g btn-sm" data-step="${i-1}">← Anterior</button>`:""}${i<EXP.length-1?`<button class="btn btn-p btn-sm" data-step="${i+1}">Siguiente fase →</button>`:""}</div>`;
+      card.style.animation="none";card.offsetHeight;card.style.animation="";
+      pills.querySelectorAll(".sit-pill").forEach(b=>b.classList.toggle("on",+b.dataset.i===i));}
+    pills.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(b)show(+b.dataset.i)});
+    card.addEventListener("click",ev=>{const b=ev.target.closest("[data-step]");if(b)show(+b.dataset.step)});
+    show(0);
+  }
+  const g=document.getElementById("calc-g"),p=document.getElementById("calc-p"),s=document.getElementById("calc-s");
+  if(g){
+    const fmt=n=>isFinite(n)?Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €":"—";
+    function calc(){const pc=+g.value,pp=Math.max(0,+p.value||0),ss=Math.max(0,+s.value||0);
+      const max=pp*(1+pc/100),sum=pp+ss,ok=sum<=max;
+      document.getElementById("calc-max").textContent=fmt(max);
+      document.getElementById("calc-sum").textContent=fmt(sum);
+      document.getElementById("calc-ok").textContent=ok?"✓ Dentro":"✗ Excede";
+      document.getElementById("calc-msg").textContent=ok?`Margen: ${fmt(max-sum)} (comprueba también el tope de Director General)`:`Sobran ${fmt(sum-max)}: haría falta un acuerdo expreso del Gobierno`;}
+    [g,p,s].forEach(el=>el.addEventListener("input",calc));calc();
+  }
+})();
+
+/* ===== Fichas ===== */
+const DATA={fichas:[
+ {p:"¿Qué normas regulan las incompatibilidades del personal de las AAPP?",r:"La Ley 53/1984, de 26 de diciembre, y su reglamento de desarrollo, el RD 598/1985, de 30 de abril. Los altos cargos de la AGE se rigen por la Ley 3/2015."},
+ {p:"¿A quién se aplica la Ley 53/1984?",r:"A todo el personal de las AAPP, cualquiera que sea su relación de empleo, y al de sus organismos, entes y empresas, incluidas las empresas con participación pública superior al 50 % y el personal retribuido por arancel."},
+ {p:"¿Hasta qué nivel se considera alto cargo a efectos de incompatibilidades?",r:"Hasta Director General, inclusive (Ley 3/2015). A los Subdirectores Generales, asimilados y puestos inferiores se les aplica la Ley 53/1984."},
+ {p:"¿Cuál es la regla general sobre un segundo puesto en el sector público?",r:"No se puede desempeñar, por sí o mediante sustitución, un segundo puesto, cargo o actividad en el sector público, ni cobrar más de una remuneración pública, salvo en los supuestos previstos en la ley y con autorización previa y expresa."},
+ {p:"¿Qué condiciones tiene la autorización de un segundo puesto público?",r:"Debe ser previa y expresa, se concede por razón del interés público, no supone modificar la jornada ni el horario de los dos puestos y se condiciona a cumplirlos estrictamente."},
+ {p:"¿Es compatible un puesto público con la pensión de jubilación?",r:"No: la pensión de Clases Pasivas o de la SS queda en suspenso mientras se desempeña el puesto, sin afectar a sus actualizaciones. Excepción: en el ámbito laboral, la jubilación parcial con un puesto a tiempo parcial."},
+ {p:"¿Cuándo puede un concejal o diputado autonómico compatibilizar el cargo con su puesto?",r:"El diputado autonómico, salvo que cobre retribución periódica o la Asamblea fije la incompatibilidad. El concejal, salvo que tenga cargo retribuido y con dedicación exclusiva. Solo se cobra una retribución, más dietas o indemnizaciones; con dedicación parcial local, se puede cobrar por ella si es fuera de la jornada."},
+ {p:"¿Qué segundo puesto puede autorizarse por interés público?",r:"El que determine el Consejo de Ministros por Real Decreto (o el Gobierno autonómico), siempre en régimen laboral, a tiempo parcial y con duración determinada."},
+ {p:"¿Qué segundas actividades públicas permite la ley al profesorado universitario?",r:"Un segundo puesto en el sector público sanitario o de investigación, dentro de su área, si ambos son a tiempo parcial, y a la inversa. También a los profesores de escuelas de enfermería con puestos sanitarios."},
+ {p:"¿Cuál es el límite retributivo por desempeñar dos puestos públicos?",r:"La suma no puede superar la retribución de un Director General ni la del puesto principal (en dedicación ordinaria) incrementada en un 30 % (A1), 35 % (A2), 40 % (C1), 45 % (C2) o 50 % (Agrupaciones profesionales)."},
+ {p:"¿Quién puede autorizar que se superen los límites retributivos?",r:"En cómputo anual, el Gobierno, el órgano competente de la CA o el Pleno de la Corporación Local, por acuerdo expreso basado en razones de especial interés para el servicio."},
+ {p:"¿Computa el segundo puesto público para trienios?",r:"No: no computa a efectos de trienios ni de derechos pasivos. Las pagas extraordinarias y las prestaciones familiares solo se cobran en uno de los puestos."},
+ {p:"¿Qué requisito tiene la autorización para poder cobrar en el segundo puesto?",r:"Debe inscribirse en el Registro de Personal correspondiente."},
+ {p:"¿En cuántos Consejos de Administración puede estar un funcionario?",r:"En no más de dos Consejos de Administración u órganos de gobierno de empresas, salvo autorización excepcional (en la AGE, del Gobierno)."},
+ {p:"¿Quién resuelve y en qué plazo la compatibilidad de un segundo puesto público?",r:"El Ministerio de función pública, a propuesta de la Subsecretaría del Departamento, en 4 meses (el manual indica silencio positivo). Hoy, por delegación, el Director de la Oficina de Conflictos de Intereses."},
+ {p:"¿Qué órgano gestiona hoy las incompatibilidades en la AGE?",r:"La Oficina de Conflictos de Intereses, con plena autonomía funcional (art. 12 RD 210/2024). Su Director tiene delegadas las autorizaciones y reconocimientos de compatibilidad (Orden TDF/469/2024)."},
+ {p:"¿Cuál es la regla general sobre las actividades privadas?",r:"Son compatibles cuando no impiden o menoscaban el cumplimiento de los deberes ni comprometen la imparcialidad e independencia, previo reconocimiento de compatibilidad."},
+ {p:"¿Cuándo solo cabe la actividad privada si el puesto público es a tiempo parcial?",r:"Cuando la actividad privada exige presencia efectiva durante la mitad o más de la jornada semanal ordinaria de las AAPP."},
+ {p:"¿Cuándo no cabe actividad privada aunque se tenga autorizado un segundo puesto público?",r:"Cuando la suma de las jornadas de los dos puestos públicos es igual o superior a la máxima permitida en las AAPP (40 horas semanales)."},
+ {p:"¿Qué actividades privadas prohíbe la Ley 53/1984?",r:"Las relacionadas con asuntos en los que se interviene, se intervino en los últimos 2 años o se intervendrá; los Consejos de Administración de empresas relacionadas con el Departamento; los cargos en concesionarias, contratistas o empresas con participación o aval público; y la participación superior al 10 % en ellas."},
+ {p:"¿Qué añade el art. 11 del RD 598/1985?",r:"Prohíbe, entre otras: gestoría administrativa; procurador o presencia ante tribunales en horario; servicios profesionales accesibles por el puesto; abogacía de Jefes de Unidades de Recursos y Letrados frente a la Administración; personal de contratación con proveedores; titulados en actividades controladas por su organismo o que coincidan en horario; y personal sanitario en conciertos con la SS."},
+ {p:"¿Quién reconoce la compatibilidad para una actividad privada y en qué plazo?",r:"El Ministerio de función pública (a propuesta del Subsecretario), el órgano de la CA o el Pleno de la Corporación, en 2 meses, por resolución motivada (el manual indica silencio positivo). En la AGE, por delegación, la Oficina de Conflictos de Intereses."},
+ {p:"¿A quién no puede autorizarse nunca la compatibilidad?",r:"Al personal cuyas complementarias incluyan el factor de incompatibilidad, al retribuido por arancel y al personal directivo, incluido el de alta dirección."},
+ {p:"¿Qué relación hay entre el complemento específico y la actividad privada?",r:"Solo puede reconocerse la compatibilidad si el CE no supera el 30 % de las retribuciones básicas, excluida la antigüedad. Se puede pedir que se reduzca el CE para cumplir ese límite."},
+ {p:"¿Quién puede pedir la reducción del complemento específico?",r:"A1 y A2 (DA 5.ª RDL 20/2012), salvo quienes estén en gabinetes de miembros del Gobierno o altos cargos o en puestos de nivel 29 o 30. C1, C2 y E, por la Resolución de la SEFP de 20-12-2011."},
+ {p:"¿Qué falta es desempeñar dos puestos incompatibles?",r:"Falta muy grave. Incumplir solo los plazos o el procedimiento, sin mantener la situación de incompatibilidad, es falta grave."},
+ {p:"¿Qué ocurre con la compatibilidad si se cambia de puesto público?",r:"Queda automáticamente sin efecto. También se revoca automáticamente si se sanciona una falta grave o muy grave relacionada con la asistencia o la diligencia."},
+ {p:"¿Qué ocurre si al tomar posesión se tiene otro puesto público incompatible?",r:"Hay que optar por uno de los dos dentro del plazo de toma de posesión; si no se opta, se entiende elegido el nuevo puesto."},
+ {p:"¿Y si los dos puestos públicos son compatibles?",r:"Hay que pedir la autorización en los 10 primeros días del plazo de toma de posesión, que se prorroga hasta que se resuelva."},
+ {p:"¿Qué debe hacer quien accede a un puesto público con una actividad privada que requiere reconocimiento?",r:"Obtener el reconocimiento o cesar en la actividad antes de empezar a trabajar. Si lo pide en los 10 primeros días del plazo posesorio, este se prorroga hasta que se resuelva."},
+ {p:"¿Qué actividades están exceptuadas del régimen de incompatibilidades?",r:"Administrar el patrimonio personal o familiar; cursos en centros de formación de funcionarios (hasta 75 h/año); preparar oposiciones (hasta 75 h/año); tribunales de oposiciones; exámenes extraordinarios del personal docente; juntas de mutualidades no retribuidas; creación literaria, artística, científica y técnica; participación ocasional en medios, congresos y cursos."},
+ {p:"¿Qué es una falta disciplinaria y cómo se clasifica?",r:"Cualquier incumplimiento de los deberes del funcionario. Se clasifican en muy graves (art. 95.2 TREBEP), graves y leves (RD 33/1986, vigente hasta que haya leyes de función pública)."},
+ {p:"Cita cinco faltas muy graves del TREBEP.",r:"Incumplir el deber de respeto a la Constitución; discriminación y acoso; abandono del servicio; acuerdos manifiestamente ilegales con perjuicio grave; desobediencia abierta; notorio incumplimiento de funciones esenciales; incumplir las incompatibilidades si genera una situación de incompatibilidad; acoso laboral; incomparecencia ante comisiones de investigación parlamentarias."},
+ {p:"¿Qué criterios fija el TREBEP para tipificar las faltas graves?",r:"El grado en que se haya vulnerado la legalidad, la gravedad de los daños al interés público, al patrimonio o a los ciudadanos, y el descrédito para la imagen pública de la Administración."},
+ {p:"¿Cuándo es falta grave el incumplimiento de jornada o la inasistencia?",r:"El incumplimiento injustificado de la jornada que acumulado sume al menos 10 horas al mes, y la 3.ª falta de asistencia injustificada en 3 meses si las dos anteriores se sancionaron como leves. También evadir el control horario."},
+ {p:"¿Cuáles son las faltas leves del RD 33/1986?",r:"Incumplir el horario sin justificación (si no es grave); 1 día de falta de asistencia injustificada; incorrección con el público, superiores, compañeros o subordinados; descuido o negligencia; e incumplir deberes cuando no sea grave ni muy grave."},
+ {p:"¿Quiénes son responsables además del autor de la falta?",r:"Quien induce a cometerla, con la misma responsabilidad, y quien encubre faltas muy graves o graves consumadas, si se deriva un daño grave para la Administración o los ciudadanos."},
+ {p:"¿Qué sanciones prevé el art. 96 TREBEP?",r:"Separación del servicio (revocación para los interinos); despido disciplinario del laboral; suspensión firme de funciones (máx. 6 años); traslado forzoso; demérito; apercibimiento; y cualquier otra que fije una ley."},
+ {p:"¿Qué es el demérito?",r:"Una sanción que penaliza a efectos de carrera, promoción o movilidad voluntaria."},
+ {p:"¿Qué sanciones se imponen hoy en la AGE según la gravedad?",r:"Muy graves: separación, suspensión de 3 a 6 años o traslado con cambio de residencia sin volver en 3 años. Graves: suspensión de hasta 3 años o traslado sin volver en 1 año. Leves: apercibimiento."},
+ {p:"¿Quién impone cada sanción en la AGE?",r:"Separación: el Ministro. Suspensión y traslado con cambio de residencia: el Subsecretario (el Ministerio de función pública si son faltas de incompatibilidades entre varios Ministerios). Apercibimiento: Subsecretario, Director General o Delegado del Gobierno."},
+ {p:"¿Qué principios rigen la potestad disciplinaria?",r:"Legalidad y tipicidad; irretroactividad de lo desfavorable y retroactividad de lo favorable; proporcionalidad; culpabilidad; y presunción de inocencia."},
+ {p:"¿Qué ocurre si en la instrucción aparecen indicios de delito?",r:"Se suspende la tramitación del expediente y se pone en conocimiento del Ministerio Fiscal. Los hechos probados por resolución judicial firme vinculan a la Administración."},
+ {p:"¿Cómo se inicia el expediente disciplinario y quién lo incoa?",r:"Siempre de oficio (por iniciativa propia, orden superior, moción razonada o denuncia). Lo incoan el Subsecretario (siempre), los Directores Generales (su personal) y los Delegados del Gobierno (en su territorio)."},
+ {p:"¿Qué requisitos tienen el instructor y el secretario?",r:"El instructor, funcionario de grupo o subgrupo igual o superior al del expedientado. El secretario, funcionario, solo si la complejidad lo exige. La abstención y la recusación se resuelven en 3 días."},
+ {p:"¿Cuál es el plazo del pliego de cargos y qué contiene?",r:"1 mes, prorrogable, desde la incoación. Contiene los hechos imputados en párrafos separados y numerados, la falta presunta y las sanciones aplicables, y la propuesta sobre la suspensión provisional. Se contesta en 10 días."},
+ {p:"¿Cuánto dura el periodo de prueba y se puede recurrir la denegación de pruebas?",r:"Un mes. La denegación de pruebas debe motivarse y no es recurrible. El instructor debe intervenir en todas las pruebas."},
+ {p:"¿Qué plazos tienen la vista del expediente y la propuesta de resolución?",r:"Vista: 10 días para alegar. Propuesta: el instructor la formula en 10 días y el inculpado tiene 10 días para alegar."},
+ {p:"¿En qué plazo se resuelve el expediente?",r:"En 10 días desde que el órgano competente recibe el expediente, salvo cuando la sanción es la separación del servicio."},
+ {p:"¿Puede la resolución apreciar hechos nuevos?",r:"No: no puede aceptar hechos distintos de los que sirvieron de base al pliego de cargos y a la propuesta, aunque sí una valoración jurídica distinta."},
+ {p:"¿Quién puede acordar la inejecución o la suspensión de una sanción?",r:"La inejecución, el Ministro de función pública; la suspensión temporal, el órgano que resolvió (por menos tiempo que la prescripción). En la separación del servicio, ambas corresponden al Consejo de Ministros."},
+ {p:"¿Cuánto dura la suspensión provisional y qué se cobra?",r:"En un expediente, máximo 6 meses, salvo paralización imputable al interesado; en un proceso judicial, lo que duren las medidas, sin perder el puesto. Se cobran básicas y prestaciones por hijo a cargo."},
+ {p:"¿Cuáles son las causas de extinción de la responsabilidad disciplinaria?",r:"Cumplimiento de la sanción, muerte, prescripción de la falta o de la sanción, indulto y amnistía. Si se pierde la condición de funcionario durante el expediente, se declara extinguido y se archiva, salvo que se pida continuar."},
+ {p:"¿Cuáles son los plazos de prescripción de faltas y sanciones?",r:"Faltas: muy graves 3 años, graves 2 años y leves 6 meses. Sanciones: muy graves 3 años, graves 2 años y leves 1 año."},
+ {p:"¿Cuándo se interrumpe la prescripción de la falta?",r:"Con la iniciación del expediente; vuelve a correr si el expediente está paralizado más de 6 meses por causa no imputable al inculpado."},
+ {p:"¿Cuándo se cancelan las anotaciones de sanciones?",r:"De oficio o a instancia, a los 6 meses (leves), 2 años (graves) o 6 años (muy graves) desde el cumplimiento de la sanción. Las canceladas no cuentan para la reincidencia."}
+]};
+
+/* ===== Tests ===== */
+const T1=[
+ {q:"El régimen de incompatibilidades del personal de las AAPP se regula en:",o:["La Ley 30/1984.","La Ley 53/1984 y el RD 598/1985.","El RD 33/1986.","La Ley 3/2015."],c:1,e:"La Ley 3/2015 es para los altos cargos de la AGE."},
+ {q:"La Ley 53/1984 se aplica al personal de empresas con participación pública:",o:["De cualquier porcentaje.","Superior al 50 %.","Superior al 25 %.","Del 100 %."],c:1,e:"Directa o indirectamente."},
+ {q:"A efectos de incompatibilidades, se considera alto cargo en la AGE hasta el nivel de:",o:["Subdirector General.","Director General.","Secretario de Estado.","Subsecretario."],c:1,e:"Los Subdirectores Generales se rigen por la Ley 53/1984."},
+ {q:"Como regla general, un segundo puesto en el sector público:",o:["Es compatible siempre.","Es incompatible, salvo los supuestos previstos en la ley y con autorización.","Es compatible con reconocimiento.","Solo es incompatible para el A1."],c:1,e:"Art. 1 Ley 53/1984."},
+ {q:"La autorización de compatibilidad para un segundo puesto público:",o:["Puede modificar el horario.","No supone modificación de la jornada ni del horario de los dos puestos.","Se presume concedida.","Es posterior al inicio de la actividad."],c:1,e:"Y se condiciona a su estricto cumplimiento."},
+ {q:"El desempeño de un puesto en el sector público con la pensión de jubilación de Clases Pasivas:",o:["Es compatible.","Es incompatible: la pensión queda en suspenso.","Es compatible si es parcial.","Reduce la pensión a la mitad."],c:1,e:"Sin afectar a sus actualizaciones."},
+ {q:"En el ámbito laboral, es compatible con un puesto a tiempo parcial:",o:["La pensión de viudedad.","La pensión de jubilación parcial.","La incapacidad permanente absoluta.","Ninguna pensión."],c:1,e:"Excepción prevista por la ley."},
+ {q:"Al profesorado universitario puede autorizarse un segundo puesto en el sector público:",o:["Administrativo, a tiempo completo.","Sanitario o de investigación, si ambos son a tiempo parcial.","Cualquiera.","Solo en otra universidad."],c:1,e:"Dentro del área de especialidad de su departamento."},
+ {q:"Las actividades de investigación no permanente o asesoramiento concreto se acreditan:",o:["Con informe del Rector.","Por la asignación del encargo en concurso público o por requerir cualificaciones especiales.","Por declaración jurada.","Por el Consejo de Ministros."],c:1,e:"Art. 6 Ley 53/1984."},
+ {q:"Un concejal sin dedicación exclusiva retribuida puede:",o:["Cobrar ambas retribuciones íntegras.","Compatibilizar el cargo, cobrando solo una retribución, más dietas o indemnizaciones.","No puede compatibilizarlo.","Solo si es A1."],c:1,e:"Con dedicación parcial, puede cobrar por ella si es fuera de la jornada."},
+ {q:"El diputado autonómico NO puede compatibilizar su actividad pública cuando:",o:["Es funcionario C1.","Percibe retribuciones periódicas por la función, o la Asamblea establece la incompatibilidad.","Tiene dedicación parcial.","Cobra dietas."],c:1,e:"Art. 5 Ley 53/1984."},
+ {q:"Si el Consejo de Ministros autoriza un segundo puesto por interés público, la actividad solo puede prestarse:",o:["Como funcionario interino.","En régimen laboral, a tiempo parcial y con duración determinada.","A tiempo completo.","Sin retribución."],c:1,e:"Art. 3 Ley 53/1984."},
+ {q:"La autorización de compatibilidad se efectúa en razón de:",o:["El interés del funcionario.","El interés público.","La antigüedad.","El subgrupo."],c:1,e:"Art. 3 Ley 53/1984."},
+ {q:"La compatibilidad del segundo puesto público en la AGE la resuelve el Ministerio de función pública en el plazo de:",o:["1 mes.","2 meses.","4 meses.","6 meses."],c:2,e:"A propuesta de la Subsecretaría; el manual indica silencio positivo."},
+ {q:"Actualmente, las funciones sobre incompatibilidades del personal de la AGE corresponden a:",o:["La Inspección General de Servicios.","La Oficina de Conflictos de Intereses.","La DGFP.","El Tribunal de Cuentas."],c:1,e:"RD 210/2024, con plena autonomía funcional."},
+ {q:"El personal investigador de los OPI puede prestar servicios en sociedades creadas o participadas por ellos según:",o:["La Ley 40/2015.","La Ley 53/1984 y la Ley 14/2011 de la Ciencia.","El ET.","La LOU exclusivamente."],c:1,e:"Previa autorización."},
+ {q:"No se puede percibir más de una remuneración con cargo a los presupuestos públicos:",o:["En ningún caso.","Salvo en los supuestos previstos en la ley.","Si se tiene más de 10 años de servicio.","Si se renuncia a los trienios."],c:1,e:"Tampoco se puede optar por percepciones de puestos incompatibles."},
+ {q:"Los profesores titulares de escuelas universitarias de enfermería pueden compatibilizar un segundo puesto en:",o:["El sector público cultural.","El sector público sanitario.","Cualquier Ministerio.","Empresas privadas."],c:1,e:"En los términos del profesorado universitario."},
+ {q:"Al personal retribuido mediante arancel:",o:["No se le aplica la ley.","Se le aplica la Ley 53/1984 y no puede autorizársele compatibilidad.","Puede tener tres puestos.","Solo se le aplica la Ley 3/2015."],c:1,e:"Arts. 2 y 16 Ley 53/1984."},
+ {q:"El desempeño de un segundo puesto en el sector público requiere la autorización:",o:["Posterior.","Previa y expresa.","Tácita.","Verbal del superior."],c:1,e:"Art. 3 Ley 53/1984."}
+];
+
+const T2=[
+ {q:"Para un funcionario C1, la suma de dos puestos públicos no puede superar la retribución del principal incrementada en un:",o:["30 %.","35 %.","40 %.","45 %."],c:2,e:"A1 30 %, A2 35 %, C1 40 %, C2 45 %, AP 50 %."},
+ {q:"Para el subgrupo A1, el incremento máximo es del:",o:["30 %.","35 %.","40 %.","50 %."],c:0,e:"El porcentaje aumenta conforme baja el subgrupo."},
+ {q:"Para las Agrupaciones profesionales, el incremento máximo es del:",o:["40 %.","45 %.","50 %.","60 %."],c:2,e:"Art. 7 Ley 53/1984."},
+ {q:"Además del porcentaje, la suma de los dos puestos no puede superar la retribución prevista en los PGE para:",o:["Un Ministro.","Un Director General.","Un Subdirector General.","Un Secretario de Estado."],c:1,e:"Art. 7 Ley 53/1984."},
+ {q:"Superar los límites retributivos en cómputo anual exige:",o:["Informe sindical.","Acuerdo expreso del Gobierno, del órgano de la CA o del Pleno de la Corporación, por especial interés del servicio.","Silencio positivo.","Autorización del Subsecretario."],c:1,e:"Art. 7 Ley 53/1984."},
+ {q:"Los servicios prestados en el segundo puesto público:",o:["Computan para trienios.","No computan a efectos de trienios ni de derechos pasivos.","Computan doble.","Computan solo para grado."],c:1,e:"Art. 7 Ley 53/1984."},
+ {q:"Las pagas extraordinarias, con dos puestos públicos compatibles:",o:["Se cobran en ambos.","Solo se cobran en uno de los dos puestos.","No se cobran.","Se reparten al 50 %."],c:1,e:"Igual que las prestaciones familiares."},
+ {q:"Para devengar haberes en el segundo puesto, la autorización debe:",o:["Publicarse en el BOE.","Inscribirse en el Registro de Personal correspondiente.","Notificarse a la Junta de Personal.","Comunicarse a Hacienda."],c:1,e:"Art. 7 Ley 53/1984."},
+ {q:"No se puede pertenecer a más de cuántos Consejos de Administración u órganos de gobierno de empresas:",o:["1.","2.","3.","5."],c:1,e:"Salvo autorización (en la AGE, del Gobierno)."},
+ {q:"Como regla general, una actividad privada:",o:["Está prohibida.","Es compatible si no impide los deberes ni compromete la imparcialidad, previo reconocimiento.","No necesita nada.","Solo si es gratuita."],c:1,e:"Art. 11 Ley 53/1984."},
+ {q:"Si la actividad privada exige presencia durante la mitad o más de la jornada semanal ordinaria, solo puede autorizarse cuando:",o:["El funcionario sea A1.","La actividad pública sea a tiempo parcial.","Haya informe favorable.","Sea fuera de España."],c:1,e:"Art. 12 Ley 53/1984."},
+ {q:"No cabe compatibilidad privada si, con un segundo puesto público autorizado, la suma de jornadas alcanza:",o:["35 horas.","37,5 horas.","40 horas semanales.","45 horas."],c:2,e:"La máxima permitida en las AAPP."},
+ {q:"Está prohibida la actividad privada relacionada con asuntos en los que se haya intervenido por razón del puesto en:",o:["El último año.","Los dos últimos años.","Los cinco últimos años.","Cualquier momento."],c:1,e:"También en los que se intervenga o vaya a intervenirse."},
+ {q:"Está prohibida la participación en empresas contratistas o concesionarias superior al:",o:["5 %.","10 %.","25 %.","50 %."],c:1,e:"Art. 12 Ley 53/1984."},
+ {q:"Según el RD 598/1985, es incompatible con cualquier función en la Administración:",o:["La creación literaria.","La gestoría administrativa, como titular o empleado.","La docencia ocasional.","La administración del patrimonio familiar."],c:1,e:"Art. 11 RD 598/1985."},
+ {q:"El ejercicio de la profesión de procurador es incompatible:",o:["Solo para jueces.","Para el personal que realice cualquier función en la Administración.","Nunca.","Solo para A1."],c:1,e:"Y cualquier actividad que requiera presencia ante tribunales en horario."},
+ {q:"La compatibilidad para una actividad privada se resuelve en el plazo de:",o:["1 mes.","2 meses.","4 meses.","6 meses."],c:1,e:"Por resolución motivada; el manual indica silencio positivo."},
+ {q:"El personal de unidades de contratación no puede desempeñar actividades en:",o:["ONG.","Empresas que suministren o contraten con dichas unidades.","Universidades.","Partidos políticos."],c:1,e:"Art. 11 RD 598/1985."},
+ {q:"Los arquitectos e ingenieros de la Administración no pueden realizar actividades privadas:",o:["De ningún tipo.","Sujetas a autorización, licencia o control de su organismo, o que coincidan en horario.","Fuera de su provincia.","Los fines de semana."],c:1,e:"Art. 11 RD 598/1985."},
+ {q:"Los Jefes de Unidades de Recursos no pueden ejercer la abogacía:",o:["En ningún caso.","En defensa de intereses frente a la Administración del Estado o la SS, o en asuntos relacionados con su Departamento.","Solo en lo penal.","Solo fuera de España."],c:1,e:"Igual que los Letrados del sector público."}
+];
+
+const T3=[
+ {q:"No podrá autorizarse compatibilidad al personal:",o:["Interino.","Cuyas retribuciones complementarias incluyan el factor de incompatibilidad.","De nivel 18.","A tiempo parcial."],c:1,e:"Tampoco al retribuido por arancel ni al directivo."},
+ {q:"Puede reconocerse compatibilidad privada si el complemento específico no supera, respecto de las básicas sin antigüedad, el:",o:["10 %.","20 %.","30 %.","50 %."],c:2,e:"Art. 16.4 Ley 53/1984."},
+ {q:"Los funcionarios C1, C2 y E pueden pedir la reducción del CE para adecuarlo al límite del 30 % según:",o:["El RDL 20/2012.","La Resolución de la SEFP de 20 de diciembre de 2011.","La Ley 53/1984 directamente.","El RD 598/1985."],c:1,e:"El RDL 20/2012 lo prevé para A1 y A2."},
+ {q:"No pueden pedir la reducción del CE los funcionarios A1 y A2:",o:["De nivel 26.","De gabinetes de miembros del Gobierno o altos cargos y de puestos de nivel 29 y 30.","Interinos.","En comisión de servicios."],c:1,e:"DA 5.ª RDL 20/2012."},
+ {q:"La dedicación del profesorado universitario a tiempo completo se considera:",o:["Dedicación ordinaria.","Especial dedicación.","Tiempo parcial.","Exceptuada."],c:1,e:"A efectos de no autorizar compatibilidad."},
+ {q:"El reconocimiento de compatibilidad:",o:["Se mantiene al cambiar de puesto.","Queda automáticamente sin efecto si se cambia de puesto en el sector público.","Es indefinido.","Se renueva cada año."],c:1,e:"Art. 14 Ley 53/1984."},
+ {q:"Si se sanciona como grave o muy grave una falta de asistencia o diligencia relacionada con la actividad compatible:",o:["Se mantiene la compatibilidad.","Queda revocada automáticamente la compatibilidad.","Se reduce el CE.","Se suspende 1 mes."],c:1,e:"Art. 19 RD 598/1985 (recogido en el manual)."},
+ {q:"Si al tomar posesión el funcionario tiene otro puesto público incompatible y no opta en plazo:",o:["Se entiende que opta por el anterior.","Se entiende que opta por el nuevo puesto.","Pierde ambos.","Se suspende la toma de posesión."],c:1,e:"Debe optar dentro del plazo de toma de posesión."},
+ {q:"Si los dos puestos públicos son susceptibles de compatibilidad, debe pedirse la autorización en:",o:["El mes siguiente a la toma de posesión.","Los 10 primeros días del plazo de toma de posesión, que se prorroga hasta que se resuelva.","Antes del proceso selectivo.","Cuando se cobre."],c:1,e:"Art. 10 Ley 53/1984."},
+ {q:"Quien cambia de puesto y tenía reconocida la compatibilidad privada debe:",o:["Nada.","Pedir un nuevo reconocimiento antes de tomar posesión en el nuevo puesto.","Renunciar a la actividad.","Esperar un año."],c:1,e:"El anterior queda sin efecto."},
+ {q:"¿Cuál de estas actividades está exceptuada del régimen de incompatibilidades?",o:["Ser procurador.","Administrar el patrimonio personal o familiar.","Ser consejero de una contratista.","Trabajar en una gestoría."],c:1,e:"Art. 19 Ley 53/1984."},
+ {q:"La impartición de cursos en centros oficiales de formación de funcionarios está exceptuada si no es habitual ni supera al año:",o:["40 horas.","75 horas.","100 horas.","150 horas."],c:1,e:"Art. 19 Ley 53/1984."},
+ {q:"La preparación de oposiciones está exceptuada con un máximo, según el RD 598/1985, de:",o:["40 horas al año.","75 horas al año.","120 horas al año.","Sin límite."],c:1,e:"Art. 19 Ley 53/1984 y RD 598/1985."},
+ {q:"Formar parte de un tribunal de oposiciones:",o:["Requiere compatibilidad.","Es una actividad exceptuada.","Está prohibido.","Requiere reducir el CE."],c:1,e:"Art. 19 Ley 53/1984."},
+ {q:"Ser vocal de la Junta Rectora de una mutualidad de funcionarios está exceptuado si:",o:["Es A1.","No es retribuido.","Es por menos de 1 año.","Lo autoriza el Ministro."],c:1,e:"Art. 19 Ley 53/1984."},
+ {q:"La producción literaria, artística o científica está exceptuada siempre que:",o:["No se publique.","No se origine como consecuencia de una relación de empleo o de prestación de servicios.","Se haga gratis.","Se haga en vacaciones."],c:1,e:"Art. 19 Ley 53/1984."},
+ {q:"La participación en programas de medios de comunicación está exceptuada si es:",o:["Habitual.","Ocasional.","Retribuida.","Diaria."],c:1,e:"Art. 19 Ley 53/1984."},
+ {q:"Desempeñar dos puestos incompatibles entre sí es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"Art. 95 TREBEP."},
+ {q:"Incumplir los plazos del procedimiento de incompatibilidades sin mantener una situación de incompatibilidad es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:1,e:"RD 33/1986."},
+ {q:"En la diligencia de toma de posesión el interesado debe manifestar:",o:["Su patrimonio.","Que no desempeña otro puesto público ni realiza actividad privada incompatible o sujeta a compatibilidad.","Su afiliación sindical.","Su domicilio."],c:1,e:"Art. 13 RD 598/1985."}
+];
+
+const T4=[
+ {q:"Las faltas muy graves se regulan en:",o:["El RD 33/1986 exclusivamente.","El TREBEP (art. 95.2).","La Ley 53/1984.","Los convenios colectivos de funcionarios."],c:1,e:"Las graves y leves siguen en el RD 33/1986."},
+ {q:"Es falta muy grave:",o:["La falta de obediencia debida.","La desobediencia abierta a las órdenes de un superior, salvo infracción manifiesta del ordenamiento.","La incorrección con el público.","Un día de falta de asistencia."],c:1,e:"La falta de obediencia debida es grave."},
+ {q:"El abandono del servicio es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"Art. 95.2.c TREBEP."},
+ {q:"La adopción de acuerdos manifiestamente ilegales que causen perjuicio GRAVE es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"Si el perjuicio no es grave, es falta grave."},
+ {q:"El acoso laboral es falta:",o:["Leve.","Grave.","Muy grave.","Solo penal."],c:2,e:"Art. 95.2.o TREBEP."},
+ {q:"La incomparecencia injustificada ante una Comisión de Investigación de las Cortes Generales es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"Art. 95.2 TREBEP."},
+ {q:"El incumplimiento de la obligación de atender los servicios esenciales en caso de huelga es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"Art. 95.2 TREBEP."},
+ {q:"La negligencia en la custodia de secretos oficiales que provoque su difusión es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"No guardar sigilo con perjuicio, en cambio, es grave."},
+ {q:"Para tipificar las faltas graves, el TREBEP atiende a:",o:["La antigüedad del funcionario.","El grado de vulneración de la legalidad, la gravedad de los daños y el descrédito para la imagen de la Administración.","El subgrupo.","El número de denuncias."],c:1,e:"Art. 95.3 TREBEP."},
+ {q:"El incumplimiento injustificado de la jornada es falta grave cuando acumulado suma al mes al menos:",o:["5 horas.","10 horas.","15 horas.","20 horas."],c:1,e:"RD 33/1986."},
+ {q:"La tercera falta injustificada de asistencia en un periodo de 3 meses es grave cuando:",o:["Siempre.","Las dos anteriores se hubiesen sancionado como faltas leves.","Es en lunes.","Es en el mismo mes."],c:1,e:"RD 33/1986."},
+ {q:"La falta de asistencia injustificada de un día es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:0,e:"RD 33/1986."},
+ {q:"Intervenir en un procedimiento cuando concurre una causa de abstención es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:1,e:"RD 33/1986."},
+ {q:"La tolerancia de los superiores respecto de faltas muy graves o graves de sus subordinados es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:1,e:"RD 33/1986."},
+ {q:"Las acciones dirigidas a evadir los sistemas de control de horarios son falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:1,e:"RD 33/1986."},
+ {q:"La incorrección con el público, superiores o compañeros es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:0,e:"La «grave desconsideración», en cambio, es grave."},
+ {q:"El abuso de autoridad en el ejercicio del cargo es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:1,e:"RD 33/1986."},
+ {q:"La prevalencia de la condición de empleado público para obtener un beneficio indebido es falta:",o:["Leve.","Grave.","Muy grave.","No es falta."],c:2,e:"Art. 95.2 TREBEP."},
+ {q:"A efectos de puntualidad y asistencia, se entiende por mes:",o:["30 días naturales.","Del día 1 al último de cada uno de los doce meses del año.","4 semanas.","22 días hábiles."],c:1,e:"RD 33/1986."},
+ {q:"Las faltas de asistencia de la funcionaria víctima de violencia de género por esa causa:",o:["Son leves.","Se consideran justificadas en el tiempo y las condiciones que fijen los servicios sociales o de salud.","Son graves.","Se descuentan siempre."],c:1,e:"Art. 49.d TREBEP."}
+];
+
+const T5=[
+ {q:"Quien induce a otro a cometer una falta disciplinaria:",o:["No responde.","Incurre en la misma responsabilidad.","Responde con una falta leve.","Solo responde penalmente."],c:1,e:"Art. 93 TREBEP."},
+ {q:"Quien encubre faltas consumadas responde cuando:",o:["Son leves.","Son muy graves o graves y se deriva daño grave para la Administración o los ciudadanos.","Siempre.","Nunca."],c:1,e:"Art. 93 TREBEP."},
+ {q:"La separación del servicio solo puede sancionar:",o:["Faltas graves.","Faltas muy graves.","Cualquier falta.","Faltas reiteradas leves."],c:1,e:"En los interinos supone la revocación del nombramiento."},
+ {q:"La suspensión firme de funciones tiene, según el TREBEP, una duración máxima de:",o:["3 años.","6 años.","10 años.","1 año."],c:1,e:"Art. 96 TREBEP."},
+ {q:"El demérito consiste en:",o:["Una multa.","La penalización a efectos de carrera, promoción o movilidad voluntaria.","El traslado forzoso.","La pérdida de trienios."],c:1,e:"Art. 96 TREBEP."},
+ {q:"El despido disciplinario del personal laboral por falta muy grave comporta:",o:["Nada más.","La inhabilitación para un nuevo contrato con funciones similares.","La pérdida de la nacionalidad.","Una multa."],c:1,e:"Art. 96 TREBEP."},
+ {q:"Si se declara improcedente el despido de un laboral fijo por falta muy grave:",o:["Se indemniza.","Procede la readmisión.","Se le traslada.","Se archiva."],c:1,e:"Art. 96.2 TREBEP."},
+ {q:"En la AGE, por falta muy grave puede imponerse una suspensión de funciones de:",o:["Hasta 3 años.","Entre 3 y 6 años.","Hasta 6 meses.","Entre 1 y 3 años."],c:1,e:"Por falta grave, hasta 3 años."},
+ {q:"El traslado con cambio de residencia por falta grave impide obtener destino en la localidad de origen durante:",o:["6 meses.","1 año.","3 años.","5 años."],c:1,e:"Por falta muy grave, 3 años."},
+ {q:"La sanción por falta leve en la AGE es:",o:["Suspensión de 1 mes.","Apercibimiento.","Demérito.","Traslado."],c:1,e:"RD 33/1986."},
+ {q:"La separación del servicio la impone:",o:["El Subsecretario.","El Ministro del Departamento.","El Consejo de Ministros.","El Delegado del Gobierno."],c:1,e:"Art. 61.s Ley 40/2015."},
+ {q:"La suspensión de funciones y el traslado con cambio de residencia los impone:",o:["El Ministro.","El Subsecretario.","El Director General.","La SEFP."],c:1,e:"Art. 63.ñ Ley 40/2015."},
+ {q:"Si la sanción es por faltas de incompatibilidades relacionadas con actividades en distintos Ministerios, es competente:",o:["El Subsecretario de cada uno.","El Ministerio competente en función pública.","El Consejo de Ministros.","La Oficina de Conflictos de Intereses."],c:1,e:"Según el manual."},
+ {q:"El apercibimiento lo pueden imponer:",o:["Solo el Ministro.","Los Subsecretarios, Directores Generales y Delegados del Gobierno.","Los jefes de servicio.","Las Juntas de Personal."],c:1,e:"RD 33/1986."},
+ {q:"Las Juntas o Delegados de Personal deben ser informados de las sanciones impuestas por faltas:",o:["Leves.","Graves.","Muy graves.","De cualquier tipo."],c:2,e:"Art. 40 TREBEP."},
+ {q:"NO es un principio de la potestad disciplinaria del art. 94 TREBEP:",o:["Proporcionalidad.","Culpabilidad.","Presunción de inocencia.","Oportunidad."],c:3,e:"Legalidad y tipicidad, irretroactividad, proporcionalidad, culpabilidad y presunción de inocencia."},
+ {q:"Las sanciones por faltas leves se imponen mediante:",o:["El procedimiento ordinario completo.","Un procedimiento sumario con audiencia al interesado.","Sin procedimiento.","Resolución judicial."],c:1,e:"Art. 98 TREBEP."},
+ {q:"En el procedimiento disciplinario, la fase instructora y la sancionadora:",o:["Las lleva el mismo órgano.","Se encomiendan a órganos distintos.","Las lleva el juez.","Se fusionan en faltas graves."],c:1,e:"Art. 98.2 TREBEP."},
+ {q:"Si en la instrucción resultan indicios fundados de criminalidad:",o:["Se continúa.","Se suspende la tramitación y se pone en conocimiento del Ministerio Fiscal.","Se archiva definitivamente.","Se impone la separación."],c:1,e:"Los hechos probados por sentencia firme vinculan a la Administración."},
+ {q:"Para graduar la sanción se tiene en cuenta, entre otros:",o:["La edad del funcionario.","La intencionalidad, el daño al interés público, la reiteración o reincidencia y el grado de participación.","El sueldo.","La antigüedad."],c:1,e:"Art. 96.3 TREBEP."}
+];
+
+const T6=[
+ {q:"El procedimiento disciplinario se inicia:",o:["A instancia del interesado.","Siempre de oficio.","A petición sindical.","Por el juez."],c:1,e:"Por iniciativa propia, orden superior, moción razonada o denuncia."},
+ {q:"Si el expediente se inicia por denuncia:",o:["El denunciante es parte.","Se comunica al firmante el acuerdo de incoación (y luego la resolución).","No se le comunica nada.","Debe ratificarla ante notario."],c:1,e:"RD 33/1986."},
+ {q:"Puede incoar en todo caso un expediente disciplinario:",o:["El jefe de servicio.","El Subsecretario del Departamento.","El Ministro de Hacienda.","La Junta de Personal."],c:1,e:"También los Directores Generales y los Delegados del Gobierno en su ámbito."},
+ {q:"Si el expedientado es Delegado de Personal, la incoación se notifica también:",o:["Al juez.","A la Junta de Personal, sección o central sindical correspondiente.","Al Defensor del Pueblo.","Al Tribunal de Cuentas."],c:1,e:"También si la incoación es dentro del año siguiente a su cese o si es candidato."},
+ {q:"El instructor debe ser funcionario de grupo o subgrupo:",o:["Inferior.","Igual o superior al del inculpado.","A1 siempre.","Cualquiera."],c:1,e:"RD 33/1986."},
+ {q:"El nombramiento de secretario en el expediente:",o:["Es obligatorio.","Solo procede cuando la complejidad o trascendencia de los hechos lo exija.","Lo hace el inculpado.","Corresponde a la Junta de Personal."],c:1,e:"Debe ser funcionario."},
+ {q:"La abstención o recusación del instructor la resuelve la autoridad que lo nombró en:",o:["24 horas.","3 días.","10 días.","1 mes."],c:1,e:"RD 33/1986."},
+ {q:"El pliego de cargos debe formularse en el plazo de:",o:["10 días.","1 mes prorrogable desde la incoación.","2 meses.","15 días."],c:1,e:"RD 33/1986."},
+ {q:"El inculpado dispone para contestar al pliego de cargos de:",o:["5 días.","10 días.","15 días.","1 mes."],c:1,e:"En ese trámite pide las pruebas."},
+ {q:"Al formular el pliego de cargos, el instructor debe proponer:",o:["La sanción definitiva.","El mantenimiento o levantamiento de la suspensión provisional.","El archivo.","Un nuevo instructor."],c:1,e:"RD 33/1986."},
+ {q:"El periodo de prueba dura:",o:["10 días.","15 días.","1 mes.","2 meses."],c:2,e:"RD 33/1986."},
+ {q:"Contra la denegación motivada de pruebas por el instructor:",o:["Cabe alzada.","No cabe recurso alguno.","Cabe reposición.","Cabe recurso contencioso inmediato."],c:1,e:"RD 33/1986."},
+ {q:"La intervención del instructor en las pruebas:",o:["Puede suplirla el secretario.","Es esencial y no puede suplirla el secretario.","Es opcional.","La hace la Junta de Personal."],c:1,e:"RD 33/1986."},
+ {q:"En la vista del expediente, el inculpado puede alegar en el plazo de:",o:["5 días.","10 días.","15 días.","1 mes."],c:1,e:"Con copia completa del expediente si la pide."},
+ {q:"La propuesta de resolución se formula en:",o:["5 días.","10 días.","1 mes.","15 días."],c:1,e:"Y el inculpado tiene 10 días para alegar."},
+ {q:"Tras las alegaciones a la propuesta, el expediente se remite:",o:["Al juez.","Al órgano que acordó la incoación, que lo envía al competente para resolver o pide más diligencias.","A la Junta de Personal.","Al Ministerio Fiscal."],c:1,e:"RD 33/1986."},
+ {q:"La resolución debe dictarse en 10 días desde la recepción del expediente, salvo cuando la sanción sea:",o:["El apercibimiento.","La separación del servicio.","La suspensión.","El traslado."],c:1,e:"RD 33/1986."},
+ {q:"La resolución sancionadora:",o:["Puede añadir hechos nuevos.","No puede aceptar hechos distintos de los del pliego y la propuesta, aunque sí valorarlos de otra forma.","No se motiva.","No se notifica al denunciante."],c:1,e:"RD 33/1986."},
+ {q:"Las sanciones se ejecutan en el plazo máximo de:",o:["10 días.","1 mes.","3 meses.","6 meses."],c:1,e:"Salvo causa justificada fijada en la resolución."},
+ {q:"La inejecución o suspensión de la sanción de separación del servicio corresponde a:",o:["El Ministro.","El Consejo de Ministros.","El Subsecretario.","La SEFP."],c:1,e:"En las demás, la inejecución la acuerda el Ministro de función pública."}
+];
+
+const T7=[
+ {q:"La suspensión provisional tiene por objeto:",o:["Sancionar.","Asegurar la eficacia de la resolución final.","Proteger al denunciante.","Ahorrar costes."],c:1,e:"Mediante resolución motivada."},
+ {q:"En un expediente disciplinario, la suspensión provisional no puede exceder de:",o:["3 meses.","6 meses, salvo paralización imputable al interesado.","1 año.","2 meses."],c:1,e:"Art. 98.3 TREBEP."},
+ {q:"La suspensión provisional en un proceso judicial que excede de 6 meses:",o:["Supone la pérdida del puesto.","No supone la pérdida del puesto.","Se convierte en firme.","Exige nuevo expediente."],c:1,e:"Dura lo que la prisión u otras medidas del juez."},
+ {q:"Durante la suspensión provisional, el funcionario percibe:",o:["Nada.","Las retribuciones básicas y, en su caso, las prestaciones por hijo a cargo.","Las íntegras.","El 50 %."],c:1,e:"Art. 98.3 TREBEP."},
+ {q:"Si la suspensión provisional se eleva a firme:",o:["Se le paga la diferencia.","Debe devolver lo percibido y el tiempo es de abono para la suspensión firme.","No pasa nada.","Se duplica la sanción."],c:1,e:"Art. 98.4 TREBEP."},
+ {q:"Si el funcionario resulta inocente, el tiempo de suspensión provisional:",o:["Se pierde.","Computa como servicio activo, con restitución de los derechos económicos.","Computa como excedencia.","Computa a la mitad."],c:1,e:"Con reincorporación a su puesto."},
+ {q:"Ante un procesamiento, si el juez no la acordó, puede acordar la suspensión provisional:",o:["El Ministro.","El Subsecretario del Departamento.","La Junta de Personal.","El Delegado del Gobierno exclusivamente."],c:1,e:"Puede prolongarse durante todo el procesamiento."},
+ {q:"NO es causa de extinción de la responsabilidad disciplinaria:",o:["La muerte.","El indulto.","El traslado a otro Ministerio.","La prescripción."],c:2,e:"También el cumplimiento de la sanción y la amnistía."},
+ {q:"Si durante el expediente el inculpado pierde la condición de funcionario:",o:["Se continúa siempre.","Se declara extinguido el procedimiento y se archiva, salvo que un interesado pida continuar.","Se impone la separación.","Se remite al juez."],c:1,e:"Sin perjuicio de la responsabilidad civil o penal."},
+ {q:"Las faltas muy graves prescriben a los:",o:["6 meses.","2 años.","3 años.","6 años."],c:2,e:"Art. 97 TREBEP."},
+ {q:"Las faltas leves prescriben a los:",o:["3 meses.","6 meses.","1 año.","2 años."],c:1,e:"Art. 97 TREBEP."},
+ {q:"Las sanciones impuestas por faltas leves prescriben al:",o:["Mes.","Año.","Semestre.","Bienio."],c:1,e:"Art. 97 TREBEP: muy graves 3 años, graves 2 y leves 1."},
+ {q:"El plazo de prescripción de las faltas continuadas comienza:",o:["Desde la primera conducta.","Desde el cese de su comisión.","Desde la denuncia.","Desde la incoación."],c:1,e:"Art. 97 TREBEP."},
+ {q:"El plazo de prescripción de las sanciones comienza desde:",o:["La comisión de la falta.","La firmeza de la resolución sancionadora.","La incoación.","La notificación del pliego."],c:1,e:"El RD 33/1986 añade: desde que se quebrante la sanción."},
+ {q:"La prescripción de la falta se interrumpe por:",o:["La denuncia.","La iniciación del procedimiento disciplinario.","La información reservada.","El nombramiento del instructor."],c:1,e:"Vuelve a correr si está paralizado más de 6 meses por causa no imputable al inculpado."},
+ {q:"Las sanciones disciplinarias se anotan en:",o:["El BOE.","El Registro Central de Personal.","El Registro Civil.","El expediente personal exclusivamente."],c:1,e:"Con indicación de las faltas que las motivaron."},
+ {q:"La anotación de una sanción por falta grave se cancela a los:",o:["6 meses.","1 año.","2 años.","6 años."],c:2,e:"Leves, 6 meses; muy graves, 6 años, desde su cumplimiento."},
+ {q:"La anotación de una sanción por falta muy grave se cancela a los:",o:["2 años.","3 años.","6 años.","10 años."],c:2,e:"Desde el cumplimiento de la sanción."},
+ {q:"Las sanciones canceladas o que pudieron serlo:",o:["Cuentan para la reincidencia.","No se computan a efectos de reincidencia.","Agravan la siguiente falta.","Se publican."],c:1,e:"RD 33/1986."},
+ {q:"La cancelación de las anotaciones se produce:",o:["Solo a instancia del interesado.","De oficio o a instancia del interesado.","Solo de oficio.","Por resolución judicial."],c:1,e:"RD 33/1986."}
+];
+
+const T8=[
+ {q:"Un funcionario C1 cobra 26.000 € en su puesto y le ofrecen un segundo puesto público de 12.000 €. ¿Puede cobrar ambos sin acuerdo especial?",o:["Sí.","No: el tope es 36.400 € (26.000 + 40 %) y la suma sería 38.000 €.","Sí, si no supera lo de un Director General.","No, nunca."],c:1,e:"26.000 × 1,40 = 36.400 €; haría falta un acuerdo expreso del Gobierno."},
+ {q:"Un funcionario A1 con 40.000 € en su puesto principal. ¿Cuál es el tope conjunto por el porcentaje?",o:["50.000 €.","52.000 €.","54.000 €.","56.000 €."],c:1,e:"40.000 × 1,30 = 52.000 € (y nunca por encima de un Director General)."},
+ {q:"Un C1 con CE equivalente al 45 % de sus básicas (sin antigüedad) quiere dar clases en una academia privada. ¿Qué debe hacer?",o:["Nada.","Pedir la reducción del CE al 30 % para poder obtener el reconocimiento de compatibilidad.","Pedir excedencia obligatoriamente.","Comunicarlo a la Junta de Personal."],c:1,e:"Resolución de 20-12-2011 para C1, C2 y E."},
+ {q:"Un funcionario que preparó a opositores durante 60 horas este año en una academia:",o:["Necesitaba reconocimiento de compatibilidad.","Está exceptuado: no supera las 75 horas anuales.","Comete falta grave.","Comete falta muy grave."],c:1,e:"Según el RD 598/1985, hasta 75 h/año."},
+ {q:"Un funcionario aprueba otra oposición y no opta entre dos puestos incompatibles en el plazo posesorio. Resultado:",o:["Conserva el antiguo.","Se entiende que opta por el nuevo.","Pierde los dos.","Puede mantener ambos."],c:1,e:"Art. 10 Ley 53/1984."},
+ {q:"Un funcionario acumula este mes 12 horas de incumplimiento injustificado de su jornada. ¿Qué falta comete?",o:["Leve.","Grave.","Muy grave.","Ninguna."],c:1,e:"10 horas o más al mes es falta grave."},
+ {q:"Un funcionario falta sin justificación un día. Se le sanciona con:",o:["Suspensión de 1 mes.","Apercibimiento (falta leve).","Traslado.","Demérito."],c:1,e:"Falta leve, sancionada con apercibimiento."},
+ {q:"Un funcionario cometió una falta leve hace 7 meses y no se ha incoado nada. Hoy:",o:["Puede sancionarse.","La falta ha prescrito (6 meses).","Se convierte en grave.","Prescribe al año."],c:1,e:"Las leves prescriben a los 6 meses."},
+ {q:"Un expediente por falta grave se incoó y lleva 7 meses paralizado por causa no imputable al inculpado. ¿Qué pasa con la prescripción?",o:["Sigue interrumpida.","Vuelve a correr el plazo.","Se extingue la falta.","Se duplica el plazo."],c:1,e:"Vuelve a correr tras más de 6 meses de paralización."},
+ {q:"Se notifica el pliego de cargos el día 1. ¿Hasta cuándo puede contestar el inculpado?",o:["5 días.","10 días.","15 días.","1 mes."],c:1,e:"10 días para contestar y proponer pruebas."},
+ {q:"Un C1 instruye el expediente de un A2. ¿Es correcto?",o:["Sí.","No: el instructor debe ser de grupo o subgrupo igual o superior al del inculpado.","Sí, si es voluntario.","Sí, si lo autoriza el Ministro."],c:1,e:"RD 33/1986."},
+ {q:"La resolución quiere sancionar unos hechos que no figuraban en el pliego de cargos. Es:",o:["Válido.","Inválido: no pueden aceptarse hechos distintos de los del pliego y la propuesta.","Válido si se motiva.","Válido si son leves."],c:1,e:"Sí cabe una distinta valoración jurídica de los mismos hechos."},
+ {q:"Un funcionario fue suspendido provisionalmente 4 meses y después se le impone una suspensión firme de 1 año. ¿Cuánto le queda por cumplir?",o:["1 año.","8 meses.","16 meses.","4 meses."],c:1,e:"El tiempo de suspensión provisional es de abono."},
+ {q:"Un jefe de servicio sabe que un subordinado comete faltas graves y lo tolera. Comete:",o:["Nada.","Falta grave.","Falta leve.","Falta muy grave."],c:1,e:"La tolerancia de los superiores con faltas graves o muy graves es falta grave."},
+ {q:"Un funcionario usa su cargo para influir en unas elecciones. Comete falta:",o:["Leve.","Grave.","Muy grave.","Ninguna."],c:2,e:"Violación de la imparcialidad para influir en procesos electorales."},
+ {q:"A un funcionario le impusieron una sanción grave que cumplió hace 30 meses. ¿Cuenta para la reincidencia?",o:["Sí.","No: pudo cancelarse a los 2 años.","Sí, durante 6 años.","Solo si es del mismo tipo."],c:1,e:"Las sanciones canceladas o que pudieron serlo no cuentan."},
+ {q:"Un auxiliar de la unidad de contratación quiere trabajar por la tarde en una empresa que suministra a esa unidad. ¿Es posible?",o:["Sí, con reconocimiento.","No: es una actividad privada prohibida por el RD 598/1985.","Sí, si es menos de 75 horas.","Sí, si no supera el 10 % del capital."],c:1,e:"Art. 11 RD 598/1985."},
+ {q:"Un funcionario es elegido concejal con dedicación parcial retribuida. ¿Puede cobrar por ella?",o:["No, nunca.","Sí, si la desempeña fuera de su jornada en la Administración y sin superar los límites generales.","Sí, sin límites.","Solo dietas."],c:1,e:"Ambas Administraciones deben comunicarse jornadas y retribuciones."},
+ {q:"Se ha impuesto una separación del servicio. ¿Quién puede acordar su inejecución?",o:["El Ministro del Departamento.","El Consejo de Ministros.","El Subsecretario.","El Ministro de función pública."],c:1,e:"En las demás sanciones, el Ministro de función pública."},
+ {q:"La sanción por falta grave quedó firme el 1 de marzo de 2024 y no se ha ejecutado. ¿Cuándo prescribe?",o:["1 de marzo de 2025.","1 de marzo de 2026.","1 de marzo de 2027.","1 de septiembre de 2024."],c:1,e:"Las sanciones graves prescriben a los 2 años desde la firmeza."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🏛️",name:"Ámbito y actividades públicas",desc:"Ley 53/1984, regla general, pensiones y supuestos excepcionales.",qs:T1},
+ {id:"t2",ic:"💶",name:"Límites retributivos y actividades privadas",desc:"Topes por subgrupo, autorización, prohibiciones y reconocimiento.",qs:T2},
+ {id:"t3",ic:"📋",name:"Disposiciones comunes y exceptuadas",desc:"Complemento específico, toma de posesión y actividades exceptuadas.",qs:T3},
+ {id:"t4",ic:"⚠️",name:"Faltas muy graves, graves y leves",desc:"Distinguir la gravedad de cada conducta.",qs:T4},
+ {id:"t5",ic:"⚖️",name:"Responsables, sanciones y principios",desc:"Sanciones del TREBEP y de la AGE, órganos y principios.",qs:T5},
+ {id:"t6",ic:"📂",name:"El expediente disciplinario",desc:"Incoación, instructor, pliego, prueba, propuesta, resolución y ejecución.",qs:T6},
+ {id:"t7",ic:"⏳",name:"Suspensión, prescripción y cancelación",desc:"Suspensión provisional, extinción, prescripción y anotaciones.",qs:T7},
+ {id:"t8",ic:"🧮",name:"Casos prácticos con cifras",desc:"Cálculos de límites, plazos y calificación de conductas.",qs:T8}
+];
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+/* ===== Esquemas autocorregibles ===== */
+const ESQ=[
+ {id:"e1",title:"Público frente a privado",intro:"Las dos reglas generales del régimen de incompatibilidades.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ley 53/1984</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Puesto público + puesto público</b>Regla: {{0}}.<br>Requisito: {{1}}.<br>Se resuelve en: {{2}}.</div>
+   <div class="sch-box alt"><b>Puesto público + actividad privada</b>Regla: {{3}}.<br>Requisito: {{4}}.<br>Se resuelve en: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Común</b>La compatibilidad no modifica {{6}} y hoy la gestiona en la AGE {{7}}.</div></div>`,
+  blanks:[
+   {o:["incompatibles salvo excepción legal","compatibles","compatibles con aviso","prohibidos siempre"],why:"No se puede desempeñar un segundo puesto en el sector público, salvo los supuestos de la ley."},
+   {o:["autorización previa y expresa","reconocimiento posterior","declaración responsable","nada"],why:"Se concede por razón del interés público."},
+   {o:["4 meses","2 meses","1 mes","6 meses"],why:"A propuesta de la Subsecretaría del Departamento."},
+   {o:["compatible salvo prohibición","incompatible","libre sin trámite","solo a tiempo parcial"],why:"Si no impide los deberes ni compromete la imparcialidad."},
+   {o:["reconocimiento previo de compatibilidad","autorización del Gobierno","nada","informe sindical"],why:"Resolución motivada."},
+   {o:["2 meses","4 meses","1 mes","3 meses"],why:"Art. 14 Ley 53/1984."},
+   {o:["la jornada ni el horario","el sueldo","el grado","el nivel"],why:"Y se condiciona a su estricto cumplimiento."},
+   {o:["la Oficina de Conflictos de Intereses","la DGFP","la Inspección de Servicios","el Tribunal de Cuentas"],why:"RD 210/2024 y Orden TDF/469/2024."}
+  ]},
+ {id:"e2",title:"Ordena: incremento máximo por subgrupo",intro:"De menor a mayor porcentaje sobre la retribución del puesto principal.",type:"order",
+  items:[
+   {t:"A1 · 30 %",why:"El incremento más bajo corresponde al subgrupo más alto."},
+   {t:"A2 · 35 %",why:"Cinco puntos más que el A1."},
+   {t:"C1 · 40 %",why:"Tu subgrupo: puesto principal + 40 %."},
+   {t:"C2 · 45 %",why:"Cinco puntos más que el C1."},
+   {t:"Agrupaciones profesionales · 50 %",why:"El incremento más alto. En todos los casos, nunca por encima de lo que cobre un Director General."}
+  ]},
+ {id:"e3",title:"Consecuencias del segundo puesto público",intro:"Qué pasa con trienios, pagas y consejos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Dos puestos públicos compatibles</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Retribuciones</b>Tope absoluto: {{0}}.<br>Pagas extra y prestaciones familiares: {{1}}.<br>Para cobrar, la autorización debe {{2}}.</div>
+   <div class="sch-box alt"><b>Otros efectos</b>Trienios y derechos pasivos del segundo puesto: {{3}}.<br>Consejos de Administración: máximo {{4}}.<br>Superar el tope: acuerdo de {{5}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["lo que cobre un Director General","lo que cobre un Ministro","el doble del principal","no hay"],why:"Remuneraciones previstas en los PGE para el cargo de Director General."},
+   {o:["solo en uno de los puestos","en ambos","en ninguno","a la mitad"],why:"Art. 7 Ley 53/1984."},
+   {o:["inscribirse en el Registro de Personal","publicarse en el BOE","notificarse a Hacienda","firmarse ante notario"],why:"Sin inscripción no se devengan haberes."},
+   {o:["no computan","computan","computan a la mitad","computan doble"],why:"Los servicios en el segundo puesto no computan."},
+   {o:["2","1","3","5"],why:"Salvo autorización excepcional del Gobierno en la AGE."},
+   {o:["el Gobierno (CA o Pleno local)","el Subsecretario","la Junta de Personal","el interesado"],why:"Por razones de especial interés para el servicio."}
+  ]},
+ {id:"e4",title:"Excepciones del sector público",intro:"Cuándo se permite una segunda actividad pública.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Segunda actividad pública permitida</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Docencia e investigación</b>Profesor universitario + puesto {{0}}, ambos {{1}}.<br>Investigación no permanente: acreditada por {{2}}.</div>
+   <div class="sch-box alt"><b>Cargos electivos</b>Diputado autonómico: salvo que {{3}}.<br>Concejal: salvo cargo {{4}}.<br>Se cobra: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Interés público</b>Lo determina {{6}}; solo en régimen {{7}}.</div></div>`,
+  blanks:[
+   {o:["sanitario o de investigación","administrativo","privado","docente en secundaria"],why:"Dentro del área de especialidad de su departamento universitario."},
+   {o:["a tiempo parcial","a tiempo completo","de libre designación","interinos"],why:"Los dos puestos deben ser de prestación a tiempo parcial."},
+   {o:["concurso público o cualificación especial","sorteo","antigüedad","informe del jefe"],why:"Excepción del art. 6 Ley 53/1984."},
+   {o:["cobre retribución periódica","sea A1","tenga hijos","sea interino"],why:"O que la propia Asamblea fije la incompatibilidad."},
+   {o:["retribuido y de dedicación exclusiva","sin sueldo","de oposición","honorífico"],why:"En ese caso pasa a servicios especiales."},
+   {o:["una sola retribución + dietas","ambas íntegras","ninguna","la mayor más el 40 %"],why:"Sin perjuicio de dietas, indemnizaciones o asistencias."},
+   {o:["el Consejo de Ministros por Real Decreto","el Subsecretario","el interesado","la Junta de Personal"],why:"O el órgano de gobierno de la CA."},
+   {o:["laboral, parcial y temporal","funcionarial","a tiempo completo","indefinido"],why:"A tiempo parcial y con duración determinada."}
+  ]},
+ {id:"e5",title:"Actividades privadas prohibidas",intro:"Ley 53/1984 y RD 598/1985.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Prohibiciones</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ley 53/1984</b>Asuntos en los que se intervino en los últimos {{0}}.<br>Participación en contratistas superior al {{1}}.<br>Consejos de empresas {{2}}.</div>
+   <div class="sch-box alt"><b>RD 598/1985</b>Cualquier funcionario: gestoría y {{3}}.<br>Personal de contratación: {{4}}.<br>Jefes de Unidades de Recursos: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Límites de jornada</b>Actividad privada de {{6}} de la jornada: solo si el puesto público es a tiempo parcial. Con dos puestos públicos que sumen {{7}}: ninguna actividad privada.</div></div>`,
+  blanks:[
+   {o:["2 años","5 años","1 año","10 años"],why:"También aquellos en que se interviene o haya que intervenir."},
+   {o:["10 %","5 %","25 %","50 %"],why:"En concesionarias, contratistas o empresas con participación pública."},
+   {o:["relacionadas con su Departamento","de cualquier tipo","extranjeras","sin ánimo de lucro"],why:"Si su actividad se relaciona con las que gestiona su Departamento u Organismo."},
+   {o:["procurador","escritor","conferenciante","profesor"],why:"Y actividades con presencia ante tribunales en horario."},
+   {o:["empresas proveedoras de su unidad","cualquier empresa","ONG","universidades"],why:"Empresas que suministran, prestan servicios o ejecutan obras gestionadas por su unidad."},
+   {o:["abogacía frente a la Administración","docencia","escritura","comercio"],why:"En defensa de intereses frente a la AGE o la SS, o en asuntos de su Departamento."},
+   {o:["la mitad o más","un tercio","un cuarto","dos tercios"],why:"Art. 12 Ley 53/1984."},
+   {o:["40 h semanales","35 h","37,5 h","45 h"],why:"La jornada máxima permitida en las AAPP."}
+  ]},
+ {id:"e6",title:"Toma de posesión y compatibilidad",intro:"Qué hacer según la situación del nuevo funcionario.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Al tomar posesión</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Otro puesto público</b>Incompatible: optar dentro del plazo posesorio; si no opta, {{0}}.<br>Compatible: pedir autorización en {{1}}; el plazo posesorio {{2}}.</div>
+   <div class="sch-box alt"><b>Actividad privada</b>Obtener la compatibilidad o {{3}} antes de empezar.<br>Cambio de puesto con compatibilidad previa: {{4}}.</div>
+  </div>
+  <div class="sch-box"><b>Diligencia</b>Se declara {{5}}. La compatibilidad queda sin efecto al {{6}}.</div></div>`,
+  blanks:[
+   {o:["se entiende elegido el nuevo","se entiende elegido el antiguo","pierde ambos","se suspende"],why:"Art. 10 Ley 53/1984."},
+   {o:["los 10 primeros días","el primer mes","los 3 primeros días","cualquier momento"],why:"Del plazo de toma de posesión."},
+   {o:["se prorroga hasta que se resuelva","caduca","se reduce","no cambia"],why:"Se entiende prorrogado mientras se resuelve."},
+   {o:["cesar en la actividad","pedir excedencia","avisar al jefe","reducir jornada"],why:"Antes de comenzar el ejercicio de las funciones públicas."},
+   {o:["pedir nuevo reconocimiento antes de la posesión","nada","renunciar","esperar un año"],why:"El reconocimiento anterior queda sin efecto con el cambio."},
+   {o:["no tener otro puesto ni actividad incompatible","su patrimonio","su afiliación","su domicilio"],why:"Art. 13 RD 598/1985."},
+   {o:["cambiar de puesto público","cumplir 1 año","cambiar de domicilio","cobrar trienios"],why:"Queda automáticamente sin efecto."}
+  ]},
+ {id:"e7",title:"Actividades exceptuadas",intro:"Asigna a cada actividad su régimen.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">¿Exceptuada o no?</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Supuestos</b>Administrar el piso heredado: {{0}}<br>Preparar opositores 60 h/año: {{1}}<br>Ser vocal de un tribunal de oposiciones: {{2}}<br>Publicar una novela propia: {{3}}</div>
+   <div class="sch-box alt"><b>Más supuestos</b>Trabajar en una gestoría administrativa: {{4}}<br>Dar clases en una academia 20 h semanales: {{5}}<br>Tertulia de radio ocasional: {{6}}<br>Junta rectora retribuida de una mutualidad: {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Exceptuada","Requiere compatibilidad","Prohibida"],why:"Administración del patrimonio personal o familiar."},
+   {o:["Exceptuada","Requiere compatibilidad","Prohibida"],why:"No supera las 75 horas anuales del RD 598/1985."},
+   {o:["Exceptuada","Requiere compatibilidad","Prohibida"],why:"Participación en tribunales calificadores."},
+   {o:["Exceptuada","Requiere compatibilidad","Prohibida"],why:"Creación literaria no derivada de la relación de empleo."},
+   {o:["Prohibida","Exceptuada","Requiere compatibilidad"],why:"Art. 11 RD 598/1985."},
+   {o:["Requiere compatibilidad","Exceptuada","Prohibida"],why:"Actividad privada habitual: reconocimiento previo (y CE ≤ 30 %)."},
+   {o:["Exceptuada","Requiere compatibilidad","Prohibida"],why:"Participación ocasional en medios de comunicación."},
+   {o:["Requiere compatibilidad","Exceptuada","Prohibida"],why:"Solo está exceptuada si no es retribuida."}
+  ]},
+ {id:"e8",title:"¿Qué gravedad tiene la falta?",intro:"Clasifica cada conducta.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Calificación de faltas</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Conductas</b>Desobediencia abierta: {{0}}<br>Falta de obediencia debida: {{1}}<br>Abandono del servicio: {{2}}<br>12 h de incumplimiento de jornada en un mes: {{3}}<br>Un día de ausencia injustificada: {{4}}</div>
+   <div class="sch-box alt"><b>Más conductas</b>Acoso laboral: {{5}}<br>Intervenir con causa de abstención: {{6}}<br>Incorrección con un compañero: {{7}}<br>Seguir con dos puestos incompatibles: {{8}}<br>Evadir el control horario: {{9}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Muy grave","Grave","Leve"],why:"Art. 95.2 TREBEP, salvo órdenes que sean infracción manifiesta."},
+   {o:["Grave","Muy grave","Leve"],why:"RD 33/1986."},
+   {o:["Muy grave","Grave","Leve"],why:"Art. 95.2 TREBEP."},
+   {o:["Grave","Leve","Muy grave"],why:"10 horas o más al mes."},
+   {o:["Leve","Grave","Muy grave"],why:"RD 33/1986."},
+   {o:["Muy grave","Grave","Leve"],why:"Art. 95.2.o TREBEP."},
+   {o:["Grave","Leve","Muy grave"],why:"RD 33/1986."},
+   {o:["Leve","Grave","Muy grave"],why:"La grave desconsideración sería grave."},
+   {o:["Muy grave","Grave","Leve"],why:"Si da lugar a una situación de incompatibilidad."},
+   {o:["Grave","Leve","Muy grave"],why:"RD 33/1986."}
+  ]},
+ {id:"e9",title:"Sanciones en la AGE",intro:"Qué sanción corresponde a cada falta y quién la impone.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Sanciones · RD 33/1986</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Muy graves</b>Separación: la impone {{0}}.<br>Suspensión: {{1}}.<br>Traslado: sin volver a la localidad en {{2}}.</div>
+   <div class="sch-box alt"><b>Graves</b>Suspensión: {{3}}.<br>Traslado: sin volver en {{4}}.<br>Impone: {{5}}.</div>
+   <div class="sch-box"><b>Leves</b>Sanción: {{6}}.<br>Imponen: {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["el Ministro","el Subsecretario","el Consejo de Ministros","la SEFP"],why:"Art. 61.s Ley 40/2015."},
+   {o:["de 3 a 6 años","hasta 3 años","hasta 6 meses","de 1 a 3 años"],why:"Ni superior a 6 años ni inferior a 3."},
+   {o:["3 años","1 año","6 años","6 meses"],why:"Desde que se efectuó el traslado."},
+   {o:["hasta 3 años","de 3 a 6 años","hasta 1 año","hasta 6 meses"],why:"No superior a 3 años."},
+   {o:["1 año","3 años","6 meses","2 años"],why:"Sin poder obtener destino en la localidad de origen durante un año."},
+   {o:["el Subsecretario","el Ministro","el Director General","el Delegado"],why:"Art. 63.ñ Ley 40/2015."},
+   {o:["apercibimiento","demérito","suspensión de 1 mes","multa"],why:"Única sanción por falta leve."},
+   {o:["Subsecretario, DG o Delegado del Gobierno","solo el Ministro","la Junta de Personal","el jefe inmediato"],why:"RD 33/1986."}
+  ]},
+ {id:"e10",title:"Ordena: fases del expediente disciplinario",intro:"Coloca las actuaciones en orden.",type:"order",
+  items:[
+   {t:"Incoación de oficio y nombramiento de instructor (y, si procede, secretario)",why:"Por el Subsecretario, el Director General o el Delegado del Gobierno."},
+   {t:"Declaración del inculpado y solicitud de informes",why:"Primeras actuaciones del instructor."},
+   {t:"Pliego de cargos (1 mes) y contestación (10 días)",why:"En la contestación se proponen las pruebas."},
+   {t:"Periodo de prueba (1 mes)",why:"La denegación motivada de pruebas no es recurrible."},
+   {t:"Vista del expediente (10 días)",why:"Con copia completa si la pide."},
+   {t:"Propuesta de resolución (10 días) y alegaciones (10 días)",why:"Después se remite al órgano que incoó."},
+   {t:"Resolución en 10 días (salvo separación) y ejecución en 1 mes",why:"Motivada y sin hechos nuevos."}
+  ]},
+ {id:"e11",title:"Plazos del procedimiento",intro:"Completa los plazos de cada trámite.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Plazos · RD 33/1986</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Instrucción</b>Abstención y recusación: {{0}}.<br>Pliego de cargos: {{1}}.<br>Contestación: {{2}}.<br>Prueba: {{3}}.</div>
+   <div class="sch-box alt"><b>Terminación</b>Vista: {{4}}.<br>Propuesta: {{5}}.<br>Resolución: {{6}}.<br>Ejecución: {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["3 días","10 días","1 mes","24 horas"],why:"Resuelve quien nombró al instructor o secretario."},
+   {o:["1 mes prorrogable","10 días","2 meses","15 días"],why:"Desde la incoación."},
+   {o:["10 días","5 días","15 días","1 mes"],why:"Y en ella se piden las pruebas."},
+   {o:["1 mes","10 días","2 meses","15 días"],why:"Plazo del periodo de prueba."},
+   {o:["10 días","5 días","15 días","1 mes"],why:"Para alegar y aportar documentos."},
+   {o:["10 días","1 mes","5 días","15 días"],why:"Y 10 días para alegaciones del inculpado."},
+   {o:["10 días (salvo separación)","1 mes","2 meses","3 días"],why:"Desde la recepción del expediente."},
+   {o:["1 mes","10 días","3 meses","6 meses"],why:"Salvo causa justificada fijada en la resolución."}
+  ]},
+ {id:"e12",title:"Suspensión provisional",intro:"Duración, retribuciones y efectos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Suspensión provisional</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Duración</b>En el expediente: {{0}}.<br>En un proceso judicial: {{1}}; si supera 6 meses, {{2}}.</div>
+   <div class="sch-box alt"><b>Efectos</b>Retribución: {{3}}.<br>Si es culpable: {{4}}.<br>Si es inocente: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Órganos</b>Expediente: {{6}}. Procesamiento sin medida judicial: {{7}}.</div></div>`,
+  blanks:[
+   {o:["máximo 6 meses","máximo 3 meses","1 año","sin límite"],why:"Salvo paralización imputable al interesado."},
+   {o:["lo que duren las medidas del juez","6 meses","3 meses","1 año"],why:"Prisión provisional u otras medidas."},
+   {o:["no pierde el puesto","pierde el puesto","pasa a excedencia","pasa a firme"],why:"Art. 98.3 TREBEP."},
+   {o:["básicas + prestación por hijo","íntegras","nada","50 %"],why:"Art. 98.3 TREBEP."},
+   {o:["devuelve lo cobrado y se abona el tiempo","no pasa nada","cobra el doble","pierde trienios"],why:"Art. 98.4 TREBEP."},
+   {o:["computa como servicio activo y se le restituye","pierde el tiempo","excedencia","nada"],why:"Con todos los derechos económicos desde la suspensión."},
+   {o:["el órgano que incoó","el Ministro","el juez","la Junta"],why:"Como medida cautelar."},
+   {o:["el Subsecretario","el Delegado","el Ministro","la SEFP"],why:"Puede prolongarse durante todo el procesamiento."}
+  ]},
+ {id:"e13",title:"Prescripción y cancelación",intro:"Los tres juegos de plazos que más se confunden.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Plazos por gravedad</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Faltas prescriben</b>Muy graves: {{0}}. Graves: {{1}}. Leves: {{2}}.</div>
+   <div class="sch-box alt"><b>Sanciones prescriben</b>Muy graves: {{3}}. Graves: {{4}}. Leves: {{5}}.</div>
+   <div class="sch-box"><b>Anotaciones se cancelan</b>Muy graves: {{6}}. Graves: {{7}}. Leves: {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["3 años","2 años","6 años","1 año"],why:"Art. 97 TREBEP."},
+   {o:["2 años","3 años","1 año","6 meses"],why:"Art. 97 TREBEP."},
+   {o:["6 meses","1 año","3 meses","2 años"],why:"Art. 97 TREBEP."},
+   {o:["3 años","6 años","2 años","1 año"],why:"Desde la firmeza de la resolución."},
+   {o:["2 años","1 año","3 años","6 meses"],why:"Art. 97 TREBEP."},
+   {o:["1 año","6 meses","2 años","3 meses"],why:"Ojo: la sanción leve prescribe al año, la falta leve a los 6 meses."},
+   {o:["6 años","3 años","2 años","10 años"],why:"Desde el cumplimiento de la sanción."},
+   {o:["2 años","1 año","6 meses","3 años"],why:"RD 33/1986."},
+   {o:["6 meses","1 año","3 meses","2 años"],why:"RD 33/1986."}
+  ]},
+ {id:"e14",title:"Principios y garantías",intro:"El marco de la potestad disciplinaria.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 94 y 98 TREBEP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Principios</b>Disposiciones desfavorables: {{0}}.<br>Disposiciones favorables: {{1}}.<br>Inculpado: {{2}}.</div>
+   <div class="sch-box alt"><b>Procedimiento</b>Faltas leves: {{3}}.<br>Instrucción y sanción: {{4}}.<br>Indicios de delito: {{5}}.<br>Hechos de una sentencia firme: {{6}}.</div>
+  </div>
+  <div class="sch-box"><b>Responsables</b>Quien induce: {{7}}. Quien encubre graves o muy graves con daño grave: {{8}}.</div></div>`,
+  blanks:[
+   {o:["irretroactividad","retroactividad","ultraactividad","indiferencia"],why:"Las disposiciones sancionadoras no favorables no se aplican hacia atrás."},
+   {o:["retroactividad","irretroactividad","nulidad","suspensión"],why:"Las favorables al presunto infractor sí son retroactivas."},
+   {o:["presunción de inocencia","presunción de culpa","carga de la prueba propia","silencio"],why:"Art. 94 TREBEP."},
+   {o:["procedimiento sumario con audiencia","sin trámite","procedimiento completo","resolución judicial"],why:"Art. 98.1 TREBEP."},
+   {o:["órganos distintos","el mismo órgano","el juez","la Junta"],why:"Separación entre la fase instructora y la sancionadora."},
+   {o:["suspender y avisar al Fiscal","continuar","archivar","sancionar ya"],why:"Art. 94.3 TREBEP."},
+   {o:["vinculan a la Administración","son orientativos","se ignoran","se revisan"],why:"Art. 94.3 TREBEP."},
+   {o:["la misma responsabilidad","la mitad","ninguna","una falta leve"],why:"Art. 93.2 TREBEP."},
+   {o:["también responde","no responde","solo penalmente","se le premia"],why:"Art. 93.3 TREBEP."}
+  ]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("t6ic1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("t6ic1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
