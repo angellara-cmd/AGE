@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>AGE: Selección de Personal · Estudio Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f0f4ff 0%, #e5e9f7 50%, #f5f3ff 100%);
+            --surface: rgba(255, 255, 255, 0.88);
+            --surface-solid: #ffffff;
+            --surface-hover: #f8fafc;
+            --border: rgba(99, 102, 241, 0.16);
+            --border-strong: rgba(99, 102, 241, 0.35);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --accent: #06b6d4;
+            --correct-bg: #ecfdf5;
+            --correct-border: #10b981;
+            --correct-text: #065f46;
+            --incorrect-bg: #fef2f2;
+            --incorrect-border: #ef4444;
+            --incorrect-text: #991b1b;
+            --explanation-bg: #f0f9ff;
+            --explanation-border: #0284c7;
+            --explanation-text: #0c4a6e;
+            --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.08), 0 4px 10px -6px rgba(15, 23, 42, 0.05);
+            --shadow-glow: 0 8px 20px -4px rgba(79, 70, 229, 0.35);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 50%, #131129 100%);
+            --surface: rgba(30, 41, 59, 0.82);
+            --surface-solid: #1e293b;
+            --surface-hover: #263349;
+            --border: rgba(148, 163, 184, 0.14);
+            --border-strong: rgba(129, 140, 248, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #818cf8;
+            --primary-light: rgba(99, 102, 241, 0.16);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: #10b981;
+            --correct-text: #6ee7b7;
+            --incorrect-bg: rgba(239, 68, 68, 0.15);
+            --incorrect-border: #ef4444;
+            --incorrect-text: #fca5a5;
+            --explanation-bg: rgba(14, 165, 233, 0.12);
+            --explanation-border: #38bdf8;
+            --explanation-text: #bae6fd;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+            --shadow-md: 0 12px 28px -6px rgba(0, 0, 0, 0.45);
+            --shadow-glow: 0 8px 22px -4px rgba(99, 102, 241, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.65;
+            font-size: 16px;
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header Glassmorphism */
+        header {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 12px 16px 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-inner {
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        .header-top {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-tema {
+            background: var(--primary-gradient);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 999px;
+            box-shadow: var(--shadow-glow);
+            white-space: nowrap;
+        }
+
+        .header-top h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-pill-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--primary-light);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .header-pill-link:hover {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-pill-link.claude-link {
+            background: linear-gradient(135deg, rgba(217, 119, 87, 0.14), rgba(124, 58, 237, 0.14));
+            color: var(--text-main);
+            border-color: var(--border-strong);
+        }
+
+        .theme-toggle {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.08);
+            border-color: var(--primary);
+        }
+
+        /* Navigation Pills */
+        nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 2px 6px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            mask-image: linear-gradient(to right, black 94%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 94%, transparent 100%);
+        }
+
+        nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            background: var(--surface-solid);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 920px;
+            margin: 20px auto 48px;
+            padding: 0 16px;
+        }
+
+        .section-container {
+            display: none;
+            animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section-container.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Toolbar Esquema */
+        .esquema-toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 13px 16px 13px 42px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--surface-solid);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 13px 22px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.06);
+        }
+
+        .action-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .action-btn.secondary {
+            background: var(--surface-solid);
+            color: var(--text-main);
+            border: 1px solid var(--border-strong);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+        }
+
+        .action-btn.speaking {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .esquema-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+
+        .q-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+        }
+
+        .card-header {
+            font-weight: 700;
+            font-size: 1.05rem;
+            line-height: 1.45;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .card-body {
+            color: var(--text-muted);
+            font-size: 0.96rem;
+        }
+
+        /* Test Progress Header */
+        .test-status-bar {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .test-status-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: var(--primary-light);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-gradient);
+            border-radius: 999px;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Options */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--surface-solid);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary);
+            background: var(--surface-hover);
+        }
+
+        .option-label:has(input:checked) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .option-label input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid var(--border-strong);
+            border-radius: 50%;
+            margin-top: 2px;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+            background: var(--surface-solid);
+        }
+
+        .option-label input[type="radio"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 0.15s transform ease-in-out;
+            background: var(--primary);
+        }
+
+        .option-label input[type="radio"]:checked {
+            border-color: var(--primary);
+        }
+
+        .option-label input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        /* Correction States */
+        .option-label.correct {
+            background: var(--correct-bg) !important;
+            color: var(--correct-text) !important;
+            border-color: var(--correct-border) !important;
+            font-weight: 700;
+        }
+
+        .option-label.incorrect {
+            background: var(--incorrect-bg) !important;
+            color: var(--incorrect-text) !important;
+            border-color: var(--incorrect-border) !important;
+        }
+
+        .explanation {
+            background: var(--explanation-bg);
+            color: var(--explanation-text);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-top: 14px;
+            border-left: 4px solid var(--explanation-border);
+            font-size: 0.92rem;
+            display: none;
+            animation: fadeSlideUp 0.25s ease;
+        }
+
+        /* Score Card */
+        .score-display {
+            display: none;
+            background: var(--surface-solid);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 18px 0;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .score-pill {
+            padding: 10px 8px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .score-pill.ok { background: var(--correct-bg); color: var(--correct-text); }
+        .score-pill.ko { background: var(--incorrect-bg); color: var(--incorrect-text); }
+        .score-pill.bl { background: var(--primary-light); color: var(--primary); }
+
+        .test-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Desktop Enhancements */
+        @media (min-width: 768px) {
+            header {
+                padding: 16px 24px 12px;
+            }
+
+            .header-top {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .header-top h1 {
+                font-size: 1.35rem;
+            }
+
+            .esquema-toolbar {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .esquema-toolbar .action-btn {
+                width: auto;
+                white-space: nowrap;
+            }
+
+            .card {
+                padding: 26px;
+            }
+
+            .test-actions {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+
+            .test-actions .action-btn {
+                width: auto;
+                min-width: 190px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <div class="header-top">
+                <div class="brand-row">
+                    <div class="brand-title">
+                        <span class="badge-tema">Tema 02</span>
+                        <h1>AGE · Selección de Personal</h1>
+                    </div>
+                    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">🌙</button>
+                </div>
+
+                <div class="header-links">
+                    <a href="Tema_02_Seleccion_personal_claude.html" class="header-pill-link claude-link">✨ Versión Claude</a>
+                    <a href="tema02_Seleccion de personal.pdf" target="_blank" class="header-pill-link">📄 PDF Base</a>
+                </div>
+            </div>
+
+            <nav id="nav-menu" aria-label="Navegación de estudio">
+                <button class="nav-btn active" id="nav-esquema" onclick="switchTab('esquema')">📚 Esquema (40)</button>
+                <!-- Los botones de los 10 tests se generan en JS -->
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Pestaña: Esquema -->
+        <section id="esquema" class="section-container active">
+            <div class="esquema-toolbar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="search" id="search-esquema" placeholder="Filtrar preguntas clave (ej. TREBEP, discapacidad, plazo, tribunal...)" oninput="filtrarEsquema(this.value)">
+                </div>
+                <button class="action-btn" id="btn-leer" onclick="leerTema()">🔊 Escuchar Tema</button>
+            </div>
+            <div id="esquema-content"></div>
+        </section>
+
+        <!-- Pestañas: Tests (se generan dinámicamente) -->
+        <div id="tests-container"></div>
+    </main>
+
+    <script>
+        // -------------------------------------------------------------------------
+        // 0. GESTIÓN DE TEMA CLARO / OSCURO
+        // -------------------------------------------------------------------------
+        function initTheme() {
+            const saved = localStorage.getItem('age-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved || (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('age-theme', next);
+            document.getElementById('theme-btn').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+
+        // -------------------------------------------------------------------------
+        // 1. DATA: ESQUEMA DE ESTUDIO (40 Preguntas basadas EXCLUSIVAMENTE en el PDF)
+        // -------------------------------------------------------------------------
+        const esquemaPreguntas = [
+            { pregunta: "¿Cuáles son los principios constitucionales de acceso al empleo público?", respuesta_detallada: "De acuerdo con los artículos 23.2 y 103.3 de la Constitución española, los principios son igualdad, mérito y capacidad." },
+            { pregunta: "¿Qué principios rectores adicionales establece el TREBEP (art. 55) para la selección?", respuesta_detallada: "Publicidad de las convocatorias y bases, transparencia, imparcialidad y profesionalidad de los órganos, independencia y discrecionalidad técnica, adecuación entre el contenido y las funciones, y agilidad sin perjuicio de objetividad." },
+            { pregunta: "¿Qué garantiza la Administración del Estado según el Real Decreto-ley 6/2023?", respuesta_detallada: "La agilidad y eficiencia promoviendo medios electrónicos, la accesibilidad garantizando igualdad de oportunidades, la confidencialidad de los órganos y la promoción de la igualdad de acceso con independencia de la situación socioeconómica." },
+            { pregunta: "¿Cómo deben ser los procesos selectivos según el TREBEP (art. 61)?", respuesta_detallada: "Tendrán carácter abierto y garantizarán la libre concurrencia, velando por el principio de igualdad de oportunidades entre sexos y cuidando la conexión entre el tipo de pruebas y el desempeño de las tareas." },
+            { pregunta: "¿Cuáles son los sistemas selectivos para funcionarios de carrera?", respuesta_detallada: "Oposición y concurso-oposición (deben incluir siempre pruebas de capacidad). Excepcionalmente, por ley, puede aplicarse el sistema de concurso (solo valoración de méritos)." },
+            { pregunta: "¿Se puede proponer un número superior de aprobados al de plazas convocadas?", respuesta_detallada: "Por regla general no, excepto cuando así lo prevea la propia convocatoria." },
+            { pregunta: "¿Qué sucede si hay renuncias de aspirantes seleccionados antes de su nombramiento?", respuesta_detallada: "El órgano convocante puede requerir del órgano de selección una relación complementaria de los aspirantes que sigan a los propuestos para asegurar la cobertura de las plazas." },
+            { pregunta: "¿Cómo debe territorializarse el proceso selectivo en la AGE según el RDL 6/2023?", respuesta_detallada: "La realización de las pruebas se llevará a cabo de forma territorializada, teniendo especialmente en cuenta los territorios no peninsulares." },
+            { pregunta: "¿Quiénes NO pueden formar parte de los órganos de selección?", respuesta_detallada: "El personal de elección o designación política, los funcionarios interinos, el personal eventual y quienes tengan la consideración de alto cargo." },
+            { pregunta: "¿Qué regla aplica a los funcionarios que han preparado opositores?", respuesta_detallada: "No pueden formar parte del órgano quienes hubiesen realizado tareas de preparación de aspirantes en los cinco años anteriores a la publicación de la convocatoria." },
+            { pregunta: "¿Cómo es la composición de los Tribunales?", respuesta_detallada: "Número impar de miembros (no inferior a cinco), funcionarios de carrera, con igual número de suplentes. Todos deben poseer titulación igual o superior a la exigida para el ingreso." },
+            { pregunta: "¿Qué son las Comisiones Permanentes de Selección?", respuesta_detallada: "Órganos encomendados para procesos con elevado número de aspirantes y nivel de titulación/especialización exigido. Creadas por Orden del Ministerio competente." },
+            { pregunta: "¿Cuántas vocalías componen la actual Comisión Permanente de Selección?", respuesta_detallada: "Está integrada por 1 Presidencia, 45 personas en las vocalías y 1 Secretaría." },
+            { pregunta: "¿Cuántas personas integran la unidad de evaluación de Gestión Civil del Estado en la CPS?", respuesta_detallada: "Está formada por 13 personas." },
+            { pregunta: "¿Cuántas personas integran la unidad de evaluación de General Auxiliar del Estado en la CPS?", respuesta_detallada: "Está formada por 9 personas." },
+            { pregunta: "¿Qué es la Oferta de Empleo Público (OEP)?", respuesta_detallada: "El instrumento donde las necesidades de recursos humanos, con asignación presupuestaria, que deban proveerse de nuevo ingreso son definidas y cuantificadas." },
+            { pregunta: "¿Cuál es el plazo máximo para ejecutar la OEP en el TREBEP y en la AGE?", respuesta_detallada: "El TREBEP establece un plazo improrrogable de 3 años. El RDL 6/2023 (AGE) exige que las convocatorias se ejecuten en 2 años desde su publicación." },
+            { pregunta: "¿Qué porcentaje mínimo se reserva para promoción interna en la OEP (AGE)?", respuesta_detallada: "Un porcentaje no inferior al 30% de las plazas de acceso libre." },
+            { pregunta: "¿Cuál es el cupo de reserva para personas con discapacidad en el TREBEP?", respuesta_detallada: "Un cupo no inferior al 7% de las vacantes (de manera que al menos el 2% sea para discapacidad intelectual)." },
+            { pregunta: "¿Cuál es el porcentaje de reserva para discapacidad en la AGE (RDL 6/2023)?", respuesta_detallada: "Un porcentaje no inferior al 10% de las plazas convocadas (de manera que al menos el 2% sea para discapacidad intelectual)." },
+            { pregunta: "¿Cuál es el grado de discapacidad exigido para acceder a las plazas reservadas?", respuesta_detallada: "Se requiere tener reconocido un grado de discapacidad igual o superior al 33%." },
+            { pregunta: "¿Cómo se convocan las plazas reservadas a personas con discapacidad intelectual?", respuesta_detallada: "Se llevará a cabo mediante la convocatoria de pruebas selectivas específicas e independientes." },
+            { pregunta: "¿Qué documentación debe acompañar a la solicitud de participación al inicio del proceso?", respuesta_detallada: "No es obligatorio acompañar documentación; basta con que los aspirantes manifiesten en la instancia que reúnen las condiciones referidas a la fecha de expiración del plazo." },
+            { pregunta: "¿Cuál es el plazo de presentación de instancias para participar?", respuesta_detallada: "El plazo es de 20 días hábiles a partir del siguiente al de la publicación de la convocatoria en el BOE." },
+            { pregunta: "¿Qué plazo hay para subsanar errores en la lista de admitidos y excluidos?", respuesta_detallada: "A los excluidos se les da un plazo de 10 días hábiles para subsanación de la falta de datos y errores." },
+            { pregunta: "¿Cuáles son los tiempos de publicidad de los ejercicios posteriores al primero?", respuesta_detallada: "Debe avisarse con 12 horas al menos si se trata del mismo ejercicio, o de 24 horas si es un nuevo ejercicio (no es obligatorio BOE, vale en locales de celebración)." },
+            { pregunta: "¿Cuál es el plazo para aportar documentación una vez aprobada la fase selectiva?", respuesta_detallada: "Debe aportarse en el plazo de 20 días hábiles desde que se hagan públicas las relaciones de aprobados." },
+            { pregunta: "¿Qué sucede si no se supera el curso selectivo o período de prácticas?", respuesta_detallada: "Los aspirantes perderán el derecho a su nombramiento como funcionarios de carrera, mediante resolución motivada." },
+            { pregunta: "¿Cuál es el plazo para la toma de posesión tras el nombramiento en AGE?", respuesta_detallada: "15 días naturales a partir de la publicación del nombramiento (BOE), que será de 1 mes cuando suponga cambio de localidad de residencia." },
+            { pregunta: "¿Ante quién se toma posesión en la AGE?", respuesta_detallada: "Ante el Subsecretario del Ministerio en servicios centrales; o ante el Delegado del Gobierno en servicios periféricos." },
+            { pregunta: "¿Cuál es el límite temporal entre la conclusión de un ejercicio y el siguiente?", respuesta_detallada: "Deberá transcurrir un plazo mínimo de 72 horas y máximo de 45 días hábiles." },
+            { pregunta: "¿Se exige requisito de nacionalidad española en todos los casos?", respuesta_detallada: "No. Los nacionales de otros Estados de la UE pueden acceder en igualdad salvo en empleos que impliquen ejercicio del poder público o salvaguardia de intereses del Estado." },
+            { pregunta: "¿Quién aprueba la Oferta de Empleo Público?", respuesta_detallada: "La aprueba el Gobierno a propuesta del Ministerio con competencias en función pública, previo informe presupuestario favorable de Hacienda, dentro del primer trimestre." },
+            { pregunta: "¿Quién puede revisar las resoluciones de los Tribunales?", respuesta_detallada: "Las resoluciones vinculan a la Administración, pero ésta puede proceder a su revisión conforme a la Ley de Procedimiento Administrativo Común." },
+            { pregunta: "¿Dónde se realiza la inscripción en los procesos selectivos gestionados por el INAP?", respuesta_detallada: "Es obligatoria la inscripción electrónica desde la Orden TFP/510/2019." },
+            { pregunta: "¿Qué características tienen los destinos obtenidos en el nombramiento de nuevo ingreso?", respuesta_detallada: "Los destinos tendrán carácter definitivo, equivalente a todos los efectos a los obtenidos por concurso." },
+            { pregunta: "¿Quién convoca las pruebas de Cuerpos interdepartamentales en la AGE?", respuesta_detallada: "Corresponde a la persona titular de la Secretaría de Estado de Función Pública." },
+            { pregunta: "¿La oferta de empleo público qué incluye respecto al talento interno según RDL 6/2023?", respuesta_detallada: "La planificación estratégica incluirá criterios para articular la OEP orientados a mecanismos de movilidad, provisión y promoción interna para fomentar el talento interno." },
+            { pregunta: "¿Cuándo se usa de forma extraordinaria el servicio público de empleo para interinos?", respuesta_detallada: "Por razones de plazos o de dificultad para captar candidatos, podrá recurrirse con carácter excepcional." },
+            { pregunta: "¿Qué implica la planificación estratégica de RRHH en AGE?", respuesta_detallada: "Establece el escenario plurianual de empleo público, optimiza el capital humano y se estructura en planes generales y específicos." }
+        ];
+
+        // -------------------------------------------------------------------------
+        // 2. DATA: TEST POOL (Basado estrictamente en el PDF)
+        // -------------------------------------------------------------------------
+        const baseTestPool = [
+            {
+                pregunta: "Según el art. 55 del TREBEP, las Administraciones seleccionarán a su personal garantizando los principios de:",
+                opciones: [
+                    "Publicidad, transparencia, imparcialidad y agilidad.",
+                    "Únicamente igualdad, mérito y capacidad.",
+                    "Independencia, pero permitiendo la discrecionalidad política.",
+                    "A y B son correctas."
+                ],
+                respuesta_correcta: 0,
+                explicacion: "El art. 55 añade a igualdad, mérito y capacidad los principios de publicidad, transparencia, imparcialidad, independencia técnica y agilidad."
+            },
+            {
+                pregunta: "El sistema selectivo aplicable, con carácter excepcional y solo en virtud de ley, será:",
+                opciones: [
+                    "La oposición pura.",
+                    "El concurso-oposición.",
+                    "El concurso.",
+                    "La entrevista curricular."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "Según el TREBEP (art. 61) y el RDL 6/2023, solo en virtud de ley podrá aplicarse, con carácter excepcional, el sistema de concurso (solo méritos)."
+            },
+            {
+                pregunta: "¿Quiénes NO podrán formar parte de los órganos de selección?",
+                opciones: [
+                    "Los funcionarios de carrera.",
+                    "Los funcionarios interinos y personal eventual.",
+                    "El personal de elección o designación política.",
+                    "B y C son correctas."
+                ],
+                respuesta_correcta: 3,
+                explicacion: "El TREBEP establece explícitamente que el personal de elección/designación política, funcionarios interinos, eventuales y altos cargos no pueden formar parte."
+            },
+            {
+                pregunta: "¿Qué número de miembros debe tener un Tribunal de selección?",
+                opciones: [
+                    "Un número par, no inferior a cuatro.",
+                    "Un número impar, no inferior a cinco.",
+                    "Siempre tres miembros (Presidente, Secretario y Vocal).",
+                    "No está regulado, depende de la convocatoria."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "Los tribunales estarán constituidos por un número impar de miembros, no inferior a cinco, debiendo designarse el mismo número de suplentes."
+            },
+            {
+                pregunta: "En la Administración del Estado, la ejecución de las convocatorias derivadas de la OEP deberá realizarse en el plazo máximo de:",
+                opciones: [
+                    "Tres años desde su publicación.",
+                    "Dos años desde su publicación.",
+                    "Un año improrrogable.",
+                    "Seis meses."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "El RDL 6/2023 establece para la AGE que las convocatorias deberán ejecutarse en el plazo máximo de 2 años desde su publicación (frente a los 3 del TREBEP)."
+            },
+            {
+                pregunta: "El porcentaje de plazas reservadas en la AGE para personas con discapacidad según el RDL 6/2023 es de:",
+                opciones: [
+                    "No inferior al 7%.",
+                    "Exactamente un 5%.",
+                    "No inferior al 10%.",
+                    "Todas son correctas."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "El RDL 6/2023 marca que en la AGE se reservará un porcentaje no inferior al 10% (de forma que el 2% sea para intelectual)."
+            },
+            {
+                pregunta: "El plazo para presentar la solicitud de participación en los procedimientos de ingreso es de:",
+                opciones: [
+                    "15 días naturales.",
+                    "20 días naturales.",
+                    "20 días hábiles.",
+                    "1 mes."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "Las solicitudes deben presentarse en el plazo de 20 días hábiles a partir del siguiente al de la publicación en el BOE."
+            },
+            {
+                pregunta: "¿Qué plazo tienen los excluidos para subsanar faltas en la lista provisional?",
+                opciones: [
+                    "5 días hábiles.",
+                    "10 días hábiles.",
+                    "15 días hábiles.",
+                    "10 días naturales."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "A los aspirantes excluidos se les dará un plazo de 10 días hábiles para subsanación de la falta de datos y errores."
+            },
+            {
+                pregunta: "¿Ante quién se interpone el recurso de alzada contra resoluciones de los órganos de selección?",
+                opciones: [
+                    "Ante el propio Tribunal.",
+                    "Ante el Ministro competente.",
+                    "Ante la autoridad que haya nombrado a su presidente.",
+                    "Ante la Secretaría de Estado de Función Pública."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "Podrá interponerse recurso de alzada ante la autoridad que haya nombrado a su presidente (órgano convocante)."
+            },
+            {
+                pregunta: "Una vez publicado el nombramiento, el plazo de toma de posesión será de:",
+                opciones: [
+                    "15 días hábiles.",
+                    "15 días naturales (1 mes si hay cambio de localidad).",
+                    "20 días hábiles.",
+                    "Al día siguiente siempre."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "La toma de posesión se efectuará dentro de 15 días naturales a partir de la publicación, siendo de un mes si supone cambio de localidad (RDL 6/2023)."
+            },
+            {
+                pregunta: "La Comisión Permanente de Selección (CPS) está integrada por:",
+                opciones: [
+                    "Presidente, 10 vocales y Secretario.",
+                    "Presidente, 45 vocalías y Secretaría.",
+                    "Presidente, 35 vocalías y 2 Secretarías.",
+                    "A y C son correctas."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "Según la Orden HFP/266/2023, la CPS la integran 1 Presidencia, 45 personas en vocalías y 1 Secretaría."
+            },
+            {
+                pregunta: "Para el acceso a plazas reservadas por discapacidad intelectual en la AGE, las pruebas serán:",
+                opciones: [
+                    "Las mismas que el turno libre pero con más tiempo.",
+                    "Específicas e independientes.",
+                    "Conjuntas, pero con un examen oral adicional.",
+                    "A voluntad del aspirante."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "El RDL 6/2023 establece que el acceso a plazas de discapacidad intelectual (>= 33%) se llevará a cabo mediante pruebas específicas e independientes."
+            },
+            {
+                pregunta: "¿Qué porcentaje de acceso libre se reserva para promoción interna en la OEP según RDL 6/2023?",
+                opciones: [
+                    "No inferior al 10%.",
+                    "No inferior al 20%.",
+                    "No inferior al 30%.",
+                    "El 50% de las vacantes."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "La oferta incluirá un porcentaje no inferior al 30% de las plazas de acceso libre para promoción interna."
+            },
+            {
+                pregunta: "Si el proceso selectivo finaliza y hay plazas de discapacidad sin cubrir, ¿a dónde van? (OEP general)",
+                opciones: [
+                    "Se pierden automáticamente.",
+                    "Se acumulan a las de turno libre.",
+                    "Se guardan para la convocatoria del año siguiente.",
+                    "El PDF no lo especifica expresamente para la OEP general, pero para temporales se acumulan a libres."
+                ],
+                respuesta_correcta: 3,
+                explicacion: "La documentación indica explícitamente en el apartado temporal (5%) que las vacantes se acumulan a libres; en general opera la regulación de discapacidad."
+            },
+            {
+                pregunta: "El tiempo transcurrido desde la conclusión de un ejercicio hasta el comienzo del siguiente será:",
+                opciones: [
+                    "Mínimo 48 horas y máximo 30 días naturales.",
+                    "Mínimo 72 horas y máximo 45 días hábiles.",
+                    "Mínimo 15 días y máximo 2 meses.",
+                    "No hay límite legal establecido."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "El Real Decreto 364/1995 fija un plazo mínimo de 72 horas y máximo de 45 días hábiles."
+            },
+            {
+                pregunta: "¿Quién nombra a los funcionarios de carrera tras concluir el proceso selectivo AGE?",
+                opciones: [
+                    "El Rey.",
+                    "El Ministro de Hacienda.",
+                    "El Secretario de Estado competente en materia de función pública.",
+                    "El Subsecretario del Ministerio."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "Quienes superen el proceso serán nombrados funcionarios de carrera por el Secretario de Estado competente en materia de función pública."
+            },
+            {
+                pregunta: "Los funcionarios que hayan preparado a opositores no podrán estar en tribunales si lo hicieron en los:",
+                opciones: [
+                    "2 años anteriores.",
+                    "3 años anteriores.",
+                    "5 años anteriores.",
+                    "10 años anteriores."
+                ],
+                respuesta_correcta: 2,
+                explicacion: "Deben abstenerse quienes hubiesen realizado tareas de preparación en los cinco años inmediatos anteriores a la convocatoria (RD 364/1995)."
+            },
+            {
+                pregunta: "¿Es obligatoria la publicación de los ejercicios sucesivos en el BOE?",
+                opciones: [
+                    "Sí, siempre para garantizar la publicidad.",
+                    "No, basta con anuncios en locales de celebración con 12/24 horas de antelación.",
+                    "Solo si cambian de localidad.",
+                    "A y C son correctas."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "Una vez comenzados, los siguientes no se publican en BOE, sino en los locales: 12h antes (mismo ejercicio) o 24h antes (distinto ejercicio)."
+            },
+            {
+                pregunta: "En la fase de concurso-oposición, la puntuación de la fase de concurso:",
+                opciones: [
+                    "Puede determinar por sí sola el resultado del proceso.",
+                    "En ningún caso determinará por sí sola el resultado del proceso selectivo.",
+                    "Solo se valora si se suspende la oposición.",
+                    "Será del 100%."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "El TREBEP exige que la valoración del concurso sea proporcionada y en ningún caso determinará por sí sola el resultado del selectivo. Hay que superar la oposición."
+            },
+            {
+                pregunta: "Los asesores especialistas que se incorporan a los órganos de selección:",
+                opciones: [
+                    "Son miembros de pleno derecho con voz y voto genérico.",
+                    "Se limitan al ejercicio de sus especialidades técnicas.",
+                    "Deben ser obligatoriamente del mismo cuerpo.",
+                    "Pueden ser personal de designación política."
+                ],
+                respuesta_correcta: 1,
+                explicacion: "Dichos asesores se limitarán al ejercicio de sus especialidades técnicas, en base exclusivamente a las cuales colaborarán."
+            }
+        ];
+
+        const examenes = [];
+        for (let i = 0; i < 10; i++) {
+            let testArray = [];
+            let shuffledPool = [...baseTestPool].sort(() => 0.5 - Math.random());
+            for (let j = 0; j < 20; j++) {
+                let templateQ = shuffledPool[j % shuffledPool.length];
+                testArray.push({
+                    numero: j + 1,
+                    pregunta: templateQ.pregunta,
+                    opciones: [...templateQ.opciones],
+                    respuesta_correcta: templateQ.respuesta_correcta,
+                    explicacion: templateQ.explicacion
+                });
+            }
+            examenes.push(testArray);
+        }
+
+        // -------------------------------------------------------------------------
+        // 3. LÓGICA DE INTERFAZ Y NAVEGACIÓN
+        // -------------------------------------------------------------------------
+        function initApp() {
+            initTheme();
+            renderNav();
+            renderEsquema(esquemaPreguntas);
+            renderTestsContainers();
+        }
+
+        function renderNav() {
+            const nav = document.getElementById('nav-menu');
+            for (let i = 0; i < 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.id = `nav-test-${i}`;
+                btn.textContent = `📝 Test ${i + 1}`;
+                btn.onclick = () => switchTab(`test-${i}`);
+                nav.appendChild(btn);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderEsquema(lista) {
+            const container = document.getElementById('esquema-content');
+            container.innerHTML = '';
+
+            if (lista.length === 0) {
+                container.innerHTML = `<div class="card"><div class="card-body">No se encontraron preguntas que coincidan con tu búsqueda.</div></div>`;
+                return;
+            }
+
+            lista.forEach((item) => {
+                const realIndex = esquemaPreguntas.indexOf(item) + 1;
+                const card = document.createElement('div');
+                card.className = 'card esquema-card';
+                card.innerHTML = `
+                    <span class="q-badge">Clave #${realIndex}</span>
+                    <div class="card-header">${item.pregunta}</div>
+                    <div class="card-body">${item.respuesta_detallada}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filtrarEsquema(query) {
+            const q = query.trim().toLowerCase();
+            if (!q) {
+                renderEsquema(esquemaPreguntas);
+                return;
+            }
+            const filtradas = esquemaPreguntas.filter(item =>
+                item.pregunta.toLowerCase().includes(q) ||
+                item.respuesta_detallada.toLowerCase().includes(q)
+            );
+            renderEsquema(filtradas);
+        }
+
+        function renderTestsContainers() {
+            const mainContainer = document.getElementById('tests-container');
+            const letras = ['A', 'B', 'C', 'D'];
+
+            examenes.forEach((test, index) => {
+                const section = document.createElement('section');
+                section.id = `test-${index}`;
+                section.className = 'section-container';
+
+                let html = `
+                    <div class="test-status-bar">
+                        <div class="test-status-info">
+                            <span>Simulacro #${index + 1}</span>
+                            <span id="prog-text-${index}">0 / 20 respondidas</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="prog-bar-${index}"></div>
+                        </div>
+                    </div>
+                    <div class="score-display" id="score-top-${index}"></div>
+                `;
+
+                test.forEach((q, qIndex) => {
+                    html += `
+                        <div class="card test-card" id="t${index}-q${qIndex}">
+                            <span class="q-badge">Pregunta ${q.numero} de 20</span>
+                            <div class="card-header">${q.pregunta}</div>
+                            <div class="options-group">
+                    `;
+                    q.opciones.forEach((opcion, oIndex) => {
+                        html += `
+                            <label class="option-label" id="label-t${index}-q${qIndex}-o${oIndex}">
+                                <input type="radio" name="t${index}-q${qIndex}" value="${oIndex}" onchange="actualizarProgreso(${index})">
+                                <span><strong>${letras[oIndex]}.</strong> ${opcion}</span>
+                            </label>
+                        `;
+                    });
+                    html += `
+                            </div>
+                            <div class="explanation" id="exp-t${index}-q${qIndex}">
+                                <strong>💡 Explicación:</strong> ${q.explicacion}
+                                <br><br><em>✅ Respuesta correcta: <strong>${letras[q.respuesta_correcta]}. ${q.opciones[q.respuesta_correcta]}</strong></em>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="score-display" id="score-bot-${index}"></div>
+                    <div class="test-actions">
+                        <button class="action-btn secondary" onclick="reiniciarTest(${index})">🔄 Reiniciar Test</button>
+                        <button class="action-btn" id="btn-corr-${index}" onclick="corregirTest(${index})">✅ Corregir Examen</button>
+                    </div>
+                `;
+                section.innerHTML = html;
+                mainContainer.appendChild(section);
+            });
+        }
+
+        function actualizarProgreso(testIndex) {
+            let respondidas = 0;
+            for (let q = 0; q < 20; q++) {
+                const checked = document.querySelector(`input[name="t${testIndex}-q${q}"]:checked`);
+                if (checked) respondidas++;
+            }
+            const pct = (respondidas / 20) * 100;
+            document.getElementById(`prog-text-${testIndex}`).textContent = `${respondidas} / 20 respondidas`;
+            document.getElementById(`prog-bar-${testIndex}`).style.width = `${pct}%`;
+        }
+
+        function corregirTest(testIndex) {
+            const test = examenes[testIndex];
+            let aciertos = 0;
+            let errores = 0;
+            let blanco = 0;
+
+            document.getElementById(`btn-corr-${testIndex}`).disabled = true;
+
+            test.forEach((q, qIndex) => {
+                const radios = document.getElementsByName(`t${testIndex}-q${qIndex}`);
+                let respondido = -1;
+
+                radios.forEach((r, idx) => {
+                    r.disabled = true;
+                    if (r.checked) respondido = idx;
+                });
+
+                if (respondido === -1) {
+                    blanco++;
+                    document.getElementById(`label-t${testIndex}-q${qIndex}-o${q.respuesta_correcta}`).classList.add('correct');
+                    document.getElementById(`exp-t${testIndex}-q${qIndex}`).style.display = 'block';
+                } else if (respondido === q.respuesta_correcta) {
+                    aciertos++;
+                    document.getElementById(`label-t${testIndex}-q${qIndex}-o${respondido}`).classList.add('correct');
+                } else {
+                    errores++;
+                    document.getElementById(`label-t${testIndex}-q${qIndex}-o${respondido}`).classList.add('incorrect');
+                    document.getElementById(`label-t${testIndex}-q${qIndex}-o${q.respuesta_correcta}`).classList.add('correct');
+                    document.getElementById(`exp-t${testIndex}-q${qIndex}`).style.display = 'block';
+                }
+            });
+
+            const scoreHTML = `
+                <div style="font-size:1.1rem; font-weight:800;">📊 Resultado del Simulacro #${testIndex + 1}</div>
+                <div class="score-grid">
+                    <div class="score-pill ok">✅ Aciertos: ${aciertos}</div>
+                    <div class="score-pill ko">❌ Errores: ${errores}</div>
+                    <div class="score-pill bl">⚪ Blancos: ${blanco}</div>
+                </div>
+            `;
+            const topScore = document.getElementById(`score-top-${testIndex}`);
+            const botScore = document.getElementById(`score-bot-${testIndex}`);
+
+            topScore.innerHTML = scoreHTML;
+            botScore.innerHTML = scoreHTML;
+            topScore.style.display = 'block';
+            botScore.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function reiniciarTest(testIndex) {
+            const test = examenes[testIndex];
+
+            document.getElementById(`btn-corr-${testIndex}`).disabled = false;
+            document.getElementById(`score-top-${testIndex}`).style.display = 'none';
+            document.getElementById(`score-bot-${testIndex}`).style.display = 'none';
+            document.getElementById(`prog-text-${testIndex}`).textContent = '0 / 20 respondidas';
+            document.getElementById(`prog-bar-${testIndex}`).style.width = '0%';
+
+            test.forEach((q, qIndex) => {
+                const radios = document.getElementsByName(`t${testIndex}-q${qIndex}`);
+                radios.forEach(r => {
+                    r.disabled = false;
+                    r.checked = false;
+                    document.getElementById(`label-t${testIndex}-q${qIndex}-o${r.value}`).classList.remove('correct', 'incorrect');
+                });
+                document.getElementById(`exp-t${testIndex}-q${qIndex}`).style.display = 'none';
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // -------------------------------------------------------------------------
+        // 4. LÓGICA DE SÍNTESIS DE VOZ
+        // -------------------------------------------------------------------------
+        let speechSynth = window.speechSynthesis;
+        let isSpeaking = false;
+
+        function leerTema() {
+            const btn = document.getElementById('btn-leer');
+            if (isSpeaking) {
+                speechSynth.cancel();
+                isSpeaking = false;
+                btn.textContent = '🔊 Escuchar Tema';
+                btn.classList.remove('speaking');
+                return;
+            }
+
+            let fullText = "Esquema de estudio. Tema 2: Selección de Personal. ";
+            esquemaPreguntas.forEach((item, index) => {
+                fullText += `Pregunta ${index + 1}. ${item.pregunta} ... Respuesta. ${item.respuesta_detallada}. `;
+            });
+
+            const utterance = new SpeechSynthesisUtterance(fullText);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.0;
+
+            utterance.onend = () => {
+                isSpeaking = false;
+                btn.textContent = '🔊 Escuchar Tema';
+                btn.classList.remove('speaking');
+            };
+
+            speechSynth.speak(utterance);
+            isSpeaking = true;
+            btn.textContent = '⏹ Detener Lectura';
+            btn.classList.add('speaking');
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
