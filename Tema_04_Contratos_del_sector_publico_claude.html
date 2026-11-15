@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque 3 · Tema 4 · Los contratos del sector público · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">DA4</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Derecho administrativo</small>
+      <b>Contratos del sector público</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .steps-out{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .steps-out div{padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .steps-out div b{color:var(--a1)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque 3 · Tema 4 · Derecho administrativo</span>
+    <h1>Los contratos del sector público: <span>de la preparación al recurso especial</span></h1>
+    <p>Resumen de alto rendimiento del manual (Ley 9/2017, LCSP) con <strong>tus siete esquemas convertidos en herramientas</strong> y con <strong>todas las cifras actualizadas a 2026</strong> (las que he cambiado llevan la etiqueta <span class="upd">2026</span>). Incluye:</p>
+    <ul>
+      <li>Un clasificador que decide si un contrato es SARA y qué procedimiento le corresponde.</li>
+      <li>Un comprobador del recurso especial con cálculo de plazos.</li>
+      <li>Una calculadora de penalidades, demora en el pago e intereses.</li>
+      <li>Un comprobador de modificaciones, un diagnóstico de invalidez y un mapa de órganos y transparencia.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">20</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">16</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">80</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('sara').scrollIntoView({behavior:'smooth'})">¿SARA y qué procedimiento? ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('rec').scrollIntoView({behavior:'smooth'})">Recurso especial ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('ejec').scrollIntoView({behavior:'smooth'})">Penalidades y pago ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Cifras corregidas respecto al manual:</strong>
+    <ul>
+      <li><strong>Umbrales SARA 2026-2027</strong> (Orden HAC/1517/2025, desde el 1-1-2026):
+        <ul>
+          <li>Obras y concesiones: <strong>5.404.000 €</strong> (antes, 5.538.000).</li>
+          <li>Suministros y servicios de la AGE, sus OOAA y la Seguridad Social: <strong>140.000 €</strong> (antes, 143.000).</li>
+          <li>Suministros y servicios de otros poderes adjudicadores: <strong>216.000 €</strong> (antes, 221.000).</li>
+          <li>Sectores especiales: <strong>432.000 €</strong> (antes, 443.000).</li>
+          <li>Servicios del anexo IV: siguen en 750.000 €.</li>
+        </ul>
+        El procedimiento abierto simplificado para suministros y servicios baja con el umbral, a menos de 140.000 €. Tu esquema 1 ya trae estas cifras, pero dice «2026-2028»: el periodo es el <strong>bienio 2026-2027</strong>.</li>
+      <li><strong>Revisión de precios</strong>: desde la Ley 11/2023 cabe en <strong>cualquier tipo de contrato</strong>, después de 1 año y con el 20 % ejecutado. El manual mantiene la lista cerrada anterior (obras, armamento, energía y recuperación de la inversión en 5 años o más).</li>
+      <li><strong>Interés de demora del segundo semestre de 2026</strong>: <strong>10,40 %</strong>.</li>
+      <li><strong>Ley 9/2025</strong> (movilidad sostenible): extiende el recurso especial a todos los contratos de servicio público de transporte de viajeros del Reglamento 1370/2007, sin importar su cuantía.</li>
+    </ul>
+  </span></div>
+
+  <div class="section-title" id="sara">
+    <div><span class="kicker">Tus esquemas 1 y 2 · umbrales 2026</span><h2>Clasificador: ¿menor, SARA o no SARA? ¿Qué procedimiento?</h2></div>
+    <p>Elige el tipo de contrato, quién contrata y el valor estimado (sin IVA). Verás su régimen, los procedimientos posibles, la publicidad, los plazos mínimos y si cabe el recurso especial.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Tipo de contrato<select id="sa-t"><option value="ob">Obras</option><option value="co">Concesión de obras</option><option value="cs">Concesión de servicios</option><option value="su">Suministro</option><option value="se" selected>Servicios</option><option value="s4">Servicios sociales y otros del anexo IV</option></select></label>
+      <label>Entidad contratante<select id="sa-e"><option value="age">AGE, sus OOAA o la Seguridad Social</option><option value="otr">Otro poder adjudicador (CCAA, EELL…)</option><option value="esp">Sectores especiales (agua, energía, transporte, correos)</option></select></label>
+      <label>Valor estimado sin IVA (€)<input type="number" id="sa-v" min="0" step="1000" value="120000"></label>
+      <label class="chk"><input type="checkbox" id="sa-i"> Prestaciones de carácter intelectual</label>
+    </div>
+    <div class="rsv" id="sa-k"></div>
+    <div class="verdict" id="sa-out"></div>
+  </div>
+
+  <div class="section-title" id="rec">
+    <div><span class="kicker">Tu esquema 5 · arts. 44-60 LCSP</span><h2>Recurso especial en materia de contratación</h2></div>
+    <p>¿Cabe el recurso especial o el ordinario? Calcula el plazo de 15 días hábiles y repasa la tramitación ante el Tribunal.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Contrato<select id="re-t"><option value="ob">Obras</option><option value="con">Concesión de obras o de servicios</option><option value="ss">Suministro o servicios</option><option value="ae">Administrativo especial</option><option value="tv">Servicio público de transporte de viajeros (Reglamento 1370/2007)</option></select></label>
+      <label>Valor estimado sin IVA (€)<input type="number" id="re-v" min="0" step="1000" value="150000"></label>
+      <label>Acto que se recurre<select id="re-a"><option value="pl">Anuncio de licitación o pliegos</option><option value="ex">Exclusión de un licitador por la mesa</option><option value="ad">Adjudicación</option><option value="mo">Modificación que debió ser una nueva adjudicación</option><option value="mp">Encargo a un medio propio</option><option value="ej">Penalidad o resolución en la fase de ejecución</option><option value="me">Contrato menor</option></select></label>
+      <label>Fecha de notificación o publicación<input type="date" id="re-f" value="2026-11-16"></label>
+    </div>
+    <div class="verdict" id="re-out"></div>
+  </div>
+
+  <div class="section-title" id="ejec">
+    <div><span class="kicker">Tu esquema 3 · arts. 192-198 LCSP · Ley 3/2004</span><h2>Ejecución: penalidades por demora y pago del precio</h2></div>
+    <p>Calcula la penalidad diaria y el umbral del 5 %, o la demora de la Administración en el pago con los intereses del segundo semestre de 2026.</p>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="ej-tabs"><button class="on" data-p="d">Demora del contratista</button><button data-p="p">Demora en el pago</button><button data-p="m">Modificación del contrato</button></div>
+    <div class="pane on" id="ej-d">
+      <div class="tool-grid">
+        <label>Precio del contrato sin IVA (€)<input type="number" id="pd-p" min="0" step="1000" value="200000"></label>
+        <label>Días de retraso<input type="number" id="pd-d" min="0" value="90"></label>
+        <label>Otras penalidades ya impuestas (€)<input type="number" id="pd-o" min="0" step="100" value="0"></label>
+      </div>
+      <div class="verdict" id="pd-out"></div>
+    </div>
+    <div class="pane" id="ej-p">
+      <div class="tool-grid">
+        <label>Importe de la certificación o factura (€)<input type="number" id="pp-i" min="0" step="100" value="50000"></label>
+        <label>Fecha de entrega o prestación<input type="date" id="pp-e" value="2026-06-01"></label>
+        <label>Fecha de aprobación de la certificación o conformidad<input type="date" id="pp-a" value="2026-06-25"></label>
+        <label>Fecha de pago efectivo (vacío = hoy)<input type="date" id="pp-p"></label>
+      </div>
+      <div class="verdict" id="pp-out"></div>
+    </div>
+    <div class="pane" id="ej-m">
+      <div class="tool-grid">
+        <label>Precio inicial del contrato (€)<input type="number" id="mm-p" min="0" step="1000" value="500000"></label>
+        <label>Importe de esta modificación (€)<input type="number" id="mm-m" min="0" step="1000" value="80000"></label>
+        <label>Modificaciones anteriores (€)<input type="number" id="mm-a" min="0" step="1000" value="0"></label>
+        <label>¿Está prevista en el pliego?<select id="mm-t"><option value="prev">Sí, de forma clara, precisa e inequívoca (art. 204)</option><option value="no">No (art. 205)</option></select></label>
+      </div>
+      <div class="verdict" id="mm-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Tu esquema 3 (página 2) · arts. 38-43 LCSP</span><h2>Diagnóstico de invalidez del contrato</h2></div>
+    <p>¿El vicio produce nulidad o anulabilidad? ¿Cómo se depura?</p>
+  </div>
+  <div class="card tool">
+    <label>Vicio<select id="iv-v"></select></label>
+    <div class="verdict" id="iv-out"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Tus esquemas 4 y 6</span><h2>Mapa de órganos, transparencia y contratación electrónica</h2></div>
+    <p>Quién interviene en la contratación y dónde se publica cada cosa.</p>
+  </div>
+  <div class="sit-pills" id="og-pills"></div>
+  <div class="card sit-card" id="og-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave (2026)</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>5.404.000 €</b><span>SARA: obras y concesiones <span class="upd">2026</span></span></div>
+    <div class="num"><b>140.000 · 216.000 €</b><span>SARA: suministros y servicios de la AGE · de otros poderes adjudicadores <span class="upd">2026</span></span></div>
+    <div class="num"><b>750.000 · 432.000 €</b><span>SARA: servicios del anexo IV · sectores especiales <span class="upd">2026</span></span></div>
+    <div class="num"><b>&lt; 40.000 · &lt; 15.000 €</b><span>Contrato menor: obras · resto. Máximo 1 año y sin prórroga</span></div>
+    <div class="num"><b>≤ 2 M · &lt; 140.000 €</b><span>Abierto simplificado: obras · suministros y servicios <span class="upd">2026</span></span></div>
+    <div class="num"><b>&lt; 80.000 · &lt; 60.000 €</b><span>Abierto simplificado abreviado: obras · suministros y servicios</span></div>
+    <div class="num"><b>&gt; 3 M · &gt; 100.000 €</b><span>Recurso especial: obras y concesiones · suministros y servicios</span></div>
+    <div class="num"><b>15 días hábiles</b><span>Interponer el recurso especial · formalizar si no cabe recurso · espera para formalizar si cabe</span></div>
+    <div class="num"><b>3 % · 5 % · +5 %</b><span>Garantía provisional (máximo) · definitiva · complementaria</span></div>
+    <div class="num"><b>0,60 € por cada 1.000</b><span>Penalidad diaria por demora. Cada 5 % del precio, se opta entre resolver o seguir penalizando</span></div>
+    <div class="num"><b>10 % · 50 %</b><span>Tope de cada penalidad · tope del total de penalidades</span></div>
+    <div class="num"><b>30 + 30 días</b><span>Aprobar la certificación o conformidad · pagar</span></div>
+    <div class="num"><b>4 · 6 meses</b><span>Demora en el pago: el contratista puede suspender · puede resolver</span></div>
+    <div class="num"><b>10,40 %</b><span>Interés de demora del segundo semestre de 2026 (tipo BCE + 8 puntos) <span class="upd">2026</span></span></div>
+    <div class="num"><b>20 % · 1 año</b><span>Revisión de precios: importe ejecutado · tiempo desde la formalización</span></div>
+    <div class="num"><b>20 % · 50 %</b><span>Modificaciones previstas en el pliego · tope de las no previstas (obligatorias hasta el 20 %)</span></div>
+    <div class="num"><b>5 años</b><span>Duración máxima de los suministros y servicios de tracto sucesivo, prórrogas incluidas</span></div>
+    <div class="num"><b>12 M €</b><span>Autorización del Consejo de Ministros (art. 324)</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Concepto, ámbito y clases</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>La LCSP: origen, estructura y principios</h3><small>Ley 9/2017</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Competencia</strong>: art. 149.1.18.ª CE (legislación básica sobre contratos y concesiones). La ley transpone las Directivas <strong>2014/23/UE</strong> (concesiones) y <strong>2014/24/UE</strong> (contratación pública); la 2014/25 (sectores especiales) se transpuso por el RDL 3/2020. Entró en vigor el <strong>9 de marzo de 2018</strong>.</li>
+          <li><strong>Estructura</strong>: título preliminar y 4 libros, <strong>347 artículos</strong>, 57 DA, 6 DT, 1 DD, 16 DF y 6 anexos.</li>
+          <li><strong>Principios</strong> (art. 1): libertad de acceso a las licitaciones, publicidad y transparencia, no discriminación e igualdad de trato, integridad, eficiencia en el gasto y estabilidad presupuestaria. Se incorporan de forma <strong>transversal</strong> criterios sociales y medioambientales, y se facilita el acceso de las pymes.</li>
+          <li><strong>Ámbito subjetivo</strong>: el sector público en tres círculos: Administraciones Públicas ⊂ poderes adjudicadores ⊂ sector público (art. 3). Las fundaciones y sociedades lo son si hay control o financiación mayoritaria pública.</li>
+          <li><strong>Negocios excluidos</strong> (arts. 4-11): relaciones de servicio de los funcionarios y contratos laborales, convenios sin naturaleza contractual, encargos a medios propios (que tienen su propio régimen, arts. 32-33), contratos patrimoniales sobre inmuebles, defensa y seguridad, etc.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Clases por el objeto</h3><small>Arts. 13-18 · tu esquema 1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Obras</strong>: ejecución de una obra (con o sin proyecto). Una obra es un conjunto de trabajos de construcción o ingeniería civil, con función económica o técnica, sobre un inmueble.</li>
+          <li><strong>Concesión de obras</strong>: la contraprestación es el <strong>derecho a explotar</strong> la obra (o ese derecho más un precio), con transferencia del <strong>riesgo operacional</strong> (de demanda o de suministro).</li>
+          <li><strong>Concesión de servicios</strong>: se encomienda la gestión de un servicio a cambio del derecho a explotarlo, con transferencia del riesgo operacional.</li>
+          <li><strong>Suministro</strong>: adquisición, arrendamiento financiero o arrendamiento, con o sin opción de compra, de bienes muebles (incluidos los programas no hechos a medida).</li>
+          <li><strong>Servicios</strong>: prestaciones de hacer distintas de una obra o un suministro. <strong>No</strong> pueden implicar el ejercicio de autoridad.</li>
+          <li><strong>Mixtos</strong> (art. 18): solo si las prestaciones están vinculadas y son complementarias. Se rigen por la prestación principal, que es la de mayor valor estimado (o la principal si no son separables).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.3</span><span class="bt"><h3>Contratos SARA <span class="upd">2026</span></h3><small>Arts. 19-23 · Orden HAC/1517/2025</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl money">
+          <tr><th>Contrato SARA (valor estimado ≥)</th><th>2024-2025 (manual)</th><th>2026-2027</th></tr>
+          <tr><td>Obras, concesión de obras y concesión de servicios</td><td data-l="Manual">5.538.000</td><td data-l="2026-27"><strong>5.404.000</strong></td></tr>
+          <tr><td>Suministros y servicios de la AGE, sus OOAA y la Seguridad Social</td><td data-l="Manual">143.000</td><td data-l="2026-27"><strong>140.000</strong></td></tr>
+          <tr><td>Suministros y servicios de otros poderes adjudicadores</td><td data-l="Manual">221.000</td><td data-l="2026-27"><strong>216.000</strong></td></tr>
+          <tr><td>Servicios sociales y otros del anexo IV</td><td data-l="Manual">750.000</td><td data-l="2026-27">750.000</td></tr>
+          <tr><td>Subvencionados más del 50 %: obras · servicios vinculados</td><td data-l="Manual">5.538.000 · 221.000</td><td data-l="2026-27"><strong>5.404.000 · 216.000</strong></td></tr>
+          <tr><td>Sectores especiales (RDL 3/2020): obras · suministros y servicios</td><td data-l="Manual">5.538.000 · 443.000</td><td data-l="2026-27"><strong>5.404.000 · 432.000</strong></td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Lotes</strong>: pueden excluirse de las normas SARA los lotes de menos de <strong>1.000.000 €</strong> (obras) o de <strong>80.000 €</strong> (suministros y servicios), siempre que en conjunto no superen el <strong>20 %</strong> del total.</li>
+          <li><strong>No son SARA</strong> aunque superen el umbral: servicios audiovisuales, defensa, contratos secretos, redes de comunicaciones, servicios jurídicos, defensa civil, transporte de viajeros por ferrocarril o metro, y redes de agua potable.</li>
+          <li>Los umbrales se revisan <strong>cada dos años</strong> mediante Reglamentos Delegados de la UE y se publican por orden ministerial (DA 11.ª LCSP).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.4</span><span class="bt"><h3>Contratos administrativos y privados. Jurisdicción</h3><small>Arts. 24-27 · tu esquema 1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Administrativos</strong>: los de obras, concesiones, suministro y servicios que celebra una <strong>Administración Pública</strong>, y los administrativos especiales. Excepciones: los servicios financieros, la creación e interpretación artística, los espectáculos y las suscripciones a revistas y bases de datos son privados. Se rigen por la LCSP, después por el derecho administrativo y, en último término, por el privado.</li>
+          <li><strong>Privados</strong>: los de las AAPP no incluidos en el punto anterior y todos los de las entidades que no son AAPP. La preparación y la adjudicación se rigen por la LCSP; los efectos y la extinción, por el derecho privado (con algunas normas de la LCSP).</li>
+          <li><strong>Contencioso-administrativa</strong>: todo el régimen de los contratos administrativos; la preparación y adjudicación de los privados; las modificaciones de los privados de las AAPP sujetas a la LCSP; las resoluciones de los tribunales de recursos contractuales. <strong>Civil</strong>: los efectos y la extinción de los contratos privados (salvo las modificaciones).</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Partes del contrato</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Órgano de contratación y prerrogativas</h3><small>Arts. 61-64, 190 y 323-324 · tu esquema 4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Órgano de contratación</strong>: en la AGE, los <strong>Ministros y Secretarios de Estado</strong>, y en los organismos, sus presidentes o directores. Puede delegar. Existe la Junta de Contratación Centralizada (DG de Racionalización y Centralización). En las EELL, alcaldes, Plenos o Juntas de Gobierno.</li>
+          <li><strong>Autorización del Consejo de Ministros</strong> (art. 324): valor estimado igual o superior a <strong>12 M €</strong>, entre otros casos.</li>
+          <li><strong>Prerrogativas</strong> (art. 190): interpretar, resolver dudas, modificar por razones de interés público, suspender, declarar la responsabilidad imputable al contratista, acordar la resolución y determinar sus efectos, inspeccionar. Hace falta audiencia, y dictamen del <strong>Consejo de Estado</strong> si el contratista se opone a la interpretación o a la resolución, o si la modificación supera el <strong>20 %</strong> del precio inicial (y el precio es de 6 M € o más).</li>
+          <li><strong>Responsable del contrato</strong> (art. 62): supervisa la ejecución y dicta instrucciones; en las obras, sus funciones las ejerce el director facultativo.</li>
+          <li><strong>Lucha contra la corrupción</strong> (art. 64): los conflictos de intereses se previenen, detectan y solucionan.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Mesas de contratación y órganos consultivos</h3><small>Arts. 326-334 · tu esquema 4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Mesa</strong>: obligatoria en los procedimientos abierto, simplificado, restringido, diálogo competitivo, licitación con negociación, asociación para la innovación y negociado sin publicidad por urgencia. <strong>Potestativa</strong> en el negociado sin publicidad y en el simplificado abreviado. Califica la documentación, valora, propone las ofertas anormalmente bajas y propone la adjudicación.</li>
+          <li><strong>Composición</strong>: presidente, secretario y vocales (al menos un <strong>interventor</strong> y un <strong>jurista</strong>). <strong>No</strong> pueden formar parte los cargos públicos representativos, el personal eventual ni quien redactó la documentación técnica. Los interinos, solo si no hay funcionarios de carrera.</li>
+          <li><strong>Comité de expertos</strong> (al menos 3 miembros) u organismo técnico: cuando los criterios de juicio de valor pesan <strong>más del 50 %</strong>.</li>
+          <li><strong>Órganos estatales</strong>: Junta Consultiva de Contratación Pública del Estado · <strong>OIRESCON</strong> · Comité de cooperación · Oficina Nacional de Evaluación (sostenibilidad de las concesiones) · <strong>TACRC</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>El contratista: capacidad, prohibiciones y solvencia</h3><small>Arts. 65-97</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Requisitos: <strong>capacidad</strong> de obrar, ausencia de <strong>prohibiciones de contratar</strong> (art. 71: condenas por delitos de corrupción, sanciones graves, falta de pago a Hacienda o a la Seguridad Social, incompatibilidades…; la Ley 11/2023 añadió las infracciones en materia LGTBI), <strong>solvencia</strong> económica y técnica o <strong>clasificación</strong>, y habilitación profesional.</li>
+          <li><strong>Clasificación</strong>: exigible en los contratos de obras de <strong>500.000 €</strong> o más. En servicios no es exigible, aunque sirve para acreditar la solvencia.</li>
+          <li>Inscripción en el <strong>ROLECE</strong>: acredita la capacidad y la solvencia y ahorra documentación.</li>
+          <li><strong>Uniones temporales de empresas</strong>, responsables solidariamente. Puede recurrirse a la solvencia de otras empresas (integración).</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Preparación y elementos</h3>
+
+    <details class="blk">
+      <summary><span class="bn">3.1</span><span class="bt"><h3>Expediente de contratación y pliegos</h3><small>Arts. 115-130 · tu esquema 2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Consultas preliminares del mercado</strong> (art. 115): se publican en el perfil del contratante y requieren un informe motivado.</li>
+          <li><strong>Expediente</strong> (art. 116): lo inicia el órgano de contratación motivando la necesidad (se publica en el perfil). Debe justificar el procedimiento, la solvencia, los criterios, las condiciones especiales, el valor estimado, la necesidad, la no división en lotes y, en los servicios, la insuficiencia de medios. Incluye el <strong>PCAP</strong>, el <strong>PPT</strong>, el certificado de crédito y la fiscalización previa. La aprobación del expediente <strong>aprueba el gasto</strong> y abre la adjudicación.</li>
+          <li><strong>Urgente</strong> (art. 119): necesidad inaplazable o interés público. Despacho preferente (5 días para los informes) y plazos a la mitad (con excepciones). La ejecución empieza en <strong>1 mes</strong> como máximo desde la formalización.</li>
+          <li><strong>Emergencia</strong> (art. 120): catástrofes, grave peligro o defensa nacional. Se ordena la ejecución sin expediente. En la AGE se da cuenta al <strong>Consejo de Ministros en 30 días</strong>. La ejecución empieza en <strong>1 mes</strong> como máximo desde el acuerdo; si no, se tramita el procedimiento ordinario.</li>
+          <li><strong>Contrato menor</strong> (art. 118): obras de menos de <strong>40.000 €</strong> y el resto de menos de <strong>15.000 €</strong>. Basta un informe de necesidad que justifique que no se fracciona el objeto (salvo pagos por anticipo de caja fija de menos de <strong>5.000 €</strong>), la aprobación del gasto y la factura; en las obras, el presupuesto (y el proyecto si lo exigen las normas). Dura <strong>1 año como máximo</strong>, sin prórroga y sin recurso especial. En ciencia e innovación, hasta <strong>50.000 €</strong> (DA 54.ª).</li>
+          <li><strong>Pliegos</strong>: los generales los aprueba el Consejo de Ministros, con informe de la Junta Consultiva. Los <strong>PCAP</strong> se aprueban antes de la licitación o junto con ella. Los <strong>PPT</strong> fijan las especificaciones técnicas sin mencionar marcas, salvo que se añada «o equivalente».</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.2</span><span class="bt"><h3>Precio, valor estimado, garantías y duración</h3><small>Arts. 99-109 y 29</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Presupuesto base de licitación</strong>: el gasto máximo, IVA incluido. <strong>Valor estimado</strong>: el importe total sin IVA, con las prórrogas y las modificaciones previstas. Es el que determina el umbral SARA, el procedimiento y el recurso.</li>
+          <li><strong>Lotes</strong> (art. 99): son la regla general; para no dividir hay que justificarlo. No se puede fraccionar para eludir los umbrales.</li>
+          <li><strong>Garantías</strong>: <strong>provisional</strong>, excepcional y de hasta el <strong>3 %</strong> del presupuesto base sin IVA · <strong>definitiva</strong>, del <strong>5 %</strong> del precio final ofertado sin IVA · <strong>complementaria</strong>, de hasta otro <strong>5 %</strong>. Si el licitador no cumplimenta el requerimiento de documentación, se le exige una penalidad del <strong>3 %</strong> del presupuesto base.</li>
+          <li><strong>Duración</strong> (art. 29): suministros y servicios de tracto sucesivo, <strong>5 años como máximo</strong> con prórrogas (o más si lo exige la recuperación de la inversión). Concesiones: de obras y de servicios con obra, hasta <strong>40 años</strong>; de servicios sin obra, <strong>25</strong>; sanitarios, <strong>10</strong>. La prórroga se acuerda por el órgano de contratación y es obligatoria para el contratista si se le preavisa con <strong>2 meses</strong>. <strong>Nunca</strong> hay prórroga tácita.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Adjudicación</h3>
+
+    <details class="blk">
+      <summary><span class="bn">4.1</span><span class="bt"><h3>Normas generales: anuncios, plazos y proposiciones</h3><small>Arts. 131-142</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Procedimiento <strong>ordinario</strong>: abierto o restringido. Principios de igualdad, no discriminación, transparencia y proporcionalidad.</li>
+          <li><strong>Anuncios</strong>: en el perfil del contratante (PCSP). En los SARA, también en el <strong>DOUE</strong>.</li>
+          <li><strong>Plazos del abierto</strong>: SARA, <strong>35 días</strong> desde el envío al DOUE (reducibles con anuncio previo, presentación electrónica o urgencia). No SARA: <strong>15 días</strong> en suministros y servicios y <strong>26</strong> en obras y concesiones, desde la publicación.</li>
+          <li><strong>Proposiciones</strong>: secretas y electrónicas; cada licitador presenta una sola (con variantes si se admiten). Se presenta la declaración responsable (DEUC) y la documentación se aporta después.</li>
+          <li><strong>Subasta electrónica</strong>: dentro del abierto, el restringido o la licitación con negociación, sobre el precio o elementos cuantificables. No se usa en prestaciones intelectuales. Empieza al menos 2 días después de la invitación.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.2</span><span class="bt"><h3>Criterios de adjudicación y ofertas anormalmente bajas</h3><small>Arts. 145-150</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Mejor relación calidad-precio</strong>, con criterios económicos y cualitativos vinculados al objeto. Si hay un solo criterio, el precio o el coste (ciclo de vida). Con varios, preponderan los evaluables mediante fórmulas. Si los de juicio de valor pesan más del 50 %, interviene un comité de expertos.</li>
+          <li>Los criterios cualitativos son obligatorios en determinados contratos (por ejemplo, los servicios intelectuales, en los que la calidad debe pesar al menos el <strong>51 %</strong>).</li>
+          <li><strong>Desempate</strong>: criterios sociales previstos en el pliego (porcentaje de personas con discapacidad, empleo de inserción, igualdad…).</li>
+          <li><strong>Ofertas anormalmente bajas</strong> (art. 149): se requiere al licitador que las justifique, con asesoramiento técnico. Se rechazan si incumplen obligaciones medioambientales, sociales o laborales, o si los costes salariales están por debajo del convenio.</li>
+          <li><strong>Secuencia</strong>: la mesa clasifica las ofertas en orden decreciente → se <strong>requiere</strong> al mejor licitador la documentación y la garantía definitiva en <strong>10 días hábiles</strong> → se <strong>adjudica</strong> en <strong>5 días hábiles</strong> → se notifica y se publica en el perfil en <strong>15 días</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.3</span><span class="bt"><h3>Procedimientos de adjudicación</h3><small>Arts. 156-187 · tu esquema 2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Procedimiento</th><th>Rasgos</th></tr>
+          <tr><td><strong>Abierto</strong></td><td data-l="Rasgos">Cualquier empresario presenta oferta. Sin negociación.</td></tr>
+          <tr><td><strong>Abierto simplificado</strong> <span class="upd">2026</span></td><td data-l="Rasgos">Obras de hasta 2 M €; suministros y servicios de menos de <strong>140.000 €</strong> (vinculado al umbral SARA de la AGE). Los juicios de valor pesan como máximo un <strong>25 %</strong> (45 % en las prestaciones intelectuales). Sin garantía provisional. Plazos de al menos 15 días (20 en obras). Mesa obligatoria.</td></tr>
+          <tr><td><strong>Simplificado abreviado</strong></td><td data-l="Rasgos">Obras de menos de 80.000 €; suministros y servicios de menos de 60.000 € (no intelectuales). Plazo de <strong>10 días hábiles</strong>. Solo criterios automáticos. Se exime de acreditar la solvencia y de la garantía definitiva. Mesa potestativa. Se formaliza con la aceptación de la resolución.</td></tr>
+          <tr><td><strong>Restringido</strong></td><td data-l="Rasgos">Cualquiera solicita participar; se invita como mínimo a <strong>5</strong>. Prohibida la negociación. Adecuado para servicios intelectuales complejos.</td></tr>
+          <tr><td><strong>Con negociación</strong></td><td data-l="Rasgos">Licitación con negociación (con publicidad) o negociado sin publicidad (supuestos tasados: licitación desierta, un único empresario por razones técnicas o de exclusividad, urgencia imperiosa, secretos…). Al menos <strong>3</strong> candidatos si es posible.</td></tr>
+          <tr><td><strong>Diálogo competitivo</strong></td><td data-l="Rasgos">Contratos complejos; se dialoga para definir la solución. Al menos 3 candidatos. Mesa especial. Puede haber primas.</td></tr>
+          <tr><td><strong>Asociación para la innovación</strong></td><td data-l="Rasgos">Desarrollo de productos o servicios innovadores y compra ulterior.</td></tr>
+          <tr><td><strong>Concurso de proyectos</strong></td><td data-l="Rasgos">Planos o proyectos (arquitectura, urbanismo, ingeniería), con <strong>jurado</strong>.</td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Racionalización técnica</strong> (arts. 218-230): <strong>acuerdos marco</strong> (4 años como máximo), <strong>sistemas dinámicos</strong> de adquisición y <strong>centrales de contratación</strong> (la estatal está en la DG de Racionalización y Centralización).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.4</span><span class="bt"><h3>Formalización y publicidad</h3><small>Arts. 153-154 · tu esquema 2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>El contrato se <strong>perfecciona con la formalización</strong>, en documento administrativo (puede elevarse a escritura pública a costa del contratista). No se puede iniciar la ejecución sin formalizar, salvo en la emergencia.</li>
+          <li><strong>Sin recurso especial</strong>: se formaliza en <strong>15 días hábiles</strong> desde la notificación de la adjudicación. <strong>Con recurso especial</strong>: hay que esperar <strong>15 días hábiles</strong> y, después, el contratista dispone de <strong>5 días</strong> desde el requerimiento.</li>
+          <li>Si el contratista no formaliza por causa propia, se le exige el <strong>3 %</strong> del presupuesto base. Si la causa es de la Administración, indemniza.</li>
+          <li><strong>Publicidad</strong>: la formalización se publica en el perfil en <strong>15 días</strong>; en los SARA, también en el DOUE. Los contratos menores se publican al menos <strong>trimestralmente</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 5 · Ejecución, modificación y extinción</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5.1</span><span class="bt"><h3>Ejecución, incumplimiento y penalidades</h3><small>Arts. 192-202 · tu esquema 3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Se ejecuta a <strong>riesgo y ventura</strong> del contratista (con excepciones como la fuerza mayor en las obras).</li>
+          <li><strong>Condiciones especiales de ejecución</strong> (art. 202): al menos una de tipo social, medioambiental o de innovación. Pueden calificarse como esenciales (su incumplimiento es causa de resolución) o llevar aparejadas penalidades.</li>
+          <li><strong>Penalidades</strong>: cada una, como máximo el <strong>10 %</strong> del precio sin IVA; en total, como máximo el <strong>50 %</strong>.</li>
+          <li><strong>Demora</strong> (art. 193): el plazo es esencial y no se necesita intimación previa. La penalidad diaria es de <strong>0,60 € por cada 1.000 €</strong> del precio (sin IVA). Cada vez que se alcanza un múltiplo del <strong>5 %</strong> del precio, se puede optar entre resolver o seguir penalizando. Se ejecutan sobre los pagos o la garantía.</li>
+          <li><strong>Obligaciones medioambientales, sociales y laborales</strong>: se pueden comprobar los pagos a los subcontratistas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5.2</span><span class="bt"><h3>Pago del precio e intereses <span class="upd">2026</span></h3><small>Art. 198 LCSP · Ley 3/2004</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>La Administración <strong>aprueba</strong> las certificaciones o los documentos de conformidad en los <strong>30 días</strong> siguientes a la entrega, y <strong>paga</strong> en los <strong>30 días</strong> siguientes a la aprobación.</li>
+          <li>Si se demora: <strong>intereses de demora</strong> (tipo BCE + 8 puntos; <strong>10,40 % en el segundo semestre de 2026</strong>) y la indemnización por los costes de cobro.</li>
+          <li>Demora de <strong>más de 4 meses</strong>: el contratista puede suspender, con <strong>1 mes</strong> de preaviso. De <strong>más de 6 meses</strong>: puede resolver y pedir los daños.</li>
+          <li><strong>Reclamación</strong>: si la Administración no contesta en <strong>1 mes</strong>, se entiende reconocido el vencimiento y cabe el recurso contencioso contra la inactividad (con medida cautelar de pago).</li>
+          <li>Cabe pedir abonos a cuenta y ceder el derecho de cobro (factoring).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5.3</span><span class="bt"><h3>Revisión de precios <span class="upd">Ley 11/2023</span></h3><small>Arts. 103-105</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Solo cabe la revisión <strong>periódica y predeterminada</strong>, con justificación y conforme a la normativa de desindexación (Ley 2/2015 y RD 55/2017). No es obligatoria: la decide el órgano de contratación en el pliego.</li>
+          <li><strong>Ámbito actual</strong>: desde la Ley 11/2023 cabe en <strong>cualquier tipo de contrato</strong>. Sobre la parte del precio ligada a materias primas, bienes intermedios y energía, cuando su peso supere el 20 %; el pliego detalla los componentes de más del 1 % y su índice oficial. El manual reproduce la redacción anterior, que solo admitía obras, armamento, energía y contratos con una recuperación de la inversión de 5 años o más.</li>
+          <li><strong>Cuándo</strong>: tras ejecutar al menos el <strong>20 %</strong> y pasado <strong>1 año</strong> desde la formalización (antes de 2023 eran 2 años). Ese primer tramo no se revisa. La energía queda exenta de ambos requisitos y las concesiones de servicios, del 20 %.</li>
+          <li><strong>No se revisan nunca</strong> las amortizaciones, los costes financieros, los gastos generales ni el beneficio industrial.</li>
+          <li>Si hay demora imputable al contratista, se aplican los índices del plazo pactado si son inferiores. El importe de la revisión se abona en las certificaciones o pagos parciales.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5.4</span><span class="bt"><h3>Modificación, cesión y subcontratación</h3><small>Arts. 203-217</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Modificaciones previstas</strong> (art. 204): deben estar en el pliego de forma clara, precisa e inequívoca, con un máximo del <strong>20 %</strong> del precio inicial.</li>
+          <li><strong>No previstas</strong> (art. 205): solo si se justifican por prestaciones adicionales, circunstancias imprevisibles o cambios no sustanciales, y en lo estrictamente indispensable. Tope del <strong>50 %</strong> del precio inicial (en las prestaciones adicionales y las circunstancias imprevisibles). Son <strong>obligatorias</strong> para el contratista hasta el <strong>20 %</strong>; por encima, requieren su conformidad o se resuelve el contrato (art. 206). Las que debieron ser una nueva licitación son recurribles en el recurso especial.</li>
+          <li><strong>Cesión</strong> (art. 214): autorización previa, al menos el <strong>20 %</strong> ejecutado (en las concesiones, al menos 1/5 de la duración), y el cesionario debe tener capacidad y solvencia.</li>
+          <li><strong>Subcontratación</strong> (art. 215): libre, salvo que el pliego la limite o la prohíba. Se comunica a la Administración. Los subcontratistas cobran en el plazo de la Ley 3/2004 (como máximo 60 días) y la Administración puede comprobar los pagos.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5.5</span><span class="bt"><h3>Cumplimiento y extinción</h3><small>Arts. 209-213</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Cumplimiento</strong>: un acto formal y positivo de <strong>recepción</strong> o conformidad dentro del mes siguiente a la entrega. Liquidación y plazo de garantía (en las obras, <strong>1 año</strong> como mínimo; certificación final en <strong>3 meses</strong>; responsabilidad por vicios ocultos durante 15 años).</li>
+          <li><strong>Causas de resolución</strong> (art. 211): muerte, incapacidad o extinción del contratista · concurso · mutuo acuerdo · <strong>demora</strong> del contratista · demora en el pago de más de <strong>6 meses</strong> · incumplimiento de la obligación principal o esencial · imposibilidad de ejecutar · <strong>impago de salarios</strong> o incumplimiento del convenio · las propias de cada contrato.</li>
+          <li><strong>Efectos</strong>: si la causa es del contratista, pierde la garantía e indemniza. Si es de la Administración, esta indemniza (en obras, el 3 % u otros porcentajes del art. 246). Plazo del procedimiento de resolución: <strong>8 meses</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 6 · Invalidez y recursos</h3>
+
+    <details class="blk">
+      <summary><span class="bn">6.1</span><span class="bt"><h3>Régimen de invalidez</h3><small>Arts. 38-43 · tu esquema 3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Causas</strong>: de derecho civil, invalidez de los actos preparatorios o de adjudicación, o ilegalidad de las cláusulas.</li>
+          <li><strong>Nulidad</strong> (art. 39), además de las causas del art. 47 LPA: falta de capacidad, de solvencia o de habilitación, o prohibición de contratar · falta o insuficiencia de <strong>crédito</strong> (salvo emergencia) · falta de publicación del anuncio · inobservancia del plazo de formalización · formalizar sin respetar la suspensión por recurso · incumplimiento grave de las normas de la UE · incumplimientos en los contratos basados en un acuerdo marco.</li>
+          <li><strong>Anulabilidad</strong> (art. 40): las demás infracciones del art. 48 LPA, y en especial: modificaciones ilegales, ventajas indebidas a empresas, encargos a medios propios irregulares.</li>
+          <li><strong>Revisión de oficio</strong> (art. 41) por el órgano de contratación. La declaración de nulidad lleva a la <strong>liquidación</strong> del contrato (restitución recíproca). Si hay un grave trastorno del servicio público, puede continuarse la ejecución hasta adoptar medidas urgentes.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6.2</span><span class="bt"><h3>Recurso especial en materia de contratación</h3><small>Arts. 44-60 · tu esquema 5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Contratos</strong>: obras y concesiones de más de <strong>3 M €</strong>; suministros y servicios de más de <strong>100.000 €</strong>; acuerdos marco y sistemas dinámicos con esos valores; administrativos especiales (sin cuantía o de más de 100.000 €); subvencionados SARA. <span class="upd">Ley 9/2025</span> Desde diciembre de 2025, también <strong>todos</strong> los contratos de servicio público de transporte de viajeros del Reglamento 1370/2007, cualquiera que sea su cuantía (DA 57.ª LCSP).</li>
+          <li><strong>Actos</strong>: anuncios, pliegos y documentos contractuales · actos de trámite cualificados (incluida la exclusión por la mesa) · adjudicación · modificaciones que debieron licitarse · encargos a medios propios · rescate de concesiones. <strong>No</strong> se recurren los contratos menores ni, en general, los actos de la fase de ejecución.</li>
+          <li><strong>Plazo</strong>: <strong>15 días hábiles</strong> desde la publicación, la notificación o el conocimiento. En algunos supuestos de nulidad, 30 días o 6 meses. Es <strong>potestativo</strong> y gratuito. Recurrir la adjudicación suspende automáticamente la tramitación.</li>
+          <li><strong>Órgano</strong>: <strong>TACRC</strong> en la AGE (presidente funcionario con más de 15 años de experiencia y vocales con más de 10; mandato de <strong>6 años</strong> no prorrogable). Las CCAA tienen órganos propios o convenio con el TACRC; las EELL, el de su comunidad.</li>
+          <li><strong>Tramitación</strong>: el expediente y el informe del órgano de contratación se remiten en <strong>2 días hábiles</strong> · alegaciones de otros interesados en <strong>5 días</strong> · prueba en 10 días · <strong>resolución en 5 días hábiles</strong>. Subsanación en 3 días. Medidas cautelares: se resuelven en 5 días.</li>
+          <li><strong>Resolución</strong>: estima, desestima o inadmite, de forma congruente. Puede imponer una indemnización al órgano de contratación o una <strong>multa de 1.000 a 30.000 €</strong> al recurrente temerario. Es ejecutiva. Contra ella solo cabe el <strong>contencioso</strong>; no cabe revisión de oficio.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6.3</span><span class="bt"><h3>Contratación electrónica y transparencia</h3><small>Arts. 63, 143, 347 y DA 15.ª-17.ª · tu esquema 6</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Perfil del contratante</strong>: acceso libre. La información se conserva al menos <strong>5 años</strong>. Incluye la memoria, el informe de insuficiencia de medios, la justificación del procedimiento, los pliegos, los anuncios, las actas de la mesa, la identidad de los licitadores, los desistimientos y los recursos, y los encargos a medios propios de más de <strong>50.000 €</strong>. Los contratos menores, al menos <strong>trimestralmente</strong> (salvo los de menos de 5.000 € pagados por caja fija).</li>
+          <li><strong>PCSP</strong> (DG del Patrimonio del Estado): aloja obligatoriamente los perfiles del sector público estatal. Las CCAA pueden tener plataforma propia; las EELL eligen entre la estatal y la autonómica.</li>
+          <li><strong>Comunicaciones</strong>: electrónicas (DEH o comparecencia en la sede). Los plazos se cuentan desde el envío si ese mismo día se publica en el perfil; si no, desde la recepción. Las ofertas son electrónicas, salvo excepciones técnicas o de seguridad, y puede enviarse primero la huella electrónica.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Umbrales 2026</b>5.404.000 · 140.000 · 216.000. Los de 5.538.000, 143.000 y 221.000 eran los de 2024-2025.</div>
+    <div class="trap"><b>Valor estimado</b>Sin IVA, con prórrogas y modificaciones previstas. El presupuesto base, en cambio, lleva IVA.</div>
+    <div class="trap"><b>Menor: menos de 40.000 o de 15.000</b>«Inferior a» (no «hasta»), máximo 1 año y sin prórroga.</div>
+    <div class="trap"><b>Recurso especial: más de 3 M o de 100.000</b>Umbrales distintos de los SARA. Plazo de 15 días hábiles.</div>
+    <div class="trap"><b>Abreviado: 10 días hábiles</b>Obras de menos de 80.000 y suministros y servicios de menos de 60.000 €, no intelectuales.</div>
+    <div class="trap"><b>Garantías</b>Provisional de hasta el 3 % del presupuesto base; definitiva del 5 % del precio ofertado (ambas sin IVA).</div>
+    <div class="trap"><b>Demora: múltiplos del 5 %</b>Tu esquema 3 dice «múltiplos de 5 del precio»: son múltiplos del <strong>5 %</strong> del precio.</div>
+    <div class="trap"><b>Pago: 4 y 6 meses</b>Más de 4 meses: suspender (con 1 mes de preaviso). Más de 6: resolver.</div>
+    <div class="trap"><b>Revisión de precios</b>Desde 2023: cualquier contrato, 1 año y 20 %. No dos años.</div>
+    <div class="trap"><b>Modificar: 20 % y 50 %</b>Las previstas, hasta el 20 %. Las no previstas, hasta el 50 %, y obligatorias para el contratista solo hasta el 20 %.</div>
+    <div class="trap"><b>Prórroga</b>Nunca tácita. Preaviso de 2 meses. Los suministros y servicios duran como máximo 5 años en total.</div>
+    <div class="trap"><b>Emergencia</b>Se da cuenta al Consejo de Ministros en 30 días; la ejecución empieza en 1 mes como máximo.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 4. Los contratos del sector público…» (CEA), con su esquema-resumen y los esquemas 1 a 6; cifras actualizadas a noviembre de 2026: umbrales SARA 2026-2027 (Orden HAC/1517/2025), revisión de precios (Ley 11/2023), recurso especial en el transporte de viajeros (Ley 9/2025, DA 57.ª LCSP) e interés de demora del segundo semestre de 2026 (10,40 %).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Bloque 3 · Tema 4 · Herramientas (cifras 2026) ===== */
+const FEST={2026:["01-01","01-06","04-03","05-01","08-15","10-12","12-08","12-25"],2027:["01-01","01-06","03-26","05-01","10-12","11-01","12-06","12-08","12-25"]};
+const UM={obras:5404000,age:140000,otr:216000,a4:750000,esp:432000};
+const IV=[
+ ["cap","El adjudicatario carecía de capacidad o solvencia, o estaba incurso en prohibición de contratar","N","Art. 39.2.a LCSP."],
+ ["cre","No había crédito, o era insuficiente (y no era una emergencia)","N","Art. 39.2.b."],
+ ["anu","No se publicó el anuncio de licitación cuando era preceptivo","N","Art. 39.2.c."],
+ ["for","Se formalizó sin respetar el plazo de espera o la suspensión por el recurso especial","N","Art. 39.2.d-e."],
+ ["am","Se adjudicó un contrato basado en un acuerdo marco incumpliendo sus normas","N","Art. 39.2.f-g."],
+ ["ue","Incumplimiento grave de normas de derecho de la UE apreciado por el TJUE","N","Art. 39.2.h."],
+ ["47","Lo adjudicó un órgano manifiestamente incompetente (art. 47 LPA)","N","Art. 39.1: causas de nulidad de la LPA."],
+ ["mod","Se modificó el contrato fuera de los supuestos de los arts. 204-205","A","Art. 40.a: incumplimiento en la modificación."],
+ ["vent","Una cláusula otorga ventajas indebidas a determinadas empresas","A","Art. 40.b."],
+ ["mp","Encargo a un medio propio sin cumplir los requisitos de la LCSP","A","Art. 40.c."],
+ ["otr","Otras infracciones del ordenamiento (por ejemplo, criterios mal ponderados)","A","Art. 40, por remisión al art. 48 LPA."],
+ ["civ","Error, dolo o violencia en el consentimiento del contratista","C","Art. 43: causas de derecho civil."]
+];
+const OG=[
+ {g:"Órganos",n:"Órgano de contratación",norm:"Arts. 61 y 323 LCSP",def:"Representa a la entidad en el contrato: inicia el expediente, aprueba los pliegos, adjudica, formaliza y ejerce las prerrogativas.",f:{"AGE":"Ministros y Secretarios de Estado (con posibilidad de delegar).","Otras entidades":"Presidentes o directores. EELL: alcalde, Pleno o Junta de Gobierno.","Colegiado":"Juntas de contratación (optativas). La Junta de Contratación Centralizada está en la DG de Racionalización y Centralización de la Contratación.","Consejo de Ministros":"Autoriza los contratos de valor estimado igual o superior a 12 M € (art. 324)."}},
+ {g:"Órganos",n:"Responsable del contrato",norm:"Art. 62 LCSP",def:"Supervisa la ejecución, adopta decisiones y dicta instrucciones.",f:{"Quién":"Persona física o jurídica, vinculada a la entidad o ajena a ella.","Obras":"Sus facultades las ejerce el director facultativo.","Unidad":"Además, hay una unidad encargada del seguimiento ordinario.","Finalidad":"Asegurar la correcta realización de la prestación."}},
+ {g:"Órganos",n:"Mesa de contratación",norm:"Art. 326 LCSP",def:"Órgano de asistencia: califica, valora y propone.",f:{"Obligatoria":"Abierto, simplificado, restringido, diálogo competitivo, licitación con negociación, asociación para la innovación y negociado sin publicidad por urgencia.","Potestativa":"Negociado sin publicidad y simplificado abreviado. No interviene si hay Junta de Contratación.","Composición":"Presidente, secretario y vocales (un interventor y un jurista). No pueden formar parte los cargos representativos ni el personal eventual.","Funciones":"Califica la documentación, excluye, valora, propone las ofertas anormalmente bajas y la adjudicación."}},
+ {g:"Órganos",n:"Comité de expertos y jurado",norm:"Arts. 146.2 y 187 LCSP",def:"Órganos técnicos de valoración.",f:{"Comité":"Al menos 3 expertos, u organismo técnico, cuando los juicios de valor pesan más del 50 %.","Jurado":"En el concurso de proyectos.","Mesa especial":"En el diálogo competitivo y la asociación para la innovación.","Independencia":"No participan quienes redactaron los pliegos."}},
+ {g:"Órganos consultivos y de control",n:"JCCPE y OIRESCON",norm:"Arts. 328-332 LCSP",def:"Asesoramiento y supervisión de la contratación.",f:{"JCCPE":"Junta Consultiva de Contratación Pública del Estado: informes, pliegos generales, ROLECE.","OIRESCON":"Oficina Independiente de Regulación y Supervisión de la Contratación: supervisa y elabora la Estrategia Nacional de Contratación.","Comité de cooperación":"Coordinación entre Administraciones.","Oficina Nacional de Evaluación":"Analiza la sostenibilidad financiera de las concesiones."}},
+ {g:"Órganos consultivos y de control",n:"TACRC",norm:"Art. 45 LCSP",def:"Tribunal Administrativo Central de Recursos Contractuales: resuelve el recurso especial en la AGE.",f:{"Presidente":"Funcionario de carrera, licenciado en Derecho, con más de 15 años de experiencia.","Vocales":"Funcionarios de carrera con más de 10 años.","Mandato":"6 años no prorrogables, a propuesta de los Ministros de Hacienda y Justicia.","CCAA y EELL":"Órgano propio o convenio con el TACRC; las EELL, el de su comunidad."}},
+ {g:"Transparencia y electrónica",n:"Perfil del contratante",norm:"Art. 63 LCSP",def:"Página para la difusión de la actividad contractual de cada órgano de contratación.",f:{"Acceso":"Libre; la información se mantiene al menos 5 años.","Contenido":"Memoria, informe de insuficiencia de medios, pliegos, anuncios, actas, licitadores, adjudicaciones, desistimientos, recursos y composición de las mesas.","Menores":"Al menos trimestralmente (salvo los de menos de 5.000 € pagados por caja fija).","Medios propios":"Se publican los encargos de más de 50.000 € (sin IVA)."}},
+ {g:"Transparencia y electrónica",n:"Plataforma de Contratación del Sector Público",norm:"Art. 347 LCSP",def:"Plataforma estatal gestionada por la DG del Patrimonio del Estado.",f:{"Obligatoria":"Para los perfiles del sector público estatal.","CCAA":"Pueden tener plataforma propia, interconectada.","EELL":"Eligen entre la estatal y la autonómica.","Acceso":"Portal único."}},
+ {g:"Transparencia y electrónica",n:"Subasta electrónica",norm:"Art. 143 LCSP",def:"Proceso electrónico repetitivo de mejora de ofertas.",f:{"Dónde":"En el abierto, el restringido y la licitación con negociación.","Criterios":"El precio, o elementos cuantificables en cifras o porcentajes.","Exclusiones":"Prestaciones intelectuales (ingeniería, arquitectura, consultoría) y calidad alimentaria.","Desarrollo":"Evaluación previa completa, invitación y comienzo al menos 2 días después; cierre por fecha, por falta de pujas o por fin de las fases."}},
+ {g:"Transparencia y electrónica",n:"Comunicaciones electrónicas",norm:"DA 15.ª-17.ª LCSP",def:"Notificaciones y ofertas por medios electrónicos.",f:{"Notificaciones":"DEH o comparecencia en la sede.","Cómputo":"Desde el envío si se publica ese mismo día en el perfil; si no, desde la recepción.","Ofertas":"Electrónicas, salvo excepciones técnicas o de seguridad.","Huella":"Puede enviarse primero la huella electrónica y después la oferta."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const eur=x=>(Math.round(x*100)/100).toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €";
+  const eur0=x=>Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €";
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+  const fd=d=>d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const k2=n=>String(n).padStart(2,"0");
+  const inh=d=>d.getDay()===0||d.getDay()===6||(FEST[d.getFullYear()]||[]).includes(k2(d.getMonth()+1)+"-"+k2(d.getDate()));
+  const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+  const habiles=(d,n)=>{let c=0;while(c<n){d=addD(d,1);if(!inh(d))c++}return d};
+  /* Clasificador */
+  (function(){if(!$("sa-t"))return;
+    function run(){const t=$("sa-t").value,en=$("sa-e").value,v=num("sa-v"),intel=$("sa-i").checked,out=$("sa-out");
+      const obraLike=t==="ob"||t==="co"||t==="cs";
+      let um=obraLike?UM.obras:t==="s4"?UM.a4:(en==="esp"?UM.esp:en==="age"?UM.age:UM.otr);
+      if(en==="esp"&&t==="s4")um=1000000;
+      const sara=v>=um;
+      const menor=(t==="ob"&&v<40000)||((t==="su"||t==="se"||t==="s4")&&v<15000);
+      const pasa=!intel&&((t==="ob"&&v<80000)||((t==="su"||t==="se")&&v<60000));
+      const pas=(t==="ob"&&v<=2000000)||((t==="su"||t==="se"||t==="s4")&&v<UM.age);
+      const rec=(obraLike&&v>3000000)||(!obraLike&&v>100000);
+      const k=[["Umbral SARA aplicable",eur0(um),""],["¿SARA?",sara?"Sí":"No",sara?"y":"n"],["¿Contrato menor?",menor?"Posible":"No",menor?"y":"n"],["¿Recurso especial?",rec?"Sí":"No",rec?"y":"n"]];
+      $("sa-k").innerHTML=k.map(x=>`<div class="${x[2]}"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");
+      const st=[];
+      if(menor)st.push(`<b>Contrato menor</b> (art. 118): adjudicación directa con informe de necesidad (que justifique que no se fracciona), aprobación del gasto y factura${t==="ob"?", más el presupuesto de las obras":""}. Máximo 1 año, sin prórroga. Publicación trimestral.`);
+      if(pasa)st.push(`<b>Abierto simplificado abreviado</b> (art. 159.6): menos de ${t==="ob"?"80.000":"60.000"} €. Al menos 10 días hábiles de plazo, solo criterios automáticos, sin acreditar solvencia ni garantía definitiva.`);
+      if(pas&&!sara)st.push(`<b>Abierto simplificado</b> (art. 159): ${t==="ob"?"obras de hasta 2 M €":"suministros y servicios de menos de 140.000 € (umbral de 2026)"}. Juicios de valor como máximo del ${intel?"45":"25"} %. Plazo de al menos ${t==="ob"?"20":"15"} días.`);
+      st.push(`<b>Abierto o restringido</b> (procedimientos ordinarios): ${sara?"plazo de al menos 35 días desde el envío del anuncio al DOUE (reducible con anuncio previo, presentación electrónica o urgencia)":`plazo de al menos ${obraLike?"26":"15"} días desde la publicación en el perfil del contratante`}.`);
+      st.push(`<b>Publicidad</b>: perfil del contratante (PCSP)${sara?" y además el DOUE":""}. La formalización se publica en 15 días.`);
+      if(v>=12000000)st.push("<b>Autorización del Consejo de Ministros</b> (art. 324): valor estimado igual o superior a 12 M €.");
+      st.push(rec?"<b>Recurso especial</b> (art. 44): potestativo, 15 días hábiles, ante el TACRC o el órgano autonómico.":"<b>Sin recurso especial</b>: recursos administrativos ordinarios (alzada o reposición) y contencioso.");
+      if(t==="ob"&&v>=500000)st.push("<b>Clasificación</b> exigible: obras de 500.000 € o más.");
+      out.className="verdict "+(sara?"mid":"ok");
+      out.innerHTML=`<b class="big">${menor?"Puede tramitarse como contrato menor":sara?"Contrato SARA (sujeto a regulación armonizada)":"Contrato no SARA"}</b><div class="steps-out">${st.map(x=>`<div>${x}</div>`).join("")}</div><div class="tool-note">Umbrales 2026-2027 (Orden HAC/1517/2025). El valor estimado no incluye el IVA, pero sí las prórrogas y las modificaciones previstas. Los lotes de menos de 80.000 € (o de menos de 1 M € en obras) pueden quedar fuera de las normas SARA si no superan en conjunto el 20 %. Algunos contratos no son SARA por su objeto (servicios jurídicos, defensa, audiovisuales…).</div>`}
+    ["sa-t","sa-e","sa-v","sa-i"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Recurso especial */
+  (function(){if(!$("re-t"))return;
+    function run(){const t=$("re-t").value,v=num("re-v"),a=$("re-a").value,f=$("re-f").value,out=$("re-out");if(!f)return;
+      let ok=t==="tv"||(t==="ob"&&v>3000000)||(t==="con"&&v>3000000)||(t==="ss"&&v>100000)||(t==="ae");
+      const aeNote=t==="ae"?" (administrativos especiales: sin cuantía, o de más de 100.000 €)":"";
+      if(a==="me"){out.className="verdict ko";out.innerHTML=`<b class="big">No cabe el recurso especial</b>Los contratos menores no son susceptibles del recurso especial (art. 44.1). Cabe el recurso administrativo ordinario y el contencioso.`;return}
+      if(a==="ej"&&a!=="mo"){out.className="verdict ko";out.innerHTML=`<b class="big">No cabe el recurso especial</b>Los actos de la fase de <strong>ejecución</strong> (penalidades, resolución, interpretación) se impugnan por los recursos ordinarios y el contencioso. Solo son recurribles por esta vía las modificaciones que debieron ser objeto de una nueva adjudicación (art. 44.2.d).`;return}
+      if(!ok){out.className="verdict ko";out.innerHTML=`<b class="big">No cabe por la cuantía</b>El recurso especial exige más de 3 M € en obras y concesiones y más de 100.000 € en suministros y servicios. Procede el recurso de alzada o de reposición y el contencioso.`;return}
+      const lim=habiles(pd(f),15);
+      const fx={pl:"Si se recurren los pliegos, el plazo cuenta desde el día siguiente a su publicación en el perfil (o desde que se pudo acceder a ellos).",ex:"Es un acto de trámite cualificado (art. 44.2.b): la exclusión por la mesa.",ad:"Recurrir la adjudicación <strong>suspende automáticamente</strong> la tramitación (art. 53): no se puede formalizar.",mo:"La modificación debió ser objeto de una nueva adjudicación (art. 44.2.d).",mp:"Se impugna la formalización del encargo a un medio propio (art. 44.2.e)."}[a];
+      out.className="verdict ok";
+      out.innerHTML=`<b class="big">Cabe el recurso especial: hasta el ${fd(lim)}</b>Plazo: <strong>15 días hábiles</strong> desde el día siguiente a la notificación o publicación${aeNote}${t==="tv"?". Contratos de transporte de viajeros: DA 57.ª LCSP, añadida por la Ley 9/2025, sin umbral":""}. ${fx}
+      <div class="steps-out"><div><b>Ante</b> el órgano de contratación o el Tribunal (TACRC en la AGE), o en los registros del art. 16.4 LPA. Subsanación en 3 días hábiles.</div><div><b>Tramitación</b>: el órgano de contratación remite el expediente y su informe en 2 días hábiles · medidas cautelares en 5 días · alegaciones de otros interesados en 5 días · prueba en 10 días.</div><div><b>Resolución</b> en 5 días hábiles desde las alegaciones. Multa al recurrente temerario de 1.000 a 30.000 €. Después, solo cabe el contencioso; no cabe la revisión de oficio.</div></div>
+      <div class="tool-note">Días hábiles: sin sábados, domingos ni festivos nacionales (añade los autonómicos y locales). En algunos supuestos de nulidad el plazo es de 30 días o de 6 meses.</div>`}
+    ["re-t","re-v","re-a","re-f"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* tabs */
+  (function(){const t=$("ej-tabs");if(!t)return;t.addEventListener("click",ev=>{const b=ev.target.closest("button[data-p]");if(!b)return;t.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll('[id^="ej-"].pane').forEach(p=>p.classList.toggle("on",p.id==="ej-"+b.dataset.p))})})();
+  /* Demora contratista */
+  (function(){if(!$("pd-p"))return;
+    function run(){const p=num("pd-p"),d=Math.floor(num("pd-d")),o=num("pd-o"),out=$("pd-out");
+      const dia=p*0.6/1000,tot=dia*d,pct=p?tot/p*100:0,m5=Math.floor(pct/5);const d5=dia?Math.ceil(p*0.05/dia):0;
+      const cap=p*0.5,over=tot+o>cap;
+      out.className="verdict "+(m5>=1?"mid":"ok");
+      out.innerHTML=`<b class="big">Penalidad acumulada: ${eur(tot)} (${pct.toFixed(2).replace(".",",")} % del precio)</b>Penalidad diaria: 0,60 € × ${eur0(p)} ÷ 1.000 = <strong>${eur(dia)}</strong> × ${d} días.
+      <div class="steps-out"><div>El primer múltiplo del <b>5 %</b> (${eur(p*0.05)}) se alcanza a los <b>${d5} días</b>. ${m5>=1?`Ya se ha alcanzado ${m5===1?"una vez":m5+" veces"}: el órgano de contratación <strong>puede optar</strong> entre resolver el contrato o seguir imponiendo penalidades (art. 193.4).`:"Aún no se ha alcanzado."}</div>
+      <div>Tope conjunto de penalidades: <b>50 %</b> del precio (${eur(cap)}). ${over?"⚠️ Con las demás penalidades se supera el tope.":"Dentro del tope."}</div>
+      <div>No hace falta intimación previa: la mora se produce por el simple vencimiento del plazo (art. 193.2). Se descuentan de los pagos o de la garantía.</div></div>`}
+    ["pd-p","pd-d","pd-o"].forEach(id=>$(id).addEventListener("input",run));run()})();
+  /* Pago */
+  (function(){if(!$("pp-i"))return;
+    function run(){const imp=num("pp-i"),E=$("pp-e").value,A=$("pp-a").value,P=$("pp-p").value,out=$("pp-out");if(!E)return;
+      const ent=pd(E),limA=addD(ent,30);const apr=A?pd(A):limA;const ref=apr>limA?limA:apr;const limP=addD(ref,30);
+      const hoy=P?pd(P):new Date(2026,10,14);const late=Math.max(0,Math.round((hoy-limP)/864e5));
+      const int=imp*0.104*late/365;const meses=late/30.4;
+      let st=[];
+      st.push(`<b>Aprobación</b>: en los 30 días siguientes a la entrega (límite: ${fd(limA)}). ${apr>limA?"⚠️ Se aprobó tarde: el plazo de pago se cuenta desde el límite de aprobación.":""}`);
+      st.push(`<b>Pago</b>: hasta el ${fd(limP)} (30 días desde la aprobación).`);
+      if(late>0){st.push(`<b>Retraso</b>: ${late} días. Intereses de demora al <b>10,40 %</b> (segundo semestre de 2026): <b>${eur(int)}</b>, más la indemnización por los costes de cobro (40 € como mínimo).`);
+        if(meses>6)st.push("<b>Más de 6 meses</b>: el contratista puede <strong>resolver</strong> el contrato y pedir los daños y perjuicios.");
+        else if(meses>4)st.push("<b>Más de 4 meses</b>: el contratista puede <strong>suspender</strong> la ejecución, con 1 mes de preaviso.");
+        st.push("<b>Reclamación</b>: si la Administración no contesta en 1 mes, se entiende reconocido el vencimiento y cabe el recurso contencioso contra la inactividad.")}
+      else st.push("Pago en plazo: no se devengan intereses.");
+      out.className="verdict "+(late>0?(meses>4?"ko":"mid"):"ok");
+      out.innerHTML=`<b class="big">${late>0?`Pago con ${late} días de retraso`:"Sin demora"}</b><div class="steps-out">${st.map(x=>`<div>${x}</div>`).join("")}</div><div class="tool-note">Interés legal de demora en las operaciones comerciales: tipo del BCE + 8 puntos (Ley 3/2004). El 10,40 % es el del segundo semestre de 2026; el cálculo es orientativo (interés simple, base 365).</div>`}
+    ["pp-i","pp-e","pp-a","pp-p"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Modificación */
+  (function(){if(!$("mm-p"))return;
+    function run(){const p=num("mm-p"),m=num("mm-m"),a=num("mm-a"),t=$("mm-t").value,out=$("mm-out");if(!p)return;
+      const pct=(m+a)/p*100,pm=m/p*100;let cls,tit,txt;
+      if(t==="prev"){if(pct<=20){cls="ok";tit="Modificación prevista válida";txt=`Acumulado: ${pct.toFixed(1).replace(".",",")} % del precio inicial (máximo 20 %, art. 204). Es obligatoria para el contratista.`}
+        else{cls="ko";tit="Supera el 20 % de las modificaciones previstas";txt=`Acumulado: ${pct.toFixed(1).replace(".",",")} %. Las modificaciones previstas no pueden superar el 20 % del precio inicial. El exceso solo cabría como modificación no prevista (art. 205), si concurre alguno de sus supuestos.`}}
+      else{if(pct>50){cls="ko";tit="No cabe: supera el 50 %";txt=`Acumulado: ${pct.toFixed(1).replace(".",",")} %. En los supuestos de prestaciones adicionales y circunstancias imprevisibles, el límite es del 50 % del precio inicial: hay que licitar un contrato nuevo. Si se modifica igualmente, el acto es anulable (art. 40) y recurrible en el recurso especial.`}
+        else if(pm<=20){cls="ok";tit="Modificación no prevista: obligatoria para el contratista";txt=`Esta modificación supone el ${pm.toFixed(1).replace(".",",")} % (acumulado ${pct.toFixed(1).replace(".",",")} %). Requiere justificar la causa del art. 205 y limitarse a lo indispensable. Es obligatoria para el contratista hasta el 20 % (art. 206).`}
+        else{cls="mid";tit="Requiere la conformidad del contratista";txt=`Esta modificación supone el ${pm.toFixed(1).replace(".",",")} %. Por encima del 20 %, el contratista puede no aceptarla, y entonces se resuelve el contrato (arts. 206 y 211.1.g).`}}
+      const ce=(pct>20&&p>=6000000)?"<div class=\"tool-note\">⚠️ Más del 20 % con un precio de 6 M € o más: hace falta el dictamen del Consejo de Estado (art. 191.3.b).</div>":"";
+      out.className="verdict "+cls;out.innerHTML=`<b class="big">${tit}</b>${txt}${ce}<div class="tool-note">Las modificaciones se publican en el perfil del contratante en 5 días y se formalizan.</div>`}
+    ["mm-p","mm-m","mm-a","mm-t"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Invalidez */
+  (function(){const s=$("iv-v");if(!s)return;s.innerHTML=IV.map((v,i)=>`<option value="${i}">${e(v[1])}</option>`).join("");
+    const T={N:["ko","Nulidad de pleno derecho","La revisa de oficio el órgano de contratación (art. 41), en cualquier momento y con dictamen favorable del Consejo de Estado. El contrato entra en <strong>fase de liquidación</strong>: restitución recíproca o su valor, e indemnización de la parte culpable. Si hay un grave trastorno del servicio, puede continuarse la ejecución hasta adoptar medidas (art. 42)."],
+      A:["mid","Anulabilidad","Se declara de oficio o por recurso, en los plazos generales. La lesividad, en 4 años. La anulación produce los efectos del art. 42 (liquidación). También puede impugnarse por el recurso especial si es un acto recurrible."],
+      C:["mid","Invalidez de derecho civil","Se rige por el Código Civil (art. 43), pero el procedimiento para declararla y sus efectos son los de los arts. 41 y 42 LCSP."]};
+    function run(){const v=IV[+s.value],t=T[v[2]],o=$("iv-out");o.className="verdict "+t[0];o.innerHTML=`<b class="big">${t[1]}</b><strong>${e(v[3])}</strong> ${t[2]}`}
+    s.addEventListener("change",run);run()})();
+  /* Mapa */
+  (function(){const p=$("og-pills"),c=$("og-card");if(!p)return;let h="",last="";OG.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=OG[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Título competencial de la LCSP.",r:"Art. 149.1.18.ª CE: legislación básica sobre contratos y concesiones administrativas."},
+ {p:"Directivas que transpone la Ley 9/2017.",r:"2014/23/UE (concesiones) y 2014/24/UE (contratación pública). La 2014/25 (sectores especiales) se transpuso por el RDL 3/2020."},
+ {p:"Entrada en vigor de la LCSP.",r:"9 de marzo de 2018."},
+ {p:"Estructura de la LCSP.",r:"Título preliminar y 4 libros: 347 artículos, 57 DA, 6 DT, 1 DD, 16 DF y 6 anexos (versión original; la Ley 9/2025 añadió otra DA 57.ª)."},
+ {p:"Principios del art. 1 LCSP.",r:"Libertad de acceso, publicidad y transparencia, no discriminación e igualdad de trato, integridad, eficiencia en el gasto y estabilidad presupuestaria. Criterios sociales y medioambientales de forma transversal."},
+ {p:"Los tres círculos del ámbito subjetivo.",r:"Administraciones Públicas ⊂ poderes adjudicadores ⊂ sector público (art. 3)."},
+ {p:"Contrato de obras.",r:"Ejecución de una obra (con o sin proyecto): trabajos de construcción o ingeniería civil con función económica o técnica sobre un inmueble."},
+ {p:"Qué distingue la concesión de obras.",r:"La contraprestación es el derecho a explotar la obra (o ese derecho más un precio) y se transfiere el riesgo operacional."},
+ {p:"Riesgo operacional.",r:"Riesgo de demanda o de suministro: el concesionario no tiene garantizado recuperar la inversión."},
+ {p:"Contrato de suministro.",r:"Adquisición, arrendamiento financiero o arrendamiento, con o sin opción de compra, de bienes muebles."},
+ {p:"Límite de los contratos de servicios.",r:"No pueden implicar el ejercicio de la autoridad inherente a los poderes públicos."},
+ {p:"Régimen de los contratos mixtos.",r:"Solo si las prestaciones están vinculadas y son complementarias; se rigen por la prestación principal (la de mayor valor estimado)."},
+ {p:"Umbral SARA 2026-2027 de obras y concesiones.",r:"5.404.000 € (antes, 5.538.000). Orden HAC/1517/2025."},
+ {p:"Umbral SARA 2026-2027 de suministros y servicios de la AGE.",r:"140.000 € (antes, 143.000)."},
+ {p:"Umbral SARA 2026-2027 de suministros y servicios de otros poderes adjudicadores.",r:"216.000 € (antes, 221.000)."},
+ {p:"Umbral SARA de los servicios sociales del anexo IV.",r:"750.000 € (sin cambios)."},
+ {p:"Umbral de suministros y servicios en sectores especiales (2026).",r:"432.000 € (antes, 443.000)."},
+ {p:"Cada cuánto se revisan los umbrales SARA.",r:"Cada dos años, por Reglamentos Delegados de la UE publicados por orden ministerial."},
+ {p:"Lotes que pueden quedar fuera de las normas SARA.",r:"Menos de 1 M € (obras) o de 80.000 € (suministros y servicios), si en conjunto no superan el 20 % del total."},
+ {p:"Contratos administrativos.",r:"Los de obras, concesiones, suministro y servicios que celebra una Administración Pública, y los administrativos especiales."},
+ {p:"Contratos de servicios de una Administración que son privados.",r:"Servicios financieros, creación e interpretación artística y literaria, espectáculos y suscripciones a revistas y bases de datos."},
+ {p:"Régimen de los contratos privados.",r:"Preparación y adjudicación: LCSP. Efectos y extinción: derecho privado (con algunas normas de la LCSP, como las de modificación)."},
+ {p:"Jurisdicción en los contratos privados.",r:"Contencioso: preparación, adjudicación y modificaciones. Civil: efectos y extinción."},
+ {p:"Órgano de contratación en la AGE.",r:"Ministros y Secretarios de Estado; en los organismos, sus presidentes o directores. Pueden delegar."},
+ {p:"Cuándo autoriza el Consejo de Ministros.",r:"Contratos de valor estimado igual o superior a 12 M € (art. 324), entre otros casos."},
+ {p:"Prerrogativas de la Administración.",r:"Interpretar, resolver dudas, modificar, suspender, declarar la responsabilidad del contratista, resolver e inspeccionar (art. 190)."},
+ {p:"Cuándo hace falta el dictamen del Consejo de Estado.",r:"Interpretación, nulidad o resolución con oposición del contratista; modificaciones de más del 20 % del precio en contratos de 6 M € o más."},
+ {p:"Responsable del contrato.",r:"Supervisa la ejecución y dicta instrucciones; en las obras, sus funciones las ejerce el director facultativo (art. 62)."},
+ {p:"Cuándo es potestativa la mesa de contratación.",r:"En el negociado sin publicidad y en el simplificado abreviado."},
+ {p:"Vocales obligatorios de la mesa.",r:"Al menos un interventor y un jurista (con funciones de asesoramiento jurídico)."},
+ {p:"Quién no puede formar parte de la mesa.",r:"Cargos públicos representativos, personal eventual y quien redactó la documentación técnica. Los interinos, solo si no hay funcionarios de carrera."},
+ {p:"Cuándo actúa un comité de expertos.",r:"Cuando los criterios de juicio de valor pesan más del 50 %. Al menos 3 miembros."},
+ {p:"Requisitos del contratista.",r:"Capacidad, no estar incurso en prohibición de contratar, solvencia o clasificación, y habilitación profesional."},
+ {p:"Cuándo es exigible la clasificación.",r:"En los contratos de obras de valor estimado de 500.000 € o más."},
+ {p:"Qué acredita el ROLECE.",r:"La capacidad, la representación, la solvencia y la ausencia de prohibiciones."},
+ {p:"Qué aprueba la aprobación del expediente.",r:"El gasto, y abre el procedimiento de adjudicación (art. 117)."},
+ {p:"Tramitación urgente.",r:"Despacho preferente, plazos a la mitad y ejecución en 1 mes como máximo desde la formalización (art. 119)."},
+ {p:"Tramitación de emergencia.",r:"Ejecución sin expediente; se da cuenta al Consejo de Ministros en 30 días y la ejecución empieza en 1 mes como máximo (art. 120)."},
+ {p:"Contrato menor: cuantías.",r:"Obras de menos de 40.000 €; suministros y servicios de menos de 15.000 € (art. 118)."},
+ {p:"Contrato menor: duración.",r:"1 año como máximo, sin prórroga."},
+ {p:"Contrato menor: exención del informe de no fraccionamiento.",r:"Pagos verificados mediante anticipo de caja fija de menos de 5.000 €."},
+ {p:"Presupuesto base frente a valor estimado.",r:"El presupuesto base es el gasto máximo con IVA; el valor estimado no lleva IVA, pero incluye prórrogas y modificaciones previstas."},
+ {p:"Garantía provisional.",r:"Excepcional, de hasta el 3 % del presupuesto base sin IVA."},
+ {p:"Garantía definitiva.",r:"5 % del precio final ofertado, sin IVA. Complementaria, de hasta otro 5 %."},
+ {p:"Duración máxima de los suministros y servicios de tracto sucesivo.",r:"5 años, prórrogas incluidas (art. 29)."},
+ {p:"Prórroga obligatoria para el contratista.",r:"Si se le preavisa con al menos 2 meses. Nunca hay prórroga tácita."},
+ {p:"Duración máxima de las concesiones.",r:"De obras y de servicios con obra, 40 años; de servicios sin obra, 25; de servicios sanitarios, 10."},
+ {p:"Procedimientos ordinarios de adjudicación.",r:"Abierto y restringido."},
+ {p:"Plazo de proposiciones del abierto SARA.",r:"35 días desde el envío del anuncio al DOUE."},
+ {p:"Plazo del abierto no SARA.",r:"15 días en suministros y servicios; 26 en obras y concesiones."},
+ {p:"Abierto simplificado: cuantías (2026).",r:"Obras de hasta 2 M €; suministros y servicios de menos de 140.000 € (vinculado al umbral SARA de la AGE)."},
+ {p:"Abierto simplificado: peso de los juicios de valor.",r:"Como máximo el 25 % (45 % en prestaciones intelectuales)."},
+ {p:"Simplificado abreviado: cuantías y plazo.",r:"Obras de menos de 80.000 € y suministros y servicios de menos de 60.000 €. Plazo de 10 días hábiles."},
+ {p:"Procedimiento restringido: número mínimo de invitados.",r:"5."},
+ {p:"Diálogo competitivo.",r:"Contratos complejos; se dialoga con al menos 3 candidatos para definir la solución."},
+ {p:"Concurso de proyectos.",r:"Planos o proyectos (arquitectura, urbanismo, ingeniería) con jurado."},
+ {p:"Duración máxima de un acuerdo marco.",r:"4 años, salvo casos excepcionales."},
+ {p:"Requerimiento al mejor licitador.",r:"Documentación y garantía definitiva en 10 días hábiles; si no cumple, se le exige el 3 % del presupuesto base."},
+ {p:"Plazo para adjudicar tras recibir la documentación.",r:"5 días hábiles."},
+ {p:"Cuándo se perfecciona el contrato.",r:"Con su formalización (art. 36)."},
+ {p:"Plazo de formalización.",r:"Sin recurso especial: 15 días hábiles. Con él: esperar 15 días hábiles y formalizar en 5 días desde el requerimiento."},
+ {p:"Publicación de los contratos menores.",r:"Al menos trimestralmente."},
+ {p:"Topes de las penalidades.",r:"Cada una, el 10 % del precio sin IVA; el total, el 50 %."},
+ {p:"Penalidad diaria por demora.",r:"0,60 € por cada 1.000 € del precio, sin IVA (art. 193.3)."},
+ {p:"Qué ocurre al alcanzar un múltiplo del 5 % por demora.",r:"El órgano de contratación puede optar entre resolver el contrato o seguir imponiendo penalidades."},
+ {p:"Plazos de pago.",r:"Aprobar la certificación o conformidad en 30 días desde la entrega y pagar en 30 días desde la aprobación (art. 198)."},
+ {p:"Interés de demora del segundo semestre de 2026.",r:"10,40 % (tipo BCE + 8 puntos)."},
+ {p:"Demora en el pago: suspensión y resolución.",r:"Más de 4 meses: suspensión con 1 mes de preaviso. Más de 6 meses: resolución."},
+ {p:"Revisión de precios tras la Ley 11/2023.",r:"Cabe en cualquier contrato, con el 20 % ejecutado y pasado 1 año desde la formalización."},
+ {p:"Lo que nunca se revisa.",r:"Amortizaciones, costes financieros, gastos generales y beneficio industrial."},
+ {p:"Modificaciones previstas.",r:"Deben constar en el pliego de forma clara, precisa e inequívoca; máximo del 20 % del precio inicial (art. 204)."},
+ {p:"Tope de las modificaciones no previstas.",r:"50 % del precio inicial en prestaciones adicionales y circunstancias imprevisibles. Obligatorias para el contratista hasta el 20 %."},
+ {p:"Requisitos de la cesión.",r:"Autorización previa, 20 % ejecutado (o 1/5 de la duración en concesiones) y cesionario con capacidad y solvencia."},
+ {p:"Plazo de garantía en las obras.",r:"Al menos 1 año; certificación final en 3 meses desde la recepción. Vicios ocultos, 15 años."},
+ {p:"Plazo del procedimiento de resolución.",r:"8 meses."},
+ {p:"Causas de nulidad del art. 39 LCSP (algunas).",r:"Falta de capacidad o solvencia, prohibición de contratar, falta de crédito, falta de anuncio, formalizar sin respetar la suspensión."},
+ {p:"Efecto de la declaración de nulidad.",r:"El contrato entra en fase de liquidación: restitución recíproca (art. 42)."},
+ {p:"Umbrales del recurso especial.",r:"Obras y concesiones de más de 3 M €; suministros y servicios de más de 100.000 €."},
+ {p:"Novedad de la Ley 9/2025 en el recurso especial.",r:"Cabe contra todos los contratos de servicio público de transporte de viajeros del Reglamento 1370/2007, cualquiera que sea su cuantía (DA 57.ª LCSP)."},
+ {p:"Plazo del recurso especial.",r:"15 días hábiles. Es potestativo y gratuito."},
+ {p:"TACRC: requisitos y mandato.",r:"Presidente con más de 15 años de experiencia; vocales con más de 10. Mandato de 6 años no prorrogable."},
+ {p:"Multa por recurso temerario.",r:"De 1.000 a 30.000 €."},
+ {p:"Conservación de la información del perfil del contratante.",r:"Al menos 5 años."},
+ {p:"Encargos a medios propios que se publican.",r:"Los de más de 50.000 € (sin IVA)."},
+ {p:"Subasta electrónica: inicio.",r:"Al menos 2 días después del envío de las invitaciones."}
+]};
+
+const T1=[
+ {q:"La LCSP se dicta al amparo del:",o:["Art. 149.1.13.ª CE.","Art. 149.1.18.ª CE.","Art. 149.1.14.ª CE.","Art. 103 CE."],c:1,e:"Legislación básica sobre contratos y concesiones administrativas."},
+ {q:"La LCSP entró en vigor el:",o:["8 de noviembre de 2017.","1 de enero de 2018.","9 de marzo de 2018.","2 de octubre de 2016."],c:2,e:"A los 4 meses de su publicación en el BOE."},
+ {q:"La LCSP transpone las Directivas:",o:["2014/23/UE y 2014/24/UE.","2014/24/UE y 2014/25/UE.","2004/17/CE y 2004/18/CE.","2014/23/UE, 2014/24/UE y 2014/25/UE."],c:0,e:"La 2014/25 (sectores especiales) se transpuso por el RDL 3/2020."},
+ {q:"¿Cuántos artículos tiene la LCSP?",o:["133.","158.","347.","334."],c:2,e:"Título preliminar y 4 libros."},
+ {q:"No es un principio del art. 1 LCSP:",o:["La libertad de acceso a las licitaciones.","La integridad.","La estabilidad presupuestaria.","La preferencia de las empresas nacionales."],c:3,e:"Al contrario: rige la no discriminación e igualdad de trato."},
+ {q:"En el ámbito subjetivo de la LCSP, el círculo más amplio es:",o:["Las Administraciones Públicas.","Los poderes adjudicadores.","El sector público.","Las entidades locales."],c:2,e:"AAPP ⊂ poderes adjudicadores ⊂ sector público."},
+ {q:"Está excluida de la LCSP:",o:["La contratación de un servicio de limpieza.","La relación de servicio de los funcionarios.","La compra de ordenadores.","La concesión de una autopista."],c:1,e:"Art. 11: negocios y relaciones excluidos."},
+ {q:"El contrato cuyo objeto es la ejecución de una obra, con o sin proyecto, es de:",o:["Obras.","Concesión de obras.","Suministro.","Servicios."],c:0,e:"Art. 13."},
+ {q:"En la concesión de obras, la contraprestación consiste en:",o:["Un precio cierto.","El derecho a explotar la obra, o ese derecho más un precio.","Una subvención.","La propiedad de la obra."],c:1,e:"Art. 14, con transferencia del riesgo operacional."},
+ {q:"El riesgo operacional comprende el riesgo de:",o:["Fuerza mayor.","Demanda o suministro.","Tipo de interés.","Inflación."],c:1,e:"Art. 14.4."},
+ {q:"El arrendamiento de bienes muebles con opción de compra es un contrato de:",o:["Servicios.","Suministro.","Obras.","Concesión."],c:1,e:"Art. 16."},
+ {q:"No pueden ser objeto de un contrato de servicios:",o:["Las prestaciones intelectuales.","Los servicios que implican ejercicio de autoridad.","Los servicios de limpieza.","Los servicios informáticos."],c:1,e:"Art. 17."},
+ {q:"Un contrato mixto se rige por las normas de:",o:["La prestación de mayor duración.","La prestación principal (la de mayor valor estimado).","El contrato de servicios.","La prestación que elija el contratista."],c:1,e:"Art. 18."},
+ {q:"Para celebrar un contrato mixto, las prestaciones deben estar:",o:["Directamente vinculadas y ser complementarias.","Previstas en el PPT.","Licitadas por lotes.","Autorizadas por el Consejo de Ministros."],c:0,e:"Art. 34.2."},
+ {q:"Un contrato de servicios de interpretación artística de una Administración es:",o:["Administrativo.","Administrativo especial.","Privado.","Excluido."],c:2,e:"Art. 25.1.a.1.º."},
+ {q:"Los efectos y la extinción de los contratos privados se rigen por:",o:["La LCSP.","El derecho privado.","La Ley 39/2015.","El derecho de la UE."],c:1,e:"Art. 26.2, salvo algunas normas de la LCSP."},
+ {q:"Corresponde al orden civil:",o:["La adjudicación de un contrato privado.","La modificación de un contrato privado de una Administración.","La extinción de un contrato privado.","La preparación de un contrato privado."],c:2,e:"Art. 27.2."},
+ {q:"Corresponde al orden contencioso-administrativo:",o:["Los efectos de un contrato privado.","La resolución de un tribunal de recursos contractuales.","El cumplimiento de un contrato privado.","La extinción de un contrato privado."],c:1,e:"Art. 27.1."},
+ {q:"Los contratos administrativos se rigen, en defecto de la LCSP y su desarrollo, por:",o:["El derecho privado directamente.","Las demás normas de derecho administrativo y, en su defecto, el privado.","El derecho de la UE.","Los pliegos exclusivamente."],c:1,e:"Art. 25.2."},
+ {q:"Un poder adjudicador que no es Administración Pública celebra contratos:",o:["Administrativos.","Privados.","Administrativos especiales.","Excluidos."],c:1,e:"Art. 26.1.b."}
+];
+const T2=[
+ {q:"Desde el 1 de enero de 2026, el umbral SARA de los contratos de obras es:",o:["5.538.000 €.","5.382.000 €.","5.404.000 €.","5.548.000 €."],c:2,e:"Orden HAC/1517/2025. El de 5.538.000 € era el de 2024-2025."},
+ {q:"Desde 2026, el umbral SARA de los suministros de la AGE es:",o:["143.000 €.","140.000 €.","139.000 €.","215.000 €."],c:1,e:"Antes era de 143.000 €."},
+ {q:"Desde 2026, el umbral SARA de los servicios de una comunidad autónoma es:",o:["221.000 €.","214.000 €.","216.000 €.","140.000 €."],c:2,e:"Otros poderes adjudicadores."},
+ {q:"El umbral SARA de los servicios sociales del anexo IV es:",o:["750.000 €.","1.000.000 €.","216.000 €.","5.404.000 €."],c:0,e:"No ha cambiado."},
+ {q:"La concesión de servicios es SARA a partir de:",o:["216.000 €.","750.000 €.","5.404.000 €.","3.000.000 €."],c:2,e:"Mismo umbral que las obras y la concesión de obras."},
+ {q:"El periodo de vigencia de los umbrales actuales es:",o:["2024-2025.","2026-2027.","2026-2028.","2025-2026."],c:1,e:"Los umbrales son bienales."},
+ {q:"Sectores especiales: umbral de suministros y servicios desde 2026:",o:["443.000 €.","432.000 €.","428.000 €.","216.000 €."],c:1,e:"RDL 3/2020."},
+ {q:"En los contratos subvencionados más de un 50 %, los servicios vinculados a obras son SARA desde:",o:["140.000 €.","216.000 €.","750.000 €.","100.000 €."],c:1,e:"Art. 23."},
+ {q:"Un lote de suministros puede quedar fuera de las normas SARA si vale menos de:",o:["60.000 €.","80.000 €.","100.000 €.","140.000 €."],c:1,e:"Y si los lotes exceptuados no superan el 20 % del total."},
+ {q:"Para calcular si un contrato es SARA se usa:",o:["El presupuesto base con IVA.","El valor estimado sin IVA.","El precio de adjudicación.","El importe de la primera anualidad."],c:1,e:"Art. 101."},
+ {q:"Contrato menor de obras:",o:["Hasta 40.000 € inclusive.","Menos de 40.000 €.","Menos de 50.000 €.","Menos de 15.000 €."],c:1,e:"Art. 118: «inferior a»."},
+ {q:"Contrato menor de servicios:",o:["Menos de 15.000 €.","Menos de 18.000 €.","Hasta 15.000 €.","Menos de 40.000 €."],c:0,e:"Art. 118."},
+ {q:"El contrato menor:",o:["Puede prorrogarse una vez.","No puede durar más de 1 año ni prorrogarse.","Puede durar 2 años.","Puede durar 4 años."],c:1,e:"Art. 29.8."},
+ {q:"No hace falta justificar que no se fracciona el objeto en los contratos menores pagados por anticipo de caja fija de menos de:",o:["3.000 €.","5.000 €.","15.000 €.","1.000 €."],c:1,e:"Art. 118.5."},
+ {q:"El abierto simplificado para suministros y servicios de la AGE alcanza, en 2026, los contratos de:",o:["Menos de 143.000 €.","Menos de 140.000 €.","Hasta 100.000 €.","Menos de 216.000 €."],c:1,e:"Art. 159.1: por debajo del umbral SARA."},
+ {q:"El abierto simplificado para obras alcanza los contratos de:",o:["Menos de 80.000 €.","Hasta 2.000.000 €.","Hasta 5.404.000 €.","Menos de 1.000.000 €."],c:1,e:"Art. 159.1.a."},
+ {q:"El simplificado abreviado se aplica a los suministros y servicios de menos de:",o:["35.000 €.","60.000 €.","80.000 €.","100.000 €."],c:1,e:"Art. 159.6. Obras: menos de 80.000 €."},
+ {q:"Los contratos de obras de más de 3 M € y los servicios de más de 100.000 € son:",o:["SARA.","Recurribles en el recurso especial.","Sujetos a autorización del Consejo de Ministros.","Menores."],c:1,e:"Art. 44."},
+ {q:"Requiere autorización del Consejo de Ministros el contrato de valor estimado de:",o:["6 M € o más.","10 M € o más.","12 M € o más.","5.404.000 € o más."],c:2,e:"Art. 324."},
+ {q:"Es exigible la clasificación en los contratos de obras de:",o:["500.000 € o más.","40.000 € o más.","1 M € o más.","Cualquier cuantía."],c:0,e:"Art. 77."}
+];
+const T3=[
+ {q:"Son órganos de contratación de la AGE:",o:["Los Subsecretarios.","Los Ministros y Secretarios de Estado.","Los Directores Generales.","Los Delegados del Gobierno."],c:1,e:"Art. 323."},
+ {q:"No es una prerrogativa del art. 190 LCSP:",o:["Interpretar.","Modificar por razones de interés público.","Fijar unilateralmente el beneficio del contratista.","Inspeccionar."],c:2,e:"Prerrogativas tasadas."},
+ {q:"El responsable del contrato, en las obras, es:",o:["El interventor.","El director facultativo.","El secretario de la mesa.","El jefe de obra del contratista."],c:1,e:"Art. 62.2."},
+ {q:"La mesa de contratación es potestativa en:",o:["El abierto.","El restringido.","El simplificado abreviado.","El diálogo competitivo."],c:2,e:"Art. 326.1."},
+ {q:"Entre los vocales de la mesa debe haber:",o:["Un interventor y un jurista.","Dos representantes sindicales.","Un miembro del Consejo de Estado.","Un notario."],c:0,e:"Art. 326.5."},
+ {q:"No puede formar parte de la mesa:",o:["Un funcionario de carrera.","El personal eventual.","Un interventor.","Un jurista del servicio jurídico."],c:1,e:"Art. 326.5."},
+ {q:"El personal interino puede formar parte de la mesa:",o:["Siempre.","Nunca.","Solo si no hay funcionarios de carrera suficientes.","Solo como presidente."],c:2,e:"Art. 326.5."},
+ {q:"El comité de expertos interviene cuando los juicios de valor pesan:",o:["Más del 25 %.","Más del 50 %.","Más del 45 %.","Cualquier porcentaje."],c:1,e:"Art. 146.2.a."},
+ {q:"El comité de expertos tiene como mínimo:",o:["2 miembros.","3 miembros.","5 miembros.","7 miembros."],c:1,e:"Art. 146.2.a."},
+ {q:"OIRESCON es:",o:["Un tribunal de recursos.","La Oficina Independiente de Regulación y Supervisión de la Contratación.","Un registro de licitadores.","La plataforma de contratación."],c:1,e:"Art. 332."},
+ {q:"Resuelve el recurso especial en la AGE:",o:["La JCCPE.","El TACRC.","El Consejo de Estado.","La OIRESCON."],c:1,e:"Art. 45."},
+ {q:"El presidente del TACRC debe tener una experiencia profesional de más de:",o:["10 años.","15 años.","20 años.","5 años."],c:1,e:"Vocales: más de 10 años."},
+ {q:"El mandato de los miembros del TACRC es de:",o:["4 años prorrogables.","5 años.","6 años no prorrogables.","Indefinido."],c:2,e:"Art. 45.4."},
+ {q:"No es un requisito para contratar:",o:["Capacidad de obrar.","Solvencia o clasificación.","Nacionalidad española.","No estar incurso en prohibición."],c:2,e:"Pueden contratar empresas de la UE y, con reciprocidad, otras."},
+ {q:"Los miembros de una UTE responden frente a la Administración:",o:["Mancomunadamente.","Solidariamente.","Subsidiariamente.","Según su porcentaje."],c:1,e:"Art. 69.3."},
+ {q:"La inscripción en el ROLECE acredita, entre otras cosas:",o:["La oferta económica.","La capacidad y la solvencia.","La garantía definitiva.","La adjudicación."],c:1,e:"Art. 96."},
+ {q:"La Junta Consultiva de Contratación Pública del Estado:",o:["Resuelve recursos.","Es órgano consultivo y emite informes.","Adjudica contratos.","Fiscaliza el gasto."],c:1,e:"Art. 328."},
+ {q:"Los conflictos de intereses en la contratación:",o:["Solo se sancionan.","Deben prevenirse, detectarse y solucionarse (art. 64).","Son irrelevantes en los menores.","Solo afectan a la mesa."],c:1,e:"Lucha contra la corrupción."},
+ {q:"Se exige dictamen del Consejo de Estado en las modificaciones de contratos de 6 M € o más cuando superan el:",o:["10 %.","20 %.","50 %.","15 %."],c:1,e:"Art. 191.3.b."},
+ {q:"La Junta de Contratación Centralizada depende de la:",o:["DG del Patrimonio del Estado.","DG de Racionalización y Centralización de la Contratación.","IGAE.","Abogacía del Estado."],c:1,e:"Contratación centralizada estatal."}
+];
+const T4=[
+ {q:"El expediente de contratación lo inicia:",o:["La mesa.","El órgano de contratación, motivando la necesidad.","El interventor.","El licitador."],c:1,e:"Art. 116.1."},
+ {q:"La aprobación del expediente implica también:",o:["La adjudicación.","La aprobación del gasto.","La formalización.","La recepción."],c:1,e:"Art. 117.1."},
+ {q:"En la tramitación urgente, la ejecución debe empezar en un plazo máximo de:",o:["15 días.","1 mes.","2 meses.","10 días."],c:1,e:"Desde la formalización (art. 119.2.c)."},
+ {q:"En la emergencia, en la AGE se da cuenta al Consejo de Ministros en:",o:["10 días.","30 días.","2 meses.","15 días."],c:1,e:"Art. 120.1.b."},
+ {q:"En la emergencia, si la ejecución no empieza en 1 mes:",o:["El contrato es nulo.","Se tramita el procedimiento ordinario.","Se prorroga otro mes.","Se resuelve con indemnización."],c:1,e:"Art. 120.1.c."},
+ {q:"Los pliegos de cláusulas administrativas generales los aprueba:",o:["El Ministro de Hacienda.","El Consejo de Ministros, previo informe de la JCCPE.","La mesa.","El Consejo de Estado."],c:1,e:"Art. 121."},
+ {q:"El PPT no puede mencionar una marca salvo que:",o:["Sea española.","Se añada «o equivalente».","Lo autorice el interventor.","El contrato sea menor."],c:1,e:"Art. 126.6."},
+ {q:"El presupuesto base de licitación:",o:["No incluye IVA.","Incluye IVA y es el límite máximo de gasto.","Incluye las prórrogas.","Es igual al valor estimado."],c:1,e:"Art. 100."},
+ {q:"El valor estimado incluye:",o:["El IVA.","Las prórrogas y las modificaciones previstas.","Solo la primera anualidad.","Los intereses de demora."],c:1,e:"Art. 101."},
+ {q:"La división en lotes es:",o:["Excepcional.","La regla general; no dividir debe justificarse.","Prohibida en los contratos SARA.","Solo para obras."],c:1,e:"Art. 99.3."},
+ {q:"La garantía provisional:",o:["Es obligatoria, del 5 %.","Es excepcional, de hasta el 3 % del presupuesto base sin IVA.","Es del 3 % del precio ofertado.","No existe."],c:1,e:"Art. 106."},
+ {q:"La garantía definitiva es del:",o:["3 % del presupuesto base.","5 % del precio final ofertado, sin IVA.","10 % del valor estimado.","5 % del presupuesto con IVA."],c:1,e:"Art. 107."},
+ {q:"La garantía complementaria puede alcanzar hasta:",o:["Un 3 % más.","Un 5 % más.","Un 10 % más.","Un 20 % más."],c:1,e:"Art. 107.2."},
+ {q:"Los suministros y servicios de tracto sucesivo duran como máximo:",o:["4 años.","5 años, prórrogas incluidas.","6 años más prórrogas.","10 años."],c:1,e:"Art. 29.4."},
+ {q:"La prórroga es obligatoria para el contratista si se le preavisa con al menos:",o:["15 días.","1 mes.","2 meses.","3 meses."],c:2,e:"Art. 29.2."},
+ {q:"La prórroga tácita:",o:["Cabe una vez.","No cabe nunca.","Cabe en los menores.","Cabe si lo dice el pliego."],c:1,e:"Art. 29.2."},
+ {q:"La concesión de servicios sin obra dura como máximo:",o:["10 años.","25 años.","40 años.","50 años."],c:1,e:"Art. 29.6.b."},
+ {q:"Las consultas preliminares del mercado:",o:["Están prohibidas.","Se publican en el perfil del contratante.","Sustituyen a la licitación.","Solo caben en los menores."],c:1,e:"Art. 115."},
+ {q:"En los contratos menores de obras hay que añadir:",o:["El dictamen del Consejo de Estado.","El presupuesto de las obras.","La garantía definitiva.","La autorización del Consejo de Ministros."],c:1,e:"Art. 118.4."},
+ {q:"Los contratos menores de ciencia e innovación pueden alcanzar:",o:["40.000 €.","50.000 €.","60.000 €.","100.000 €."],c:1,e:"DA 54.ª."}
+];
+const T5=[
+ {q:"Son procedimientos ordinarios de adjudicación:",o:["El abierto y el restringido.","El negociado y el diálogo competitivo.","El abierto y el negociado.","El restringido y el diálogo."],c:0,e:"Art. 131.2."},
+ {q:"En el abierto SARA, el plazo mínimo de proposiciones es de:",o:["26 días.","35 días desde el envío al DOUE.","15 días.","52 días."],c:1,e:"Art. 156.2."},
+ {q:"En el abierto no SARA de servicios, el plazo mínimo es de:",o:["10 días.","15 días.","26 días.","35 días."],c:1,e:"Art. 156.6. Obras: 26 días."},
+ {q:"En el abierto simplificado, los juicios de valor pesan como máximo:",o:["El 25 % (45 % en prestaciones intelectuales).","El 50 %.","El 10 %.","El 35 %."],c:0,e:"Art. 159.1.b."},
+ {q:"En el simplificado abreviado, el plazo de proposiciones es de al menos:",o:["5 días hábiles.","10 días hábiles.","15 días naturales.","20 días."],c:1,e:"Art. 159.6.a."},
+ {q:"En el simplificado abreviado:",o:["Se exige garantía provisional.","Se exime de acreditar la solvencia.","Hay criterios de juicio de valor.","La mesa es obligatoria."],c:1,e:"Y de la garantía definitiva."},
+ {q:"En el restringido, el número mínimo de empresas invitadas es:",o:["3.","5.","10.","7."],c:1,e:"Art. 162."},
+ {q:"En el restringido, la negociación:",o:["Es obligatoria.","Está prohibida.","Es potestativa.","Solo sobre el precio."],c:1,e:"Art. 160.2."},
+ {q:"El negociado sin publicidad cabe, entre otros supuestos, cuando:",o:["El contrato supera el umbral SARA.","La licitación ha quedado desierta.","Lo pide el licitador.","El contrato es de servicios."],c:1,e:"Art. 168."},
+ {q:"El diálogo competitivo se usa para:",o:["Contratos menores.","Contratos complejos en los que la solución no puede definirse de antemano.","Suministros de bienes estándar.","Contratos urgentes."],c:1,e:"Art. 167."},
+ {q:"La asociación para la innovación tiene por objeto:",o:["Comprar bienes existentes.","Desarrollar productos o servicios innovadores y su compra ulterior.","Adjudicar concesiones.","Evaluar ofertas."],c:1,e:"Art. 177."},
+ {q:"El concurso de proyectos lo valora:",o:["La mesa.","Un jurado.","El TACRC.","El interventor."],c:1,e:"Art. 187."},
+ {q:"Un acuerdo marco dura como máximo:",o:["2 años.","4 años, salvo excepciones.","5 años.","6 años."],c:1,e:"Art. 219.2."},
+ {q:"Con varios criterios de adjudicación, deben preponderar:",o:["Los de juicio de valor.","Los evaluables mediante fórmulas (o actuar un comité de expertos).","Los sociales.","Los de precio exclusivamente."],c:1,e:"Art. 146.2."},
+ {q:"Ante una oferta anormalmente baja, la Administración debe:",o:["Excluirla automáticamente.","Pedir al licitador que la justifique.","Adjudicársela.","Comunicarlo al TACRC."],c:1,e:"Art. 149.4."},
+ {q:"Se rechaza una oferta anormalmente baja si:",o:["Es la más barata.","Los costes salariales están por debajo del convenio.","El licitador es una pyme.","Supera el presupuesto."],c:1,e:"Art. 149.4."},
+ {q:"El mejor licitador debe presentar la documentación y la garantía en:",o:["5 días hábiles.","10 días hábiles.","15 días hábiles.","1 mes."],c:1,e:"Art. 150.2."},
+ {q:"Si el mejor licitador no cumplimenta el requerimiento:",o:["Se archiva el procedimiento.","Se le exige el 3 % del presupuesto base y se pasa al siguiente.","Se le impone una multa de 30.000 €.","Se declara desierta la licitación."],c:1,e:"Art. 150.2."},
+ {q:"La subasta electrónica no puede usarse en:",o:["Suministros estándar.","Prestaciones intelectuales como la arquitectura o la consultoría.","El procedimiento abierto.","La licitación con negociación."],c:1,e:"Art. 143.2."},
+ {q:"La subasta electrónica empieza al menos:",o:["El mismo día.","2 días hábiles después de la invitación.","10 días después.","5 días después."],c:1,e:"Art. 143.11."}
+];
+const T6=[
+ {q:"El contrato se perfecciona con:",o:["La adjudicación.","La formalización.","La recepción.","La aprobación del expediente."],c:1,e:"Art. 36.1."},
+ {q:"Si cabe el recurso especial, no puede formalizarse antes de:",o:["5 días hábiles.","10 días hábiles.","15 días hábiles desde la remisión de la notificación.","1 mes."],c:2,e:"Art. 153.3."},
+ {q:"Si no cabe el recurso especial, la formalización se hace en:",o:["15 días hábiles desde la notificación de la adjudicación.","5 días.","1 mes.","2 meses."],c:0,e:"Art. 153.3."},
+ {q:"Si el contrato no se formaliza por causa del adjudicatario:",o:["Se le exige el 3 % del presupuesto base.","Se le exige el 5 %.","Se le multa con 1.000 €.","No tiene consecuencias."],c:0,e:"Art. 153.4."},
+ {q:"El contrato se ejecuta:",o:["A riesgo de la Administración.","A riesgo y ventura del contratista.","Con beneficio garantizado.","Sin riesgo para nadie."],c:1,e:"Art. 197."},
+ {q:"Cada penalidad no puede superar el:",o:["5 % del precio.","10 % del precio sin IVA.","20 % del precio.","50 % del precio."],c:1,e:"Art. 192.1."},
+ {q:"El total de las penalidades no puede superar el:",o:["20 %.","30 %.","50 % del precio.","100 %."],c:2,e:"Art. 192.1."},
+ {q:"La penalidad diaria por demora es de:",o:["0,20 € por cada 1.000 €.","0,60 € por cada 1.000 € del precio sin IVA.","1 € por cada 1.000 €.","6 € por cada 1.000 €."],c:1,e:"Art. 193.3."},
+ {q:"Cuando las penalidades por demora alcanzan un múltiplo del 5 % del precio:",o:["El contrato se resuelve automáticamente.","El órgano de contratación puede resolver o seguir penalizando.","Se suspende el contrato.","Se pide dictamen al Consejo de Estado."],c:1,e:"Art. 193.4."},
+ {q:"Para que el contratista incurra en mora hace falta:",o:["Intimación previa.","Solo el vencimiento del plazo.","Una sentencia.","Dictamen del Consejo de Estado."],c:1,e:"Art. 193.2."},
+ {q:"La Administración debe aprobar la certificación en:",o:["10 días.","30 días desde la entrega.","60 días.","15 días."],c:1,e:"Art. 198.4."},
+ {q:"El tipo legal de interés de demora del segundo semestre de 2026 es:",o:["8,00 %.","10,40 %.","12,15 %.","3,25 %."],c:1,e:"Tipo del BCE más 8 puntos."},
+ {q:"El contratista puede suspender la ejecución si la demora en el pago supera:",o:["2 meses.","4 meses, con 1 mes de preaviso.","6 meses.","1 año."],c:1,e:"Art. 198.5."},
+ {q:"El contratista puede resolver el contrato si la demora en el pago supera:",o:["4 meses.","6 meses.","8 meses.","1 año."],c:1,e:"Art. 198.6."},
+ {q:"Tras la Ley 11/2023, la revisión de precios cabe:",o:["Solo en obras.","En cualquier tipo de contrato, con los requisitos legales.","Solo en suministros de energía.","Nunca."],c:1,e:"Art. 103.2, en su redacción actual."},
+ {q:"La revisión de precios exige, además del 20 % ejecutado, que haya pasado:",o:["6 meses.","1 año desde la formalización.","2 años.","3 años."],c:1,e:"Antes de la Ley 11/2023 eran 2 años."},
+ {q:"No se revisan nunca:",o:["Los materiales.","La energía.","Los gastos generales y el beneficio industrial.","La mano de obra de los contratos de obras."],c:2,e:"Art. 103.3."},
+ {q:"Las modificaciones previstas en el pliego no pueden superar el:",o:["10 %.","20 % del precio inicial.","50 %.","30 %."],c:1,e:"Art. 204."},
+ {q:"Las modificaciones no previstas son obligatorias para el contratista hasta el:",o:["10 %.","20 %.","50 %.","15 %."],c:1,e:"Art. 206."},
+ {q:"Para ceder el contrato hace falta haber ejecutado al menos el:",o:["10 %.","20 %.","50 %.","25 %."],c:1,e:"Art. 214.2.b."}
+];
+const T7=[
+ {q:"No es causa de nulidad del art. 39 LCSP:",o:["La falta de crédito.","La falta de solvencia del adjudicatario.","Una cláusula que favorece indebidamente a una empresa.","La falta de anuncio de licitación preceptivo."],c:2,e:"Es causa de anulabilidad (art. 40.b)."},
+ {q:"La declaración de nulidad del contrato produce:",o:["Su conversión.","Su liquidación, con restitución recíproca.","Su prórroga.","Su cesión."],c:1,e:"Art. 42."},
+ {q:"Si la nulidad causa un grave trastorno del servicio público:",o:["El contrato sigue vigente para siempre.","Puede continuarse la ejecución hasta adoptar medidas urgentes.","Se convalida.","Se indemniza al contratista."],c:1,e:"Art. 42.3."},
+ {q:"La invalidez por causas de derecho civil se declara:",o:["Por el juez civil siempre.","Conforme al procedimiento de los arts. 41-42 LCSP.","Por el TACRC.","No se declara."],c:1,e:"Art. 43."},
+ {q:"Cabe el recurso especial en un contrato de servicios de:",o:["80.000 €.","100.000 €.","120.000 €.","15.000 €."],c:2,e:"Más de 100.000 €."},
+ {q:"Cabe el recurso especial en un contrato de obras de:",o:["2.500.000 €.","3.000.000 €.","3.500.000 €.","1.000.000 €."],c:2,e:"Más de 3 M €."},
+ {q:"Desde la Ley 9/2025, el recurso especial cabe contra los contratos de servicio público de transporte de viajeros:",o:["Solo si son SARA.","Cualquiera que sea su cuantía.","Solo si superan 3 M €.","Nunca."],c:1,e:"DA 57.ª LCSP."},
+ {q:"No es recurrible en el recurso especial:",o:["La adjudicación.","Los pliegos.","Un contrato menor.","La exclusión de un licitador por la mesa."],c:2,e:"Art. 44.1."},
+ {q:"En general, los actos de la fase de ejecución:",o:["Son recurribles en el recurso especial.","No lo son, salvo las modificaciones que debieron ser una nueva adjudicación.","Solo los recurre el contratista.","No son recurribles de ningún modo."],c:1,e:"Art. 44.2.d."},
+ {q:"El plazo del recurso especial es de:",o:["10 días hábiles.","15 días hábiles.","1 mes.","20 días naturales."],c:1,e:"Art. 50.1."},
+ {q:"El recurso especial es:",o:["Obligatorio.","Potestativo y gratuito.","De pago.","Previo a la reclamación de responsabilidad."],c:1,e:"Art. 44.7."},
+ {q:"Recurrir la adjudicación produce:",o:["La anulación inmediata.","La suspensión automática de la tramitación.","El archivo.","La pérdida de la garantía."],c:1,e:"Art. 53."},
+ {q:"El órgano de contratación remite el expediente y su informe al Tribunal en:",o:["2 días hábiles.","5 días hábiles.","10 días.","1 mes."],c:0,e:"Art. 56.2."},
+ {q:"El Tribunal resuelve el recurso especial en:",o:["2 días hábiles.","5 días hábiles desde las alegaciones.","1 mes.","3 meses."],c:1,e:"Art. 57.1."},
+ {q:"Al recurrente temerario se le puede imponer una multa de:",o:["100 a 1.000 €.","1.000 a 30.000 €.","30.000 a 60.000 €.","Hasta el 3 % del contrato."],c:1,e:"Art. 58.2."},
+ {q:"Contra la resolución del recurso especial cabe:",o:["El recurso de alzada.","Solo el contencioso-administrativo.","La revisión de oficio.","El recurso de reposición."],c:1,e:"Art. 59."},
+ {q:"La información del perfil del contratante se conserva al menos:",o:["2 años.","4 años.","5 años.","10 años."],c:2,e:"Art. 63.1."},
+ {q:"Se publican en el perfil los encargos a medios propios de más de:",o:["15.000 €.","40.000 €.","50.000 €.","100.000 €."],c:2,e:"Art. 63.6."},
+ {q:"La Plataforma de Contratación del Sector Público la gestiona:",o:["La IGAE.","La DG del Patrimonio del Estado.","La OIRESCON.","El TACRC."],c:1,e:"Art. 347."},
+ {q:"Los contratos menores se publican en el perfil:",o:["Mensualmente.","Al menos trimestralmente.","Anualmente.","No se publican."],c:1,e:"Art. 63.4."}
+];
+const T8=[
+ {q:"Un ministerio licita en 2026 un servicio de 141.000 € (valor estimado sin IVA). Es:",o:["No SARA; abierto simplificado.","SARA, porque supera 140.000 €.","No SARA, porque no llega a 143.000 €.","Menor."],c:1,e:"El umbral de la AGE es de 140.000 € desde el 1-1-2026."},
+ {q:"Un ayuntamiento licita en 2026 un suministro de 200.000 €. Es:",o:["SARA.","No SARA (umbral de 216.000 €), pero cabe el recurso especial.","Menor.","No SARA y sin recurso especial."],c:1,e:"Supera los 100.000 € del recurso especial."},
+ {q:"Una obra de 38.000 € sin IVA puede adjudicarse como:",o:["Contrato menor.","Solo por el abierto.","Concurso de proyectos.","Diálogo competitivo."],c:0,e:"Menos de 40.000 €."},
+ {q:"Un servicio de 70.000 €, no intelectual, de la AGE puede tramitarse por:",o:["El simplificado abreviado.","El abierto simplificado.","El menor.","El negociado sin publicidad por la cuantía."],c:1,e:"Más de 60.000 € (no cabe el abreviado) y menos de 140.000 €."},
+ {q:"Una obra de 2.500.000 €. ¿Abierto simplificado?",o:["Sí.","No: el simplificado alcanza las obras de hasta 2 M €.","Solo si es urgente.","Solo si es SARA."],c:1,e:"Art. 159.1.a."},
+ {q:"Contrato de 200.000 € sin IVA; el contratista acumula 50 días de retraso. La penalidad acumulada es:",o:["600 €.","6.000 €.","12.000 €.","60.000 €."],c:1,e:"0,60 × 200 = 120 €/día × 50 = 6.000 €."},
+ {q:"En ese contrato de 200.000 €, ¿cuándo alcanza la demora el primer 5 %?",o:["A los 50 días.","A los 84 días.","A los 100 días.","A los 167 días."],c:1,e:"5 % = 10.000 €; 10.000 ÷ 120 = 83,3 → día 84."},
+ {q:"Una factura aprobada el 1 de marzo de 2026 no se ha pagado el 15 de agosto. El contratista:",o:["Solo puede reclamar intereses.","Puede suspender (más de 4 meses de demora desde el vencimiento).","Puede resolver.","No puede hacer nada."],c:1,e:"El pago vencía el 31 de marzo; más de 4 meses después, pero menos de 6."},
+ {q:"Contrato de 500.000 €; el pliego no prevé modificaciones y se quiere modificar en 130.000 €. ¿Es obligatoria para el contratista?",o:["Sí.","No: supera el 20 % (26 %), así que necesita su conformidad o se resuelve.","No cabe en ningún caso.","Solo con dictamen del Consejo de Estado."],c:1,e:"Art. 206."},
+ {q:"La mesa excluye a un licitador en un contrato de servicios de 300.000 €. El licitador:",o:["Solo puede ir a alzada.","Puede interponer el recurso especial en 15 días hábiles.","No puede recurrir hasta la adjudicación.","Debe acudir al juez civil."],c:1,e:"Acto de trámite cualificado (art. 44.2.b)."},
+ {q:"Un licitador recurre la adjudicación de un servicio de 400.000 €. El órgano de contratación:",o:["Puede formalizar.","No puede formalizar: la tramitación se suspende.","Debe anular la adjudicación.","Debe adjudicar al segundo."],c:1,e:"Suspensión automática (art. 53)."},
+ {q:"El contratista impugna una penalidad impuesta en un contrato de obras de 5 M €. La vía es:",o:["El recurso especial.","Los recursos ordinarios y el contencioso.","El juez civil.","Ninguna."],c:1,e:"Es un acto de la fase de ejecución."},
+ {q:"Se adjudica un contrato a una empresa condenada por cohecho e incursa en prohibición de contratar. El contrato es:",o:["Anulable.","Nulo de pleno derecho.","Válido.","Rescindible."],c:1,e:"Art. 39.2.a."},
+ {q:"Tras una inundación, un ministerio contrata obras de reparación por emergencia. Debe:",o:["Tramitar un abierto.","Dar cuenta al Consejo de Ministros en 30 días.","Pedir autorización previa al Consejo de Ministros.","Esperar al dictamen del Consejo de Estado."],c:1,e:"Art. 120."},
+ {q:"Una diputación licita servicios de transporte de viajeros por carretera de 60.000 €. ¿Cabe el recurso especial?",o:["No, por la cuantía.","Sí, desde la Ley 9/2025 (DA 57.ª LCSP).","Solo si es SARA.","Solo contra los pliegos."],c:1,e:"Sin umbral."},
+ {q:"Un contrato de servicios de 2023 lleva 14 meses ejecutándose y el 30 % ejecutado. El pliego prevé la revisión. ¿Procede?",o:["No: hacen falta 2 años.","Sí: 20 % ejecutado y más de 1 año desde la formalización.","No: solo en obras.","Solo la energía."],c:1,e:"Ley 11/2023."},
+ {q:"Un suministro de la AGE de 500.000 € al año, con 2 años de duración y 3 años de prórroga posibles, tiene un valor estimado de:",o:["500.000 €.","1.000.000 €.","2.500.000 €.","5.000.000 €."],c:2,e:"Incluye las prórrogas: 5 años × 500.000 €."},
+ {q:"Notificada la adjudicación de un servicio de 90.000 € (no cabe el recurso especial), la formalización debe hacerse:",o:["En 5 días.","En 15 días hábiles desde la notificación.","Pasados 15 días hábiles.","En 1 mes."],c:1,e:"Art. 153.3."},
+ {q:"Una empresa presenta su oferta y luego no constituye la garantía definitiva requerida. Consecuencia:",o:["Ninguna.","Se entiende retirada y se le exige el 3 % del presupuesto base.","Se le adjudica igualmente.","Se anula el procedimiento."],c:1,e:"Art. 150.2."},
+ {q:"La AGE quiere contratar un servicio de 15.000 € exactos. ¿Cabe el contrato menor?",o:["Sí.","No: el menor de servicios exige menos de 15.000 €.","Solo con autorización.","Solo por caja fija."],c:1,e:"Art. 118.1: «inferior a»."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"📚",name:"La LCSP: ámbito y clases de contratos",desc:"Principios, tipos, contratos administrativos y privados, jurisdicción.",qs:T1},
+ {id:"t2",ic:"💶",name:"Umbrales y cuantías 2026",desc:"SARA, menores, simplificados, recurso especial (esquema 1).",qs:T2},
+ {id:"t3",ic:"🏛️",name:"Órganos y contratista",desc:"Órgano de contratación, mesa, TACRC, capacidad (esquema 4).",qs:T3},
+ {id:"t4",ic:"📝",name:"Preparación: expediente, pliegos, garantías",desc:"Tramitación, menores, precio, duración (esquema 2).",qs:T4},
+ {id:"t5",ic:"🔨",name:"Procedimientos de adjudicación",desc:"Abierto, simplificado, restringido, negociado, criterios.",qs:T5},
+ {id:"t6",ic:"⚙️",name:"Formalización, ejecución y modificación",desc:"Penalidades, pago, revisión de precios, cesión (esquema 3).",qs:T6},
+ {id:"t7",ic:"⚖️",name:"Invalidez, recurso especial y transparencia",desc:"Esquemas 3, 5 y 6.",qs:T7},
+ {id:"t8",ic:"🧩",name:"Casos prácticos",desc:"Umbrales 2026, penalidades, demora, modificaciones y recursos.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+const ESQ=[
+ {id:"e1",title:"Umbrales SARA 2026-2027 (esquema 1)",intro:"Orden HAC/1517/2025.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Contratos SARA (valor estimado ≥)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Obras y concesiones</b>{{0}}</div>
+   <div class="sch-box alt"><b>Suministros y servicios AGE</b>{{1}}</div>
+   <div class="sch-box"><b>Otros poderes adjudicadores</b>{{2}}</div>
+   <div class="sch-box alt"><b>Servicios del anexo IV</b>{{3}}</div>
+   <div class="sch-box"><b>Sectores especiales (sum./serv.)</b>{{4}}</div>
+  </div></div>`,
+  blanks:[{o:["5.404.000 €","5.538.000 €","5.382.000 €","3.000.000 €"],why:"Antes, 5.538.000 €."},{o:["140.000 €","143.000 €","139.000 €","100.000 €"],why:"Antes, 143.000 €."},{o:["216.000 €","221.000 €","215.000 €","140.000 €"],why:"Antes, 221.000 €."},{o:["750.000 €","1.000.000 €","500.000 €","216.000 €"],why:"Sin cambios."},{o:["432.000 €","443.000 €","431.000 €","216.000 €"],why:"Antes, 443.000 €."}]},
+ {id:"e2",title:"Tipos de contrato (esquema 1)",intro:"Arts. 13-18.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Contratos por su objeto</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Obras</b>Trabajos de construcción sobre un {{0}}.</div>
+   <div class="sch-box alt"><b>Concesiones</b>Derecho a explotar, con transferencia del riesgo {{1}}.</div>
+   <div class="sch-box"><b>Suministro</b>Bienes {{2}}.</div>
+   <div class="sch-box alt"><b>Servicios</b>Sin ejercicio de {{3}}.</div>
+   <div class="sch-box"><b>Mixtos</b>Rige la prestación {{4}}.</div>
+  </div></div>`,
+  blanks:[{o:["inmueble","mueble","servicio","proyecto"],why:"Art. 13."},{o:["operacional","financiero","político","contable"],why:"Arts. 14-15."},{o:["muebles","inmuebles","inmateriales","públicos"],why:"Art. 16."},{o:["autoridad","dirección","gestión","inspección"],why:"Art. 17."},{o:["principal","más antigua","menor","accesoria"],why:"Art. 18."}]},
+ {id:"e3",title:"Administrativos y privados (esquema 1)",intro:"Arts. 25-27.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Régimen jurídico</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Administrativos</b>Celebrados por una {{0}}. Jurisdicción: {{1}}.</div>
+   <div class="sch-box alt"><b>Privados</b>Preparación y adjudicación: {{2}}. Efectos y extinción: derecho {{3}}.</div>
+  </div></div>`,
+  blanks:[{o:["Administración Pública","fundación pública","sociedad mercantil pública","empresa privada"],why:"Art. 25."},{o:["contencioso-administrativa","civil","social","penal"],why:"Art. 27.1."},{o:["LCSP","Código Civil","Código de Comercio","Ley 39/2015"],why:"Art. 26."},{o:["privado","administrativo","laboral","europeo"],why:"Art. 26.2."}]},
+ {id:"e4",title:"Cuantías de los procedimientos (esquema 2)",intro:"Valor estimado sin IVA, 2026.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">¿Qué procedimiento?</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Menor</b>Obras &lt; {{0}} · resto &lt; {{1}}</div>
+   <div class="sch-box alt"><b>Abreviado</b>Obras &lt; 80.000 € · resto &lt; {{2}}</div>
+   <div class="sch-box"><b>Simplificado</b>Obras ≤ {{3}} · resto &lt; {{4}}</div>
+  </div></div>`,
+  blanks:[{o:["40.000 €","50.000 €","15.000 €","80.000 €"],why:"Art. 118."},{o:["15.000 €","18.000 €","40.000 €","5.000 €"],why:"Art. 118."},{o:["60.000 €","35.000 €","80.000 €","100.000 €"],why:"Art. 159.6."},{o:["2.000.000 €","5.404.000 €","1.000.000 €","3.000.000 €"],why:"Art. 159.1."},{o:["140.000 €","143.000 €","100.000 €","216.000 €"],why:"Umbral SARA de la AGE de 2026."}]},
+ {id:"e5",title:"Ordena: del expediente a la formalización (esquema 2)",intro:"Procedimiento abierto.",type:"order",
+  items:[{t:"Informe de necesidad e inicio del expediente",why:"Art. 116.1."},{t:"Pliegos, certificado de crédito y fiscalización",why:"Art. 116.3."},{t:"Aprobación del expediente y del gasto",why:"Art. 117."},{t:"Anuncio de licitación en el perfil (y en el DOUE si es SARA)",why:"Art. 135."},{t:"Presentación de proposiciones",why:"Art. 139."},{t:"Clasificación de las ofertas por la mesa",why:"Art. 150.1."},{t:"Requerimiento de documentación y garantía (10 días hábiles)",why:"Art. 150.2."},{t:"Adjudicación (5 días hábiles)",why:"Art. 150.3."},{t:"Formalización",why:"Art. 153."}]},
+ {id:"e6",title:"Tramitación del expediente (esquema 2)",intro:"Arts. 118-120.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Clases de tramitación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ordinaria</b>Plazos generales.</div>
+   <div class="sch-box alt"><b>Urgente</b>Plazos reducidos a la {{0}}. Ejecución en {{1}} como máximo.</div>
+   <div class="sch-box"><b>Emergencia</b>Sin expediente. Se da cuenta al Consejo de Ministros en {{2}}.</div>
+  </div></div>`,
+  blanks:[{o:["mitad","tercera parte","cuarta parte","décima parte"],why:"Art. 119.2.b."},{o:["1 mes","15 días","2 meses","10 días"],why:"Art. 119.2.c."},{o:["30 días","10 días","2 meses","15 días"],why:"Art. 120.1.b."}]},
+ {id:"e7",title:"Garantías y duración",intro:"Arts. 29 y 106-110.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Garantías y plazos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Provisional</b>Hasta el {{0}} del presupuesto base.</div>
+   <div class="sch-box alt"><b>Definitiva</b>{{1}} del precio ofertado.</div>
+   <div class="sch-box"><b>Suministros y servicios</b>Máximo {{2}} con prórrogas.</div>
+   <div class="sch-box alt"><b>Prórroga</b>Preaviso de {{3}}; nunca {{4}}.</div>
+  </div></div>`,
+  blanks:[{o:["3 %","5 %","10 %","2 %"],why:"Art. 106."},{o:["5 %","3 %","10 %","4 %"],why:"Art. 107."},{o:["5 años","4 años","6 años","10 años"],why:"Art. 29.4."},{o:["2 meses","1 mes","3 meses","15 días"],why:"Art. 29.2."},{o:["tácita","expresa","escrita","motivada"],why:"Art. 29.2."}]},
+ {id:"e8",title:"La mesa de contratación (esquema 4)",intro:"Art. 326.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Mesa</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Potestativa</b>Negociado sin publicidad y {{0}}.</div>
+   <div class="sch-box alt"><b>Vocales</b>Al menos un {{1}} y un {{2}}.</div>
+   <div class="sch-box"><b>Excluidos</b>Cargos representativos y personal {{3}}.</div>
+  </div></div>`,
+  blanks:[{o:["simplificado abreviado","abierto","restringido","diálogo competitivo"],why:"Art. 326.1."},{o:["interventor","notario","juez","sindicalista"],why:"Art. 326.5."},{o:["jurista","economista","arquitecto","informático"],why:"Art. 326.5."},{o:["eventual","laboral","de carrera","directivo"],why:"Art. 326.5."}]},
+ {id:"e9",title:"Órganos de la contratación (esquema 4)",intro:"Arts. 323-332.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Órganos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>De contratación AGE</b>Ministros y {{0}}.</div>
+   <div class="sch-box alt"><b>Autorización</b>Consejo de Ministros desde {{1}}.</div>
+   <div class="sch-box"><b>Consultivo</b>{{2}}.</div>
+   <div class="sch-box alt"><b>Supervisión</b>{{3}}.</div>
+  </div></div>`,
+  blanks:[{o:["Secretarios de Estado","Subsecretarios","Directores Generales","Delegados del Gobierno"],why:"Art. 323."},{o:["12 M €","6 M €","5.404.000 €","3 M €"],why:"Art. 324."},{o:["JCCPE","TACRC","IGAE","PCSP"],why:"Art. 328."},{o:["OIRESCON","Tribunal de Cuentas","AIReF","CNMC"],why:"Art. 332."}]},
+ {id:"e10",title:"Penalidades (esquema 3)",intro:"Arts. 192-193.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Incumplimiento del contratista</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Cada penalidad</b>Hasta el {{0}}.</div>
+   <div class="sch-box alt"><b>Total</b>Hasta el {{1}}.</div>
+   <div class="sch-box"><b>Demora</b>{{2}} por cada 1.000 € al día.</div>
+   <div class="sch-box alt"><b>Opción</b>Cada múltiplo del {{3}} del precio: resolver o seguir.</div>
+  </div></div>`,
+  blanks:[{o:["10 %","5 %","20 %","50 %"],why:"Art. 192.1."},{o:["50 %","20 %","100 %","30 %"],why:"Art. 192.1."},{o:["0,60 €","0,20 €","1 €","6 €"],why:"Art. 193.3."},{o:["5 %","10 %","20 %","50 %"],why:"Art. 193.4. Tu esquema 3 dice «múltiplos de 5»: es el 5 %."}]},
+ {id:"e11",title:"Pago del precio",intro:"Art. 198 · Ley 3/2004.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Pago</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Aprobar</b>En {{0}} desde la entrega.</div>
+   <div class="sch-box alt"><b>Pagar</b>En 30 días desde la aprobación.</div>
+   <div class="sch-box"><b>Intereses 2.º semestre de 2026</b>{{1}}.</div>
+   <div class="sch-box alt"><b>Suspender · resolver</b>Más de {{2}} · más de {{3}}.</div>
+  </div></div>`,
+  blanks:[{o:["30 días","60 días","15 días","10 días"],why:"Art. 198.4."},{o:["10,40 %","8,00 %","12,15 %","3,25 %"],why:"BCE + 8 puntos."},{o:["4 meses","2 meses","6 meses","3 meses"],why:"Art. 198.5."},{o:["6 meses","8 meses","1 año","4 meses"],why:"Art. 198.6."}]},
+ {id:"e12",title:"Modificación y revisión de precios",intro:"Arts. 103 y 203-207.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Cambios en el contrato</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Previstas</b>Hasta el {{0}}.</div>
+   <div class="sch-box alt"><b>No previstas</b>Hasta el {{1}}; obligatorias hasta el 20 %.</div>
+   <div class="sch-box"><b>Revisión de precios</b>Cualquier contrato; {{2}} ejecutado y {{3}} desde la formalización.</div>
+  </div></div>`,
+  blanks:[{o:["20 %","10 %","50 %","15 %"],why:"Art. 204."},{o:["50 %","20 %","30 %","100 %"],why:"Art. 205."},{o:["20 %","50 %","10 %","30 %"],why:"Art. 103.5."},{o:["1 año","2 años","6 meses","3 años"],why:"Ley 11/2023."}]},
+ {id:"e13",title:"Invalidez (esquema 3)",intro:"Arts. 39-42.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Invalidez</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Nulidad</b>Por ejemplo, falta de {{0}}.</div>
+   <div class="sch-box alt"><b>Anulabilidad</b>Por ejemplo, {{1}} ilegales.</div>
+   <div class="sch-box"><b>Efecto</b>Fase de {{2}}.</div>
+  </div></div>`,
+  blanks:[{o:["crédito","firma del responsable","informe del interventor","consulta preliminar"],why:"Art. 39.2.b."},{o:["modificaciones","prórrogas expresas","garantías","recepciones"],why:"Art. 40.a."},{o:["liquidación","prórroga","cesión","conversión"],why:"Art. 42."}]},
+ {id:"e14",title:"Recurso especial (esquema 5)",intro:"Arts. 44-60.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Recurso especial</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Obras</b>Más de {{0}}.</div>
+   <div class="sch-box alt"><b>Suministros y servicios</b>Más de {{1}}.</div>
+   <div class="sch-box"><b>Plazo</b>{{2}}.</div>
+   <div class="sch-box alt"><b>Resolución</b>{{3}}.</div>
+   <div class="sch-box"><b>Multa</b>De 1.000 a {{4}}.</div>
+  </div></div>`,
+  blanks:[{o:["3 M €","5.404.000 €","2 M €","1 M €"],why:"Art. 44.1.a."},{o:["100.000 €","140.000 €","216.000 €","60.000 €"],why:"Art. 44.1.a."},{o:["15 días hábiles","10 días hábiles","1 mes","20 días"],why:"Art. 50."},{o:["5 días hábiles","2 días hábiles","1 mes","15 días"],why:"Art. 57."},{o:["30.000 €","15.000 €","60.000 €","100.000 €"],why:"Art. 58.2."}]},
+ {id:"e15",title:"Ordena: tramitación del recurso especial (esquema 5)",intro:"Ante el TACRC.",type:"order",
+  items:[{t:"Interposición en 15 días hábiles",why:"Art. 50."},{t:"Subsanación, en su caso (3 días hábiles)",why:"Art. 51.2."},{t:"Remisión del expediente y del informe (2 días hábiles)",why:"Art. 56.2."},{t:"Alegaciones de los demás interesados (5 días hábiles)",why:"Art. 56.3."},{t:"Prueba, si procede (10 días hábiles)",why:"Art. 56.4."},{t:"Resolución (5 días hábiles)",why:"Art. 57."},{t:"Recurso contencioso-administrativo",why:"Art. 59."}]},
+ {id:"e16",title:"Perfil del contratante (esquema 6)",intro:"Art. 63.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Transparencia</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Conservación</b>Al menos {{0}}.</div>
+   <div class="sch-box alt"><b>Menores</b>Publicación {{1}}; salvo caja fija de menos de {{2}}.</div>
+   <div class="sch-box"><b>Medios propios</b>Encargos de más de {{3}}.</div>
+   <div class="sch-box alt"><b>Plataforma estatal</b>Gestiona la DG del {{4}}.</div>
+  </div></div>`,
+  blanks:[{o:["5 años","4 años","10 años","2 años"],why:"Art. 63.1."},{o:["trimestral","mensual","anual","semestral"],why:"Art. 63.4."},{o:["5.000 €","3.000 €","15.000 €","1.000 €"],why:"Tu esquema 6 pone «3m €»: la cifra legal es de 5.000 €."},{o:["50.000 €","15.000 €","40.000 €","100.000 €"],why:"Art. 63.6."},{o:["Patrimonio del Estado","Presupuestos","Tesoro","Función Pública"],why:"Art. 347."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("da4c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("da4c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
