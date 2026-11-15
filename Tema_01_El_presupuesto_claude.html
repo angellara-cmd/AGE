@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Gestión financiera · Tema 1 · El presupuesto: concepto, principios, ciclo y presupuesto por programas · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">GF1</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Gestión financiera</small>
+      <b>El presupuesto y su ciclo</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+  <style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .facet.vs{border-style:dashed}.facet.vs b{color:var(--a2)}
+    .sit-warn{margin-top:12px}
+    .cy-pills{counter-reset:cy}
+    .cy-pills .sit-pill::before{counter-increment:cy;content:counter(cy);display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;margin-right:7px;font-size:.72rem;font-weight:800;background:var(--card2);color:var(--a1)}
+    .cy-pills .sit-pill.on::before{background:rgba(255,255,255,.25);color:#fff}
+    .cy-bar{height:6px;border-radius:99px;background:var(--card2);margin:-4px 0 16px;overflow:hidden}
+    .cy-bar i{display:block;height:100%;background:var(--grad);transition:width .35s var(--ease)}
+    .cy-nav{display:flex;gap:8px;justify-content:space-between;margin-top:14px}
+    .pg{padding:22px}
+    .pg-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .pg input{flex:1;min-width:150px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:700 1.2rem Sora,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+    .pg-code{display:flex;gap:6px;margin:14px 0 8px}
+    .pg-code span{display:grid;place-items:center;width:46px;height:54px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font:800 1.4rem Sora,system-ui,sans-serif}
+    .pg-code span.k{background:var(--grad);color:#fff;border-color:transparent}
+    .pg-out{font-size:.95rem}
+    .pg-ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  </style>
+  <div class="hero">
+    <span class="kicker">Tema 1 · Gestión financiera</span>
+    <h1>El presupuesto: <span>concepto, principios, ciclo y presupuesto por programas</span></h1>
+    <p>Resumen de alto rendimiento del manual (CE, LGP 47/2003, LO 2/2012 y orden de elaboración) con <strong>tus dos esquemas convertidos en mapas interactivos</strong> (principios presupuestarios y ciclo presupuestario paso a paso), un decodificador de programas, esquemas autocorregibles, fichas y test con penalización.</p>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">14</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">55</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('mapa').scrollIntoView({behavior:'smooth'})">Ver mapa de principios ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('ciclo').scrollIntoView({behavior:'smooth'})">Ciclo paso a paso ↓</button>
+      <button class="btn btn-g" data-go="esquemas">Practicar esquemas →</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Actualización a noviembre de 2026.</strong> El manual dice que los PGE de 2023 están «prorrogados para 2025». Hoy siguen prorrogados también en <strong>2026</strong>: el Gobierno no llegó a presentar el proyecto de 2026 y las Cortes se disolvieron el 6-10-2026 (RD 806/2026) con elecciones el 29-11-2026. La orden de elaboración vigente ya no es la HAC/641/2024 (PGE 2025), sino la <strong>Orden HAC/557/2026</strong>, de 3 de junio, para los PGE de <strong>2027</strong>. Las preguntas de los mecanismos (art. 134 CE, arts. 36-38 LGP) no cambian.</span></div>
+
+  <div class="section-title" id="mapa">
+    <div><span class="kicker">Tu esquema 1, ahora interactivo</span><h2>Mapa de los principios presupuestarios</h2></div>
+    <p>Agrupados por norma, como en tu esquema: art. 134 CE, arts. 26-27 LGP y arts. 3-9 LO 2/2012. Cada tarjeta da la definición, el artículo, la clave de examen y su versión contable o clásica. ⚠ marca dónde tu esquema simplifica o difiere del manual.</p>
+  </div>
+  <div class="sit-pills" id="pp-pills"></div>
+  <div class="card sit-card" id="pp-card"></div>
+
+  <div class="section-title" id="ciclo">
+    <div><span class="kicker">Tu esquema 2, ahora interactivo</span><h2>El ciclo presupuestario paso a paso</h2></div>
+    <p>Desde las actuaciones preparatorias hasta el control: quién, cuándo y con qué norma. Avanza con los botones o toca cualquier fase.</p>
+  </div>
+  <div class="sit-pills cy-pills" id="cy-pills"></div>
+  <div class="cy-bar"><i id="cy-bar"></i></div>
+  <div class="card sit-card" id="cy-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Practica</span><h2>Decodificador de programas presupuestarios</h2></div>
+    <p>El código de programa tiene 3 dígitos y una letra. El <strong>cuarto carácter</strong> distingue los programas <strong>finalistas (A-L)</strong> de los <strong>instrumentales y de gestión (M-Z)</strong>.</p>
+  </div>
+  <div class="card pg">
+    <div class="pg-row"><input id="pg-in" maxlength="4" value="312A" aria-label="Código de programa" autocomplete="off"></div>
+    <div class="pg-code" id="pg-code"></div>
+    <div class="pg-out" id="pg-out"></div>
+    <div class="pg-ex" id="pg-ex"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras y artículos clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>Art. 32 LGP</b><span>Definición legal: expresión cifrada, conjunta y sistemática de derechos y obligaciones a liquidar en el ejercicio</span></div>
+    <div class="num"><b>Art. 134 CE</b><span>Gobierno elabora · Cortes examinan, enmiendan y aprueban · anuales · prórroga automática</span></div>
+    <div class="num"><b>3 meses · 1 de octubre</b><span>Presentación: CE «al menos 3 meses antes» de expirar los anteriores; LGP «antes del 1 de octubre»</span></div>
+    <div class="num"><b>134.6 · 134.7 CE</b><span>Enmiendas que suben gasto o bajan ingresos: conformidad del Gobierno · la LPGE no crea tributos</span></div>
+    <div class="num"><b>Arts. 3 a 9</b><span>LO 2/2012: estabilidad, sostenibilidad, plurianualidad, transparencia, eficiencia, responsabilidad y lealtad</span></div>
+    <div class="num"><b>1.er semestre · 3 años</b><span>Objetivos de estabilidad y deuda (art. 15 LO 2/2012) para los 3 ejercicios siguientes, en % del PIB</span></div>
+    <div class="num"><b>1 de abril · 15 días</b><span>Propuestas de objetivos al CPFF y a la CNAL · plazo para sus informes</span></div>
+    <div class="num"><b>1 mes</b><span>Si Congreso o Senado rechazan los objetivos, nuevo acuerdo del Gobierno en ese plazo</span></div>
+    <div class="num"><b>30 de septiembre</b><span>Fin de la fase de refundición en el Ministerio de Hacienda</span></div>
+    <div class="num"><b>Art. 38 LGP</b><span>Prórroga automática hasta la publicación de los nuevos en el BOE, salvo programas que terminan</span></div>
+    <div class="num"><b>12 millones €</b><span>Convenios o contratos-programa por encima: autorización del Consejo de Ministros</span></div>
+    <div class="num"><b>A-L · M-Z</b><span>4.º carácter del programa: finalistas · instrumentales y de gestión</span></div>
+    <div class="num"><b>1924 · 1965 · 1985</b><span>General Motors · Johnson lo extiende a todo el Gobierno federal · España lo aplica a los PGE</span></div>
+    <div class="num"><b>RD 1973/1977</b><span>Crea la Comisión de Racionalización y Descentralización del Gasto Público</span></div>
+    <div class="num"><b>1947 · 96 %</b><span>Presupuesto de estabilización automática: desde 1947, con un empleo cercano al 96 %</span></div>
+    <div class="num"><b>Arts. 91 · 119 · 140 · 176</b><span>LGP: unidad de caja · rendición de cuentas · control interno de la IGAE · responsabilidad</span></div>
+    <div class="num"><b>Arts. 27.3 · 27.4</b><span>LGP: no afectación · presupuesto bruto</span></div>
+    <div class="num"><b>Orden HAC/557/2026</b><span>Normas de elaboración de los PGE 2027 (BOE 5-6-2026); propuestas antes del 29-6-2026</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El presupuesto: concepto</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>Concepto de presupuesto</h3><small>Definiciones doctrinales, jurídica y legal</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Práctico</strong>: plan de acción de carácter temporal (generalmente <strong>anual</strong>) del grupo gobernante, con el gasto total autorizado por el Legislativo y la estimación de los ingresos para cubrirlo.</li>
+          <li><strong>Fuentes Quintana</strong>: expresión contable del plan económico de la Hacienda Pública.</li>
+          <li><strong>Jurídico</strong>: una ley con la que el Legislativo regula la conducta económica del Ejecutivo durante un periodo determinado.</li>
+          <li><strong>Neumark</strong>: resumen sistemático, en periodos regulares, de las previsiones obligatorias de gasto y de las estimaciones de ingresos para cubrirlos.</li>
+          <li><strong>Art. 32 LGP</strong>: los PGE son la <strong>expresión cifrada, conjunta y sistemática de los derechos y obligaciones a liquidar durante el ejercicio</strong> por cada órgano y entidad del <strong>sector público estatal</strong>.</li>
+        </ul>
+        <div class="flow"><span>Acto de <strong>previsión</strong>, no un balance</span><i>·</i><span>Previsión <strong>normativa</strong> (se aprueba por ley)</span><i>·</i><span>Lenguaje <strong>contable</strong></span><i>·</i><span>Confección <strong>periódica</strong></span><i>·</i><span><strong>Formalmente equilibrado</strong>, aunque haya déficit o superávit</span></div>
+        <ul>
+          <li>Contenido: un <strong>estado de gastos</strong> (créditos para atender <strong>obligaciones</strong>) y un <strong>estado de ingresos</strong> (estimación de los <strong>derechos</strong> a liquidar). Obligaciones y derechos son la razón de ser de la Hacienda Pública (art. 5 LGP).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Ámbito: el sector público estatal</h3><small>Art. 2 LGP, art. 134.2 CE y composición de los PGE</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Sector público estatal</strong> (art. 2 LGP): la <strong>AGE</strong> y el <strong>sector público institucional estatal</strong> (OOAA, EPE y agencias estatales; autoridades administrativas independientes; sociedades mercantiles estatales; consorcios y fundaciones adscritos; fondos sin personalidad; universidades no transferidas; entidades gestoras, servicios comunes y Mutuas de la Seguridad Social; otras entidades de derecho público).</li>
+          <li>Los órganos con <strong>dotación diferenciada</strong> sin personalidad (p. ej., órganos constitucionales) forman parte del sector público estatal, con sus especialidades de contabilidad y control.</li>
+          <li>Las <strong>Cortes Generales</strong> quedan fuera de la LGP: tienen <strong>autonomía presupuestaria</strong> (art. 72 CE), aunque se coordinan para elaborar el proyecto.</li>
+          <li><strong>Art. 134.2 CE</strong>: los PGE son <strong>anuales</strong>, incluyen la <strong>totalidad de gastos e ingresos del sector público estatal</strong> y consignan los <strong>beneficios fiscales</strong> de los tributos del Estado. Quedan fuera las CCAA (LO 8/1980, LOFCA) y las EELL (Ley 7/1985: el Estado fija la estructura de sus presupuestos, art. 112.2).</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Presupuestos <strong>limitativos</strong></th><th>Presupuestos <strong>estimativos</strong></th></tr>
+          <tr><td>Estado · organismos autónomos · Seguridad Social · resto de entidades con régimen de especificaciones y modificaciones de la LGP o presupuesto limitativo por su norma</td><td>EPE, sociedades mercantiles y fundaciones estatales (contabilidad del Código de Comercio y PGC) · consorcios, universidades no transferidas, fondos sin personalidad y demás entidades con presupuesto estimativo</td></tr>
+        </table></div>
+        <ul><li>Se une a la LPGE el presupuesto de gastos de funcionamiento e inversiones del <strong>Banco de España</strong> (art. 4.2 Ley 13/1994).</li></ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Los principios presupuestarios</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Principios de la LO 2/2012</h3><small>Arts. 3 a 9 LOEPSF: los siete de la programación</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Art.</th><th>Principio</th><th>Idea clave</th></tr>
+          <tr><td data-l="Art.">3</td><td data-l="Principio"><strong>Estabilidad presupuestaria</strong></td><td data-l="Idea clave">Equilibrio o superávit <strong>estructural</strong> en las AAPP; equilibrio <strong>financiero</strong> en EPE, sociedades y similares. Coherente con la normativa europea.</td></tr>
+          <tr><td data-l="Art.">4</td><td data-l="Principio"><strong>Sostenibilidad financiera</strong></td><td data-l="Idea clave">Capacidad de financiar compromisos presentes y futuros dentro de los límites de déficit y deuda. Deuda comercial sostenible si el periodo medio de pago no supera el de la ley de morosidad. Prudencia financiera.</td></tr>
+          <tr><td data-l="Art.">5</td><td data-l="Principio"><strong>Plurianualidad</strong></td><td data-l="Idea clave">Marco presupuestario a medio plazo, compatible con la anualidad de aprobación y ejecución.</td></tr>
+          <tr><td data-l="Art.">6</td><td data-l="Principio"><strong>Transparencia</strong></td><td data-l="Idea clave">Información suficiente para verificar la situación financiera; Hacienda la hace pública; también las previsiones y su metodología.</td></tr>
+          <tr><td data-l="Art.">7</td><td data-l="Principio"><strong>Eficiencia</strong> en la asignación y uso de recursos</td><td data-l="Idea clave">Eficacia, eficiencia, economía y calidad; las normas, actos, contratos y convenios deben valorar sus efectos en el gasto.</td></tr>
+          <tr><td data-l="Art.">8</td><td data-l="Principio"><strong>Responsabilidad</strong></td><td data-l="Idea clave">Quien incumple asume su parte de responsabilidad (con audiencia). El Estado no responde de las CCAA ni de las EELL; las CCAA no responden de las EELL (salvo garantías mutuas en proyectos conjuntos).</td></tr>
+          <tr><td data-l="Art.">9</td><td data-l="Principio"><strong>Lealtad institucional</strong></td><td data-l="Idea clave">Valorar el impacto en otras AAPP, respetar sus competencias, ponderar todos los intereses, facilitar información y prestar cooperación.</td></tr>
+        </table></div>
+        <ul><li>La <strong>programación presupuestaria</strong> de la LGP se rige por estos siete principios (art. 26 LGP).</li></ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Principios de la LGP y de la CE</h3><small>Anualidad, unidad de caja, no afectación, presupuesto bruto, especialidad…</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Principio</th><th>Norma</th><th>Contenido</th></tr>
+          <tr><td data-l="Principio"><strong>Anualidad</strong></td><td data-l="Norma">Art. 27.1 LGP</td><td data-l="Contenido">Presupuesto anual aprobado por las Cortes, en el marco de un escenario plurianual.</td></tr>
+          <tr><td data-l="Principio"><strong>Unidad de caja</strong></td><td data-l="Norma">Art. 91 LGP</td><td data-l="Contenido">El Tesoro centraliza todos los fondos y valores, presupuestarios y no presupuestarios.</td></tr>
+          <tr><td data-l="Principio"><strong>Contabilidad</strong></td><td data-l="Norma">Art. 119 LGP</td><td data-l="Contenido">Rendir cuentas al Tribunal de Cuentas por conducto de la IGAE.</td></tr>
+          <tr><td data-l="Principio"><strong>Responsabilidad</strong></td><td data-l="Norma">Art. 176 LGP</td><td data-l="Contenido">Por dolo o culpa grave: indemnizar a la Hacienda Pública, además de la responsabilidad penal o disciplinaria.</td></tr>
+          <tr><td data-l="Principio"><strong>Competencia</strong></td><td data-l="Norma">Art. 134.1 CE · arts. 27 y 74 LGP</td><td data-l="Contenido">Ejecutivo: elabora y ejecuta. Legislativo: aprueba.</td></tr>
+          <tr><td data-l="Principio"><strong>Control</strong></td><td data-l="Norma">Art. 140 LGP</td><td data-l="Contenido">Externo: Tribunal de Cuentas (supremo órgano fiscalizador). Interno: IGAE, con plena autonomía.</td></tr>
+          <tr><td data-l="Principio"><strong>No afectación</strong></td><td data-l="Norma">Art. 27.3 LGP</td><td data-l="Contenido">Los recursos financian el conjunto de obligaciones, salvo que una <strong>ley</strong> los afecte a fines concretos.</td></tr>
+          <tr><td data-l="Principio"><strong>Presupuesto bruto</strong></td><td data-l="Norma">Art. 27.4 LGP</td><td data-l="Contenido">Derechos y obligaciones por su <strong>importe íntegro</strong>, sin minorar unos con otros salvo autorización legal expresa. Excepciones: devoluciones de ingresos indebidos, reembolso de garantías, participaciones en tributos. Importe íntegro = tras exenciones y bonificaciones.</td></tr>
+          <tr><td data-l="Principio"><strong>Universalidad</strong></td><td data-l="Norma">Art. 134.2 CE</td><td data-l="Contenido">La totalidad de gastos e ingresos.</td></tr>
+          <tr><td data-l="Principio"><strong>Unidad</strong></td><td data-l="Norma">Art. 134.2 CE</td><td data-l="Contenido">En un presupuesto único.</td></tr>
+          <tr><td data-l="Principio"><strong>Especialidad</strong></td><td data-l="Norma">LGP</td><td data-l="Contenido">Créditos solo para su finalidad (<strong>cualitativa</strong>), sin exceder su importe —nulidad de pleno derecho— (<strong>cuantitativa</strong>) y en el ejercicio; los no comprometidos se anulan al cierre, salvo incorporaciones (<strong>temporal</strong>).</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>Los principios clásicos</h3><small>Políticos, jurídicos, económicos y contables (Sánchez Revenga y Pascual)</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Grupo</th><th>Principios</th></tr>
+          <tr><td data-l="Grupo"><strong>Político</strong></td><td data-l="Principios">Competencia (el Legislativo aprueba lo que elabora y ejecuta el Ejecutivo).</td></tr>
+          <tr><td data-l="Grupo"><strong>Jurídicos</strong></td><td data-l="Principios">Universalidad · unidad · especialidad · temporalidad · publicidad.</td></tr>
+          <tr><td data-l="Grupo"><strong>Económicos</strong></td><td data-l="Principios">Gasto público mínimo · nivelación (equilibrio anual) · neutralidad impositiva (Adam Smith) · no emitir deuda salvo para inversiones autoliquidables.</td></tr>
+          <tr><td data-l="Grupo"><strong>Contables</strong></td><td data-l="Principios">Presupuesto bruto · unidad de caja · especificación.</td></tr>
+        </table></div>
+        <ul>
+          <li>Cada principio contable es la <strong>traducción</strong> de uno político: presupuesto bruto ← universalidad; unidad de caja ← unidad; especificación ← especialidad; <strong>ejercicio cerrado</strong> ← temporalidad.</li>
+          <li><strong>Desafectación</strong>: los ingresos financian el conjunto de los gastos, salvo afectación legal. <strong>Publicidad</strong>: presupuesto, liquidación y cuentas son públicos.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Clases de presupuesto</h3>
+
+    <details class="blk">
+      <summary><span class="bn">3.1</span><span class="bt"><h3>Del presupuesto clásico a la estabilización</h3><small>Clásico, compensatorio, cíclico y de estabilización automática</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Ordinario y extraordinario</strong>: hoy solo hay presupuesto ordinario. Los gastos urgentes no previstos se cubren con <strong>créditos extraordinarios y suplementos de crédito</strong> aprobados por ley (art. 55 LGP).</li>
+          <li><strong>Clásico</strong> (siglo XVIII hasta la crisis de 1929): liberalismo; gasto mínimo, neutralidad impositiva, equilibrio anual y deuda solo para inversiones autoliquidables.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Fórmulas de estabilización (keynesianas, tras 1929)</th><th>Idea</th></tr>
+          <tr><td data-l="Fórmula"><strong>Compensatorio</strong></td><td data-l="Idea">El Estado compensa la falta de demanda privada con <strong>déficit</strong>; al servicio del pleno empleo; financiado con deuda o, si no conviene, con emisión de moneda.</td></tr>
+          <tr><td data-l="Fórmula"><strong>Cíclico</strong></td><td data-l="Idea">El equilibrio anual se sustituye por el equilibrio a lo largo del <strong>ciclo económico</strong>.</td></tr>
+          <tr><td data-l="Fórmula"><strong>Estabilización automática</strong></td><td data-l="Idea">Desde <strong>1947</strong>: estabilizadores automáticos (sistema fiscal y Seguridad Social) que corrigen sin intervención discrecional; equilibrio con superávit y empleo cercano al 96 %.</td></tr>
+        </table></div>
+        <ul><li><strong>Objetivos actuales</strong>: crecimiento estable, equidad distributiva (gasto social), sostenibilidad e incremento de la eficacia productiva (educación, I+D+i, infraestructuras).</li></ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.2</span><span class="bt"><h3>Técnicas de eficacia y tipos por limitación</h3><small>Funcional, tareas, programas, base cero · administrativos, de explotación y capital, mixtos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Base constitucional: el gasto público hará una <strong>asignación equitativa</strong> y su programación y ejecución responderán a <strong>eficiencia y economía</strong> (art. 31.2 CE).</li>
+        </ul>
+        <div class="flow"><span><strong>Funcional</strong>: dice <em>para qué</em> se gasta (antes solo quién y en qué)</span><i>→</i><span><strong>Tareas</strong>: tareas en las unidades orientadas a objetivos</span><i>→</i><span><strong>Programas</strong>: además analiza <strong>alternativas</strong> y elige la mejor, con indicadores</span><i>·</i><span><strong>Base cero</strong>: cada centro justifica todo desde cero, sin partir del año anterior</span></div>
+        <ul>
+          <li><strong>Presupuesto consolidado del Tesoro o de caja</strong>: técnica menor que muestra el efecto de ingresos y gastos públicos sobre la liquidez.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Tipo</th><th>Quién</th><th>Rasgo</th></tr>
+          <tr><td data-l="Tipo"><strong>Administrativos</strong></td><td data-l="Quién">AGE, OOAA, Seguridad Social, algunos entes</td><td data-l="Rasgo">Gasto con triple limitación (cuantitativa, cualitativa y temporal); ingresos estimativos.</td></tr>
+          <tr><td data-l="Tipo"><strong>De explotación y capital</strong></td><td data-l="Quién">EPE, sociedades mercantiles estatales y asimiladas</td><td data-l="Rasgo">Forma de cuenta de resultados (pérdidas y ganancias) y de flujos de efectivo.</td></tr>
+          <tr><td data-l="Tipo"><strong>Mixtos</strong></td><td data-l="Quién">Entidades con ambos rasgos</td><td data-l="Rasgo">Estados de ingresos y gastos administrativos y cuenta de explotación.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · El ciclo presupuestario</h3>
+
+    <details class="blk">
+      <summary><span class="bn">4.1</span><span class="bt"><h3>Fases del ciclo</h3><small>Quién, cuándo y cómo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Fase</th><th>Plazo</th><th>Poder</th></tr>
+          <tr><td data-l="Fase"><strong>Elaboración</strong></td><td data-l="Plazo">Antes del <strong>1 de octubre</strong> del año anterior</td><td data-l="Poder">Ejecutivo (Gobierno)</td></tr>
+          <tr><td data-l="Fase"><strong>Aprobación</strong></td><td data-l="Plazo"><strong>Último trimestre</strong> del año anterior</td><td data-l="Poder">Legislativo (examen y enmienda)</td></tr>
+          <tr><td data-l="Fase"><strong>Ejecución</strong></td><td data-l="Plazo">Año de vigencia (año natural)</td><td data-l="Poder">Ejecutivo y órganos con secciones presupuestarias</td></tr>
+          <tr><td data-l="Fase"><strong>Control</strong></td><td data-l="Plazo">Simultáneo y posterior a la ejecución</td><td data-l="Poder">Ejecutivo (IGAE), Tribunal de Cuentas y Legislativo</td></tr>
+        </table></div>
+        <div class="flow"><span>Identificación y selección de objetivos</span><i>→</i><span>Planificación plurianual por programas</span><i>→</i><span>Selección por programas</span><i>→</i><span>Presupuesto anual</span><i>→</i><span>Aprobación y ejecución</span><i>→</i><span>Liquidación, evaluación y análisis</span></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.2</span><span class="bt"><h3>Objetivos de estabilidad y deuda</h3><small>Art. 15 LO 2/2012 y reglas fiscales europeas</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>En el <strong>primer semestre</strong>, el Gobierno (Consejo de Ministros, a propuesta de Hacienda) fija los objetivos de <strong>estabilidad</strong> (capacidad o necesidad de financiación, SEC) y de <strong>deuda</strong> para los <strong>3 ejercicios siguientes</strong>, para el conjunto de AAPP y cada subsector, en <strong>% del PIB nominal</strong>.</li>
+          <li>Previo informe del <strong>Consejo de Política Fiscal y Financiera</strong> (CCAA) y de la <strong>Comisión Nacional de Administración Local</strong>: Hacienda les envía las propuestas <strong>antes del 1 de abril</strong> y tienen <strong>15 días</strong> para informar.</li>
+          <li>El acuerdo incluye el <strong>límite de gasto no financiero</strong> del Estado («techo de gasto», art. 30). Se tienen en cuenta la <strong>regla de gasto</strong> (art. 12: el gasto no puede crecer más que la tasa de referencia del PIB a medio plazo), el saldo estructural del año anterior y las recomendaciones de la UE. Lo acompaña un informe del Ministerio de Economía sobre la situación económica prevista.</li>
+          <li>Va a las <strong>Cortes</strong>: se pronuncian sucesivamente el Congreso y el Senado. Si el Congreso aprueba y el Senado rechaza, nueva votación en el Congreso, que lo ratifica por <strong>mayoría simple</strong>. Si se rechazan, el Gobierno remite un nuevo acuerdo en <strong>1 mes</strong>.</li>
+          <li><strong>Reglas fiscales UE</strong>: la cláusula general de salvaguarda se activó en 2020-2023. La reforma de 2023-2024 (impulsada por la Presidencia española) usa un indicador único, la <strong>senda de gasto</strong>, adaptada a cada país, con régimen transitorio hasta 2027.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.3</span><span class="bt"><h3>Escenarios y programas plurianuales</h3><small>Arts. 26 a 31 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Instrumento</th><th>Quién y cómo</th></tr>
+          <tr><td data-l="Instrumento"><strong>Escenarios presupuestarios plurianuales</strong> (art. 28)</td><td data-l="Quién y cómo">Los confecciona el <strong>Ministerio de Hacienda</strong>, que da cuenta al Consejo de Ministros antes de aprobar el <strong>proyecto</strong> de LPGE. Límites para los <strong>3 ejercicios siguientes</strong>; un escenario de ingresos y otro de gastos; se ajustan al objetivo de estabilidad.</td></tr>
+          <tr><td data-l="Instrumento"><strong>Programa plurianual de cada Ministerio</strong> (art. 29)</td><td data-l="Quién y cómo">Reúne los programas de sus centros gestores; lo aprueba el <strong>Ministro</strong>; se remite anualmente a Hacienda. El de la Seguridad Social, aparte, por su Ministro. Contenido: objetivos medibles, actividad, medios y créditos, inversiones e <strong>indicadores</strong>.</td></tr>
+          <tr><td data-l="Instrumento"><strong>Programas de los centros gestores</strong> (art. 30)</td><td data-l="Quién y cómo">Los elaboran sus titulares y se integran en el del Ministerio. Procedimiento y estructura: <strong>orden del Ministro de Hacienda</strong>.</td></tr>
+          <tr><td data-l="Instrumento"><strong>Asignación y objetivos</strong> (art. 31)</td><td data-l="Quién y cómo">Los PGE se adecúan a los escenarios; se asigna teniendo en cuenta el <strong>grado de cumplimiento</strong> de objetivos anteriores. Los objetivos instrumentales se relacionan con los finales.</td></tr>
+        </table></div>
+        <ul><li>Las EPE, sociedades y entidades sin presupuesto limitativo integran sus <strong>programas de actuación plurianual</strong> en los del Ministerio del que dependen, a efectos informativos.</li></ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.4</span><span class="bt"><h3>Elaboración según la LGP</h3><small>Arts. 36 y 37: reglas, Seguridad Social y documentación</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>«Corresponde al Gobierno la elaboración de los PGE» (art. 134.1 CE). El órgano técnico principal es la <strong>Dirección General de Presupuestos</strong>. El procedimiento se fija por <strong>orden del Ministro de Hacienda</strong> (art. 36.2).</li>
+          <li><strong>1.ª</strong> Las <strong>directrices</strong> de distribución del gasto las fija el Ministro de Hacienda, con la <strong>Comisión de Políticas de Gasto</strong>. <strong>2.ª</strong> Ministerios y órganos con dotación diferenciada remiten sus propuestas (y las de sus OOAA y entes). <strong>3.ª</strong> Cada programa lleva su <strong>memoria de objetivos anuales</strong>. <strong>4.ª</strong> El Ministerio de Seguridad Social fija por orden las especificaciones de su presupuesto.</li>
+          <li><strong>Seguridad Social</strong>: Sanidad (INGESA) y Derechos Sociales (IMSERSO) envían sus propuestas a <strong>Hacienda</strong>, que forma el anteproyecto definitivo y lo remite al Ministerio de <strong>Seguridad Social</strong>; este lo integra con las entidades gestoras, servicios comunes y Mutuas y lo devuelve a Hacienda. Ambos Ministros lo elevan al Gobierno.</li>
+          <li>El <strong>presupuesto de ingresos de la AGE</strong> lo elabora el Ministerio de Hacienda.</li>
+          <li><strong>Documentación complementaria</strong> del proyecto: memorias de los programas · informe de <strong>impacto de género</strong> · impacto en la <strong>infancia, adolescencia y familia</strong> · alineamiento con los <strong>ODS</strong> · desarrollo económico de los créditos · anexo plurianual de <strong>inversiones</strong> territorializado · liquidación del año anterior y avance del corriente · cuentas y balances de la Seguridad Social · estados <strong>consolidados</strong> · informe económico y financiero · memoria de <strong>beneficios fiscales</strong>.</li>
+          <li><strong>EPE y sociedades mercantiles estatales</strong>: presupuestos de <strong>explotación y de capital</strong> (previsión de la cuenta de resultados y de flujos de efectivo, con balance) y un <strong>programa de actuación plurianual</strong> (el año del proyecto y los 2 siguientes). No lo presentan, entre otras, las sociedades que pueden formular cuentas abreviadas sin recibir aportaciones de los PGE, las fundaciones y las cotizadas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.5</span><span class="bt"><h3>La orden de elaboración</h3><small>Comisiones, centros directivos y plazos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Órgano</th><th>Composición y función</th></tr>
+          <tr><td data-l="Órgano"><strong>Comisión de Políticas de Gasto</strong></td><td data-l="Composición y función">Preside el titular del <strong>Ministerio de Hacienda</strong> (en su ausencia, el Secretario de Estado de Presupuestos y Gastos); la integran los Ministros o, en su ausencia, los Subsecretarios. Secretario no miembro: el Subdirector General de Política Presupuestaria. Fija prioridades del gasto.</td></tr>
+          <tr><td data-l="Órgano"><strong>Comisiones de Análisis de Programas</strong></td><td data-l="Composición y función">Reuniones <strong>bilaterales</strong> Hacienda–Ministerio. Las preside el <strong>Secretario de Estado de Presupuestos y Gastos</strong> (o el DG de Presupuestos); con el DG de Presupuestos, el Subsecretario del departamento y el Jefe de su Oficina Presupuestaria. Estudian la adecuación de los programas a sus objetivos y necesidades.</td></tr>
+          <tr><td data-l="Órgano"><strong>Dirección General de Presupuestos</strong></td><td data-l="Composición y función">Elabora los estados de <strong>gastos</strong> (y los de ingresos con las previsiones que coordina la SEPG) y los anteproyectos del INGESA y del IMSERSO.</td></tr>
+          <tr><td data-l="Órgano"><strong>Oficinas presupuestarias</strong></td><td data-l="Composición y función">Canalizan la documentación de los centros gestores hacia la DG de Presupuestos.</td></tr>
+        </table></div>
+        <ul>
+          <li>Plazos: la orden fija una fecha común para propuestas de gasto, articulado, proyectos financiables con fondos UE (a la Secretaría General de Fondos Europeos) e informes transversales. En el manual (PGE 2025) era el <strong>8-7-2024</strong>; en la Orden HAC/557/2026 (PGE 2027), el <strong>29-6-2026</strong>.</li>
+          <li><strong>Informes transversales</strong>: impacto de género (Realidad, Representación y Recursos-Resultados), infancia, adolescencia y familia, ODS, <strong>transición ecológica</strong> (dimensiones verde y marrón) y juventud.</li>
+          <li>Proyectos del Mecanismo de Recuperación y Resiliencia: código que empieza por <strong>68</strong>.</li>
+        </ul>
+        <div class="note"><span>⚠️</span><span>El manual dice que la Comisión de Políticas de Gasto la preside la «Vicepresidencia Cuarta» y que los estados se elevan a la «Vicepresidencia Primera»: es una incoherencia del texto ligada a la composición del Gobierno. La Orden HAC/557/2026 habla simplemente de la <strong>persona titular del Ministerio de Hacienda</strong>, y así lo contesta el examen.</span></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.6</span><span class="bt"><h3>Aprobación y prórroga</h3><small>Art. 134 CE y art. 38 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Presentación: CE, ante el <strong>Congreso</strong> «al menos <strong>tres meses</strong> antes de la expiración de los del año anterior»; LGP, a las Cortes <strong>antes del 1 de octubre</strong>.</li>
+          <li>Las Cortes los <strong>examinan, enmiendan y aprueban</strong>. Tienen <strong>preferencia</strong> en la tramitación. Es una <strong>ley ordinaria</strong>: basta la <strong>mayoría simple</strong>.</li>
+          <li><strong>Art. 134.6 CE</strong>: proposiciones o enmiendas que <strong>aumenten créditos o disminuyan ingresos</strong> necesitan la <strong>conformidad del Gobierno</strong>. Las enmiendas que suben un crédito solo se admiten si proponen una <strong>baja de igual cuantía en la misma sección</strong>.</li>
+          <li><strong>Art. 134.7 CE</strong>: la LPGE <strong>no puede crear tributos</strong>; solo modificarlos si una ley tributaria sustantiva lo prevé.</li>
+          <li><strong>Prórroga</strong> (art. 134.4 CE y art. 38 LGP): si no se aprueba antes del <strong>1 de enero</strong>, se prorrogan <strong>automáticamente</strong> los presupuestos <strong>iniciales</strong> del ejercicio anterior hasta la <strong>publicación de los nuevos en el BOE</strong>. No se prorrogan los créditos de programas que terminan ni de obligaciones que se extinguen. La estructura orgánica se adapta a la organización vigente, <strong>sin alterar la cuantía total</strong>. El Consejo de Ministros fija los criterios.</li>
+        </ul>
+        <div class="note"><span>📌</span><span>Los PGE de 2023 (Ley 31/2022) se prorrogaron en 2024, 2025 y 2026. Con las Cortes disueltas en octubre de 2026, no habrá una LPGE 2027 aprobada antes del 1 de enero, así que operará de nuevo la prórroga automática.</span></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.7</span><span class="bt"><h3>Ejecución y control</h3><small>Arts. 74, 75 y 140 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Ministros</strong> y titulares de órganos con dotación diferenciada: aprueban y comprometen el gasto, reconocen obligaciones e interesan el pago al <strong>Ordenador general de pagos</strong> (salvo lo reservado al Consejo de Ministros). Fijan los límites por debajo de los cuales actúan Secretarios de Estado y Subsecretarios.</li>
+          <li><strong>Presidentes o directores de OOAA</strong> y entidades con presupuesto limitativo: aprueban, comprometen, reconocen <strong>y pagan</strong>. <strong>Directores de entidades gestoras y servicios comunes</strong> de la Seguridad Social: aprueban, comprometen y reconocen, e interesan el pago a su Ordenador.</li>
+          <li>Desconcentración por <strong>real decreto</strong> acordado en Consejo de Ministros, o delegación.</li>
+          <li>Convenios o contratos-programa de <strong>más de 12 millones €</strong>: autorización del <strong>Consejo de Ministros</strong> (que implica aprobar el gasto); también para modificarlos (importe, destino o calendario) o resolverlos. No se aplica a los compromisos de créditos gestionados por las CCAA (art. 86).</li>
+          <li><strong>Ordenadores generales de pagos</strong> (art. 75): del Estado, el <strong>Director General del Tesoro y Política Financiera</strong>; de la Seguridad Social, el <strong>Director General de la TGSS</strong>; bajo la autoridad del Ministro de Economía.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Control</th><th>Órgano</th></tr>
+          <tr><td data-l="Control"><strong>Interno</strong></td><td data-l="Órgano">IGAE, con plena autonomía respecto de los controlados.</td></tr>
+          <tr><td data-l="Control"><strong>Externo</strong></td><td data-l="Órgano">Tribunal de Cuentas, supremo órgano fiscalizador (con función también jurisdiccional).</td></tr>
+          <tr><td data-l="Control"><strong>Político</strong> (también externo)</td><td data-l="Órgano">Cortes Generales.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 5 · El presupuesto por programas</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5.1</span><span class="bt"><h3>Antecedentes</h3><small>Del sector privado a los PGE de 1985</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span><strong>1924</strong> General Motors</span><i>→</i><span><strong>1942</strong> Controlled Materials Plan (EE. UU.)</span><i>→</i><span><strong>1965</strong> Johnson: todo el Gobierno federal</span><i>→</i><span><strong>1966</strong> estudio en otros países</span></div>
+        <div class="flow"><span><strong>RD 1973/1977</strong>: Comisión de Racionalización y Descentralización del Gasto</span><i>→</i><span><strong>RD 3148/1977</strong>: objetivos, programación y control</span><i>→</i><span><strong>LGP 1977</strong>: créditos por programas</span><i>→</i><span><strong>Pactos de la Moncloa</strong>: PxP desde 1979</span><i>→</i><span><strong>1984</strong> todos los Ministerios (indicativo)</span><i>→</i><span><strong>1985</strong> PGE</span></div>
+        <div class="note"><span>⚠️</span><span>El manual dice que los Pactos de la Moncloa se firmaron en 1978; en realidad se firmaron en <strong>octubre de 1977</strong>. Lo que se pactó fue aplicar el PxP <strong>a partir de los presupuestos de 1979</strong> (Sanidad y Seguridad Social, Obras Públicas y, si era posible, Educación).</span></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5.2</span><span class="bt"><h3>Concepto, fases e indicadores</h3><small>Objetivos, programación, presupuestación y control</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Concepto</strong>: cada unidad (centro gestor u OA) programa sus actividades según sus fines, fija <strong>objetivos</strong> medidos con <strong>indicadores</strong> y asigna recursos según sus medios.</li>
+          <li><strong>Programas finalistas (A-L)</strong> e <strong>instrumentales y de gestión (M-Z)</strong>, según el cuarto carácter del código.</li>
+        </ul>
+        <div class="flow"><span><strong>Planificación</strong> (objetivos)</span><i>→</i><span><strong>Programación</strong>: impacto financiero plurianual de los programas elegidos</span><i>→</i><span><strong>Presupuestación</strong>: créditos del tramo anual</span><i>→</i><span><strong>Ejecución</strong></span><i>→</i><span><strong>Control</strong>: costes y resultados frente a previsiones</span></div>
+        <ul>
+          <li><strong>Objetivos</strong>: lo fundamental del PxP; anuales o plurianuales; los formulan los centros gestores a los que se asignan recursos.</li>
+          <li><strong>Control</strong>: un sistema de <strong>información</strong> y otro de <strong>indicadores</strong> (concretos y poco numerosos). Fines: seguimiento simultáneo, control de eficacia, revisión de objetivos y memorias de coste y rendimiento que se unen a la <strong>Cuenta General del Estado</strong>.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Indicador</th><th>Mide</th></tr>
+          <tr><td data-l="Indicador"><strong>De impacto</strong></td><td data-l="Mide">Efectos sobre los objetivos (resultado frente a objetivo) → <strong>eficacia</strong>; incluye indicadores sociales.</td></tr>
+          <tr><td data-l="Indicador"><strong>De resultados</strong></td><td data-l="Mide">Productos físicos o servicios prestados.</td></tr>
+          <tr><td data-l="Indicador"><strong>De medios</strong></td><td data-l="Mide">Recursos financieros y costes imputados al programa.</td></tr>
+          <tr><td data-l="Indicador"><strong>De gestión</strong></td><td data-l="Mide">Medios frente a resultados y frente a previsiones → <strong>eficiencia</strong>.</td></tr>
+        </table></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>CE frente a LGP: el plazo</b>CE: al Congreso, «al menos tres meses antes de la expiración» de los anteriores. LGP: a las Cortes, «antes del 1 de octubre».</div>
+    <div class="trap"><b>Ley ordinaria, no orgánica</b>La LPGE se aprueba por mayoría simple. Lo orgánico es la LO 2/2012 de estabilidad.</div>
+    <div class="trap"><b>No crea tributos</b>La LPGE solo los modifica si una ley tributaria sustantiva lo prevé (art. 134.7 CE).</div>
+    <div class="trap"><b>Conformidad del Gobierno</b>Para enmiendas que suben créditos o bajan ingresos (art. 134.6 CE). Y la subida exige una baja igual en la misma sección.</div>
+    <div class="trap"><b>Prórroga de los iniciales</b>Se prorrogan los presupuestos iniciales (no los modificados), hasta su publicación en el BOE, sin programas que terminan.</div>
+    <div class="trap"><b>Estabilidad: estructural ≠ financiero</b>AAPP: equilibrio o superávit estructural. EPE y sociedades: equilibrio financiero.</div>
+    <div class="trap"><b>Versiones contables</b>Bruto ↔ universalidad; caja ↔ unidad; especificación ↔ especialidad; ejercicio cerrado ↔ temporalidad.</div>
+    <div class="trap"><b>Tareas frente a programas</b>Lo que añade el PxP es el análisis de alternativas en la planificación. La base cero parte de cero sin mirar el año anterior.</div>
+    <div class="trap"><b>Escenarios: 3 años</b>Escenarios y programas plurianuales: 3 ejercicios siguientes. Programa de actuación plurianual de empresas: el año del proyecto y 2 más.</div>
+    <div class="trap"><b>Ordenadores de pagos</b>Estado: DG del Tesoro y Política Financiera. Seguridad Social: DG de la TGSS. Ambos bajo el Ministro de Economía, no de Hacienda.</div>
+    <div class="trap"><b>Impacto ≠ gestión</b>Indicadores de impacto → eficacia; de gestión → eficiencia.</div>
+    <div class="trap"><b>Cortes fuera de la LGP</b>Tienen autonomía presupuestaria (art. 72 CE), aunque se coordinan para el proyecto.</div>
+  </div>
+</section>
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 1. El presupuesto: concepto. Los principios presupuestarios. El ciclo presupuestario. El presupuesto por programas: concepto y fases. Terminología y desarrollo del proceso presupuestario» y tus dos esquemas. Actualizado a noviembre de 2026: PGE 2023 prorrogados en 2024-2026, Orden HAC/557/2026 (PGE 2027) y disolución de las Cortes (RD 806/2026).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Gestión financiera · Tema 1 · Mapas interactivos (esquemas del usuario + manual) ===== */
+const PP=[
+ {g:"Art. 134 CE",n:"Legalidad o competencia",norm:"Art. 134.1 CE · art. 66.2 CE",def:"Corresponde al Gobierno la elaboración de los PGE y a las Cortes Generales su examen, enmienda y aprobación.",
+  f:{"La Ley de Presupuestos":"Es ordinaria, tiene preferencia en el trámite, respeta los compromisos de años anteriores, tiene peculiaridades en las enmiendas y no puede crear tributos.","Reparto de poderes":"Ejecutivo: elabora y ejecuta. Legislativo: aprueba. Control: Tribunal de Cuentas, Cortes e IGAE.","Clave de examen":"El manual lo llama también «principio de competencia» y lo cita como el único principio clásico de carácter político."}},
+ {g:"Art. 134 CE",n:"Unidad",norm:"Art. 134.2 CE",def:"La totalidad de gastos e ingresos se presenta en un presupuesto único.",
+  f:{"Versión contable":"Unidad de caja: los cobros y pagos se centralizan en una sola caja (art. 91 LGP: el Tesoro).","Grupo clásico":"Principio jurídico.","Clave de examen":"No confundir con la universalidad: unidad = un solo documento; universalidad = todo dentro."}},
+ {g:"Art. 134 CE",n:"Universalidad",norm:"Art. 134.2 CE",def:"Los PGE incluyen la totalidad de los gastos e ingresos del sector público estatal, sin gastos fuera del presupuesto.",
+  f:{"Versión contable":"Presupuesto bruto: todo por su importe íntegro, sin compensar ingresos con gastos.","Grupo clásico":"Principio jurídico.","Clave de examen":"El art. 134.2 añade que se consignan los beneficios fiscales de los tributos del Estado."}},
+ {g:"Arts. 26-27 LGP",n:"Especialidad cualitativa",norm:"LGP",def:"Los créditos se destinan exclusivamente a la finalidad específica para la que se autorizaron.",
+  f:{"Vinculación":"El carácter limitativo y vinculante depende del nivel de especificación con que aparezcan los créditos.","Versión contable":"Especificación: registrar ingresos y gastos en su nivel de desagregación.","Clave de examen":"Es el «para qué» del crédito."},
+  warn:"Tu esquema agrupa la especialidad bajo los arts. 26 y 27 LGP. El art. 27 recoge la anualidad, la no afectación y el presupuesto bruto; la especialidad cualitativa y la cuantitativa se regulan en otros artículos de la LGP (42 y 46)."},
+ {g:"Arts. 26-27 LGP",n:"Especialidad cuantitativa",norm:"LGP",def:"No pueden adquirirse compromisos de gasto ni reconocerse obligaciones por encima del importe de los créditos autorizados.",
+  f:{"Sanción":"Son nulos de pleno derecho los actos administrativos y las disposiciones de rango inferior a ley que lo infrinjan.","Clave de examen":"Es el «cuánto»: el crédito es un límite máximo."}},
+ {g:"Arts. 26-27 LGP",n:"Especialidad temporal",norm:"LGP",def:"Los créditos no afectados a obligaciones reconocidas el último día del ejercicio quedan anulados de pleno derecho.",
+  f:{"Excepción":"Los créditos incorporables al ejercicio siguiente.","Relación":"Concreta la temporalidad: se gasta en el ejercicio para el que se aprobó.","Clave de examen":"Es el «cuándo»."}},
+ {g:"Arts. 26-27 LGP",n:"Temporalidad o anualidad",norm:"Art. 134.2 CE · art. 27.1 LGP",def:"Vigencia limitada: 1 año. La gestión se somete a un presupuesto anual aprobado por las Cortes, enmarcado en un escenario plurianual.",
+  f:{"Versión contable":"Ejercicio cerrado: al terminar la vigencia, se hacen las operaciones de cierre.","Compatibilidad":"La plurianualidad de la LO 2/2012 es compatible con la anualidad de aprobación y ejecución.","Clave de examen":"El ejercicio coincide con el año natural."}},
+ {g:"Arts. 26-27 LGP",n:"Publicidad",norm:"Principio jurídico clásico",def:"El presupuesto, su liquidación y las cuentas deben ser de conocimiento público.",
+  f:{"Clásico":"Las cuentas del sector público se contabilizan y rinden al Tribunal de Cuentas.","Hoy":"Se refuerza con el principio de transparencia (art. 6 LO 2/2012)."}},
+ {g:"Arts. 26-27 LGP",n:"No afectación (desafectación)",norm:"Art. 27.3 LGP",def:"Los recursos del Estado, de los OOAA y de las entidades con presupuesto limitativo financian el conjunto de sus obligaciones.",
+  f:{"Excepción":"Que una ley afecte recursos a fines determinados.","Clave de examen":"La excepción exige ley; no basta un acuerdo del Gobierno."}},
+ {g:"Arts. 26-27 LGP",n:"Presupuesto bruto",norm:"Art. 27.4 LGP",def:"Derechos liquidados y obligaciones reconocidas se aplican por su importe íntegro, sin atender obligaciones minorando derechos, salvo autorización legal expresa.",
+  f:{"Excepciones":"Devoluciones de ingresos indebidos; reembolso del coste de garantías para suspender pagos; participaciones en la recaudación de tributos.","Seguridad Social":"Reintegros de prestaciones pagadas indebidamente: minoran las obligaciones del ejercicio en que se reintegran.","Importe íntegro":"El que resulta después de aplicar exenciones y bonificaciones."}},
+ {g:"Otros de la LGP",n:"Unidad de caja, contabilidad y control",norm:"Arts. 91, 119 y 140 LGP",def:"Tres principios de gestión que cierran el sistema.",
+  f:{"Unidad de caja (91)":"El Tesoro centraliza todos los fondos y valores, presupuestarios o no.","Contabilidad (119)":"Rendir cuentas al Tribunal de Cuentas por conducto de la IGAE.","Control (140)":"Externo: Tribunal de Cuentas. Interno: IGAE, con plena autonomía."}},
+ {g:"Otros de la LGP",n:"Responsabilidad (LGP)",norm:"Art. 176 LGP",def:"Autoridades y personal que por dolo o culpa grave infrinjan la LGP indemnizan los daños a la Hacienda Pública.",
+  f:{"Compatibilidad":"Con independencia de la responsabilidad penal o disciplinaria.","Clave de examen":"No confundir con la responsabilidad del art. 8 LO 2/2012, que es entre Administraciones."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Estabilidad presupuestaria",norm:"Art. 3 LO 2/2012",def:"Elaboración, aprobación y ejecución en un marco de estabilidad coherente con la normativa europea.",
+  f:{"AAPP":"Equilibrio o superávit estructural.","EPE y sociedades":"Equilibrio financiero.","Clave de examen":"«Estructural» descuenta el efecto del ciclo económico."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Sostenibilidad financiera",norm:"Art. 4 LO 2/2012",def:"Capacidad para financiar compromisos de gasto presentes y futuros dentro de los límites de déficit y deuda.",
+  f:{"Deuda comercial":"Sostenible si el periodo medio de pago a proveedores no supera el plazo máximo de la normativa de morosidad.","Operaciones financieras":"Sometidas al principio de prudencia financiera."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Plurianualidad",norm:"Art. 5 LO 2/2012",def:"Los presupuestos se encuadran en un marco a medio plazo.",
+  f:{"Compatibilidad":"Con la anualidad de aprobación y ejecución.","Instrumentos":"Escenarios y programas plurianuales (arts. 28-31 LGP), a 3 años."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Transparencia",norm:"Art. 6 LO 2/2012",def:"Contabilidad, presupuestos y liquidaciones con información suficiente para verificar la situación financiera y el cumplimiento de los objetivos.",
+  f:{"Quién publica":"Hacienda provee la disponibilidad pública de la información económico-financiera.","También públicas":"Las previsiones de la planificación y su metodología, supuestos y parámetros."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Eficiencia",norm:"Art. 7 LO 2/2012",def:"Gestión orientada por la eficacia, la eficiencia, la economía y la calidad.",
+  f:{"Planificación":"Marco plurianual, programación y presupuestación.","Valoración previa":"Normas, actos, contratos y convenios deben valorar su efecto en el gasto y supeditarse a la estabilidad."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Responsabilidad (LO 2/2012)",norm:"Art. 8 LO 2/2012",def:"La Administración que incumpla asume la parte de responsabilidad que le sea imputable, con audiencia.",
+  f:{"Estado":"No responde de los compromisos de CCAA, EELL y sus entes.","CCAA":"No responden de los de las EELL.","Salvedad":"Garantías financieras mutuas para proyectos específicos conjuntos."}},
+ {g:"LO 2/2012 (arts. 3-9)",n:"Lealtad institucional",norm:"Art. 9 LO 2/2012",def:"Cada Administración adecúa su actuación a la lealtad con las demás.",
+  f:{"Deberes":"Valorar el impacto en otras AAPP; respetar sus competencias; ponderar todos los intereses públicos; facilitar información; prestar cooperación y asistencia."}}
+];
+const CY=[
+ {g:"Preparación",n:"Objetivos de estabilidad",norm:"Art. 15 LO 2/2012 · 1.er semestre",def:"El Consejo de Ministros fija los objetivos de estabilidad y deuda para los 3 ejercicios siguientes, en % del PIB, y el límite de gasto no financiero.",
+  f:{"Quién":"Gobierno, a propuesta de Hacienda; informan el CPFF y la CNAL (propuestas antes del 1 de abril; 15 días).","Cortes":"Congreso y Senado se pronuncian. Si el Senado rechaza, el Congreso ratifica por mayoría simple. Si se rechazan, nuevo acuerdo en 1 mes.","Tienen en cuenta":"La regla de gasto, el saldo estructural del año anterior y las recomendaciones de la UE."}},
+ {g:"Preparación",n:"Escenarios plurianuales",norm:"Arts. 28-31 LGP",def:"Hacienda confecciona los escenarios (ingresos y gastos) para los 3 ejercicios siguientes; los Ministerios elaboran sus programas plurianuales.",
+  f:{"Hacienda":"Da cuenta al Consejo de Ministros antes de aprobar el proyecto de LPGE.","Gobierno":"Ajusta su actuación a los límites de los escenarios.","Centros gestores":"Elaboran y remiten anualmente sus programas, con la estructura que fije una orden de Hacienda."},
+  warn:"Tu esquema dice que Hacienda da cuenta «antes de la aprobación de la LGPE». La LGP dice antes de aprobar el proyecto de Ley, es decir, en el Consejo de Ministros, no en las Cortes."},
+ {g:"Elaboración",n:"Orden y directrices",norm:"Art. 36 LGP · orden anual de elaboración",def:"Hacienda dicta por orden el procedimiento y fija las directrices de distribución del gasto.",
+  f:{"Comisión de Políticas de Gasto":"Presidida por el titular de Hacienda; con los Ministros (o Subsecretarios). Fija prioridades.","Orden vigente":"Orden HAC/557/2026 (PGE 2027); el manual cita la HAC/641/2024 (PGE 2025)."}},
+ {g:"Elaboración",n:"Preparación en los Ministerios",norm:"Art. 36 LGP",def:"Ministerios y órganos con dotación diferenciada remiten a Hacienda sus propuestas, ajustadas a las directrices.",
+  f:{"Memorias":"Cada programa de gasto, con su memoria de objetivos anuales.","Seguridad Social":"INGESA (Sanidad) e IMSERSO (Derechos Sociales) → Hacienda → Ministerio de Seguridad Social, que forma el anteproyecto → Hacienda.","Plazo":"El que fije la orden: 8-7-2024 para 2025; 29-6-2026 para 2027."}},
+ {g:"Elaboración",n:"Refundición en Hacienda",norm:"Art. 36 LGP · orden de elaboración",def:"Desde la publicación de la orden hasta el 30 de septiembre, Hacienda unifica gastos, completa ingresos y prepara el articulado.",
+  f:{"Comisiones de Análisis de Programas":"Bilaterales, presididas por el Secretario de Estado de Presupuestos y Gastos.","DG de Presupuestos":"Elabora los estados de gastos; los ingresos de la AGE los elabora Hacienda.","Cierre":"El Ministro de Hacienda eleva el anteproyecto al Gobierno."}},
+ {g:"Aprobación",n:"Remisión a las Cortes",norm:"Art. 134.3 CE · art. 37 LGP",def:"El proyecto (articulado, anexos y estados) se remite antes del 1 de octubre; la CE dice al menos 3 meses antes de que expiren los anteriores.",
+  f:{"Documentación":"Memorias de programas, informes de género, infancia y ODS, anexo de inversiones, liquidaciones, cuentas de la SS, estados consolidados, informe económico y memoria de beneficios fiscales.","Ante quién":"CE: el Congreso de los Diputados. LGP: las Cortes Generales."}},
+ {g:"Aprobación",n:"Tramitación y aprobación",norm:"Art. 134 CE",def:"Las Cortes examinan, enmiendan y aprueban durante el último trimestre del año anterior.",
+  f:{"Preferencia":"Sobre los demás trabajos de las Cámaras.","Enmiendas":"Si suben créditos o bajan ingresos, conformidad del Gobierno (134.6); una subida exige una baja igual en la misma sección.","Límites":"Ley ordinaria, mayoría simple; no crea tributos (134.7)."}},
+ {g:"Aprobación",n:"Prórroga",norm:"Art. 134.4 CE · art. 38 LGP",def:"Si el 1 de enero no hay nueva ley, se prorrogan automáticamente los presupuestos iniciales del ejercicio anterior.",
+  f:{"Hasta":"La aprobación y publicación de los nuevos en el BOE.","No se prorrogan":"Créditos de programas que terminan o de obligaciones que se extinguen.","Estructura":"Se adapta a la organización vigente sin alterar la cuantía total; criterios del Consejo de Ministros.","Actualidad":"PGE 2023 prorrogados en 2024, 2025 y 2026."}},
+ {g:"Ejecución",n:"Ejecución",norm:"Arts. 74 y 75 LGP",def:"Durante el año natural, por el Ejecutivo y los órganos con secciones presupuestarias.",
+  f:{"Ministros":"Aprueban y comprometen gasto, reconocen obligaciones e interesan el pago.","OOAA":"Presidentes o directores: también pagan.","Consejo de Ministros":"Autoriza convenios o contratos-programa de más de 12 millones €.","Ordenadores de pagos":"DG del Tesoro y Política Financiera (Estado); DG de la TGSS (Seguridad Social)."}},
+ {g:"Control",n:"Control",norm:"Arts. 140 y ss. LGP · art. 136 CE",def:"Simultáneo y posterior a la ejecución: legalidad y cumplimiento de objetivos con un coste razonable.",
+  f:{"Interno":"IGAE, con plena autonomía.","Externo":"Tribunal de Cuentas, supremo órgano fiscalizador.","Político":"Cortes Generales (también externo).","Cierre del ciclo":"Liquidación, evaluación de resultados y análisis, que realimentan los objetivos."}}
+];
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  function mk(list,pid,cid,opt){
+    const pills=document.getElementById(pid),card=document.getElementById(cid);if(!pills)return;
+    let html="",last="";
+    list.forEach((s,i)=>{if(!opt.flat&&s.g!==last){html+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}
+      html+=`<button class="sit-pill${s.warn?" warn":""}${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});
+    pills.innerHTML=html;
+    function show(i){const s=list[i];
+      card.innerHTML=`<span class="kicker">${e(s.g)}${opt.flat?` · paso ${i+1} de ${list.length}`:""}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div>
+      <div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>
+      ${s.warn?`<div class="note sit-warn"><span>⚠️</span><span>${e(s.warn)}</span></div>`:""}
+      ${opt.flat?`<div class="cy-nav"><button class="btn btn-g btn-sm" data-d="-1" ${i?"":"disabled"}>← Anterior</button><button class="btn btn-p btn-sm" data-d="1" ${i<list.length-1?"":"disabled"}>Siguiente →</button></div>`:""}`;
+      card.dataset.i=i;card.style.animation="none";card.offsetHeight;card.style.animation="";
+      pills.querySelectorAll(".sit-pill").forEach(b=>b.classList.toggle("on",+b.dataset.i===i));
+      if(opt.bar){const b=document.getElementById(opt.bar);if(b)b.style.width=((i+1)/list.length*100)+"%"}}
+    pills.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(b){show(+b.dataset.i);if(innerWidth<720)card.scrollIntoView({behavior:"smooth",block:"start"})}});
+    card.addEventListener("click",ev=>{const b=ev.target.closest("[data-d]");if(b){const n=+card.dataset.i+ +b.dataset.d;if(n>=0&&n<list.length)show(n)}});
+    show(0);
+  }
+  mk(PP,"pp-pills","pp-card",{});
+  mk(CY,"cy-pills","cy-card",{flat:true,bar:"cy-bar"});
+  /* Decodificador de programas */
+  const inp=document.getElementById("pg-in");if(!inp)return;
+  const code=document.getElementById("pg-code"),out=document.getElementById("pg-out"),ex=document.getElementById("pg-ex");
+  const EX=["312A","231F","000X","923M","929M","132A","467C","912O"];
+  ex.innerHTML="Prueba: "+EX.map(c=>`<button class="btn btn-g btn-sm" data-c="${c}">${c}</button>`).join("");
+  ex.addEventListener("click",ev=>{const b=ev.target.closest("[data-c]");if(b){inp.value=b.dataset.c;run()}});
+  function run(){
+    const v=inp.value.toUpperCase().replace(/[^0-9A-Z]/g,"").slice(0,4);inp.value=v;
+    code.innerHTML=[0,1,2,3].map(i=>`<span class="${i===3?"k":""}">${e(v[i]||"·")}</span>`).join("");
+    if(!/^\d{3}[A-Z]$/.test(v)){out.innerHTML="Escribe 3 dígitos y una letra (por ejemplo, 312A).";return}
+    const L=v[3],fin=L<="L";
+    out.innerHTML=`<strong>${e(v)}</strong>: la letra <strong>${L}</strong> está en el tramo <strong>${fin?"A-L":"M-Z"}</strong>, así que es un programa <strong>${fin?"finalista":"instrumental y de gestión"}</strong>. `+
+      (fin?"Persigue objetivos finales que llegan a la sociedad (servicios, prestaciones, inversiones).":"Da soporte a otros programas: dirección, servicios generales, administración, gestión.")+
+      (v==="000X"?" (El 000X recoge las transferencias internas entre subsectores.)":"");
+  }
+  inp.addEventListener("input",run);run();
+})();
+
+/* ===== Fichas ===== */
+const DATA={fichas:[
+ {p:"¿Cómo define el art. 32 LGP los Presupuestos Generales del Estado?",r:"Como la expresión cifrada, conjunta y sistemática de los derechos y obligaciones a liquidar durante el ejercicio por cada uno de los órganos y entidades del sector público estatal."},
+ {p:"¿Cómo definen el presupuesto Fuentes Quintana y la doctrina jurídica?",r:"Fuentes Quintana: la expresión contable del plan económico de la Hacienda Pública. Jurídicamente: una ley por la que el Legislativo regula la conducta económica del Ejecutivo durante un periodo."},
+ {p:"¿Qué rasgos tiene el presupuesto según la definición de Neumark?",r:"Es un acto de previsión (no un balance), una previsión normativa (se aprueba por ley), ordenado en lenguaje contable, de confección periódica y formalmente equilibrado aunque económicamente tenga déficit o superávit."},
+ {p:"¿De qué dos estados se compone el presupuesto?",r:"Del estado de gastos (créditos para atender obligaciones) y del estado de ingresos (estimación de los derechos económicos a liquidar)."},
+ {p:"¿Qué integra el sector público estatal según el art. 2 LGP?",r:"La AGE y el sector público institucional estatal: OOAA, EPE y agencias; autoridades independientes; sociedades mercantiles; consorcios y fundaciones adscritos; fondos sin personalidad; universidades no transferidas; entidades de la Seguridad Social y Mutuas; y otras entidades de derecho público."},
+ {p:"¿Se aplica la LGP a las Cortes Generales?",r:"No: gozan de autonomía presupuestaria (art. 72 CE), aunque se coordinan para elaborar el proyecto de LPGE."},
+ {p:"¿Qué dice el art. 134.2 CE sobre los PGE?",r:"Que son anuales, que incluyen la totalidad de los gastos e ingresos del sector público estatal y que consignan el importe de los beneficios fiscales de los tributos del Estado."},
+ {p:"¿Qué entidades tienen presupuesto limitativo?",r:"El Estado, los OOAA, la Seguridad Social y el resto de entidades a las que se aplica el régimen de especificaciones y modificaciones de la LGP o cuya norma les da presupuesto limitativo."},
+ {p:"¿Qué entidades tienen presupuesto estimativo?",r:"Las EPE, sociedades mercantiles y fundaciones estatales (con contabilidad del Código de Comercio y PGC) y los consorcios, universidades no transferidas, fondos sin personalidad y demás entidades con presupuesto estimativo."},
+ {p:"¿Qué presupuesto se une a la LPGE por la Ley 13/1994?",r:"El de gastos de funcionamiento e inversiones del Banco de España (art. 4.2 de su Ley de Autonomía)."},
+ {p:"¿Qué principios recoge la LO 2/2012 en sus arts. 3 a 9?",r:"Estabilidad presupuestaria, sostenibilidad financiera, plurianualidad, transparencia, eficiencia en la asignación y utilización de los recursos públicos, responsabilidad y lealtad institucional."},
+ {p:"¿Qué es la estabilidad presupuestaria?",r:"Para las AAPP, la situación de equilibrio o superávit estructural. Para las EPE, sociedades y entes del art. 2.2, la posición de equilibrio financiero (art. 3 LO 2/2012)."},
+ {p:"¿Qué es la sostenibilidad financiera?",r:"La capacidad para financiar compromisos de gasto presentes y futuros dentro de los límites de déficit y deuda. La deuda comercial es sostenible si el periodo medio de pago no supera el máximo de la normativa de morosidad (art. 4)."},
+ {p:"¿Qué establece el principio de responsabilidad de la LO 2/2012?",r:"Quien incumpla asume su parte, con audiencia. El Estado no responde de los compromisos de CCAA ni EELL, y las CCAA no responden de los de las EELL, salvo garantías mutuas para proyectos conjuntos (art. 8)."},
+ {p:"¿Qué deberes impone la lealtad institucional?",r:"Valorar el impacto en otras AAPP, respetar sus competencias, ponderar todos los intereses públicos, facilitar información y prestar cooperación y asistencia (art. 9 LO 2/2012)."},
+ {p:"¿Qué dicen los principios de anualidad y unidad de caja en la LGP?",r:"Anualidad (art. 27.1): presupuesto anual aprobado por las Cortes, en un escenario plurianual. Unidad de caja (art. 91): el Tesoro centraliza todos los fondos y valores, presupuestarios y no presupuestarios."},
+ {p:"¿Qué dice el principio de responsabilidad del art. 176 LGP?",r:"Que autoridades y personal que, por dolo o culpa grave, infrinjan la LGP deben indemnizar a la Hacienda Pública los daños, con independencia de la responsabilidad penal o disciplinaria."},
+ {p:"¿Qué es el principio de no afectación?",r:"Los recursos financian el conjunto de las obligaciones, salvo que una ley los afecte a fines determinados (art. 27.3 LGP)."},
+ {p:"¿Qué es el principio de presupuesto bruto?",r:"Derechos y obligaciones se aplican por su importe íntegro, sin minorar unos con otros, salvo autorización legal expresa (art. 27.4 LGP). Importe íntegro es el que resulta tras exenciones y bonificaciones."},
+ {p:"¿Qué excepciones tiene el presupuesto bruto?",r:"Las devoluciones de ingresos indebidos, el reembolso del coste de las garantías para suspender pagos y las participaciones en la recaudación de tributos previstas legalmente."},
+ {p:"¿Cuáles son las tres especialidades?",r:"Cualitativa: el crédito solo para su finalidad. Cuantitativa: no comprometer más del crédito (nulidad de pleno derecho). Temporal: los créditos no afectados a obligaciones el último día se anulan, salvo los incorporables."},
+ {p:"¿Cómo clasifican Sánchez Revenga y Pascual los principios clásicos?",r:"Político (competencia); jurídicos (universalidad, unidad, especialidad, temporalidad y publicidad); económicos (gasto mínimo, nivelación, neutralidad impositiva y no emitir deuda salvo para inversiones autoliquidables); contables (presupuesto bruto, unidad de caja y especificación)."},
+ {p:"¿Qué principio político traduce cada principio contable?",r:"Presupuesto bruto ← universalidad; unidad de caja ← unidad; especificación ← especialidad; ejercicio cerrado ← temporalidad."},
+ {p:"¿Existe hoy el presupuesto extraordinario?",r:"No: solo el ordinario. Los gastos urgentes no previstos se atienden con créditos extraordinarios y suplementos de crédito aprobados por ley (art. 55 LGP)."},
+ {p:"¿En qué se basaba el presupuesto clásico?",r:"En el liberalismo (siglo XVIII hasta la crisis de 1929): gasto público reducido, neutralidad impositiva, equilibrio anual y deuda solo para inversiones autoliquidables."},
+ {p:"¿Qué tres fórmulas de estabilización económica hay?",r:"Compensatorio (déficit para compensar la demanda privada), cíclico (equilibrio a lo largo del ciclo) y de estabilización automática (desde 1947: estabilizadores automáticos sin intervención discrecional)."},
+ {p:"¿Qué aporta el presupuesto funcional?",r:"Clasifica el gasto por funciones o políticas: dice para qué se gasta, cuando antes solo se sabía quién gastaba y en qué. Es requisito previo de las técnicas de eficacia."},
+ {p:"¿En qué se diferencian el presupuesto por tareas y el presupuesto por programas?",r:"En la planificación: el de programas analiza las distintas alternativas para lograr un objetivo y elige la mejor; el de tareas se limita a fijar tareas orientadas a objetivos."},
+ {p:"¿Qué es el presupuesto en base cero?",r:"Una técnica en la que cada centro de gasto justifica todas sus necesidades partiendo de cero, sin tomar como referencia lo gastado el año anterior."},
+ {p:"¿Qué tres tipos de presupuesto hay según la limitación de los gastos?",r:"Administrativos (AGE, OOAA, SS: triple limitación del gasto e ingresos estimativos), de explotación y capital (sector empresarial: forma de cuenta de resultados) y mixtos."},
+ {p:"¿Qué fases tiene el ciclo presupuestario?",r:"Elaboración (Ejecutivo, antes del 1 de octubre), aprobación (Legislativo, último trimestre), ejecución (Ejecutivo, año natural) y control (Ejecutivo, Tribunal de Cuentas y Legislativo, durante y después)."},
+ {p:"¿Cuándo y cómo se fijan los objetivos de estabilidad y deuda?",r:"En el primer semestre, por acuerdo del Consejo de Ministros a propuesta de Hacienda, previo informe del CPFF y de la CNAL, para los 3 ejercicios siguientes y en % del PIB nominal (art. 15 LO 2/2012)."},
+ {p:"¿Qué plazos hay en el informe del CPFF y de la CNAL?",r:"Hacienda les remite las propuestas antes del 1 de abril y deben informar en un máximo de 15 días desde su recepción."},
+ {p:"¿Qué pasa si las Cortes rechazan los objetivos de estabilidad?",r:"El Gobierno remite un nuevo acuerdo en el plazo máximo de 1 mes. Si los aprueba el Congreso y los rechaza el Senado, el Congreso vota de nuevo y basta la mayoría simple."},
+ {p:"¿Qué es la regla de gasto?",r:"La variación del gasto computable de las AAPP no puede superar la tasa de referencia de crecimiento del PIB a medio plazo (art. 12 LO 2/2012). Se tiene en cuenta para fijar el objetivo de estabilidad."},
+ {p:"¿Qué son los escenarios presupuestarios plurianuales?",r:"La programación del sector público estatal con presupuesto limitativo: equilibrios básicos, ingresos y recursos de las políticas de gasto, con límites para los 3 ejercicios siguientes. Los confecciona Hacienda (un escenario de ingresos y otro de gastos)."},
+ {p:"¿Quién aprueba el programa plurianual de cada Ministerio?",r:"El Ministro. Contiene los programas de sus centros gestores. El de la Seguridad Social lo elabora separadamente su Ministro."},
+ {p:"¿Qué contienen los programas plurianuales?",r:"Objetivos medibles, la actividad a realizar, los medios y créditos necesarios, las inversiones y los indicadores de ejecución (eficacia, eficiencia, economía y calidad)."},
+ {p:"¿Quién dicta el procedimiento de elaboración de los PGE?",r:"El Ministro de Hacienda, por orden (art. 36.2 LGP). Para 2027: Orden HAC/557/2026, de 3 de junio. El manual cita la HAC/641/2024 (PGE 2025)."},
+ {p:"¿Cómo se forma el presupuesto de la Seguridad Social?",r:"Sanidad (INGESA) y Derechos Sociales (IMSERSO) envían propuestas a Hacienda, que forma los anteproyectos y los remite al Ministerio de Seguridad Social; este los integra con gestoras, servicios comunes y Mutuas y lo remite a Hacienda. Ambos Ministros lo elevan al Gobierno."},
+ {p:"¿Quién elabora el presupuesto de ingresos de la AGE y los estados de gastos?",r:"El de ingresos, el Ministerio de Hacienda. Los estados de gastos del anteproyecto, la Dirección General de Presupuestos."},
+ {p:"¿Qué es la Comisión de Políticas de Gasto?",r:"El órgano que fija las prioridades de gasto: la preside el titular de Hacienda (en su ausencia, el Secretario de Estado de Presupuestos y Gastos) y la integran los Ministros o los Subsecretarios. Secretario no miembro: el SG de Política Presupuestaria."},
+ {p:"¿Qué son las Comisiones de Análisis de Programas?",r:"Reuniones bilaterales Hacienda–Ministerio, presididas por el Secretario de Estado de Presupuestos y Gastos, con el DG de Presupuestos, el Subsecretario y el Jefe de la Oficina Presupuestaria del departamento."},
+ {p:"¿Qué documentación acompaña al proyecto de LPGE?",r:"Memorias de los programas; informes de impacto de género, de infancia, adolescencia y familia y de alineamiento con los ODS; desarrollo económico de los créditos; anexo plurianual de inversiones; liquidaciones; cuentas de la Seguridad Social; estados consolidados; informe económico-financiero; y memoria de beneficios fiscales."},
+ {p:"¿Qué presupuestos elaboran las EPE y las sociedades mercantiles estatales?",r:"Presupuestos de explotación y de capital (previsión de la cuenta de resultados y de flujos de efectivo, con balance) y un programa de actuación plurianual para el año del proyecto y los 2 siguientes."},
+ {p:"¿Cuándo se presentan los PGE?",r:"Según la CE, ante el Congreso al menos 3 meses antes de que expiren los del año anterior. Según la LGP, a las Cortes antes del 1 de octubre del año anterior."},
+ {p:"¿Qué límites tienen las enmiendas a la LPGE?",r:"Si suben créditos o bajan ingresos, necesitan la conformidad del Gobierno (art. 134.6 CE). Las que suben un crédito solo se admiten si proponen una baja de igual cuantía en la misma sección."},
+ {p:"¿Puede la LPGE crear tributos?",r:"No. Solo puede modificarlos cuando una ley tributaria sustantiva lo prevea (art. 134.7 CE)."},
+ {p:"¿Qué mayoría exige la LPGE?",r:"La mayoría simple: es una ley ordinaria. Tiene preferencia de tramitación en ambas Cámaras."},
+ {p:"¿Cómo funciona la prórroga presupuestaria?",r:"Si no hay ley el 1 de enero, se prorrogan automáticamente los presupuestos iniciales del año anterior hasta que se publiquen los nuevos en el BOE, salvo los créditos de programas que terminan; la estructura orgánica se adapta sin alterar el total (art. 38 LGP)."},
+ {p:"¿Qué competencias de ejecución tienen los Ministros y los presidentes de OOAA?",r:"Los Ministros aprueban y comprometen el gasto, reconocen obligaciones e interesan el pago al Ordenador general de pagos. Los presidentes o directores de OOAA, además, pagan."},
+ {p:"¿Cuándo se necesita autorización del Consejo de Ministros para un convenio?",r:"Cuando el gasto de un convenio o contrato-programa supera los 12 millones €; también para modificarlo (importe, destino o calendario) o resolverlo. No se aplica a créditos gestionados por las CCAA (art. 86 LGP)."},
+ {p:"¿Quiénes son los Ordenadores generales de pagos?",r:"Del Estado, el Director General del Tesoro y Política Financiera; de la Seguridad Social, el Director General de la TGSS; ambos bajo el Ministro de Economía (art. 75 LGP)."},
+ {p:"¿Qué tipos de control presupuestario hay?",r:"Interno (IGAE, con plena autonomía), externo (Tribunal de Cuentas, supremo órgano fiscalizador) y político (Cortes Generales, también externo)."},
+ {p:"¿Cuáles son los hitos del presupuesto por programas?",r:"1924 General Motors; 1942 Controlled Materials Plan; 1965 Johnson lo extiende al Gobierno federal; en España, RD 1973/1977 (Comisión de Racionalización), RD 3148/1977, LGP de 1977, Pactos de la Moncloa, 1984 en todos los Ministerios y 1985 en los PGE."},
+ {p:"¿Cómo se distinguen los programas finalistas de los instrumentales?",r:"Por el cuarto carácter del código: las letras A a L son finalistas; las letras M a Z, instrumentales y de gestión."},
+ {p:"¿Qué fases tiene el presupuesto por programas?",r:"Planificación (objetivos), programación (impacto financiero plurianual de los programas elegidos), presupuestación (créditos del tramo anual), ejecución y control."},
+ {p:"¿Qué tipos de indicadores se usan en el presupuesto por programas?",r:"De impacto (efecto sobre objetivos, eficacia), de resultados (productos o servicios), de medios (recursos y costes) y de gestión (medios frente a resultados, eficiencia)."}
+]};
+
+/* ===== Tests ===== */
+const T1=[
+ {q:"Según el art. 32 LGP, los PGE constituyen:",o:["La expresión contable del plan económico de la Hacienda.","La expresión cifrada, conjunta y sistemática de los derechos y obligaciones a liquidar durante el ejercicio por los órganos y entidades del sector público estatal.","El resumen de los ingresos y gastos del año anterior.","El plan económico plurianual del Gobierno."],c:1,e:"Definición legal del art. 32 LGP."},
+ {q:"Definió el presupuesto como «expresión contable del plan económico de la Hacienda Pública»:",o:["Neumark.","Fuentes Quintana.","Adam Smith.","Keynes."],c:1,e:"Definición doctrinal recogida en el manual."},
+ {q:"Del presupuesto NO puede decirse que sea:",o:["Un acto de previsión.","Una previsión normativa.","Un balance.","De confección regular."],c:2,e:"Es un acto de previsión, no un balance."},
+ {q:"El presupuesto se presenta:",o:["Siempre con superávit.","Formalmente equilibrado, aunque económicamente presente déficit o superávit.","Siempre con déficit.","Sin estado de ingresos."],c:1,e:"Rasgo destacado por la doctrina."},
+ {q:"El estado de gastos recoge:",o:["La estimación de derechos.","Los créditos para atender obligaciones.","Los beneficios fiscales.","Las cuentas de la Seguridad Social."],c:1,e:"El de ingresos, la estimación de los derechos."},
+ {q:"Forman parte del sector público estatal (art. 2 LGP):",o:["Solo la AGE.","La AGE y el sector público institucional estatal.","Las CCAA y las EELL.","Solo los OOAA."],c:1,e:"Art. 2 LGP."},
+ {q:"Se clasifican como organismos públicos vinculados o dependientes de la AGE:",o:["Sociedades mercantiles y fundaciones.","OOAA, EPE y agencias estatales.","Consorcios y universidades.","Mutuas y fondos."],c:1,e:"Art. 2 LGP."},
+ {q:"Las Cortes Generales, respecto a la LGP:",o:["Están plenamente sometidas.","No se les aplica, porque tienen autonomía presupuestaria (art. 72 CE).","Se rigen por la LO 2/2012 solamente.","Elaboran su presupuesto con el Gobierno."],c:1,e:"Se mantiene la coordinación para el proyecto."},
+ {q:"Según el art. 134.2 CE, en los PGE se consignará:",o:["El importe de las subvenciones.","El importe de los beneficios fiscales que afecten a los tributos del Estado.","La deuda de las CCAA.","El techo de gasto de las EELL."],c:1,e:"Art. 134.2 CE."},
+ {q:"Los presupuestos de las CCAA se regulan, en sus rasgos básicos, en:",o:["La Ley 7/1985.","La LO 8/1980 (LOFCA).","La LGP.","La LO 2/2012 exclusivamente."],c:1,e:"Mismo carácter anual."},
+ {q:"Determina con carácter general la estructura de los presupuestos de las EELL:",o:["Cada Ayuntamiento.","La Administración del Estado (art. 112.2 Ley 7/1985).","Las CCAA.","El Tribunal de Cuentas."],c:1,e:"Ley de Bases del Régimen Local."},
+ {q:"Tiene presupuesto con carácter limitativo:",o:["Una sociedad mercantil estatal.","Un organismo autónomo.","Una fundación del sector público.","Una entidad pública empresarial."],c:1,e:"Junto con el Estado y la Seguridad Social."},
+ {q:"Tienen presupuesto estimativo:",o:["El Estado.","Las entidades públicas empresariales.","La Seguridad Social.","Los organismos autónomos."],c:1,e:"Aplican el Código de Comercio y el PGC."},
+ {q:"Se une a la LPGE el presupuesto de gastos de funcionamiento e inversiones de:",o:["El Tribunal Constitucional.","El Banco de España.","La CNMV.","El Consejo de Estado."],c:1,e:"Art. 4.2 Ley 13/1994."},
+ {q:"Los PGE vigentes en 2026 son:",o:["Los de 2026, aprobados en 2025.","Los de 2023 (Ley 31/2022), prorrogados.","Los de 2024.","Los de 2025, aprobados en 2024."],c:1,e:"Prorrogados en 2024, 2025 y 2026."},
+ {q:"Las obligaciones y los derechos de contenido económico fundamentan la Hacienda Pública según el art.:",o:["2 LGP.","5 LGP.","27 LGP.","32 LGP."],c:1,e:"Art. 5 LGP."},
+ {q:"Según el art. 134.2 CE, los PGE tendrán carácter:",o:["Bienal.","Anual.","Trienal.","Indefinido."],c:1,e:"Sin perjuicio de la prórroga."},
+ {q:"El primer día del ejercicio económico es:",o:["1 de octubre.","1 de enero.","1 de abril.","30 de septiembre."],c:1,e:"El ejercicio coincide con el año natural."},
+ {q:"Los órganos con dotación diferenciada en los PGE sin personalidad jurídica:",o:["No forman parte del sector público estatal.","Forman parte del sector público estatal, con especialidades en contabilidad y control.","Son OOAA.","Son entidades privadas."],c:1,e:"Art. 2 LGP."},
+ {q:"Jurídicamente, el presupuesto es:",o:["Un reglamento del Gobierno.","Una ley por la que el Legislativo regula la conducta económica del Ejecutivo durante un periodo.","Un acto administrativo.","Un contrato."],c:1,e:"Visión jurídica del manual."}
+];
+
+const T2=[
+ {q:"Los principios de la LO 2/2012 se regulan en sus arts.:",o:["1 a 7.","3 a 9.","10 a 15.","26 a 31."],c:1,e:"Arts. 3 a 9 LOEPSF."},
+ {q:"Para las AAPP, la estabilidad presupuestaria es:",o:["El equilibrio financiero.","La situación de equilibrio o superávit estructural.","El déficit cero cada año.","La deuda por debajo del 60 %."],c:1,e:"Art. 3 LO 2/2012."},
+ {q:"Para las EPE y sociedades del art. 2.2 LO 2/2012, la estabilidad es:",o:["El superávit estructural.","La posición de equilibrio financiero.","La deuda cero.","El equilibrio cíclico."],c:1,e:"Art. 3 LO 2/2012."},
+ {q:"La capacidad para financiar compromisos presentes y futuros dentro de los límites de déficit y deuda es:",o:["Estabilidad.","Sostenibilidad financiera.","Plurianualidad.","Eficiencia."],c:1,e:"Art. 4 LO 2/2012."},
+ {q:"Hay sostenibilidad de la deuda comercial cuando:",o:["No hay deuda.","El periodo medio de pago a proveedores no supera el plazo máximo de la normativa de morosidad.","Se paga en 90 días.","La deuda es inferior al PIB."],c:1,e:"Art. 4 LO 2/2012."},
+ {q:"Las operaciones financieras se someten, para cumplir la sostenibilidad, al principio de:",o:["Lealtad.","Prudencia financiera.","Transparencia.","Unidad de caja."],c:1,e:"Art. 4 LO 2/2012."},
+ {q:"El marco presupuestario a medio plazo, compatible con la anualidad, corresponde al principio de:",o:["Estabilidad.","Plurianualidad.","Temporalidad.","Especialidad."],c:1,e:"Art. 5 LO 2/2012."},
+ {q:"Proveer la disponibilidad pública de la información económico-financiera corresponde a:",o:["El Tribunal de Cuentas.","El Ministerio de Hacienda.","El INE.","Las Cortes."],c:1,e:"Principio de transparencia (art. 6)."},
+ {q:"Según el principio de responsabilidad de la LO 2/2012:",o:["El Estado responde de las deudas de las CCAA.","El Estado no asume los compromisos de las CCAA ni de las EELL, salvo garantías mutuas para proyectos conjuntos.","Las CCAA responden de las EELL.","No hay audiencia."],c:1,e:"Art. 8 LO 2/2012."},
+ {q:"Valorar el impacto de las propias actuaciones en otras AAPP es un deber derivado del principio de:",o:["Eficiencia.","Lealtad institucional.","Transparencia.","Estabilidad."],c:1,e:"Art. 9 LO 2/2012."},
+ {q:"NO es un principio de la LO 2/2012:",o:["Plurianualidad.","Lealtad institucional.","Presupuesto bruto.","Transparencia."],c:2,e:"El presupuesto bruto es de la LGP (art. 27.4)."},
+ {q:"La gestión del sector público estatal se somete a presupuesto anual aprobado por las Cortes según el art.:",o:["27.1 LGP.","32 LGP.","91 LGP.","119 LGP."],c:0,e:"Principio de anualidad."},
+ {q:"El principio de unidad de caja se recoge en el art.:",o:["27.3 LGP.","91 LGP.","140 LGP.","176 LGP."],c:1,e:"Entre las funciones del Tesoro."},
+ {q:"Las entidades del sector público estatal rinden cuentas al Tribunal de Cuentas por conducto de:",o:["La Dirección General de Presupuestos.","La IGAE.","El Ministro.","Las Cortes."],c:1,e:"Art. 119 LGP."},
+ {q:"La responsabilidad del art. 176 LGP exige:",o:["Cualquier culpa.","Dolo o culpa grave.","Solo dolo.","Negligencia leve."],c:1,e:"Obligación de indemnizar a la Hacienda."},
+ {q:"El control interno del sector público estatal corresponde a:",o:["El Tribunal de Cuentas.","La IGAE.","Las Cortes.","El Consejo de Estado."],c:1,e:"Art. 140 LGP, con plena autonomía."},
+ {q:"Según la no afectación, los recursos financian el conjunto de obligaciones salvo que:",o:["Lo acuerde el Gobierno.","Una ley establezca su afectación a fines determinados.","Lo pida el Ministro.","Lo autorice el Tribunal de Cuentas."],c:1,e:"Art. 27.3 LGP."},
+ {q:"El presupuesto bruto se regula en el art.:",o:["27.3 LGP.","27.4 LGP.","32 LGP.","38 LGP."],c:1,e:"Importe íntegro."},
+ {q:"A efectos del presupuesto bruto, el importe íntegro es:",o:["El previo a exenciones.","El resultante después de aplicar exenciones y bonificaciones.","El neto de devoluciones.","El estimado."],c:1,e:"Art. 27.4 LGP."},
+ {q:"Es una excepción al presupuesto bruto:",o:["El pago de nóminas.","La devolución de ingresos declarados indebidos.","La compra de bienes.","Las subvenciones."],c:1,e:"Art. 27.4 LGP."}
+];
+
+const T3=[
+ {q:"Que los créditos se destinen exclusivamente a la finalidad para la que se autorizaron es la especialidad:",o:["Cuantitativa.","Cualitativa.","Temporal.","Orgánica."],c:1,e:"El «para qué»."},
+ {q:"Los actos que comprometan gasto por encima de los créditos autorizados son:",o:["Anulables.","Nulos de pleno derecho.","Válidos si se convalidan.","Irregulares sin efecto."],c:1,e:"Especialidad cuantitativa."},
+ {q:"Los créditos no afectados a obligaciones reconocidas el último día del ejercicio:",o:["Se incorporan siempre.","Quedan anulados de pleno derecho, salvo excepciones (incorporables).","Se prorrogan.","Pasan al Tesoro como reserva."],c:1,e:"Especialidad temporal."},
+ {q:"Que la totalidad de gastos e ingresos se presenten en un presupuesto único es el principio de:",o:["Universalidad.","Unidad.","Especialidad.","Publicidad."],c:1,e:"Art. 134.2 CE."},
+ {q:"Que no existan gastos al margen del presupuesto es el principio de:",o:["Unidad.","Universalidad.","Desafectación.","Temporalidad."],c:1,e:"La totalidad dentro."},
+ {q:"El principio de competencia es, en la clasificación clásica, de carácter:",o:["Jurídico.","Político.","Económico.","Contable."],c:1,e:"Es el único político."},
+ {q:"Es un principio clásico de carácter jurídico:",o:["Nivelación presupuestaria.","Publicidad.","Unidad de caja.","Gasto mínimo."],c:1,e:"Con universalidad, unidad, especialidad y temporalidad."},
+ {q:"Es un principio clásico de carácter económico:",o:["Especialidad.","Neutralidad de la imposición.","Presupuesto bruto.","Universalidad."],c:1,e:"Inspirado en Adam Smith."},
+ {q:"Son principios clásicos de carácter contable:",o:["Unidad y universalidad.","Presupuesto bruto, unidad de caja y especificación.","Gasto mínimo y nivelación.","Competencia y publicidad."],c:1,e:"Clasificación de Sánchez Revenga y Pascual."},
+ {q:"El presupuesto bruto es la traducción contable del principio de:",o:["Unidad.","Universalidad.","Especialidad.","Temporalidad."],c:1,e:"Todo por su importe íntegro."},
+ {q:"La unidad de caja es la versión contable del principio de:",o:["Universalidad.","Unidad.","Especialidad.","Publicidad."],c:1,e:"Centralizar cobros y pagos."},
+ {q:"El principio de ejercicio cerrado garantiza el de:",o:["Unidad.","Temporalidad.","Universalidad.","Especialidad."],c:1,e:"Operaciones de cierre."},
+ {q:"Según el principio clásico de deuda pública, solo podía emitirse para:",o:["Gasto corriente.","Inversiones autoliquidables.","Pagar intereses.","Cubrir el déficit cíclico."],c:1,e:"Principio económico clásico."},
+ {q:"Hoy, los gastos urgentes no previstos en el presupuesto se atienden con:",o:["Un presupuesto extraordinario.","Créditos extraordinarios y suplementos de crédito aprobados por ley.","Un decreto de urgencia.","El fondo de reserva sin límites."],c:1,e:"Art. 55 LGP."},
+ {q:"El presupuesto clásico se mantuvo hasta:",o:["La Revolución francesa.","La crisis de 1929.","1947.","1978."],c:1,e:"Desde el siglo XVIII."},
+ {q:"El presupuesto que utiliza el déficit para compensar la falta de demanda privada es el:",o:["Clásico.","Compensatorio.","De base cero.","Por programas."],c:1,e:"De inspiración keynesiana."},
+ {q:"El presupuesto que busca el equilibrio considerando todos los presupuestos del ciclo es el:",o:["Compensatorio.","Cíclico.","De estabilización automática.","Funcional."],c:1,e:"Sustituye el equilibrio anual."},
+ {q:"El presupuesto de estabilización automática se desarrolla a partir de:",o:["1929.","1947.","1965.","1985."],c:1,e:"Estabilizadores automáticos."},
+ {q:"La técnica en la que cada centro justifica sus necesidades desde cero, olvidando el gasto anterior, es el presupuesto:",o:["Por tareas.","En base cero.","Funcional.","Por programas."],c:1,e:"Reacción frente al incrementalismo."},
+ {q:"El presupuesto que informa de «para qué» se gasta es el:",o:["Administrativo.","Funcional.","Clásico.","De caja."],c:1,e:"Antes solo se sabía quién y en qué."}
+];
+
+const T4=[
+ {q:"Lo que diferencia el presupuesto por programas del presupuesto por tareas está en:",o:["La ejecución.","La fase de elaboración o planificación: se analizan alternativas y se elige la mejor.","El control externo.","La contabilidad."],c:1,e:"Manual del tema."},
+ {q:"El art. 31.2 CE dispone que la programación y ejecución del gasto responderán a:",o:["Legalidad y jerarquía.","Eficiencia y economía.","Unidad y universalidad.","Estabilidad y sostenibilidad."],c:1,e:"Con asignación equitativa de los recursos."},
+ {q:"El presupuesto consolidado del Tesoro o de caja pretende mostrar:",o:["La eficacia de los programas.","El efecto de ingresos y gastos públicos sobre la liquidez.","El gasto por funciones.","El patrimonio."],c:1,e:"Técnica menos relevante."},
+ {q:"Los presupuestos administrativos se caracterizan por:",o:["Tener forma de cuenta de resultados.","La triple limitación del gasto (cuantitativa, cualitativa y temporal) e ingresos estimativos.","Ser estimativos en gastos.","Ser exclusivos de sociedades."],c:1,e:"AGE, OOAA, Seguridad Social."},
+ {q:"Los presupuestos de explotación y capital corresponden a:",o:["La AGE.","Entidades de tipo empresarial (EPE, sociedades mercantiles).","La Seguridad Social.","Los OOAA."],c:1,e:"Cuenta de explotación o de pérdidas y ganancias."},
+ {q:"El ciclo presupuestario comprende:",o:["Planificación, gasto y pago.","Elaboración, aprobación, ejecución y control.","Previsión, liquidación y cierre.","Propuesta, enmienda y veto."],c:1,e:"Cuatro fases."},
+ {q:"La aprobación del presupuesto se produce normalmente:",o:["En el primer semestre.","Durante el último trimestre del año anterior.","Antes del 1 de abril.","Durante el año de vigencia."],c:1,e:"Por el Legislativo."},
+ {q:"El control presupuestario se realiza:",o:["Solo después de la ejecución.","Durante y con posterioridad a la ejecución.","Solo antes.","Solo durante."],c:1,e:"Simultáneo y posterior."},
+ {q:"La ejecución del presupuesto corresponde:",o:["A las Cortes.","Al Ejecutivo y a los órganos con secciones presupuestarias.","Al Tribunal de Cuentas.","Al Banco de España."],c:1,e:"Durante el año natural."},
+ {q:"Los objetivos de estabilidad presupuestaria y de deuda se fijan:",o:["En el segundo semestre.","En el primer semestre de cada año.","Con la LPGE.","Cada 3 años."],c:1,e:"Art. 15 LO 2/2012."},
+ {q:"Los objetivos de estabilidad se refieren a:",o:["El año siguiente.","Los 3 ejercicios siguientes.","Los 5 ejercicios siguientes.","El ejercicio en curso."],c:1,e:"Para el conjunto de AAPP y cada subsector."},
+ {q:"Los objetivos de estabilidad y deuda se expresan en:",o:["Millones de euros.","Términos porcentuales del PIB nacional nominal.","Porcentaje del gasto.","Puntos del IPC."],c:1,e:"Art. 15 LO 2/2012."},
+ {q:"Antes de fijar los objetivos de estabilidad informan:",o:["El Consejo de Estado y el TC.","El Consejo de Política Fiscal y Financiera y la Comisión Nacional de Administración Local.","El Banco de España y la CNMV.","Las Cortes."],c:1,e:"En cuanto a sus ámbitos."},
+ {q:"Hacienda remite las propuestas de objetivos al CPFF y a la CNAL:",o:["Antes del 1 de octubre.","Antes del 1 de abril.","Antes del 30 de junio.","En enero."],c:1,e:"Con un plazo de 15 días para informar."},
+ {q:"El acuerdo del Consejo de Ministros con los objetivos de estabilidad incluye:",o:["El IPC.","El límite de gasto no financiero del Presupuesto del Estado.","Los tipos impositivos.","La plantilla de funcionarios."],c:1,e:"El llamado «techo de gasto»."},
+ {q:"Si el Congreso aprueba los objetivos y el Senado los rechaza:",o:["Quedan rechazados.","Se someten a nueva votación en el Congreso, que los aprueba si los ratifica por mayoría simple.","Decide el Gobierno.","Requieren mayoría absoluta."],c:1,e:"Art. 15 LO 2/2012."},
+ {q:"Si las Cortes rechazan los objetivos de estabilidad, el Gobierno remite un nuevo acuerdo en el plazo máximo de:",o:["15 días.","1 mes.","3 meses.","6 meses."],c:1,e:"Por el mismo procedimiento."},
+ {q:"La regla de gasto implica que la variación del gasto de las AAPP no puede superar:",o:["El IPC.","La tasa de referencia de crecimiento del PIB a medio plazo.","El 3 % del PIB.","El crecimiento de los ingresos."],c:1,e:"Art. 12 LO 2/2012."},
+ {q:"El informe sobre la situación económica que acompaña a la propuesta de objetivos lo elabora:",o:["El Banco de España.","El Ministerio competente en Economía.","La AIReF.","El INE."],c:1,e:"Teniendo en cuenta las previsiones del BCE y de la Comisión."},
+ {q:"La reforma de las reglas fiscales de la UE de 2023-2024 se basa en un indicador único:",o:["El déficit nominal.","La senda de gasto.","La deuda bruta.","El saldo primario."],c:1,e:"Con régimen transitorio hasta 2027."}
+];
+
+const T5=[
+ {q:"Los escenarios presupuestarios plurianuales los confecciona:",o:["Cada Ministerio.","El Ministerio de Hacienda.","El Consejo de Ministros.","Las Cortes."],c:1,e:"Art. 28 LGP."},
+ {q:"Los escenarios presupuestarios plurianuales determinan límites para:",o:["El año siguiente.","Los 3 ejercicios siguientes.","Los 5 ejercicios siguientes.","La legislatura."],c:1,e:"Art. 28 LGP."},
+ {q:"Los escenarios presupuestarios plurianuales están integrados por:",o:["Un único escenario.","Un escenario de ingresos y un escenario de gastos.","Escenarios por CCAA.","Un escenario de deuda."],c:1,e:"Art. 28 LGP."},
+ {q:"Hacienda da cuenta de los escenarios al Consejo de Ministros:",o:["Después de aprobar la LPGE.","Antes de aprobar el proyecto de LPGE de cada año.","Cada 3 años.","Solo si lo piden las Cortes."],c:1,e:"Art. 28 LGP."},
+ {q:"El programa plurianual de cada Ministerio se aprueba por:",o:["El Consejo de Ministros.","El Ministro.","Hacienda.","El Subsecretario."],c:1,e:"Contiene los programas de sus centros gestores."},
+ {q:"El programa plurianual de la Seguridad Social se elabora:",o:["Por Hacienda.","Separadamente por el Ministro competente en Seguridad Social.","Por la TGSS.","Por el INSS."],c:1,e:"Art. 29 LGP."},
+ {q:"El procedimiento de elaboración y la estructura de los programas plurianuales de los centros gestores se establece por:",o:["Real decreto.","Orden del Ministro de Hacienda.","Ley.","Resolución del centro gestor."],c:1,e:"Art. 30 LGP."},
+ {q:"Las asignaciones a los centros gestores tienen en cuenta, entre otras cosas:",o:["El número de funcionarios.","El nivel de cumplimiento de los objetivos en ejercicios anteriores.","El gasto del año anterior más el IPC.","La antigüedad del centro."],c:1,e:"Art. 31 LGP."},
+ {q:"El procedimiento de elaboración de los PGE se establece por:",o:["Real decreto.","Orden del Ministro de Hacienda.","Ley.","Acuerdo de las Cortes."],c:1,e:"Art. 36.2 LGP."},
+ {q:"La orden de elaboración de los PGE para 2027 es la:",o:["Orden HAC/641/2024.","Orden HAC/974/2025.","Orden HAC/557/2026.","Orden HAC/20/2020."],c:2,e:"De 3 de junio (BOE de 5-6-2026)."},
+ {q:"Las directrices para la distribución del gasto las determina:",o:["El Consejo de Ministros.","El Ministro de Hacienda.","Cada Ministro.","Las Cortes."],c:1,e:"Con la Comisión de Políticas de Gasto."},
+ {q:"La Comisión de Políticas de Gasto la preside, según la orden vigente:",o:["El Presidente del Gobierno.","La persona titular del Ministerio de Hacienda.","El DG de Presupuestos.","El Subsecretario de Hacienda."],c:1,e:"En su ausencia, el Secretario de Estado de Presupuestos y Gastos."},
+ {q:"Actúa como secretario no miembro de la Comisión de Políticas de Gasto:",o:["El DG de Presupuestos.","El Subdirector General de Política Presupuestaria.","El Interventor General.","Un Subsecretario."],c:1,e:"Orden de elaboración."},
+ {q:"Las Comisiones de Análisis de Programas son:",o:["Plenarias.","Bilaterales entre Hacienda y cada departamento ministerial.","Parlamentarias.","Autonómicas."],c:1,e:"Estudian la adecuación de los programas."},
+ {q:"Preside las Comisiones de Análisis de Programas:",o:["El Ministro de Hacienda.","El Secretario de Estado de Presupuestos y Gastos.","El Subsecretario del departamento.","El Jefe de la Oficina Presupuestaria."],c:1,e:"En su ausencia, el DG de Presupuestos."},
+ {q:"NO forma parte de las Comisiones de Análisis de Programas:",o:["El DG de Presupuestos.","El Subsecretario del departamento.","El Interventor General del Estado.","El Jefe de la Oficina Presupuestaria."],c:2,e:"Composición de la orden."},
+ {q:"Elabora los estados de gastos del anteproyecto de PGE:",o:["Cada Ministerio.","La Dirección General de Presupuestos.","La IGAE.","El Tesoro."],c:1,e:"Con las prioridades de la Comisión de Políticas de Gasto."},
+ {q:"El presupuesto de ingresos de la AGE lo elabora:",o:["La AEAT.","El Ministerio de Hacienda.","Cada Ministerio.","El Banco de España."],c:1,e:"Art. 36 LGP."},
+ {q:"La fase de refundición en el Ministerio de Hacienda llega hasta:",o:["El 1 de abril.","El 30 de septiembre.","El 31 de diciembre.","El 1 de julio."],c:1,e:"Desde que se publica la orden."},
+ {q:"En la Orden HAC/557/2026, los centros gestores remiten sus propuestas a la DG de Presupuestos antes del:",o:["8 de julio de 2024.","29 de junio de 2026.","1 de octubre de 2026.","30 de septiembre de 2026."],c:1,e:"El 8-7-2024 era la fecha de la orden del manual (PGE 2025)."}
+];
+
+const T6=[
+ {q:"Las propuestas de presupuesto del INGESA las envía el Ministerio de Sanidad a:",o:["El Ministerio de Seguridad Social.","El Ministerio de Hacienda, que forma el anteproyecto definitivo.","Las Cortes.","La TGSS."],c:1,e:"Después va al Ministerio de Seguridad Social."},
+ {q:"Las propuestas de presupuesto del IMSERSO las envía:",o:["Sanidad.","El Ministerio de Derechos Sociales.","Trabajo.","Hacienda."],c:1,e:"A Hacienda, que forma el anteproyecto."},
+ {q:"Forma el anteproyecto de presupuesto de la Seguridad Social:",o:["Hacienda.","El Ministerio competente en Seguridad Social.","El INSS.","La IGAE."],c:1,e:"Con gestoras, servicios comunes y Mutuas."},
+ {q:"El anteproyecto de Presupuesto de la Seguridad Social se eleva al Gobierno por:",o:["El Ministro de Hacienda solo.","Los titulares de los Ministerios de Seguridad Social y de Hacienda.","El Director de la TGSS.","El Presidente del Gobierno."],c:1,e:"Conjuntamente."},
+ {q:"Cada programa de gasto se acompaña de:",o:["Un informe del Tribunal de Cuentas.","Su memoria de objetivos anuales.","Un dictamen del Consejo de Estado.","Una auditoría."],c:1,e:"Conforme al programa plurianual."},
+ {q:"Eleva al Gobierno el anteproyecto de LPGE:",o:["El Presidente.","El Ministro de Hacienda.","El DG de Presupuestos.","El Secretario de Estado de Presupuestos."],c:1,e:"Art. 37 LGP."},
+ {q:"Según la LGP, el proyecto de LPGE se remite a las Cortes:",o:["Antes del 1 de septiembre.","Antes del 1 de octubre del año anterior.","Antes del 31 de diciembre.","En enero."],c:1,e:"Art. 37 LGP."},
+ {q:"Según la CE, el Gobierno presenta los PGE ante el Congreso:",o:["Al menos 3 meses antes de la expiración de los del año anterior.","Al menos 6 meses antes.","Antes del 1 de enero.","En el primer semestre."],c:0,e:"Art. 134.3 CE."},
+ {q:"NO acompaña al proyecto de LPGE como documentación complementaria:",o:["El informe de impacto de género.","La memoria de beneficios fiscales.","El dictamen del Consejo de Estado.","Los estados consolidados."],c:2,e:"Art. 37 LGP."},
+ {q:"Acompaña al proyecto de LPGE:",o:["La Cuenta General del Estado del año en curso.","La liquidación del año anterior y un avance de la del corriente.","El informe de fiscalización del Tribunal de Cuentas.","El programa electoral."],c:1,e:"Art. 37 LGP."},
+ {q:"El anexo de proyectos de inversión pública tiene carácter:",o:["Anual.","Plurianual, con clasificación territorial.","Secreto.","Indicativo para las CCAA."],c:1,e:"Art. 37 LGP."},
+ {q:"Las sociedades mercantiles estatales elaboran:",o:["Presupuestos limitativos.","Presupuestos de explotación y de capital.","Solo un balance.","Presupuesto por programas."],c:1,e:"Se integran en los PGE."},
+ {q:"Los presupuestos de explotación y capital consisten en:",o:["Créditos limitativos.","Una previsión de la cuenta de resultados y del estado de flujos de efectivo.","Un estado de ingresos y gastos.","Un balance de situación."],c:1,e:"Con una previsión del balance como anexo."},
+ {q:"El programa de actuación plurianual de las entidades empresariales abarca:",o:["Solo el ejercicio del proyecto.","El ejercicio del proyecto y los 2 siguientes.","Los 3 ejercicios siguientes al proyecto.","5 años."],c:1,e:"Art. 65 LGP."},
+ {q:"NO están obligadas a presentar programa de actuación plurianual:",o:["Las EPE que reciben subvenciones.","Las fundaciones del sector público estatal.","Las sociedades que piden aportaciones de los PGE.","Todas las sociedades mercantiles."],c:1,e:"Tampoco las cotizadas ni las que formulan cuentas abreviadas sin aportaciones."},
+ {q:"En la orden de elaboración, los proyectos financiables con el Mecanismo de Recuperación y Resiliencia se codifican empezando por:",o:["00.","68.","99.","12."],c:1,e:"Y, si hace falta, 69, 70… hasta 77."},
+ {q:"El informe de impacto de género se estructura en tres capítulos:",o:["Diagnóstico, medidas y evaluación.","Realidad, Representación y Recursos-Resultados.","Ingresos, gastos y saldo.","Objetivos, medios e indicadores."],c:1,e:"Orden de elaboración."},
+ {q:"El informe de alineamiento con la transición ecológica distingue las dimensiones:",o:["Social y económica.","Verde y marrón.","Positiva y negativa.","Estatal y autonómica."],c:1,e:"Gastos que contribuyen o perjudican a los objetivos medioambientales."},
+ {q:"Los documentos de los centros gestores se remiten a la DG de Presupuestos a través de:",o:["Las Subsecretarías directamente.","Las oficinas presupuestarias.","La IGAE.","El Registro."],c:1,e:"Coordinan y tramitan la información."},
+ {q:"Los proyectos de inversión susceptibles de financiación europea se comunican a:",o:["La DG de Presupuestos.","La Secretaría General de Fondos Europeos.","La Comisión Europea directamente.","El Tribunal de Cuentas Europeo."],c:1,e:"Orden de elaboración."}
+];
+
+const T7=[
+ {q:"El examen, enmienda y aprobación de los PGE corresponde a:",o:["El Gobierno.","Las Cortes Generales.","El Congreso exclusivamente.","El Tribunal de Cuentas."],c:1,e:"Art. 134.1 CE."},
+ {q:"El proyecto de LPGE, en su tramitación parlamentaria:",o:["No tiene prioridad.","Goza de preferencia respecto de los demás trabajos de las Cámaras.","Se tramita por urgencia siempre.","Se tramita en lectura única."],c:1,e:"Manual del tema."},
+ {q:"Las proposiciones o enmiendas que supongan aumento de créditos o disminución de ingresos requieren:",o:["Mayoría absoluta.","Conformidad del Gobierno para su tramitación.","Informe del Consejo de Estado.","Dictamen del Tribunal de Cuentas."],c:1,e:"Art. 134.6 CE."},
+ {q:"Las enmiendas que suponen aumento de créditos en algún concepto solo se admiten si:",o:["Tienen apoyo del 60 %.","Proponen una baja de igual cuantía en la misma sección.","Las firma un grupo mayoritario.","Se refieren a inversiones."],c:1,e:"Además de los requisitos generales."},
+ {q:"La Ley de Presupuestos:",o:["Puede crear tributos.","No puede crear tributos, solo modificarlos si una ley tributaria sustantiva lo prevé.","No puede modificar tributos nunca.","Puede crear tasas pero no impuestos."],c:1,e:"Art. 134.7 CE."},
+ {q:"La Ley de Presupuestos es una ley:",o:["Orgánica.","Ordinaria, que se aprueba por mayoría simple.","De bases.","Marco."],c:1,e:"Sin mayorías cualificadas."},
+ {q:"Si la LPGE no se aprueba antes del primer día del ejercicio:",o:["Se cierra la Administración.","Se prorrogan automáticamente los presupuestos del ejercicio anterior.","El Gobierno aprueba un decreto de presupuestos.","Se aplica un presupuesto provisional del Senado."],c:1,e:"Art. 134.4 CE."},
+ {q:"Según el art. 38 LGP, se prorrogan los presupuestos:",o:["Definitivos del ejercicio anterior.","Iniciales del ejercicio anterior.","Del último año aprobado en Cortes con sus modificaciones.","Proyectados para el año."],c:1,e:"Art. 38 LGP."},
+ {q:"La prórroga dura hasta:",o:["El 30 de junio.","La aprobación y publicación de los nuevos en el BOE.","Un máximo de un año.","La aprobación en el Congreso."],c:1,e:"Art. 38 LGP."},
+ {q:"La prórroga NO afecta a los créditos:",o:["De personal.","De programas o actuaciones que terminan en el ejercicio prorrogado.","De la deuda.","De las pensiones."],c:1,e:"Ni a obligaciones que se extinguen en él."},
+ {q:"En la prórroga, la estructura orgánica del presupuesto:",o:["Se mantiene igual.","Se adapta a la organización vigente sin alterar la cuantía total.","Se reduce un 10 %.","La fijan las Cortes."],c:1,e:"Art. 38 LGP."},
+ {q:"Los criterios para aplicar la prórroga los acuerda:",o:["Las Cortes.","El Consejo de Ministros, a propuesta de Hacienda.","El Tribunal de Cuentas.","Cada Ministerio."],c:1,e:"Art. 38 LGP."},
+ {q:"Aprueban y comprometen los gastos propios de sus presupuestos y reconocen las obligaciones:",o:["Los Subdirectores Generales.","Los Ministros y titulares de órganos con dotación diferenciada.","El Tesoro.","La IGAE."],c:1,e:"Salvo lo reservado al Consejo de Ministros."},
+ {q:"Los presidentes o directores de OOAA tienen competencia para:",o:["Solo comprometer gasto.","Aprobar y comprometer gasto, reconocer obligaciones y pagarlas.","Solo pagar.","Aprobar la LPGE."],c:1,e:"Art. 74 LGP."},
+ {q:"Los convenios de colaboración con gasto superior a 12 millones € requieren:",o:["Informe de la IGAE solo.","Autorización del Consejo de Ministros.","Ley.","Autorización de las Cortes."],c:1,e:"Art. 74.5 LGP."},
+ {q:"La autorización del Consejo de Ministros de un convenio implica:",o:["Su fiscalización.","La aprobación del gasto derivado.","Su publicación.","Su prórroga."],c:1,e:"Art. 74 LGP."},
+ {q:"El Ordenador general de pagos del Estado es:",o:["El Interventor General.","El Director General del Tesoro y Política Financiera.","El Ministro de Hacienda.","El DG de Presupuestos."],c:1,e:"Art. 75 LGP."},
+ {q:"El Ordenador general de pagos de la Seguridad Social es:",o:["El Director del INSS.","El Director General de la TGSS.","El Ministro de Seguridad Social.","El Interventor de la SS."],c:1,e:"Art. 75 LGP."},
+ {q:"El control externo del sector público estatal corresponde a:",o:["La IGAE.","El Tribunal de Cuentas.","Las Intervenciones Delegadas.","El Consejo de Estado."],c:1,e:"Supremo órgano fiscalizador."},
+ {q:"El control político del presupuesto lo realizan:",o:["El Tribunal de Cuentas.","Las Cortes Generales.","La IGAE.","El Gobierno."],c:1,e:"Es también externo."}
+];
+
+const T8=[
+ {q:"Los antecedentes más remotos del presupuesto por programas se sitúan en:",o:["1942, EE. UU.","1924, General Motors.","1965, Johnson.","1977, España."],c:1,e:"En el sector privado."},
+ {q:"El primer presupuesto por programas del Gobierno Federal de EE. UU. fue:",o:["El New Deal.","The Controlled Materials Plan (1942).","El PPBS de 1965.","El Plan Marshall."],c:1,e:"Consejo de Producción de Guerra."},
+ {q:"Extendió el presupuesto por programas a todas las oficinas del Gobierno Federal:",o:["Roosevelt en 1942.","Lyndon Johnson en 1965.","Kennedy en 1961.","Nixon en 1970."],c:1,e:"Agosto de 1965."},
+ {q:"En España, el RD 1973/1977 creó:",o:["La IGAE.","La Comisión de Racionalización y Descentralización del Gasto Público.","La DG de Presupuestos.","El Tribunal de Cuentas."],c:1,e:"Entre sus fines, elaborar presupuestos por programas."},
+ {q:"El presupuesto por programas se aplicó a los PGE en:",o:["1979.","1984.","1985.","1977."],c:2,e:"En 1984, de forma indicativa en los Ministerios."},
+ {q:"Lo fundamental en el presupuesto por programas es:",o:["El control externo.","La fijación de metas u objetivos.","El equilibrio anual.","La contabilidad de caja."],c:1,e:"Manual del tema."},
+ {q:"La programación consiste en:",o:["Aprobar los créditos anuales.","Calcular el impacto financiero de los programas elegidos para los años que dure su ejecución.","Controlar los resultados.","Fijar los fines."],c:1,e:"Evalúa los programas que permiten alcanzar los objetivos."},
+ {q:"La presupuestación es la fase de:",o:["Fijación de objetivos.","Determinación formal de los créditos para el tramo anual del presupuesto plurianual.","Evaluación ex post.","Rendición de cuentas."],c:1,e:"Traducción económica de los programas."},
+ {q:"Las memorias de coste y rendimiento de los servicios y de cumplimiento de objetivos se unen a:",o:["La LPGE.","La Cuenta General del Estado.","El informe de la IGAE.","El escenario plurianual."],c:1,e:"Fines del sistema de información."},
+ {q:"Los indicadores del presupuesto por programas deben ser:",o:["Abstractos y numerosos.","Concretos y poco numerosos.","Exclusivamente financieros.","Secretos."],c:1,e:"Para evitar una red burocrática extensa."},
+ {q:"Los indicadores que comparan el resultado con los objetivos (eficacia) son los:",o:["De medios.","De impacto.","De gestión.","De resultados."],c:1,e:"Pueden ser sociales."},
+ {q:"Los indicadores que miden productos físicos o servicios prestados son los:",o:["De impacto.","De resultados.","De medios.","De gestión."],c:1,e:"Cantidades o niveles alcanzados."},
+ {q:"Los indicadores que comparan los costes con los resultados (eficiencia) son los:",o:["De impacto.","De resultados.","De medios.","De gestión."],c:3,e:"Y los resultados con las previsiones."},
+ {q:"Los indicadores que miden los recursos financieros y costes de cada programa son los:",o:["De gestión.","De medios.","De impacto.","De resultados."],c:1,e:"Manual del tema."},
+ {q:"Un programa con código 912M es:",o:["Finalista.","Instrumental y de gestión.","De inversión.","De la Seguridad Social."],c:1,e:"Letras M a Z."},
+ {q:"Un programa con código 231F es:",o:["Instrumental.","Finalista.","De gestión.","Transferencia interna."],c:1,e:"Letras A a L."},
+ {q:"Las fases del presupuesto por programas según tu esquema son:",o:["Elaboración, aprobación, ejecución y control.","Planificación, programación, presupuestación, ejecución y control.","Objetivos, medios y resultados.","Previsión, gasto y cierre."],c:1,e:"Esquema del presupuesto por programas."},
+ {q:"Un ejemplo de objetivo del presupuesto por programas es:",o:["Gastar todo el crédito.","Reducir la tasa de desempleo estimulando las medidas de fomento de empleo.","Aumentar la plantilla.","Cumplir el calendario."],c:1,e:"Ejemplo del manual."},
+ {q:"El sistema de información del presupuesto por programas NO tiene como fin:",o:["Seguir la gestión de los programas.","Permitir el control de eficacia.","Sustituir el control del Tribunal de Cuentas.","Revisar los objetivos a corto y medio plazo."],c:2,e:"Fines del sistema de información."},
+ {q:"La LGP de 1977 estableció que cada Departamento u OA fijaría:",o:["Un techo de gasto.","Un sistema de objetivos, clasificando los créditos por programas.","Una plantilla.","Un presupuesto en base cero."],c:1,e:"Antecedente del PxP en España."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"📘",name:"Concepto y ámbito",desc:"Definiciones, art. 32 LGP, sector público estatal y composición de los PGE.",qs:T1},
+ {id:"t2",ic:"⚖️",name:"Principios de la LO 2/2012 y la LGP",desc:"Estabilidad, sostenibilidad, anualidad, no afectación y presupuesto bruto.",qs:T2},
+ {id:"t3",ic:"🏛️",name:"Principios clásicos y clases",desc:"Especialidades, grupos clásicos y fórmulas de estabilización.",qs:T3},
+ {id:"t4",ic:"🔄",name:"Ciclo y objetivos de estabilidad",desc:"Fases, art. 15 LO 2/2012, regla de gasto y reglas fiscales de la UE.",qs:T4},
+ {id:"t5",ic:"🗂️",name:"Programación y elaboración",desc:"Escenarios, programas plurianuales, orden y comisiones.",qs:T5},
+ {id:"t6",ic:"📦",name:"Seguridad Social, documentación y entes",desc:"Anteproyecto de la SS, documentación complementaria e informes.",qs:T6},
+ {id:"t7",ic:"🗳️",name:"Aprobación, prórroga, ejecución y control",desc:"Art. 134 CE, art. 38 LGP, ordenadores de pagos y control.",qs:T7},
+ {id:"t8",ic:"🎯",name:"Presupuesto por programas",desc:"Antecedentes, fases, indicadores y códigos de programa.",qs:T8}
+];
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+/* ===== Esquemas autocorregibles ===== */
+const ESQ=[
+ {id:"e1",title:"Concepto de presupuesto",intro:"Definiciones y rasgos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">El presupuesto</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Definiciones</b>Art. 32 LGP: expresión {{0}} de los derechos y obligaciones a liquidar.<br>Fuentes Quintana: expresión {{1}} del plan económico de la Hacienda.<br>Ámbito: {{2}}.</div>
+   <div class="sch-box alt"><b>Rasgos</b>Es un acto de {{3}}, no un balance.<br>Se aprueba por {{4}}.<br>Se presenta formalmente {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Contenido</b>Estado de gastos: {{6}}. Estado de ingresos: {{7}}.</div></div>`,
+  blanks:[
+   {o:["cifrada, conjunta y sistemática","contable y patrimonial","anual y plurianual","política y jurídica"],why:"Art. 32 LGP."},
+   {o:["contable","jurídica","política","fiscal"],why:"Definición doctrinal."},
+   {o:["el sector público estatal","todas las AAPP","solo la AGE","AGE y CCAA"],why:"Art. 32 LGP."},
+   {o:["previsión","liquidación","control","contabilidad"],why:"Previsión normativa."},
+   {o:["ley","real decreto","orden","acuerdo del Gobierno"],why:"Por las Cortes."},
+   {o:["equilibrado","con superávit","con déficit","nivelado a cero"],why:"Aunque económicamente haya déficit o superávit."},
+   {o:["créditos para obligaciones","estimación de derechos","beneficios fiscales","deuda"],why:"Límite del gasto."},
+   {o:["estimación de derechos","créditos para obligaciones","tributos creados","subvenciones"],why:"Estimativo."}
+  ]},
+ {id:"e2",title:"Principios de la CE y la LGP",intro:"Asocia cada principio con su contenido.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Principios presupuestarios</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Art. 134 CE</b>Gobierno elabora, Cortes aprueban: {{0}}.<br>Un único presupuesto: {{1}}.<br>Todos los gastos e ingresos: {{2}}.</div>
+   <div class="sch-box alt"><b>LGP</b>Art. 27.3, recursos para el conjunto de obligaciones: {{3}}.<br>Art. 27.4, importe íntegro: {{4}}.<br>Art. 91, el Tesoro centraliza fondos: {{5}}.<br>Art. 176, dolo o culpa grave: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["legalidad o competencia","unidad","especialidad","publicidad"],why:"Art. 134.1 CE."},
+   {o:["unidad","universalidad","temporalidad","especialidad"],why:"Art. 134.2 CE."},
+   {o:["universalidad","unidad","no afectación","bruto"],why:"Art. 134.2 CE."},
+   {o:["no afectación","presupuesto bruto","unidad de caja","especialidad"],why:"Salvo afectación por ley."},
+   {o:["presupuesto bruto","no afectación","especialidad cuantitativa","universalidad"],why:"Sin minorar derechos ni obligaciones."},
+   {o:["unidad de caja","unidad","contabilidad","control"],why:"Art. 91 LGP."},
+   {o:["responsabilidad","control","lealtad","contabilidad"],why:"Indemnizar a la Hacienda Pública."}
+  ]},
+ {id:"e3",title:"Las tres especialidades",intro:"Qué, cuánto y cuándo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Especialidad</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Cualitativa</b>Créditos solo para {{0}}.</div>
+   <div class="sch-box alt"><b>Cuantitativa</b>No comprometer más de {{1}}.<br>Si se infringe: {{2}}.</div>
+   <div class="sch-box"><b>Temporal</b>Los créditos no afectados a obligaciones el último día {{3}}, salvo {{4}}.</div>
+  </div>
+  <div class="sch-box"><b>Versión contable</b>{{5}}: registrar en su nivel de desagregación.</div></div>`,
+  blanks:[
+   {o:["su finalidad específica","cualquier gasto del Ministerio","gastos urgentes","inversiones"],why:"Para lo que se autorizaron."},
+   {o:["el importe del crédito","el gasto del año anterior","el 110 % del crédito","el techo de gasto"],why:"El crédito es un límite."},
+   {o:["nulidad de pleno derecho","anulabilidad","responsabilidad penal solo","multa"],why:"De actos y disposiciones de rango inferior a ley."},
+   {o:["se anulan de pleno derecho","se prorrogan","pasan al Tesoro","se incorporan siempre"],why:"Cierre del ejercicio."},
+   {o:["los incorporables","los de personal","los de deuda","ninguno"],why:"Excepciones legales."},
+   {o:["Especificación","Unidad de caja","Bruto","Ejercicio cerrado"],why:"Versión contable de la especialidad."}
+  ]},
+ {id:"e4",title:"Los siete principios de la LO 2/2012",intro:"Asigna cada definición a su principio.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">LO 2/2012, arts. 3 a 9</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Definiciones</b>Equilibrio o superávit estructural: {{0}}.<br>Financiar compromisos dentro de los límites de déficit y deuda: {{1}}.<br>Marco a medio plazo compatible con la anualidad: {{2}}.<br>Información suficiente y pública: {{3}}.</div>
+   <div class="sch-box alt"><b>Más definiciones</b>Eficacia, eficiencia, economía y calidad: {{4}}.<br>El Estado no responde de CCAA ni EELL: {{5}}.<br>Valorar el impacto en otras AAPP y cooperar: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["Estabilidad","Sostenibilidad","Plurianualidad","Eficiencia"],why:"Art. 3."},
+   {o:["Sostenibilidad","Estabilidad","Responsabilidad","Transparencia"],why:"Art. 4."},
+   {o:["Plurianualidad","Anualidad","Estabilidad","Lealtad"],why:"Art. 5."},
+   {o:["Transparencia","Publicidad","Lealtad","Eficiencia"],why:"Art. 6."},
+   {o:["Eficiencia","Estabilidad","Transparencia","Sostenibilidad"],why:"Art. 7."},
+   {o:["Responsabilidad","Lealtad","Sostenibilidad","Estabilidad"],why:"Art. 8."},
+   {o:["Lealtad institucional","Responsabilidad","Transparencia","Eficiencia"],why:"Art. 9."}
+  ]},
+ {id:"e5",title:"Principios clásicos por grupos",intro:"Clasificación de Sánchez Revenga y Pascual.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Principios clásicos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Principios</b>Competencia: {{0}}.<br>Publicidad: {{1}}.<br>Nivelación presupuestaria: {{2}}.<br>Unidad de caja: {{3}}.</div>
+   <div class="sch-box alt"><b>Más principios</b>Neutralidad de la imposición: {{4}}.<br>Especificación: {{5}}.<br>Temporalidad: {{6}}.<br>Gasto público mínimo: {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["político","jurídico","económico","contable"],why:"El único de carácter político."},
+   {o:["jurídico","político","contable","económico"],why:"Con universalidad, unidad, especialidad y temporalidad."},
+   {o:["económico","jurídico","contable","político"],why:"Gastos no superiores a ingresos."},
+   {o:["contable","jurídico","económico","político"],why:"Versión contable de la unidad."},
+   {o:["económico","jurídico","contable","político"],why:"Adam Smith."},
+   {o:["contable","jurídico","económico","político"],why:"Versión contable de la especialidad."},
+   {o:["jurídico","contable","económico","político"],why:"Gastar en el ejercicio aprobado."},
+   {o:["económico","político","jurídico","contable"],why:"Ideario liberal."}
+  ]},
+ {id:"e6",title:"Ordena: del presupuesto clásico a la estabilización",intro:"Según su aparición histórica.",type:"order",
+  items:[
+   {t:"Presupuesto clásico (siglo XVIII – 1929)",why:"Liberalismo: gasto mínimo y equilibrio anual."},
+   {t:"Presupuesto compensatorio",why:"Tras 1929: déficit para compensar la demanda privada."},
+   {t:"Presupuesto cíclico",why:"Equilibrio a lo largo del ciclo económico."},
+   {t:"Presupuesto de estabilización automática (desde 1947)",why:"Culmina los anteriores: estabilizadores automáticos."}
+  ]},
+ {id:"e7",title:"Técnicas de eficacia y tipos de presupuesto",intro:"Identifica cada técnica o tipo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Clases de presupuesto</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Técnicas de eficacia</b>Dice para qué se gasta: {{0}}.<br>Analiza alternativas y elige la mejor: {{1}}.<br>Justifica todo partiendo de cero: {{2}}.<br>Efecto sobre la liquidez: {{3}}.</div>
+   <div class="sch-box alt"><b>Por la limitación del gasto</b>AGE, OOAA y SS, triple limitación: {{4}}.<br>EPE y sociedades: {{5}}.<br>Con ambos rasgos: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["funcional","por tareas","base cero","clásico"],why:"Clasificación funcional del gasto."},
+   {o:["por programas","por tareas","funcional","compensatorio"],why:"Diferencia con el de tareas."},
+   {o:["base cero","por programas","cíclico","funcional"],why:"Sin mirar el año anterior."},
+   {o:["de caja (consolidado del Tesoro)","de base cero","funcional","de capital"],why:"Técnica menos relevante."},
+   {o:["administrativos","de explotación y capital","mixtos","estimativos"],why:"Ingresos estimativos."},
+   {o:["de explotación y capital","administrativos","mixtos","por programas"],why:"Forma de cuenta de resultados."},
+   {o:["mixtos","administrativos","funcionales","cíclicos"],why:"Estados administrativos y cuenta de explotación."}
+  ]},
+ {id:"e8",title:"Fases del ciclo presupuestario",intro:"Quién y cuándo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ciclo presupuestario</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Elaboración</b>Poder: {{0}}.<br>Plazo LGP: {{1}}.</div>
+   <div class="sch-box alt"><b>Aprobación</b>Poder: {{2}}.<br>Plazo: {{3}}.</div>
+   <div class="sch-box"><b>Ejecución</b>Plazo: {{4}}.</div>
+   <div class="sch-box alt"><b>Control</b>Interno: {{5}}.<br>Externo: {{6}}.<br>Político: {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["Ejecutivo","Legislativo","Judicial","Tribunal de Cuentas"],why:"Art. 134.1 CE."},
+   {o:["antes del 1 de octubre","antes del 1 de abril","antes del 31 de diciembre","en el primer semestre"],why:"Art. 37 LGP."},
+   {o:["Legislativo","Ejecutivo","Consejo de Estado","IGAE"],why:"Examen, enmienda y aprobación."},
+   {o:["último trimestre del año anterior","primer semestre","año de vigencia","antes del 1 de abril"],why:"Fases del ciclo."},
+   {o:["año natural de vigencia","trimestre","bienio","indefinido"],why:"Ejercicio económico."},
+   {o:["IGAE","Tribunal de Cuentas","Cortes","DG de Presupuestos"],why:"Art. 140 LGP."},
+   {o:["Tribunal de Cuentas","IGAE","Gobierno","Banco de España"],why:"Supremo órgano fiscalizador."},
+   {o:["Cortes Generales","Gobierno","IGAE","Consejo de Estado"],why:"También externo."}
+  ]},
+ {id:"e9",title:"Objetivos de estabilidad (art. 15 LO 2/2012)",intro:"Plazos y órganos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Objetivos de estabilidad y deuda</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Fijación</b>Cuándo: {{0}}.<br>Quién: {{1}}.<br>Horizonte: {{2}}.<br>Medida: {{3}}.</div>
+   <div class="sch-box alt"><b>Informes y Cortes</b>Informan: {{4}}, antes del {{5}} y en {{6}}.<br>Si se rechazan: nuevo acuerdo en {{7}}.</div>
+  </div>
+  <div class="sch-box"><b>Incluye</b>{{8}}.</div></div>`,
+  blanks:[
+   {o:["primer semestre","segundo semestre","octubre","enero"],why:"De cada año."},
+   {o:["Consejo de Ministros","Cortes","Ministro de Hacienda solo","AIReF"],why:"A propuesta de Hacienda."},
+   {o:["3 ejercicios siguientes","el año siguiente","5 años","la legislatura"],why:"Art. 15.1."},
+   {o:["% del PIB nominal","millones de €","% del gasto","puntos de IPC"],why:"Art. 15.1."},
+   {o:["CPFF y CNAL","Consejo de Estado","Banco de España","Tribunal de Cuentas"],why:"CCAA y EELL."},
+   {o:["1 de abril","1 de octubre","30 de junio","1 de enero"],why:"Remisión de las propuestas."},
+   {o:["15 días","1 mes","10 días","3 meses"],why:"Plazo máximo de informe."},
+   {o:["1 mes","15 días","3 meses","6 meses"],why:"Mismo procedimiento."},
+   {o:["el límite de gasto no financiero del Estado","los tipos impositivos","la plantilla","el IPC"],why:"Techo de gasto."}
+  ]},
+ {id:"e10",title:"Programación plurianual (arts. 28-31 LGP)",intro:"Escenarios y programas.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Programación plurianual</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Escenarios</b>Los confecciona: {{0}}.<br>Horizonte: {{1}}.<br>Composición: {{2}}.<br>Da cuenta al Consejo de Ministros antes de aprobar {{3}}.</div>
+   <div class="sch-box alt"><b>Programas</b>Del Ministerio: lo aprueba {{4}}.<br>De la Seguridad Social: {{5}}.<br>De centros gestores: estructura por {{6}}.<br>Asignación según {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["el Ministerio de Hacienda","cada Ministerio","las Cortes","la IGAE"],why:"Art. 28 LGP."},
+   {o:["3 ejercicios siguientes","1 año","5 años","la legislatura"],why:"Art. 28 LGP."},
+   {o:["escenario de ingresos y de gastos","solo de gastos","de deuda","por CCAA"],why:"Art. 28 LGP."},
+   {o:["el proyecto de LPGE","la LPGE en las Cortes","la liquidación","la Cuenta General"],why:"Cada año."},
+   {o:["el Ministro","el Consejo de Ministros","Hacienda","el Subsecretario"],why:"Art. 29 LGP."},
+   {o:["aparte, por su Ministro","Hacienda","la TGSS","el INSS"],why:"Art. 29 LGP."},
+   {o:["orden de Hacienda","real decreto","ley","resolución del centro"],why:"Art. 30 LGP."},
+   {o:["cumplimiento de objetivos anteriores","el gasto histórico","la plantilla","el IPC"],why:"Art. 31 LGP."}
+  ]},
+ {id:"e11",title:"Ordena: el proceso de elaboración y aprobación",intro:"Del primer paso a la entrada en vigor.",type:"order",
+  items:[
+   {t:"Objetivos de estabilidad y deuda (1.er semestre)",why:"Art. 15 LO 2/2012: marco de todo el proceso."},
+   {t:"Escenario presupuestario plurianual",why:"Se ajusta al objetivo de estabilidad."},
+   {t:"Orden de elaboración y directrices de gasto",why:"Art. 36 LGP; Comisión de Políticas de Gasto."},
+   {t:"Propuestas de los Ministerios",why:"Con memorias de objetivos."},
+   {t:"Refundición en Hacienda (hasta el 30 de septiembre)",why:"DG de Presupuestos y Comisiones de Análisis de Programas."},
+   {t:"Acuerdo del Gobierno y remisión a las Cortes (antes del 1 de octubre)",why:"Con la documentación complementaria."},
+   {t:"Examen, enmienda y aprobación en las Cortes",why:"Último trimestre del año anterior."},
+   {t:"Publicación en el BOE y vigencia desde el 1 de enero",why:"Si no, prórroga automática."}
+  ]},
+ {id:"e12",title:"Aprobación, prórroga y ejecución",intro:"Art. 134 CE y arts. 38, 74 y 75 LGP.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Aprobación y ejecución</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Aprobación</b>Tipo de ley: {{0}}.<br>Enmiendas que suben gasto: {{1}}.<br>Tributos: {{2}}.</div>
+   <div class="sch-box alt"><b>Prórroga</b>Se prorrogan los presupuestos {{3}}.<br>Hasta: {{4}}.<br>No se prorrogan: {{5}}.</div>
+   <div class="sch-box"><b>Ejecución</b>Convenios de más de {{6}}: Consejo de Ministros.<br>Ordenador de pagos del Estado: {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["ordinaria, mayoría simple","orgánica","de bases","decreto ley"],why:"Sin mayorías cualificadas."},
+   {o:["conformidad del Gobierno","mayoría absoluta","informe del TC","nada especial"],why:"Art. 134.6 CE."},
+   {o:["no puede crearlos","puede crearlos","solo tasas","solo impuestos"],why:"Art. 134.7 CE."},
+   {o:["iniciales del ejercicio anterior","definitivos","del Senado","del año en curso"],why:"Art. 38 LGP."},
+   {o:["publicación de los nuevos en el BOE","30 de junio","un año","la votación en el Congreso"],why:"Art. 38 LGP."},
+   {o:["créditos de programas que terminan","créditos de personal","pensiones","intereses"],why:"Ni obligaciones que se extinguen."},
+   {o:["12 millones €","6 millones €","1 millón €","50 millones €"],why:"Art. 74.5 LGP."},
+   {o:["DG del Tesoro y Política Financiera","Interventor General","DG de Presupuestos","Ministro de Hacienda"],why:"Art. 75 LGP."}
+  ]},
+ {id:"e13",title:"Ordena: antecedentes del presupuesto por programas",intro:"Cronología.",type:"order",
+  items:[
+   {t:"1924 · General Motors",why:"Origen en el sector privado."},
+   {t:"1942 · The Controlled Materials Plan (EE. UU.)",why:"Primer PxP del Gobierno federal."},
+   {t:"1965 · Johnson lo extiende a todo el Gobierno federal",why:"Agosto de 1965."},
+   {t:"1977 · RD 1973/1977, Comisión de Racionalización del Gasto",why:"Inicio en España."},
+   {t:"1984 · Todos los Ministerios, de forma indicativa",why:"Sin clasificación funcional exhaustiva."},
+   {t:"1985 · Se aplica a los PGE",why:"Implantación completa."}
+  ]},
+ {id:"e14",title:"Presupuesto por programas: fases e indicadores",intro:"Concepto, fases e indicadores.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Presupuesto por programas</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Fases</b>Fijar metas: {{0}}.<br>Impacto financiero plurianual: {{1}}.<br>Créditos del tramo anual: {{2}}.<br>Costes y resultados frente a previsiones: {{3}}.</div>
+   <div class="sch-box alt"><b>Indicadores</b>Resultado frente a objetivos: {{4}}.<br>Productos o servicios: {{5}}.<br>Recursos y costes: {{6}}.<br>Costes frente a resultados: {{7}}.</div>
+  </div>
+  <div class="sch-box"><b>Códigos</b>4.º carácter A-L: {{8}}; M-Z: instrumentales y de gestión.</div></div>`,
+  blanks:[
+   {o:["planificación (objetivos)","programación","presupuestación","control"],why:"Lo fundamental del PxP."},
+   {o:["programación","presupuestación","planificación","ejecución"],why:"Para los años que dure la ejecución."},
+   {o:["presupuestación","programación","control","planificación"],why:"Traducción económica anual."},
+   {o:["control","ejecución","presupuestación","programación"],why:"Sistema de información e indicadores."},
+   {o:["de impacto","de gestión","de medios","de resultados"],why:"Eficacia."},
+   {o:["de resultados","de impacto","de medios","de gestión"],why:"Cantidades alcanzadas."},
+   {o:["de medios","de resultados","de gestión","de impacto"],why:"Recursos financieros."},
+   {o:["de gestión","de impacto","de medios","de resultados"],why:"Eficiencia."},
+   {o:["finalistas","instrumentales","de inversión","de personal"],why:"Esquema del presupuesto por programas."}
+  ]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("gf1c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("gf1c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
