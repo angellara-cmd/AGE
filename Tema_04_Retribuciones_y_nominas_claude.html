@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Gestión financiera · Tema 4 · Retribuciones, nóminas, devengo y pago · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">GF4</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Gestión financiera</small>
+      <b>Retribuciones y nóminas</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+  <style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Tema 4 · Gestión financiera</span>
+    <h1>Retribuciones e indemnizaciones: <span>nóminas, devengo y pago</span></h1>
+    <p>Resumen de alto rendimiento del manual (TREBEP, Ley 30/1984, LPGE 2023 prorrogada, Orden de 30-7-1992, Resolución de 25-5-2010, RD 462/2002 y Decreto 680/1974) con <strong>tu anexo convertido en mapas y calculadoras</strong>: conceptos retributivos, una nómina real con las cifras de 2026, justificantes de altas y bajas, paga extra y liquidación por días, y dietas y asistencias. Además, esquemas autocorregibles, fichas y test.</p>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">17</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">60</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('nomina').scrollIntoView({behavior:'smooth'})">Calcular una nómina ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('mapa').scrollIntoView({behavior:'smooth'})">Conceptos retributivos ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('indem').scrollIntoView({behavior:'smooth'})">Dietas ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Cifras actualizadas a 2026.</strong> Las tablas del manual son de 2023-2024 (RDL 4/2024). En 2025 las retribuciones subieron un <strong>2,5 %</strong> y en 2026 un <strong>1,5 %</strong> (RDL 14/2025, de 2 de diciembre), al no haber LPGE nueva. Este tema usa las cuantías oficiales de 2026 de la SEPG; por ejemplo, el sueldo del <strong>C1</strong> es de <strong>10.807,56 €/año</strong> (900,63 €/mes). El <strong>SMI 2026</strong> es de <strong>1.221 €/mes</strong> o 40,70 €/día (RD 126/2026), y no de 1.184 € como dice el manual. Las cuotas siguen en el <strong>3,86 %</strong> (derechos pasivos) y el <strong>1,69 %</strong> (MUFACE) de los haberes reguladores de 2026. Las reglas que pregunta el examen (devengo, pagas, nóminas, justificantes, dietas) no cambian.</span></div>
+
+  <div class="section-title" id="mapa">
+    <div><span class="kicker">Tu anexo, ahora interactivo</span><h2>Mapa de los conceptos retributivos</h2></div>
+    <p>Funcionarios, personal laboral y otro personal: qué retribuye cada concepto, cómo se fija y cuándo se cobra.</p>
+  </div>
+  <div class="sit-pills" id="rt-pills"></div>
+  <div class="card sit-card" id="rt-card"></div>
+
+  <div class="section-title" id="nomina">
+    <div><span class="kicker">Practica con cifras reales de 2026</span><h2>Calculadora de nómina de un funcionario</h2></div>
+    <p>Elige el grupo, el nivel, los trienios y el complemento específico. Verás la nómina ordinaria y la paga extra con su <strong>íntegro, líquido y neto</strong> y los códigos de deducción de la Orden de 1992.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Grupo/Subgrupo<select id="nm-g"><option>A1</option><option>A2</option><option>B</option><option selected>C1</option><option>C2</option><option value="E">E / Agrupaciones prof.</option></select></label>
+      <label>Nivel de complemento de destino<select id="nm-n"></select></label>
+      <label>Trienios (del mismo grupo)<input type="number" id="nm-t" min="0" max="20" value="2"></label>
+      <label>Trienios de otro grupo<input type="number" id="nm-t2" min="0" max="20" value="0"></label>
+      <label>Grupo de esos trienios<select id="nm-g2"><option>A1</option><option>A2</option><option>B</option><option>C1</option><option selected>C2</option><option value="E">E / AP</option></select></label>
+      <label>Complemento específico anual (€)<input type="number" id="nm-ce" min="0" step="100" value="6500"></label>
+      <label>Productividad del mes (€)<input type="number" id="nm-p" min="0" step="10" value="0"></label>
+      <label>Régimen de previsión<select id="nm-r"><option value="cp">Clases Pasivas + MUFACE</option><option value="ss">RGSS + MUFACE (ingreso desde 2011)</option></select></label>
+      <label>Retención IRPF (%)<input type="number" id="nm-irpf" min="0" max="45" step="0.5" value="14"></label>
+      <label>Deducciones no formalizables (€)<input type="number" id="nm-nf" min="0" step="10" value="0"></label>
+    </div>
+    <div class="nm-kpis" id="nm-k"></div>
+    <div class="tabs-mini" id="nm-tabs"><button class="on" data-p="o">Nómina ordinaria</button><button data-p="x">Paga extra (junio o diciembre)</button><button data-p="a">Resumen anual</button></div>
+    <div class="tbl-wrap"><table class="tbl money" id="nm-tb"></table></div>
+    <p class="tool-note" id="nm-note"></p>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Orden de 30-7-1992 · tu anexo</span><h2>¿Qué justificante lleva cada alta, baja o modificación?</h2></div>
+    <p>Elige el caso y verás la documentación que se une a la nómina.</p>
+  </div>
+  <div class="sit-pills" id="jb-pills"></div>
+  <div class="card sit-card" id="jb-card"></div>
+
+  <div class="section-title" id="devengo">
+    <div><span class="kicker">Resolución de 25-5-2010</span><h2>Calculadora de devengo</h2></div>
+    <p>Tres cálculos que caen en los supuestos prácticos: paga extra proporcional, mes liquidado por días y descuento por horas no trabajadas.</p>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="dv-tabs"><button class="on" data-p="px">Paga extra proporcional</button><button data-p="md">Mes por días</button><button data-p="dh">Descuento por horas</button></div>
+    <div class="pane on" id="dv-px">
+      <div class="tool-grid">
+        <label>Paga<select id="px-p"><option value="6">Junio</option><option value="12">Diciembre</option></select></label>
+        <label>Año<input type="number" id="px-y" min="2020" max="2040" value="2026"></label>
+        <label>Importe de la paga completa (€)<input type="number" id="px-i" step="0.01" value="1300"></label>
+        <label>Inicio de servicios dentro del semestre (vacío = todo)<input type="date" id="px-a"></label>
+        <label>Días de licencia sin retribución<input type="number" id="px-l" min="0" value="0"></label>
+      </div>
+      <div class="verdict" id="px-out"></div>
+    </div>
+    <div class="pane" id="dv-md">
+      <div class="tool-grid">
+        <label>Retribuciones íntegras mensuales (€)<input type="number" id="md-i" step="0.01" value="2100"></label>
+        <label>Supuesto<select id="md-s"><option value="alta">Toma de posesión del primer destino (desde ese día)</option><option value="cese">Cese en el servicio activo (hasta ese día)</option><option value="jub">Cese por jubilación o fallecimiento (Clases Pasivas)</option><option value="lic">Inicio de licencia sin sueldo (hasta la víspera)</option></select></label>
+        <label>Fecha<input type="date" id="md-f" value="2026-03-16"></label>
+      </div>
+      <div class="verdict" id="md-out"></div>
+    </div>
+    <div class="pane" id="dv-dh">
+      <div class="tool-grid">
+        <label>Retribuciones íntegras mensuales (€)<input type="number" id="dh-i" step="0.01" value="2100"></label>
+        <label>Mes<input type="month" id="dh-m" value="2026-11" style="padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font-size:16px"></label>
+        <label>Horas medias diarias de obligado cumplimiento<input type="number" id="dh-h" step="0.25" value="7.5"></label>
+        <label>Horas no trabajadas sin justificar<input type="number" id="dh-n" step="0.25" value="3"></label>
+      </div>
+      <div class="verdict" id="dh-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="indem">
+    <div><span class="kicker">RD 462/2002</span><h2>Laboratorio de indemnizaciones por razón del servicio</h2></div>
+    <p>Liquida una comisión de servicio (dietas, alojamiento y kilometraje) o comprueba los límites anuales de las asistencias.</p>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="in-tabs"><button class="on" data-p="dt">Dietas de una comisión</button><button data-p="as">Límites de asistencias</button></div>
+    <div class="pane on" id="in-dt">
+      <div class="tool-grid">
+        <label>Grupo de dietas<select id="dt-g"><option value="1">Grupo 1 · Altos cargos</option><option value="2">Grupo 2 · A1 y A2</option><option value="3" selected>Grupo 3 · C1, C2 y AP</option></select></label>
+        <label>Inicio de la comisión<input type="datetime-local" id="dt-s" value="2026-11-17T08:00"></label>
+        <label>Fin de la comisión<input type="datetime-local" id="dt-e" value="2026-11-19T18:30"></label>
+        <label>Gasto real de hotel por noche (€)<input type="number" id="dt-h" step="0.01" value="62"></label>
+        <label>Km en vehículo particular (ida y vuelta)<input type="number" id="dt-k" min="0" value="0"></label>
+      </div>
+      <div class="verdict" id="dt-out"></div>
+    </div>
+    <div class="pane" id="in-as">
+      <div class="tool-grid">
+        <label>Retribuciones anuales del puesto, sin antigüedad (€)<input type="number" id="as-r" step="100" value="28000"></label>
+        <label>Consejos de administración y órganos colegiados (€)<input type="number" id="as-c" step="50" value="0"></label>
+        <label>Tribunales de oposiciones (€)<input type="number" id="as-t" step="50" value="4000"></label>
+        <label>Formación y perfeccionamiento (€)<input type="number" id="as-f" step="50" value="2500"></label>
+        <label>Horas de formación al año<input type="number" id="as-h" min="0" value="40"></label>
+      </div>
+      <div class="verdict" id="as-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>Art. 22-24 TREBEP</b><span>Básicas: sueldo y trienios (y su parte en las pagas). Complementarias: puesto, carrera y desempeño</span></div>
+    <div class="num"><b>10.807,56 €</b><span>Sueldo anual del C1 en 2026 (12 mensualidades) · trienio de 395,52 €</span></div>
+    <div class="num"><b>778,42 €</b><span>Sueldo del C1 en cada paga extra de 2026 · trienio de 28,45 €</span></div>
+    <div class="num"><b>14 pagas</b><span>Complemento específico: 12 mensuales y 2 en junio y diciembre</span></div>
+    <div class="num"><b>30 %</b><span>Compatibilidad privada si el específico no supera el 30 % de las básicas (sin antigüedad)</span></div>
+    <div class="num"><b>3,86 % · 1,69 %</b><span>Cuota de derechos pasivos · cuota de MUFACE, sobre el haber regulador</span></div>
+    <div class="num"><b>Día 5 · día 7</b><span>Cierre de la nómina ordinaria · entrega en contabilidad con el OK o ADOK</span></div>
+    <div class="num"><b>17 dígitos</b><span>Aplicación presupuestaria por perceptor y concepto en la nómina</span></div>
+    <div class="num"><b>01 · 02 · 03 · 09</b><span>Códigos de deducción: IRPF · derechos pasivos · MUFACE · cuota obrera del RGSS</span></div>
+    <div class="num"><b>182/183 · 183</b><span>Divisor de la paga extra de junio (183 en bisiesto) · de diciembre</span></div>
+    <div class="num"><b>1.er día hábil</b><span>De junio y diciembre: devengo de las pagas extra</span></div>
+    <div class="num"><b>1 mes · 3 meses</b><span>Duración máxima de una comisión: en España · en el extranjero</span></div>
+    <div class="num"><b>80 % · 1 año</b><span>Residencia eventual: máximo de la dieta entera · duración (más un año de prórroga)</span></div>
+    <div class="num"><b>65,97 + 37,40</b><span>Dieta del grupo 2 en España: alojamiento + manutención (grupo 3: 48,92 + 28,21)</span></div>
+    <div class="num"><b>0,26 €/km</b><span>Automóvil particular (0,106 €/km en moto)</span></div>
+    <div class="num"><b>40 · 20 · 25 · 50 %</b><span>Asistencias: consejos · tribunales · formación (75 h) · total</span></div>
+    <div class="num"><b>8 · 10 · 12 %</b><span>Gastos de instalación al ir al extranjero (más de 18 meses), según los miembros de la familia</span></div>
+    <div class="num"><b>15 días</b><span>Libramientos de nómina en las Ordenaciones de Pagos con antelación (Decreto 680/1974)</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Régimen retributivo</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>Marco normativo y principios</h3><small>TREBEP, Ley 30/1984 y LPGE</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Las retribuciones del TREBEP solo serán plenamente vigentes con las <strong>leyes de Función Pública</strong> que lo desarrollen (DF 4.ª). Mientras tanto se aplica la <strong>Ley 30/1984</strong> (arts. 23 y 24), las cuantías de la <strong>LPGE</strong> (2023, prorrogada) y la <strong>Resolución de 25-5-2010</strong>; las nóminas, por la <strong>Orden de 30-7-1992</strong>.</li>
+          <li>La LPGE fija las <strong>básicas</strong>, el incremento global de las <strong>complementarias</strong> y el de la <strong>masa salarial laboral</strong>. No caben incrementos por encima de sus límites.</li>
+          <li><strong>Retribución diferida</strong>: aportaciones a planes de pensiones de empleo o seguros colectivos de jubilación, hasta el porcentaje de la masa salarial que fije la LPGE.</li>
+          <li><strong>Deducción de haberes</strong>: la jornada no realizada se descuenta proporcionalmente, <strong>sin carácter sancionador</strong>. En huelga no se devenga retribución (tampoco es sanción ni afecta a las prestaciones sociales).</li>
+          <li><strong>Prohibido</strong> percibir participación en tributos u otros ingresos, ni premios en multas.</li>
+          <li>Incrementos: 2024, un 2 % (+0,5 %); <strong>2025, un 2,5 %; 2026, un 1,5 %</strong> (RDL 14/2025, con un posible 0,5 % adicional).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Básicas y complementarias</h3><small>Arts. 22-24 TREBEP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Básicas</strong> (art. 23): <strong>sueldo</strong> del subgrupo o grupo y <strong>trienios</strong> (cantidad igual por grupo cada 3 años). El art. 22 añade sus componentes en las <strong>pagas extra</strong>. Son iguales en todas las Administraciones.</li>
+          <li><strong>Complementarias</strong> (art. 24): progresión en la carrera · dificultad técnica, responsabilidad, dedicación, incompatibilidad y condiciones del puesto · interés, iniciativa, esfuerzo y rendimiento · servicios extraordinarios fuera de la jornada.</li>
+          <li><strong>Pagas extra</strong>: dos al año, cada una por una mensualidad de las básicas y de todas las complementarias, <strong>salvo</strong> las de rendimiento y los servicios extraordinarios.</li>
+          <li>Según tu anexo, el sueldo del grupo A no puede superar el <strong>triple</strong> del sueldo del grupo E.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl money">
+          <tr><th>Grupo (2026)</th><th>Sueldo anual</th><th>Trienio anual</th><th>Sueldo/paga extra</th><th>Trienio/paga extra</th></tr>
+          <tr><td>A1</td><td>16.646,88</td><td>640,68</td><td>856,05</td><td>32,96</td></tr>
+          <tr><td>A2</td><td>14.394,24</td><td>522,48</td><td>874,83</td><td>31,74</td></tr>
+          <tr><td>B</td><td>12.582,60</td><td>458,40</td><td>906,26</td><td>33,03</td></tr>
+          <tr><td><strong>C1</strong></td><td><strong>10.807,56</strong></td><td><strong>395,52</strong></td><td><strong>778,42</strong></td><td><strong>28,45</strong></td></tr>
+          <tr><td>C2</td><td>8.994,96</td><td>269,28</td><td>742,75</td><td>22,20</td></tr>
+          <tr><td>E / AP</td><td>8.232,84</td><td>202,80</td><td>686,07</td><td>16,90</td></tr>
+        </table></div>
+        <p class="tool-note">Cuantías de 2026 (SEPG; RDL 14/2025). En las pagas extra, el sueldo de A1 y A2 es <strong>menor</strong> que una mensualidad ordinaria.</p>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.3</span><span class="bt"><h3>Grupos y trienios</h3><small>Art. 76 TREBEP, equivalencias y cómputo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span>A (Ley 30/84) → <strong>A1</strong></span><i>·</i><span>B → <strong>A2</strong></span><i>·</i><span>C → <strong>C1</strong></span><i>·</i><span>D → <strong>C2</strong></span><i>·</i><span>E → <strong>Agrupaciones profesionales</strong></span></div>
+        <ul>
+          <li>Titulaciones del TREBEP: A, grado universitario · B, <strong>técnico superior</strong> · C1, bachiller o técnico · C2, graduado en ESO.</li>
+          <li><strong>Trienios</strong>: computan todos los servicios previos en cualquier Administración (laboral, interino, eventual, estatutario…; Ley 70/1978) y en las Administraciones de la <strong>UE</strong> y de los Estados con libre circulación (salvo prestaciones obligatorias). Los reconoce el <strong>Subsecretario</strong> del departamento de destino (o el Delegado del Gobierno).</li>
+          <li>Quien cambia de cuerpo <strong>conserva</strong> los trienios anteriores, cada uno con el valor de su grupo. Si cambia de grupo antes de completar un trienio, la fracción cuenta en el <strong>nuevo grupo</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.4</span><span class="bt"><h3>Complementos y gratificaciones</h3><small>Destino, específico, productividad, gratificaciones y CPT</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Complemento de destino</strong>: según el <strong>nivel</strong> del puesto (o el grado consolidado, si es superior); 30 niveles fijados por la LPGE. Entra en las pagas extra. En 2026: nivel 30, 14.541,24 €; nivel 22, 7.652,76 €; nivel 18, 5.926,32 €; nivel 15, 4.915,08 €.</li>
+          <li><strong>Complemento específico</strong>: condiciones particulares del puesto (dificultad, dedicación, responsabilidad, incompatibilidad, peligrosidad o penosidad). <strong>Uno solo por puesto</strong>, aunque pondere varias condiciones. En <strong>14 pagas</strong>. Se percibe el del puesto obtenido por provisión, no el de las tareas reales.</li>
+          <li><strong>Productividad</strong>: especial rendimiento, actividad y dedicación extraordinarias, interés e iniciativa. Criterios <strong>objetivos</strong>; <strong>no genera derechos</strong> para períodos sucesivos; es <strong>pública</strong> en el centro.</li>
+          <li><strong>Gratificaciones</strong>: excepcionales, por servicios <strong>fuera de la jornada</strong>; nunca fijas ni periódicas, ni generan derechos.</li>
+          <li><strong>CPT</strong> (Ley 50/1984): se mantiene en la cuantía a 31 de diciembre y se <strong>absorbe</strong> con las mejoras por cambio de puesto. Los incrementos generales solo computan al <strong>50 %</strong> (sueldo en 14 mensualidades, destino y específico); <strong>nunca</strong> los trienios, la productividad ni las gratificaciones.</li>
+        </ul>
+        <div class="note"><span>⚠️</span><span>En el apartado de productividad, el manual repite por error el texto del complemento específico («en ningún caso podrá asignarse más de un complemento específico…» y la compatibilidad del 30 %). Esas reglas son del <strong>específico</strong>, no de la productividad.</span></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.5</span><span class="bt"><h3>Interinos, eventuales y en prácticas</h3><small>Otro personal</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Personal</th><th>Retribuciones</th></tr>
+          <tr><td data-l="Personal"><strong>Interinos</strong></td><td data-l="Retribuciones">Básicas <strong>con trienios</strong> del grupo del cuerpo y complementarias del puesto, salvo las ligadas a la condición de funcionario de carrera (o las que fije Función Pública si no ocupan puesto). Los trienios anteriores al EBEP solo tienen efectos económicos desde 2007.</td></tr>
+          <tr><td data-l="Personal"><strong>Eventuales</strong></td><td data-l="Retribuciones">Sueldo y pagas del grupo al que Función Pública <strong>asimile</strong> sus funciones (<strong>sin trienios</strong>) y complementarias del puesto. Un funcionario de carrera en un puesto eventual cobra sus básicas <strong>con trienios</strong>.</td></tr>
+          <tr><td data-l="Personal"><strong>En prácticas</strong> (art. 26 TREBEP; RD 456/1986)</td><td data-l="Retribuciones">Como mínimo, el <strong>sueldo</strong> del grupo al que aspiran, más las pagas extra; si ocupan un puesto, también sus complementarias. Si ya cobraban de la Administración, <strong>pueden optar</strong> por su remuneración de origen. Los funcionarios de un grupo inferior conservan sus trienios.</td></tr>
+          <tr><td data-l="Personal"><strong>Productividad</strong></td><td data-l="Retribuciones">Cabe para interinos, eventuales y funcionarios en prácticas que ocupen puesto, si la tienen los de carrera de puestos análogos.</td></tr>
+          <tr><td data-l="Personal"><strong>Puesto suprimido</strong> (tu anexo)</td><td data-l="Retribuciones">Siguen cobrando las complementarias del puesto suprimido, a cuenta, hasta un máximo de <strong>3 meses</strong>, sin reintegro si cobraron de más.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.6</span><span class="bt"><h3>Personal laboral</h3><small>Convenio Único y masa salarial (art. 19 LPGE)</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Estructura</strong> (Convenio Único de la AGE): salario base · pagas extra · retribuciones personales (antigüedad, complemento personal de antigüedad, de unificación, absorbibles) · complementos salariales (de puesto, por cantidad o calidad, de residencia) · percepciones no salariales · retribución en especie.</li>
+          <li><strong>Pagas extra</strong> (tu anexo): el <strong>primer día hábil de junio y diciembre</strong>, por una mensualidad de salario base, antigüedad y complemento personal de antigüedad. La de junio retribuye del 1 de diciembre al 31 de mayo; la de diciembre, del 1 de junio al 30 de noviembre.</li>
+          <li><strong>Antigüedad</strong>: desde el día 1 del mes en que se cumplen 3 años o múltiplos.</li>
+          <li><strong>Masa salarial</strong>: las retribuciones salariales y extrasalariales del año anterior. Excluye: prestaciones de la SS, <strong>cotizaciones del empleador</strong>, indemnizaciones por traslado o despido y suplidos.</li>
+          <li><strong>Informe de la SEPG</strong> (Hacienda), <strong>preceptivo y vinculante</strong>, en 1 mes: previo a negociar convenios (salvo los que solo aplican la subida de la LPGE). No se aplica al Convenio Único ni a las agencias con contrato de gestión.</li>
+          <li><strong>SMI 2026</strong>: 40,70 €/día · 1.221 €/mes · 17.094 €/año (RD 126/2026). Eventuales y temporeros de 120 días o menos: al menos 57,82 € por jornada.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Nóminas</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Estructura de la nómina</h3><small>Orden de 30-7-1992</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Son documentos en modelos oficiales con las retribuciones del personal adscrito a la <strong>habilitación</strong> de un centro. Son el <strong>expediente de gasto</strong> de las retribuciones.</li>
+          <li><strong>Cuerpo (N1)</strong>: perceptores por orden <strong>alfabético</strong>, numerados desde 1. Cabecera: Ministerio, habilitación, clase (funcionarios, funcionarios en el extranjero, laborales, laborales en el extranjero), número, mes-año-agrupación, habilitado y suplente, período y presupuesto. Datos personales: nombre, DNI y número de registro de personal.</li>
+          <li><strong>Retribuciones</strong>: código, concepto y <strong>aplicación presupuestaria de 17 dígitos</strong> (única por perceptor y concepto).</li>
+          <li><strong>Deducciones</strong>: formalizables (se ingresan en formalización en el Tesoro) y no formalizables. Códigos: <strong>01 IRPF · 02 derechos pasivos · 03 MUFACE · 04 ISFAS · 05 MUNPAL · 06 MUGEJU · 09 cuota obrera del RGSS · 20 anticipo reintegrable · 21 retención judicial · 22 reintegro de préstamo de MUFACE</strong>.</li>
+        </ul>
+        <div class="flow"><span><strong>Íntegro</strong> = suma de retribuciones</span><i>→</i><span><strong>Líquido</strong> = íntegro − deducciones formalizables</span><i>→</i><span><strong>Neto</strong> = líquido − deducciones no formalizables</span></div>
+        <ul>
+          <li><strong>Resúmenes (RN)</strong>: retribuciones por aplicación presupuestaria, deducciones por claves y reintegros; los firman el <strong>habilitado y el Jefe del centro</strong>. <strong>Estados justificativos (VR)</strong>: altas y modificaciones respecto al mes anterior, solo con cantidades íntegras. Documentos contables: AD y OK, o ADOK.</li>
+          <li><strong>Cuotas</strong>: derechos pasivos, <strong>3,86 %</strong>, y MUFACE, <strong>1,69 %</strong>, del haber regulador (también en las pagas extra). Se reducen si la paga es proporcional, pero <strong>no</strong> durante las licencias sin sueldo. En el RGSS, los funcionarios de carrera no cotizan por desempleo.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Clases de nómina y plazos</h3><small>Ordinaria, incidencias y documentos contables</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Ordinaria</strong> (número <strong>01</strong>): las retribuciones fijas y periódicas, incluidas las pagas extra de junio y diciembre. Una por mes, clase y agrupación. <strong>Se cierra el día 5</strong>.</li>
+          <li><strong>Resto de nóminas del mes</strong> (desde la número 2): todos sus perceptores cuentan como altas. La de <strong>incidencias</strong> recoge lo que no está en la ordinaria (importes de menos de una mensualidad o atrasos) y va en el <strong>mismo documento contable</strong>.</li>
+          <li><strong>Liquidación principal</strong>: el mes de devengo coincide con el de pago. <strong>Complementaria</strong>: no coinciden. En cada nómina, el perceptor figura <strong>una sola vez</strong>.</li>
+          <li><strong>AD</strong> al inicio del año (estimación con la nómina de enero). Se admite <strong>ADOK</strong> por nómina. Los habilitados entregan el OK o ADOK con los resúmenes <strong>antes del día 7</strong>. El pago a las habilitaciones, con <strong>5 días</strong> de antelación al vencimiento.</li>
+          <li><strong>Cuenta justificativa</strong> (tu anexo): al órgano que reconoció la obligación, <strong>dentro del mes siguiente</strong> al pago. Se archiva a disposición del Tribunal de Cuentas y de la Intervención.</li>
+          <li><strong>Valor del día</strong>: retribuciones íntegras mensuales ÷ días naturales del mes.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>Altas, bajas y modificaciones</h3><small>Justificación</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Alta</strong>: perceptor que no estaba en la nómina del mes anterior. <strong>Baja</strong>: el que estaba y sale. <strong>Modificación</strong>: aumento o disminución respecto al mes anterior; <strong>definitiva</strong> si persiste en nóminas futuras y <strong>transitoria</strong> si no.</li>
+          <li>Nuevo ingreso: título, nombramiento y toma de posesión (más la <strong>liquidación de trienios</strong> si hay servicios previos). Comisión de servicios o traslado: nombramiento, toma de posesión y <strong>certificado de baja en nómina</strong>. Laboral nuevo: hoja de servicios, contrato y plan de contratación fiscalizado.</li>
+          <li>Bajas: acuerdo de cese (y modelo <strong>F7</strong> si es en comisión) · cambio de situación (salvo suspensión) · jubilación · fallecimiento o renuncia (acuerdo de cese) · separación (anotación de la sanción) · licencia.</li>
+          <li>Aumentos transitorios: productividad y gratificaciones (certificación) · pagas extra (certificación global del habilitado) · atrasos (con la documentación del alta y, si van en una nómina posterior, certificación de no haberlos incluido antes). Disminuciones transitorias: <strong>huelga</strong> (certificación del personal y la duración) y licencias.</li>
+          <li><strong>Complementos</strong>: destino y específico (primera nómina: certificado del Jefe del centro con los niveles) · productividad (acuerdo de la Comisión Ministerial de Retribuciones) · complemento familiar (declaración y libro de familia) · CPT (importe reconocido). La <strong>indemnización por residencia</strong> se devenga día a día y se justifica con el alta en sueldos.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Devengo y liquidación</h3>
+
+    <details class="blk">
+      <summary><span class="bn">3.1</span><span class="bt"><h3>Devengo mensual y liquidación por días</h3><small>Resolución de 25-5-2010</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Regla</strong>: las retribuciones fijas mensuales se pagan por <strong>meses completos</strong>, según la situación del <strong>primer día hábil del mes</strong>.</li>
+          <li><strong>Se liquidan por días</strong>: el mes de toma de posesión del <strong>primer destino</strong>, de reingreso o de vuelta de licencia sin sueldo · el mes en que empieza una licencia sin sueldo · el mes de cambio a <strong>otra Administración</strong> · el mes de <strong>cese</strong> en activo (también por cambio de cuerpo), <strong>salvo</strong> jubilación, fallecimiento o retiro en Clases Pasivas, que se paga el mes completo.</li>
+          <li><strong>Valor de la hora</strong> para descuentos: íntegro mensual ÷ días naturales del mes ÷ horas diarias medias.</li>
+          <li><strong>Jornada reducida</strong> (art. 48.1.g y h TREBEP): se reducen todas las retribuciones, incluidos los trienios. En las pagas extra se suman los tramos con y sin reducción.</li>
+          <li>Durante el <strong>plazo posesorio</strong> se cobran todas las retribuciones fijas. Al acceder a un nuevo cuerpo: permiso retribuido de <strong>3 días hábiles</strong> (o <strong>1 mes</strong> si hay cambio de residencia).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3.2</span><span class="bt"><h3>Pagas extraordinarias</h3><small>Art. 33 Ley 33/1987</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Se devengan el <strong>primer día hábil de junio y diciembre</strong>, según la situación en esa fecha. Incluyen el <strong>sueldo y los trienios</strong> fijados para las pagas y <strong>una mensualidad del complemento de destino</strong> (y la del específico, que va en 14 pagas).</li>
+          <li><strong>Proporcional</strong> si no se ha servido todo el semestre: cada día vale la paga completa ÷ <strong>182</strong> (183 en bisiesto) en junio, o ÷ <strong>183</strong> en diciembre.</li>
+          <li>Las <strong>licencias sin sueldo</strong> no cuentan como servicios; se devenga la paga, pero reducida.</li>
+          <li><strong>Cese</strong>: la última paga se devenga el día del cese, en proporción. Si es por jubilación, fallecimiento o retiro, los días de ese mes cuentan como <strong>mes completo</strong>. Si el cese es en diciembre, se aplican las cuantías de ese mes.</li>
+          <li>Tu anexo añade que la de diciembre se paga «a partir del día 18».</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Indemnizaciones por razón del servicio</h3>
+
+    <details class="blk">
+      <summary><span class="bn">4.1</span><span class="bt"><h3>Comisiones de servicio y dietas</h3><small>RD 462/2002</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Supuestos</strong>: comisiones de servicio · desplazamientos dentro del término municipal · traslados de residencia · asistencias. Se aplican al personal civil y militar de la AGE y sus organismos, la SS, la Justicia, las EELL y la UNED; no al laboral (va por su convenio).</li>
+          <li><strong>Comisión</strong>: cometido especial <strong>fuera del término municipal</strong> de la residencia oficial. Las de iniciativa propia no se indemnizan (salvo las de altos cargos). La designa el <strong>Subsecretario</strong> o la autoridad superior del organismo. Duración máxima: <strong>1 mes en España y 3 en el extranjero</strong> (prorrogables).</li>
+          <li><strong>Dieta</strong> = alojamiento (gasto <strong>real justificado</strong>, con tope) + manutención (importe <strong>fijo, sin justificar</strong>). Grupos: <strong>1</strong> altos cargos · <strong>2</strong> A1 y A2 · <strong>3</strong> C1, C2 y AP. Importes en España: grupo 1, 102,56 + 53,34 €; grupo 2, 65,97 + 37,40 €; grupo 3, 48,92 + 28,21 € (Acuerdo del Consejo de Ministros de 2-12-2005).</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Duración</th><th>Alojamiento</th><th>Manutención</th></tr>
+          <tr><td data-l="Duración"><strong>Un día natural o menos</strong></td><td data-l="Alojamiento">No</td><td data-l="Manutención">50 %, solo si dura al menos 5 h, empieza antes de las 14:00 y termina después de las 16:00</td></tr>
+          <tr><td data-l="Duración"><strong>24 h o menos, en dos días</strong></td><td data-l="Alojamiento">Un día</td><td data-l="Manutención">Como los días de salida y regreso</td></tr>
+          <tr><td data-l="Duración"><strong>Más de 24 h: día de salida</strong></td><td data-l="Alojamiento">Sí</td><td data-l="Manutención">100 % si sale antes de las 14:00 · 50 % si sale entre las 14:00 y las 22:00</td></tr>
+          <tr><td data-l="Duración"><strong>Días intermedios</strong></td><td data-l="Alojamiento">Sí</td><td data-l="Manutención">100 %</td></tr>
+          <tr><td data-l="Duración"><strong>Día de regreso</strong></td><td data-l="Alojamiento">No</td><td data-l="Manutención">50 % si regresa después de las 14:00</td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Residencia eventual</strong>: si se prevé que la comisión dure más de 1 mes (o 3 en el extranjero), y siempre en los <strong>cursos selectivos de promoción interna</strong>. Hasta el <strong>80 % de la dieta entera</strong>, sin justificar. Máximo <strong>1 año</strong>, prorrogable otro.</li>
+          <li><strong>Gastos de viaje</strong>: avión en turista; AVE en preferente para el grupo 1 y turista para los grupos 2 y 3; tren nocturno en cama preferente o turista; trenes convencionales en primera para los grupos 1 y 2 y segunda para el 3. Vehículo particular: <strong>0,26 €/km</strong> (moto, 0,106). Taxis, aparcamiento (comisiones de 24 h o menos) y peajes, si se autorizan y justifican. Se puede pedir un <strong>anticipo</strong>.</li>
+          <li><strong>Desplazamientos dentro del término municipal</strong>: con la conformidad del Jefe de la unidad; preferentemente en transporte público colectivo (vehículos de más de 9 plazas).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.2</span><span class="bt"><h3>Traslados de residencia</h3><small>En España y al extranjero</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>En España</strong> (solo traslados <strong>forzosos</strong>; los que son sanción no se indemnizan): viaje del titular y la familia, mudanza y <strong>3 dietas</strong> por persona. Si fallece el titular, la familia tiene derecho a lo mismo una vez.</li>
+          <li><strong>Al extranjero</strong>: viaje del titular. Si el destino es por más de <strong>18 meses</strong>, también la familia y la mudanza, y <strong>gastos de instalación</strong>: <strong>8 %</strong> (1-2 miembros), <strong>10 %</strong> (3-4) y <strong>12 %</strong> (más de 4) de las retribuciones anuales sin antigüedad. Al volver tras <strong>4 años</strong> o más, también instalación. Quien cesa a petición propia antes de 18 meses <strong>reintegra</strong> (salvo enfermedad o razones familiares graves).</li>
+          <li><strong>Familia</strong>: el cónyuge y los hijos <strong>menores de 21 años</strong> siempre. El resto, si conviven y no ganan más del <strong>doble del SMI</strong>.</li>
+          <li>El derecho <strong>caduca al año</strong>, con prórrogas semestrales de hasta 2 años más. Se puede anticipar.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.3</span><span class="bt"><h3>Asistencias</h3><small>Órganos colegiados, tribunales y formación</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Tipo</th><th>Límite anual</th><th>Claves</th></tr>
+          <tr><td data-l="Tipo"><strong>Órganos colegiados y consejos de administración</strong></td><td data-l="Límite">40 %</td><td data-l="Claves">Excepcionales; las autoriza el Ministro de <strong>Hacienda</strong> (cuantías para 2 años).</td></tr>
+          <tr><td data-l="Tipo"><strong>Tribunales de oposiciones</strong></td><td data-l="Límite">20 %</td><td data-l="Claves">Las autoriza <strong>Función Pública</strong>, previo informe de Hacienda. Categorías: 1.ª A1 · 2.ª A2 y C1 · 3.ª C2 y AP. <strong>+50 %</strong> en sábados y festivos; hasta +50 % por la complejidad. Una asistencia por sesión y una por día.</td></tr>
+          <tr><td data-l="Tipo"><strong>Formación y perfeccionamiento</strong></td><td data-l="Límite">25 %</td><td data-l="Claves">Colaboración no permanente; máximo <strong>75 horas</strong> al año.</td></tr>
+          <tr><td data-l="Tipo"><strong>Todas juntas</strong></td><td data-l="Límite"><strong>50 %</strong></td><td data-l="Claves">De las retribuciones anuales del puesto principal, <strong>sin antigüedad</strong>. Compatibles con las dietas; con retención de IRPF. Comunicación <strong>semestral</strong> a Función Pública.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 5 · El pago de las retribuciones</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5.1</span><span class="bt"><h3>Pago por transferencia o cheque nominativo</h3><small>Decreto 680/1974</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span><strong>Ley de 16-3-1939</strong>: se busca suprimir el pago en dinero</span><i>→</i><span><strong>Orden de 2-11-1962</strong>: transferencia voluntaria</span><i>→</i><span><strong>Decreto 680/1974</strong>: régimen actual</span></div>
+        <ul>
+          <li>El personal en activo (civil, militar y de OOAA) elige entre <strong>transferencia</strong> a una cuenta a su nombre o <strong>cheque nominativo</strong> emitido por la entidad por cuenta de la habilitación. Puede <strong>cambiar en cualquier momento</strong>.</li>
+          <li>Los libramientos van a favor de las <strong>habilitaciones o pagadurías</strong>, con su importe líquido transferido a sus cuentas. Deben estar en las Ordenaciones de Pagos con <strong>15 días</strong> de antelación.</li>
+          <li>Las habilitaciones envían a la entidad <strong>relaciones nominales</strong> (perceptores, cuentas e importes); los cheques se entregan con <strong>firma del recibí</strong>.</li>
+          <li>El servicio de las entidades es <strong>gratuito</strong> para los perceptores y la Administración.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Líquido ≠ neto</b>El líquido resta las deducciones formalizables (IRPF, cuotas); el neto, además, las no formalizables (anticipos, embargos).</div>
+    <div class="trap"><b>Paga extra sin productividad</b>Incluye sueldo, trienios, destino y específico, pero no la productividad ni las gratificaciones.</div>
+    <div class="trap"><b>Sueldo de la paga extra</b>No es una mensualidad de sueldo: tiene su propia tabla (C1: 778,42 € frente a 900,63 €).</div>
+    <div class="trap"><b>182 frente a 183</b>Junio: ÷182 (183 en bisiesto). Diciembre: ÷183.</div>
+    <div class="trap"><b>Jubilación: mes completo</b>Es la excepción a la liquidación por días en el cese, también para la paga extra.</div>
+    <div class="trap"><b>Eventuales sin trienios</b>Salvo que sean funcionarios de carrera: estos sí los cobran.</div>
+    <div class="trap"><b>Nómina: día 5 y día 7</b>El 5 se cierra la ordinaria; antes del 7 se entrega en contabilidad. El pago, 5 días antes del vencimiento.</div>
+    <div class="trap"><b>Manutención sin factura</b>La manutención es fija; el alojamiento se justifica y tiene tope.</div>
+    <div class="trap"><b>Comisión de un día</b>Solo hay media manutención si dura 5 h o más, empieza antes de las 14:00 y acaba después de las 16:00.</div>
+    <div class="trap"><b>Residencia eventual: 80 %</b>Más de 1 mes en España o de 3 en el extranjero; cursos selectivos de promoción interna, siempre.</div>
+    <div class="trap"><b>Traslado sancionador</b>No da derecho a indemnización. En España solo se indemnizan los forzosos.</div>
+    <div class="trap"><b>CPT y absorción</b>Los incrementos generales absorben al 50 %; nunca los trienios, la productividad ni las gratificaciones.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 4. Retribuciones e indemnizaciones del personal; las nóminas; devengo, liquidación y pago» y su anexo (CEA), con las cuantías de 2026: RDL 14/2025 (+1,5 %), tablas retributivas de la SEPG, RD 126/2026 (SMI) y anexo II del RD 462/2002.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Gestión financiera · Tema 4 · Herramientas interactivas ===== */
+const RT=[
+ {g:"Funcionarios · básicas",n:"Sueldo",norm:"Art. 23.a TREBEP · LPGE · subconcepto 120",def:"Cantidad igual para todos los funcionarios del mismo subgrupo o grupo de clasificación, sin grado en el caso de las Agrupaciones Profesionales.",
+  f:{"Qué retribuye":"La pertenencia a un subgrupo o grupo, sin atender al puesto concreto.","Cómo se fija":"Lo fija la LPGE para cada subgrupo. En 2026, C1: 10.807,56 €/año (RDL 14/2025).","Cuándo se cobra":"En 12 mensualidades más su cuantía específica en las dos pagas extra.","En la nómina":"Concepto 120 del presupuesto (retribuciones básicas de funcionarios). Tu anexo: el sueldo del grupo A no puede superar el triple del E."}},
+ {g:"Funcionarios · básicas",n:"Trienios",norm:"Art. 23.b TREBEP · Ley 70/1978",def:"Cantidad igual para cada subgrupo o grupo por cada 3 años de servicio.",
+  f:{"Qué retribuye":"La antigüedad: todos los servicios previos en cualquier Administración y en las Administraciones de la UE y de los Estados con libre circulación.","Cómo se fija":"Cada trienio conserva el valor del grupo en que se perfeccionó. Si se cambia de grupo antes de completarlo, la fracción cuenta en el nuevo grupo.","Cuándo se cobra":"Desde el mes siguiente al cumplimiento, en 12 mensualidades y en las pagas extra (con su propia cuantía).","Quién los reconoce":"El Subsecretario del departamento de destino o el Delegado del Gobierno."},
+  warn:"Los eventuales no cobran trienios, salvo que sean funcionarios de carrera."},
+ {g:"Funcionarios · básicas",n:"Pagas extraordinarias",norm:"Art. 22.4 TREBEP · art. 33 Ley 33/1987",def:"Dos al año, en junio y diciembre, con una mensualidad de las básicas y de las complementarias, salvo las de rendimiento y los servicios extraordinarios.",
+  f:{"Qué incluye":"Sueldo y trienios de la tabla de pagas, una mensualidad de complemento de destino y la paga del específico.","Devengo":"El primer día hábil de junio y de diciembre, con la situación de esa fecha.","Proporción":"Por días de servicio en el semestre: ÷182 (183 en bisiesto) en junio y ÷183 en diciembre.","Qué excluye":"La productividad y las gratificaciones."}},
+ {g:"Funcionarios · complementarias",n:"Complemento de destino",norm:"Art. 24 TREBEP · art. 23.3.a Ley 30/1984 · subconcepto 121.00",def:"Corresponde al nivel del puesto que se desempeña, o al grado personal consolidado si es superior.",
+  f:{"Qué retribuye":"La progresión en la carrera y el nivel del puesto (30 niveles).","Cómo se fija":"La LPGE fija la cuantía de cada nivel. En 2026, nivel 30: 14.541,24 €; nivel 22: 7.652,76 €.","Cuándo se cobra":"12 mensualidades más una mensualidad en cada paga extra.","Justificante":"En la primera nómina, certificado del Jefe del centro con el nivel del puesto."}},
+ {g:"Funcionarios · complementarias",n:"Complemento específico",norm:"Art. 23.3.b Ley 30/1984 · subconcepto 121.01",def:"Retribuye las condiciones particulares de algunos puestos: dificultad técnica, dedicación, responsabilidad, incompatibilidad, peligrosidad o penosidad.",
+  f:{"Regla de oro":"Solo puede haber un complemento específico por puesto, aunque pondere varias condiciones.","Cómo se fija":"Se valora el puesto y lo recoge la RPT; las cuantías dependen de la LPGE.","Cuándo se cobra":"En 14 pagas: 12 mensuales y 2 en junio y diciembre.","Compatibilidad":"Cabe autorizar una actividad privada si el específico no supera el 30 % de las retribuciones básicas, sin antigüedad."}},
+ {g:"Funcionarios · complementarias",n:"Productividad",norm:"Art. 23.3.c Ley 30/1984 · concepto 150",def:"Retribuye el especial rendimiento, la actividad extraordinaria y el interés o la iniciativa con que se desempeña el trabajo.",
+  f:{"Cómo se fija":"Con criterios objetivos. El Ministerio de Hacienda fija la cuantía global y el titular del departamento la reparte.","Derechos":"No genera derechos para períodos sucesivos.","Publicidad":"Las cantidades son públicas para el personal del centro y sus representantes.","Justificante":"Acuerdo de la Comisión Ministerial de Retribuciones, o certificación."},
+  warn:"No entra en las pagas extra ni computa para absorber el CPT."},
+ {g:"Funcionarios · complementarias",n:"Gratificaciones",norm:"Art. 23.3.d Ley 30/1984 · concepto 151",def:"Retribuyen servicios extraordinarios prestados fuera de la jornada normal.",
+  f:{"Carácter":"Excepcional. Nunca pueden ser fijas ni periódicas.","Derechos":"No originan derechos individuales.","En la nómina":"Aumento transitorio, justificado con certificación.","Absorción":"No computan para absorber el CPT."}},
+ {g:"Funcionarios · complementarias",n:"Complemento personal transitorio (CPT)",norm:"Ley 50/1984 · LPGE",def:"Garantiza que nadie cobre menos tras un cambio del sistema retributivo; se mantiene en la cuantía a 31 de diciembre.",
+  f:{"Absorción":"Lo absorben las mejoras retributivas, también las debidas a un cambio de puesto.","Incrementos generales":"Solo computan al 50 % (sueldo en 14 mensualidades, destino y específico).","No computan":"Los trienios, la productividad y las gratificaciones.","Justificante":"El importe reconocido."}},
+ {g:"Funcionarios · complementarias",n:"Indemnización por residencia",norm:"Subconcepto 121.02 · territorios no peninsulares",def:"Compensa el mayor coste de la vida en determinadas zonas (Baleares, Canarias, Ceuta y Melilla).",
+  f:{"Devengo":"Día a día, según el destino.","Justificante":"El mismo que el alta en sueldos.","Personal laboral":"El convenio prevé un complemento de residencia equivalente.","Clase":"Es una retribución complementaria por razón del destino."}},
+ {g:"Otro personal",n:"Funcionarios interinos",norm:"Art. 25.1 TREBEP",def:"Cobran las básicas del grupo del cuerpo y las complementarias del puesto.",
+  f:{"Trienios":"Sí; los anteriores al EBEP solo tienen efectos económicos desde 2007.","Excluidas":"Las complementarias ligadas a la condición de funcionario de carrera.","Productividad":"Sí, si la cobran los de carrera de puestos análogos.","Sin puesto":"Las retribuciones que fije Función Pública."}},
+ {g:"Otro personal",n:"Personal eventual",norm:"Art. 12 TREBEP · concepto 110",def:"Sueldo y pagas del grupo al que Función Pública asimile sus funciones y complementarias del puesto.",
+  f:{"Trienios":"No (tu anexo: básicas «excluidos trienios»).","Excepción":"Un funcionario de carrera en un puesto eventual cobra sus básicas con trienios.","Productividad":"Puede cobrarla si la tienen puestos análogos.","Presupuesto":"Artículo 11 de la clasificación económica: personal eventual."}},
+ {g:"Otro personal",n:"Funcionarios en prácticas",norm:"Art. 26 TREBEP · RD 456/1986 · concepto 124",def:"Como mínimo, el sueldo del grupo al que aspiran, con sus pagas extra.",
+  f:{"Si ocupan puesto":"También las complementarias del puesto.","Opción":"Si ya cobraban de la Administración, pueden optar por su remuneración de origen.","Trienios":"Los funcionarios de un grupo inferior conservan los suyos.","Curso selectivo":"Si es de promoción interna, se indemniza como residencia eventual."}},
+ {g:"Personal laboral",n:"Salario base",norm:"Convenio Único de la AGE · concepto 130",def:"Retribución por unidad de tiempo fijada para cada grupo profesional.",
+  f:{"Cuándo se cobra":"En 12 mensualidades.","Cómo se fija":"Por el convenio, dentro de la masa salarial que autoriza la LPGE.","Antigüedad":"Trienios desde el día 1 del mes en que se cumplen 3 años o múltiplos.","Complementos personales":"Complemento personal de antigüedad, de unificación y absorbibles."}},
+ {g:"Personal laboral",n:"Pagas extra del laboral",norm:"Convenio Único · tu anexo",def:"Se devengan el primer día hábil de junio y diciembre.",
+  f:{"Importe":"Una mensualidad de salario base, antigüedad y complemento personal de antigüedad.","Paga de junio":"Retribuye del 1 de diciembre al 31 de mayo.","Paga de diciembre":"Retribuye del 1 de junio al 30 de noviembre.","Pago":"La de diciembre, a partir del día 18 (tu anexo)."}},
+ {g:"Personal laboral",n:"Complementos y percepciones no salariales",norm:"Convenio Único",def:"Complementos salariales del puesto, por cantidad o calidad del trabajo y de residencia; y percepciones extrasalariales.",
+  f:{"Salariales":"De puesto (jornada, nocturnidad, turnicidad…), por cantidad o calidad (horas extra, productividad) y de residencia.","No salariales":"Indemnizaciones o suplidos por gastos del trabajo (no forman parte de la masa salarial).","En especie":"Bienes o servicios que se valoran.","Masa salarial":"Excluye las prestaciones de la SS, las cotizaciones del empleador, las indemnizaciones por traslado o despido y los suplidos."}},
+ {g:"Indemnizaciones",n:"Dietas y gastos de viaje",norm:"RD 462/2002 · artículo 23 del presupuesto (cap. 2)",def:"No son retribuciones: compensan gastos por razón del servicio.",
+  f:{"Dieta":"Alojamiento (gasto real con tope) más manutención (fija).","Grupos":"1 altos cargos · 2 A1 y A2 · 3 C1, C2 y AP.","Viaje":"Billete según el grupo, o 0,26 €/km en vehículo particular.","Asistencias":"Límites del 40, 20, 25 y 50 % de las retribuciones anuales sin antigüedad."},
+  warn:"Van al capítulo 2 (artículo 23, indemnizaciones por razón del servicio), no al capítulo 1."}
+];
+
+const JB=[
+ {g:"Altas",n:"Nuevo ingreso",norm:"Orden de 30-7-1992",def:"Funcionario que se incorpora por primera vez a la nómina tras superar el proceso selectivo.",
+  f:{"Justificante":"Título, nombramiento y diligencia de toma de posesión.","Si tiene servicios previos":"Además, la resolución de reconocimiento de trienios y su liquidación.","Cómo se liquida":"El mes de toma de posesión del primer destino se liquida por días.","Complementos":"Certificado del Jefe del centro con los niveles de destino y específico."}},
+ {g:"Altas",n:"Traslado o comisión de servicios",norm:"Orden de 30-7-1992",def:"Funcionario que viene de otro centro o habilitación.",
+  f:{"Justificante":"Nombramiento, toma de posesión y certificado de baja en nómina del centro de origen.","Cómo se liquida":"Por meses completos: el centro de origen paga el mes en que se produce el cese.","Plazo posesorio":"Se cobran todas las retribuciones fijas.","Si viene de otra Administración":"El mes de cambio se liquida por días."}},
+ {g:"Altas",n:"Reingreso al servicio activo",norm:"Resolución de 25-5-2010",def:"Funcionario que vuelve de una situación sin retribución.",
+  f:{"Justificante":"Resolución de reingreso y toma de posesión.","Cómo se liquida":"El mes de reingreso se liquida por días.","Trienios":"Los perfeccionados se mantienen.","Ojo":"Lo mismo al volver de una licencia sin sueldo."}},
+ {g:"Altas",n:"Personal laboral de nuevo ingreso",norm:"Orden de 30-7-1992",def:"Trabajador contratado que se incorpora a la nómina de laborales.",
+  f:{"Justificante":"Hoja de servicios y contrato.","Control":"Contratación dentro del plan de contratación fiscalizado.","Clase de nómina":"Laborales (o laborales en el extranjero).","Presupuesto":"Artículo 13 (personal laboral)."}},
+ {g:"Bajas",n:"Cese en el destino",norm:"Orden de 30-7-1992",def:"Funcionario que deja el centro por traslado o cambio de situación.",
+  f:{"Justificante":"Acuerdo de cese; si estaba en comisión de servicios, el modelo F7.","Cómo se liquida":"Si pasa a otra Administración o deja el servicio activo, por días hasta el cese.","Certificado":"Se expide el certificado de baja para el nuevo centro.","Excepción":"La suspensión no se justifica como cambio de situación."}},
+ {g:"Bajas",n:"Jubilación, fallecimiento o retiro",norm:"Resolución de 25-5-2010",def:"Cese en el servicio activo por causa que da paso a Clases Pasivas.",
+  f:{"Justificante":"Resolución de jubilación o acuerdo de cese.","Cómo se liquida":"Se paga el mes completo, sin prorrateo.","Paga extra":"Proporcional, pero los días de ese mes cuentan como un mes completo.","Ojo":"Es la excepción a la regla general del cese."}},
+ {g:"Bajas",n:"Separación del servicio",norm:"Orden de 30-7-1992",def:"Pérdida de la condición de funcionario por sanción disciplinaria firme.",
+  f:{"Justificante":"Anotación de la sanción.","Cómo se liquida":"Por días hasta el cese.","Paga extra":"Proporcional hasta la fecha del cese.","Ojo":"El traslado forzoso por sanción no se indemniza."}},
+ {g:"Bajas",n:"Licencia sin retribución",norm:"Resolución de 25-5-2010",def:"Licencia por asuntos propios sin sueldo.",
+  f:{"Justificante":"Concesión de la licencia.","Cómo se liquida":"Por días: el mes en que empieza y el mes en que se vuelve.","Paga extra":"Los días de licencia no cuentan como servicios.","Cuotas":"Las de derechos pasivos y MUFACE no se reducen durante la licencia."}},
+ {g:"Modificaciones",n:"Nuevo trienio",norm:"Orden de 30-7-1992",def:"Aumento definitivo: persiste en las nóminas siguientes.",
+  f:{"Justificante":"Resolución de reconocimiento del trienio.","Efectos":"Desde el mes siguiente al cumplimiento.","Paga extra":"También aumenta la parte de trienios de las pagas.","Clase":"Modificación definitiva (aumento)."}},
+ {g:"Modificaciones",n:"Productividad o gratificación",norm:"Orden de 30-7-1992",def:"Aumento transitorio: no se repite en la nómina siguiente.",
+  f:{"Justificante productividad":"Acuerdo de la Comisión Ministerial de Retribuciones o certificación.","Justificante gratificación":"Certificación de los servicios extraordinarios.","Derechos":"No generan derechos para períodos sucesivos.","Clase":"Modificación transitoria (aumento)."}},
+ {g:"Modificaciones",n:"Pagas extraordinarias",norm:"Orden de 30-7-1992",def:"Aumento transitorio en la nómina ordinaria de junio y diciembre.",
+  f:{"Justificante":"Certificación global del habilitado.","Nómina":"Van en la ordinaria (número 01) de junio y diciembre.","Proporción":"Por días de servicio en el semestre.","Clase":"Modificación transitoria (aumento)."}},
+ {g:"Modificaciones",n:"Atrasos",norm:"Orden de 30-7-1992",def:"Cantidades de meses anteriores no abonadas.",
+  f:{"Justificante":"La documentación del derecho (la del alta, si es el caso).","Nómina posterior":"Certificación de no haberlos incluido antes.","Dónde":"Nómina de incidencias del mes (desde la número 02), en el mismo documento contable.","Liquidación":"Complementaria: el mes de devengo no coincide con el de pago."}},
+ {g:"Modificaciones",n:"Huelga",norm:"Art. 30 TREBEP",def:"Disminución transitoria: no se devenga retribución por el tiempo de huelga.",
+  f:{"Justificante":"Certificación del personal que la hizo y su duración.","Cálculo":"Por días u horas (valor hora = íntegro ÷ días del mes ÷ horas diarias).","Carácter":"No es una sanción ni afecta a las prestaciones sociales.","Clase":"Modificación transitoria (disminución)."}},
+ {g:"Modificaciones",n:"Retención judicial o anticipo",norm:"Orden de 30-7-1992",def:"Deducciones no formalizables: rebajan el neto, no el líquido.",
+  f:{"Códigos":"20 anticipo reintegrable · 21 retención judicial · 22 reintegro de préstamo de MUFACE.","Justificante":"Mandamiento judicial o resolución de concesión del anticipo.","Efecto":"Neto = líquido − deducciones no formalizables.","Clase":"Deducción (modificación)."}},
+ {g:"Modificaciones",n:"Complemento familiar y CPT",norm:"Orden de 30-7-1992",def:"Conceptos personales que se justifican en su primera inclusión.",
+  f:{"Complemento familiar":"Declaración del interesado y libro de familia.","CPT":"Resolución con el importe reconocido.","Absorción del CPT":"Con las mejoras retributivas (los incrementos generales al 50 %).","Clase":"Modificación definitiva."}}
+];
+
+const GR={A1:{s:16646.88,t:640.68,xs:856.05,xt:32.96,hr:52697.06,lv:[22,30]},A2:{s:14394.24,t:522.48,xs:874.83,xt:31.74,hr:41473.91,lv:[16,26]},B:{s:12582.60,t:458.40,xs:906.26,xt:33.03,hr:36317.13,lv:[16,26]},C1:{s:10807.56,t:395.52,xs:778.42,xt:28.45,hr:31852.67,lv:[15,22]},C2:{s:8994.96,t:269.28,xs:742.75,xt:22.20,hr:25200.74,lv:[14,18]},E:{s:8232.84,t:202.80,xs:686.07,xt:16.90,hr:21485.65,lv:[13,14]}};
+const CDN=[0,1377.72,1630.08,1882.92,2135.04,2387.64,2556.24,2724.84,2893.08,3062.04,3230.40,3566.88,3904.20,4241.28,4578.84,4915.08,5252.76,5589.00,5926.32,6263.28,6600.12,7105.32,7652.76,8201.76,8749.68,9298.32,10480.56,11945.64,12494.64,13042.68,14541.24];
+const DIET={1:{a:102.56,m:53.34},2:{a:65.97,m:37.40},3:{a:48.92,m:28.21}};
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const eur=x=>(Math.round(x*100)/100).toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €";
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  function mk(list,pid,cid,opt){
+    const pills=$(pid),card=$(cid);if(!pills)return;
+    let html="",last="";
+    list.forEach((s,i)=>{if(!opt.flat&&s.g!==last){html+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}
+      html+=`<button class="sit-pill${s.warn?" warn":""}${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});
+    pills.innerHTML=html;
+    function show(i){const s=list[i];
+      card.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div>
+      <div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>
+      ${s.warn?`<div class="note sit-warn"><span>⚠️</span><span>${e(s.warn)}</span></div>`:""}`;
+      card.style.animation="none";card.offsetHeight;card.style.animation="";
+      pills.querySelectorAll(".sit-pill").forEach(b=>b.classList.toggle("on",+b.dataset.i===i))}
+    pills.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(b){show(+b.dataset.i);if(innerWidth<720)card.scrollIntoView({behavior:"smooth",block:"start"})}});
+    show(0);
+  }
+  mk(RT,"rt-pills","rt-card",{});
+  mk(JB,"jb-pills","jb-card",{});
+
+  function tabs(tid,prefix,cb){const t=$(tid);if(!t)return;
+    t.addEventListener("click",ev=>{const b=ev.target.closest("button[data-p]");if(!b)return;
+      t.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+      if(prefix)document.querySelectorAll(`[id^="${prefix}"]`).forEach(p=>{if(p.classList.contains("pane"))p.classList.toggle("on",p.id===prefix+b.dataset.p)});
+      if(cb)cb(b.dataset.p)})}
+
+  /* --- Calculadora de nómina --- */
+  (function(){
+    if(!$("nm-g"))return;
+    const nsel=$("nm-n");
+    nsel.innerHTML=CDN.map((v,i)=>i?`<option value="${i}">${i} · ${eur(v)}</option>`:"").join("");
+    nsel.value="18";
+    let mode="o";
+    tabs("nm-tabs",null,p=>{mode=p;run()});
+    function run(){
+      const g=$("nm-g").value,G=GR[g],n=+nsel.value,t=Math.max(0,Math.floor(num("nm-t"))),t2=Math.max(0,Math.floor(num("nm-t2"))),G2=GR[$("nm-g2").value];
+      const ce=num("nm-ce"),pr=num("nm-p"),irpf=num("nm-irpf")/100,nf=num("nm-nf"),reg=$("nm-r").value;
+      const o={s:G.s/12,t:(t*G.t+t2*G2.t)/12,cd:CDN[n]/12,ce:ce/14,p:pr};
+      const x={s:G.xs,t:t*G.xt+t2*G2.xt,cd:CDN[n]/12,ce:ce/14,p:0};
+      const ord=o.s+o.t+o.cd+o.ce+o.p,ext=x.s+x.t+x.cd+x.ce;
+      const anual=12*(o.s+o.t+o.cd+o.ce)+2*ext;
+      const dp=reg==="cp"?G.hr*0.0386/14:0,mu=G.hr*0.0169/14;
+      const base=Math.min(anual/12+pr,5101.20),ssO=reg==="ss"?base*0.0495:0;
+      function ded(i,isX){const r=[];r.push(["01","IRPF ("+(irpf*100).toLocaleString("es-ES")+" %)",i*irpf]);
+        if(reg==="cp")r.push(["02","Derechos pasivos (3,86 % HR ÷ 14)",dp]);
+        r.push(["03","MUFACE (1,69 % HR ÷ 14)",mu]);
+        if(reg==="ss"&&!isX)r.push(["09","Cuota obrera RGSS (4,70 CC + 0,10 FP + 0,15 MEI)",ssO]);return r}
+      const tb=$("nm-tb");let rows="",kp;
+      function block(R,isX){const I=R.s+R.t+R.cd+R.ce+R.p;const D=ded(I,isX);const F=D.reduce((a,b)=>a+b[2],0);const L=I-F,N=L-(isX?0:nf);
+        rows=`<tr><th>Código</th><th>Concepto</th><th>Importe</th></tr>
+        <tr><td>Sueldo</td><td data-l="Concepto">Sueldo ${g}${isX?" (tabla de paga extra)":""}</td><td data-l="Importe">${eur(R.s)}</td></tr>
+        <tr><td>Trienios</td><td data-l="Concepto">${t} del ${g}${t2?` + ${t2} del ${$("nm-g2").value}`:""}</td><td data-l="Importe">${eur(R.t)}</td></tr>
+        <tr><td>C. destino</td><td data-l="Concepto">Nivel ${n}${isX?" (una mensualidad)":""}</td><td data-l="Importe">${eur(R.cd)}</td></tr>
+        <tr><td>C. específico</td><td data-l="Concepto">${isX?"Paga de junio o diciembre":"Mensualidad"} (anual ÷ 14)</td><td data-l="Importe">${eur(R.ce)}</td></tr>
+        ${isX?`<tr><td>Productividad</td><td data-l="Concepto">No entra en la paga extra</td><td data-l="Importe">${eur(0)}</td></tr>`:`<tr><td>Productividad</td><td data-l="Concepto">Del mes</td><td data-l="Importe">${eur(R.p)}</td></tr>`}
+        <tr class="tot"><td>ÍNTEGRO</td><td data-l="Concepto">Suma de retribuciones</td><td data-l="Importe">${eur(I)}</td></tr>
+        ${D.map(d=>`<tr><td>${d[0]}</td><td data-l="Concepto">${e(d[1])} · formalizable</td><td data-l="Importe">− ${eur(d[2])}</td></tr>`).join("")}
+        <tr class="tot"><td>LÍQUIDO</td><td data-l="Concepto">Íntegro − formalizables</td><td data-l="Importe">${eur(L)}</td></tr>
+        ${!isX&&nf?`<tr><td>20-22</td><td data-l="Concepto">No formalizables (anticipo, embargo…)</td><td data-l="Importe">− ${eur(nf)}</td></tr>`:""}
+        <tr class="tot"><td>NETO</td><td data-l="Concepto">Lo que se transfiere al perceptor</td><td data-l="Importe">${eur(N)}</td></tr>`;
+        return {I,F,L,N}}
+      if(mode==="a"){const a=block(o,false),b=block(x,true);
+        rows=`<tr><th>Concepto</th><th>Ordinaria × 12</th><th>Extra × 2</th><th>Año</th></tr>
+        <tr><td>Íntegro</td><td data-l="× 12">${eur(a.I*12)}</td><td data-l="× 2">${eur(b.I*2)}</td><td data-l="Año">${eur(a.I*12+b.I*2)}</td></tr>
+        <tr><td>Formalizables</td><td data-l="× 12">${eur(a.F*12)}</td><td data-l="× 2">${eur(b.F*2)}</td><td data-l="Año">${eur(a.F*12+b.F*2)}</td></tr>
+        <tr class="tot"><td>Líquido</td><td data-l="× 12">${eur(a.L*12)}</td><td data-l="× 2">${eur(b.L*2)}</td><td data-l="Año">${eur(a.L*12+b.L*2)}</td></tr>`;
+        kp={I:a.I*12+b.I*2,L:a.L*12+b.L*2,lab:"anual"}}
+      else{const r=block(mode==="x"?x:o,mode==="x");kp={I:r.I,L:r.L,N:r.N,lab:mode==="x"?"paga extra":"mes ordinario"}}
+      tb.innerHTML=rows;
+      $("nm-k").innerHTML=`<div class="nm-kpi"><span>Íntegro · ${kp.lab}</span><b>${eur(kp.I)}</b></div><div class="nm-kpi"><span>Líquido · ${kp.lab}</span><b>${eur(kp.L)}</b></div>${kp.N!=null?`<div class="nm-kpi g"><span>Neto</span><b>${eur(kp.N)}</b></div>`:""}<div class="nm-kpi"><span>Bruto anual</span><b>${eur(anual+12*pr)}</b></div>`;
+      const out=n<G.lv[0]||n>G.lv[1];
+      $("nm-note").innerHTML=`${out?`<strong>⚠️ El nivel ${n} está fuera del intervalo habitual del ${g} (${G.lv[0]}-${G.lv[1]}, RD 364/1995).</strong> `:""}Cuantías de 2026 (RDL 14/2025 y tablas de la SEPG). Las cuotas de derechos pasivos y MUFACE se calculan sobre el haber regulador de 2026 del grupo (${eur(G.hr)}) y se pagan en 14 cuotas. La cuota del RGSS es orientativa (base mensual con prorrata de pagas, máximo 5.101,20 €; los funcionarios de carrera no cotizan por desempleo). El IRPF real depende de la situación personal.`;
+    }
+    ["nm-g","nm-n","nm-t","nm-t2","nm-g2","nm-ce","nm-p","nm-r","nm-irpf","nm-nf"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});
+    $("nm-g").addEventListener("change",()=>{const G=GR[$("nm-g").value];if(+nsel.value<G.lv[0]||+nsel.value>G.lv[1]){nsel.value=String(G.lv[0]);run()}});
+    run();
+  })();
+
+  /* --- Devengo --- */
+  const leap=y=>(y%4===0&&y%100!==0)||y%400===0;
+  const dim=(y,m)=>new Date(y,m,0).getDate();
+  const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+  const dd=(a,b)=>Math.round((b-a)/864e5);
+  const fd=d=>d.toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"});
+  tabs("dv-tabs","dv-");
+  (function(){
+    if(!$("px-p"))return;
+    function run(){const p=+$("px-p").value,y=Math.floor(num("px-y"))||2026,imp=num("px-i"),lic=Math.max(0,Math.floor(num("px-l")));
+      const ini=p===6?new Date(y-1,11,1):new Date(y,5,1),fin=p===6?new Date(y,4,31):new Date(y,10,30);
+      const div=p===6?(leap(y)?183:182):183;const tot=dd(ini,fin)+1;
+      let start=ini,msg="";const a=$("px-a").value;
+      if(a){const d=pd(a);if(d>fin){$("px-out").className="verdict ko";$("px-out").innerHTML=`<b class="big">Sin derecho a esta paga</b>La fecha es posterior al ${fd(fin)}: no hay días de servicio en el período.`;return}
+        if(d>ini)start=d;else msg="La fecha es anterior al inicio del período: cuenta todo el semestre. "}
+      let dias=dd(start,fin)+1-lic;if(dias<0)dias=0;
+      const full=dias>=tot;const val=full?imp:imp*dias/div;
+      $("px-out").className="verdict "+(full?"ok":"mid");
+      $("px-out").innerHTML=`<b class="big">${eur(val)}</b>Período: ${fd(ini)} – ${fd(fin)} (${tot} días). Días computables: <strong>${dias}</strong>${lic?` (descontados ${lic} de licencia sin retribución)`:""}. ${full?"Semestre completo: paga entera.":`Fórmula: ${eur(imp)} × ${dias} ÷ ${div}.`}<div class="tool-note">${msg}Divisor: ${p===6?`junio, 182 días (183 si el año es bisiesto; ${y} ${leap(y)?"lo es":"no lo es"})`:"diciembre, 183 días"}. Devengo: primer día hábil de ${p===6?"junio":"diciembre"}.</div>`}
+    ["px-p","px-y","px-i","px-a","px-l"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run();
+  })();
+  (function(){
+    if(!$("md-i"))return;
+    function run(){const imp=num("md-i"),s=$("md-s").value,f=$("md-f").value;if(!f)return;const d=pd(f),y=d.getFullYear(),m=d.getMonth()+1,D=dim(y,m),day=d.getDate();
+      let n,txt;
+      if(s==="alta"){n=D-day+1;txt=`Del ${day} al ${D}, ambos incluidos.`}
+      else if(s==="cese"){n=day;txt=`Del 1 al ${day}, ambos incluidos.`}
+      else if(s==="jub"){n=D;txt="Jubilación, fallecimiento o retiro en Clases Pasivas: se paga el mes completo."}
+      else{n=day-1;txt=n?`Del 1 al ${day-1}: la licencia empieza el día ${day}.`:"La licencia empieza el día 1: no se cobra nada ese mes."}
+      const vd=imp/D;
+      $("md-out").className="verdict "+(n===D?"ok":"mid");
+      $("md-out").innerHTML=`<b class="big">${eur(vd*n)}</b>${txt} Valor del día: ${eur(imp)} ÷ ${D} días naturales = ${eur(vd)}. Días: <strong>${n}</strong>.<div class="tool-note">Regla general: meses completos según la situación del primer día hábil. Se liquida por días el mes de toma de posesión del primer destino, de reingreso, de inicio o fin de licencia sin sueldo, de cambio de Administración y de cese en activo (salvo jubilación, fallecimiento o retiro).</div>`}
+    ["md-i","md-s","md-f"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run();
+  })();
+  (function(){
+    if(!$("dh-i"))return;
+    function run(){const imp=num("dh-i"),mv=$("dh-m").value,h=num("dh-h"),nh=num("dh-n");if(!mv||!h)return;const [y,m]=mv.split("-").map(Number),D=dim(y,m);
+      const vh=imp/D/h;
+      $("dh-out").className="verdict mid";
+      $("dh-out").innerHTML=`<b class="big">Descuento: ${eur(vh*nh)}</b>Valor de la hora: ${eur(imp)} ÷ ${D} días ÷ ${h.toLocaleString("es-ES")} h = <strong>${eur(vh)}</strong>. Por ${nh.toLocaleString("es-ES")} h sin justificar.<div class="tool-note">La deducción proporcional de haberes no es una sanción (art. 30 TREBEP). La misma fórmula se usa para la huelga.</div>`}
+    ["dh-i","dh-m","dh-h","dh-n"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run();
+  })();
+
+  /* --- Indemnizaciones --- */
+  tabs("in-tabs","in-");
+  (function(){
+    if(!$("dt-g"))return;
+    function run(){const g=$("dt-g").value,T=DIET[g],s=$("dt-s").value,f=$("dt-e").value,hotel=num("dt-h"),km=num("dt-k"),out=$("dt-out");
+      if(!s||!f)return;const S=new Date(s),E=new Date(f);
+      if(E<=S){out.className="verdict ko";out.innerHTML=`<b class="big">Fechas incoherentes</b>El fin debe ser posterior al inicio.`;return}
+      const hrs=(E-S)/36e5,hS=S.getHours()+S.getMinutes()/60,hE=E.getHours()+E.getMinutes()/60;
+      const d0=new Date(S.getFullYear(),S.getMonth(),S.getDate()),d1=new Date(E.getFullYear(),E.getMonth(),E.getDate());
+      const days=dd(d0,d1);let nights=0,man=0,lines=[];
+      if(days===0){
+        if(hrs>=5&&hS<14&&hE>16){man=0.5;lines.push("Comisión de un día: dura 5 h o más, empieza antes de las 14:00 y acaba después de las 16:00 → 50 % de manutención.")}
+        else lines.push(`Comisión de un día sin derecho a manutención (dura ${hrs.toFixed(1).replace(".",",")} h; hace falta ≥ 5 h, inicio antes de las 14:00 y fin después de las 16:00).`);
+        lines.push("Sin alojamiento.")}
+      else{
+        nights=days;
+        const ms=hS<14?1:hS<22?0.5:0;const me=hE>14?0.5:0;
+        man=ms+(days-1)+me;
+        lines.push(`Día de salida (${String(S.getHours()).padStart(2,"0")}:${String(S.getMinutes()).padStart(2,"0")}): ${ms===1?"100 %":ms?"50 %":"0 %"} de manutención.`);
+        if(days>1)lines.push(`${days-1} día(s) intermedio(s): 100 % cada uno.`);
+        lines.push(`Día de regreso (${String(E.getHours()).padStart(2,"0")}:${String(E.getMinutes()).padStart(2,"0")}): ${me?"50 %":"0 %"} de manutención; sin alojamiento.`);
+        if(hrs<=24)lines.push("Dura 24 h o menos en dos días naturales: un día de alojamiento y manutención según la salida y el regreso.")}
+      const aloj=Math.min(hotel,T.a)*nights,mt=man*T.m,kv=km*0.26,tot=aloj+mt+kv;
+      const warn=hrs>24*31?`<div class="note sit-warn"><span>⚠️</span><span>Dura más de un mes: si se prevé así desde el inicio, procede la residencia eventual (hasta el 80 % de la dieta entera: ${eur(0.8*(T.a+T.m))}/día, sin justificar).</span></div>`:"";
+      out.className="verdict ok";
+      out.innerHTML=`<b class="big">Total: ${eur(tot)}</b><ul style="margin:6px 0 6px 18px">${lines.map(l=>`<li>${e(l)}</li>`).join("")}</ul>
+      Alojamiento: ${nights} noche(s) × ${eur(Math.min(hotel,T.a))}${hotel>T.a?` (tope del grupo ${g}: ${eur(T.a)}; el exceso no se paga)`:" (gasto real, por debajo del tope)"} = <strong>${eur(aloj)}</strong><br>
+      Manutención: ${man.toLocaleString("es-ES")} × ${eur(T.m)} = <strong>${eur(mt)}</strong> (fija, sin justificar)<br>
+      ${km?`Kilometraje: ${km} km × 0,26 € = <strong>${eur(kv)}</strong><br>`:""}${warn}
+      <div class="tool-note">Grupo ${g}: alojamiento ${eur(T.a)} y manutención ${eur(T.m)} (anexo II del RD 462/2002, Acuerdo de 2-12-2005).</div>`}
+    ["dt-g","dt-s","dt-e","dt-h","dt-k"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run();
+  })();
+  (function(){
+    if(!$("as-r"))return;
+    function run(){const r=num("as-r"),c=num("as-c"),t=num("as-t"),f=num("as-f"),h=num("as-h"),out=$("as-out");
+      if(!r){out.className="verdict mid";out.innerHTML="Introduce las retribuciones anuales del puesto.";return}
+      const L=[["Órganos colegiados y consejos",c,0.4],["Tribunales de oposiciones",t,0.2],["Formación y perfeccionamiento",f,0.25],["Total de asistencias",c+t+f,0.5]];
+      let bad=0;const rows=L.map(([n,v,p])=>{const lim=r*p,ok=v<=lim+1e-9;if(!ok)bad++;return `<li>${ok?"✅":"❌"} <strong>${n}</strong>: ${eur(v)} de ${eur(lim)} (${p*100} %)${ok?"":` · exceso de ${eur(v-lim)}`}</li>`});
+      const hok=h<=75;if(!hok)bad++;
+      rows.push(`<li>${hok?"✅":"❌"} <strong>Horas de formación</strong>: ${h} de 75 h al año</li>`);
+      out.className="verdict "+(bad?"ko":"ok");
+      out.innerHTML=`<b class="big">${bad?"Se superan "+bad+" límite(s)":"Dentro de todos los límites"}</b><ul style="margin:6px 0 0 18px">${rows.join("")}</ul><div class="tool-note">Porcentajes sobre las retribuciones anuales del puesto principal, sin antigüedad. Las asistencias se comunican semestralmente a Función Pública y llevan retención de IRPF.</div>`}
+    ["as-r","as-c","as-t","as-f","as-h"].forEach(id=>$(id).addEventListener("input",run));run();
+  })();
+})();
+
+const DATA={fichas:[
+ {p:"¿Qué norma regula hoy las retribuciones de los funcionarios de la AGE?",r:"El TREBEP solo se aplica cuando se aprueben las leyes de Función Pública que lo desarrollen (DF 4.ª). Mientras tanto rige la Ley 30/1984 (arts. 23 y 24), con las cuantías de la LPGE."},
+ {p:"¿Qué LPGE está vigente en 2026?",r:"La de 2023, prorrogada por tercera vez. Las retribuciones de 2026 suben un 1,5 % por el RDL 14/2025."},
+ {p:"¿Cuáles son las retribuciones básicas?",r:"El sueldo y los trienios (art. 23 TREBEP), más sus componentes en las pagas extraordinarias (art. 22)."},
+ {p:"¿Qué retribuyen las complementarias (art. 24 TREBEP)?",r:"La progresión en la carrera; las características del puesto; el interés, la iniciativa y el rendimiento; y los servicios extraordinarios fuera de la jornada."},
+ {p:"¿Qué incluye cada paga extraordinaria?",r:"Una mensualidad de las básicas y de todas las complementarias, salvo las de rendimiento (productividad) y los servicios extraordinarios (gratificaciones)."},
+ {p:"¿Cuál es el sueldo anual del C1 en 2026?",r:"10.807,56 € (900,63 €/mes). Trienio: 395,52 €/año. En cada paga extra: 778,42 € de sueldo y 28,45 € por trienio."},
+ {p:"¿Qué límite hay entre el sueldo del grupo A y el del E?",r:"El sueldo del A no puede superar el triple del E (tu anexo)."},
+ {p:"¿Qué es la retribución diferida?",r:"Las aportaciones a planes de pensiones de empleo o seguros colectivos de jubilación, hasta el porcentaje de la masa salarial que fije la LPGE."},
+ {p:"¿La deducción de haberes por jornada no realizada es una sanción?",r:"No. Es proporcional y sin carácter sancionador. Durante la huelga no se devenga retribución, sin que tampoco sea sanción."},
+ {p:"¿Pueden los funcionarios participar en tributos o multas?",r:"No: está prohibido percibir participación en tributos u otros ingresos, o premios en multas."},
+ {p:"Equivalencias de grupos de la Ley 30/1984 con el TREBEP.",r:"A → A1 · B → A2 · C → C1 · D → C2 · E → Agrupaciones profesionales. El grupo B del TREBEP (técnico superior) es nuevo."},
+ {p:"¿Qué servicios computan para los trienios?",r:"Todos los prestados en cualquier Administración (Ley 70/1978), sea cual sea el régimen, y en las Administraciones de la UE o de los Estados con libre circulación."},
+ {p:"¿Quién reconoce los trienios?",r:"El Subsecretario del departamento de destino (o el Delegado del Gobierno)."},
+ {p:"¿Qué pasa con los trienios al cambiar de cuerpo?",r:"Se conservan con el valor de su grupo. La fracción de trienio no completada cuenta en el nuevo grupo."},
+ {p:"¿Qué determina el complemento de destino?",r:"El nivel del puesto (o el grado consolidado, si es superior). Hay 30 niveles y la LPGE fija su cuantía. Va en 12 mensualidades más una en cada paga extra."},
+ {p:"¿Cuánto vale el nivel 18 de complemento de destino en 2026?",r:"5.926,32 € al año (493,86 € al mes). Nivel 30: 14.541,24 €; nivel 22: 7.652,76 €."},
+ {p:"¿Qué retribuye el complemento específico?",r:"Las condiciones particulares del puesto: dificultad técnica, dedicación, responsabilidad, incompatibilidad, peligrosidad o penosidad."},
+ {p:"¿Puede un puesto tener dos complementos específicos?",r:"No: uno solo por puesto, aunque retribuya varias condiciones."},
+ {p:"¿En cuántas pagas se cobra el específico?",r:"En 14: 12 mensuales y 2 en junio y diciembre."},
+ {p:"¿Cuándo es compatible una actividad privada con el específico?",r:"Si el específico no supera el 30 % de las retribuciones básicas, sin antigüedad."},
+ {p:"Rasgos de la productividad.",r:"Especial rendimiento e iniciativa; criterios objetivos; no genera derechos para períodos sucesivos; es pública en el centro."},
+ {p:"Rasgos de las gratificaciones.",r:"Servicios extraordinarios fuera de la jornada. Excepcionales, nunca fijas ni periódicas, sin derechos individuales."},
+ {p:"¿Cómo se absorbe el CPT?",r:"Con las mejoras retributivas (también por cambio de puesto). Los incrementos generales computan al 50 %; nunca los trienios, la productividad ni las gratificaciones."},
+ {p:"¿Qué cobran los funcionarios interinos?",r:"Las básicas del grupo del cuerpo (con trienios) y las complementarias del puesto, salvo las ligadas a la condición de funcionario de carrera."},
+ {p:"¿Cobran trienios los eventuales?",r:"No, salvo que sean funcionarios de carrera: estos cobran sus básicas con trienios."},
+ {p:"¿Qué cobran los funcionarios en prácticas?",r:"Como mínimo, el sueldo del grupo al que aspiran y las pagas extra; si ocupan puesto, también sus complementarias. Si ya cobraban de la Administración, pueden optar (RD 456/1986)."},
+ {p:"¿Qué ocurre con las retribuciones si se suprime el puesto?",r:"Se siguen cobrando sus complementarias, a cuenta, hasta un máximo de 3 meses (tu anexo)."},
+ {p:"¿Qué es la masa salarial del personal laboral?",r:"Las retribuciones salariales y extrasalariales del año anterior. Excluye las prestaciones de la SS, las cotizaciones del empleador, las indemnizaciones por traslado o despido y los suplidos."},
+ {p:"¿Qué informe exige negociar un convenio laboral?",r:"El de la SEPG, preceptivo y vinculante, en el plazo de 1 mes (art. 19 LPGE)."},
+ {p:"¿Cuándo se devengan las pagas extra del personal laboral?",r:"El primer día hábil de junio (del 1-12 al 31-5) y de diciembre (del 1-6 al 30-11)."},
+ {p:"SMI 2026.",r:"40,70 €/día, 1.221 €/mes y 17.094 €/año (RD 126/2026). El manual cita el de 2025 (1.184 €)."},
+ {p:"¿Qué norma regula las nóminas?",r:"La Orden de 30-7-1992, sobre confección de nóminas."},
+ {p:"¿Qué cuatro clases de nómina hay?",r:"Funcionarios, funcionarios en el extranjero, laborales y laborales en el extranjero."},
+ {p:"¿Cuántos dígitos tiene la aplicación presupuestaria en la nómina?",r:"17. Es única por perceptor y concepto."},
+ {p:"Códigos de deducción 01, 02, 03 y 09.",r:"01 IRPF · 02 derechos pasivos · 03 MUFACE · 09 cuota obrera del RGSS."},
+ {p:"Códigos de deducción 20, 21 y 22.",r:"20 anticipo reintegrable · 21 retención judicial · 22 reintegro de préstamo de MUFACE."},
+ {p:"¿Cuánto son las cuotas de derechos pasivos y MUFACE?",r:"3,86 % y 1,69 % del haber regulador del grupo, en 14 cuotas (también en las pagas extra)."},
+ {p:"Íntegro, líquido y neto.",r:"Íntegro: suma de retribuciones. Líquido: íntegro − deducciones formalizables. Neto: líquido − deducciones no formalizables."},
+ {p:"¿Qué documentos forman la nómina?",r:"El cuerpo (N1), los resúmenes (RN), los estados justificativos de altas y modificaciones (VR) y los documentos contables."},
+ {p:"¿Quién firma los resúmenes de la nómina?",r:"El habilitado y el Jefe del centro."},
+ {p:"¿Qué número tiene la nómina ordinaria y cuándo se cierra?",r:"La 01. Se cierra el día 5 del mes."},
+ {p:"¿Qué es la nómina de incidencias?",r:"La que recoge lo no incluido en la ordinaria (desde la número 02); todos sus perceptores son altas. Va en el mismo documento contable."},
+ {p:"Liquidación principal frente a complementaria.",r:"Principal: coinciden el mes de devengo y el de pago. Complementaria: no coinciden."},
+ {p:"Plazos contables de la nómina.",r:"AD al inicio del año. El OK o ADOK con los resúmenes, antes del día 7. Pago a las habilitaciones, con 5 días de antelación."},
+ {p:"¿Qué es un alta, una baja y una modificación?",r:"Alta: no figuraba el mes anterior. Baja: figuraba y sale. Modificación: varía su importe (definitiva si persiste; transitoria si no)."},
+ {p:"Justificante de un nuevo ingreso.",r:"Título, nombramiento y toma de posesión (más la liquidación de trienios si tiene servicios previos)."},
+ {p:"Justificante del alta por traslado.",r:"Nombramiento, toma de posesión y certificado de baja en nómina del centro de origen."},
+ {p:"Justificante de la huelga.",r:"Certificación del personal que la hizo y su duración (disminución transitoria)."},
+ {p:"Regla general del devengo mensual.",r:"Las retribuciones fijas se pagan por meses completos, según la situación del primer día hábil del mes."},
+ {p:"¿Qué meses se liquidan por días?",r:"Toma de posesión del primer destino, reingreso, inicio o fin de licencia sin sueldo, cambio de Administración y cese en activo (salvo jubilación, fallecimiento o retiro)."},
+ {p:"¿Cómo se calcula el valor de la hora?",r:"Íntegro mensual ÷ días naturales del mes ÷ horas diarias de obligado cumplimiento."},
+ {p:"¿Cuándo se devengan las pagas extra de los funcionarios?",r:"El primer día hábil de junio y de diciembre, según la situación en esa fecha."},
+ {p:"Divisores de la paga extra proporcional.",r:"Junio: 182 días (183 en año bisiesto). Diciembre: 183 días."},
+ {p:"¿Cuentan las licencias sin sueldo para la paga extra?",r:"No: se devenga la paga, pero reducida en esos días."},
+ {p:"Duración máxima de una comisión de servicio.",r:"1 mes en España y 3 en el extranjero (prorrogables)."},
+ {p:"Grupos de dietas del RD 462/2002.",r:"Grupo 1: altos cargos. Grupo 2: A1 y A2. Grupo 3: C1, C2 y AP."},
+ {p:"Dieta del grupo 3 en España.",r:"Alojamiento hasta 48,92 € (gasto real justificado) y manutención fija de 28,21 €."},
+ {p:"¿Cuándo hay manutención en una comisión de un día?",r:"50 %, si dura al menos 5 h, empieza antes de las 14:00 y acaba después de las 16:00. Sin alojamiento."},
+ {p:"Manutención del día de salida y del de regreso.",r:"Salida: 100 % antes de las 14:00 y 50 % entre las 14:00 y las 22:00. Regreso: 50 % si es después de las 14:00 (sin alojamiento)."},
+ {p:"Residencia eventual.",r:"Comisiones de más de 1 mes (3 en el extranjero) y cursos selectivos de promoción interna. Hasta el 80 % de la dieta entera; 1 año prorrogable otro."},
+ {p:"Indemnización por vehículo particular.",r:"0,26 €/km en automóvil y 0,106 €/km en motocicleta."},
+ {p:"Gastos de instalación en el extranjero.",r:"Más de 18 meses de destino: 8 %, 10 % o 12 % de las retribuciones anuales sin antigüedad, según 1-2, 3-4 o más de 4 miembros."},
+ {p:"Límites de las asistencias.",r:"Consejos y órganos colegiados, 40 %; tribunales, 20 %; formación, 25 % (máx. 75 h); total, 50 % de las retribuciones anuales sin antigüedad."},
+ {p:"¿Cómo se pagan las retribuciones (Decreto 680/1974)?",r:"Por transferencia a una cuenta o cheque nominativo, a elección del interesado, que puede cambiar en cualquier momento. Servicio gratuito."},
+ {p:"¿Con qué antelación deben estar los libramientos de nómina en las Ordenaciones de Pagos?",r:"15 días (Decreto 680/1974)."}
+]};
+
+const T1=[
+ {q:"Según la DF 4.ª del TREBEP, sus preceptos sobre retribuciones:",o:["Se aplican desde su entrada en vigor.","Producen efectos con la entrada en vigor de las leyes de Función Pública que lo desarrollen.","Están derogados.","Solo se aplican al personal laboral."],c:1,e:"Mientras tanto rige la Ley 30/1984."},
+ {q:"Las retribuciones básicas de los funcionarios son:",o:["Sueldo y complemento de destino.","Sueldo y trienios.","Sueldo, trienios y complemento específico.","Sueldo y productividad."],c:1,e:"Art. 23 TREBEP."},
+ {q:"El sueldo se asigna a cada:",o:["Puesto de trabajo.","Subgrupo o grupo de clasificación.","Nivel de complemento de destino.","Departamento ministerial."],c:1,e:"Art. 23.a TREBEP."},
+ {q:"Los trienios consisten en una cantidad:",o:["Distinta por cada nivel.","Igual para cada subgrupo o grupo por cada tres años de servicio.","Igual para todos los funcionarios.","Fijada en la RPT."],c:1,e:"Art. 23.b TREBEP."},
+ {q:"Las pagas extraordinarias son:",o:["Una al año.","Dos al año, cada una de una mensualidad de básicas y complementarias salvo las de rendimiento y servicios extraordinarios.","Dos al año, solo de básicas.","Tres al año."],c:1,e:"Art. 22.4 TREBEP."},
+ {q:"¿Qué concepto NO forma parte de la paga extraordinaria?",o:["Sueldo.","Trienios.","Complemento de destino.","Productividad."],c:3,e:"Ni la productividad ni las gratificaciones."},
+ {q:"El sueldo del grupo A no puede superar:",o:["El doble del grupo E.","El triple del grupo E.","El cuádruple del grupo E.","El del grupo B en un 50 %."],c:1,e:"Tu anexo."},
+ {q:"La retribución diferida consiste en:",o:["Pagas atrasadas.","Aportaciones a planes de pensiones de empleo o seguros colectivos de jubilación.","El CPT.","La paga de diciembre."],c:1,e:"Dentro del límite de la LPGE."},
+ {q:"La diferencia de jornada no cumplida da lugar a:",o:["Una sanción disciplinaria.","Una deducción proporcional de haberes sin carácter sancionador.","La pérdida de un trienio.","Nada."],c:1,e:"Art. 30 TREBEP."},
+ {q:"Los funcionarios en huelga:",o:["Cobran todas sus retribuciones.","No devengan retribuciones por ese tiempo, sin que sea sanción.","Pierden la paga extra.","Son sancionados."],c:1,e:"Art. 30.2 TREBEP."},
+ {q:"Los funcionarios pueden percibir participación en tributos:",o:["Sí, si lo prevé la LPGE.","No, está prohibido.","Solo los de Hacienda.","Solo en multas de tráfico."],c:1,e:"Ni premios en multas."},
+ {q:"En 2026, las retribuciones del sector público estatal se incrementan:",o:["Un 2,5 %.","Un 1,5 %.","Un 3 %.","No se incrementan."],c:1,e:"RDL 14/2025 (2025: 2,5 %)."},
+ {q:"El sueldo anual del subgrupo C1 en 2026 es de:",o:["10.337,52 €.","10.807,56 €.","10.582,44 €.","11.221,00 €."],c:1,e:"Tablas de la SEPG de 2026."},
+ {q:"El grupo C de la Ley 30/1984 equivale al:",o:["A2.","C1.","C2.","B."],c:1,e:"Disposición transitoria 3.ª TREBEP."},
+ {q:"El grupo B del TREBEP exige el título de:",o:["Grado universitario.","Técnico superior.","Bachiller.","Graduado en ESO."],c:1,e:"Art. 76 TREBEP."},
+ {q:"Para los trienios computan los servicios prestados:",o:["Solo como funcionario de carrera.","En cualquier Administración, sea cual sea el régimen jurídico.","Solo en la AGE.","Solo desde 2007."],c:1,e:"Ley 70/1978."},
+ {q:"¿Computan para trienios los servicios en Administraciones de otros Estados de la UE?",o:["No.","Sí.","Solo si se convalidan por convenio bilateral.","Solo los anteriores a 1986."],c:1,e:"Salvo prestaciones obligatorias."},
+ {q:"Reconoce los trienios:",o:["El Ministro de Hacienda.","El Subsecretario del departamento de destino.","La IGAE.","El habilitado."],c:1,e:"O el Delegado del Gobierno."},
+ {q:"Si un funcionario cambia de grupo sin completar un trienio, la fracción:",o:["Se pierde.","Se computa en el nuevo grupo.","Se paga en el grupo de origen.","Se acumula al complemento de destino."],c:1,e:"Regla de cómputo."},
+ {q:"Las cuantías de las retribuciones básicas son:",o:["Distintas en cada Administración.","Iguales en todas las Administraciones.","Fijadas por cada Ministerio.","Fijadas por convenio."],c:1,e:"Las fija la LPGE para todas."}
+];
+const T2=[
+ {q:"El complemento de destino corresponde:",o:["Al subgrupo.","Al nivel del puesto que se desempeña.","A la antigüedad.","Al rendimiento."],c:1,e:"Art. 23.3.a Ley 30/1984."},
+ {q:"¿Cuántos niveles de complemento de destino hay?",o:["20.","24.","30.","32."],c:2,e:"Niveles 1 a 30."},
+ {q:"El complemento de destino nivel 30 en 2026 es de:",o:["13.908,72 €.","14.541,24 €.","14.218,92 €.","15.922,80 €."],c:1,e:"13.908,72 € era el de 2024."},
+ {q:"El complemento específico retribuye:",o:["La antigüedad.","Las condiciones particulares de algunos puestos.","El rendimiento.","Las horas extra."],c:1,e:"Art. 23.3.b Ley 30/1984."},
+ {q:"¿Cuántos complementos específicos puede tener un puesto?",o:["Uno por cada condición.","Uno solo.","Dos como máximo.","Los que fije la RPT."],c:1,e:"Aunque pondere varias condiciones."},
+ {q:"El complemento específico se percibe en:",o:["12 pagas.","14 pagas.","2 pagas.","Una paga anual."],c:1,e:"12 mensuales y 2 en junio y diciembre."},
+ {q:"Puede autorizarse la compatibilidad con una actividad privada si el específico no supera:",o:["El 10 % de las básicas.","El 30 % de las básicas, sin antigüedad.","El 50 % del sueldo.","El 30 % de las retribuciones totales."],c:1,e:"Ley 53/1984."},
+ {q:"La productividad:",o:["Genera derechos consolidados.","No genera derechos para períodos sucesivos.","Es secreta.","Se paga en 14 pagas."],c:1,e:"Y es pública en el centro."},
+ {q:"Las gratificaciones por servicios extraordinarios:",o:["Pueden ser fijas.","Pueden ser periódicas.","Nunca pueden ser fijas ni periódicas.","Forman parte de la paga extra."],c:2,e:"Art. 23.3.d Ley 30/1984."},
+ {q:"Para absorber el CPT, los incrementos generales computan:",o:["Al 100 %.","Al 50 %.","Al 25 %.","No computan."],c:1,e:"Sueldo en 14 mensualidades, destino y específico."},
+ {q:"NO computan para absorber el CPT:",o:["El complemento de destino.","El complemento específico.","Los trienios, la productividad y las gratificaciones.","El sueldo."],c:2,e:"Regla de la LPGE."},
+ {q:"Los funcionarios interinos perciben:",o:["Básicas sin trienios.","Básicas con trienios y complementarias del puesto, salvo las propias de la carrera.","Solo el sueldo.","Las retribuciones del laboral."],c:1,e:"Art. 25 TREBEP."},
+ {q:"El personal eventual percibe:",o:["Básicas con trienios.","Sueldo y pagas del grupo asimilado, sin trienios, y complementarias del puesto.","Solo complementarias.","Un salario de convenio."],c:1,e:"Salvo que sea funcionario de carrera."},
+ {q:"Un funcionario de carrera nombrado eventual cobra:",o:["Sin trienios.","Sus básicas con trienios.","Solo el sueldo.","La retribución del cuerpo de origen sin complementos."],c:1,e:"Excepción a la regla de los eventuales."},
+ {q:"Los funcionarios en prácticas perciben, como mínimo:",o:["El SMI.","El sueldo del grupo al que aspiran, con sus pagas extra.","Todas las retribuciones del puesto.","Nada."],c:1,e:"RD 456/1986."},
+ {q:"Un funcionario de carrera que hace prácticas para otro cuerpo:",o:["Pierde sus retribuciones.","Puede optar por su remuneración de origen.","Cobra las dos.","Solo cobra trienios."],c:1,e:"Derecho de opción."},
+ {q:"Si se suprime un puesto, su titular sigue percibiendo las complementarias hasta un máximo de:",o:["1 mes.","3 meses.","6 meses.","1 año."],c:1,e:"Tu anexo."},
+ {q:"La productividad puede asignarse a interinos que ocupen puesto:",o:["Nunca.","Si la perciben los de carrera de puestos análogos.","Solo con autorización del Consejo de Ministros.","Solo en el extranjero."],c:1,e:"Igual que eventuales y en prácticas."},
+ {q:"El complemento de destino se percibe:",o:["Solo en 12 mensualidades.","En 12 mensualidades más una en cada paga extra.","Solo en las pagas extra.","En 13 pagas."],c:1,e:"Entra en las pagas extra."},
+ {q:"Si el grado personal consolidado es superior al nivel del puesto, se cobra:",o:["El nivel del puesto.","El del grado consolidado.","La media.","El mínimo del intervalo."],c:1,e:"Garantía del grado."}
+];
+const T3=[
+ {q:"El personal laboral de la AGE se rige por:",o:["La Ley 30/1984.","El Convenio Único y la normativa laboral, con los límites de la LPGE.","El RD 462/2002.","La Orden de 1992."],c:1,e:"Masa salarial."},
+ {q:"La masa salarial del personal laboral está formada por:",o:["Solo el salario base.","Las retribuciones salariales y extrasalariales del año anterior.","Las cotizaciones del empleador.","Las indemnizaciones por despido."],c:1,e:"Art. 19 LPGE."},
+ {q:"Queda excluido de la masa salarial:",o:["El salario base.","Las pagas extra.","Las cotizaciones a cargo del empleador.","La antigüedad."],c:2,e:"Junto a las prestaciones de la SS, las indemnizaciones y los suplidos."},
+ {q:"El informe de la SEPG previo a la negociación de convenios es:",o:["Facultativo.","Preceptivo y vinculante.","Preceptivo y no vinculante.","Posterior."],c:1,e:"Art. 19 LPGE."},
+ {q:"El plazo para emitir el informe de la SEPG sobre convenios es de:",o:["15 días.","1 mes.","2 meses.","3 meses."],c:1,e:"Art. 19 LPGE."},
+ {q:"La paga extra de junio del personal laboral retribuye el período:",o:["1 de enero a 30 de junio.","1 de diciembre a 31 de mayo.","1 de junio a 30 de noviembre.","Todo el año anterior."],c:1,e:"Tu anexo."},
+ {q:"Las pagas extra del personal laboral se devengan:",o:["El día 1 de junio y diciembre.","El primer día hábil de junio y diciembre.","El último día hábil.","El 15 de cada mes."],c:1,e:"Convenio Único."},
+ {q:"La antigüedad del personal laboral se devenga desde:",o:["El día en que se cumplen los 3 años.","El día 1 del mes en que se cumplen 3 años o múltiplos.","El año siguiente.","El 1 de enero."],c:1,e:"Tu anexo."},
+ {q:"El salario base del laboral se percibe en:",o:["12 mensualidades.","14 mensualidades.","11 mensualidades.","Una paga anual."],c:0,e:"Más las pagas extra."},
+ {q:"El complemento de residencia del laboral es un complemento:",o:["Personal.","Salarial.","No salarial.","En especie."],c:1,e:"Tu anexo."},
+ {q:"Las indemnizaciones por gastos del trabajo del laboral son:",o:["Complementos salariales.","Percepciones no salariales.","Salario base.","Retribuciones en especie."],c:1,e:"No forman parte de la masa salarial."},
+ {q:"El SMI de 2026 es de:",o:["1.184 €/mes.","1.221 €/mes.","1.134 €/mes.","1.300 €/mes."],c:1,e:"RD 126/2026."},
+ {q:"El SMI diario de 2026 es de:",o:["39,47 €.","40,70 €.","41,00 €.","38,00 €."],c:1,e:"RD 126/2026."},
+ {q:"El SMI anual de 2026 es de:",o:["16.576 €.","17.094 €.","15.876 €.","18.000 €."],c:1,e:"1.221 × 14."},
+ {q:"Las retribuciones del laboral en la nómina se imputan al artículo:",o:["12.","13.","15.","23."],c:1,e:"Artículo 13 (personal laboral)."},
+ {q:"Los complementos personales del laboral incluyen:",o:["El salario base.","La antigüedad y el complemento personal de antigüedad.","Las dietas.","Las horas extra."],c:1,e:"Retribuciones personales."},
+ {q:"La paga extra del laboral incluye:",o:["Todos los complementos.","Salario base, antigüedad y complemento personal de antigüedad.","Solo el salario base.","La productividad."],c:1,e:"Tu anexo."},
+ {q:"La paga extra de diciembre del laboral se abona a partir del día:",o:["1.","15.","18.","22."],c:2,e:"Tu anexo."},
+ {q:"No necesitan informe previo de la SEPG los convenios que:",o:["Suban un 3 %.","Solo apliquen el incremento de la LPGE.","Afecten a menos de 50 trabajadores.","Firme el Ministro."],c:1,e:"Art. 19 LPGE."},
+ {q:"Las horas extraordinarias del laboral son un complemento:",o:["Por cantidad o calidad del trabajo.","Personal.","De residencia.","No salarial."],c:0,e:"Complemento salarial."}
+];
+const T4=[
+ {q:"La confección de nóminas se regula por:",o:["La Orden de 30 de julio de 1992.","El RD 462/2002.","El Decreto 680/1974.","La Resolución de 25 de mayo de 2010."],c:0,e:"Orden de 30-7-1992."},
+ {q:"Las nóminas son:",o:["Documentos contables.","Documentos que forman el expediente de gasto de las retribuciones de una habilitación.","Resoluciones administrativas.","Facturas."],c:1,e:"Orden de 1992."},
+ {q:"Los perceptores de la nómina se ordenan:",o:["Por grupo.","Alfabéticamente, numerados desde el 1.","Por antigüedad.","Por nivel."],c:1,e:"Cuerpo de la nómina."},
+ {q:"¿Cuál NO es una clase de nómina?",o:["Funcionarios.","Laborales en el extranjero.","Altos cargos.","Funcionarios en el extranjero."],c:2,e:"Hay cuatro clases."},
+ {q:"La aplicación presupuestaria de cada concepto en la nómina tiene:",o:["11 dígitos.","14 dígitos.","17 dígitos.","20 dígitos."],c:2,e:"Única por perceptor y concepto."},
+ {q:"El código de deducción 02 corresponde a:",o:["IRPF.","Derechos pasivos.","MUFACE.","Cuota obrera del RGSS."],c:1,e:"01 IRPF, 02 derechos pasivos, 03 MUFACE."},
+ {q:"El código de deducción 09 corresponde a:",o:["ISFAS.","MUGEJU.","Cuota obrera del RGSS.","Retención judicial."],c:2,e:"Orden de 1992."},
+ {q:"El código 21 corresponde a:",o:["Anticipo reintegrable.","Retención judicial.","Préstamo de MUFACE.","MUNPAL."],c:1,e:"20 anticipo · 21 retención judicial · 22 préstamo MUFACE."},
+ {q:"La cuota de derechos pasivos es del:",o:["1,69 %.","3,86 %.","4,70 %.","6,35 %."],c:1,e:"Sobre el haber regulador."},
+ {q:"La cuota de MUFACE es del:",o:["1,69 %.","3,86 %.","2,00 %.","0,10 %."],c:0,e:"Sobre el haber regulador."},
+ {q:"El líquido de la nómina es:",o:["El íntegro menos las deducciones no formalizables.","El íntegro menos las deducciones formalizables.","La suma de las retribuciones.","El neto más el IRPF."],c:1,e:"Neto = líquido − no formalizables."},
+ {q:"El neto de la nómina resulta de:",o:["Íntegro − formalizables.","Líquido − no formalizables.","Íntegro + deducciones.","Líquido + IRPF."],c:1,e:"Orden de 1992."},
+ {q:"Son deducciones no formalizables:",o:["El IRPF.","Los derechos pasivos.","Los anticipos reintegrables y las retenciones judiciales.","La cuota de MUFACE."],c:2,e:"Rebajan el neto."},
+ {q:"Los resúmenes de la nómina los firman:",o:["El Interventor.","El habilitado y el Jefe del centro.","El Subsecretario.","El Ordenador de pagos."],c:1,e:"Orden de 1992."},
+ {q:"Los estados justificativos recogen:",o:["Las altas y modificaciones respecto al mes anterior.","Solo las bajas.","Las deducciones.","El neto."],c:0,e:"Con cantidades íntegras."},
+ {q:"La nómina ordinaria lleva el número:",o:["00.","01.","10.","99."],c:1,e:"Desde la 02, las demás."},
+ {q:"La nómina ordinaria se cierra el día:",o:["1.","5.","7.","15."],c:1,e:"El OK o ADOK, antes del día 7."},
+ {q:"Los habilitados entregan el OK o ADOK con los resúmenes:",o:["Antes del día 5.","Antes del día 7.","Antes del día 15.","El último día del mes."],c:1,e:"Orden de 1992."},
+ {q:"En cada nómina, un perceptor figura:",o:["Tantas veces como conceptos.","Una sola vez.","Dos veces si hay atrasos.","Según el habilitado."],c:1,e:"Regla de la Orden."},
+ {q:"Los funcionarios de carrera del RGSS cotizan por desempleo:",o:["Sí.","No.","Solo los interinos.","Solo en las pagas extra."],c:1,e:"Tu anexo."}
+];
+const T5=[
+ {q:"Es un alta en nómina el perceptor que:",o:["Ya figuraba el mes anterior.","No figuraba en la nómina del mes anterior.","Cobra productividad.","Cambia de nivel."],c:1,e:"Orden de 1992."},
+ {q:"Una modificación definitiva es la que:",o:["Solo afecta a un mes.","Persiste en las nóminas siguientes.","Se refiere a atrasos.","Afecta al IRPF."],c:1,e:"La transitoria no se repite."},
+ {q:"El cobro de productividad un mes se refleja como:",o:["Alta.","Aumento transitorio.","Aumento definitivo.","Baja."],c:1,e:"Se justifica con certificación o acuerdo."},
+ {q:"El nuevo ingreso se justifica con:",o:["Solo la toma de posesión.","Título, nombramiento y toma de posesión.","El contrato.","El certificado de baja."],c:1,e:"Más la liquidación de trienios, si procede."},
+ {q:"El alta por traslado se justifica además con:",o:["El título.","El certificado de baja en nómina del centro de origen.","El contrato.","La hoja de servicios."],c:1,e:"Más nombramiento y toma de posesión."},
+ {q:"El personal laboral de nuevo ingreso se justifica con:",o:["Título y toma de posesión.","Hoja de servicios y contrato.","Resolución del Subsecretario.","Declaración responsable."],c:1,e:"Y el plan de contratación fiscalizado."},
+ {q:"La baja de un funcionario en comisión de servicios requiere el modelo:",o:["N1.","F7.","RN.","VR."],c:1,e:"Acuerdo de cese y F7."},
+ {q:"La baja por separación del servicio se justifica con:",o:["La anotación de la sanción.","La toma de posesión.","El título.","El certificado de haberes."],c:0,e:"Orden de 1992."},
+ {q:"Las pagas extraordinarias se justifican con:",o:["Un certificado individual por perceptor.","Una certificación global del habilitado.","El acuerdo del Consejo de Ministros.","Nada."],c:1,e:"Aumento transitorio."},
+ {q:"Los atrasos incluidos en una nómina posterior requieren:",o:["Nada.","Certificación de no haberlos incluido antes.","Informe de la IGAE.","Resolución judicial."],c:1,e:"Además de la documentación del derecho."},
+ {q:"La huelga en nómina es:",o:["Un aumento transitorio.","Una disminución transitoria.","Una baja.","Una deducción formalizable."],c:1,e:"Se justifica con certificación del personal y su duración."},
+ {q:"El complemento de destino se justifica en la primera nómina con:",o:["La RPT completa.","Certificado del Jefe del centro con los niveles.","Declaración del interesado.","Informe de la CECIR."],c:1,e:"Orden de 1992."},
+ {q:"La productividad se justifica con:",o:["Acuerdo de la Comisión Ministerial de Retribuciones.","Resolución del Consejo de Ministros.","Declaración del interesado.","Nada."],c:0,e:"O certificación."},
+ {q:"El complemento familiar se justifica con:",o:["Declaración del interesado y libro de familia.","Certificado de empadronamiento.","Informe de servicios sociales.","El contrato."],c:0,e:"Orden de 1992."},
+ {q:"La indemnización por residencia se devenga:",o:["Por meses completos.","Día a día.","Por trimestres.","Anualmente."],c:1,e:"Se justifica con el alta en sueldos."},
+ {q:"La nómina de incidencias:",o:["Es la número 01.","Recoge lo no incluido en la ordinaria y va en el mismo documento contable.","Sustituye a la ordinaria.","Solo existe en diciembre."],c:1,e:"Tu anexo."},
+ {q:"En la liquidación complementaria:",o:["Coinciden el mes de devengo y el de pago.","No coinciden el mes de devengo y el de pago.","Solo hay deducciones.","No hay IRPF."],c:1,e:"En la principal sí coinciden."},
+ {q:"El documento AD de nóminas se expide:",o:["Cada mes.","Al inicio del año, con una estimación.","En diciembre.","Nunca."],c:1,e:"Cabe ADOK por nómina."},
+ {q:"La cuenta justificativa de la nómina se rinde:",o:["En 3 meses.","Dentro del mes siguiente al pago.","Al cierre del ejercicio.","En 15 días."],c:1,e:"Tu anexo."},
+ {q:"El pago a las habilitaciones se realiza con una antelación al vencimiento de:",o:["2 días.","5 días.","10 días.","15 días."],c:1,e:"Tu anexo."}
+];
+const T6=[
+ {q:"Las retribuciones fijas mensuales se devengan:",o:["Por días siempre.","Por meses completos, según la situación del primer día hábil del mes.","Por semanas.","Según el último día del mes."],c:1,e:"Resolución de 25-5-2010."},
+ {q:"Se liquida por días el mes en que se produce:",o:["Un traslado dentro de la AGE.","La toma de posesión del primer destino.","Un cambio de nivel.","El cobro de productividad."],c:1,e:"Supuesto a)."},
+ {q:"En el mes de cese por jubilación se cobra:",o:["Por días.","El mes completo.","La mitad del mes.","Nada."],c:1,e:"Excepción: jubilación, fallecimiento o retiro."},
+ {q:"El valor de la hora para los descuentos se obtiene dividiendo el íntegro mensual entre:",o:["30 y entre 8.","Los días naturales del mes y entre las horas diarias de obligado cumplimiento.","Los días hábiles.","1.642 horas."],c:1,e:"Resolución de 2010."},
+ {q:"Las pagas extra de los funcionarios se devengan:",o:["El 1 de junio y de diciembre.","El primer día hábil de junio y de diciembre.","El 30 de junio y de diciembre.","El día 15."],c:1,e:"Art. 33 Ley 33/1987."},
+ {q:"En la paga de junio, cada día de servicio equivale a:",o:["1/180.","1/182 (1/183 en bisiesto).","1/183 siempre.","1/365."],c:1,e:"Del 1-12 al 31-5."},
+ {q:"En la paga de diciembre, cada día equivale a:",o:["1/182.","1/183.","1/184.","1/180."],c:1,e:"Del 1-6 al 30-11."},
+ {q:"Los días de licencia sin retribución, para la paga extra:",o:["Computan como servicio.","No computan como servicio.","Computan al 50 %.","Anulan la paga."],c:1,e:"Se devenga reducida."},
+ {q:"En el cese por fallecimiento, los días de ese mes, para la paga extra:",o:["No cuentan.","Cuentan como un mes completo.","Cuentan al 50 %.","Cuentan como 15 días."],c:1,e:"Igual que jubilación y retiro."},
+ {q:"Durante el plazo posesorio se perciben:",o:["Ninguna retribución.","Todas las retribuciones fijas.","Solo las básicas.","Solo el sueldo."],c:1,e:"Resolución de 2010."},
+ {q:"Al acceder a un nuevo cuerpo con cambio de residencia se tiene un permiso retribuido de:",o:["3 días hábiles.","1 mes.","15 días.","1 semana."],c:1,e:"Sin cambio de residencia: 3 días hábiles."},
+ {q:"En la jornada reducida por guarda legal se reducen:",o:["Solo las complementarias.","Todas las retribuciones, incluidos los trienios.","Solo el sueldo.","Nada."],c:1,e:"Art. 48 TREBEP."},
+ {q:"La paga extra de diciembre incluye del complemento de destino:",o:["Nada.","Una mensualidad.","Media mensualidad.","Dos mensualidades."],c:1,e:"Art. 22 TREBEP."},
+ {q:"Se liquida por días el mes de cambio:",o:["De puesto en el mismo Ministerio.","A otra Administración.","De nivel.","De jornada."],c:1,e:"Resolución de 2010."},
+ {q:"Si el cese en el servicio activo se produce en diciembre, la paga extra se calcula:",o:["Con las cuantías de junio.","Con las cuantías vigentes en diciembre.","Con las del año siguiente.","No se paga."],c:1,e:"Resolución de 2010."},
+ {q:"La paga extra de junio retribuye los servicios del período:",o:["1 de enero a 31 de mayo.","1 de diciembre del año anterior a 31 de mayo.","1 de enero a 30 de junio.","1 de junio a 30 de noviembre."],c:1,e:"182 o 183 días."},
+ {q:"Las cuotas de derechos pasivos y MUFACE durante una licencia sin sueldo:",o:["Se reducen.","No se reducen.","Se suspenden.","Se duplican."],c:1,e:"Tu manual."},
+ {q:"El mes en que empieza una licencia sin sueldo se cobra:",o:["Completo.","Por días, hasta la víspera del inicio.","Nada.","La mitad."],c:1,e:"Supuesto b)."},
+ {q:"Un funcionario que reingresa al servicio activo el día 10 cobra ese mes:",o:["Completo.","Por días, desde el 10.","Nada.","Desde el mes siguiente."],c:1,e:"Supuesto a)."},
+ {q:"La deducción proporcional de haberes por incumplimiento de jornada:",o:["Requiere expediente disciplinario.","No tiene carácter sancionador.","Afecta a los trienios.","Se aplica por días completos."],c:1,e:"Art. 30 TREBEP."}
+];
+const T7=[
+ {q:"Las indemnizaciones por razón del servicio se regulan en:",o:["El RD 462/2002.","La Orden de 1992.","El Decreto 680/1974.","El RD 456/1986."],c:0,e:"Indemnizaciones por razón del servicio."},
+ {q:"La comisión de servicio es un cometido especial:",o:["Dentro del término municipal.","Fuera del término municipal de la residencia oficial.","En el extranjero solo.","Voluntario siempre."],c:1,e:"Art. 3 RD 462/2002."},
+ {q:"Designa la comisión de servicio:",o:["El Ministro de Hacienda.","El Subsecretario o la autoridad superior del organismo.","El Interventor.","El habilitado."],c:1,e:"RD 462/2002."},
+ {q:"La comisión en territorio nacional no puede durar más de:",o:["15 días.","1 mes.","3 meses.","1 año."],c:1,e:"3 meses en el extranjero."},
+ {q:"Los C1 están en el grupo de dietas:",o:["1.","2.","3.","4."],c:2,e:"Grupo 3: C1, C2 y AP."},
+ {q:"La manutención se percibe:",o:["Previa justificación.","En cuantía fija, sin justificar.","Solo con factura.","En especie."],c:1,e:"El alojamiento sí se justifica."},
+ {q:"La dieta del grupo 2 en España es de:",o:["48,92 + 28,21 €.","65,97 + 37,40 €.","102,56 + 53,34 €.","80 + 40 €."],c:1,e:"Alojamiento + manutención."},
+ {q:"En una comisión de un día hay 50 % de manutención si dura al menos:",o:["3 h.","5 h, empieza antes de las 14:00 y acaba después de las 16:00.","8 h.","24 h."],c:1,e:"Art. 12 RD 462/2002."},
+ {q:"El día de salida, si se sale entre las 14:00 y las 22:00, se percibe de manutención:",o:["100 %.","50 %.","0 %.","25 %."],c:1,e:"Antes de las 14:00, el 100 %."},
+ {q:"El día de regreso se percibe:",o:["Alojamiento y manutención.","50 % de manutención si se regresa después de las 14:00, sin alojamiento.","100 % de manutención.","Nada nunca."],c:1,e:"RD 462/2002."},
+ {q:"La residencia eventual puede alcanzar hasta el:",o:["50 % de la dieta entera.","80 % de la dieta entera.","100 %.","30 %."],c:1,e:"Sin justificar."},
+ {q:"Los cursos selectivos de promoción interna se indemnizan siempre como:",o:["Comisión de servicio.","Residencia eventual.","Traslado.","Asistencia."],c:1,e:"RD 462/2002."},
+ {q:"El vehículo particular se indemniza a:",o:["0,19 €/km.","0,26 €/km.","0,30 €/km.","0,106 €/km."],c:1,e:"0,106 €/km la moto."},
+ {q:"En los traslados forzosos en España se perciben por persona:",o:["1 dieta.","3 dietas.","5 dietas.","10 dietas."],c:1,e:"Más viaje y mudanza."},
+ {q:"Los gastos de instalación en el extranjero exigen un destino superior a:",o:["6 meses.","12 meses.","18 meses.","4 años."],c:2,e:"8, 10 o 12 %."},
+ {q:"Las asistencias a tribunales de oposiciones no pueden superar al año el:",o:["10 %.","20 %.","40 %.","50 %."],c:1,e:"De las retribuciones sin antigüedad."},
+ {q:"El conjunto de asistencias no puede superar el:",o:["25 %.","40 %.","50 %.","75 %."],c:2,e:"De las retribuciones anuales sin antigüedad."},
+ {q:"La colaboración en formación tiene un máximo anual de:",o:["50 horas.","75 horas.","100 horas.","120 horas."],c:1,e:"Y el 25 %."},
+ {q:"Según el Decreto 680/1974, las retribuciones se pagan:",o:["En efectivo.","Por transferencia o cheque nominativo, a elección del interesado.","Solo por transferencia.","Solo por cheque."],c:1,e:"Puede cambiar en cualquier momento."},
+ {q:"El servicio de las entidades de crédito por el pago de nóminas es:",o:["Con comisión para el perceptor.","Gratuito para el perceptor y la Administración.","A cargo de la Administración.","Al 0,5 %."],c:1,e:"Decreto 680/1974."}
+];
+const T8=[
+ {q:"Un C1 de nivel 18 con 2 trienios del C1 y sin específico. ¿Cuál es su íntegro mensual ordinario en 2026?",o:["1.460,41 €.","1.394,49 €.","1.526,33 €.","1.328,57 €."],c:0,e:"Sueldo 900,63 € + trienios 2 × 32,96 € = 65,92 € + destino 493,86 € = 1.460,41 €."},
+ {q:"En la nómina de un funcionario, el anticipo reintegrable (código 20) reduce:",o:["El íntegro.","El líquido.","El neto, no el líquido.","El IRPF."],c:2,e:"Es no formalizable."},
+ {q:"Un funcionario toma posesión de su primer destino el 16 de marzo, con 3.100 € de íntegro mensual. Cobra en marzo:",o:["3.100 €.","1.600 €.","1.500 €.","1.550 €."],c:1,e:"3.100 ÷ 31 = 100 €/día × 16 días (del 16 al 31) = 1.600 €."},
+ {q:"Un funcionario se jubila el 10 de abril. Ese mes cobra:",o:["10 días.","El mes completo.","Nada.","20 días."],c:1,e:"Excepción de la jubilación."},
+ {q:"Un funcionario ingresa el 1 de septiembre. Su paga de diciembre (completa: 1.830 €) es de:",o:["1.830 €.","910 €.","915 €.","1.220 €."],c:1,e:"Días del 1-9 al 30-11 = 91; 1.830 × 91 ÷ 183 = 910 €."},
+ {q:"Con 2.170 € de íntegro en un mes de 31 días y 7 h diarias, una hora vale:",o:["10 €.","70 €.","9,89 €.","12 €."],c:0,e:"2.170 ÷ 31 ÷ 7 = 10 €."},
+ {q:"Un C1 sale de comisión a las 15:00 del lunes y vuelve a las 13:00 del miércoles. Manutención:",o:["2,5 dietas.","1,5 dietas.","2 dietas.","1 dieta."],c:1,e:"Salida tras las 14:00: 50 %; martes: 100 %; regreso antes de las 14:00: 0 %."},
+ {q:"En esa misma comisión, ¿cuántas noches de alojamiento se indemnizan?",o:["1.","2.","3.","Ninguna."],c:1,e:"Lunes y martes."},
+ {q:"Un C1 hace una comisión de un día de 9:00 a 15:30. Manutención:",o:["50 %.","Nada.","100 %.","25 %."],c:1,e:"No termina después de las 16:00."},
+ {q:"Un A2 recorre 200 km con su coche en una comisión. Le corresponden:",o:["38 €.","52 €.","21,20 €.","60 €."],c:1,e:"200 × 0,26 €."},
+ {q:"Un C1 paga 60 € de hotel por noche. ¿Cuánto se le abona por noche?",o:["60 €.","48,92 €.","65,97 €.","28,21 €."],c:1,e:"Tope del grupo 3."},
+ {q:"Un funcionario con 30.000 € de retribuciones sin antigüedad cobra 7.000 € como tribunal de oposiciones. ¿Supera el límite?",o:["No.","Sí: el límite es 6.000 €.","Sí: el límite es 3.000 €.","No hay límite."],c:1,e:"20 % de 30.000."},
+ {q:"Un funcionario es trasladado a Bruselas por 2 años con su cónyuge y dos hijos de 10 y 15. Gastos de instalación:",o:["8 %.","10 %.","12 %.","No le corresponden."],c:1,e:"Más de 18 meses; 4 miembros."},
+ {q:"Un habilitado incluye en la nómina de mayo atrasos de febrero. Es una liquidación:",o:["Principal.","Complementaria.","Ordinaria.","Extraordinaria."],c:1,e:"No coinciden el mes de devengo y el de pago."},
+ {q:"Para incorporar a un funcionario trasladado desde otro Ministerio, el habilitado necesita:",o:["Solo la toma de posesión.","Nombramiento, toma de posesión y certificado de baja en nómina del origen.","El título.","El contrato."],c:1,e:"Orden de 1992."},
+ {q:"Un funcionario hace huelga 1 día en junio (30 días), con 1.800 € de íntegro. Se le descuentan:",o:["60 €.","58,06 €.","90 €.","Nada."],c:0,e:"1.800 ÷ 30."},
+ {q:"Un eventual que no es funcionario de carrera, con 6 años de servicios previos. ¿Cobra trienios?",o:["Sí, 2.","No.","Sí, 1.","Solo en las pagas extra."],c:1,e:"Los eventuales no cobran trienios."},
+ {q:"Un funcionario C1 cobra 5.000 € de específico y sus básicas sin antigüedad son 12.364 €. ¿Puede pedir compatibilidad para una actividad privada?",o:["No: supera el 30 %.","Sí: no supera el 30 %.","Nunca.","Solo con informe de la SEPG."],c:0,e:"30 % de 12.364 = 3.709,20 €; 5.000 € lo supera."},
+ {q:"El íntegro de un funcionario es de 2.000 €, sus deducciones formalizables suman 400 € y tiene un embargo de 100 €. Su neto es:",o:["1.600 €.","1.500 €.","1.900 €.","2.100 €."],c:1,e:"Líquido 1.600 − 100."},
+ {q:"Un funcionario de Madrid hace un curso selectivo de promoción interna de 4 meses en Alcalá de Henares. Se indemniza como:",o:["Comisión de servicio con dietas enteras.","Residencia eventual.","Traslado.","No se indemniza."],c:1,e:"Siempre residencia eventual."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"💶",name:"Régimen retributivo y básicas",desc:"TREBEP, Ley 30/1984, sueldo, trienios y pagas.",qs:T1},
+ {id:"t2",ic:"🏷️",name:"Complementos y otro personal",desc:"Destino, específico, productividad, CPT, interinos y eventuales.",qs:T2},
+ {id:"t3",ic:"👷",name:"Personal laboral y masa salarial",desc:"Convenio Único, art. 19 LPGE y SMI 2026.",qs:T3},
+ {id:"t4",ic:"🧾",name:"La nómina: estructura y deducciones",desc:"Orden de 1992, códigos, íntegro, líquido y neto.",qs:T4},
+ {id:"t5",ic:"📎",name:"Altas, bajas y justificantes",desc:"Modificaciones, incidencias y plazos contables.",qs:T5},
+ {id:"t6",ic:"📅",name:"Devengo y pagas extra",desc:"Resolución de 25-5-2010, 182/183 y liquidación por días.",qs:T6},
+ {id:"t7",ic:"🚆",name:"Indemnizaciones y pago",desc:"RD 462/2002 y Decreto 680/1974.",qs:T7},
+ {id:"t8",ic:"🧮",name:"Casos prácticos",desc:"Nóminas, días, dietas, límites y justificantes con números.",qs:T8}
+];
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+/* ===== Esquemas autocorregibles ===== */
+const ESQ=[
+ {id:"e1",title:"Estructura retributiva del funcionario",intro:"Básicas y complementarias.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Retribuciones (TREBEP / Ley 30/1984)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Básicas</b>{{0}} por subgrupo.<br>{{1}} cada 3 años.<br>Su parte en las {{2}}.</div>
+   <div class="sch-box alt"><b>Complementarias</b>Destino: según el {{3}}.<br>Específico: {{4}} del puesto.<br>Productividad: {{5}}.<br>Gratificaciones: servicios {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["Sueldo","Destino","Específico","Productividad"],why:"Art. 23.a TREBEP."},
+   {o:["Trienios","Quinquenios","Sexenios","Bienios"],why:"Art. 23.b TREBEP."},
+   {o:["pagas extraordinarias","dietas","indemnizaciones","asistencias"],why:"Art. 22 TREBEP."},
+   {o:["nivel del puesto","subgrupo","rendimiento","horario"],why:"30 niveles."},
+   {o:["condiciones particulares","antigüedad","rendimiento","grado"],why:"Dificultad, dedicación, responsabilidad…"},
+   {o:["especial rendimiento","antigüedad","nivel","residencia"],why:"Art. 23.3.c."},
+   {o:["extraordinarios fuera de la jornada","ordinarios","nocturnos","en el extranjero"],why:"Nunca fijas ni periódicas."}
+  ]},
+ {id:"e2",title:"Ordena: de la retribución al pago",intro:"Del íntegro a la transferencia.",type:"order",
+  items:[
+   {t:"Suma de retribuciones: íntegro",why:"Sueldo, trienios, complementos."},
+   {t:"Se restan las deducciones formalizables (IRPF, cuotas): líquido",why:"Se ingresan en formalización."},
+   {t:"Se restan las deducciones no formalizables (anticipos, embargos): neto",why:"Lo que recibe el perceptor."},
+   {t:"El habilitado entrega el OK o ADOK con los resúmenes antes del día 7",why:"Orden de 1992."},
+   {t:"Se transfiere el líquido a la cuenta de la habilitación",why:"5 días antes del vencimiento."},
+   {t:"La habilitación paga por transferencia o cheque nominativo",why:"Decreto 680/1974."}
+  ]},
+ {id:"e3",title:"Códigos de deducción",intro:"Orden de 30-7-1992.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Deducciones en nómina</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Formalizables</b>01: {{0}}<br>02: {{1}}<br>03: {{2}}<br>09: {{3}}</div>
+   <div class="sch-box alt"><b>No formalizables</b>20: {{4}}<br>21: {{5}}<br>22: {{6}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["IRPF","MUFACE","ISFAS","MUGEJU"],why:"Código 01."},
+   {o:["Derechos pasivos","IRPF","MUFACE","Cuota obrera"],why:"3,86 %."},
+   {o:["MUFACE","ISFAS","MUNPAL","IRPF"],why:"1,69 %."},
+   {o:["Cuota obrera del RGSS","MUGEJU","ISFAS","Anticipo"],why:"Código 09."},
+   {o:["Anticipo reintegrable","Retención judicial","Préstamo de MUFACE","IRPF"],why:"Código 20."},
+   {o:["Retención judicial","Anticipo","MUFACE","ISFAS"],why:"Código 21."},
+   {o:["Reintegro de préstamo de MUFACE","Anticipo","Retención judicial","MUNPAL"],why:"Código 22."}
+  ]},
+ {id:"e4",title:"Íntegro, líquido y neto",intro:"Las tres cifras de la nómina.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Importes de la nómina</div>
+  <div class="sch-box">Íntegro = {{0}}.<br>Líquido = íntegro − {{1}}.<br>Neto = líquido − {{2}}.<br>Cuotas: derechos pasivos {{3}} y MUFACE {{4}} del haber regulador.</div></div>`,
+  blanks:[
+   {o:["suma de retribuciones","suma de deducciones","sueldo","líquido + IRPF"],why:"Orden de 1992."},
+   {o:["deducciones formalizables","deducciones no formalizables","IRPF solo","pagas extra"],why:"Se ingresan en formalización."},
+   {o:["deducciones no formalizables","deducciones formalizables","cuotas","IRPF"],why:"Anticipos, embargos."},
+   {o:["3,86 %","1,69 %","4,70 %","6,35 %"],why:"Clases Pasivas."},
+   {o:["1,69 %","3,86 %","0,10 %","2 %"],why:"Mutualismo."}
+  ]},
+ {id:"e5",title:"Clases de nómina y plazos",intro:"Ordinaria e incidencias.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Nóminas</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ordinaria</b>Número {{0}}.<br>Se cierra el día {{1}}.<br>Incluye las pagas extra de {{2}}.</div>
+   <div class="sch-box alt"><b>Incidencias</b>Desde el número {{3}}.<br>Va en {{4}}.<br>Sus perceptores son {{5}}.</div>
+  </div>
+  <div class="sch-box">OK o ADOK: antes del día {{6}}. Aplicación de {{7}} dígitos.</div></div>`,
+  blanks:[
+   {o:["01","00","10","99"],why:"Orden de 1992."},
+   {o:["5","1","7","15"],why:"Cierre."},
+   {o:["junio y diciembre","julio y enero","marzo y septiembre","diciembre solo"],why:"Fijas y periódicas."},
+   {o:["02","01","10","05"],why:"Resto de nóminas."},
+   {o:["el mismo documento contable","un documento distinto","un ADOK separado","un RC"],why:"Tu anexo."},
+   {o:["altas","bajas","modificaciones","deducciones"],why:"Orden de 1992."},
+   {o:["7","5","10","15"],why:"Entrega en contabilidad."},
+   {o:["17","14","11","20"],why:"Por perceptor y concepto."}
+  ]},
+ {id:"e6",title:"Ordena: los documentos de la nómina",intro:"Del cuerpo a la contabilidad.",type:"order",
+  items:[
+   {t:"Cuerpo de la nómina (N1): perceptores por orden alfabético",why:"Con retribuciones y deducciones."},
+   {t:"Estados justificativos (VR): altas y modificaciones",why:"Respecto al mes anterior."},
+   {t:"Resúmenes (RN): por aplicación y claves, firmados por el habilitado y el Jefe",why:"Totales."},
+   {t:"Documento contable OK o ADOK",why:"Antes del día 7."},
+   {t:"Cuenta justificativa, dentro del mes siguiente al pago",why:"Tu anexo."}
+  ]},
+ {id:"e7",title:"Justificantes de altas y bajas",intro:"Orden de 30-7-1992.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Justificantes</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Altas</b>Nuevo ingreso: título, nombramiento y {{0}}.<br>Traslado: además, {{1}}.<br>Laboral: hoja de servicios y {{2}}.</div>
+   <div class="sch-box alt"><b>Bajas y modificaciones</b>Comisión de servicios: acuerdo de cese y modelo {{3}}.<br>Separación: {{4}}.<br>Huelga: certificación del personal y {{5}}.<br>Pagas extra: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["toma de posesión","contrato","certificado de baja","declaración"],why:"Más trienios, si procede."},
+   {o:["certificado de baja en nómina del origen","título","contrato","informe de la IGAE"],why:"Orden de 1992."},
+   {o:["contrato","título","toma de posesión","modelo F7"],why:"Plan de contratación fiscalizado."},
+   {o:["F7","N1","RN","VR"],why:"Orden de 1992."},
+   {o:["anotación de la sanción","resolución judicial","acuerdo de cese","certificado médico"],why:"Orden de 1992."},
+   {o:["su duración","su motivo","el sindicato","la convocatoria"],why:"Disminución transitoria."},
+   {o:["certificación global del habilitado","certificado individual","acuerdo ministerial","nada"],why:"Aumento transitorio."}
+  ]},
+ {id:"e8",title:"Devengo: regla y excepciones",intro:"Resolución de 25-5-2010.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Devengo mensual</div>
+  <div class="sch-box">Regla: meses completos según la situación del {{0}}.</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Por días</b>Toma de posesión del {{1}}.<br>Inicio o fin de {{2}}.<br>Cambio a {{3}}.<br>Cese en activo.</div>
+   <div class="sch-box alt"><b>Excepción</b>Jubilación, {{4}} o retiro: {{5}}.<br>Valor hora: íntegro ÷ {{6}} ÷ horas diarias.</div>
+  </div></div>`,
+  blanks:[
+   {o:["primer día hábil del mes","último día del mes","día 15","día 1 natural"],why:"Resolución de 2010."},
+   {o:["primer destino","cualquier destino","nivel","puesto en comisión"],why:"Supuesto a)."},
+   {o:["licencia sin sueldo","vacaciones","permiso por asuntos propios","baja médica"],why:"Supuestos a) y b)."},
+   {o:["otra Administración","otro Ministerio","otro centro","otra unidad"],why:"Supuesto c)."},
+   {o:["fallecimiento","traslado","excedencia","suspensión"],why:"En Clases Pasivas."},
+   {o:["mes completo","por días","medio mes","nada"],why:"Excepción del cese."},
+   {o:["días naturales del mes","30","días hábiles","22"],why:"Resolución de 2010."}
+  ]},
+ {id:"e9",title:"Pagas extraordinarias",intro:"Devengo y cálculo proporcional.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Pagas extra</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Junio</b>Período: 1-12 a {{0}}.<br>Divisor: {{1}} (183 en bisiesto).</div>
+   <div class="sch-box alt"><b>Diciembre</b>Período: 1-6 a {{2}}.<br>Divisor: {{3}}.</div>
+  </div>
+  <div class="sch-box">Devengo: {{4}}. Incluyen: sueldo y trienios de su tabla, una mensualidad de {{5}} y la paga del específico. No incluyen {{6}}.</div></div>`,
+  blanks:[
+   {o:["31-5","30-6","31-12","30-4"],why:"182 días."},
+   {o:["182","183","180","365"],why:"Resolución de 2010."},
+   {o:["30-11","31-12","31-10","30-6"],why:"183 días."},
+   {o:["183","182","184","180"],why:"Resolución de 2010."},
+   {o:["primer día hábil de junio y diciembre","día 1","día 15","último día hábil"],why:"Art. 33 Ley 33/1987."},
+   {o:["complemento de destino","productividad","gratificaciones","dietas"],why:"Art. 22 TREBEP."},
+   {o:["productividad ni gratificaciones","complemento de destino","trienios","sueldo"],why:"Rendimiento y servicios extraordinarios."}
+  ]},
+ {id:"e10",title:"Otro personal",intro:"Interinos, eventuales y en prácticas.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Retribuciones de otro personal</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Interinos</b>Básicas {{0}} trienios y complementarias del puesto.</div>
+   <div class="sch-box alt"><b>Eventuales</b>Sueldo del grupo asimilado {{1}} trienios (salvo funcionarios de carrera).</div>
+   <div class="sch-box"><b>En prácticas</b>Mínimo: {{2}} del grupo al que aspiran. Norma: {{3}}. Si ya cobraban: {{4}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["con","sin","con la mitad de","con el doble de"],why:"Art. 25 TREBEP."},
+   {o:["sin","con","con la mitad de","con el doble de"],why:"Tu anexo."},
+   {o:["el sueldo","todas las retribuciones","el SMI","el complemento de destino"],why:"Más pagas extra."},
+   {o:["RD 456/1986","RD 462/2002","RD 364/1995","Orden de 1992"],why:"Funcionarios en prácticas."},
+   {o:["opción","acumulación","pérdida","prorrata"],why:"Pueden optar."}
+  ]},
+ {id:"e11",title:"Personal laboral y masa salarial",intro:"Art. 19 LPGE.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Laboral</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Masa salarial</b>Retribuciones salariales y {{0}} del año anterior.<br>Excluye: prestaciones de la SS, {{1}}, indemnizaciones por traslado o despido y suplidos.</div>
+   <div class="sch-box alt"><b>Informe de la SEPG</b>Carácter: {{2}}.<br>Plazo: {{3}}.</div>
+  </div>
+  <div class="sch-box">Pagas extra: {{4}} de junio y diciembre. SMI 2026: {{5}} €/mes.</div></div>`,
+  blanks:[
+   {o:["extrasalariales","en especie solo","de convenio","de productividad"],why:"Art. 19 LPGE."},
+   {o:["cotizaciones del empleador","salario base","antigüedad","pagas extra"],why:"Exclusión."},
+   {o:["preceptivo y vinculante","facultativo","preceptivo no vinculante","posterior"],why:"Art. 19 LPGE."},
+   {o:["1 mes","15 días","2 meses","10 días"],why:"Art. 19 LPGE."},
+   {o:["primer día hábil","día 1","último día hábil","día 15"],why:"Convenio Único."},
+   {o:["1.221","1.184","1.134","1.300"],why:"RD 126/2026."}
+  ]},
+ {id:"e12",title:"Dietas: comisión con pernocta",intro:"RD 462/2002.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Manutención y alojamiento</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Salida</b>Antes de las 14:00: {{0}}.<br>Entre las 14:00 y las 22:00: {{1}}.<br>Alojamiento: {{2}}.</div>
+   <div class="sch-box alt"><b>Regreso</b>Después de las 14:00: {{3}} de manutención.<br>Alojamiento: {{4}}.</div>
+  </div>
+  <div class="sch-box">Comisión de un día: 50 % si dura ≥ {{5}}, empieza antes de las 14:00 y acaba después de las {{6}}.</div></div>`,
+  blanks:[
+   {o:["100 %","50 %","0 %","25 %"],why:"Art. 12."},
+   {o:["50 %","100 %","0 %","25 %"],why:"Art. 12."},
+   {o:["sí","no","solo si es grupo 1","50 %"],why:"Se pernocta."},
+   {o:["50 %","100 %","0 %","25 %"],why:"Art. 12."},
+   {o:["no","sí","50 %","solo grupo 1"],why:"No se pernocta."},
+   {o:["5 h","3 h","8 h","6 h"],why:"Art. 12.3."},
+   {o:["16:00","15:00","18:00","14:00"],why:"Art. 12.3."}
+  ]},
+ {id:"e13",title:"Indemnizaciones: cifras",intro:"Comisiones, residencia, traslados y asistencias.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">RD 462/2002</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Comisiones</b>Máximo en España: {{0}}; en el extranjero: {{1}}.<br>Vehículo: {{2}} €/km.</div>
+   <div class="sch-box alt"><b>Residencia eventual</b>Hasta el {{3}} de la dieta; {{4}} prorrogable.</div>
+   <div class="sch-box"><b>Asistencias</b>Consejos {{5}} · tribunales {{6}} · formación 25 % · total {{7}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["1 mes","15 días","3 meses","6 meses"],why:"Art. 5."},
+   {o:["3 meses","1 mes","6 meses","1 año"],why:"Art. 5."},
+   {o:["0,26","0,19","0,106","0,30"],why:"Orden HFP/792/2023."},
+   {o:["80 %","50 %","100 %","30 %"],why:"Sin justificar."},
+   {o:["1 año","6 meses","2 años","3 meses"],why:"Más 1 de prórroga."},
+   {o:["40 %","20 %","25 %","50 %"],why:"Órganos colegiados."},
+   {o:["20 %","40 %","25 %","10 %"],why:"Tribunales."},
+   {o:["50 %","75 %","40 %","100 %"],why:"Límite conjunto."}
+  ]},
+ {id:"e14",title:"Ordena: el pago de las retribuciones",intro:"Decreto 680/1974.",type:"order",
+  items:[
+   {t:"El interesado elige transferencia o cheque nominativo",why:"Puede cambiar en cualquier momento."},
+   {t:"Los libramientos están en las Ordenaciones de Pagos 15 días antes",why:"A favor de las habilitaciones."},
+   {t:"Se transfiere el importe líquido a la cuenta de la habilitación",why:"Decreto 680/1974."},
+   {t:"La habilitación envía a la entidad las relaciones nominales",why:"Perceptores, cuentas e importes."},
+   {t:"La entidad abona en cuenta o entrega el cheque con firma del recibí",why:"Servicio gratuito."}
+  ]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("gf4c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("gf4c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
