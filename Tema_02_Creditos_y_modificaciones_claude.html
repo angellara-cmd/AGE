@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Gestión financiera · Tema 2 · El presupuesto del Estado, créditos y modificaciones presupuestarias · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">GF2</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Gestión financiera</small>
+      <b>Créditos y modificaciones</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+  <style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:12px 0}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .verdict ul{margin:6px 0 0 18px}.verdict li{margin:3px 0}
+    .ap-in{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:700 1.15rem Sora,system-ui,sans-serif;letter-spacing:.06em}
+    .ap-chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+    .ap-chip{padding:8px 12px;border-radius:12px;font:800 1rem Sora,system-ui,sans-serif;color:#fff}
+    .ap-chip.o{background:#6d5cff}.ap-chip.p{background:#0aa37f}.ap-chip.e{background:#e2603b}
+    .ap-ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .pl-t td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+  </style>
+  <div class="hero">
+    <span class="kicker">Tema 2 · Gestión financiera</span>
+    <h1>El presupuesto del Estado: <span>créditos, gastos plurianuales y modificaciones</span></h1>
+    <p>Resumen de alto rendimiento del manual (LGP, LPGE 2023 prorrogada y Orden HFP/147/2022) con <strong>tus dos esquemas convertidos en herramientas</strong>: el mapa de las modificaciones presupuestarias, un decodificador de aplicaciones presupuestarias, un comprobador de transferencias y calculadoras de gastos plurianuales y de competencias. Además, esquemas autocorregibles, fichas y test con penalización.</p>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">17</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">55</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('mapa').scrollIntoView({behavior:'smooth'})">Mapa de modificaciones ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('aplic').scrollIntoView({behavior:'smooth'})">Decodificador ↓</button>
+      <button class="btn btn-g" data-go="esquemas">Practicar esquemas →</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Actualización a noviembre de 2026.</strong> El manual habla de la LPGE 2023 «prorrogada automáticamente por segunda vez el 1 de enero de 2025». Se prorrogó por <strong>tercera vez el 1-1-2026</strong>, así que las reglas de la Ley 31/2022 que cita el tema (vinculaciones, ampliables del anexo II, incorporables del anexo VII, competencias) siguen aplicándose. En la prórroga, la estructura orgánica se adapta a los Ministerios actuales sin alterar el total (art. 38 LGP), por lo que los nombres de algunas secciones de 2023 han cambiado. El <strong>PRTR</strong> ya ha terminado: los hitos debían cumplirse antes del 31-8-2026 y la última solicitud de pago se presentó el 30-9-2026.</span></div>
+
+  <div class="section-title" id="mapa">
+    <div><span class="kicker">Tus esquemas, ahora interactivos</span><h2>Mapa de las modificaciones presupuestarias</h2></div>
+    <p>Cada tarjeta da el concepto, los supuestos, la financiación, quién autoriza, el documento contable MC y el principio que excepciona. ⚠ marca un matiz entre tus esquemas y el manual.</p>
+  </div>
+  <div class="sit-pills" id="md-pills"></div>
+  <div class="card sit-card" id="md-card"></div>
+
+  <div class="section-title" id="aplic">
+    <div><span class="kicker">Practica con códigos reales</span><h2>Decodificador de aplicaciones presupuestarias</h2></div>
+    <p>Escribe una aplicación con el formato <strong>sección.servicio.programa.económica</strong> y la herramienta te la desglosa en sus tres clasificaciones: orgánica (¿quién?), por programas (¿para qué?) y económica (¿en qué?).</p>
+  </div>
+  <div class="card tool">
+    <input class="ap-in" id="ap-in" value="16.01.142B.220.00" autocomplete="off" spellcheck="false" aria-label="Aplicación presupuestaria">
+    <div class="ap-chips" id="ap-chips"></div>
+    <div class="tbl-wrap"><table class="tbl" id="ap-t"></table></div>
+    <div class="ap-ex" id="ap-ex"></div>
+    <p class="tool-note">Las secciones usan los nombres de la LPGE 2023, como el manual. En la prórroga, algunos Ministerios han cambiado de nombre.</p>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Art. 52 LGP</span><h2>¿Se puede hacer esta transferencia?</h2></div>
+    <p>Elige el origen y el destino y la herramienta comprueba las restricciones del art. 52 LGP, sus excepciones y quién la autoriza.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Capítulo de origen (se minora)<select id="tr-o"></select></label>
+      <label>Capítulo de destino (se aumenta)<select id="tr-d"></select></label>
+      <label>Ámbito<select id="tr-a">
+        <option value="prog">Mismo programa o programas del mismo servicio</option>
+        <option value="secc">Distintos servicios de la misma sección</option>
+        <option value="dist">Distintas secciones presupuestarias</option></select></label>
+      <label>Causa especial<select id="tr-x">
+        <option value="no">Ninguna</option>
+        <option value="reorg">Reorganización administrativa o traspaso a CCAA</option>
+        <option value="conv">Convenio entre departamentos u organismos</option>
+        <option value="php">Ley del Patrimonio Histórico Español</option>
+        <option value="imp">Desde el programa de imprevistos</option>
+        <option value="cc">Programa de contratación centralizada</option></select></label>
+    </div>
+    <div class="tool-grid">
+      <label class="chk"><input type="checkbox" id="tr-m"> El crédito de origen es extraordinario o se ha suplementado o ampliado este año</label>
+      <label class="chk"><input type="checkbox" id="tr-s"> Crea o aumenta una subvención nominativa a un ente privado</label>
+    </div>
+    <div class="verdict" id="tr-out"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Art. 47 LGP</span><h2>Calculadora de gastos plurianuales</h2></div>
+    <p>Límites sobre el <strong>crédito inicial</strong>: 70 % en el año siguiente, 60 % en el segundo y 50 % en el tercero y el cuarto. Como máximo, 4 ejercicios posteriores.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Crédito inicial de la aplicación (€)<input type="number" id="pl-c" min="0" step="1000" value="1000000"></label>
+      <label>Año +1 (€)<input type="number" id="pl-1" min="0" step="1000" value="650000"></label>
+      <label>Año +2 (€)<input type="number" id="pl-2" min="0" step="1000" value="620000"></label>
+      <label>Año +3 (€)<input type="number" id="pl-3" min="0" step="1000" value="300000"></label>
+      <label>Año +4 (€)<input type="number" id="pl-4" min="0" step="1000" value="0"></label>
+    </div>
+    <div class="tool-grid">
+      <label class="chk"><input type="checkbox" id="pl-o"> Contrato de obra (no de abono total del precio)</label>
+      <label>Importe de adjudicación (€)<input type="number" id="pl-a" min="0" step="1000" value="1500000"></label>
+      <label>Año en que termina la obra<select id="pl-f"><option value="1">+1</option><option value="2">+2</option><option value="3" selected>+3</option><option value="4">+4</option></select></label>
+    </div>
+    <div class="tbl-wrap"><table class="tbl pl-t" id="pl-t"></table></div>
+    <div class="verdict" id="pl-out"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Art. 56 LGP</span><h2>¿Quién autoriza un crédito extraordinario en un organismo autónomo?</h2></div>
+    <p>Los límites se calculan sobre el <strong>capítulo del presupuesto inicial</strong> del OA y sobre el <strong>acumulado</strong> de las modificaciones del ejercicio.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Crédito inicial del capítulo (€)<input type="number" id="oa-c" min="0" step="1000" value="3000000"></label>
+      <label>Acumulado en el ejercicio, incluida esta modificación (€)<input type="number" id="oa-i" min="0" step="1000" value="250000"></label>
+    </div>
+    <div class="tool-grid">
+      <label class="chk"><input type="checkbox" id="oa-p"> Afecta a gastos de personal o a créditos del art. 44.2</label>
+      <label class="chk"><input type="checkbox" id="oa-a"> Es para obligaciones de ejercicios anteriores sin crédito anulado</label>
+    </div>
+    <div class="verdict" id="oa-out"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras y artículos clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>Arts. 32 · 33 · 35</b><span>LGP: concepto de PGE · contenido y ámbito · créditos y programas</span></div>
+    <div class="num"><b>Art. 40</b><span>Gastos: clasificación orgánica, por programas y económica (y funcional)</span></div>
+    <div class="num"><b>5 · 27 · ~400</b><span>Áreas de gasto (1, 2, 3, 4 y 9) · políticas de gasto · programas</span></div>
+    <div class="num"><b>2 · 3 dígitos</b><span>Servicios del Estado (15.07) · organismos autónomos (15.101)</span></div>
+    <div class="num"><b>Servicio 50</b><span>Mecanismo de Recuperación y Resiliencia; arts. 19, 29 y 69 en la económica</span></div>
+    <div class="num"><b>2 %</b><span>Fondo de Contingencia (art. 50): de los gastos no financieros, sin los de financiación de CCAA y EELL</span></div>
+    <div class="num"><b>Concepto · artículo · capítulo</b><span>Estado: regla general · capítulos 1 y 2 · capítulo 6</span></div>
+    <div class="num"><b>4 años · 70/60/50/50</b><span>Gastos plurianuales (art. 47) sobre el crédito inicial</span></div>
+    <div class="num"><b>10 %</b><span>Retención adicional en contratos de obra plurianuales (no de abono total)</span></div>
+    <div class="num"><b>6 M€ · 25 %</b><span>Inmuebles con pago aplazado (art. 48): desembolso inicial mínimo</span></div>
+    <div class="num"><b>10 años · 100 %</b><span>Arrendamientos de inmuebles (LPGE 2023)</span></div>
+    <div class="num"><b>10 % · 500.000 €</b><span>OA: autoriza el Presidente o Director un crédito extraordinario o suplemento</span></div>
+    <div class="num"><b>20 % · 1.000.000 €</b><span>OA: por debajo de ambos límites, el Ministro de Hacienda; por encima, el Consejo de Ministros</span></div>
+    <div class="num"><b>1 %</b><span>Anticipos de Tesorería: límite anual sobre los créditos del Estado (art. 60)</span></div>
+    <div class="num"><b>Último trimestre</b><span>Los ingresos de ese periodo pueden generar crédito en el ejercicio siguiente</span></div>
+    <div class="num"><b>Último mes</b><span>Créditos extraordinarios y suplementos concedidos en él: incorporables</span></div>
+    <div class="num"><b>MC 030 → 095</b><span>Documentos contables de modificación; los autoriza el DG de Presupuestos</span></div>
+    <div class="num"><b>000X</b><span>Programa «Transferencias y libramientos internos»</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El presupuesto del Estado: concepto y estructura</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1.1</span><span class="bt"><h3>Concepto y contenido</h3><small>Arts. 32 y 33 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Art. 32 LGP</strong>: expresión <strong>cifrada, conjunta y sistemática</strong> de los derechos y obligaciones a liquidar durante el ejercicio por los órganos y entidades del <strong>sector público estatal</strong>.</li>
+          <li><strong>Art. 33.1</strong>: los PGE integran a) los presupuestos <strong>limitativos</strong> (órganos del art. 2.3 y entidades con el régimen de especificaciones y modificaciones de la LGP) y b) los <strong>estimativos</strong> (sectores empresarial y fundacional, consorcios, universidades no transferidas, fondos sin personalidad y resto). Se une el presupuesto de funcionamiento e inversiones del <strong>Banco de España</strong>.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Art. 33.2: los PGE determinan…</th></tr>
+          <tr><td>a) Las <strong>obligaciones</strong> que, como <strong>máximo</strong>, pueden reconocer los entes con presupuesto limitativo.</td></tr>
+          <tr><td>b) Los <strong>derechos</strong> a reconocer en el ejercicio por esos entes.</td></tr>
+          <tr><td>c) Las operaciones no financieras y financieras de los entes con presupuesto estimativo.</td></tr>
+          <tr><td>d) Los <strong>objetivos</strong> de cada gestor de programas con los recursos asignados.</td></tr>
+          <tr><td>e) La estimación de los <strong>beneficios fiscales</strong> de los tributos del Estado.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.2</span><span class="bt"><h3>Estructura del presupuesto de ingresos</h3><small>Orgánica y económica (capítulos 1 a 9)</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul><li><strong>Orgánica</strong>: Estado, Seguridad Social, OOAA y demás entidades con presupuesto limitativo. <strong>Económica</strong>: capítulos, artículos, conceptos y subconceptos, separando operaciones corrientes, de capital y financieras.</li></ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Cap.</th><th>Ingreso</th><th>Clave</th></tr>
+          <tr><td data-l="Cap.">1</td><td data-l="Ingreso"><strong>Impuestos directos y cotizaciones sociales</strong></td><td data-l="Clave">Patrimonio o renta (IRPF, Sociedades); paga quien soporta la carga. Más las cotizaciones obligatorias.</td></tr>
+          <tr><td data-l="Cap.">2</td><td data-l="Ingreso"><strong>Impuestos indirectos</strong></td><td data-l="Clave">Circulación de bienes o gasto de la renta (IVA, especiales); quien soporta no es quien ingresa.</td></tr>
+          <tr><td data-l="Cap.">3</td><td data-l="Ingreso"><strong>Tasas, precios públicos y otros</strong></td><td data-l="Clave">Dominio público, servicios en régimen de derecho público, venta de bienes, recargos y multas.</td></tr>
+          <tr><td data-l="Cap.">4</td><td data-l="Ingreso"><strong>Transferencias corrientes</strong></td><td data-l="Clave">Sin contrapartida, para operaciones corrientes.</td></tr>
+          <tr><td data-l="Cap.">5</td><td data-l="Ingreso"><strong>Ingresos patrimoniales</strong></td><td data-l="Clave">Rentas de la propiedad y actividades de derecho privado.</td></tr>
+          <tr><td data-l="Cap.">6</td><td data-l="Ingreso"><strong>Enajenación de inversiones reales</strong></td><td data-l="Clave">Venta de bienes de capital.</td></tr>
+          <tr><td data-l="Cap.">7</td><td data-l="Ingreso"><strong>Transferencias de capital</strong></td><td data-l="Clave">Sin contrapartida, para operaciones de capital.</td></tr>
+          <tr><td data-l="Cap.">8</td><td data-l="Ingreso"><strong>Activos financieros</strong></td><td data-l="Clave">Venta de activos, reintegro de préstamos concedidos, depósitos y fianzas constituidos.</td></tr>
+          <tr><td data-l="Cap.">9</td><td data-l="Ingreso"><strong>Pasivos financieros</strong></td><td data-l="Clave">Emisión de deuda, préstamos recibidos, depósitos y fianzas recibidos.</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.3</span><span class="bt"><h3>Gastos: clasificación orgánica</h3><small>¿Quién gasta? Secciones, servicios y organismos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Art. 40 LGP</strong>: los gastos se estructuran por clasificaciones <strong>orgánica, por programas y económica</strong>; además, los créditos se identifican <strong>funcionalmente</strong> según su finalidad. La orden añade la distribución <strong>territorial</strong> de las inversiones.</li>
+          <li><strong>Subsectores</strong>: Estado (secciones → servicios), OOAA, Seguridad Social, agencias estatales y resto con presupuesto limitativo (agrupados por Ministerio de adscripción).</li>
+          <li><strong>Secciones</strong>: altos órganos y Ministerios, además de Deuda (06), Clases Pasivas (07), Mutualismo (09), Contratación centralizada (10), UE (34), Fondo de Contingencia (35), FCI (36) y entes territoriales (37 y 38).</li>
+          <li><strong>Códigos</strong>: los servicios llevan <strong>2 dígitos</strong> tras la sección (15.07, DG de Tributos); los OOAA, <strong>3 dígitos</strong> (15.101, IEF; 15.302, AEAT). Las actuaciones del PRTR van al <strong>servicio 50</strong> «Mecanismo de Recuperación y Resiliencia».</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.4</span><span class="bt"><h3>Gastos: clasificación por programas</h3><small>¿Para qué? Áreas, políticas, grupos y programas</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="flow"><span><strong>Área</strong> (1 dígito)</span><i>→</i><span><strong>Política</strong> (2)</span><i>→</i><span><strong>Grupo</strong> (3)</span><i>→</i><span><strong>Programa</strong> (3 + letra)</span></div>
+        <ul>
+          <li><strong>Áreas</strong>: 1 servicios públicos básicos · 2 protección y promoción social · 3 bienes públicos de carácter preferente · 4 actuaciones de carácter económico · 9 actuaciones de carácter general. En total, unas 27 políticas y unos 400 programas.</li>
+          <li><strong>Finalistas (A-L)</strong>: objetivos cuantificables e indicadores medibles. <strong>Instrumentales o de apoyo y de gestión (M-Z)</strong>: administración general, actividades sin objetivos cuantificables o apoyo a un finalista.</li>
+          <li>La <strong>DG de Presupuestos</strong> puede modificar el código, el nombre y el contenido de los programas.</li>
+          <li>Ejemplo: <strong>453C</strong>, conservación y explotación de carreteras: área 4 → política 45 → grupo 453 → finalista C.</li>
+          <li><strong>PRTR</strong>: el 3.<sup>er</sup> carácter identifica el <strong>componente</strong> (A = C1 … Z = C26; Ñ = C31) y el 4.º la <strong>inversión</strong> (A-M = I1-I13) o la <strong>reforma</strong> (R-Z = R1-R9; P = R10; Q = R11). Ejemplo: 42AB C1.I2. El Plan tenía 4 ejes, 10 políticas palanca y 31 componentes.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">1.5</span><span class="bt"><h3>Gastos: clasificación económica</h3><small>¿En qué? Capítulos 1 a 9 y Fondo de Contingencia</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Cap.</th><th>Gasto</th><th>Clave</th></tr>
+          <tr><td data-l="Cap.">1</td><td data-l="Gasto"><strong>Gastos de personal</strong></td><td data-l="Clave">Retribuciones, cotizaciones, prestaciones y gastos sociales. Las indemnizaciones por razón del servicio van al cap. 2 (art. 23).</td></tr>
+          <tr><td data-l="Cap.">2</td><td data-l="Gasto"><strong>Bienes corrientes y servicios</strong></td><td data-l="Clave">Fungibles, duran menos de un ejercicio, no inventariables, reiterativos; gastos inmateriales no amortizables.</td></tr>
+          <tr><td data-l="Cap.">3</td><td data-l="Gasto"><strong>Gastos financieros</strong></td><td data-l="Clave">Intereses de deudas, depósitos y fianzas, y gastos de emisión, modificación y cancelación.</td></tr>
+          <tr><td data-l="Cap.">4</td><td data-l="Gasto"><strong>Transferencias corrientes</strong></td><td data-l="Clave">Sin contrapartida, para operaciones corrientes.</td></tr>
+          <tr><td data-l="Cap.">5</td><td data-l="Gasto"><strong>Fondo de Contingencia</strong></td><td data-l="Clave">No se imputan gastos: financia modificaciones.</td></tr>
+          <tr><td data-l="Cap.">6</td><td data-l="Gasto"><strong>Inversiones reales</strong></td><td data-l="Clave">Bienes de capital, inventariables e inmateriales <strong>amortizables</strong>.</td></tr>
+          <tr><td data-l="Cap.">7</td><td data-l="Gasto"><strong>Transferencias de capital</strong></td><td data-l="Clave">Sin contrapartida, para operaciones de capital.</td></tr>
+          <tr><td data-l="Cap.">8</td><td data-l="Gasto"><strong>Activos financieros</strong></td><td data-l="Clave">Adquisición de títulos, préstamos concedidos, depósitos y fianzas.</td></tr>
+          <tr><td data-l="Cap.">9</td><td data-l="Gasto"><strong>Pasivos financieros</strong></td><td data-l="Clave">Amortización de deudas y devolución de depósitos y fianzas.</td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Fondo de Contingencia</strong> (art. 50 LGP; art. 31 LO 2/2012): <strong>2 %</strong> de los gastos no financieros, excluida la financiación de CCAA y EELL. Solo financia <strong>ampliaciones, créditos extraordinarios y suplementos, e incorporaciones</strong>, y nunca decisiones discrecionales sin cobertura. Su aplicación la aprueba el <strong>Consejo de Ministros</strong> a propuesta de Hacienda, con informe <strong>trimestral</strong> a las Cortes. Su remanente <strong>no se incorpora</strong>.</li>
+          <li>Artículos de los capítulos 4 y 7: 40/70 Estado · 41/71 OOAA · 42/72 Seguridad Social · 43/73 otras entidades limitativas · 44/74 sociedades, EPE y fundaciones · 45/75 CCAA · 46/76 EELL · 47/77 empresas privadas · 48/78 familias e ISFL · 49/79 exterior.</li>
+          <li>Del capítulo 1: 10 altos cargos · 11 eventual · 12 funcionarios · 13 laborales · 14 otro · 15 incentivos · 16 cuotas y gastos sociales. PRTR: arts. <strong>19, 29 y 69</strong>.</li>
+          <li>Los conceptos no tipificados de los capítulos 1, 2 y 6 los aprueba la DG de Presupuestos. La clasificación <strong>territorial</strong> recoge las inversiones por CCAA y provincias, con su año de inicio (art. 37.2.f LGP).</li>
+        </ul>
+        <div class="note"><span>⚠️</span><span>Errata del manual: llama al capítulo 6 «Operaciones reales». Su nombre correcto es <strong>Inversiones reales</strong>, como dice tu esquema.</span></div>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Los créditos presupuestarios</h3>
+
+    <details class="blk">
+      <summary><span class="bn">2.1</span><span class="bt"><h3>Créditos y programas</h3><small>Art. 35 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Crédito presupuestario</strong>: cada asignación individualizada de gasto puesta a disposición de los centros gestores para cubrir las necesidades para las que se aprobó. Se especifica por las clasificaciones orgánica, por programas y económica (arts. 40, 43 y 44).</li>
+          <li><strong>Programa presupuestario</strong>: <strong>plurianual</strong> y bajo la responsabilidad del titular del centro gestor; conjunto de gastos para alcanzar objetivos: producir bienes y servicios, cumplir obligaciones específicas u otras actividades. Los servicios horizontales e instrumentales pueden ser <strong>programas de apoyo</strong>.</li>
+          <li><strong>Programa de gasto del presupuesto anual</strong>: la concreción anual del programa plurianual. Su cumplimiento se mide por resultados o, si no son medibles, con indicadores indirectos.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.2</span><span class="bt"><h3>Características de los créditos</h3><small>Especialidad, limitación y temporalidad</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Carácter</th><th>Art.</th><th>Contenido</th></tr>
+          <tr><td data-l="Carácter"><strong>Especialidad (vinculante)</strong></td><td data-l="Art.">42</td><td data-l="Contenido">Solo para la finalidad autorizada por la LPGE o por sus modificaciones.</td></tr>
+          <tr><td data-l="Carácter"><strong>Limitativo</strong></td><td data-l="Art.">46</td><td data-l="Contenido">No se puede comprometer por encima del crédito: <strong>nulidad de pleno derecho</strong> de actos y disposiciones de rango inferior a ley, más la responsabilidad del Título VII.</td></tr>
+          <tr><td data-l="Carácter"><strong>Temporal</strong></td><td data-l="Art.">34 y 49</td><td data-l="Contenido">Ejercicio = año natural. Se imputan los derechos liquidados en él y las obligaciones reconocidas hasta fin de diciembre por gastos del ejercicio. Lo no afectado a obligaciones el último día se anula, salvo incorporaciones (art. 58).</td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Excepciones temporales</strong> (obligaciones de años anteriores con cargo al corriente): <strong>atrasos de personal</strong>; <strong>resoluciones judiciales</strong>; obligaciones con crédito anulado en su ejercicio; y las que tengan un crédito específico dotado. El resto exige una <strong>norma con rango de ley</strong>.</li>
+          <li>Los créditos iniciales para obligaciones de ejercicios anteriores solo se modifican por los arts. 55, 56 y 57.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2.3</span><span class="bt"><h3>Especificación y vinculación</h3><small>Arts. 43 y 44 LGP y art. 8 LPGE 2023</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Presupuesto</th><th>Regla</th><th>Capítulos 1 y 2</th><th>Capítulo 6</th></tr>
+          <tr><td data-l="Presupuesto"><strong>Estado</strong> (art. 43)</td><td data-l="Regla">Concepto</td><td data-l="Capítulos 1 y 2"><strong>Artículo</strong></td><td data-l="Capítulo 6"><strong>Capítulo</strong></td></tr>
+          <tr><td data-l="Presupuesto"><strong>OOAA y Seguridad Social</strong> (art. 44)</td><td data-l="Regla">Concepto</td><td data-l="Capítulos 1 y 2"><strong>Capítulo</strong></td><td data-l="Capítulo 6"><strong>Capítulo</strong></td></tr>
+        </table></div>
+        <ul>
+          <li><strong>Vinculan al nivel de su clasificación</strong>: atenciones protocolarias y representativas (y, en el Estado, gastos reservados) · arrendamientos de edificios · <strong>ampliables</strong> · los que identifican <strong>perceptor o beneficiario</strong> (salvo transferencias al exterior) · los que fije la LPGE · los <strong>créditos extraordinarios</strong> del ejercicio.</li>
+          <li><strong>Seguridad Social</strong>: créditos especificados por <strong>grupo de programas</strong>; la acción protectora no contributiva y universal, por programa.</li>
+          <li><strong>LPGE 2023</strong>: vinculan los de ejercicios anteriores; 150 Productividad, 151 Gratificaciones, 153 Dedicación especial y art. 15; 162.00 Formación, 162.01 Economatos, 162.04 Acción social; 221.09 FNMT, 225.02 Tributos locales y 202 Arrendamientos; los del servicio 50 por su importe global; y los de la Presidencia española de la UE (178, 278 y 688).</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Gastos plurianuales</h3>
+
+    <details class="blk">
+      <summary><span class="bn">3.1</span><span class="bt"><h3>Compromisos de gasto plurianuales</h3><small>Arts. 47, 47 bis y 48 LGP y RDL 36/2020</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Gastos que se comprometen en un ejercicio y se ejecutan en los siguientes. <strong>No son una modificación</strong>: dejan intactos los créditos.</li>
+          <li><strong>Requisitos</strong> (art. 47): que la ejecución empiece en el propio ejercicio; como máximo <strong>4 ejercicios</strong> posteriores; límites sobre el <strong>crédito inicial</strong> del <strong>70 · 60 · 50 · 50 %</strong>.</li>
+          <li><strong>Obras</strong> (salvo abono total): <strong>retención adicional del 10 %</strong> de la adjudicación, en el año en que termina la obra o en el siguiente; computa dentro de los porcentajes.</li>
+          <li><strong>Sin límites</strong>: carga financiera de la <strong>Deuda</strong> y <strong>arrendamientos de inmuebles</strong> (la LPGE 2023 los limita a 10 anualidades y al 100 %).</li>
+          <li>El <strong>Gobierno</strong>, en casos justificados, puede modificar porcentajes, ampliar anualidades o autorizar compromisos sin crédito inicial, a propuesta de Hacienda y con informe de la DG de Presupuestos. Se reflejan en los escenarios y se contabilizan aparte.</li>
+          <li><strong>Prohibido</strong> para las subvenciones <strong>nominativas</strong> (art. 22.2.a LGS). La <strong>tramitación anticipada</strong> puede llegar a la adjudicación y formalización.</li>
+          <li><strong>Art. 47 bis</strong>: si una LPGE posterior no dota crédito suficiente: comunicarlo al tercero → <strong>reprogramar</strong> anualidades → si no es posible, <strong>resolver</strong> con compensaciones.</li>
+          <li><strong>Art. 48</strong>: inmuebles de <strong>más de 6 M€</strong> con pago aplazado: desembolso inicial de al menos el <strong>25 %</strong> y el resto en los 4 ejercicios siguientes. Las obras de abono total siguen el art. 47.</li>
+          <li><strong>RDL 36/2020</strong> (MRR): hasta <strong>3 ejercicios</strong> posteriores y nunca más allá de 2026 (70 · 60 · 50 %), con informes de la DG de Presupuestos y de la DG del Plan.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Las modificaciones presupuestarias</h3>
+
+    <details class="blk">
+      <summary><span class="bn">4.1</span><span class="bt"><h3>Concepto, tipos y procedimiento</h3><small>Art. 51 LGP y Orden HFP/147/2022</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Son variaciones de los créditos durante el ejercicio por cambio de <strong>finalidad</strong>, <strong>cuantía</strong> o <strong>anualidad</strong>. Requisitos: estar previstas en la LGP o en la LPGE y autorizarlas el órgano competente.</li>
+          <li><strong>Art. 51</strong>: transferencias, generaciones, ampliaciones, créditos extraordinarios y suplementos, e incorporaciones.</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Principio excepcionado</th><th>Carácter del crédito</th><th>Modificación</th></tr>
+          <tr><td data-l="Principio">Especialidad <strong>cuantitativa</strong></td><td data-l="Carácter">Limitativo</td><td data-l="Modificación">Créditos extraordinarios, suplementos, ampliaciones y generaciones</td></tr>
+          <tr><td data-l="Principio">Especialidad <strong>cualitativa</strong></td><td data-l="Carácter">Vinculante</td><td data-l="Modificación">Transferencias</td></tr>
+          <tr><td data-l="Principio">Especialidad <strong>temporal</strong></td><td data-l="Carácter">Temporal</td><td data-l="Modificación">Incorporaciones</td></tr>
+        </table></div>
+        <div class="flow"><span><strong>Iniciación</strong>: el centro gestor → Oficina Presupuestaria (memoria e informes)</span><i>→</i><span><strong>Tramitación</strong> según el órgano competente</span><i>→</i><span><strong>Resolución</strong> motivada (sección, servicio, programa y económica)</span><i>→</i><span><strong>Instrumentación</strong>: documento <strong>MC</strong> (DG de Presupuestos)</span></div>
+        <ul>
+          <li><strong>Memoria</strong>: clase de modificación, base legal, estudio económico, incidencia en ejercicios futuros y en objetivos, y financiación. <strong>Informes</strong>: Intervención Delegada y Oficina Presupuestaria; certificado de existencia de crédito; en el MRR, informe preceptivo de la DG del Plan (vinculante si decide el Ministro o el presidente de la entidad).</li>
+          <li><strong>Documentos MC</strong>: 030 extraordinarios · 040 suplementos · 050 ampliaciones · 060/061 transferencias positivas/negativas · 070 incorporaciones · 080 generaciones · 090 bajas por anulación · 095 aumento de rectificaciones. Si se financian con el Fondo o con baja: <strong>retención previa</strong> y <strong>dos MC</strong> (positivo y negativo).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.2</span><span class="bt"><h3>Créditos extraordinarios y suplementos</h3><small>Arts. 55 y 56 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Para un gasto <strong>que no puede demorarse</strong> al año siguiente: sin crédito → <strong>extraordinario</strong>; con crédito insuficiente y no ampliable → <strong>suplemento</strong>. Solo si no cabe otra modificación.</li>
+          <li><strong>Financiación en el Estado</strong>: operaciones no financieras (cap. 1-7), con el <strong>Fondo de Contingencia</strong> o con baja en otros créditos no financieros; financieras, con <strong>Deuda Pública</strong> o con baja en créditos de la misma naturaleza.</li>
+          <li><strong>Proyecto de ley a las Cortes</strong> (informe de la DG de Presupuestos y dictamen del <strong>Consejo de Estado</strong>): obligaciones de ejercicios anteriores <strong>sin crédito anulado</strong>; obligaciones del ejercicio financiadas <strong>con baja en otros créditos</strong>; operaciones financieras.</li>
+          <li><strong>Consejo de Ministros</strong>: obligaciones del ejercicio (o anteriores con crédito anulado) financiadas con el <strong>Fondo de Contingencia</strong>.</li>
+          <li><strong>OOAA</strong> (art. 56): se financian con el <strong>remanente de tesorería</strong> no aplicado o con <strong>mayores ingresos</strong>. Autoriza el <strong>Presidente o Director</strong> hasta el 10 % del capítulo y 500.000 € (sin personal ni art. 44.2); el <strong>Ministro de Hacienda</strong> por debajo del 20 % y 1.000.000 €; el <strong>Consejo de Ministros</strong> en el resto. Límites acumulados en el ejercicio; no computan las financiadas con aportación del Estado. Si no hay capítulo inicial, solo cuentan los límites de cuantía. Informe trimestral a las Cortes.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.3</span><span class="bt"><h3>Ampliaciones de crédito</h3><small>Art. 54 LGP y anexo II LPGE 2023</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Excepcionalmente ampliables</strong> hasta el importe de las obligaciones: <strong>Clases Pasivas</strong>; obligaciones derivadas de <strong>normas con rango de ley</strong> relacionadas taxativamente en el estado de gastos; <strong>Deuda</strong> del Estado y de los OOAA (intereses, amortización y gastos de emisión).</li>
+          <li><strong>Seguridad Social</strong>, siempre: pensiones, IT, familia, nacimiento, riesgos en el embarazo y la lactancia, menores con cáncer, <strong>IMV</strong>, subsidios de la LISMI, capitales-renta, Fondo de Reserva, aportaciones de Mutuas, recargos, transferencias a la UE y cese de actividad.</li>
+          <li><strong>LPGE 2023, ampliables en todas las secciones</strong>: cuotas de la Seguridad Social y aportación al mutualismo; transferencias de OOAA al Estado (hasta el remanente); <strong>sentencias firmes</strong>; medidas por la guerra de Ucrania. La sección 34 (UE) también es ampliable.</li>
+          <li><strong>Financiación</strong>: Estado, con el <strong>Fondo de Contingencia</strong> o con baja en créditos no financieros; OOAA y Seguridad Social, con remanente, mayores ingresos o bajas.</li>
+          <li><strong>Límite</strong>: no se amplían créditos <strong>previamente minorados</strong> (salvo en la Seguridad Social, la Deuda o un traspaso a CCAA).</li>
+          <li><strong>Competencia</strong>: el <strong>Ministro de Hacienda</strong> (Estado y OOAA); los Presidentes de las entidades de la Seguridad Social, en las suyas. Por la LPGE 2023, los Ministros y Presidentes de OOAA autorizan las del <strong>capítulo 1 financiadas con el capítulo 1</strong>; el de Sanidad, las del INGESA.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.4</span><span class="bt"><h3>Generaciones de crédito</h3><small>Art. 53 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Aumentan los créditos por <strong>ingresos no previstos o superiores</strong> a los presupuestados, realizados en el ejercicio (excepcionalmente, en el <strong>último trimestre del anterior</strong>).</li>
+        </ul>
+        <div class="tbl-wrap"><table class="tbl">
+          <tr><th>Supuesto (art. 53.2)</th><th>Regla</th><th>Autoriza</th></tr>
+          <tr><td data-l="Supuesto">a) <strong>Aportaciones</strong> para financiar conjuntamente</td><td data-l="Regla">En OOAA y SS basta el reconocimiento del derecho o un compromiso firme</td><td data-l="Autoriza">Ministros (y Presidentes de OOAA)</td></tr>
+          <tr><td data-l="Supuesto">b) <strong>Ventas</strong> de bienes y servicios</td><td data-l="Regla">En créditos de la misma naturaleza del gasto que los originó</td><td data-l="Autoriza">Ministro de Hacienda (Estado) · Presidentes de OOAA</td></tr>
+          <tr><td data-l="Supuesto">c) <strong>Enajenación de inmovilizado</strong></td><td data-l="Regla">En operaciones de la misma naturaleza económica</td><td data-l="Autoriza"><strong>Siempre el Ministro de Hacienda</strong></td></tr>
+          <tr><td data-l="Supuesto">d) <strong>Reembolso de préstamos</strong></td><td data-l="Regla">Solo para conceder nuevos préstamos</td><td data-l="Autoriza">Ministros (y Presidentes de OOAA)</td></tr>
+          <tr><td data-l="Supuesto">e) Ingresos <strong>legalmente afectados</strong></td><td data-l="Regla">A las actuaciones a las que están afectados</td><td data-l="Autoriza">Ministro de Hacienda (Estado) · Presidentes de OOAA</td></tr>
+          <tr><td data-l="Supuesto">f) <strong>Reintegros</strong> de pagos indebidos del corriente</td><td data-l="Regla">Reponen el crédito</td><td data-l="Autoriza">Ministros (y Presidentes de OOAA)</td></tr>
+        </table></div>
+        <ul>
+          <li>Presidentes de órganos con sección: como los Ministros. Presidentes de las entidades de la Seguridad Social: todas salvo la c). Por la LPGE 2023, el Ministro de Defensa (farmacia, hospitales, OTAN, Cría Caballar) y el de Sanidad (INGESA). Los reintegros del PRTR generan crédito en cualquier momento (los aprueba Hacienda).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.5</span><span class="bt"><h3>Transferencias de crédito</h3><small>Arts. 52, 61, 62 y 63 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Son traspasos de dotaciones entre créditos, incluso creando créditos nuevos, sin alterar el total. Excepcionan la especialidad <strong>cualitativa</strong>.</li>
+          <li><strong>Restricciones</strong>: a) no desde <strong>financieras</strong> (8-9) al resto ni desde <strong>capital</strong> (6-7) a <strong>corrientes</strong> (1-4); b) no entre <strong>secciones distintas</strong> (salvo contratación centralizada); c) no minorar créditos <strong>extraordinarios, suplementados o ampliados</strong> en el ejercicio (salvo ampliables de la SS o la sección 06); d) en la SS, los ampliables solo financian otros ampliables.</li>
+          <li><strong>No se aplican</strong> a reorganizaciones administrativas o traspasos a CCAA, convenios entre departamentos u organismos, la Ley del Patrimonio Histórico ni las transferencias desde el programa de <strong>imprevistos</strong>.</li>
+          <li><strong>Nunca</strong> pueden crear o aumentar <strong>subvenciones nominativas</strong>, salvo conforme a la LGS o a otros entes del sector público.</li>
+          <li><strong>Competencia</strong>: el <strong>Consejo de Ministros</strong> entre secciones por reorganización (art. 61); los <strong>Ministros</strong> y Presidentes de OOAA, con informe favorable de la Intervención Delegada, dentro de un programa o entre programas del mismo servicio, pudiendo crear créditos de los capítulos 2 y 6, sin afectar a personal ni aumentar los del art. 43.2 (art. 63); el <strong>Ministro de Hacienda</strong>, el resto (art. 62).</li>
+          <li><strong>LPGE 2023</strong>: el Gobierno autoriza transferencias entre secciones para necesidades ineludibles y en los servicios 50 y 51. Hacienda autoriza las de capital a corrientes y otras específicas. Los Ministros y Presidentes de OOAA, las transferencias entre créditos del capítulo 1 (salvo incentivos y acción social) y las del servicio 50. Información trimestral a las Cortes.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.6</span><span class="bt"><h3>Incorporaciones de crédito</h3><small>Art. 58 LGP y anexo VII LPGE 2023</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Excepción a la <strong>temporalidad</strong> (art. 49): los remanentes del ejercicio anterior pueden incorporarse si: a) lo dispone una <strong>norma con rango de ley</strong> (anexo VII de la LPGE y RDL 36/2020); b) proceden de <strong>generaciones a) y e)</strong>; c) son <strong>retenciones</strong> para créditos extraordinarios o suplementos con <strong>anticipo de tesorería</strong> y la ley quedó pendiente; d) son créditos extraordinarios y suplementos concedidos por ley en el <strong>último mes</strong>.</li>
+          <li><strong>LPGE 2023</strong>: <strong>suspende el supuesto b)</strong>: no se incorporan los remanentes de generaciones, salvo los del MRR.</li>
+          <li><strong>Financiación</strong>: en el Estado, con el Fondo de Contingencia o con baja en créditos no financieros; en OOAA y SS, <strong>solo con remanente de tesorería</strong>. Las del MRR, con <strong>Deuda Pública</strong>.</li>
+          <li><strong>Competencia</strong>: el <strong>Ministro de Hacienda</strong> (art. 62).</li>
+          <li>Anexo VII: créditos del Patrimonio Sindical Acumulado, Instituto para la Transición Justa, Erasmus+ y Cuerpo Europeo de Solidaridad (INJUVE), FCI (sección 36) y traspasos (sección 38).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4.7</span><span class="bt"><h3>Normas generales de la LPGE 2023</h3><small>Tu esquema del anexo I</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Todo acuerdo de modificación debe indicar la <strong>sección, el servicio u órgano, el programa y la económica</strong>.</li>
+          <li>Las transferencias y libramientos de los arts. 40-43 y 70-73 y de ciertos préstamos (820, 821, 829, 910, 911) se hacen por el programa <strong>000X «Transferencias y libramientos internos»</strong>; también las convocatorias públicas a OOAA y entidades limitativas.</li>
+          <li>Los fondos del MRR y del <strong>REACT-EU</strong> están <strong>legalmente afectados</strong>: si no se gastan, se reintegran al Tesoro.</li>
+          <li>Hacienda también autoriza las modificaciones con remanentes de otras entidades por encima de <strong>500.000 €</strong> y las que afecten a los capítulos 4, 7 y 8 de esas entidades.</li>
+          <li>Ministros y Presidentes de OOAA autorizan las de gastos comunes de edificios compartidos y servicios horizontales (IGAE, AEAT, SGAD), salvo personal.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 5 · Anticipos de Tesorería</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5.1</span><span class="bt"><h3>Anticipos de Tesorería</h3><small>Art. 60 LGP</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Excepcionales</strong>: los concede el <strong>Gobierno</strong>, a propuesta del Ministro de <strong>Economía</strong>, para gastos <strong>inaplazables</strong>, con un límite anual del <strong>1 %</strong> de los créditos del Estado.</li>
+          <li><strong>Supuestos</strong>: a) iniciado un crédito extraordinario o suplemento, con <strong>dictamen favorable del Consejo de Estado</strong>; b) promulgada una <strong>ley</strong> que crea obligaciones que exigen un crédito extraordinario o suplemento.</li>
+          <li>Si el destino es un OA, el anticipo autoriza el pago mediante operaciones de tesorería.</li>
+          <li>Si las Cortes <strong>no aprueban</strong> la ley: el Gobierno (a propuesta de <strong>Hacienda</strong>) cancela el anticipo con cargo a los créditos del departamento u OA cuya minoración cause <strong>menos trastornos</strong> al servicio.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Plurianuales ≠ modificación</b>No cambian los créditos. Los límites se calculan sobre el crédito inicial, no sobre el definitivo.</div>
+    <div class="trap"><b>Especificación: Estado frente a OOAA</b>Capítulos 1 y 2: artículo en el Estado, capítulo en los OOAA. El capítulo 6, capítulo en ambos.</div>
+    <div class="trap"><b>Enajenación de inmovilizado</b>Es la única generación que siempre autoriza el Ministro de Hacienda, también en los OOAA.</div>
+    <div class="trap"><b>Fondo de Contingencia: solo tres</b>Ampliaciones, créditos extraordinarios y suplementos, e incorporaciones. Nunca transferencias ni generaciones, ni gastos discrecionales.</div>
+    <div class="trap"><b>Fondo frente a baja</b>Un crédito extraordinario del ejercicio con el Fondo lo aprueba el Consejo de Ministros; con baja en otros créditos, hace falta una ley de las Cortes.</div>
+    <div class="trap"><b>Capital → corriente: no</b>Pero sí de corriente a capital. Y de financieras, a nada.</div>
+    <div class="trap"><b>Anticipo: Economía propone</b>Lo concede el Gobierno a propuesta de Economía; lo cancela a propuesta de Hacienda. Límite del 1 %.</div>
+    <div class="trap"><b>OA: 10 % y 500.000 € a la vez</b>El Presidente solo autoriza si no se supera ninguno de los dos, y nunca en gastos de personal. Hacienda, por debajo del 20 % y de 1 M€.</div>
+    <div class="trap"><b>Generaciones del último trimestre</b>Los ingresos del último trimestre del año anterior pueden generar crédito en el siguiente. Las incorporaciones, en cambio, son del último mes.</div>
+    <div class="trap"><b>Indemnizaciones por razón del servicio</b>Van al capítulo 2 (art. 23), no al capítulo 1.</div>
+    <div class="trap"><b>Arrendamientos</b>Fuera de los límites del art. 47; la LPGE 2023 los fija en 10 anualidades al 100 %.</div>
+    <div class="trap"><b>Documentos MC</b>030 extraordinario · 040 suplemento · 050 ampliación · 060/061 transferencia · 070 incorporación · 080 generación.</div>
+  </div>
+</section>
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 2. El presupuesto del Estado en España: concepto y estructura. Los créditos presupuestarios: clasificación. Gastos plurianuales. Las modificaciones presupuestarias. Anticipos de tesorería» y tus esquemas (anexos I y II). Actualizado a noviembre de 2026: LPGE 2023 prorrogada por tercera vez en 2026; PRTR cerrado (hitos hasta el 31-8-2026).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Gestión financiera · Tema 2 · Herramientas interactivas (esquemas del usuario + manual) ===== */
+const MD=[
+ {g:"Aumentan el crédito",n:"Crédito extraordinario",norm:"Art. 55 LGP (Estado) · art. 56 (OOAA) · MC 030",def:"Gasto que no puede demorarse al ejercicio siguiente y para el que no existe crédito adecuado, ni cabe otra modificación.",
+  f:{"Financiación (Estado)":"No financieras (cap. 1-7): Fondo de Contingencia o baja en otros créditos no financieros. Financieras: Deuda Pública o baja en créditos de la misma naturaleza.","Competencia (Estado)":"Consejo de Ministros si es del ejercicio (o de anteriores con crédito anulado) y con el Fondo. Proyecto de ley a las Cortes (informe DGP y dictamen del Consejo de Estado) si es de ejercicios anteriores sin crédito anulado, se financia con baja en otros créditos o afecta a operaciones financieras.","Principio excepcionado":"Especialidad cuantitativa (carácter limitativo).","Vinculación":"El crédito extraordinario vincula al nivel de su clasificación económica."}},
+ {g:"Aumentan el crédito",n:"Suplemento de crédito",norm:"Art. 55 LGP (Estado) · art. 56 (OOAA) · MC 040",def:"Gasto inaplazable con crédito existente pero insuficiente y no ampliable.",
+  f:{"Diferencia":"Extraordinario: no hay crédito. Suplemento: hay crédito, pero insuficiente.","Financiación y competencia":"Las mismas que el crédito extraordinario.","Anticipo de Tesorería":"Mientras se tramita la ley, cabe un anticipo si ya hay dictamen favorable del Consejo de Estado.","Principio excepcionado":"Especialidad cuantitativa."}},
+ {g:"Aumentan el crédito",n:"Extraordinarios y suplementos en OOAA",norm:"Art. 56 LGP",def:"Reglas propias para los organismos autónomos.",
+  f:{"Financiación":"Solo remanente de tesorería no aplicado del ejercicio anterior o mayores ingresos. Si exige modificar el presupuesto del Estado, ambas se acuerdan juntas por el procedimiento del Estado.","Competencia":"Presidente o Director: hasta el 10 % del capítulo y 500.000 € (sin personal ni art. 44.2). Ministro de Hacienda: por debajo del 20 % y de 1.000.000 €. Consejo de Ministros: el resto.","Cómputo":"Acumulado del ejercicio, por separado para personal o art. 44.2 y para el resto. No computan las financiadas con aportación del Estado. Sin capítulo inicial, solo cuentan las cuantías.","Ejercicios anteriores":"Sin crédito anulado: proyecto de ley a las Cortes."}},
+ {g:"Aumentan el crédito",n:"Ampliación de crédito",norm:"Art. 54 LGP · anexo II LPGE 2023 · MC 050",def:"Aumento de créditos declarados ampliables hasta el importe de las obligaciones que se reconozcan.",
+  f:{"Ampliables":"Clases Pasivas; obligaciones de normas con rango de ley relacionadas taxativamente; Deuda; y, en la Seguridad Social, pensiones, IT, IMV, Fondo de Reserva, etc. LPGE 2023: cuotas sociales, sentencias firmes, transferencias de OOAA al Estado, sección 34.","Financiación":"Estado: Fondo de Contingencia o baja en créditos no financieros. OOAA y SS: remanente, mayores ingresos o bajas.","Competencia":"Ministro de Hacienda (Estado y OOAA); Presidentes de las entidades de la SS. LPGE 2023: Ministros y Presidentes de OOAA, las del cap. 1 financiadas con el cap. 1.","Límite":"No se amplían créditos previamente minorados (salvo SS, sección 06 o traspasos a CCAA)."}},
+ {g:"Aumentan el crédito",n:"Generación de crédito",norm:"Art. 53 LGP · MC 080",def:"Aumento de créditos por ingresos no previstos o superiores a los presupuestados, realizados en el ejercicio (o en el último trimestre del anterior).",
+  f:{"Supuestos":"a) Aportaciones para financiar conjuntamente · b) Ventas de bienes y servicios · c) Enajenación de inmovilizado · d) Reembolso de préstamos · e) Ingresos legalmente afectados · f) Reintegros de pagos indebidos del corriente.","Requisito":"Ingreso efectivo; en OOAA y SS, para el supuesto a), basta el reconocimiento del derecho o un compromiso firme.","Competencia":"Ministros: a), d) y f). Ministro de Hacienda: c) siempre, y b) y e) en el Estado. Presidentes de OOAA: todos salvo c).","Destino":"Ventas → gastos de la misma naturaleza; inmovilizado → misma naturaleza económica; préstamos → nuevos préstamos."},
+  warn:"Tu esquema resume la competencia de los Presidentes de OOAA como «todos los casos salvo la enajenación de inmovilizado». Coincide con el manual: el art. 63 les da los supuestos b) y e) más los de los Ministros, que pueden avocar."},
+ {g:"Aumentan el crédito",n:"Incorporación de crédito",norm:"Art. 58 LGP · anexo VII LPGE 2023 · MC 070",def:"Remanentes del ejercicio anterior que se añaden a los créditos del corriente. Excepción a la anulación del art. 49.",
+  f:{"Supuestos":"a) Norma con rango de ley · b) Generaciones a) y e) (suspendido por la LPGE 2023, salvo el MRR) · c) Retenciones para extraordinarios o suplementos con anticipo de tesorería y ley pendiente · d) Extraordinarios y suplementos concedidos en el último mes.","Financiación":"Estado: Fondo de Contingencia o baja en créditos no financieros. OOAA y SS: solo remanente de tesorería. MRR: Deuda Pública.","Competencia":"Ministro de Hacienda (art. 62).","Principio excepcionado":"Especialidad temporal."}},
+ {g:"Redistribuyen",n:"Transferencia de crédito",norm:"Art. 52 LGP · arts. 61-63 · MC 060 (+) y 061 (−)",def:"Traspaso de dotaciones entre créditos, incluso creando créditos nuevos, sin alterar el total del presupuesto.",
+  f:{"Restricciones":"No de financieras al resto ni de capital a corrientes; no entre secciones (salvo contratación centralizada); no minorar créditos extraordinarios, suplementados o ampliados; en la SS, los ampliables solo para otros ampliables.","Excepciones":"Reorganizaciones o traspasos a CCAA, convenios entre departamentos, Patrimonio Histórico y programa de imprevistos. Nunca para crear o aumentar subvenciones nominativas (salvo LGS o sector público).","Competencia":"Consejo de Ministros: entre secciones por reorganización. Ministros y Presidentes de OOAA (con informe de la Intervención Delegada): dentro del programa o del servicio. Ministro de Hacienda: el resto.","Principio excepcionado":"Especialidad cualitativa (carácter vinculante)."}},
+ {g:"Herramientas",n:"Fondo de Contingencia",norm:"Art. 50 LGP · art. 31 LO 2/2012 · sección 35 · capítulo 5",def:"Dotación para necesidades inaplazables y no discrecionales sin crédito suficiente.",
+  f:{"Cuantía":"2 % de los gastos no financieros, excluida la financiación de CCAA y EELL.","Solo financia":"Ampliaciones, créditos extraordinarios y suplementos, e incorporaciones. Nunca decisiones discrecionales sin cobertura.","Aprobación":"Consejo de Ministros, a propuesta de Hacienda, antes de autorizar la modificación. Informe trimestral a las Cortes.","Remanente":"No se incorpora a ejercicios posteriores. No se imputan gastos al capítulo 5."},
+  warn:"Tu esquema dice que las modificaciones se financian «con baja en otras aplicaciones o con cargo al Fondo». Eso vale para el Estado; en OOAA y SS también cuentan el remanente de tesorería y los mayores ingresos, y en las financieras y el MRR, la Deuda Pública."},
+ {g:"Herramientas",n:"Anticipo de Tesorería",norm:"Art. 60 LGP",def:"Adelanto excepcional de fondos para gastos inaplazables mientras se tramita un crédito extraordinario o suplemento.",
+  f:{"Quién":"El Gobierno, a propuesta del Ministro de Economía.","Límite":"1 % de los créditos autorizados al Estado por la LPGE, cada ejercicio.","Supuestos":"a) Expediente iniciado con dictamen favorable del Consejo de Estado · b) Ley promulgada que crea obligaciones que exigen crédito.","Si las Cortes no aprueban":"El Gobierno, a propuesta de Hacienda, lo cancela con cargo a los créditos que causen menos trastornos."}},
+ {g:"Herramientas",n:"Gastos plurianuales",norm:"Arts. 47, 47 bis y 48 LGP",def:"Compromisos que se extienden a ejercicios posteriores. No modifican créditos.",
+  f:{"Límites":"Hasta 4 ejercicios: 70 % · 60 % · 50 % · 50 % del crédito inicial. Obras: retención adicional del 10 % de la adjudicación.","Excluidos":"Deuda y arrendamientos de inmuebles (LPGE 2023: 10 anualidades al 100 %).","Excepción":"El Gobierno puede modificar porcentajes y anualidades o autorizar compromisos sin crédito inicial.","Prohibido":"Para subvenciones nominativas."}},
+ {g:"Procedimiento",n:"Tramitación y documentos MC",norm:"Orden HFP/147/2022 · Orden de 1-2-1996",def:"Procedimiento en cuatro fases y registro contable de la modificación.",
+  f:{"Fases":"Iniciación (centro gestor → Oficina Presupuestaria) · tramitación (según el órgano) · resolución motivada · instrumentación (MC).","Expediente":"Memoria (clase, base legal, estudio económico, efectos futuros y financiación); informes de la Intervención Delegada y de la Oficina Presupuestaria; certificado de existencia de crédito; en el MRR, informe de la DG del Plan.","Documentos MC":"030 extraordinario · 040 suplemento · 050 ampliación · 060/061 transferencia +/− · 070 incorporación · 080 generación · 090 baja · 095 aumento de rectificaciones. Los autoriza el DG de Presupuestos.","Financiación con baja":"Retención previa y dos MC: uno positivo y otro negativo."}}
+];
+
+const SECC={"01":"Casa de S.M. el Rey","02":"Cortes Generales","03":"Tribunal de Cuentas","04":"Tribunal Constitucional","05":"Consejo de Estado","06":"Deuda Pública","07":"Clases Pasivas","08":"Consejo General del Poder Judicial","09":"Aportaciones al mutualismo administrativo","10":"Contratación centralizada","12":"M.º de Asuntos Exteriores, UE y Cooperación","13":"M.º de Justicia","14":"M.º de Defensa","15":"M.º de Hacienda y Función Pública","16":"M.º del Interior","17":"M.º de Transportes, Movilidad y Agenda Urbana","18":"M.º de Educación y Formación Profesional","19":"M.º de Trabajo y Economía Social","20":"M.º de Industria, Comercio y Turismo","21":"M.º de Agricultura, Pesca y Alimentación","22":"M.º de Política Territorial","23":"M.º para la Transición Ecológica y el Reto Demográfico","24":"M.º de Cultura y Deporte","25":"M.º de la Presidencia, Relaciones con las Cortes y Memoria Democrática","26":"M.º de Sanidad","27":"M.º de Asuntos Económicos y Transformación Digital","28":"M.º de Ciencia e Innovación","29":"M.º de Derechos Sociales y Agenda 2030","30":"M.º de Igualdad","31":"M.º de Consumo","32":"M.º de Inclusión, Seguridad Social y Migraciones","33":"M.º de Universidades","34":"Relaciones financieras con la UE","35":"Fondo de Contingencia","36":"Fondos de Compensación Interterritorial","37":"Otras relaciones financieras con Entes Territoriales","38":"Sistemas de financiación de Entes Territoriales"};
+const ORGX={"15.07":"Dirección General de Tributos","15.101":"Instituto de Estudios Fiscales (OA)","15.302":"Agencia Estatal de Administración Tributaria","28.107":"Instituto de Salud Carlos III","27.303":"Agencia Estatal de Investigación","23.112":"Instituto para la Transición Justa","29.101":"Instituto de la Juventud","02.02":"Congreso de los Diputados","02.03":"Senado"};
+const AREA={"1":"Servicios públicos básicos","2":"Actuaciones de protección y promoción social","3":"Producción de bienes públicos de carácter preferente","4":"Actuaciones de carácter económico","9":"Actuaciones de carácter general","0":"Transferencias internas"};
+const POL={"11":"Justicia","12":"Defensa","13":"Seguridad ciudadana e Instituciones Penitenciarias","14":"Política exterior","21":"Pensiones","22":"Otras prestaciones económicas","23":"Servicios sociales y promoción social","24":"Fomento del empleo","25":"Desempleo","26":"Acceso a la vivienda y fomento de la edificación","29":"Gestión y administración de la Inclusión, de la Seguridad Social y de la Migración","31":"Sanidad","32":"Educación","33":"Cultura","41":"Agricultura, pesca y alimentación","42":"Industria y energía","43":"Comercio, turismo y pymes","44":"Subvenciones al transporte","45":"Infraestructuras y ecosistemas resilientes","46":"Investigación, desarrollo, innovación y digitalización","49":"Otras actuaciones de carácter económico","91":"Órganos constitucionales, Gobierno y otros","92":"Servicios de carácter general","93":"Administración financiera y tributaria","94":"Transferencias a otras Administraciones Públicas","95":"Deuda pública","00":"Transferencias y libramientos internos"};
+const CAPG={"1":"Gastos de personal","2":"Gastos corrientes en bienes y servicios","3":"Gastos financieros","4":"Transferencias corrientes","5":"Fondo de Contingencia y otros imprevistos","6":"Inversiones reales","7":"Transferencias de capital","8":"Activos financieros","9":"Pasivos financieros"};
+const ARTG={"10":"Altos cargos","11":"Personal eventual","12":"Funcionarios","13":"Laborales","14":"Otro personal","15":"Incentivos al rendimiento","16":"Cuotas, prestaciones y gastos sociales a cargo del empleador","19":"Gastos de personal. MRR","20":"Arrendamientos y cánones","21":"Reparación, mantenimiento y conservación","22":"Material, suministros y otros","23":"Indemnizaciones por razón del servicio","24":"Gastos de publicaciones","25":"Conciertos de asistencia sanitaria","27":"Compras, suministros y otros gastos relacionados con la actividad","29":"Gastos corrientes en bienes y servicios. MRR","60":"Inversión nueva en infraestructuras y bienes de uso general","61":"Inversión de reposición en infraestructuras y bienes de uso general","62":"Inversión nueva asociada al funcionamiento operativo de los servicios","63":"Inversión de reposición asociada al funcionamiento operativo","64":"Gastos de inversión de carácter inmaterial","65":"Inversiones militares en infraestructura y otros bienes","66":"Inversiones militares asociadas al funcionamiento de los servicios","67":"Gastos militares de inversiones de carácter inmaterial","69":"Inversiones reales. MRR"};
+["40","41","42","43","44","45","46","47","48","49"].forEach((a,i)=>{const d=["A la Administración del Estado","A organismos autónomos","A la Seguridad Social","A entidades del sector público administrativo estatal con presupuesto limitativo","A sociedades, EPE, fundaciones y resto del sector público","A Comunidades Autónomas","A Entidades Locales","A empresas privadas","A familias e instituciones sin fines de lucro","Al exterior"][i];ARTG[a]=d;ARTG[String(70+i)]=d});
+const CONC={"120":"Retribuciones básicas","150":"Productividad","151":"Gratificaciones","153":"Complemento de dedicación especial","162":"Gastos sociales del personal","202":"Arrendamientos de edificios y otras construcciones","220":"Material de oficina","221":"Suministros","225":"Tributos","227":"Trabajos realizados por otras empresas y profesionales","228":"Gastos del SNS por la emergencia COVID-19"};
+const PROGX={"453C":"Conservación y explotación de carreteras","32SB":"Transformación digital de la educación (C19.I02)","000X":"Transferencias y libramientos internos","465A":"Investigación sanitaria","463B":"Fomento y coordinación de la investigación científica y técnica","112A":"(Justicia)","231A":"(Plan Nacional sobre Drogas)","281M":"(Patrimonio Sindical Acumulado)"};
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const eur=x=>(Math.round(x*100)/100).toFixed(2).replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €";
+  /* --- Mapa de modificaciones --- */
+  (function(){
+    const pills=document.getElementById("md-pills"),card=document.getElementById("md-card");if(!pills)return;
+    let html="",last="";
+    MD.forEach((s,i)=>{if(s.g!==last){html+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}
+      html+=`<button class="sit-pill${s.warn?" warn":""}${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});
+    pills.innerHTML=html;
+    function show(i){const s=MD[i];
+      card.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div>
+      <div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>
+      ${s.warn?`<div class="note sit-warn"><span>⚠️</span><span>${e(s.warn)}</span></div>`:""}`;
+      card.style.animation="none";card.offsetHeight;card.style.animation="";
+      pills.querySelectorAll(".sit-pill").forEach(b=>b.classList.toggle("on",+b.dataset.i===i));}
+    pills.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(b){show(+b.dataset.i);if(innerWidth<720)card.scrollIntoView({behavior:"smooth",block:"start"})}});
+    show(0);
+  })();
+
+  /* --- Decodificador de aplicaciones --- */
+  (function(){
+    const inp=document.getElementById("ap-in");if(!inp)return;
+    const chips=document.getElementById("ap-chips"),t=document.getElementById("ap-t"),ex=document.getElementById("ap-ex");
+    const EX=["16.01.142B.220.00","22.101.921O.120.01","18.50.32SB.19","15.07.932M.227","28.107.465A.7","26.18.231A.227.11","19.01.281M.628"];
+    ex.innerHTML="Ejemplos: "+EX.map(c=>`<button class="btn btn-g btn-sm" data-c="${c}">${c}</button>`).join("");
+    ex.addEventListener("click",ev=>{const b=ev.target.closest("[data-c]");if(b){inp.value=b.dataset.c;run()}});
+    const ABC="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    function row(k,c,v){return `<tr><td data-l="Nivel"><strong>${e(k)}</strong></td><td data-l="Código">${e(c)}</td><td data-l="Significado">${v}</td></tr>`}
+    function run(){
+      let raw=inp.value.toUpperCase().trim().replace(/\s*C\d{1,2}\s*\.\s*[IR]\d{1,2}\s*/g,".").replace(/(\d{3})\s+([A-ZÑ])(?![A-ZÑ])/g,"$1$2").replace(/\s+/g,".").replace(/\.{2,}/g,".").replace(/^\.|\.$/g,"");
+      const m=raw.match(/^(\d{2})\.(\d{2,3})\.(\d{2}[A-ZÑ]{2}|\d{3}[A-ZÑ])(?:\.(\d{1,3}))?(?:\.(\d{2}))?$/);
+      if(!m){chips.innerHTML="";t.innerHTML=`<tr><td>Formato no reconocido. Prueba con <strong>sección.servicio.programa.económica</strong>, por ejemplo 16.01.142B.220.00.</td></tr>`;return}
+      const [,sec,org,prog,eco,sub]=m;const prtr=/^\d{2}[A-ZÑ]{2}$/.test(prog);
+      chips.innerHTML=`<span class="ap-chip o">${sec}.${org}</span><span class="ap-chip p">${prog}</span>`+(eco?`<span class="ap-chip e">${eco}${sub?"."+sub:""}</span>`:"");
+      let h=`<tr><th>Nivel</th><th>Código</th><th>Significado</th></tr>`;
+      h+=row("Sección",sec,e(SECC[sec]||"Sección no incluida en la lista de la LPGE 2023"));
+      const ok=sec+"."+org;
+      if(org.length===2)h+=row("Servicio",ok,org==="50"?"Servicio 50 «Mecanismo de Recuperación y Resiliencia»":org==="51"?"Servicio 51 «REACT-EU»":e(ORGX[ok]||"Centro gestor del Estado (servicio): 2 dígitos tras la sección"));
+      else h+=row("Organismo",ok,e(ORGX[ok]||"Organismo público adscrito a la sección: 3 dígitos tras ella (OA, agencia o entidad con presupuesto limitativo)"));
+      const a=prog[0],p=prog.slice(0,2);
+      h+=row("Área de gasto",a,e(AREA[a]||"—"));
+      h+=row("Política de gasto",p,e(POL[p]||"—"));
+      if(prtr){const cl=prog[2],il=prog[3];const comp=cl==="Ñ"?31:ABC.indexOf(cl)+1;
+        const inv=ABC.indexOf(il)<13?"Inversión "+(ABC.indexOf(il)+1):{R:"Reforma 1",S:"Reforma 2",T:"Reforma 3",U:"Reforma 4",V:"Reforma 5",W:"Reforma 6",X:"Reforma 7",Y:"Reforma 8",Z:"Reforma 9",P:"Reforma 10",Q:"Reforma 11"}[il]||"—";
+        h+=row("Grupo de programas (PRTR)",prog.slice(0,3),`Letra <strong>${cl}</strong> = componente <strong>C${comp}</strong> del Plan`);
+        h+=row("Programa (PRTR)",prog,`Letra <strong>${il}</strong> = <strong>${inv}</strong> del componente${PROGX[prog]?" · "+e(PROGX[prog]):""}`);
+      }else{const L=prog[3],fin=L<="L";
+        h+=row("Grupo de programas",prog.slice(0,3),"Tercer dígito: grupo dentro de la política");
+        h+=row("Programa",prog,`${PROGX[prog]?e(PROGX[prog])+" · ":""}Letra <strong>${L}</strong>: programa <strong>${prog==="000X"?"de transferencias internas":fin?"finalista (A-L)":"instrumental o de gestión (M-Z)"}</strong>`);}
+      if(eco){const c=eco[0];h+=row("Capítulo",c,e(CAPG[c]||"—"));
+        if(eco.length>=2){const ar=eco.slice(0,2);h+=row("Artículo",ar,e(ARTG[ar]||"Artículo del capítulo "+c));}
+        if(eco.length===3)h+=row("Concepto",eco,e(CONC[eco]||"Concepto dentro del artículo"));
+        if(sub)h+=row("Subconcepto",eco+"."+sub,"Último nivel de desagregación");
+        const lvl=sec==="06"?"":(org.length===2?(c==="1"||c==="2"?"artículo":c==="6"?"capítulo":"concepto"):(c==="1"||c==="2"||c==="6"?"capítulo":"concepto"));
+        if(lvl)h+=`<tr><td colspan="3">📌 Vinculación general: en ${org.length===2?"el presupuesto del Estado (art. 43 LGP)":"un organismo (art. 44 LGP)"}, este crédito vincula a nivel de <strong>${lvl}</strong>, salvo que esté entre los especificados a su propio nivel (protocolarios, arrendamientos, ampliables, nominativos, extraordinarios o los de la LPGE).</td></tr>`;}
+      t.innerHTML=h;
+    }
+    inp.addEventListener("input",run);run();
+  })();
+
+  /* --- Comprobador de transferencias --- */
+  (function(){
+    const o=document.getElementById("tr-o");if(!o)return;
+    const d=document.getElementById("tr-d"),a=document.getElementById("tr-a"),x=document.getElementById("tr-x"),m=document.getElementById("tr-m"),s=document.getElementById("tr-s"),out=document.getElementById("tr-out");
+    const opts=[1,2,3,4,6,7,8,9].map(c=>`<option value="${c}">Cap. ${c} · ${CAPG[c]}</option>`).join("");
+    o.innerHTML=opts;d.innerHTML=opts;o.value="2";d.value="6";
+    const grp=c=>c<=4?"corriente":c<=7?"capital":"financiera";
+    function run(){
+      const co=+o.value,cd=+d.value,amb=a.value,cx=x.value;
+      const exc=["reorg","conv","php","imp"].includes(cx);
+      const bad=[],notes=[];
+      if(co===cd&&amb==="prog")notes.push("Transferencia dentro del mismo capítulo.");
+      if(grp(co)==="financiera"&&grp(cd)!=="financiera")bad.push(["a","De operaciones financieras (cap. 8-9) al resto de créditos."]);
+      if(grp(co)==="capital"&&grp(cd)==="corriente")bad.push(["a2","De operaciones de capital (cap. 6-7) a corrientes (cap. 1-4)."]);
+      if(amb==="dist"&&cx!=="cc")bad.push(["b","Entre créditos de distintas secciones presupuestarias."]);
+      if(m.checked)bad.push(["c","Minora un crédito extraordinario, suplementado o ampliado en el ejercicio."]);
+      let ok=exc?true:bad.length===0;
+      let html="";
+      if(s.checked){ok=false;html+=`<b class="big">❌ No permitida</b>Las transferencias nunca pueden crear ni aumentar subvenciones nominativas, salvo conforme a la Ley General de Subvenciones o si son a otros entes del sector público.`;}
+      else if(ok){
+        html+=`<b class="big">✅ Permitida</b>`;
+        if(exc&&bad.length)html+=`Habría chocado con ${bad.length>1?"estas restricciones":"esta restricción"}, pero no se aplican a la causa elegida (art. 52.2 LGP):<ul>${bad.map(b=>`<li>${e(b[1])}</li>`).join("")}</ul>`;
+        else html+="No choca con ninguna restricción del art. 52.1 LGP.";
+      }else{
+        html+=`<b class="big">❌ No permitida por el art. 52.1 LGP</b><ul>${bad.map(b=>`<li>${e(b[1])}</li>`).join("")}</ul>`;
+        if(bad.length===1&&bad[0][0]==="a2")html+=`<p class="tool-note">Salvedad de la LPGE 2023 (prorrogada): el <strong>Ministro de Hacienda</strong> puede autorizar transferencias de capital a corrientes en el Estado, los OOAA y las entidades limitativas.</p>`;
+        if(bad.some(b=>b[0]==="b"))html+=`<p class="tool-note">Salvedad de la LPGE 2023: el <strong>Gobierno</strong> puede autorizar transferencias entre secciones para atender necesidades ineludibles.</p>`;
+      }
+      if(ok&&!s.checked){
+        let who;
+        if(amb==="dist"&&cx==="reorg")who="<strong>Consejo de Ministros</strong>, a propuesta de Hacienda y a iniciativa de los Ministros afectados (art. 61 LGP).";
+        else if(co===1&&cd===1&&amb!=="dist")who="El <strong>Ministro del departamento</strong> o el Presidente o Director del OA (LPGE 2023), salvo incentivos al rendimiento y gastos sociales.";
+        else if(amb==="prog"&&co!==1&&cd!==1)who="El <strong>Ministro del departamento</strong> (o el Presidente o Director del OA), previo informe favorable de la <strong>Intervención Delegada</strong> (art. 63 LGP). Puede crear créditos nuevos de los capítulos 2 y 6 si están codificados, sin aumentar los del art. 43.2.";
+        else who="El <strong>Ministro de Hacienda</strong>: competencia residual del art. 62 LGP.";
+        html+=`<p style="margin-top:8px">👤 <strong>Autoriza:</strong> ${who}</p>`;
+      }
+      if(notes.length)html+=`<p class="tool-note">${notes.join(" ")}</p>`;
+      out.className="verdict "+(ok&&!s.checked?"ok":"ko");out.innerHTML=html;
+    }
+    [o,d,a,x,m,s].forEach(el=>el.addEventListener("input",run));run();
+  })();
+
+  /* --- Calculadora de plurianuales --- */
+  (function(){
+    const c=document.getElementById("pl-c");if(!c)return;
+    const ys=[1,2,3,4].map(i=>document.getElementById("pl-"+i)),ob=document.getElementById("pl-o"),ad=document.getElementById("pl-a"),fi=document.getElementById("pl-f"),t=document.getElementById("pl-t"),out=document.getElementById("pl-out");
+    const P=[70,60,50,50];
+    function run(){
+      const C=Math.max(0,+c.value||0),ret=ob.checked?Math.max(0,+ad.value||0)*0.1:0,F=+fi.value;
+      let h=`<tr><th>Año</th><th>Límite</th><th>Previsto</th><th>Retención 10 %</th><th>Total</th><th>Estado</th></tr>`,bad=0;
+      ys.forEach((y,i)=>{const lim=C*P[i]/100,v=Math.max(0,+y.value||0),r=(ob.checked&&F===i+1)?ret:0,tot=v+r,okk=tot<=lim+1e-6;if(!okk)bad++;
+        h+=`<tr><td data-l="Año">+${i+1} (${P[i]} %)</td><td data-l="Límite">${eur(lim)}</td><td data-l="Previsto">${eur(v)}</td><td data-l="Retención">${r?eur(r):"—"}</td><td data-l="Total">${eur(tot)}</td><td data-l="Estado">${okk?"✅":"❌ excede en "+eur(tot-lim)}</td></tr>`});
+      t.innerHTML=h;
+      out.className="verdict "+(bad?"ko":"ok");
+      out.innerHTML=bad?`<b class="big">❌ Supera los límites del art. 47.2 en ${bad} ${bad>1?"anualidades":"anualidad"}</b>Opciones: reprogramar las anualidades o pedir al <strong>Gobierno</strong> que modifique los porcentajes (propuesta de Hacienda e informe de la DG de Presupuestos, art. 47.3).`:
+        `<b class="big">✅ Dentro de los límites del art. 47</b>Recuerda que la ejecución debe iniciarse en el propio ejercicio y que el compromiso se contabiliza aparte. La Deuda y los arrendamientos no tienen estos límites.`;
+    }
+    [c,...ys,ob,ad,fi].forEach(el=>el.addEventListener("input",run));run();
+  })();
+
+  /* --- Competencia en créditos extraordinarios de OOAA --- */
+  (function(){
+    const c=document.getElementById("oa-c");if(!c)return;
+    const i=document.getElementById("oa-i"),p=document.getElementById("oa-p"),an=document.getElementById("oa-a"),out=document.getElementById("oa-out");
+    function run(){
+      const C=Math.max(0,+c.value||0),I=Math.max(0,+i.value||0);
+      if(an.checked){out.className="verdict ko";out.innerHTML=`<b class="big">🏛️ Proyecto de ley a las Cortes Generales</b>Para obligaciones de ejercicios anteriores sin crédito anulado se sigue el procedimiento del art. 55 LGP (art. 56.7).`;return}
+      const pct=C>0?I/C*100:null;
+      const pctTxt=pct===null?"sin crédito inicial en el capítulo: solo cuentan los límites de cuantía":`el ${pct.toFixed(2).replace(".",",")} % del capítulo`;
+      let who,why;
+      const pres=!p.checked&&I<=500000&&(pct===null||pct<=10);
+      const hac=I<=1000000&&(pct===null||pct<20);
+      if(pres){who="Presidente o Director del organismo";why="No supera el 10 % ni 500.000 € y no afecta a personal ni a créditos del art. 44.2. Da cuenta al Ministro del que depende y al de Hacienda."}
+      else if(hac){who="Ministro de Hacienda";why=(p.checked&&I<=500000&&(pct===null||pct<=10))?"Por cuantía lo autorizaría el Presidente, pero afecta a personal o al art. 44.2: esos supuestos excluidos pasan a Hacienda dentro de sus límites.":"Supera algún límite del Presidente, pero no llega al 20 % del capítulo ni supera 1.000.000 €."}
+      else{who="Consejo de Ministros";why="Alcanza el 20 % del capítulo o supera 1.000.000 €."}
+      out.className="verdict ok";
+      out.innerHTML=`<b class="big">👤 ${who}</b>Acumulado: ${eur(I)}, ${pctTxt}. ${why}<p class="tool-note">Financiación del OA: remanente de tesorería no aplicado o mayores ingresos (art. 56.2). No computan las financiadas con más aportación del Estado.</p>`;
+    }
+    [c,i,p,an].forEach(el=>el.addEventListener("input",run));run();
+  })();
+})();
+
+/* ===== Fichas ===== */
+const DATA={fichas:[
+ {p:"¿Qué integra los PGE según el art. 33.1 LGP?",r:"Los presupuestos limitativos (órganos del art. 2.3 y entidades con el régimen de especificaciones y modificaciones de la LGP) y los estimativos (sectores empresarial y fundacional, consorcios, universidades no transferidas, fondos sin personalidad y resto)."},
+ {p:"¿Qué determinan los PGE según el art. 33.2 LGP?",r:"Las obligaciones máximas de los entes limitativos, los derechos a reconocer por ellos, las operaciones de los entes estimativos, los objetivos de los gestores de programas y la estimación de los beneficios fiscales."},
+ {p:"¿Cómo se estructura el presupuesto de ingresos?",r:"Por unidades orgánicas (Estado, SS, OOAA y demás limitativos) y por categorías económicas: capítulos, artículos, conceptos y subconceptos, separando operaciones corrientes, de capital y financieras."},
+ {p:"¿Qué distingue los capítulos 1 y 2 de ingresos?",r:"Cap. 1: impuestos directos (patrimonio o renta; IRPF, Sociedades) y cotizaciones sociales. Cap. 2: impuestos indirectos (circulación de bienes o gasto de la renta; IVA, especiales)."},
+ {p:"¿Qué recogen los capítulos 8 y 9 de ingresos?",r:"Cap. 8, activos financieros: venta de activos, reintegro de préstamos concedidos y de depósitos y fianzas. Cap. 9, pasivos financieros: emisión de deuda, préstamos recibidos y depósitos y fianzas recibidos."},
+ {p:"¿Qué clasificaciones de gastos establece el art. 40 LGP?",r:"Orgánica (¿quién?), por programas (¿para qué?) y económica (¿en qué?). Además, los créditos se identifican funcionalmente. La orden añade la clasificación territorial de las inversiones."},
+ {p:"¿Cómo se codifican los servicios y los organismos autónomos?",r:"Los servicios, con 2 dígitos tras la sección (15.07, DG de Tributos). Los OOAA y demás entidades, con 3 dígitos tras la sección a la que se adscriben (15.101, IEF)."},
+ {p:"¿Qué es el servicio 50?",r:"El servicio «Mecanismo de Recuperación y Resiliencia» de cada Ministerio, donde se recogían los créditos de las actuaciones elegibles del PRTR."},
+ {p:"¿Cuáles son las áreas de gasto?",r:"1 Servicios públicos básicos · 2 Actuaciones de protección y promoción social · 3 Producción de bienes públicos de carácter preferente · 4 Actuaciones de carácter económico · 9 Actuaciones de carácter general."},
+ {p:"¿Qué estructura tiene la clasificación por programas?",r:"Área (1 dígito) → política (2) → grupo de programas (3) → programa (3 dígitos y una letra). La LPGE 2023 tiene unas 5 áreas, 27 políticas y 400 programas."},
+ {p:"¿Qué son los programas finalistas y los instrumentales?",r:"Finalistas (A-L): objetivos cuantificables e indicadores medibles. Instrumentales o de apoyo y de gestión (M-Z): administración general, actividades sin objetivos cuantificables o apoyo a un finalista."},
+ {p:"¿Cómo se codificaban los programas del PRTR?",r:"El 3.er carácter identifica el componente (A = C1 … Z = C26; Ñ = C31) y el 4.º la inversión (A-M = I1-I13) o la reforma (R-Z = R1-R9; P = R10; Q = R11). Ejemplo: 32SB, C19.I02."},
+ {p:"¿Qué artículos económicos se usaban para el MRR?",r:"El 19 en el capítulo 1, el 29 en el capítulo 2 y el 69 en el capítulo 6. En los capítulos 8 y 9, conceptos específicos del anexo II de la orden."},
+ {p:"¿Qué gastos van al capítulo 2?",r:"Bienes y servicios corrientes que no aumentan el capital: fungibles, de duración inferior al ejercicio, no inventariables y reiterativos; también los inmateriales no amortizables y las indemnizaciones por razón del servicio (art. 23)."},
+ {p:"¿Qué gastos van al capítulo 6?",r:"Inversiones reales: creación o adquisición de bienes de capital, bienes inventariables para el funcionamiento y gastos inmateriales amortizables."},
+ {p:"¿Qué es el Fondo de Contingencia?",r:"Art. 50 LGP: el 2 % de los gastos no financieros (sin la financiación de CCAA y EELL), para necesidades inaplazables y no discrecionales. Solo financia ampliaciones, créditos extraordinarios y suplementos, e incorporaciones."},
+ {p:"¿Quién aprueba la aplicación del Fondo de Contingencia?",r:"El Consejo de Ministros, a propuesta de Hacienda, antes de autorizar las modificaciones. El Gobierno informa trimestralmente a las Cortes y su remanente no se incorpora."},
+ {p:"¿Qué es una aplicación presupuestaria?",r:"La combinación de las clasificaciones orgánica, por programas y económica que identifica un crédito concreto. Ejemplo: 16.01.142B.220.00 (sección 16, servicio 01, programa 142B, subconcepto 220.00)."},
+ {p:"¿Qué es un crédito presupuestario (art. 35 LGP)?",r:"Cada asignación individualizada de gasto puesta a disposición de los centros gestores para cubrir las necesidades para las que se aprobó, especificada por las clasificaciones orgánica, por programas y económica."},
+ {p:"¿Qué es un programa de gasto del presupuesto anual?",r:"El conjunto de créditos que, para lograr sus objetivos anuales, se ponen a disposición del gestor responsable: la concreción anual del programa plurianual."},
+ {p:"¿Qué dice el art. 46 LGP sobre el carácter limitativo?",r:"No pueden adquirirse compromisos ni obligaciones por encima de los créditos; son nulos de pleno derecho los actos y disposiciones de rango inferior a ley que lo incumplan, sin perjuicio de la responsabilidad del Título VII."},
+ {p:"¿Qué se imputa al ejercicio presupuestario (art. 34)?",r:"Los derechos liquidados en él, cualquiera que sea su origen, y las obligaciones reconocidas hasta fin de diciembre por gastos realizados en el ejercicio."},
+ {p:"¿Qué obligaciones de ejercicios anteriores pueden imputarse al corriente?",r:"Atrasos de personal, resoluciones judiciales, obligaciones con crédito anulado en su ejercicio y las que tengan un crédito específico dotado. El resto requiere una norma con rango de ley."},
+ {p:"¿A qué nivel se especifican los créditos del Estado?",r:"A nivel de concepto, salvo los de personal y de bienes y servicios (artículo) y las inversiones reales (capítulo) (art. 43 LGP)."},
+ {p:"¿A qué nivel se especifican los créditos de los OOAA?",r:"A nivel de concepto, salvo los de personal, bienes y servicios e inversiones reales, que se especifican a nivel de capítulo (art. 44 LGP). Los de la SS, por grupo de programas."},
+ {p:"¿Qué créditos vinculan siempre a su propio nivel?",r:"Los de atenciones protocolarias y representativas (y gastos reservados en el Estado), los de arrendamientos de edificios, los ampliables, los que identifican perceptor (salvo al exterior), los que fije la LPGE y los créditos extraordinarios del ejercicio."},
+ {p:"¿Qué créditos declara vinculantes la LPGE 2023?",r:"Los de ejercicios anteriores; 150, 151, 153 y art. 15; 162.00, 162.01 y 162.04; 221.09, 225.02 y 202; los del servicio 50 por su importe global; y los de la Presidencia española de la UE (178, 278 y 688)."},
+ {p:"¿Qué son los gastos plurianuales?",r:"Compromisos que se extienden a ejercicios posteriores al de su autorización. No son una modificación presupuestaria: dejan intactos los créditos."},
+ {p:"¿Qué límites tiene el art. 47 LGP?",r:"La ejecución debe empezar en el propio ejercicio; como máximo 4 ejercicios posteriores; y sobre el crédito inicial: 70 % el primero, 60 % el segundo y 50 % el tercero y el cuarto."},
+ {p:"¿Qué retención adicional exigen los contratos de obra plurianuales?",r:"El 10 % del importe de adjudicación, salvo en los de abono total, en el ejercicio en que acaba la obra o en el siguiente. Computa dentro de los porcentajes."},
+ {p:"¿Qué compromisos quedan fuera de los límites del art. 47?",r:"La carga financiera de la Deuda y los arrendamientos de inmuebles (incluidos los mixtos). La LPGE 2023 limita los arrendamientos a 10 anualidades al 100 %."},
+ {p:"¿Quién puede excepcionar los límites de los gastos plurianuales?",r:"El Gobierno, en casos justificados, a propuesta de Hacienda (a iniciativa del Ministerio) y con informe de la DG de Presupuestos. Puede modificar porcentajes, ampliar anualidades o autorizar compromisos sin crédito inicial."},
+ {p:"¿Qué prevé el art. 47 bis si una LPGE no dota crédito suficiente?",r:"Comunicarlo al tercero, reprogramar las anualidades y, si no es posible, resolver el negocio fijando compensaciones."},
+ {p:"¿Qué dice el art. 48 sobre los inmuebles con pago aplazado?",r:"Si superan 6 millones €, el desembolso inicial debe ser al menos del 25 % y el resto puede ir en los 4 ejercicios siguientes, con los porcentajes del art. 47."},
+ {p:"¿Qué regla del RDL 36/2020 afectaba a los plurianuales del MRR?",r:"Hasta 3 ejercicios posteriores, nunca más allá de 2026, con límites del 70, 60 y 50 %, e informes de la DG de Presupuestos y de la DG del Plan."},
+ {p:"¿Qué modificaciones enumera el art. 51 LGP?",r:"Transferencias, generaciones, ampliaciones, créditos extraordinarios y suplementos de crédito, e incorporaciones."},
+ {p:"¿Qué principio excepciona cada modificación?",r:"Especialidad cuantitativa: extraordinarios, suplementos, ampliaciones y generaciones. Cualitativa: transferencias. Temporal: incorporaciones."},
+ {p:"¿Qué diferencia hay entre crédito extraordinario y suplemento?",r:"Ambos son para un gasto inaplazable. El extraordinario, cuando no hay crédito; el suplemento, cuando hay crédito pero es insuficiente y no ampliable."},
+ {p:"¿Cuándo se necesita una ley para un crédito extraordinario del Estado?",r:"Para obligaciones de ejercicios anteriores sin crédito anulado; para obligaciones del ejercicio financiadas con baja en otros créditos; y si afecta a operaciones financieras. Con informe de la DG de Presupuestos y dictamen del Consejo de Estado."},
+ {p:"¿Cuándo autoriza el Consejo de Ministros un crédito extraordinario del Estado?",r:"Cuando es para obligaciones del ejercicio (o de anteriores con crédito anulado) y se financia con el Fondo de Contingencia."},
+ {p:"¿Cómo se financian los créditos extraordinarios de los OOAA?",r:"Solo con el remanente de tesorería del ejercicio anterior no aplicado o con mayores ingresos. Si exige modificar el presupuesto del Estado, ambas modificaciones se acuerdan juntas."},
+ {p:"¿Quién autoriza los créditos extraordinarios de los OOAA?",r:"El Presidente o Director hasta el 10 % del capítulo y 500.000 € (sin personal ni art. 44.2); el Ministro de Hacienda por debajo del 20 % y de 1.000.000 €; el Consejo de Ministros en el resto."},
+ {p:"¿Qué créditos son ampliables según el art. 54 LGP?",r:"Excepcionalmente: Clases Pasivas, obligaciones derivadas de normas con rango de ley relacionadas taxativamente, y la Deuda del Estado y de los OOAA. En la SS, pensiones, IT, IMV, Fondo de Reserva, etc."},
+ {p:"¿Qué ampliables recoge la LPGE 2023 para todas las secciones?",r:"Cuotas de la Seguridad Social y aportación al mutualismo; transferencias de OOAA al Estado hasta el remanente; sentencias firmes; y medidas por la guerra de Ucrania."},
+ {p:"¿Quién autoriza las ampliaciones de crédito?",r:"El Ministro de Hacienda (Estado y OOAA); los Presidentes de las entidades de la SS, las suyas. Por la LPGE 2023, Ministros y Presidentes de OOAA, las del capítulo 1 financiadas con el mismo capítulo."},
+ {p:"¿Qué ingresos pueden generar crédito (art. 53)?",r:"Aportaciones para financiar conjuntamente, ventas de bienes y servicios, enajenación de inmovilizado, reembolso de préstamos, ingresos legalmente afectados y reintegros de pagos indebidos del corriente."},
+ {p:"¿Cuándo puede hacerse una generación de crédito?",r:"Cuando se ha producido el ingreso. Excepcionalmente, con ingresos del último trimestre del año anterior. En OOAA y SS, en el supuesto a), basta el reconocimiento del derecho o un compromiso firme."},
+ {p:"¿Quién autoriza las generaciones de crédito?",r:"Ministros: a), d) y f). Ministro de Hacienda: c) siempre, y b) y e) en el Estado. Presidentes de OOAA: todas salvo c). Presidentes de entidades de la SS: todas salvo c)."},
+ {p:"¿Qué son las transferencias de crédito?",r:"Traspasos de dotaciones entre créditos, incluso creando créditos nuevos, sin alterar el total. Excepcionan la especialidad cualitativa."},
+ {p:"¿Qué restricciones tienen las transferencias (art. 52)?",r:"No de financieras al resto ni de capital a corrientes; no entre secciones (salvo contratación centralizada); no minorar créditos extraordinarios, suplementados o ampliados; en la SS, los ampliables solo para otros ampliables."},
+ {p:"¿Cuándo no se aplican esas restricciones?",r:"En reorganizaciones administrativas o traspasos a CCAA, convenios entre departamentos u organismos, la Ley del Patrimonio Histórico Español y las transferencias desde el programa de imprevistos."},
+ {p:"¿Quién autoriza las transferencias de crédito?",r:"El Consejo de Ministros, entre secciones por reorganización (art. 61). Ministros y Presidentes de OOAA, con informe de la Intervención Delegada, dentro de un programa o del mismo servicio (art. 63). El Ministro de Hacienda, el resto (art. 62)."},
+ {p:"¿Cuándo pueden incorporarse remanentes (art. 58)?",r:"a) Si lo dispone una norma con rango de ley · b) Generaciones a) y e) · c) Retenciones para extraordinarios o suplementos con anticipo de tesorería y ley pendiente · d) Extraordinarios y suplementos concedidos en el último mes."},
+ {p:"¿Qué restricción impone la LPGE 2023 a las incorporaciones?",r:"Deja sin efecto el art. 58.b): no se incorporan los remanentes de generaciones del ejercicio anterior, salvo los del Mecanismo de Recuperación y Resiliencia."},
+ {p:"¿Cómo se financian las incorporaciones y quién las autoriza?",r:"Estado: Fondo de Contingencia o baja en créditos no financieros. OOAA y SS: solo remanente de tesorería. MRR: Deuda Pública. Las autoriza el Ministro de Hacienda."},
+ {p:"¿Qué son los anticipos de Tesorería?",r:"Art. 60 LGP: los concede excepcionalmente el Gobierno, a propuesta de Economía, para gastos inaplazables, con un límite del 1 % de los créditos del Estado. Supuestos: dictamen favorable del Consejo de Estado o ley ya promulgada."},
+ {p:"¿Qué pasa con el anticipo si las Cortes no aprueban la ley?",r:"El Gobierno, a propuesta de Hacienda, lo cancela con cargo a los créditos del departamento u OA cuya minoración cause menos trastornos al servicio."},
+ {p:"¿Qué documentos MC hay?",r:"030 crédito extraordinario · 040 suplemento · 050 ampliación · 060/061 transferencia positiva/negativa · 070 incorporación · 080 generación · 090 baja por anulación · 095 aumento de rectificaciones. Los autoriza el DG de Presupuestos."},
+ {p:"¿Qué fases tiene el procedimiento de las modificaciones?",r:"Iniciación (centro gestor y Oficina Presupuestaria, con memoria e informes), tramitación según el órgano, resolución motivada e instrumentación contable mediante el documento MC (Orden HFP/147/2022)."},
+ {p:"¿Para qué sirve el programa 000X?",r:"Es el programa «Transferencias y libramientos internos»: canaliza las transferencias y libramientos de los arts. 40-43 y 70-73 y de ciertos préstamos, y las convocatorias a OOAA y entidades limitativas."}
+]};
+
+/* ===== Tests ===== */
+const T1=[
+ {q:"Según el art. 33.2 LGP, los PGE determinan las obligaciones que pueden reconocer los entes limitativos:",o:["Como mínimo.","Como máximo.","De forma orientativa.","Sin límite."],c:1,e:"Carácter limitativo."},
+ {q:"Los presupuestos de las sociedades mercantiles estatales son:",o:["Limitativos.","Estimativos.","Administrativos.","Vinculantes."],c:1,e:"Art. 33.1.b LGP."},
+ {q:"El presupuesto de ingresos se estructura por:",o:["Programas y capítulos.","Unidades orgánicas y categorías económicas.","Secciones y servicios exclusivamente.","Áreas de gasto."],c:1,e:"Orgánica y económica."},
+ {q:"El IRPF se incluye en el capítulo de ingresos:",o:["1.","2.","3.","5."],c:0,e:"Impuestos directos y cotizaciones sociales."},
+ {q:"El IVA se incluye en el capítulo de ingresos:",o:["1.","2.","3.","4."],c:1,e:"Impuestos indirectos."},
+ {q:"Las multas y los recargos se imputan al capítulo de ingresos:",o:["2.","3.","5.","6."],c:1,e:"Tasas, precios públicos y otros ingresos."},
+ {q:"Los ingresos por rentas del patrimonio y actividades de derecho privado son el capítulo:",o:["3.","4.","5.","6."],c:2,e:"Ingresos patrimoniales."},
+ {q:"La emisión de deuda pública se imputa al capítulo de ingresos:",o:["7.","8.","9.","3."],c:2,e:"Pasivos financieros."},
+ {q:"El reintegro de préstamos concedidos se imputa al capítulo de ingresos:",o:["5.","8.","9.","6."],c:1,e:"Activos financieros."},
+ {q:"Según el art. 40 LGP, los estados de gastos se estructuran por las clasificaciones:",o:["Orgánica, funcional y territorial.","Orgánica, por programas y económica.","Económica y territorial.","Por programas y funcional."],c:1,e:"La funcional es una identificación adicional."},
+ {q:"La clasificación orgánica responde a la pregunta:",o:["¿Para qué se gasta?","¿Quién gasta?","¿En qué se gasta?","¿Dónde se gasta?"],c:1,e:"La de programas, ¿para qué?; la económica, ¿en qué?"},
+ {q:"En el Estado, los servicios se identifican con:",o:["1 dígito.","2 dígitos tras la sección.","3 dígitos tras la sección.","Una letra."],c:1,e:"Ejemplo: 15.07."},
+ {q:"Los organismos autónomos se identifican con:",o:["2 dígitos.","3 dígitos tras la sección a la que están adscritos.","4 dígitos.","Una letra."],c:1,e:"Ejemplo: 15.101."},
+ {q:"La sección 06 corresponde a:",o:["Clases Pasivas.","Deuda Pública.","Fondo de Contingencia.","Consejo de Estado."],c:1,e:"La 07 es Clases Pasivas."},
+ {q:"La sección 35 corresponde a:",o:["Relaciones financieras con la UE.","Fondo de Contingencia.","Fondos de Compensación Interterritorial.","Contratación centralizada."],c:1,e:"La 34 es UE y la 36 el FCI."},
+ {q:"Los créditos del PRTR se recogían en cada Ministerio en el servicio:",o:["01.","50.","51.","99."],c:1,e:"«Mecanismo de Recuperación y Resiliencia»."},
+ {q:"En la aplicación 16.01.142B.220.00, «220» es:",o:["El programa.","El concepto.","El artículo.","El servicio."],c:1,e:"2 capítulo, 22 artículo, 220 concepto, 220.00 subconcepto."},
+ {q:"En la aplicación 22.101.921O.120.01, «101» identifica:",o:["Un servicio.","Un organismo autónomo.","Un programa.","Un concepto."],c:1,e:"3 dígitos tras la sección."},
+ {q:"La clasificación territorial se refiere a:",o:["Los ingresos tributarios.","Los proyectos de inversión por CCAA y provincias.","Los gastos de personal.","Las transferencias a EELL."],c:1,e:"Art. 37.2.f LGP."},
+ {q:"El Banco de España une a los PGE su presupuesto de:",o:["Ingresos.","Gastos de funcionamiento e inversiones.","Beneficios.","Personal exclusivamente."],c:1,e:"Ley 13/1994."}
+];
+
+const T2=[
+ {q:"La estructura de programas se organiza en:",o:["Capítulos, artículos y conceptos.","Áreas, políticas, grupos de programas y programas.","Secciones y servicios.","Componentes e inversiones."],c:1,e:"De mayor a menor."},
+ {q:"El área de gasto 9 es:",o:["Actuaciones de carácter económico.","Actuaciones de carácter general.","Servicios públicos básicos.","Deuda pública."],c:1,e:"Incluye las políticas 91 a 95."},
+ {q:"El área de gasto 2 es:",o:["Servicios públicos básicos.","Actuaciones de protección y promoción social.","Bienes públicos de carácter preferente.","Actuaciones de carácter económico."],c:1,e:"Pensiones, desempleo, etc."},
+ {q:"La política de gasto 31 es:",o:["Educación.","Sanidad.","Cultura.","Pensiones."],c:1,e:"Área 3."},
+ {q:"La política de gasto 21 es:",o:["Desempleo.","Pensiones.","Justicia.","Sanidad."],c:1,e:"Área 2."},
+ {q:"La LPGE 2023 contiene aproximadamente:",o:["50 programas y 10 políticas.","400 programas, 27 políticas y 5 áreas.","1.000 programas.","27 áreas."],c:1,e:"Dato del manual."},
+ {q:"Los programas finalistas se identifican con las letras:",o:["M a Z.","A a L.","X e Y.","Cualquiera."],c:1,e:"Objetivos cuantificables."},
+ {q:"El programa 921O es:",o:["Finalista.","Instrumental o de gestión.","Del PRTR.","De transferencias internas."],c:1,e:"La O está en el tramo M-Z."},
+ {q:"En el programa 453C, «45» es:",o:["El área.","La política de gasto.","El grupo de programas.","El servicio."],c:1,e:"Infraestructuras y ecosistemas resilientes."},
+ {q:"Puede modificar el código, nombre y contenido de los programas de gasto:",o:["Las Cortes.","La Dirección General de Presupuestos.","Cada Ministerio.","La IGAE."],c:1,e:"Por iniciativa propia o de los centros gestores."},
+ {q:"En los programas del PRTR, el tercer carácter identifica:",o:["La inversión.","El componente del Plan.","El área.","La reforma."],c:1,e:"El cuarto, la inversión o la reforma."},
+ {q:"En el programa 32SB del PRTR, la letra S corresponde al componente:",o:["C9.","C19.","C29.","C31."],c:1,e:"S es la 19.ª letra."},
+ {q:"En el PRTR, la letra Ñ como tercer carácter corresponde al componente:",o:["C27.","C31.","C14.","C26."],c:1,e:"Manual del tema."},
+ {q:"En el PRTR, la reforma 1 se identifica con la letra:",o:["A.","R.","P.","M."],c:1,e:"R-Z = R1-R9; P = R10; Q = R11."},
+ {q:"El PRTR se estructuraba en:",o:["5 ejes y 20 componentes.","4 ejes transversales, 10 políticas palanca y 31 componentes.","3 pilares.","10 ejes y 10 componentes."],c:1,e:"Con 111 reformas y 142 inversiones."},
+ {q:"NO es un eje transversal del PRTR:",o:["Transición ecológica.","Transformación digital.","Consolidación fiscal.","Igualdad de género."],c:2,e:"El cuarto es la cohesión territorial y social."},
+ {q:"En el PRTR, los créditos de gastos de personal se recogían en el artículo:",o:["12.","19.","29.","69."],c:1,e:"El 29 en el capítulo 2 y el 69 en el capítulo 6."},
+ {q:"La fecha límite para cumplir los hitos y objetivos del PRTR fue:",o:["El 31-12-2025.","El 31-8-2026.","El 31-12-2027.","Sin plazo."],c:1,e:"La última solicitud de pago se presentó el 30-9-2026."},
+ {q:"Los programas instrumentales o de gestión tienen por objeto, entre otros:",o:["Objetivos cuantificables con indicadores.","El apoyo a un programa finalista.","Las transferencias al exterior.","Las inversiones nuevas."],c:1,e:"O la administración general u otra actividad sin objetivos cuantificables."},
+ {q:"La política de gasto 95 es:",o:["Deuda pública.","Transferencias a otras AAPP.","Administración financiera y tributaria.","Servicios de carácter general."],c:0,e:"Área 9."}
+];
+
+const T3=[
+ {q:"Los créditos para operaciones corrientes son los capítulos de gasto:",o:["1 a 3.","1 a 4.","1 a 5.","6 y 7."],c:1,e:"El capítulo 5 es el Fondo de Contingencia."},
+ {q:"Las indemnizaciones por razón del servicio se imputan al capítulo:",o:["1.","2.","4.","6."],c:1,e:"Art. 23."},
+ {q:"NO es una característica de los gastos del capítulo 2:",o:["Ser fungibles.","Duración inferior al ejercicio.","Ser inventariables.","Ser reiterativos."],c:2,e:"Los inventariables van al capítulo 6."},
+ {q:"Los gastos inmateriales amortizables se imputan al capítulo:",o:["2.","4.","6.","8."],c:2,e:"Inversiones reales."},
+ {q:"Los intereses de la deuda se imputan al capítulo de gastos:",o:["3.","9.","8.","4."],c:0,e:"Gastos financieros."},
+ {q:"La amortización de deuda se imputa al capítulo de gastos:",o:["3.","8.","9.","7."],c:2,e:"Pasivos financieros."},
+ {q:"La concesión de préstamos se imputa al capítulo de gastos:",o:["4.","7.","8.","9."],c:2,e:"Activos financieros."},
+ {q:"El Fondo de Contingencia se dota con el:",o:["1 % de los créditos del Estado.","2 % del total de gastos no financieros, excluida la financiación de CCAA y EELL.","5 % del gasto de personal.","3 % del PIB."],c:1,e:"Art. 50 LGP."},
+ {q:"El Fondo de Contingencia NO puede financiar:",o:["Ampliaciones.","Créditos extraordinarios.","Incorporaciones.","Transferencias."],c:3,e:"Solo financia las tres anteriores."},
+ {q:"La aplicación del Fondo de Contingencia la aprueba:",o:["El Ministro de Hacienda.","El Consejo de Ministros, a propuesta de Hacienda.","Las Cortes.","La DG de Presupuestos."],c:1,e:"Antes de autorizar la modificación."},
+ {q:"El remanente del Fondo de Contingencia al final del ejercicio:",o:["Se incorpora.","No puede incorporarse a ejercicios posteriores.","Pasa a la Deuda.","Va al Fondo de Reserva."],c:1,e:"Esquema del tema."},
+ {q:"Las transferencias corrientes a Comunidades Autónomas se imputan al artículo:",o:["42.","45.","46.","75."],c:1,e:"El 75 es la de capital."},
+ {q:"Las transferencias de capital a familias e ISFL son el artículo:",o:["48.","78.","77.","49."],c:1,e:"El 48 es la corriente."},
+ {q:"En el capítulo 1, el artículo 12 corresponde a:",o:["Altos cargos.","Funcionarios.","Laborales.","Personal eventual."],c:1,e:"10 altos cargos, 11 eventual, 13 laborales."},
+ {q:"La inversión de reposición asociada al funcionamiento de los servicios es el artículo:",o:["60.","61.","63.","64."],c:2,e:"El 62 es la nueva."},
+ {q:"Los conceptos no tipificados de los capítulos 1, 2 y 6 los aprueba:",o:["El Consejo de Ministros.","La DG de Presupuestos.","La IGAE.","Cada Ministro."],c:1,e:"A propuesta, en su caso, de los centros gestores."},
+ {q:"Según el art. 35 LGP, un crédito presupuestario es:",o:["Un ingreso previsto.","Cada asignación individualizada de gasto puesta a disposición de los centros gestores.","Un préstamo.","Una subvención."],c:1,e:"Definición legal."},
+ {q:"Los programas presupuestarios son de carácter:",o:["Anual.","Plurianual, bajo la responsabilidad del titular del centro gestor.","Mensual.","Indefinido."],c:1,e:"El programa de gasto anual es su concreción."},
+ {q:"Si los resultados de un programa no son mensurables, su efectividad se mide con:",o:["Auditorías.","Indicadores de medición indirecta.","Encuestas.","No se mide."],c:1,e:"Art. 35 LGP."},
+ {q:"Las actividades horizontales e instrumentales pueden configurarse como:",o:["Programas finalistas.","Programas de apoyo.","Secciones.","Fondos."],c:1,e:"Art. 35 LGP."}
+];
+
+const T4=[
+ {q:"La especialidad de los créditos se regula en el art.:",o:["42 LGP.","46 LGP.","49 LGP.","54 LGP."],c:0,e:"El 46, carácter limitativo; el 49, temporalidad."},
+ {q:"El carácter limitativo de los créditos se regula en el art.:",o:["42 LGP.","46 LGP.","49 LGP.","58 LGP."],c:1,e:"Con nulidad de pleno derecho."},
+ {q:"Al ejercicio se imputan las obligaciones reconocidas:",o:["Hasta el 31 de marzo siguiente.","Hasta el fin de diciembre, por gastos realizados en el ejercicio.","En cualquier momento.","Hasta el 30 de noviembre."],c:1,e:"Art. 34 LGP."},
+ {q:"Puede imputarse al presupuesto corriente, como excepción:",o:["Cualquier deuda antigua.","La liquidación de atrasos a favor del personal.","Las compras del año siguiente.","Las subvenciones futuras."],c:1,e:"También las resoluciones judiciales."},
+ {q:"Las obligaciones de ejercicios anteriores no incluidas en las excepciones requieren para imputarse:",o:["Una orden ministerial.","Una norma con rango de ley.","Un acuerdo del Consejo de Ministros.","Informe de la IGAE."],c:1,e:"Art. 34 LGP."},
+ {q:"En el Estado, los créditos se especifican como regla general a nivel de:",o:["Capítulo.","Artículo.","Concepto.","Subconcepto."],c:2,e:"Art. 43 LGP."},
+ {q:"En el Estado, los gastos de personal se especifican a nivel de:",o:["Concepto.","Artículo.","Capítulo.","Subconcepto."],c:1,e:"Igual que los de bienes corrientes y servicios."},
+ {q:"En el Estado, las inversiones reales se especifican a nivel de:",o:["Concepto.","Artículo.","Capítulo.","Programa."],c:2,e:"Art. 43 LGP."},
+ {q:"En los OOAA, los gastos de bienes corrientes y servicios se especifican a nivel de:",o:["Concepto.","Artículo.","Capítulo.","Subconcepto."],c:2,e:"Art. 44 LGP."},
+ {q:"Los créditos de la Seguridad Social se especifican a nivel de:",o:["Concepto.","Grupo de programas.","Sección.","Subconcepto."],c:1,e:"Salvo la acción protectora no contributiva, por programa."},
+ {q:"Se especifica al nivel de su clasificación económica el crédito destinado a:",o:["Material de oficina.","Arrendamientos de edificios.","Gastos de viaje.","Suministros."],c:1,e:"Excepción de los arts. 43 y 44."},
+ {q:"Los créditos que identifican perceptor o beneficiario vinculan a su nivel, salvo:",o:["Los de personal.","Las transferencias al exterior.","Los de capital.","Los de los OOAA."],c:1,e:"Arts. 43 y 44 LGP."},
+ {q:"Según la LPGE 2023, es vinculante el crédito:",o:["220 «Material de oficina».","150 «Productividad».","221 «Suministros».","120 «Retribuciones básicas»."],c:1,e:"Con 151, 153 y el art. 15."},
+ {q:"Los gastos plurianuales:",o:["Son una modificación presupuestaria.","No son una modificación: dejan intactos los créditos.","Requieren ley siempre.","Solo existen en los OOAA."],c:1,e:"Manual del tema."},
+ {q:"El número máximo de ejercicios a los que pueden aplicarse los gastos plurianuales es:",o:["2.","3.","4.","5."],c:2,e:"Art. 47 LGP."},
+ {q:"En el segundo ejercicio posterior, el gasto plurianual no puede exceder del:",o:["70 %.","60 %.","50 %.","100 %."],c:1,e:"70 · 60 · 50 · 50."},
+ {q:"Los porcentajes de los gastos plurianuales se aplican sobre:",o:["El crédito definitivo.","El crédito inicial.","El gasto del año anterior.","El techo de gasto."],c:1,e:"Art. 47.2 LGP."},
+ {q:"En los contratos de obra plurianuales (salvo abono total), la retención adicional es del:",o:["5 %.","10 %.","15 %.","20 %."],c:1,e:"Del importe de adjudicación."},
+ {q:"Quedan excluidos de los límites del art. 47:",o:["Los contratos de obra.","La carga financiera de la Deuda y los arrendamientos de inmuebles.","Las subvenciones.","Los gastos de personal."],c:1,e:"Art. 47 LGP."},
+ {q:"NO pueden adquirirse compromisos plurianuales para:",o:["Contratos de servicios.","Subvenciones nominativas.","Arrendamientos.","Obras."],c:1,e:"Art. 22.2.a LGS."}
+];
+
+const T5=[
+ {q:"Puede modificar los porcentajes de los gastos plurianuales:",o:["El Ministro de Hacienda.","El Gobierno, en casos especialmente justificados.","Las Cortes.","La DG de Presupuestos."],c:1,e:"Con informe de la DG de Presupuestos."},
+ {q:"Si una LPGE posterior no dota crédito para un compromiso plurianual, lo primero es:",o:["Resolver el contrato.","Comunicarlo al tercero.","Pedir un crédito extraordinario.","Anularlo."],c:1,e:"Art. 47 bis."},
+ {q:"Para adquirir inmuebles con pago aplazado (art. 48), deben superar:",o:["1 millón €.","6 millones €.","12 millones €.","3 millones €."],c:1,e:"Con un desembolso inicial mínimo del 25 %."},
+ {q:"Según la LPGE 2023, los arrendamientos de inmuebles pueden extenderse a:",o:["4 anualidades.","10 anualidades al 100 %.","20 anualidades.","Sin límite."],c:1,e:"Excepción a los límites del art. 47."},
+ {q:"El art. 51 LGP NO incluye entre las modificaciones:",o:["Las generaciones.","Las incorporaciones.","Los anticipos de tesorería.","Las ampliaciones."],c:2,e:"Los anticipos están en el art. 60."},
+ {q:"Las transferencias de crédito excepcionan el principio de especialidad:",o:["Cuantitativa.","Cualitativa.","Temporal.","Contable."],c:1,e:"Carácter vinculante."},
+ {q:"Las incorporaciones de crédito excepcionan el principio de especialidad:",o:["Cuantitativa.","Cualitativa.","Temporal.","Contable."],c:2,e:"Carácter temporal."},
+ {q:"El documento contable de una generación de crédito es el MC:",o:["030.","050.","070.","080."],c:3,e:"070 es la incorporación."},
+ {q:"El documento MC 040 corresponde a:",o:["Crédito extraordinario.","Suplemento de crédito.","Ampliación.","Transferencia."],c:1,e:"030 es el crédito extraordinario."},
+ {q:"Los documentos MC los autoriza:",o:["El Interventor Delegado.","El Director General de Presupuestos.","El Ministro.","El Tesoro."],c:1,e:"Orden de 1-2-1996."},
+ {q:"Una modificación financiada con baja en otra aplicación requiere:",o:["Un único MC.","Retención previa y dos MC, uno positivo y otro negativo.","Una ley.","Un anticipo."],c:1,e:"Instrucción de operatoria contable."},
+ {q:"Los expedientes de modificación se inician en:",o:["La DG de Presupuestos.","Los centros que gestionan los programas, ante la Oficina Presupuestaria.","El Consejo de Ministros.","La IGAE."],c:1,e:"Orden HFP/147/2022."},
+ {q:"Es un informe preceptivo en el expediente de modificación:",o:["El del Consejo de Estado.","El de la Intervención Delegada.","El del Tribunal de Cuentas.","El de la AIReF."],c:1,e:"Y el de la Oficina Presupuestaria."},
+ {q:"El crédito extraordinario procede cuando:",o:["El crédito es insuficiente y no ampliable.","No existe crédito adecuado.","Hay ingresos afectados.","Hay remanentes."],c:1,e:"Si es insuficiente, suplemento."},
+ {q:"En el Estado, un crédito extraordinario para operaciones financieras se financia con:",o:["El Fondo de Contingencia.","Deuda Pública o baja en créditos de la misma naturaleza.","Remanente de tesorería.","Mayores ingresos."],c:1,e:"Art. 55 LGP."},
+ {q:"Un suplemento del Estado para obligaciones del ejercicio financiado con el Fondo de Contingencia lo autoriza:",o:["Las Cortes por ley.","El Consejo de Ministros.","El Ministro de Hacienda.","El Ministro del ramo."],c:1,e:"Art. 55.3 LGP."},
+ {q:"Un crédito extraordinario del Estado financiado con baja en otros créditos requiere:",o:["Acuerdo del Consejo de Ministros.","Proyecto de ley a las Cortes, con dictamen del Consejo de Estado.","Resolución del Ministro.","Solo informe de la IGAE."],c:1,e:"Art. 55.2 LGP."},
+ {q:"Los créditos extraordinarios de los OOAA solo pueden financiarse con:",o:["El Fondo de Contingencia.","Remanente de tesorería no aplicado o mayores ingresos.","Deuda Pública.","Baja en créditos del Estado."],c:1,e:"Art. 56.2 LGP."},
+ {q:"El Presidente de un OA puede autorizar un crédito extraordinario de hasta:",o:["El 20 % del capítulo y 1.000.000 €.","El 10 % del capítulo y 500.000 €, sin personal ni art. 44.2.","Cualquier importe.","El 5 % y 100.000 €."],c:1,e:"Dando cuenta a su Ministro y al de Hacienda."},
+ {q:"Para autorizar un crédito extraordinario en un OA que alcance el 20 % del capítulo es competente:",o:["El Presidente del OA.","El Ministro de Hacienda.","El Consejo de Ministros.","El Ministro de adscripción."],c:2,e:"Hacienda solo si no se alcanza el 20 % ni se supera 1 M€."}
+];
+
+const T6=[
+ {q:"Son ampliables, según el art. 54 LGP, los créditos para:",o:["Material de oficina.","Pensiones de Clases Pasivas.","Productividad.","Inversiones nuevas."],c:1,e:"También la Deuda y obligaciones de leyes."},
+ {q:"En la Seguridad Social se consideran en todo caso ampliables los créditos para:",o:["Gastos de personal.","El ingreso mínimo vital.","Inversiones.","Publicidad."],c:1,e:"Art. 54.2 LGP."},
+ {q:"Es ampliable en todas las secciones según la LPGE 2023:",o:["El pago de sentencias firmes.","La productividad.","Los arrendamientos.","Las subvenciones nominativas."],c:0,e:"Art. 106.1 LJCA."},
+ {q:"Las ampliaciones de crédito del Estado se financian con:",o:["Remanente de tesorería.","El Fondo de Contingencia o baja en otros créditos no financieros.","Deuda Pública siempre.","Mayores ingresos."],c:1,e:"Art. 54.3 LGP."},
+ {q:"NO pueden ampliarse créditos:",o:["De la Seguridad Social.","Previamente minorados (con excepciones).","De la Deuda.","De Clases Pasivas."],c:1,e:"Salvo SS, sección 06 o traspasos a CCAA."},
+ {q:"Autoriza las ampliaciones de crédito del Estado:",o:["El Consejo de Ministros.","El Ministro de Hacienda.","El Ministro del departamento.","Las Cortes."],c:1,e:"Art. 62 LGP."},
+ {q:"Según la LPGE 2023, las ampliaciones del capítulo 1 financiadas con créditos del capítulo 1 las autorizan:",o:["El Ministro de Hacienda.","Los titulares de los Ministerios o los Presidentes de OOAA.","El Consejo de Ministros.","La DG de Costes de Personal."],c:1,e:"En sus presupuestos."},
+ {q:"La generación de crédito se produce por:",o:["Bajas en otros créditos.","Ingresos no previstos o superiores a los presupuestados.","El Fondo de Contingencia.","Una ley."],c:1,e:"Art. 53 LGP."},
+ {q:"Excepcionalmente pueden generar crédito los ingresos realizados en:",o:["El primer trimestre del ejercicio siguiente.","El último trimestre del ejercicio anterior.","Cualquier ejercicio anterior.","El último mes."],c:1,e:"Art. 53 LGP."},
+ {q:"Los ingresos por reembolso de préstamos solo pueden generar crédito en:",o:["Gastos de personal.","Créditos para conceder nuevos préstamos.","Inversiones.","Cualquier crédito."],c:1,e:"Art. 53 LGP."},
+ {q:"La generación por enajenación de inmovilizado la autoriza:",o:["El Ministro del departamento.","El Ministro de Hacienda, siempre.","El Presidente del OA.","El Consejo de Ministros."],c:1,e:"Art. 62.1.b LGP."},
+ {q:"En los OOAA, la generación por aportaciones (supuesto a) puede hacerse:",o:["Solo con el ingreso efectivo.","Con el reconocimiento del derecho o un compromiso firme, si el ingreso se prevé en el ejercicio.","Nunca.","Con autorización de las Cortes."],c:1,e:"Art. 53.3 LGP."},
+ {q:"Los Ministros autorizan las generaciones de los supuestos:",o:["b), c) y e).","a), d) y f).","Todos.","Solo c)."],c:1,e:"Art. 63 LGP."},
+ {q:"NO podrán realizarse transferencias:",o:["De corriente a capital.","De capital a corriente.","Dentro de un mismo programa.","Desde el programa de imprevistos."],c:1,e:"Art. 52.1.a LGP."},
+ {q:"La restricción de no transferir entre secciones no afecta a:",o:["Los créditos de personal.","Los créditos del programa de contratación centralizada.","Las inversiones.","Las subvenciones."],c:1,e:"Art. 52.1.b LGP."},
+ {q:"Las restricciones del art. 52.1 NO se aplican a las transferencias:",o:["Entre capítulos 1 y 2.","Derivadas de reorganizaciones administrativas.","Hacia subvenciones nominativas.","Desde operaciones financieras."],c:1,e:"Art. 52.2 LGP."},
+ {q:"Las transferencias entre secciones por reorganización administrativa las autoriza:",o:["El Ministro de Hacienda.","El Consejo de Ministros.","Los Ministros afectados.","Las Cortes."],c:1,e:"Art. 61 LGP."},
+ {q:"Los Ministros autorizan transferencias, previo informe favorable de:",o:["El Consejo de Estado.","La Intervención Delegada.","El Tribunal de Cuentas.","La DG de Presupuestos."],c:1,e:"Art. 63 LGP."},
+ {q:"Los Ministros pueden crear créditos nuevos mediante transferencia en los capítulos:",o:["1 y 4.","2 y 6.","3 y 9.","7 y 8."],c:1,e:"Si están codificados en la clasificación económica."},
+ {q:"El Ministro de Hacienda autoriza las transferencias:",o:["Solo entre secciones.","No reservadas al Consejo de Ministros que no puedan acordar los Ministros.","Solo de personal.","Ninguna."],c:1,e:"Art. 62 LGP."}
+];
+
+const T7=[
+ {q:"Las incorporaciones de crédito se regulan en el art.:",o:["53 LGP.","54 LGP.","58 LGP.","60 LGP."],c:2,e:"Excepción al art. 49."},
+ {q:"Pueden incorporarse los remanentes de créditos extraordinarios concedidos:",o:["En cualquier momento.","Por ley en el último mes del ejercicio anterior.","En el último trimestre.","Por el Consejo de Ministros."],c:1,e:"Art. 58.d LGP."},
+ {q:"La LPGE 2023 deja sin efecto la incorporación de remanentes de:",o:["Créditos extraordinarios.","Generaciones del ejercicio anterior, salvo el MRR.","Créditos de la Deuda.","Anticipos."],c:1,e:"Art. 58.b LGP."},
+ {q:"Las incorporaciones de crédito en los OOAA solo pueden financiarse con:",o:["El Fondo de Contingencia.","Remanente de tesorería no aplicado.","Deuda.","Bajas en el Estado."],c:1,e:"Art. 58 LGP."},
+ {q:"Las incorporaciones de crédito las autoriza:",o:["El Consejo de Ministros.","El Ministro de Hacienda.","El Ministro del ramo.","El Presidente del OA."],c:1,e:"Art. 62 LGP."},
+ {q:"Las incorporaciones de remanentes vinculados al MRR que afectaban al Estado se financiaban con:",o:["El Fondo de Contingencia.","Deuda Pública.","Remanente.","Mayores ingresos."],c:1,e:"RDL 36/2020."},
+ {q:"Los anticipos de Tesorería los concede:",o:["El Ministro de Hacienda.","El Gobierno, a propuesta del Ministro de Economía.","Las Cortes.","El Banco de España."],c:1,e:"Art. 60 LGP."},
+ {q:"El límite anual de los anticipos de Tesorería es el:",o:["2 % de los gastos no financieros.","1 % de los créditos autorizados al Estado.","5 %.","10 %."],c:1,e:"Art. 60 LGP."},
+ {q:"Procede un anticipo de Tesorería cuando, iniciado el expediente de crédito extraordinario:",o:["Lo pide el Ministro.","Hay dictamen favorable del Consejo de Estado.","Lo informa la IGAE.","Lo aprueba el Congreso."],c:1,e:"Art. 60.1.a LGP."},
+ {q:"Si las Cortes no aprueban la ley, el anticipo se cancela a propuesta de:",o:["Economía.","Hacienda.","El Presidente del Gobierno.","El Consejo de Estado."],c:1,e:"Con cargo a los créditos que causen menos trastornos."},
+ {q:"Las transferencias y libramientos de los arts. 40-43 y 70-73 se hacen a través del programa:",o:["000X.","923M.","929M.","912O."],c:0,e:"«Transferencias y libramientos internos»."},
+ {q:"Los fondos del MRR transferidos a entidades del sector público estaban:",o:["Libres.","Legalmente afectados; si no se gastan, se reintegran al Tesoro.","Vinculados a nivel de capítulo.","Exentos de control."],c:1,e:"Normas de la LPGE 2023."},
+ {q:"La documentación de las modificaciones presupuestarias se regula en la:",o:["Orden HAC/641/2024.","Orden HFP/147/2022.","Ley 31/2022.","Orden de 1-2-1996."],c:1,e:"Junto con los compromisos de ejercicios futuros."},
+ {q:"El documento acreditativo del ingreso en una generación del Estado puede ser:",o:["El modelo 069 validado o un certificado de la oficina de contabilidad del Tesoro.","Una factura.","Un acta.","Una declaración responsable."],c:0,e:"Orden HFP/147/2022."},
+ {q:"En una transferencia financiada desde el programa de imprevistos, el certificado de existencia de crédito lo aporta:",o:["El centro gestor.","La DG de Presupuestos.","La Intervención Delegada.","El Tesoro."],c:1,e:"Orden HFP/147/2022."},
+ {q:"En el MRR, el informe de la DG del Plan es vinculante cuando la competencia es:",o:["Del Consejo de Ministros.","Del Ministro del departamento o del presidente de la entidad.","De las Cortes.","Siempre."],c:1,e:"Orden HFP/147/2022."},
+ {q:"Hacienda autoriza las modificaciones con remanentes de las entidades del apartado 4.º cuando superan:",o:["100.000 €.","500.000 € acumulados.","1 millón €.","12 millones €."],c:1,e:"LPGE 2023."},
+ {q:"Los gastos comunes de edificios compartidos y servicios horizontales (IGAE, AEAT, SGAD) se financian mediante transferencias que autoriza:",o:["Hacienda.","El órgano que aporta la financiación (Ministro o Presidente del OA).","El Consejo de Ministros.","La IGAE."],c:1,e:"LPGE 2023."},
+ {q:"La LPGE 2023, prorrogada, sigue vigente en 2026 porque:",o:["Se aprobó una nueva ley.","No se aprobó la LPGE 2026 y se prorrogó automáticamente por tercera vez.","Lo decidió el Tribunal Constitucional.","Es una ley indefinida."],c:1,e:"Art. 134.4 CE."},
+ {q:"En la prórroga, la estructura orgánica del presupuesto:",o:["Queda congelada con los Ministerios de 2023.","Se adapta a la organización vigente sin alterar la cuantía total.","Se suprime.","La fijan las Cortes."],c:1,e:"Art. 38 LGP."}
+];
+
+const T8=[
+ {q:"Un Ministerio necesita 2 M€ para un gasto inaplazable sin crédito, del ejercicio corriente, y se financia con el Fondo de Contingencia. ¿Qué modificación y quién la autoriza?",o:["Suplemento; Ministro de Hacienda.","Crédito extraordinario; Consejo de Ministros.","Ampliación; Ministro de Hacienda.","Transferencia; Ministro del ramo."],c:1,e:"Art. 55.3 LGP."},
+ {q:"El mismo gasto se financia con baja en otros créditos del Ministerio. ¿Qué hace falta?",o:["Acuerdo del Consejo de Ministros.","Proyecto de ley a las Cortes, con dictamen del Consejo de Estado.","Resolución del Ministro.","Nada."],c:1,e:"Art. 55.2.b LGP."},
+ {q:"Un OA con un capítulo 2 inicial de 3 M€ necesita un suplemento de 250.000 €. Lo autoriza:",o:["El Presidente o Director del OA.","El Ministro de Hacienda.","El Consejo de Ministros.","Las Cortes."],c:0,e:"8,3 % y menos de 500.000 €."},
+ {q:"El mismo OA necesita 450.000 € en su capítulo 2 de 3 M€ (15 %). Lo autoriza:",o:["El Presidente.","El Ministro de Hacienda.","El Consejo de Ministros.","Las Cortes."],c:1,e:"Supera el 10 %, pero no llega al 20 % ni supera 1 M€."},
+ {q:"Un OA necesita 200.000 € de crédito extraordinario en gastos de personal (5 % del capítulo). Lo autoriza:",o:["El Presidente.","El Ministro de Hacienda.","El Consejo de Ministros.","Las Cortes."],c:1,e:"Los de personal están excluidos de la competencia del Presidente."},
+ {q:"Un OA necesita 1,2 M€ (8 % del capítulo). Lo autoriza:",o:["El Presidente.","El Ministro de Hacienda.","El Consejo de Ministros.","Las Cortes."],c:2,e:"Supera 1.000.000 €."},
+ {q:"Un Ministerio quiere pasar dinero del capítulo 6 al capítulo 2 en el mismo programa. Según el art. 52.1:",o:["Puede hacerlo el Ministro.","No es posible: de capital a corriente.","Requiere ley.","Lo autoriza la Intervención."],c:1,e:"La LPGE 2023 permite que lo autorice Hacienda."},
+ {q:"Un Ministerio quiere pasar dinero del capítulo 2 al capítulo 6 dentro del mismo programa. Lo autoriza:",o:["El Ministro, previo informe de la Intervención Delegada.","El Consejo de Ministros.","Las Cortes.","No es posible."],c:0,e:"Art. 63 LGP."},
+ {q:"Por una reestructuración de Ministerios hay que mover créditos entre dos secciones. Lo autoriza:",o:["El Ministro de Hacienda.","El Consejo de Ministros.","Los Ministros afectados.","Las Cortes."],c:1,e:"Art. 61 LGP."},
+ {q:"Se quiere minorar un crédito ampliado este año para financiar otro. ¿Es posible?",o:["Sí, siempre.","No, salvo excepciones (ampliables de la SS, Deuda o las causas del art. 52.2).","Solo con ley.","Solo en los OOAA."],c:1,e:"Art. 52.1.c LGP."},
+ {q:"Un Ministerio vende publicaciones por encima de lo previsto y quiere generar crédito en el Estado. Lo autoriza:",o:["El Ministro del departamento.","El Ministro de Hacienda.","El Consejo de Ministros.","La DG de Presupuestos."],c:1,e:"Supuesto b) en el Estado."},
+ {q:"Un OA vende un edificio y quiere generar crédito. Lo autoriza:",o:["El Presidente del OA.","El Ministro de Hacienda.","El Ministro de adscripción.","El Consejo de Ministros."],c:1,e:"Enajenación de inmovilizado: siempre Hacienda."},
+ {q:"Un Ministerio recibe un reintegro de un pago indebido de este año y quiere reponer el crédito. Lo autoriza:",o:["El Ministro del departamento.","El Ministro de Hacienda.","El Consejo de Ministros.","Las Cortes."],c:0,e:"Supuesto f)."},
+ {q:"Crédito inicial de 1 M€: ¿cuál es el máximo que se puede comprometer para el año +1?",o:["1.000.000 €.","700.000 €.","600.000 €.","500.000 €."],c:1,e:"70 %."},
+ {q:"Crédito inicial de 1 M€: ¿cuál es el máximo para el año +3?",o:["700.000 €.","600.000 €.","500.000 €.","300.000 €."],c:2,e:"50 %."},
+ {q:"Obra adjudicada por 2 M€ (no de abono total). La retención adicional es de:",o:["100.000 €.","200.000 €.","400.000 €.","No hay."],c:1,e:"10 % de la adjudicación, dentro de los límites."},
+ {q:"Se quiere comprar un inmueble de 8 M€ con pago aplazado. El desembolso mínimo a la firma es de:",o:["800.000 €.","2.000.000 €.","4.000.000 €.","6.000.000 €."],c:1,e:"25 % del precio."},
+ {q:"Con créditos del Estado por valor de 300.000 M€, el límite de anticipos de Tesorería en el ejercicio es de:",o:["300 M€.","3.000 M€.","6.000 M€.","30.000 M€."],c:1,e:"1 %."},
+ {q:"Un crédito extraordinario se concede por ley el 20 de diciembre y no se gasta. Al año siguiente:",o:["Se anula.","Puede incorporarse.","Se convierte en ampliación.","Pasa al Fondo de Contingencia."],c:1,e:"Art. 58.d LGP: último mes."},
+ {q:"Un Ministerio quiere usar el Fondo de Contingencia para una actuación discrecional nueva sin cobertura. ¿Es posible?",o:["Sí, con acuerdo del Consejo de Ministros.","No: el Fondo no financia decisiones discrecionales sin cobertura.","Sí, con ley.","Sí, si es inferior al 1 %."],c:1,e:"Art. 50 LGP."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🏛️",name:"Concepto y estructura orgánica",desc:"Arts. 32-33, ingresos y clasificación orgánica.",qs:T1},
+ {id:"t2",ic:"🎯",name:"Clasificación por programas y PRTR",desc:"Áreas, políticas, letras A-L / M-Z y códigos del Plan.",qs:T2},
+ {id:"t3",ic:"📊",name:"Clasificación económica y créditos",desc:"Capítulos, artículos, Fondo de Contingencia y art. 35.",qs:T3},
+ {id:"t4",ic:"🔒",name:"Características, especificación y plurianuales",desc:"Arts. 42-49, vinculación y art. 47.",qs:T4},
+ {id:"t5",ic:"🛠️",name:"Procedimiento y créditos extraordinarios",desc:"Art. 51, documentos MC y arts. 55-56.",qs:T5},
+ {id:"t6",ic:"🔁",name:"Ampliaciones, generaciones y transferencias",desc:"Arts. 52, 53 y 54 y competencias.",qs:T6},
+ {id:"t7",ic:"⏩",name:"Incorporaciones, anticipos y normas LPGE",desc:"Arts. 58 y 60, programa 000X y Orden HFP/147/2022.",qs:T7},
+ {id:"t8",ic:"🧮",name:"Casos prácticos",desc:"¿Qué modificación?, ¿quién la autoriza? y cálculos.",qs:T8}
+];
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+/* ===== Esquemas autocorregibles ===== */
+const ESQ=[
+ {id:"e1",title:"Las tres clasificaciones del gasto",intro:"¿Quién, para qué y en qué?",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Clasificación del gasto (art. 40 LGP)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Orgánica: ¿quién?</b>Estado: {{0}} y servicios.<br>Servicios: {{1}} dígitos.<br>OOAA: {{2}} dígitos.</div>
+   <div class="sch-box alt"><b>Programas: ¿para qué?</b>Niveles: área → {{3}} → grupo → programa.<br>Finalistas: letras {{4}}.</div>
+   <div class="sch-box"><b>Económica: ¿en qué?</b>Niveles: {{5}} → artículo → concepto → subconcepto.</div>
+  </div>
+  <div class="sch-box alt"><b>Además</b>Funcional y {{6}} (inversiones por CCAA y provincias).</div></div>`,
+  blanks:[
+   {o:["secciones","capítulos","áreas","grupos"],why:"Altos órganos y Ministerios."},
+   {o:["2","3","1","4"],why:"Ejemplo: 15.07."},
+   {o:["3","2","4","1"],why:"Ejemplo: 15.101."},
+   {o:["política de gasto","capítulo","sección","concepto"],why:"Ejemplo: 45."},
+   {o:["A a L","M a Z","X e Y","A a Z"],why:"Objetivos cuantificables."},
+   {o:["capítulo","área","sección","programa"],why:"Capítulos 1 a 9."},
+   {o:["territorial","orgánica","temporal","contable"],why:"Art. 37.2.f LGP."}
+  ]},
+ {id:"e2",title:"Capítulos del presupuesto de ingresos",intro:"Asigna cada ingreso a su capítulo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ingresos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ingresos</b>IRPF: {{0}}<br>IVA: {{1}}<br>Multas y precios públicos: {{2}}<br>Alquileres de inmuebles del Estado: {{3}}</div>
+   <div class="sch-box alt"><b>Más ingresos</b>Venta de un edificio: {{4}}<br>Reintegro de un préstamo concedido: {{5}}<br>Emisión de deuda: {{6}}<br>Cotizaciones sociales: {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Cap. 1","Cap. 2","Cap. 3","Cap. 5"],why:"Impuesto directo."},
+   {o:["Cap. 2","Cap. 1","Cap. 3","Cap. 4"],why:"Impuesto indirecto."},
+   {o:["Cap. 3","Cap. 2","Cap. 5","Cap. 4"],why:"Tasas, precios públicos y otros."},
+   {o:["Cap. 5","Cap. 3","Cap. 6","Cap. 8"],why:"Ingresos patrimoniales."},
+   {o:["Cap. 6","Cap. 5","Cap. 8","Cap. 7"],why:"Enajenación de inversiones reales."},
+   {o:["Cap. 8","Cap. 9","Cap. 6","Cap. 5"],why:"Activos financieros."},
+   {o:["Cap. 9","Cap. 8","Cap. 3","Cap. 7"],why:"Pasivos financieros."},
+   {o:["Cap. 1","Cap. 2","Cap. 4","Cap. 3"],why:"Impuestos directos y cotizaciones sociales."}
+  ]},
+ {id:"e3",title:"Capítulos del presupuesto de gastos",intro:"Asigna cada gasto a su capítulo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Gastos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Gastos</b>Nóminas de funcionarios: {{0}}<br>Dietas por un viaje oficial: {{1}}<br>Material de oficina: {{2}}<br>Intereses de la deuda: {{3}}<br>Subvención corriente a una CA: {{4}}</div>
+   <div class="sch-box alt"><b>Más gastos</b>Fondo de Contingencia: {{5}}<br>Compra de ordenadores inventariables: {{6}}<br>Préstamo concedido a una empresa: {{7}}<br>Amortización de deuda: {{8}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["Cap. 1","Cap. 2","Cap. 4","Cap. 6"],why:"Gastos de personal."},
+   {o:["Cap. 2","Cap. 1","Cap. 4","Cap. 6"],why:"Indemnizaciones por razón del servicio (art. 23)."},
+   {o:["Cap. 2","Cap. 6","Cap. 1","Cap. 4"],why:"Fungible y no inventariable."},
+   {o:["Cap. 3","Cap. 9","Cap. 8","Cap. 2"],why:"Gastos financieros."},
+   {o:["Cap. 4","Cap. 7","Cap. 2","Cap. 3"],why:"Transferencias corrientes (art. 45)."},
+   {o:["Cap. 5","Cap. 9","Cap. 3","Cap. 4"],why:"Fondo de Contingencia y otros imprevistos."},
+   {o:["Cap. 6","Cap. 2","Cap. 8","Cap. 7"],why:"Inversiones reales."},
+   {o:["Cap. 8","Cap. 9","Cap. 7","Cap. 4"],why:"Activos financieros."},
+   {o:["Cap. 9","Cap. 3","Cap. 8","Cap. 7"],why:"Pasivos financieros."}
+  ]},
+ {id:"e4",title:"Desglose de una aplicación presupuestaria",intro:"16.01.142B.220.00 (ejemplo del manual).",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">16.01.142B.220.00</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Orgánica</b>16: {{0}}.<br>01: {{1}}.</div>
+   <div class="sch-box alt"><b>Programas</b>1: {{2}}.<br>14: {{3}}.<br>142: grupo de programas.<br>142B: {{4}}.</div>
+   <div class="sch-box"><b>Económica</b>2: {{5}}.<br>22: {{6}}.<br>220: {{7}}.<br>220.00: subconcepto.</div>
+  </div></div>`,
+  blanks:[
+   {o:["sección","servicio","programa","capítulo"],why:"Ministerio del Interior en la LPGE 2023."},
+   {o:["servicio","organismo","área","artículo"],why:"Siempre con la sección delante."},
+   {o:["área de gasto","capítulo","sección","política"],why:"1 = servicios públicos básicos."},
+   {o:["política de gasto","grupo de programas","servicio","artículo"],why:"14 = Política exterior."},
+   {o:["programa (finalista)","programa (instrumental)","concepto","subconcepto"],why:"B está en el tramo A-L."},
+   {o:["capítulo","artículo","área","sección"],why:"Bienes corrientes y servicios."},
+   {o:["artículo","concepto","capítulo","subconcepto"],why:"Material, suministros y otros."},
+   {o:["concepto","artículo","programa","subconcepto"],why:"Tres dígitos."}
+  ]},
+ {id:"e5",title:"Fondo de Contingencia (art. 50 LGP)",intro:"Dotación, uso y control.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Fondo de Contingencia</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Dotación</b>Importe: {{0}} de los gastos {{1}}, sin la financiación de CCAA y EELL.<br>Sección: {{2}}.</div>
+   <div class="sch-box alt"><b>Uso</b>Financia: {{3}}.<br>Nunca: {{4}}.<br>Aprueba su aplicación: {{5}}.<br>Su remanente: {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["2 %","1 %","5 %","3 %"],why:"Art. 50 LGP."},
+   {o:["no financieros","financieros","de personal","de capital"],why:"Art. 50 LGP."},
+   {o:["35","06","34","36"],why:"Sección independiente."},
+   {o:["ampliaciones, extraordinarios y suplementos, e incorporaciones","transferencias y generaciones","solo ampliaciones","cualquier gasto"],why:"Tres modificaciones."},
+   {o:["decisiones discrecionales sin cobertura","gastos inaplazables","pensiones","sentencias"],why:"Art. 50.3."},
+   {o:["el Consejo de Ministros","el Ministro de Hacienda","las Cortes","la DG de Presupuestos"],why:"A propuesta de Hacienda."},
+   {o:["no se incorpora","se incorpora","pasa a la Deuda","se reparte"],why:"Esquema del tema."}
+  ]},
+ {id:"e6",title:"Especificación y vinculación (arts. 43 y 44 LGP)",intro:"Nivel de vinculación de los créditos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Nivel de especificación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Estado</b>Regla: {{0}}.<br>Capítulos 1 y 2: {{1}}.<br>Capítulo 6: {{2}}.</div>
+   <div class="sch-box alt"><b>OOAA</b>Regla: {{3}}.<br>Capítulos 1, 2 y 6: {{4}}.<br>Seguridad Social: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Vinculan a su nivel</b>Por ejemplo: {{6}}.</div></div>`,
+  blanks:[
+   {o:["concepto","artículo","capítulo","subconcepto"],why:"Art. 43.1."},
+   {o:["artículo","capítulo","concepto","subconcepto"],why:"Art. 43.1."},
+   {o:["capítulo","artículo","concepto","programa"],why:"Art. 43.1."},
+   {o:["concepto","capítulo","artículo","subconcepto"],why:"Art. 44.1."},
+   {o:["capítulo","artículo","concepto","subconcepto"],why:"Art. 44.1."},
+   {o:["grupo de programas","concepto","capítulo","sección"],why:"Salvo la acción no contributiva, por programa."},
+   {o:["ampliables, arrendamientos y extraordinarios","material de oficina","suministros","dietas"],why:"Arts. 43.2 y 44.2."}
+  ]},
+ {id:"e7",title:"Gastos plurianuales (art. 47 LGP)",intro:"Límites y excepciones.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Compromisos plurianuales</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Límites</b>Máximo de ejercicios: {{0}}.<br>Año +1: {{1}}; +2: {{2}}; +3 y +4: {{3}}.<br>Sobre el crédito {{4}}.</div>
+   <div class="sch-box alt"><b>Especialidades</b>Obras: retención del {{5}}.<br>Sin límites: {{6}}.<br>Excepcionar: {{7}}.<br>Prohibido para: {{8}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["4","3","5","2"],why:"Art. 47.2."},
+   {o:["70 %","60 %","50 %","100 %"],why:"Art. 47.2."},
+   {o:["60 %","70 %","50 %","40 %"],why:"Art. 47.2."},
+   {o:["50 %","60 %","40 %","30 %"],why:"Art. 47.2."},
+   {o:["inicial","definitivo","del año anterior","total"],why:"Art. 47.2."},
+   {o:["10 %","5 %","20 %","15 %"],why:"Del importe de adjudicación."},
+   {o:["Deuda y arrendamientos de inmuebles","obras","subvenciones","personal"],why:"Art. 47.2."},
+   {o:["el Gobierno","el Ministro del ramo","las Cortes","la IGAE"],why:"Art. 47.3."},
+   {o:["subvenciones nominativas","contratos de obra","arrendamientos","servicios"],why:"Art. 22.2.a LGS."}
+  ]},
+ {id:"e8",title:"Modificaciones y principio excepcionado",intro:"Tu esquema de clasificación.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Modificaciones (art. 51 LGP)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Modificaciones</b>Crédito extraordinario: {{0}}<br>Generación: {{1}}<br>Transferencia: {{2}}<br>Incorporación: {{3}}</div>
+   <div class="sch-box alt"><b>Documentos MC</b>Extraordinario: {{4}}<br>Suplemento: {{5}}<br>Ampliación: {{6}}<br>Incorporación: {{7}}</div>
+  </div></div>`,
+  blanks:[
+   {o:["especialidad cuantitativa","especialidad cualitativa","especialidad temporal","unidad"],why:"Carácter limitativo."},
+   {o:["especialidad cuantitativa","especialidad temporal","especialidad cualitativa","universalidad"],why:"Aumenta la cuantía."},
+   {o:["especialidad cualitativa","especialidad cuantitativa","especialidad temporal","unidad de caja"],why:"Carácter vinculante."},
+   {o:["especialidad temporal","especialidad cualitativa","especialidad cuantitativa","publicidad"],why:"Carácter temporal."},
+   {o:["030","040","050","080"],why:"Orden de 1-2-1996."},
+   {o:["040","030","060","070"],why:"Orden de 1-2-1996."},
+   {o:["050","080","070","090"],why:"Orden de 1-2-1996."},
+   {o:["070","080","060","050"],why:"Orden de 1-2-1996."}
+  ]},
+ {id:"e9",title:"Créditos extraordinarios en el Estado (art. 55)",intro:"Financiación y competencia.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 55 LGP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Financiación</b>No financieras: {{0}}.<br>Financieras: {{1}}.</div>
+   <div class="sch-box alt"><b>Competencia</b>Del ejercicio, con el Fondo: {{2}}.<br>Con baja en otros créditos: {{3}}.<br>De ejercicios anteriores sin crédito anulado: {{4}}.</div>
+  </div>
+  <div class="sch-box"><b>Requisitos del proyecto de ley</b>Informe de la {{5}} y dictamen del {{6}}.</div></div>`,
+  blanks:[
+   {o:["Fondo de Contingencia o baja en no financieros","Deuda Pública","remanente de tesorería","mayores ingresos"],why:"Art. 55.1.a."},
+   {o:["Deuda Pública o baja en la misma naturaleza","Fondo de Contingencia","remanente","tasas"],why:"Art. 55.1.b."},
+   {o:["Consejo de Ministros","proyecto de ley","Ministro de Hacienda","Ministro del ramo"],why:"Art. 55.3."},
+   {o:["proyecto de ley","Consejo de Ministros","Ministro de Hacienda","Presidente del OA"],why:"Art. 55.2.b."},
+   {o:["proyecto de ley","Consejo de Ministros","Ministro de Hacienda","nada"],why:"Art. 55.2.a."},
+   {o:["DG de Presupuestos","IGAE","AIReF","Oficina Presupuestaria"],why:"Art. 55.2."},
+   {o:["Consejo de Estado","Tribunal de Cuentas","Banco de España","CPFF"],why:"Art. 55.2."}
+  ]},
+ {id:"e10",title:"Créditos extraordinarios en los OOAA (art. 56)",intro:"Financiación y escalas de competencia.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 56 LGP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Financiación</b>{{0}} o mayores ingresos.</div>
+   <div class="sch-box alt"><b>Competencia</b>Presidente o Director: hasta {{1}} y {{2}}, sin personal.<br>Ministro de Hacienda: menos del {{3}} y hasta {{4}}.<br>Resto: {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Cómputo</b>Los límites son {{6}} en el ejercicio; no computan las financiadas con {{7}}.</div></div>`,
+  blanks:[
+   {o:["remanente de tesorería no aplicado","Fondo de Contingencia","Deuda Pública","baja en el Estado"],why:"Art. 56.2."},
+   {o:["10 %","20 %","5 %","15 %"],why:"Del capítulo inicial."},
+   {o:["500.000 €","1.000.000 €","250.000 €","12 M€"],why:"Art. 56.3.a."},
+   {o:["20 %","10 %","30 %","50 %"],why:"Art. 56.3.b."},
+   {o:["1.000.000 €","500.000 €","2.000.000 €","6 M€"],why:"Art. 56.3.b."},
+   {o:["Consejo de Ministros","Cortes","Ministro de adscripción","IGAE"],why:"Art. 56.3.c."},
+   {o:["acumulados","por expediente","mensuales","trimestrales"],why:"Art. 56.4."},
+   {o:["aumento de la aportación del Estado","remanente","mayores ingresos","Deuda"],why:"Art. 56.4."}
+  ]},
+ {id:"e11",title:"Generaciones de crédito (art. 53)",intro:"Supuestos y quién autoriza.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 53 LGP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Quién autoriza</b>Aportaciones para financiar conjuntamente: {{0}}.<br>Ventas de bienes y servicios (Estado): {{1}}.<br>Enajenación de inmovilizado: {{2}}.<br>Reembolso de préstamos: {{3}}.</div>
+   <div class="sch-box alt"><b>Reglas</b>Reembolso de préstamos → solo para {{4}}.<br>Excepción temporal: ingresos del {{5}}.<br>Presidentes de OOAA: todos salvo {{6}}.</div>
+  </div></div>`,
+  blanks:[
+   {o:["Ministros","Ministro de Hacienda","Consejo de Ministros","Cortes"],why:"Art. 63."},
+   {o:["Ministro de Hacienda","Ministros","Presidente del OA","Consejo de Ministros"],why:"Art. 62.1.b."},
+   {o:["Ministro de Hacienda (siempre)","Ministros","Presidente del OA","Consejo de Ministros"],why:"Art. 62.1.b."},
+   {o:["Ministros","Ministro de Hacienda","Consejo de Ministros","Intervención"],why:"Art. 63."},
+   {o:["nuevos préstamos","gastos de personal","inversiones","cualquier gasto"],why:"Art. 53.3."},
+   {o:["último trimestre del año anterior","último mes","primer trimestre","año anterior completo"],why:"Art. 53.4."},
+   {o:["la enajenación de inmovilizado","las ventas","los ingresos afectados","las aportaciones"],why:"Tu esquema."}
+  ]},
+ {id:"e12",title:"Transferencias de crédito (art. 52)",intro:"Restricciones, excepciones y competencia.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 52 LGP</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Restricciones</b>No desde {{0}} al resto.<br>No de capital a {{1}}.<br>No entre {{2}}, salvo contratación centralizada.<br>No minorar créditos {{3}}.</div>
+   <div class="sch-box alt"><b>Excepciones y límites</b>No se aplican a: {{4}}.<br>Nunca para crear o aumentar {{5}}.</div>
+  </div>
+  <div class="sch-box"><b>Competencia</b>Entre secciones por reorganización: {{6}}. Dentro de un programa: {{7}}. El resto: {{8}}.</div></div>`,
+  blanks:[
+   {o:["financieras","corrientes","capital","personal"],why:"Art. 52.1.a."},
+   {o:["corrientes","financieras","capital","personal"],why:"Art. 52.1.a."},
+   {o:["secciones","servicios","programas","artículos"],why:"Art. 52.1.b."},
+   {o:["extraordinarios, suplementados o ampliados","de personal","de inversiones","de imprevistos"],why:"Art. 52.1.c."},
+   {o:["reorganizaciones y traspasos a CCAA","subvenciones nominativas","personal","Deuda"],why:"Art. 52.2."},
+   {o:["subvenciones nominativas","inversiones","personal","activos"],why:"Art. 52.3."},
+   {o:["Consejo de Ministros","Ministro de Hacienda","Ministro del ramo","Cortes"],why:"Art. 61."},
+   {o:["Ministro, con informe de la Intervención Delegada","Consejo de Ministros","Cortes","DG de Presupuestos"],why:"Art. 63."},
+   {o:["Ministro de Hacienda","Consejo de Ministros","Cortes","Presidente del OA"],why:"Art. 62."}
+  ]},
+ {id:"e13",title:"Incorporaciones y anticipos de Tesorería",intro:"Arts. 58 y 60 LGP.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Arts. 58 y 60</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Incorporaciones</b>Supuestos: norma con rango de ley; generaciones {{0}}; retenciones con anticipo; extraordinarios del {{1}}.<br>OOAA: solo con {{2}}.<br>Autoriza: {{3}}.</div>
+   <div class="sch-box alt"><b>Anticipos</b>Concede: {{4}}.<br>Propone: {{5}}.<br>Límite: {{6}}.<br>Requisito: {{7}} o ley promulgada.</div>
+  </div></div>`,
+  blanks:[
+   {o:["a) y e)","b) y c)","d) y f)","todas"],why:"Art. 58.b (suspendido por la LPGE 2023, salvo el MRR)."},
+   {o:["último mes","último trimestre","primer mes","año anterior"],why:"Art. 58.d."},
+   {o:["remanente de tesorería","Fondo de Contingencia","Deuda","bajas"],why:"Art. 58."},
+   {o:["Ministro de Hacienda","Consejo de Ministros","Ministro del ramo","Cortes"],why:"Art. 62."},
+   {o:["el Gobierno","el Ministro de Hacienda","las Cortes","el Banco de España"],why:"Art. 60."},
+   {o:["Ministro de Economía","Ministro de Hacienda","Presidente","Consejo de Estado"],why:"Art. 60."},
+   {o:["1 % de los créditos del Estado","2 %","5 %","10 %"],why:"Art. 60."},
+   {o:["dictamen favorable del Consejo de Estado","informe de la IGAE","acuerdo de las Cortes","informe de la AIReF"],why:"Art. 60.1.a."}
+  ]},
+ {id:"e14",title:"Ordena: tramitación de una modificación",intro:"Orden HFP/147/2022.",type:"order",
+  items:[
+   {t:"El centro gestor detecta la necesidad y prepara la memoria",why:"Clase de modificación, base legal, estudio económico y financiación."},
+   {t:"Retención de crédito en la aplicación que se va a minorar",why:"Si se financia con baja o con el Fondo de Contingencia."},
+   {t:"Informes de la Intervención Delegada y de la Oficina Presupuestaria",why:"Son preceptivos."},
+   {t:"Resolución motivada del órgano competente",why:"Indica la sección, el servicio, el programa y la económica."},
+   {t:"La DG de Presupuestos expide el documento MC",why:"Instrumentación contable: registra la modificación en el sistema."}
+  ]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("gf2c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("gf2c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
