@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque Informática · Tema 4 · Word 365 · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">IN4</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Informática básica y ofimática</small>
+      <b>Word 365</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .of{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+    .of div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem}
+    .of div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .tr{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .tr div{padding:10px 14px;border-radius:12px;border-left:5px solid var(--a1);background:var(--card2);font-size:.92rem}
+    .tr div.l2{margin-left:18px;border-left-color:#0aa37f}
+    .tr div.l3{margin-left:36px;border-left-color:#f59e0b}
+    .tr div.no{opacity:.55;border-left-color:var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque de Informática · Tema 4 · Ofimática</span>
+    <h1>Word 365 <span>Entorno, vistas, edición, formato, diseño de página, tablas, gráficos, referencias, correspondencia, revisión y Copilot</span></h1>
+    <p>Resumen de alto rendimiento del procesador de textos de Microsoft 365, puesto al día a <strong>noviembre de 2026</strong>: guardado en la nube por defecto, Copilot en modo agente, retirada de «Transformar» y de Publisher, y atajos de la versión en español. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un combinador y un buscador de atajos de Word en español.</li>
+      <li>Un simulador de párrafo: alineación, sangrías, interlineado y espaciado con vista previa.</li>
+      <li>Un simulador de combinar correspondencia con regla «Si… entonces… si no».</li>
+      <li>Un comparador de formatos de archivo (.docx, .dotm, .rtf, .odt, .pdf…).</li>
+      <li>Entrenadores de pestañas, atajos y saltos y control de paginación.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">17</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">144</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('kc').scrollIntoView({behavior:'smooth'})">Atajos ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('pp').scrollIntoView({behavior:'smooth'})">Párrafo ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('mm').scrollIntoView({behavior:'smooth'})">Correspondencia ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Fuente y actualización</strong>. Como material base he usado la página de repaso que adjuntaste («Oposiciones AGE: Word 365», con 40 preguntas de esquema y 4 tests; los tests 5 a 10 eran copias de los 4 primeros) y el <strong>esquema del tema</strong> (ADAMS Formación, OL1124: elementos de Word, grupos de cada pestaña, funciones más relevantes y atajos). He ordenado el contenido por bloques, lo he completado con el funcionamiento real de Word en español y lo he puesto al día:
+    <ul>
+      <li><span class="upd">2026</span> <strong>Guardado en la nube</strong>: desde la versión 2509, Word para Windows guarda los documentos nuevos en OneDrive (o la nube elegida) con Autoguardado activo; se puede desactivar en Archivo &gt; Opciones &gt; Guardar.</li>
+      <li><span class="upd">2026</span> <strong>Copilot en Word</strong>: el modo agente (reescribe, reformatea y reorganiza el documento a partir de una instrucción) es la experiencia por defecto para los suscriptores desde el 22-4-2026; el punto de acceso se unifica en el panel de chat y Copilot ya usa también modelos de Anthropic.</li>
+      <li><span class="upd">2026</span> <strong>Funciones retiradas</strong>:
+        <ul>
+          <li><strong>Transformar a página web (Sway)</strong>, en Archivo: retirada el 30-9-2025. La alternativa es importar el documento desde Sway («Empezar a partir de un documento»).</li>
+          <li><strong>Publisher</strong> deja de tener soporte en octubre de 2026; Microsoft orienta a Word para las publicaciones.</li>
+          <li>La galería de <strong>imágenes prediseñadas (Clip Art)</strong> desapareció hace años; hoy se usan Imágenes de stock, Iconos e Imágenes en línea.</li>
+        </ul></li>
+      <li><strong>Erratas y precisiones del material</strong>:
+        <ul>
+          <li>«Presentación preliminar» <strong>no es una vista</strong>: la vista previa está en Archivo &gt; Imprimir (Ctrl + P o Ctrl + F2). Las vistas son Modo de lectura, Diseño de impresión, Diseño web, Esquema y Borrador (más Lector inmersivo y Concentración).</li>
+          <li><strong>Ctrl + T centra el párrafo</strong> entre los márgenes; centrar «en la página» (verticalmente) es la alineación vertical de Configurar página.</li>
+          <li>Interlineado por defecto: <strong>1,15</strong>, no 1,16; fuente Aptos y 8 pto de espaciado posterior.</li>
+          <li>Combinar correspondencia: desde Word 2002 la conexión por defecto es <strong>OLE DB</strong>; DDE es un método antiguo que hay que elegir expresamente.</li>
+          <li><strong>Barra de acceso rápido</strong>: el esquema y el material citan <strong>Autoguardado, Guardar, Deshacer, Rehacer y Tabla</strong>; memoriza esa lista para el examen, aunque en una instalación limpia «Tabla» no aparece (se añade al personalizar la barra) y en Microsoft 365 la barra puede estar oculta.</li>
+          <li><span class="upd">2026</span> El esquema dice que en Referencias «aparece Investigación» (<strong>Investigador</strong>): Microsoft lo retiró de Word a partir del 1-1-2025 y propone Copilot en su lugar.</li>
+          <li><strong>Colores de revisión</strong>: el esquema cita verde, rojo y azul (el verde era la gramática de versiones antiguas). Hoy el Editor marca la <strong>ortografía en rojo</strong>, la <strong>gramática en azul</strong> y las <strong>sugerencias de estilo en morado</strong>.</li>
+          <li><strong>Tamaño de fuente</strong>: el esquema da <strong>Ctrl + &gt;</strong> (aumentar 1 punto) y <strong>Ctrl + &lt;</strong> (disminuir 1 punto); en teclado español «&gt;» se escribe con Mayús, así que Ctrl + &gt; se pulsa como Ctrl + Mayús + &lt;.</li>
+          <li><strong>Zoom</strong>: el esquema cita «Ctrl +» y «Ctrl −». En Word de escritorio Ctrl + + es subíndice; el zoom se cambia con Ctrl + rueda del ratón o con el control de la barra de estado (Ctrl + y Ctrl − actúan en el navegador, en Word para la web).</li>
+          <li>«Guardar como» admite además <strong>.odt</strong> (OpenDocument), <strong>.xps</strong>, <strong>.mht</strong> y <strong>.xml</strong>.</li>
+          <li>Mostrar u ocultar marcas: en teclado español es <strong>Ctrl + (</strong>, que es Ctrl + Mayús + 8; «Ctrl + *» es la notación del teclado inglés.</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="kc">
+    <div><span class="kicker">Word en español</span><h2>Combinador de atajos</h2></div>
+    <p>Elige los modificadores y la tecla: te dice qué hace en Word 365 en español.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Modificadores<select id="kc-m"></select></label>
+      <label>Tecla<select id="kc-k"></select></label>
+    </div>
+    <div class="verdict" id="kc-out"></div>
+  </div>
+
+  <div class="section-title" id="sc">
+    <div><span class="kicker">Por acción o por tecla</span><h2>Buscador de atajos</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Buscar<input type="text" id="sc-q" placeholder="Ej.: sangría, Ctrl + E" autocomplete="off"></label>
+      <label>Grupo<select id="sc-c"><option value="">Todos</option><option value="arc">Archivo</option><option value="mov">Desplazamiento y selección</option><option value="edi">Edición</option><option value="fue">Fuente</option><option value="par">Párrafo</option><option value="ins">Insertar y saltos</option><option value="rev">Revisión y herramientas</option></select></label>
+    </div>
+    <div class="rsv" id="sc-n"></div>
+    <div class="tr" id="sc-out"></div>
+  </div>
+
+  <div class="section-title" id="pp">
+    <div><span class="kicker">Formato de párrafo</span><h2>Simulador de párrafo</h2></div>
+    <p>Cambia la alineación, las sangrías, el interlineado y el espaciado y mira el resultado.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Alineación<select id="pp-al"><option value="left">Izquierda (Ctrl + Q)</option><option value="center">Centrada (Ctrl + T)</option><option value="right">Derecha (Ctrl + D)</option><option value="justify" selected>Justificada (Ctrl + J)</option><option value="dist">Distribuida (Ctrl + Mayús + J)</option></select></label>
+      <label>Sangría izquierda (cm)<input type="number" id="pp-il" value="0" min="0" max="5" step="0.5"></label>
+      <label>Sangría derecha (cm)<input type="number" id="pp-ir" value="0" min="0" max="5" step="0.5"></label>
+      <label>Especial<select id="pp-sp"><option value="no">(ninguna)</option><option value="first" selected>Primera línea</option><option value="hang">Francesa</option></select></label>
+      <label>En (cm)<input type="number" id="pp-sv" value="1.25" min="0" max="4" step="0.25"></label>
+      <label>Interlineado<select id="pp-ls"><option value="1">Sencillo (Ctrl + 1)</option><option value="1.15" selected>1,15 (por defecto)</option><option value="1.5">1,5 líneas (Ctrl + 5)</option><option value="2">Doble (Ctrl + 2)</option></select></label>
+      <label>Espaciado anterior (pto)<input type="number" id="pp-sb" value="0" min="0" max="48" step="6"></label>
+      <label>Espaciado posterior (pto)<input type="number" id="pp-sa" value="8" min="0" max="48" step="2"></label>
+    </div>
+    <div id="pp-box" style="border:1px dashed var(--line,#cbd5e1);border-radius:12px;padding:14px 10px;margin:12px 0;background:var(--card,#fff);font-family:Aptos,'Segoe UI',system-ui,sans-serif;font-size:.92rem;overflow:hidden"></div>
+    <div class="verdict" id="pp-v"></div>
+  </div>
+
+  <div class="section-title" id="mm">
+    <div><span class="kicker">Pestaña Correspondencia</span><h2>Simulador de combinar correspondencia</h2></div>
+    <p>Documento principal + origen de datos = un documento por destinatario.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Tipo de documento<select id="mm-t"><option value="carta">Cartas</option><option value="sobre">Sobres</option><option value="etiq">Etiquetas</option><option value="mail">Mensajes de correo electrónico</option></select></label>
+      <label>Vista previa de resultados<select id="mm-r"><option value="0">Registro 1</option><option value="1">Registro 2</option><option value="2">Registro 3</option><option value="3">Registro 4</option><option value="all">Finalizar y combinar (todos)</option></select></label>
+      <label>Filtrar destinatarios<select id="mm-f"><option value="">Todos</option><option value="Madrid">Solo provincia = Madrid</option><option value="pend">Solo con trámite pendiente</option></select></label>
+      <label>Regla «Si… entonces… si no»<select id="mm-ru"><option value="1">Activada (saludo según tratamiento)</option><option value="0">Desactivada</option></select></label>
+    </div>
+    <div class="rsv" id="mm-src"></div>
+    <div class="tr" id="mm-out"></div>
+    <div class="verdict" id="mm-v"></div>
+  </div>
+
+  <div class="section-title" id="fx">
+    <div><span class="kicker">Guardar como · F12</span><h2>Comparador de formatos de archivo</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid"><label>Formato<select id="fx-a"></select></label><label>Comparar con<select id="fx-b"></select></label></div>
+    <div class="of" id="fx-oa"></div>
+    <div class="of" id="fx-ob"></div>
+  </div>
+
+  <div class="section-title" id="tb">
+    <div><span class="kicker">Cinta de opciones</span><h2>¿En qué pestaña está?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="tb-case"></div>
+    <div class="choice" id="tb-opts"></div>
+    <div class="verdict" id="tb-out" style="display:none"></div>
+    <div class="score"><span id="tb-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="tb-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="sh">
+    <div><span class="kicker">Teclado</span><h2>¿Qué atajo usarías?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="sh-case"></div>
+    <div class="choice" id="sh-opts"></div>
+    <div class="verdict" id="sh-out" style="display:none"></div>
+    <div class="score"><span id="sh-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="sh-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="sl">
+    <div><span class="kicker">Saltos · Líneas y saltos de página</span><h2>¿Qué salto u opción necesitas?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="sl-case"></div>
+    <div class="choice" id="sl-opts"></div>
+    <div class="verdict" id="sl-out" style="display:none"></div>
+    <div class="score"><span id="sl-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="sl-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Pestañas, vistas y herramientas</span><h2>Mapa de consulta rápida</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>.docx</b><span>Formato de documento de Word desde 2007; .doc es el de Word 97-2003</span></div>
+    <div class="num"><b>.dotx · .dotm</b><span>Plantilla y plantilla habilitada para macros</span></div>
+    <div class="num"><b>24</b><span>Elementos que guarda como máximo el Portapapeles de Office</span></div>
+    <div class="num"><b>21 × 29,7 cm</b><span>DIN A4, tamaño de papel por defecto en la versión española</span></div>
+    <div class="num"><b>Aptos · 1,15 · 8 pto</b><span>Fuente, interlineado y espaciado posterior por defecto</span></div>
+    <div class="num"><b>5 vistas</b><span>Modo de lectura, Diseño de impresión, Diseño web, Esquema y Borrador</span></div>
+    <div class="num"><b>5 tabuladores</b><span>Izquierda, Centrado, Derecha, Decimal y Barra</span></div>
+    <div class="num"><b>3 interlineados</b><span>Sencillo (Ctrl + 1), 1,5 (Ctrl + 5) y Doble (Ctrl + 2)</span></div>
+    <div class="num"><b>4 saltos de sección</b><span>Página siguiente, Continua, Página par y Página impar</span></div>
+    <div class="num"><b>4 alineaciones verticales</b><span>Superior, Centrada, Justificada e Inferior (Abajo)</span></div>
+    <div class="num"><b>6 pasos</b><span>De combinar correspondencia: tipo, destinatarios, lista, campos, vista previa y finalizar</span></div>
+    <div class="num"><b>F7 · Mayús + F7</b><span>Ortografía y gramática · Sinónimos</span></div>
+    <div class="num"><b>F12</b><span>Guardar como; Ctrl + G guarda</span></div>
+    <div class="num"><b>2509 <span class="upd">2026</span></b><span>Versión desde la que los documentos nuevos se guardan en la nube por defecto</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El entorno y los archivos</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Word 365 y su entorno</h3><small>Ventana, cinta y Archivo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Qué es</strong>: el procesador de textos de Microsoft 365, para crear, editar y dar formato a documentos. Está integrado con <strong>OneDrive</strong>, lo que permite el Autoguardado y la coautoría en tiempo real.</li>
+          <li><strong>Elementos de la ventana</strong>:
+            <ul>
+              <li><strong>barra de acceso rápido</strong>, arriba a la izquierda: según el esquema, <strong>Autoguardado, Guardar, Deshacer, Rehacer y Tabla</strong> (personalizable);</li>
+              <li><strong>barra de título</strong>: nombre del documento; en Microsoft 365 no va centrado, sino a la izquierda, junto al <strong>cuadro de búsqueda</strong>. A la derecha, los botones minimizar, maximizar y cerrar;</li>
+              <li><strong>cinta de opciones</strong>, organizada en pestañas, grupos y comandos; se contrae con <strong>Ctrl + F1</strong>;</li>
+              <li><strong>área de trabajo</strong> con la <strong>regla</strong>;</li>
+              <li>al final de la cinta, a la derecha, los botones <strong>Comentarios</strong> y <strong>Edición</strong> (modo de trabajo), además de Compartir;</li>
+              <li><strong>barra de estado</strong>: página, número de palabras, idioma, botones de vista y zoom.</li>
+            </ul>
+          </li>
+          <li><strong>Pestañas</strong>: Archivo, Inicio, Insertar, Dibujar, Diseño, Disposición, Referencias, Correspondencia, Revisar, Vista y Ayuda. Las <strong>contextuales</strong> aparecen al seleccionar un objeto (Diseño de tabla, Formato de imagen…). Programador se activa en Opciones.</li>
+          <li><strong>Grupos de cada pestaña</strong> (según el esquema):
+            <ul>
+              <li><strong>Inicio</strong>: Portapapeles, Fuente, Párrafo, Estilos y Edición, más tres nuevas: <strong>Voz (Dictar)</strong>, <strong>Editor</strong> y <strong>Complementos</strong>;</li>
+              <li><strong>Insertar</strong>: Páginas, Tablas, Ilustraciones (incluye Imágenes), Multimedia, Vínculos, Comentarios, Encabezado y pie de página, Texto y Símbolos;</li>
+              <li><strong>Diseño</strong>: Temas, Formato del documento y Fondo de página;</li>
+              <li><strong>Disposición</strong>: Configurar página (columnas, saltos, números de línea), Párrafo y Organizar;</li>
+              <li><strong>Referencias</strong>: notas al pie, citas y bibliografía, referencias cruzadas, tablas e índices;</li>
+              <li><strong>Correspondencia</strong>: documentos automatizados con datos de distintas fuentes;</li>
+              <li><strong>Revisar</strong>: ortografía y gramática (Editor), versiones y cambios;</li>
+              <li><strong>Vista</strong>: forma de visualización; incluye <strong>Inmersivo</strong> (Concentración y Lector inmersivo);</li>
+              <li><strong>Dibujar</strong>: escritura y dibujo táctil (lápiz o dedo).</li>
+            </ul>
+          </li>
+          <li><strong>Archivo (vista Backstage)</strong>: Nuevo, Abrir, Información (proteger, inspeccionar, versiones), Guardar, Guardar como, Imprimir, Compartir, Exportar, Cerrar, Cuenta y Opciones.</li>
+          <li><span class="upd">2026</span> <strong>Transformar a página web (Sway)</strong>, que estaba en Archivo, se retiró el 30-9-2025.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Las vistas del documento</h3><small>Pestaña Vista</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Modo de lectura</strong>: pantalla completa pensada para leer, sin cinta.</li>
+          <li><strong>Diseño de impresión</strong>: la vista habitual; muestra el documento tal como se imprimirá, con encabezados, pies, notas, columnas e imágenes.</li>
+          <li><strong>Diseño web</strong>: como se vería en un navegador, sin saltos de página.</li>
+          <li><strong>Esquema</strong>: organiza el documento por <strong>niveles de título</strong>; en ella se trabaja con los <strong>documentos maestros</strong>.</li>
+          <li><strong>Borrador</strong>: solo el texto, para editar rápido; <strong>no</strong> muestra encabezados, pies de página ni notas al pie.</li>
+          <li><strong>Herramientas de lectura</strong>:
+            <ul>
+              <li><strong>Inmersivo</strong> (Vista) agrupa <strong>Concentración</strong> y <strong>Lector inmersivo</strong>: ancho de columna, espaciado, sílabas y <strong>Leer en voz alta</strong>;</li>
+              <li><strong>Concentración</strong>: oculta todo salvo el documento.</li>
+            </ul>
+          </li>
+          <li><strong>No es una vista</strong>: la vista previa de impresión, que está en Archivo &gt; Imprimir (<strong>Ctrl + P</strong> o <strong>Ctrl + F2</strong>).</li>
+          <li><strong>Otros controles de Vista</strong>: regla, cuadrícula, panel de navegación, zoom, nueva ventana, dividir, organizar todo, macros.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Crear, abrir, guardar y formatos</h3><small>Archivo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Atajos</strong>:
+            <ul>
+              <li><strong>Ctrl + U</strong>: nuevo documento;</li>
+              <li><strong>Ctrl + A</strong>: abrir;</li>
+              <li><strong>Ctrl + G</strong>: guardar; <strong>F12</strong>: guardar como;</li>
+              <li><strong>Ctrl + F4</strong>: cerrar el documento; <strong>Alt + F4</strong>: cerrar la ventana (y Word, si es la última).</li>
+            </ul>
+          </li>
+          <li><strong>Formatos de Word</strong>:
+            <ul>
+              <li><strong>.docx</strong>: documento; <strong>.docm</strong>: documento con macros;</li>
+              <li><strong>.dotx</strong>: plantilla; <strong>.dotm</strong>: plantilla con macros (Normal.dotm es la plantilla base);</li>
+              <li><strong>.doc</strong> y <strong>.dot</strong>: documento y plantilla de Word 97-2003.</li>
+            </ul>
+          </li>
+          <li><strong>Otros formatos</strong>: .pdf, .xps, .rtf (texto enriquecido), .txt (texto sin formato), .htm/.html, .mht, .xml y <strong>.odt</strong> (OpenDocument).</li>
+          <li><strong>Plantillas</strong>: documentos modelo con estilos, texto y diseño; Archivo &gt; Nuevo.</li>
+          <li><span class="upd">2026</span> <strong>Guardado en la nube</strong>: desde la versión 2509, Word para Windows crea los documentos nuevos en OneDrive con Autoguardado activo. Se puede volver al guardado local en Archivo &gt; Opciones &gt; Guardar.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Edición y formato</h3>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Desplazamiento y selección</h3><small>Teclado y ratón</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Desplazamiento</strong>:
+            <ul>
+              <li><strong>Inicio / Fin</strong>: principio o final de la <strong>línea</strong>;</li>
+              <li><strong>Ctrl + Inicio / Ctrl + Fin</strong>: principio o final del <strong>documento</strong>;</li>
+              <li><strong>Ctrl + flecha derecha / izquierda</strong>: palabra siguiente o anterior;</li>
+              <li><strong>Ctrl + flecha abajo / arriba</strong>: párrafo siguiente o anterior;</li>
+              <li><strong>Av Pág / Re Pág</strong>: una pantalla abajo o arriba;</li>
+              <li><strong>F5</strong> o <strong>Ctrl + I</strong>: Ir a.</li>
+            </ul>
+          </li>
+          <li><strong>Selección con el ratón</strong>:
+            <ul>
+              <li><strong>doble clic</strong>: una palabra;</li>
+              <li><strong>triple clic</strong> en el texto: el párrafo;</li>
+              <li>en el <strong>área de selección</strong> (margen izquierdo): un clic, la línea; doble clic, el párrafo; triple clic, todo el documento;</li>
+              <li><strong>Ctrl + clic</strong>: una oración;</li>
+              <li><strong>Alt + arrastrar</strong>: selección vertical (rectangular).</li>
+            </ul>
+          </li>
+          <li><strong>Selección con el teclado</strong>:
+            <ul>
+              <li><strong>Mayús + flechas</strong>: carácter a carácter o línea a línea;</li>
+              <li><strong>Ctrl + Mayús + Inicio / Fin</strong>: hasta el principio o el final del documento;</li>
+              <li><strong>Ctrl + E</strong>: seleccionar todo;</li>
+              <li><strong>F8</strong>: modo extender selección.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Edición: portapapeles, buscar y deshacer</h3><small>Grupos Portapapeles y Edición</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Portapapeles</strong>:
+            <ul>
+              <li><strong>Ctrl + X, C y V</strong>: cortar, copiar y pegar;</li>
+              <li>el Portapapeles de Office guarda hasta <strong>24 elementos</strong>;</li>
+              <li><strong>Pegado especial</strong> (Ctrl + Alt + V) y opciones de pegado: mantener formato de origen, combinar formato o mantener solo texto.</li>
+            </ul>
+          </li>
+          <li><strong>Copiar formato</strong> (brocha):
+            <ul>
+              <li>un clic: se aplica una vez; <strong>doble clic</strong>: se aplica varias veces hasta pulsar Esc;</li>
+              <li>con teclado: <strong>Ctrl + Mayús + C</strong> copia el formato y <strong>Ctrl + Mayús + V</strong> lo pega.</li>
+            </ul>
+          </li>
+          <li><strong>Deshacer y rehacer</strong>: <strong>Ctrl + Z</strong> y <strong>Ctrl + Y</strong> (o F4, repetir).</li>
+          <li><strong>Buscar y reemplazar</strong>:
+            <ul>
+              <li><strong>Ctrl + B</strong>: buscar (panel de navegación); <strong>Ctrl + L</strong>: reemplazar;</li>
+              <li>opciones: coincidir mayúsculas, solo palabras completas, <strong>usar caracteres comodín</strong>, buscar formato y caracteres especiales;</li>
+              <li>comodines: <strong>?</strong> un carácter y <strong>*</strong> cualquier cadena.</li>
+            </ul>
+          </li>
+          <li><strong>Marcas no imprimibles</strong> (¶, espacios, tabulaciones, saltos): se muestran con <strong>Ctrl + (</strong> (Ctrl + Mayús + 8 en teclado español).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Formato de fuente</h3><small>Inicio &gt; Fuente · Ctrl + Mayús + F</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Por defecto</strong>: <strong>Aptos</strong> (títulos, Aptos Display), sustituta de Calibri.</li>
+          <li><strong>Atajos de estilo</strong>:
+            <ul>
+              <li><strong>Ctrl + N</strong>: negrita;</li>
+              <li><strong>Ctrl + K</strong>: cursiva;</li>
+              <li><strong>Ctrl + S</strong>: subrayado; <strong>Ctrl + Mayús + D</strong>: subrayado doble;</li>
+              <li><strong>Ctrl + Mayús + L</strong>: versalitas (según el material);</li>
+              <li><strong>Ctrl + &gt;</strong> y <strong>Ctrl + &lt;</strong>: aumentar y disminuir 1 punto el tamaño (en teclado español, Ctrl + &gt; se pulsa como Ctrl + Mayús + &lt;);</li>
+              <li><strong>Ctrl + Mayús + +</strong>: superíndice; <strong>Ctrl + +</strong>: subíndice;</li>
+              <li><strong>Mayús + F3</strong>: cambiar mayúsculas y minúsculas.</li>
+            </ul>
+          </li>
+          <li><strong>Quitar formato de carácter</strong>: <strong>Ctrl + barra espaciadora</strong>; «Borrar todo el formato» quita además el de párrafo.</li>
+          <li><strong>Efectos</strong>: tachado, doble tachado, superíndice, subíndice, versalitas, mayúsculas, oculto; color de fuente, resaltado y efectos de texto.</li>
+          <li><strong>Letra capital</strong> (Insertar &gt; Texto): la primera letra del párrafo, grande, en el texto o en el margen.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Formato de párrafo</h3><small>Inicio &gt; Párrafo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Alineación</strong>:
+            <ul>
+              <li><strong>Ctrl + Q</strong>: izquierda;</li>
+              <li><strong>Ctrl + T</strong>: centrada;</li>
+              <li><strong>Ctrl + D</strong>: derecha;</li>
+              <li><strong>Ctrl + J</strong>: justificada;</li>
+              <li><strong>Ctrl + Mayús + J</strong>: distribuida (justifica también la última línea).</li>
+            </ul>
+          </li>
+          <li><strong>Sangrías</strong>:
+            <ul>
+              <li><strong>izquierda y derecha</strong>: separan el párrafo del margen;</li>
+              <li><strong>primera línea</strong>: solo la primera línea entra hacia dentro;</li>
+              <li><strong>francesa</strong>: todas las líneas <strong>menos la primera</strong>;</li>
+              <li>en la regla: triángulo superior (primera línea), triángulo inferior (francesa), <strong>cuadrado</strong> (sangría izquierda completa);</li>
+              <li><strong>Ctrl + M</strong>: aumentar la sangría.</li>
+            </ul>
+          </li>
+          <li><strong>Interlineado</strong>: sencillo (<strong>Ctrl + 1</strong>), 1,5 (<strong>Ctrl + 5</strong>), doble (<strong>Ctrl + 2</strong>), mínimo, exacto y múltiple; por defecto, <strong>1,15</strong>.</li>
+          <li><strong>Espaciado</strong>: anterior y posterior, en puntos; por defecto, 8 pto posterior.</li>
+          <li><strong>Bordes y sombreado</strong> del párrafo.</li>
+          <li><strong>Saltos de línea</strong>: <strong>Intro</strong> crea un párrafo nuevo; <strong>Mayús + Intro</strong> salta de línea dentro del mismo párrafo.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Tabulaciones, listas y estilos</h3><small>Regla · Párrafo · Estilos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Tabuladores</strong>:
+            <ul>
+              <li><strong>izquierda</strong>, <strong>centrado</strong> y <strong>derecha</strong>: alinean el texto respecto a la posición;</li>
+              <li><strong>decimal</strong>: alinea los números por la <strong>coma decimal</strong>;</li>
+              <li><strong>barra</strong>: dibuja una línea vertical;</li>
+              <li><strong>relleno</strong>: puntos, guiones o línea hasta la tabulación (índices).</li>
+            </ul>
+          </li>
+          <li><strong>Listas</strong>: con viñetas, numeradas y multinivel (Tab baja de nivel; Mayús + Tab lo sube).</li>
+          <li><strong>Estilos</strong>:
+            <ul>
+              <li>conjuntos de formatos con nombre (Normal, Título 1, Título 2…);</li>
+              <li>de párrafo, de carácter, vinculados, de tabla y de lista;</li>
+              <li>los <strong>estilos de título</strong> alimentan el panel de navegación, la vista Esquema y la tabla de contenido.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Página, documento largo y referencias</h3>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Configurar página</h3><small>Disposición &gt; Configurar página</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Márgenes</strong>: superior, inferior, izquierdo, derecho y encuadernación; páginas simétricas para impresión a doble cara.</li>
+          <li><strong>Orientación</strong>: vertical u horizontal.</li>
+          <li><strong>Tamaño</strong>: por defecto, <strong>DIN A4 (21 × 29,7 cm)</strong> en la versión española.</li>
+          <li><strong>Columnas</strong>: una, dos, tres, izquierda o derecha, con línea entre columnas.</li>
+          <li><strong>Alineación vertical</strong> (Configurar página &gt; Diseño): <strong>Superior, Centrada, Justificada e Inferior</strong>.</li>
+          <li><strong>Números de línea</strong> y <strong>guiones</strong> (división de palabras).</li>
+          <li><strong>Pestaña Diseño</strong> (fondo de página):
+            <ul>
+              <li><strong>marca de agua</strong> (texto o imagen, como «BORRADOR» o «CONFIDENCIAL»);</li>
+              <li><strong>color de página</strong>;</li>
+              <li><strong>bordes de página</strong>;</li>
+              <li>temas, conjuntos de estilos, colores y fuentes del documento.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Saltos, secciones y control de paginación</h3><small>Disposición &gt; Saltos · Párrafo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Saltos de página</strong>:
+            <ul>
+              <li><strong>de página</strong>: <strong>Ctrl + Intro</strong> (también en Insertar &gt; Páginas);</li>
+              <li><strong>de columna</strong>: <strong>Ctrl + Mayús + Intro</strong>;</li>
+              <li><strong>de ajuste de texto</strong>: separa el texto de alrededor de un objeto.</li>
+            </ul>
+          </li>
+          <li><strong>Saltos de sección</strong>: permiten cambiar orientación, márgenes, columnas o encabezados en una parte del documento.
+            <ul>
+              <li><strong>Página siguiente</strong>: la sección empieza en una página nueva;</li>
+              <li><strong>Continua</strong>: la sección empieza en la <strong>misma página</strong>;</li>
+              <li><strong>Página par</strong> y <strong>Página impar</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Líneas y saltos de página</strong> (cuadro Párrafo):
+            <ul>
+              <li><strong>Control de líneas viudas y huérfanas</strong>: evita dejar la <strong>última</strong> línea de un párrafo sola arriba de una página (<strong>viuda</strong>) o la <strong>primera</strong> sola abajo (<strong>huérfana</strong>);</li>
+              <li><strong>Conservar con el siguiente</strong>: no separa el párrafo del siguiente (títulos);</li>
+              <li><strong>Conservar líneas juntas</strong>: no parte el párrafo entre páginas;</li>
+              <li><strong>Salto de página anterior</strong>: el párrafo empieza siempre en página nueva.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Encabezados, pies, números y notas</h3><small>Insertar · Referencias</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Encabezado y pie de página</strong> (Insertar): texto que se repite en todas las páginas de la sección.
+            <ul>
+              <li>opciones: <strong>primera página diferente</strong>, <strong>páginas pares e impares diferentes</strong>;</li>
+              <li>«Vincular al anterior» enlaza o separa el de cada sección.</li>
+            </ul>
+          </li>
+          <li><strong>Número de página</strong>: arriba, abajo, en el margen o en la posición actual; formato (1, i, a…) y número inicial.</li>
+          <li><strong>Notas</strong> (Referencias):
+            <ul>
+              <li><strong>al pie</strong>: al final de la <strong>página</strong>, encima del pie de página (<strong>Alt + Ctrl + O</strong>, según el material);</li>
+              <li><strong>al final</strong>: al final del <strong>documento</strong> (o de la sección).</li>
+            </ul>
+          </li>
+          <li><strong>Campos</strong>: contenido que Word calcula (fecha, página, índices); se actualizan con <strong>F9</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Referencias y documentos largos</h3><small>Referencias · Vista Esquema</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Tabla de contenido</strong> (Referencias): índice de títulos generado a partir de los <strong>estilos de título</strong>; se actualiza con «Actualizar tabla» o F9.</li>
+          <li><strong>Otros índices</strong>:
+            <ul>
+              <li><strong>índice</strong> alfabético, a partir de entradas marcadas;</li>
+              <li><strong>tabla de ilustraciones</strong>, a partir de los títulos (epígrafes) de figuras;</li>
+              <li><strong>citas y bibliografía</strong>;</li>
+              <li><strong>referencias cruzadas</strong> a títulos, figuras o notas.</li>
+            </ul>
+          </li>
+          <li><strong>Documento maestro</strong>:
+            <ul>
+              <li>contiene <strong>vínculos a subdocumentos</strong> para manejar documentos muy largos (libros, manuales);</li>
+              <li>se crea y gestiona en la <strong>vista Esquema</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Marcadores y referencias cruzadas</strong>: <strong>identifican elementos del documento</strong> para saltar a ellos o citarlos («ver página 12»).</li>
+          <li><strong>Hipervínculos</strong>: <strong>Ctrl + Alt + K</strong>; también a marcadores del propio documento.</li>
+          <li><span class="upd">2026</span> <strong>Investigador</strong> (la «Investigación» del esquema) se retiró de Referencias a partir del 1-1-2025; Microsoft propone Copilot.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Tablas, gráficos y correspondencia</h3>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Tablas</h3><small>Insertar &gt; Tabla</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Insertar</strong>: con la cuadrícula, «Insertar tabla» (filas, columnas y autoajuste), dibujar tabla, convertir texto en tabla, hoja de Excel o tablas rápidas.</li>
+          <li><strong>Autoajuste</strong>: ancho de columna fijo, autoajustar al contenido y autoajustar a la ventana.</li>
+          <li><strong>Pestañas contextuales</strong>:
+            <ul>
+              <li><strong>Diseño de tabla</strong>: estilos, sombreado y bordes;</li>
+              <li><strong>Disposición</strong>: insertar y eliminar filas y columnas, combinar y dividir celdas, tamaño, alineación, dirección del texto, repetir filas de encabezado, ordenar y <strong>fórmulas</strong> (=SUM(ABOVE)).</li>
+            </ul>
+          </li>
+          <li><strong>Propiedades de tabla</strong>: ancho, alineación y ajuste del texto; dimensiones de filas, columnas y celdas.</li>
+          <li><strong>Teclado</strong>: Tab pasa a la celda siguiente y, en la última, añade una fila.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Elementos gráficos</h3><small>Insertar &gt; Ilustraciones y Texto</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Imágenes</strong>:
+            <ul>
+              <li><strong>mapa de bits</strong> (fotografías: .jpg, .png) y <strong>vectoriales</strong> (.svg, iconos);</li>
+              <li>desde el dispositivo, <strong>imágenes de stock</strong> e <strong>imágenes en línea</strong> (la antigua galería Clip Art ya no existe).</li>
+            </ul>
+          </li>
+          <li><strong>Formas, iconos y modelos 3D</strong>.</li>
+          <li><strong>SmartArt</strong>: plantillas de listas, procesos, ciclos, jerarquías (organigramas), relaciones, matrices y pirámides.</li>
+          <li><strong>Gráficos</strong>: representan datos numéricos y se crean con una hoja de <strong>Excel</strong> asociada.</li>
+          <li><strong>WordArt</strong>: texto con efectos artísticos que se trata como un objeto gráfico (Insertar &gt; Texto).</li>
+          <li><strong>Cuadro de texto</strong>, <strong>letra capital</strong> y <strong>ecuaciones</strong>.</li>
+          <li><strong>Ajuste del texto</strong>: en línea con el texto, cuadrado, estrecho, transparente, arriba y abajo, detrás del texto o delante del texto.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Combinar correspondencia</h3><small>Pestaña Correspondencia</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Idea</strong>: un <strong>documento principal</strong> con texto fijo y <strong>campos</strong> + un <strong>origen de datos</strong> (Excel, Access, contactos de Outlook o lista nueva) = un documento por destinatario.</li>
+          <li><strong>Pasos</strong>:
+            <ol>
+              <li><strong>Iniciar combinación de correspondencia</strong>: cartas, mensajes de correo, sobres, etiquetas o directorio;</li>
+              <li><strong>Seleccionar destinatarios</strong>: <strong>escribir una nueva lista</strong>, <strong>usar una lista existente</strong> o <strong>elegir de los contactos de Outlook</strong>;</li>
+              <li><strong>Editar lista de destinatarios</strong>: ordenar, filtrar, quitar duplicados;</li>
+              <li>escribir el documento e <strong>insertar campos combinados</strong> (o Bloque de direcciones y Línea de saludo); <strong>Reglas</strong> como «Si… entonces… si no»;</li>
+              <li><strong>Vista previa de resultados</strong>;</li>
+              <li><strong>Finalizar y combinar</strong>: editar documentos individuales, imprimir o enviar por correo.</li>
+            </ol>
+          </li>
+          <li><strong>Conexión con Excel</strong>: por defecto <strong>OLE DB</strong> (desde Word 2002); DDE es un método antiguo que se elige activando «Confirmar conversión de formato al abrir».</li>
+          <li><strong>Sobres y etiquetas</strong> sueltos también se crean en Correspondencia.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 5 · Revisión, protección y herramientas</h3>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Revisar y proteger</h3><small>Pestaña Revisar · Archivo &gt; Información</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Revisión</strong>:
+            <ul>
+              <li><strong>F7</strong>: ortografía y gramática (Editor);</li>
+              <li><strong>Mayús + F7</strong>: sinónimos;</li>
+              <li><strong>contar palabras</strong>, accesibilidad, traducir e idioma;</li>
+              <li><strong>Leer en voz alta</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Comentarios</strong> y <strong>Control de cambios</strong>: registra inserciones, eliminaciones y formatos; luego se <strong>aceptan o rechazan</strong>. <strong>Comparar</strong> y <strong>combinar</strong> versiones.</li>
+          <li><strong>Restringir edición</strong> (Revisar &gt; Proteger):
+            <ul>
+              <li>restricciones de formato;</li>
+              <li>edición permitida: <strong>solo lectura (sin cambios)</strong>, marcas de revisión, comentarios o rellenado de formularios.</li>
+            </ul>
+          </li>
+          <li><strong>Archivo &gt; Información &gt; Proteger documento</strong>:
+            <ul>
+              <li><strong>abrir siempre como de solo lectura</strong>;</li>
+              <li><strong>cifrar con contraseña</strong>;</li>
+              <li><strong>restringir edición</strong>;</li>
+              <li><strong>restringir acceso</strong> (permisos de Microsoft Purview / IRM);</li>
+              <li><strong>agregar una firma digital</strong>;</li>
+              <li><strong>marcar como final</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Marcas de revisión</strong>: el Editor subraya la <strong>ortografía en rojo</strong>, la <strong>gramática en azul</strong> y las <strong>sugerencias de estilo en morado</strong> (el esquema cita verde, rojo y azul: el verde era la gramática de versiones antiguas).</li>
+          <li><strong>Inspeccionar documento</strong>: busca propiedades ocultas, comentarios y datos personales antes de compartir.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">17</span><span class="bt"><h3>Imprimir, macros y Copilot</h3><small>Archivo · Vista · Copilot</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Imprimir</strong> (<strong>Ctrl + P</strong> o <strong>Ctrl + F2</strong>): vista previa, impresora, intervalo de páginas, una o dos caras, intercaladas, orientación, tamaño y páginas por hoja.</li>
+          <li><strong>Macros</strong> (Vista &gt; Macros; más opciones en Programador):
+            <ul>
+              <li>conjunto de acciones grabadas con un nombre para repetir tareas;</li>
+              <li>se guardan en documentos <strong>.docm</strong> o plantillas <strong>.dotm</strong> (o en Normal.dotm);</li>
+              <li>se escriben en <strong>VBA</strong>; por seguridad, las macros de archivos de Internet se bloquean.</li>
+            </ul>
+          </li>
+          <li><strong>Dictar</strong> (Inicio): escribir con la voz.</li>
+          <li><strong>Ventana</strong> (Vista): <strong>Dividir</strong> la ventana del documento (Alt, W, D, según el esquema) y quitar la división (<strong>Alt + Mayús + C</strong>); <strong>Esc</strong> cancela un comando.</li>
+          <li><span class="upd">2026</span> <strong>Copilot en Word</strong>:
+            <ul>
+              <li>redacta, resume, reescribe y responde sobre el documento;</li>
+              <li>desde el 22-4-2026 el <strong>modo agente</strong> es la experiencia por defecto para los suscriptores: reformatea o reorganiza todo el documento con una sola instrucción;</li>
+              <li>desde 2026 trabaja también con control de cambios y comentarios.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> <strong>Publisher</strong> pierde el soporte en octubre de 2026 y Word asume sus funciones de maquetación.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Atajos en español</b>Ctrl + N es negrita (no «nuevo»: es Ctrl + U), Ctrl + K cursiva, Ctrl + S subrayado y Ctrl + G guardar.</div>
+    <div class="trap"><b>Ctrl + E</b>Selecciona todo; Ctrl + T centra, Ctrl + B busca y Ctrl + L reemplaza.</div>
+    <div class="trap"><b>Alineaciones</b>Ctrl + Q izquierda, Ctrl + D derecha, Ctrl + J justificada; Ctrl + Mayús + J distribuida.</div>
+    <div class="trap"><b>Viuda y huérfana</b>Viuda: última línea sola arriba de la página. Huérfana: primera línea sola abajo.</div>
+    <div class="trap"><b>Sangría francesa</b>Afecta a todas las líneas menos la primera.</div>
+    <div class="trap"><b>Saltos</b>Ctrl + Intro, página; Ctrl + Mayús + Intro, columna; Mayús + Intro, línea. La sección continua empieza en la misma página.</div>
+    <div class="trap"><b>Notas</b>Al pie: final de la página. Al final: final del documento.</div>
+    <div class="trap"><b>Borrador</b>No muestra encabezados, pies ni notas. Los documentos maestros se gestionan en Esquema.</div>
+    <div class="trap"><b>Extensiones</b>.dotm es plantilla con macros; .docm, documento con macros; .dot, plantilla de Word 97-2003.</div>
+    <div class="trap"><b>Pestañas</b>Marca de agua y color de página en Diseño; márgenes, saltos y columnas en Disposición; tabla de contenido en Referencias.</div>
+    <div class="trap"><b>Copiar formato</b>Doble clic en la brocha para aplicarlo varias veces; Ctrl + Mayús + C lo copia por teclado.</div>
+    <div class="trap"><b>F7 y Mayús + F7</b>Ortografía y gramática; sinónimos. F12 es Guardar como.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: página de repaso «Oposiciones AGE: Word 365» aportada por el usuario (esquema y tests) y esquema «Word 365» de ADAMS Formación (OL1124), reorganizados y completada con el funcionamiento de Word 365 en español, actualizada a noviembre de 2026: guardado en la nube por defecto, Copilot en modo agente, retirada de Transformar (Sway) y de Publisher.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Informática · Tema 4 · Word 365 · Herramientas ===== */
+const SC=[
+ ["Ctrl + U","Nuevo documento.","arc"],["Ctrl + A","Abrir un documento.","arc"],["Ctrl + G","Guardar.","arc"],["F12","Guardar como.","arc"],
+ ["Ctrl + P","Imprimir y vista previa de impresión.","arc"],["Ctrl + F2","Vista previa de impresión (Archivo > Imprimir).","arc"],
+ ["Ctrl + F4","Cerrar el documento sin cerrar Word.","arc"],["Alt + F4","Cerrar la ventana; si es la última, sale de Word.","arc"],
+ ["Ctrl + F1","Contraer o expandir la cinta de opciones.","arc"],
+ ["Inicio","Al principio de la línea.","mov"],["Fin","Al final de la línea.","mov"],
+ ["Ctrl + Inicio","Al principio del documento.","mov"],["Ctrl + Fin","Al final del documento.","mov"],
+ ["Ctrl + flecha derecha","Al principio de la palabra siguiente.","mov"],["Ctrl + flecha izquierda","Al principio de la palabra anterior.","mov"],
+ ["Ctrl + flecha abajo","Al principio del párrafo siguiente.","mov"],["Ctrl + flecha arriba","Al principio del párrafo anterior.","mov"],
+ ["Ctrl + Mayús + Inicio","Seleccionar hasta el principio del documento.","mov"],["Ctrl + Mayús + Fin","Seleccionar hasta el final del documento.","mov"],
+ ["Ctrl + E","Seleccionar todo el documento.","mov"],["F5","Ir a (también Ctrl + I).","mov"],["Ctrl + I","Ir a (también F5).","mov"],
+ ["F8","Activar el modo de extender la selección.","mov"],
+ ["Ctrl + X","Cortar.","edi"],["Ctrl + C","Copiar.","edi"],["Ctrl + V","Pegar.","edi"],["Ctrl + Alt + V","Pegado especial.","edi"],
+ ["Ctrl + Z","Deshacer.","edi"],["Ctrl + Y","Rehacer o repetir.","edi"],["F4","Repetir la última acción.","edi"],
+ ["Ctrl + B","Buscar (panel de navegación).","edi"],["Ctrl + L","Buscar y reemplazar.","edi"],
+ ["Ctrl + Mayús + C","Copiar formato.","edi"],["Ctrl + Mayús + V","Pegar formato.","edi"],
+ ["Ctrl + (","Mostrar u ocultar marcas de formato (Ctrl + Mayús + 8 en teclado español).","edi"],
+ ["Ctrl + N","Negrita.","fue"],["Ctrl + K","Cursiva.","fue"],["Ctrl + S","Subrayado.","fue"],["Ctrl + Mayús + D","Subrayado doble.","fue"],
+ ["Ctrl + Mayús + P","Subrayado solo de palabras (según el material).","fue"],["Ctrl + Mayús + L","Versalitas (según el material).","fue"],
+ ["Ctrl + >","Aumentar 1 punto el tamaño de la fuente (en teclado español, Ctrl + Mayús + <).","fue"],["Ctrl + <","Disminuir 1 punto el tamaño de la fuente.","fue"],["Ctrl + Mayús + <","Aumentar 1 punto el tamaño de la fuente (es Ctrl + > en teclado español).","fue"],
+ ["Ctrl + Mayús + +","Superíndice.","fue"],["Ctrl + +","Subíndice.","fue"],
+ ["Ctrl + Mayús + F","Abrir el cuadro Fuente.","fue"],["Mayús + F3","Cambiar entre mayúsculas, minúsculas y tipo título.","fue"],
+ ["Ctrl + Barra espaciadora","Quitar el formato de carácter (también Ctrl + Mayús + Z).","fue"],
+ ["Ctrl + Mayús + Z","Quitar el formato de carácter.","fue"],
+ ["Ctrl + Q","Alinear a la izquierda.","par"],["Ctrl + T","Centrar el párrafo.","par"],["Ctrl + D","Alinear a la derecha.","par"],
+ ["Ctrl + J","Justificar.","par"],["Ctrl + Mayús + J","Alineación distribuida (también la última línea).","par"],
+ ["Ctrl + 1","Interlineado sencillo.","par"],["Ctrl + 5","Interlineado de 1,5 líneas.","par"],["Ctrl + 2","Interlineado doble.","par"],
+ ["Ctrl + M","Aumentar la sangría izquierda.","par"],["Ctrl + W","Quitar el formato de párrafo (según el material).","par"],
+ ["Ctrl + Intro","Salto de página.","ins"],["Ctrl + Mayús + Intro","Salto de columna.","ins"],["Mayús + Intro","Salto de línea manual.","ins"],
+ ["Ctrl + Mayús + Barra espaciadora","Espacio de no separación.","ins"],["Ctrl + Alt + K","Insertar hipervínculo.","ins"],
+ ["Ctrl + Alt + O","Insertar nota al pie (según el material).","ins"],
+ ["Esc","Cancelar un comando.","edi"],["Alt + Mayús + C","Quitar la división de la ventana del documento (según el esquema).","rev"],["Alt + W + D","Dividir la ventana del documento (teclas de acceso, según el esquema).","rev"],["F7","Ortografía y gramática.","rev"],["Mayús + F7","Sinónimos.","rev"],["F9","Actualizar campos.","rev"],
+ ["Alt + F8","Ver las macros.","rev"],["Alt + F11","Abrir el editor de Visual Basic (VBA).","rev"]
+];
+const SCCAT={arc:"Archivo",mov:"Desplazamiento y selección",edi:"Edición",fue:"Fuente",par:"Párrafo",ins:"Insertar y saltos",rev:"Revisión y herramientas"};
+const KMODS=["","Ctrl","Mayús","Alt","Ctrl + Mayús","Ctrl + Alt","Alt + Mayús","Alt + W"];
+const KKEYS=["A","B","C","D","E","F","G","I","J","K","L","M","N","O","P","Q","S","T","U","V","W","Y","Z","1","2","5","(","+",">","<","F1","F2","F3","F4","F5","F7","F8","F9","F11","F12","Esc","Intro","Barra espaciadora","Inicio","Fin","flecha derecha","flecha izquierda","flecha arriba","flecha abajo"];
+const FX={
+ docx:{n:".docx",d:"Documento de Word (desde 2007)",b:"Office Open XML (ZIP con XML)",m:"No",u:"Formato por defecto"},
+ docm:{n:".docm",d:"Documento habilitado para macros",b:"Office Open XML",m:"Sí",u:"Documentos con automatizaciones VBA"},
+ dotx:{n:".dotx",d:"Plantilla de Word",b:"Office Open XML",m:"No",u:"Modelos reutilizables"},
+ dotm:{n:".dotm",d:"Plantilla habilitada para macros",b:"Office Open XML",m:"Sí",u:"Normal.dotm, la plantilla base de Word"},
+ doc:{n:".doc",d:"Documento de Word 97-2003",b:"Binario",m:"Puede contenerlas",u:"Compatibilidad con versiones antiguas"},
+ dot:{n:".dot",d:"Plantilla de Word 97-2003",b:"Binario",m:"Puede contenerlas",u:"Plantillas antiguas"},
+ pdf:{n:".pdf",d:"Portable Document Format",b:"Formato fijo",m:"No",u:"Distribuir sin que cambie el aspecto"},
+ xps:{n:".xps",d:"XML Paper Specification",b:"Formato fijo de Microsoft",m:"No",u:"Alternativa de Microsoft al PDF"},
+ rtf:{n:".rtf",d:"Formato de texto enriquecido",b:"Texto con códigos de formato",m:"No",u:"Intercambio básico entre procesadores"},
+ txt:{n:".txt",d:"Texto sin formato",b:"Texto plano",m:"No",u:"Solo el texto, sin formato"},
+ odt:{n:".odt",d:"Texto de OpenDocument",b:"Estándar abierto ISO (ODF)",m:"No",u:"Intercambio con LibreOffice y Administraciones"},
+ htm:{n:".htm / .html",d:"Página web",b:"HTML más carpeta de archivos",m:"No",u:"Publicar en la web"},
+ mht:{n:".mht / .mhtml",d:"Página web de un solo archivo",b:"HTML con recursos incrustados",m:"No",u:"Página web en un único archivo"},
+ xml:{n:".xml",d:"Documento XML de Word 2003",b:"XML de un solo archivo",m:"No",u:"Integración con otros sistemas"}
+};
+const FXK=["Descripción","Estructura","¿Macros?","Uso típico"];
+const REC=[
+ {Tratamiento:"Sra.",Nombre:"Ana",Apellidos:"García López",Direccion:"C/ Mayor 1",Provincia:"Madrid",Tramite:"Pendiente"},
+ {Tratamiento:"Sr.",Nombre:"Luis",Apellidos:"Pérez Ruiz",Direccion:"Av. del Puerto 22",Provincia:"Valencia",Tramite:"Resuelto"},
+ {Tratamiento:"Sra.",Nombre:"Marta",Apellidos:"Sanz Gil",Direccion:"Pza. España 5",Provincia:"Madrid",Tramite:"Resuelto"},
+ {Tratamiento:"Sr.",Nombre:"Jorge",Apellidos:"Díaz Mora",Direccion:"C/ Real 40",Provincia:"Sevilla",Tramite:"Pendiente"}
+];
+const TB=[
+ ["Insertar una marca de agua «CONFIDENCIAL».","dis","Diseño > Fondo de página > Marca de agua."],
+ ["Cambiar el color de fondo de todas las páginas.","dis","Diseño > Fondo de página > Color de página."],
+ ["Cambiar los márgenes o la orientación.","disp","Disposición > Configurar página."],
+ ["Insertar un salto de sección continuo.","disp","Disposición > Saltos."],
+ ["Dividir el texto en dos columnas.","disp","Disposición > Columnas."],
+ ["Crear una tabla de contenido.","ref","Referencias > Tabla de contenido."],
+ ["Insertar una nota al pie.","ref","Referencias > Notas al pie."],
+ ["Insertar un encabezado o el número de página.","ins","Insertar > Encabezado y pie de página."],
+ ["Insertar un SmartArt o un gráfico.","ins","Insertar > Ilustraciones."],
+ ["Insertar un WordArt o una letra capital.","ins","Insertar > Texto."],
+ ["Iniciar una combinación de correspondencia.","cor","Correspondencia > Iniciar combinación de correspondencia."],
+ ["Crear sobres o etiquetas.","cor","Correspondencia > Crear."],
+ ["Activar el Control de cambios.","rev","Revisar > Seguimiento."],
+ ["Restringir la edición del documento.","rev","Revisar > Proteger > Restringir edición."],
+ ["Revisar la ortografía o buscar sinónimos.","rev","Revisar > Revisión."],
+ ["Grabar una macro.","vis","Vista > Macros (más opciones en Programador)."],
+ ["Pasar a la vista Esquema o activar la regla.","vis","Vista > Vistas y Mostrar."],
+ ["Abrir el Lector inmersivo.","vis","Vista > Lector inmersivo."],
+ ["Cifrar el documento con contraseña.","arc","Archivo > Información > Proteger documento."],
+ ["Inspeccionar el documento antes de compartirlo.","arc","Archivo > Información > Comprobar si hay problemas."],
+ ["Copiar formato con la brocha.","ini","Inicio > Portapapeles."],
+ ["Aplicar el estilo Título 1.","ini","Inicio > Estilos."]
+];
+const TBO={ini:"Inicio",ins:"Insertar",dis:"Diseño",disp:"Disposición",ref:"Referencias",cor:"Correspondencia",rev:"Revisar",vis:"Vista",arc:"Archivo"};
+const SH=[
+ ["Poner en negrita la palabra seleccionada.","n","Ctrl + N es negrita en Word en español."],
+ ["Poner el texto en cursiva.","k","Ctrl + K."],
+ ["Crear un documento nuevo.","u","Ctrl + U."],
+ ["Seleccionar todo el documento.","e","Ctrl + E."],
+ ["Centrar un título.","t","Ctrl + T."],
+ ["Justificar un párrafo.","j","Ctrl + J."],
+ ["Guardar el documento.","g","Ctrl + G (F12 es Guardar como)."],
+ ["Buscar una palabra.","b","Ctrl + B."],
+ ["Sustituir «Ley 30/1992» por «Ley 39/2015» en todo el documento.","l","Ctrl + L abre Buscar y reemplazar."],
+ ["Subrayar el texto.","s","Ctrl + S."],
+ ["Alinear a la derecha la fecha de un escrito.","d","Ctrl + D."],
+ ["Alinear a la izquierda.","q","Ctrl + Q."]
+];
+const SHO={n:"Ctrl + N",k:"Ctrl + K",s:"Ctrl + S",u:"Ctrl + U",g:"Ctrl + G",e:"Ctrl + E",t:"Ctrl + T",j:"Ctrl + J",d:"Ctrl + D",q:"Ctrl + Q",b:"Ctrl + B",l:"Ctrl + L"};
+const SL=[
+ ["El capítulo 2 debe empezar siempre en una página nueva, pero sin cambiar márgenes ni orientación.","pag","Salto de página (Ctrl + Intro) o, como opción del párrafo, «Salto de página anterior»."],
+ ["Un anexo con una tabla ancha debe ir en horizontal y el resto del documento en vertical.","secp","Salto de sección «Página siguiente» antes y después del anexo, y orientación horizontal en esa sección."],
+ ["El título del documento ocupa una columna y el texto, debajo y en la misma página, va a dos columnas.","secc","Salto de sección «Continua»: la nueva sección empieza en la misma página."],
+ ["En un texto a dos columnas quieres que el siguiente párrafo pase ya a la segunda columna.","col","Salto de columna (Ctrl + Mayús + Intro)."],
+ ["Quieres cambiar de línea en una dirección sin crear un párrafo nuevo.","lin","Salto de línea (Mayús + Intro)."],
+ ["Un título se queda solo al final de la página y su texto pasa a la siguiente.","cons","«Conservar con el siguiente» en el título."],
+ ["La última línea de un párrafo queda sola arriba de la página siguiente.","viu","Control de líneas viudas y huérfanas (es una viuda)."],
+ ["Un párrafo corto no debe partirse nunca entre dos páginas.","junt","«Conservar líneas juntas»."],
+ ["Cada capítulo de un libro a doble cara debe empezar en página impar (derecha).","secp","Salto de sección «Página impar»: como «Página siguiente», empieza en página nueva, pero siempre impar."],
+ ["La primera línea de un párrafo queda sola al final de una página.","viu","Control de líneas viudas y huérfanas (es una huérfana)."]
+];
+const SLO={pag:"Salto de página",col:"Salto de columna",lin:"Salto de línea",secp:"Sección: página siguiente / impar",secc:"Sección: continua",cons:"Conservar con el siguiente",junt:"Conservar líneas juntas",viu:"Control de viudas y huérfanas"};
+const INS=[
+ {g:"Pestañas",n:"Inicio",norm:"Formato básico",def:"Lo que más se usa.",f:{"Grupos":"Portapapeles, Fuente, Párrafo, Estilos y Edición.","Además":"Dictar, Editor y Complementos.","Atajos":"Ctrl + N, K, S; Ctrl + Q, T, D, J.","Brocha":"Copiar formato: doble clic para varias veces."}},
+ {g:"Pestañas",n:"Insertar",norm:"Objetos",def:"Todo lo que se añade al documento.",f:{"Páginas":"Portada, página en blanco y salto de página.","Tablas e ilustraciones":"Tabla, imágenes, formas, iconos, SmartArt, gráfico.","Encabezado y pie":"Encabezado, pie y número de página.","Texto y símbolos":"Cuadro de texto, WordArt, letra capital, ecuación, símbolo."}},
+ {g:"Pestañas",n:"Diseño y Disposición",norm:"La página",def:"Dos pestañas que se confunden en el examen.",f:{"Diseño":"Temas, estilos del documento, marca de agua, color y bordes de página.","Disposición":"Márgenes, orientación, tamaño, columnas, saltos, números de línea y guiones.","Párrafo en Disposición":"Sangría y espaciado.","Organizar":"Posición, ajuste del texto, alinear y agrupar objetos."}},
+ {g:"Pestañas",n:"Referencias y Correspondencia",norm:"Documentos largos y envíos",def:"Índices, notas y combinaciones.",f:{"Referencias":"Tabla de contenido, notas al pie y al final, citas, bibliografía, títulos, índice, marcadores y referencias cruzadas (Investigador, retirado en 2025).","Correspondencia":"Sobres, etiquetas y combinar correspondencia.","Campos":"Insertar campo combinado, bloque de direcciones, línea de saludo, reglas.","Finalizar":"Editar documentos individuales, imprimir o enviar por correo."}},
+ {g:"Pestañas",n:"Revisar y Vista",norm:"Control y presentación",def:"Revisión, protección, vistas y macros.",f:{"Revisar":"Editor: ortografía en rojo, gramática en azul, estilo en morado; F7, sinónimos, comentarios, control de cambios, comparar, restringir edición.","Vista":"Vistas, lector inmersivo, regla, panel de navegación, zoom, ventanas y macros.","Leer en voz alta":"En Revisar y en el Lector inmersivo.","Proteger":"Solo lectura, comentarios, cambios o formularios."}},
+ {g:"Vistas",n:"Las cinco vistas",norm:"Pestaña Vista y barra de estado",def:"Cómo se ve el documento.",f:{"Diseño de impresión":"Tal como se imprimirá; la habitual.","Modo de lectura":"Para leer, sin cinta.","Diseño web":"Como en un navegador.","Esquema y Borrador":"Niveles de título (documentos maestros) y solo texto."}},
+ {g:"Archivo",n:"Backstage y formatos",norm:"Archivo",def:"Gestión del documento.",f:{"Información":"Proteger, inspeccionar, versiones.","Formatos":".docx, .docm, .dotx, .dotm, .doc, .dot, .pdf, .rtf, .txt, .odt.","2026":"Documentos nuevos en la nube por defecto (versión 2509).","Retirado":"Transformar a página web (Sway), en septiembre de 2025."}},
+ {g:"IA",n:"Copilot en Word",norm:"Microsoft 365 Copilot",def:"Asistente de IA integrado.",f:{"Funciones":"Redactar, resumir, reescribir, preguntar sobre el documento.","Modo agente":"Experiencia por defecto desde el 22-4-2026.","Acceso":"Panel de chat de Copilot, unificado en 2026.","Licencia":"Microsoft 365 Copilot o planes que lo incluyen."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${e(OPTS[k])}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+e(OPTS[c[1]])}</b>${e(c[2])}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("tb",TB,TBO,"Tarea");
+  trainer("sh",SH,SHO,"Tarea");
+  trainer("sl",SL,SLO,"Caso");
+  const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  /* Combinador */
+  (function(){const m=$("kc-m"),k=$("kc-k");if(!m)return;m.innerHTML=KMODS.map(x=>`<option value="${x}">${x||"(ninguno)"}</option>`).join("");k.innerHTML=KKEYS.map(x=>`<option>${e(x)}</option>`).join("");m.value="Ctrl";k.value="E";
+    function run(){const key=(m.value?m.value+" + ":"")+k.value,hits=SC.filter(s=>s[0]===key),o=$("kc-out");
+      if(!hits.length){o.className="verdict mid";o.innerHTML=`<b class="big">${e(key)}</b>Esta combinación no está entre los atajos que recoge la página.`;return}
+      const doubt=hits.some(h=>/según el material/.test(h[1]));
+      o.className="verdict "+(doubt?"mid":"ok");
+      o.innerHTML=`<b class="big">${e(key)}</b>`+hits.map(h=>`${e(h[1])} <small>· ${SCCAT[h[2]]}</small>`).join("<br>")+(doubt?"<br><small>Atajo tomado del material de estudio; puede variar según la versión y la distribución del teclado.</small>":"")}
+    ev(["kc-m","kc-k"],run);run()})();
+  /* Buscador */
+  (function(){if(!$("sc-q"))return;
+    function run(){const q=norm($("sc-q").value.trim()),c=$("sc-c").value;const r=SC.filter(s=>(!c||s[2]===c)&&(!q||norm(s[0]+" "+s[1]).includes(q)));
+      $("sc-n").innerHTML=`<div><b>Resultados</b><span>${r.length} de ${SC.length} atajos${(q||c)?"":" (se muestran 12: escribe o elige un grupo)"}</span></div>`;
+      $("sc-out").innerHTML=r.length?r.slice(0,(q||c)?80:12).map(s=>`<div><b>${e(s[0])}</b>: ${e(s[1])} <small>· ${SCCAT[s[2]]}</small></div>`).join(""):"<div>No hay atajos con ese texto.</div>"}
+    ev(["sc-q","sc-c"],run);run()})();
+  /* Párrafo */
+  (function(){if(!$("pp-al"))return;const TXT="La presente resolución se notificará a los interesados en el plazo de diez días a partir de la fecha en que haya sido dictada, con indicación de si pone fin o no a la vía administrativa y de los recursos que procedan.";
+    function run(){const al=$("pp-al").value,il=num("pp-il"),ir=num("pp-ir"),sp=$("pp-sp").value,sv=num("pp-sv"),ls=+$("pp-ls").value,sb=num("pp-sb"),sa=num("pp-sa");
+      const px=38;let pl=il*px,ti=0;if(sp==="first")ti=sv*px;else if(sp==="hang"){pl+=sv*px;ti=-sv*px}
+      const ta=al==="dist"?"justify":al,tal=al==="dist"?"justify":"auto";
+      const para=t=>`<p style="margin:${sb*1.3}px ${ir*px}px ${sa*1.3}px ${pl}px;text-indent:${ti}px;text-align:${ta};text-align-last:${tal};line-height:${(ls*1.2).toFixed(2)}">${t}</p>`;
+      $("pp-box").innerHTML=`<div style="border-left:2px dotted #94a3b8;border-right:2px dotted #94a3b8;padding:0 4px">${para(TXT)}${para("Contra esta resolución cabe recurso de alzada en el plazo de un mes.")}</div>`;
+      const sc={left:"Ctrl + Q",center:"Ctrl + T",right:"Ctrl + D",justify:"Ctrl + J",dist:"Ctrl + Mayús + J"}[al],lsk={1:"Ctrl + 1","1.5":"Ctrl + 5",2:"Ctrl + 2"}[String(ls)];
+      const parts=[`Alineación ${({left:"izquierda",center:"centrada",right:"derecha",justify:"justificada",dist:"distribuida (justifica también la última línea)"})[al]} (<strong>${sc}</strong>)`];
+      parts.push(sp==="first"?`sangría de <strong>primera línea</strong> de ${String(sv).replace(".",",")} cm: solo la primera línea entra`:sp==="hang"?`sangría <strong>francesa</strong> de ${String(sv).replace(".",",")} cm: todas las líneas menos la primera`:"sin sangría especial");
+      if(il||ir)parts.push(`sangría izquierda ${String(il).replace(".",",")} cm y derecha ${String(ir).replace(".",",")} cm`);
+      parts.push(`interlineado ${String(ls).replace(".",",")}${lsk?` (<strong>${lsk}</strong>)`:" (el valor por defecto de Word)"}`);
+      parts.push(`espaciado ${sb} pto anterior y ${sa} pto posterior`);
+      const o=$("pp-v");o.className="verdict ok";o.innerHTML=`<b class="big">Formato del párrafo</b>${parts.join("; ")}. Todo se ajusta en Inicio &gt; Párrafo (o Disposición &gt; Párrafo). Las líneas punteadas marcan los márgenes.`}
+    ev(["pp-al","pp-il","pp-ir","pp-sp","pp-sv","pp-ls","pp-sb","pp-sa"],run);run()})();
+  /* Correspondencia */
+  (function(){if(!$("mm-t"))return;
+    function run(){const t=$("mm-t").value,r=$("mm-r").value,f=$("mm-f").value,ru=$("mm-ru").value==="1";
+      let list=REC.map((x,i)=>({x,i}));if(f==="Madrid")list=list.filter(o=>o.x.Provincia==="Madrid");if(f==="pend")list=list.filter(o=>o.x.Tramite==="Pendiente");
+      $("mm-src").innerHTML=`<div style="grid-column:1/-1"><b>Origen de datos (Excel, ${REC.length} registros${f?`; tras el filtro quedan ${list.length}`:""})</b><span>${REC.map((x,i)=>`${list.some(o=>o.i===i)?"✅":"▫️"} ${i+1}. ${x.Tratamiento} ${x.Nombre} ${x.Apellidos} · ${x.Provincia} · ${x.Tramite}`).join("<br>")}</span></div>`;
+      const sal=x=>ru?(x.Tratamiento==="Sra."?"Estimada":"Estimado"):"Estimado/a";
+      const doc=x=>t==="carta"?`<div class="l2"><b>Carta</b><br>${x.Tratamiento} ${x.Nombre} ${x.Apellidos}<br>${x.Direccion}<br>${x.Provincia}<br><br>${sal(x)} ${x.Tratamiento} ${x.Apellidos.split(" ")[0]}:<br>Le comunicamos que su trámite figura como <strong>${x.Tramite.toLowerCase()}</strong>.</div>`
+        :t==="sobre"?`<div class="l2"><b>Sobre</b><br>${x.Tratamiento} ${x.Nombre} ${x.Apellidos}<br>${x.Direccion}<br>${x.Provincia.toUpperCase()}</div>`
+        :t==="etiq"?`<div class="l2"><b>Etiqueta</b> · ${x.Nombre} ${x.Apellidos} · ${x.Direccion} · ${x.Provincia}</div>`
+        :`<div class="l2"><b>Correo</b> · Para: ${norm(x.Nombre)}.${norm(x.Apellidos.split(" ")[0])}@ejemplo.es<br>${sal(x)} ${x.Nombre}: su trámite está ${x.Tramite.toLowerCase()}.</div>`;
+      const o=$("mm-out"),v=$("mm-v");
+      if(!list.length){o.innerHTML="<div>Ningún registro cumple el filtro.</div>";v.className="verdict ko";v.innerHTML=`<b class="big">No se generará ningún documento</b>Revisa el filtro en «Editar lista de destinatarios».`;return}
+      if(r==="all"){o.innerHTML=`<div><b>Documento combinado: ${list.length} ${t==="etiq"?"etiquetas":t==="sobre"?"sobres":t==="mail"?"mensajes":"cartas"}</b></div>`+list.map(z=>doc(z.x)).join("");
+        v.className="verdict ok";v.innerHTML=`<b class="big">Finalizar y combinar</b>Se crea un resultado por cada registro que pasa el filtro. Puedes editar los documentos individuales${t==="mail"?", imprimirlos o enviarlos como mensajes de correo (con Outlook)":" o imprimirlos"}.`}
+      else{const idx=+r,pick=list.find(z=>z.i===idx);
+        o.innerHTML=pick?doc(pick.x):`<div>El registro ${idx+1} está excluido por el filtro.</div>`;
+        v.className="verdict "+(pick?"ok":"mid");v.innerHTML=`<b class="big">Vista previa de resultados</b>Pasos: 1) Iniciar combinación (${({carta:"cartas",sobre:"sobres",etiq:"etiquetas",mail:"mensajes de correo"})[t]}); 2) Seleccionar destinatarios; 3) Editar lista${f?" (filtro aplicado)":""}; 4) Insertar campos combinados${ru?" y la regla «Si… entonces… si no» (Tratamiento = Sra. → «Estimada»)":""}; 5) Vista previa; 6) Finalizar y combinar.`}}
+    ev(["mm-t","mm-r","mm-f","mm-ru"],run);run()})();
+  /* Formatos */
+  (function(){const a=$("fx-a"),b=$("fx-b");if(!a)return;const ks=Object.keys(FX);a.innerHTML=ks.map(k=>`<option value="${k}">${FX[k].n}</option>`).join("");b.innerHTML=`<option value="">(ninguno)</option>`+a.innerHTML;a.value="dotm";b.value="docx";
+    const card=o=>{const v=[o.d,o.b,o.m,o.u];return `<div style="grid-column:1/-1;background:var(--a1);color:#fff;border-color:var(--a1)"><b style="color:#fff;opacity:.8">Formato</b><span style="font-weight:800;font-size:1.05rem">${e(o.n)}</span></div>`+FXK.map((k,i)=>`<div><b>${k}</b>${e(v[i])}</div>`).join("")};
+    function run(){$("fx-oa").innerHTML=card(FX[a.value]);$("fx-ob").innerHTML=b.value?card(FX[b.value]):""}
+    ev(["fx-a","fx-b"],run);run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Microsoft Word 365.",r:"Procesador de textos de Microsoft 365 para crear, editar y dar formato a documentos; integrado con OneDrive."},
+ {p:"Cinta de opciones.",r:"Barra de pestañas con grupos de comandos; se contrae con Ctrl + F1."},
+ {p:"Pestañas contextuales.",r:"Aparecen al seleccionar un objeto: Diseño de tabla, Disposición, Formato de imagen…"},
+ {p:"Barra de herramientas de acceso rápido.",r:"Comandos frecuentes y personalizables: Guardar, Deshacer, Rehacer (y el interruptor de Autoguardado)."},
+ {p:"Vista Backstage.",r:"La pestaña Archivo: Nuevo, Abrir, Información, Guardar, Imprimir, Compartir, Exportar, Opciones."},
+ {p:"Funciones de la pestaña Inicio añadidas en Microsoft 365.",r:"Dictar (Voz), Editor y Complementos."},
+ {p:"Pestaña Programador.",r:"Macros avanzadas, controles de formulario y VBA; se activa en Archivo > Opciones > Personalizar cinta."},
+ {p:"Las cinco vistas de Word.",r:"Modo de lectura, Diseño de impresión, Diseño web, Esquema y Borrador."},
+ {p:"Vista Diseño de impresión.",r:"Muestra el documento tal como se imprimirá, con encabezados, pies, notas y columnas."},
+ {p:"Vista Borrador.",r:"Solo el texto; no muestra encabezados, pies de página ni notas al pie."},
+ {p:"Vista Esquema.",r:"Organiza el documento por niveles de título; en ella se gestionan los documentos maestros."},
+ {p:"Vista Diseño web.",r:"Muestra el documento como en un navegador, sin saltos de página."},
+ {p:"Modo de lectura.",r:"Pantalla pensada para leer, sin la cinta de opciones."},
+ {p:"Lector inmersivo.",r:"Herramienta de Vista para leer con ajustes de columna, espaciado y Leer en voz alta."},
+ {p:"¿Es una vista la «presentación preliminar»?",r:"No: la vista previa de impresión está en Archivo > Imprimir (Ctrl + P o Ctrl + F2)."},
+ {p:"Ctrl + U.",r:"Nuevo documento."},
+ {p:"Ctrl + A.",r:"Abrir."},
+ {p:"Ctrl + G.",r:"Guardar."},
+ {p:"F12.",r:"Guardar como."},
+ {p:"Ctrl + P y Ctrl + F2.",r:"Imprimir y vista previa de impresión."},
+ {p:"Ctrl + F4 y Alt + F4.",r:"Cerrar el documento; cerrar la ventana (y Word si es la última)."},
+ {p:".docx.",r:"Documento de Word (desde 2007)."},
+ {p:".docm.",r:"Documento habilitado para macros."},
+ {p:".dotx.",r:"Plantilla de Word."},
+ {p:".dotm.",r:"Plantilla habilitada para macros (Normal.dotm es la plantilla base)."},
+ {p:".doc y .dot.",r:"Documento y plantilla de Word 97-2003."},
+ {p:".rtf.",r:"Formato de texto enriquecido."},
+ {p:".txt.",r:"Texto sin formato."},
+ {p:".odt.",r:"Texto de OpenDocument, formato abierto."},
+ {p:".xps.",r:"Formato de documento fijo de Microsoft, alternativo al PDF."},
+ {p:"Guardado en la nube por defecto.",r:"Desde la versión 2509, Word para Windows crea los documentos nuevos en OneDrive con Autoguardado."},
+ {p:"Inicio y Fin.",r:"Principio y final de la línea."},
+ {p:"Ctrl + Inicio y Ctrl + Fin.",r:"Principio y final del documento."},
+ {p:"Ctrl + flecha derecha.",r:"Principio de la palabra siguiente."},
+ {p:"Ctrl + Mayús + Fin.",r:"Seleccionar desde el cursor hasta el final del documento."},
+ {p:"Ctrl + E.",r:"Seleccionar todo el documento."},
+ {p:"F5 o Ctrl + I.",r:"Ir a."},
+ {p:"Doble clic sobre una palabra.",r:"La selecciona."},
+ {p:"Triple clic sobre el texto.",r:"Selecciona el párrafo."},
+ {p:"Un clic en el área de selección.",r:"Selecciona la línea."},
+ {p:"Triple clic en el área de selección.",r:"Selecciona todo el documento."},
+ {p:"Ctrl + clic.",r:"Selecciona una oración."},
+ {p:"Alt + arrastrar.",r:"Selección vertical o rectangular."},
+ {p:"Portapapeles de Office.",r:"Guarda hasta 24 elementos."},
+ {p:"Ctrl + Alt + V.",r:"Pegado especial."},
+ {p:"Ctrl + Z y Ctrl + Y.",r:"Deshacer y rehacer."},
+ {p:"Copiar formato con doble clic en la brocha.",r:"Permite aplicar el formato varias veces seguidas."},
+ {p:"Ctrl + Mayús + C y Ctrl + Mayús + V.",r:"Copiar y pegar formato."},
+ {p:"Ctrl + B.",r:"Buscar."},
+ {p:"Ctrl + L.",r:"Buscar y reemplazar."},
+ {p:"Comodín ? en Buscar.",r:"Sustituye a un único carácter (con «Usar caracteres comodín»)."},
+ {p:"Marcas no imprimibles.",r:"Espacios, marcas de párrafo, tabulaciones y saltos; se muestran con Ctrl + ( ."},
+ {p:"Fuente por defecto de Word 365.",r:"Aptos (Aptos Display en títulos)."},
+ {p:"Interlineado y espaciado por defecto.",r:"1,15 y 8 pto posterior."},
+ {p:"Ctrl + N.",r:"Negrita."},
+ {p:"Ctrl + K.",r:"Cursiva."},
+ {p:"Ctrl + S.",r:"Subrayado."},
+ {p:"Ctrl + Mayús + D.",r:"Subrayado doble."},
+ {p:"Ctrl + > y Ctrl + <.",r:"Aumentar y disminuir 1 punto el tamaño de la fuente."},
+ {p:"Barra de título en Microsoft 365.",r:"Nombre del documento a la izquierda, junto al cuadro de búsqueda; a la derecha, minimizar, maximizar y cerrar."},
+ {p:"Barra de acceso rápido según el esquema.",r:"Autoguardado, Guardar, Deshacer, Rehacer y Tabla."},
+ {p:"Botones al final de la cinta.",r:"Comentarios y Edición (además de Compartir)."},
+ {p:"Grupos de la pestaña Insertar.",r:"Páginas, Tablas, Ilustraciones, Multimedia, Vínculos, Comentarios, Encabezado y pie, Texto y Símbolos."},
+ {p:"Grupos de la pestaña Diseño.",r:"Temas, Formato del documento y Fondo de página."},
+ {p:"Grupos de la pestaña Disposición.",r:"Configurar página, Párrafo y Organizar."},
+ {p:"Pestaña Dibujar.",r:"Escritura y dibujo táctil."},
+ {p:"Colores del Editor.",r:"Ortografía en rojo, gramática en azul y sugerencias de estilo en morado."},
+ {p:"Investigador (Referencias).",r:"Retirado de Word a partir del 1-1-2025; Microsoft propone Copilot."},
+ {p:"Marcadores y referencias cruzadas.",r:"Identifican elementos del documento para saltar a ellos o citarlos."},
+ {p:"Opciones de Proteger documento.",r:"Solo lectura, cifrar con contraseña, restringir edición, restringir acceso, firma digital y marcar como final."},
+ {p:"Seleccionar destinatarios.",r:"Escribir una nueva lista, usar una lista existente o elegir de los contactos de Outlook."},
+ {p:"Alt + Mayús + C.",r:"Quitar la división de la ventana del documento."},
+ {p:"Ctrl + barra espaciadora.",r:"Quitar el formato de carácter."},
+ {p:"Mayús + F3.",r:"Cambiar entre mayúsculas y minúsculas."},
+ {p:"Versalitas.",r:"Minúsculas escritas como mayúsculas de menor tamaño."},
+ {p:"Letra capital.",r:"Primera letra de un párrafo agrandada (Insertar > Texto)."},
+ {p:"Ctrl + Q.",r:"Alinear a la izquierda."},
+ {p:"Ctrl + T.",r:"Centrar el párrafo."},
+ {p:"Ctrl + D.",r:"Alinear a la derecha."},
+ {p:"Ctrl + J.",r:"Justificar."},
+ {p:"Ctrl + Mayús + J.",r:"Alineación distribuida: justifica también la última línea."},
+ {p:"Sangría de primera línea.",r:"Solo la primera línea del párrafo entra hacia dentro."},
+ {p:"Sangría francesa.",r:"Todas las líneas del párrafo menos la primera."},
+ {p:"El cuadrado de la regla.",r:"Mueve la sangría izquierda completa."},
+ {p:"Ctrl + M.",r:"Aumentar la sangría izquierda."},
+ {p:"Ctrl + 1, Ctrl + 5 y Ctrl + 2.",r:"Interlineado sencillo, de 1,5 y doble."},
+ {p:"Espaciado anterior y posterior.",r:"Espacio en puntos antes y después del párrafo (formato de párrafo)."},
+ {p:"Mayús + Intro.",r:"Salto de línea dentro del mismo párrafo."},
+ {p:"Tipos de tabulador.",r:"Izquierda, Centrado, Derecha, Decimal y Barra."},
+ {p:"Tabulador decimal.",r:"Alinea los números por la coma decimal."},
+ {p:"Tabulador de barra.",r:"Dibuja una línea vertical en esa posición."},
+ {p:"Relleno de tabulación.",r:"Puntos, guiones o línea hasta la tabulación (típico de índices)."},
+ {p:"Estilo.",r:"Conjunto de formatos con nombre (Normal, Título 1…)."},
+ {p:"Para qué sirven los estilos de título.",r:"Para el panel de navegación, la vista Esquema y la tabla de contenido."},
+ {p:"Tamaño de papel por defecto.",r:"DIN A4: 21 × 29,7 cm."},
+ {p:"Alineación vertical de la página.",r:"Superior, Centrada, Justificada e Inferior (Configurar página > Diseño)."},
+ {p:"Dónde están márgenes, orientación, columnas y saltos.",r:"En la pestaña Disposición."},
+ {p:"Marca de agua.",r:"Diseño > Fondo de página > Marca de agua."},
+ {p:"Color y bordes de página.",r:"Diseño > Fondo de página."},
+ {p:"Ctrl + Intro.",r:"Salto de página."},
+ {p:"Ctrl + Mayús + Intro.",r:"Salto de columna."},
+ {p:"Salto de sección continuo.",r:"La nueva sección empieza en la misma página."},
+ {p:"Salto de sección página siguiente.",r:"La nueva sección empieza en una página nueva."},
+ {p:"Para qué sirve una sección.",r:"Para cambiar márgenes, orientación, columnas o encabezados en parte del documento."},
+ {p:"Línea viuda.",r:"La última línea de un párrafo, sola en la parte superior de una página."},
+ {p:"Línea huérfana.",r:"La primera línea de un párrafo, sola en la parte inferior de una página."},
+ {p:"Conservar con el siguiente.",r:"Impide un salto de página entre el párrafo y el siguiente."},
+ {p:"Conservar líneas juntas.",r:"Impide un salto de página dentro del párrafo."},
+ {p:"Salto de página anterior.",r:"El párrafo empieza siempre en una página nueva."},
+ {p:"Encabezado y pie de página.",r:"Texto que se repite en todas las páginas de la sección (Insertar)."},
+ {p:"Opciones de encabezado.",r:"Primera página diferente y páginas pares e impares diferentes."},
+ {p:"Nota al pie.",r:"Se coloca al final de la página, encima del pie de página."},
+ {p:"Nota al final.",r:"Se coloca al final del documento o de la sección."},
+ {p:"F9.",r:"Actualizar campos."},
+ {p:"Tabla de contenido.",r:"Índice generado a partir de los estilos de título (Referencias)."},
+ {p:"Tabla de ilustraciones.",r:"Índice de figuras a partir de sus títulos (epígrafes)."},
+ {p:"Documento maestro.",r:"Documento con vínculos a subdocumentos para manejar textos largos; se gestiona en la vista Esquema."},
+ {p:"Ctrl + Alt + K.",r:"Insertar hipervínculo."},
+ {p:"Opciones de autoajuste de una tabla.",r:"Ancho de columna fijo, autoajustar al contenido y autoajustar a la ventana."},
+ {p:"Pestaña Disposición de tabla.",r:"Insertar y eliminar filas, combinar y dividir celdas, tamaño, alineación, ordenar y fórmulas."},
+ {p:"Tab en la última celda.",r:"Añade una fila nueva a la tabla."},
+ {p:"Repetir filas de título.",r:"Hace que el encabezado de la tabla se repita en cada página."},
+ {p:"Imagen de mapa de bits.",r:"Formada por píxeles (fotografías .jpg, .png)."},
+ {p:"Imagen vectorial.",r:"Formada por formas geométricas; se escala sin perder calidad (.svg, iconos)."},
+ {p:"SmartArt.",r:"Plantillas de listas, procesos, ciclos, jerarquías, relaciones, matrices y pirámides."},
+ {p:"Gráfico en Word.",r:"Representación de datos que se edita en una hoja de Excel asociada."},
+ {p:"WordArt.",r:"Texto con efectos artísticos tratado como objeto gráfico (Insertar > Texto)."},
+ {p:"Ajuste del texto de una imagen.",r:"En línea, cuadrado, estrecho, transparente, arriba y abajo, detrás o delante del texto."},
+ {p:"Combinar correspondencia.",r:"Documento principal + origen de datos = un documento por destinatario."},
+ {p:"Seis pasos de combinar correspondencia.",r:"Iniciar, seleccionar destinatarios, editar lista, insertar campos, vista previa, finalizar y combinar."},
+ {p:"Tipos de combinación.",r:"Cartas, mensajes de correo, sobres, etiquetas y directorio."},
+ {p:"Insertar campo combinado.",r:"Incrusta un dato del origen de datos en el documento principal."},
+ {p:"Regla «Si… entonces… si no».",r:"Inserta un texto u otro según el valor de un campo."},
+ {p:"Conexión por defecto con Excel en la combinación.",r:"OLE DB (desde Word 2002); DDE es un método antiguo opcional."},
+ {p:"F7 y Mayús + F7.",r:"Ortografía y gramática; sinónimos."},
+ {p:"Control de cambios.",r:"Registra las modificaciones para aceptarlas o rechazarlas (Revisar)."},
+ {p:"Restringir edición.",r:"Limita formatos y permite solo lectura, cambios, comentarios o formularios (Revisar)."},
+ {p:"Cifrar con contraseña.",r:"Archivo > Información > Proteger documento."},
+ {p:"Inspeccionar documento.",r:"Busca propiedades ocultas y datos personales antes de compartir."},
+ {p:"Macro.",r:"Conjunto de acciones grabadas con un nombre para repetir tareas (Vista > Macros)."},
+ {p:"Lenguaje de las macros.",r:"VBA (Visual Basic para Aplicaciones)."},
+ {p:"Transformar a página web (Sway).",r:"Función de Archivo retirada el 30-9-2025."},
+ {p:"Copilot en Word (2026).",r:"Asistente de IA; el modo agente es la experiencia por defecto desde el 22-4-2026."},
+ {p:"Publisher.",r:"Sin soporte desde octubre de 2026; Word asume la maquetación."}
+]};
+
+const T1=[
+ {q:"Además de las pestañas, al final de la cinta de opciones aparecen los botones:",o:["Comentarios y Edición.","Ortografía y Sinónimos.","Guardar e Imprimir.","Fuente y Párrafo."],c:0,e:"Según el esquema."},
+ {q:"Para contraer la cinta de opciones se pulsa:",o:["Ctrl + F1.","Ctrl + F4.","F2.","Alt + F1."],c:0,e:"Ctrl + F1."},
+ {q:"Las pestañas que solo aparecen al seleccionar un objeto, como una tabla, se llaman:",o:["Contextuales.","Ocultas.","Personalizadas.","Flotantes."],c:0,e:"Diseño de tabla, Disposición…"},
+ {q:"No es una vista de documento de Word:",o:["Presentación preliminar.","Esquema.","Borrador.","Diseño web."],c:0,e:"La vista previa está en Archivo > Imprimir."},
+ {q:"La vista que muestra el documento tal como se imprimirá es:",o:["Diseño de impresión.","Borrador.","Esquema.","Diseño web."],c:0,e:"La vista habitual."},
+ {q:"En la vista Borrador no se muestran:",o:["Los encabezados, los pies de página y las notas al pie.","Las tablas.","Las marcas de párrafo.","Las negritas."],c:0,e:"Solo el texto."},
+ {q:"Los documentos maestros se crean y gestionan en la vista:",o:["Esquema.","Diseño de impresión.","Modo de lectura.","Borrador."],c:0,e:"Con niveles de título."},
+ {q:"La herramienta que permite escuchar el documento y leer sin distracciones es:",o:["El Lector inmersivo.","El Editor.","El panel de navegación.","Diseño web."],c:0,e:"Pestaña Vista; incluye Leer en voz alta."},
+ {q:"El atajo para crear un documento nuevo en Word en español es:",o:["Ctrl + U.","Ctrl + N.","Ctrl + A.","Ctrl + G."],c:0,e:"Ctrl + N es negrita."},
+ {q:"El atajo para abrir un documento es:",o:["Ctrl + A.","Ctrl + U.","Ctrl + B.","Ctrl + O."],c:0,e:"Ctrl + A."},
+ {q:"F12 abre:",o:["Guardar como.","Imprimir.","Ortografía.","Ir a."],c:0,e:"Ctrl + G guarda."},
+ {q:"Ctrl + F4:",o:["Cierra el documento sin cerrar Word.","Cierra Word.","Imprime.","Guarda como."],c:0,e:"Alt + F4 cierra la ventana."},
+ {q:"La extensión de una plantilla de Word habilitada para macros es:",o:[".dotm",".docm",".dotx",".docx"],c:0,e:".docm es un documento con macros."},
+ {q:"La extensión .dot corresponde a:",o:["Una plantilla de Word 97-2003.","Un documento con macros.","Una plantilla actual.","Un documento OpenDocument."],c:0,e:"Formato binario antiguo."},
+ {q:"El formato abierto de texto de OpenDocument que Word puede guardar es:",o:[".odt",".ods",".rtf",".xps"],c:0,e:".ods es hoja de cálculo."},
+ {q:"El archivo .txt contiene:",o:["Texto sin formato.","Texto con formato enriquecido.","Una plantilla.","Macros."],c:0,e:".rtf es texto enriquecido."},
+ {q:"La plantilla base de los documentos en blanco de Word es:",o:["Normal.dotm","Blank.docx","Default.dot","Word.dotx"],c:0,e:"Plantilla habilitada para macros."},
+ {q:"Desde la versión 2509, Word para Windows guarda los documentos nuevos por defecto:",o:["En OneDrive o la nube elegida, con Autoguardado.","Solo en el disco local.","En una unidad USB.","En la carpeta Descargas."],c:0,e:"Se puede desactivar en Opciones."},
+ {q:"La función «Transformar a página web» de Word, que convertía el documento en un Sway:",o:["Se retiró el 30 de septiembre de 2025.","Está en la pestaña Diseño.","Se añadió en 2026.","Crea un PDF."],c:0,e:"Alternativa: importar desde Sway."},
+ {q:"La vista previa de impresión se abre con:",o:["Ctrl + P o Ctrl + F2.","Ctrl + F4.","F7.","Alt + P."],c:0,e:"Archivo > Imprimir."}
+];
+const T2=[
+ {q:"La tecla Inicio, sin combinar, lleva el cursor:",o:["Al principio de la línea.","Al principio del documento.","A la pestaña Inicio.","Al principio del párrafo."],c:0,e:"Ctrl + Inicio, al principio del documento."},
+ {q:"Ctrl + Fin lleva el cursor:",o:["Al final del documento.","Al final de la línea.","Al final del párrafo.","A la última página visible."],c:0,e:"Fin solo, final de la línea."},
+ {q:"Ctrl + flecha derecha lleva el cursor:",o:["Al principio de la palabra siguiente.","Al final de la línea.","Al párrafo siguiente.","A la página siguiente."],c:0,e:"Desplazamiento por palabras."},
+ {q:"Para seleccionar desde el cursor hasta el final del documento se pulsa:",o:["Ctrl + Mayús + Fin.","Mayús + Fin.","Ctrl + Fin.","Alt + Fin."],c:0,e:"Mayús + Fin, hasta el final de la línea."},
+ {q:"Ctrl + E:",o:["Selecciona todo el documento.","Centra el texto.","Envía por correo.","Exporta a PDF."],c:0,e:"Ctrl + T centra."},
+ {q:"Para seleccionar un párrafo haciendo clic sobre el texto se hace:",o:["Triple clic.","Doble clic.","Un clic.","Clic derecho."],c:0,e:"Doble clic selecciona una palabra."},
+ {q:"Un clic en el área de selección (margen izquierdo) selecciona:",o:["Una línea.","Una palabra.","El párrafo.","Todo el documento."],c:0,e:"Triple clic ahí: todo."},
+ {q:"La selección vertical o rectangular se hace arrastrando con:",o:["Alt.","Ctrl.","Mayús.","Tab."],c:0,e:"Alt + arrastrar."},
+ {q:"Ctrl + clic sobre el texto selecciona:",o:["Una oración.","Una palabra.","Una línea.","Una página."],c:0,e:"Oración completa."},
+ {q:"F5 o Ctrl + I abren:",o:["Ir a.","Imprimir.","Insertar.","Información."],c:0,e:"Ir a una página, sección, línea…"},
+ {q:"El Portapapeles de Office almacena como máximo:",o:["24 elementos.","12 elementos.","1 elemento.","Elementos ilimitados."],c:0,e:"Se ve en Inicio > Portapapeles."},
+ {q:"Ctrl + Z:",o:["Deshace la última acción.","Rehace.","Cierra.","Copia formato."],c:0,e:"Ctrl + Y rehace."},
+ {q:"Si se hace doble clic en el botón Copiar formato:",o:["Se puede aplicar el formato varias veces seguidas.","Se copia el texto dos veces.","Se borra el formato.","Se abre el cuadro Fuente."],c:0,e:"Hasta pulsar Esc."},
+ {q:"El atajo que copia el formato del texto seleccionado es:",o:["Ctrl + Mayús + C.","Ctrl + C.","Ctrl + Alt + C.","Ctrl + F."],c:0,e:"Ctrl + Mayús + V lo pega."},
+ {q:"El cuadro Buscar y reemplazar se abre con:",o:["Ctrl + L.","Ctrl + B.","Ctrl + R.","Ctrl + H."],c:0,e:"Ctrl + B solo busca."},
+ {q:"Con la opción «Usar caracteres comodín», el signo ? sustituye a:",o:["Un único carácter.","Una palabra completa.","Un número.","Un párrafo."],c:0,e:"* sustituye a una cadena."},
+ {q:"Las marcas de formato (¶, espacios, tabulaciones) se muestran en teclado español con:",o:["Ctrl + ( , es decir, Ctrl + Mayús + 8.","Ctrl + M.","Ctrl + F1.","Alt + 8."],c:0,e:"«Ctrl + *» es la notación inglesa."},
+ {q:"El pegado especial se abre con:",o:["Ctrl + Alt + V.","Ctrl + Mayús + V.","Ctrl + V.","Alt + V."],c:0,e:"Ctrl + Mayús + V pega formato."},
+ {q:"Ctrl + Y:",o:["Rehace o repite la última acción.","Deshace.","Cierra el documento.","Inserta un hipervínculo."],c:0,e:"También F4 repite."},
+ {q:"F8 activa:",o:["El modo de extender la selección.","La ortografía.","Guardar como.","Ir a."],c:0,e:"Cada pulsación amplía la selección."}
+];
+const T3=[
+ {q:"El atajo de negrita en Word en español es:",o:["Ctrl + N.","Ctrl + B.","Ctrl + K.","Ctrl + G."],c:0,e:"Ctrl + B es buscar."},
+ {q:"El atajo de cursiva es:",o:["Ctrl + K.","Ctrl + I.","Ctrl + C.","Ctrl + U."],c:0,e:"Ctrl + I es Ir a."},
+ {q:"El atajo de subrayado es:",o:["Ctrl + S.","Ctrl + U.","Ctrl + G.","Ctrl + D."],c:0,e:"Ctrl + Mayús + D, doble."},
+ {q:"Ctrl + Mayús + D aplica:",o:["Subrayado doble.","Alineación derecha.","Doble interlineado.","Doble tachado."],c:0,e:"Fuente."},
+ {q:"Según el esquema, el tamaño de la fuente se aumenta 1 punto con:",o:["Ctrl + >.","Ctrl + <.","Ctrl + +.","Ctrl + 2."],c:0,e:"Ctrl + < lo disminuye; en teclado español «>» lleva Mayús."},
+ {q:"Ctrl + barra espaciadora:",o:["Quita el formato de carácter.","Inserta un espacio de no separación.","Selecciona todo.","Abre Copilot."],c:0,e:"Ctrl + Mayús + barra espaciadora: espacio de no separación."},
+ {q:"Mayús + F3:",o:["Cambia entre mayúsculas y minúsculas.","Busca.","Abre sinónimos.","Guarda."],c:0,e:"Fuente."},
+ {q:"La fuente predeterminada de Word 365 es:",o:["Aptos.","Calibri.","Arial.","Times New Roman."],c:0,e:"Sustituyó a Calibri."},
+ {q:"El interlineado predeterminado de Word es:",o:["1,15.","1.","1,5.","2."],c:0,e:"No 1,16."},
+ {q:"Una letra capital es:",o:["La primera letra de un párrafo, agrandada y destacada.","Cualquier mayúscula.","Una fuente.","Un carácter oculto."],c:0,e:"Insertar > Texto."},
+ {q:"Ctrl + Q:",o:["Alinea a la izquierda.","Cierra el documento.","Quita el formato.","Justifica."],c:0,e:"Párrafo."},
+ {q:"Ctrl + T:",o:["Centra el párrafo entre los márgenes.","Centra el texto verticalmente en la página.","Inserta una tabla.","Abre el tesauro."],c:0,e:"La alineación vertical está en Configurar página."},
+ {q:"Ctrl + D:",o:["Alinea a la derecha.","Duplica.","Subraya doble.","Abre el diseño."],c:0,e:"Párrafo."},
+ {q:"Ctrl + J:",o:["Justifica el texto entre los márgenes.","Inserta un salto.","Abre Ir a.","Une párrafos."],c:0,e:"Párrafo."},
+ {q:"Ctrl + Mayús + J aplica:",o:["La alineación distribuida, que justifica también la última línea.","El subrayado doble.","La justificación vertical.","Una sangría francesa."],c:0,e:"Distribuir."},
+ {q:"En la sangría francesa se separan del margen:",o:["Todas las líneas menos la primera.","Solo la primera línea.","Todas las líneas.","Solo la última línea."],c:0,e:"Típica de bibliografías."},
+ {q:"En la regla, la sangría izquierda completa se mueve con:",o:["El cuadrado inferior.","El triángulo superior.","El triángulo inferior.","El triángulo derecho."],c:0,e:"Triángulo superior: primera línea."},
+ {q:"El interlineado de 1,5 líneas se aplica con:",o:["Ctrl + 5.","Ctrl + 1.","Ctrl + 2.","Ctrl + 15."],c:0,e:"Ctrl + 1 sencillo, Ctrl + 2 doble."},
+ {q:"El espaciado anterior y posterior se ajusta en:",o:["El formato de párrafo.","El formato de fuente.","Configurar página.","Tabulaciones."],c:0,e:"En puntos."},
+ {q:"Mayús + Intro inserta:",o:["Un salto de línea dentro del mismo párrafo.","Un salto de página.","Un salto de columna.","Un párrafo nuevo."],c:0,e:"Intro crea un párrafo."}
+];
+const T4=[
+ {q:"No es un tipo de tabulador de Word:",o:["Justificado.","Decimal.","Barra.","Centrado."],c:0,e:"Izquierda, Centrado, Derecha, Decimal y Barra."},
+ {q:"El tabulador decimal:",o:["Alinea los números por la coma decimal.","Divide la regla en diez partes.","Inserta una línea.","Alinea a 10 cm."],c:0,e:"Útil para importes."},
+ {q:"El tabulador de barra:",o:["Dibuja una línea vertical en esa posición.","Alinea a la derecha.","Inserta puntos.","Centra el texto."],c:0,e:"No alinea texto."},
+ {q:"Los puntos que van hasta el número de página en un índice son:",o:["Un relleno de tabulación.","Una sangría.","Un borde.","Un estilo de lista."],c:0,e:"Puntos, guiones o línea."},
+ {q:"Un estilo es:",o:["Un conjunto de formatos guardado con un nombre.","Un tipo de fuente.","Una plantilla de documento.","Un tema de color."],c:0,e:"Normal, Título 1…"},
+ {q:"La tabla de contenido se genera a partir de:",o:["Los estilos de título.","Las negritas.","Las notas al pie.","Los marcadores."],c:0,e:"Referencias > Tabla de contenido."},
+ {q:"El tamaño de papel por defecto en la versión española es:",o:["DIN A4 (21 × 29,7 cm).","Carta.","DIN A3.","Legal."],c:0,e:"Disposición > Tamaño."},
+ {q:"Las opciones Superior, Centrada, Justificada e Inferior corresponden a:",o:["La alineación vertical de la página.","La alineación del párrafo.","La alineación de tablas.","Los márgenes."],c:0,e:"Configurar página > Diseño."},
+ {q:"La marca de agua se inserta desde la pestaña:",o:["Diseño.","Insertar.","Disposición.","Vista."],c:0,e:"Fondo de página."},
+ {q:"El color de página se cambia en:",o:["Diseño.","Inicio.","Disposición.","Revisar."],c:0,e:"Fondo de página."},
+ {q:"Los márgenes, la orientación y las columnas están en:",o:["Disposición.","Diseño.","Inicio.","Referencias."],c:0,e:"Configurar página."},
+ {q:"Ctrl + Intro inserta:",o:["Un salto de página.","Un salto de línea.","Un salto de columna.","Un salto de sección continuo."],c:0,e:"Manual."},
+ {q:"Ctrl + Mayús + Intro inserta:",o:["Un salto de columna.","Un salto de página.","Un salto de sección.","Un espacio de no separación."],c:0,e:"Para texto en columnas."},
+ {q:"El salto de sección que permite tener secciones distintas en la misma página es:",o:["Continuo.","Página siguiente.","Página par.","Página impar."],c:0,e:"Disposición > Saltos."},
+ {q:"Para poner una sola página en horizontal dentro de un documento vertical se usan:",o:["Saltos de sección.","Saltos de columna.","Saltos de línea.","Tabulaciones."],c:0,e:"Cada sección tiene su orientación."},
+ {q:"Una línea viuda es:",o:["La última línea de un párrafo sola en la parte superior de una página.","La primera línea de un párrafo sola al final de una página.","Una línea en blanco.","Una línea con sangría francesa."],c:0,e:"La huérfana es la primera, abajo."},
+ {q:"Una línea huérfana es:",o:["La primera línea de un párrafo sola al final de una página.","La última línea de un párrafo sola arriba de una página.","Una línea sin formato.","Una línea de un encabezado."],c:0,e:"Control de viudas y huérfanas."},
+ {q:"«Conservar con el siguiente» sirve para:",o:["Evitar un salto de página entre el párrafo y el siguiente.","Evitar un salto dentro del párrafo.","Unir dos párrafos.","Evitar los guiones."],c:0,e:"Típico de títulos."},
+ {q:"«Conservar líneas juntas» sirve para:",o:["Evitar que el párrafo se parta entre dos páginas.","Unir dos párrafos en uno.","Eliminar saltos de línea.","Mantener las tabulaciones."],c:0,e:"Líneas y saltos de página."},
+ {q:"Las opciones «Primera página diferente» y «Páginas pares e impares diferentes» son de:",o:["El encabezado y el pie de página.","Los márgenes.","Las columnas.","Las tablas."],c:0,e:"Insertar > Encabezado."}
+];
+const T5=[
+ {q:"La nota al pie se coloca:",o:["Al final de la página, encima del pie de página.","Al final del documento.","En el margen derecho.","En el encabezado."],c:0,e:"La nota al final, al final del documento."},
+ {q:"Las notas al pie se insertan desde la pestaña:",o:["Referencias.","Insertar.","Revisar.","Diseño."],c:0,e:"Grupo Notas al pie."},
+ {q:"F9:",o:["Actualiza los campos.","Imprime.","Abre sinónimos.","Cierra el documento."],c:0,e:"Fechas, números, índices."},
+ {q:"Un documento maestro es:",o:["Un documento con vínculos a subdocumentos para gestionar textos largos.","La plantilla Normal.dotm.","El documento principal de una combinación.","Un documento protegido."],c:0,e:"Vista Esquema."},
+ {q:"Para insertar un hipervínculo se pulsa:",o:["Ctrl + Alt + K.","Ctrl + H.","Ctrl + L.","Ctrl + Alt + V."],c:0,e:"Insertar > Vínculo."},
+ {q:"La tabla de ilustraciones se genera a partir de:",o:["Los títulos (epígrafes) de las figuras.","Los estilos de título.","Las notas al pie.","Los comentarios."],c:0,e:"Referencias > Insertar título."},
+ {q:"No es una opción de autoajuste al insertar una tabla:",o:["Autoajustar a la página impar.","Ancho de columna fijo.","Autoajustar al contenido.","Autoajustar a la ventana."],c:0,e:"Son tres."},
+ {q:"Combinar y dividir celdas está en la pestaña contextual:",o:["Disposición (de tabla).","Diseño de tabla.","Referencias.","Revisar."],c:0,e:"Diseño de tabla: estilos y bordes."},
+ {q:"Al pulsar Tab en la última celda de una tabla:",o:["Se añade una fila nueva.","Se sale de la tabla.","Se inserta una tabulación.","Se borra la fila."],c:0,e:"Comportamiento estándar."},
+ {q:"Para que la fila de encabezado aparezca en cada página se usa:",o:["Repetir filas de título.","Conservar con el siguiente.","Salto de sección.","Combinar celdas."],c:0,e:"Disposición de tabla."},
+ {q:"Una tabla de Word puede calcular sumas con:",o:["Fórmulas (por ejemplo, =SUM(ABOVE)).","Macros obligatoriamente.","Copilot exclusivamente.","No puede calcular."],c:0,e:"Disposición > Fórmula."},
+ {q:"Las imágenes formadas por píxeles, como las fotografías, son:",o:["De mapa de bits.","Vectoriales.","SmartArt.","WordArt."],c:0,e:"Las vectoriales se escalan sin perder calidad."},
+ {q:"SmartArt permite crear:",o:["Listas, procesos, organigramas y diagramas.","Cálculos.","Macros.","Hipervínculos."],c:0,e:"Insertar > Ilustraciones."},
+ {q:"Los gráficos de Word se crean con una hoja de cálculo asociada de:",o:["Excel.","Access.","PowerPoint.","OneNote."],c:0,e:"Representación de datos."},
+ {q:"El WordArt está en:",o:["Insertar > Texto.","Diseño > Fondo de página.","Inicio > Estilos.","Disposición > Organizar."],c:0,e:"Texto artístico."},
+ {q:"La galería de imágenes prediseñadas (Clip Art):",o:["Ya no existe; se usan imágenes de stock, iconos e imágenes en línea.","Es la única forma de insertar iconos.","Está en Diseño.","Se añadió en 2026."],c:0,e:"Actualización."},
+ {q:"El ajuste que coloca la imagen como si fuera un carácter más del texto es:",o:["En línea con el texto.","Cuadrado.","Detrás del texto.","Estrecho."],c:0,e:"Opción por defecto al insertar."},
+ {q:"La letra capital se inserta desde:",o:["Insertar > Texto.","Inicio > Fuente.","Diseño.","Referencias."],c:0,e:"En el texto o en el margen."},
+ {q:"Los índices alfabéticos se generan a partir de:",o:["Entradas de índice marcadas.","Los estilos de título.","Los comentarios.","Las tabulaciones."],c:0,e:"Referencias > Índice."},
+ {q:"La bibliografía se crea en:",o:["Referencias > Citas y bibliografía.","Insertar > Texto.","Revisar.","Correspondencia."],c:0,e:"A partir de las fuentes citadas."}
+];
+const T6=[
+ {q:"Combinar correspondencia une:",o:["Un documento principal y un origen de datos.","Dos documentos de Word.","Un documento y una plantilla.","Word y PowerPoint."],c:0,e:"Un resultado por registro."},
+ {q:"El primer paso de una combinación de correspondencia es:",o:["Iniciar combinación de correspondencia (elegir el tipo de documento).","Finalizar y combinar.","Insertar campo combinado.","Vista previa."],c:0,e:"Cartas, correos, sobres, etiquetas o directorio."},
+ {q:"El comando que genera las cartas definitivas es:",o:["Finalizar y combinar.","Iniciar combinación.","Seleccionar destinatarios.","Insertar campo combinado."],c:0,e:"Último paso."},
+ {q:"El comando que incrusta un dato del origen de datos en el documento es:",o:["Insertar campo combinado.","Bloque de direcciones exclusivamente.","Reglas.","Vista previa de resultados."],c:0,e:"«Nombre», «Dirección»…"},
+ {q:"En «Seleccionar destinatarios» se puede:",o:["Escribir una nueva lista, usar una lista existente o elegir de los contactos de Outlook.","Solo usar una hoja de Excel.","Solo escribir una nueva lista.","Elegir una plantilla .dotx."],c:0,e:"Según el esquema."},
+ {q:"La regla que inserta «Estimada» o «Estimado» según el tratamiento es:",o:["Si… entonces… si no.","Siguiente registro.","Preguntar.","Combinar registro n.º."],c:0,e:"Correspondencia > Reglas."},
+ {q:"Desde Word 2002, la conexión por defecto con un origen de datos de Excel es:",o:["OLE DB.","DDE.","ODBC obligatoriamente.","HTML."],c:0,e:"DDE es un método antiguo opcional."},
+ {q:"No es un tipo de documento de combinación de correspondencia:",o:["Presentación.","Cartas.","Sobres.","Etiquetas."],c:0,e:"También mensajes de correo y directorio."},
+ {q:"La ortografía y gramática se revisan con:",o:["F7.","Mayús + F7.","F9.","F12."],c:0,e:"Revisar > Revisión."},
+ {q:"Mayús + F7 abre:",o:["Los sinónimos.","La ortografía.","Guardar como.","Ir a."],c:0,e:"Tesauro."},
+ {q:"El Control de cambios está en la pestaña:",o:["Revisar.","Vista.","Referencias.","Inicio."],c:0,e:"Grupo Seguimiento."},
+ {q:"Los cambios registrados con Control de cambios se pueden:",o:["Aceptar o rechazar.","Solo aceptar.","Solo imprimir.","Convertir en macros."],c:0,e:"Revisar > Cambios."},
+ {q:"Restringir edición permite dejar el documento en:",o:["Sin cambios (solo lectura), o permitir solo cambios, comentarios o formularios.","Formato PDF.","Vista Borrador.","Modo de lectura."],c:0,e:"Revisar > Proteger."},
+ {q:"Cifrar un documento con contraseña se hace en:",o:["Archivo > Información > Proteger documento.","Revisar > Ortografía.","Inicio > Edición.","Vista > Macros."],c:0,e:"También marcar como final."},
+ {q:"Inspeccionar documento sirve para:",o:["Comprobar si hay propiedades ocultas o datos personales antes de compartir.","Traducir.","Cambiar márgenes.","Contar palabras."],c:0,e:"Archivo > Información."},
+ {q:"Una macro se graba desde la pestaña:",o:["Vista (o Programador).","Inicio.","Revisar.","Archivo."],c:0,e:"Vista > Macros."},
+ {q:"Las macros de Word se escriben en:",o:["VBA (Visual Basic para Aplicaciones).","HTML.","Python obligatoriamente.","SQL."],c:0,e:"Alt + F11 abre el editor."},
+ {q:"Un documento que contiene macros debe guardarse como:",o:[".docm",".docx",".dotx",".rtf"],c:0,e:"O plantilla .dotm."},
+ {q:"Comparar dos versiones de un documento se hace en:",o:["Revisar > Comparar.","Vista > Dividir.","Archivo > Exportar.","Inicio > Buscar."],c:0,e:"Comparar y combinar."},
+ {q:"Contar palabras está en:",o:["Revisar (y en la barra de estado).","Diseño.","Correspondencia.","Disposición."],c:0,e:"Revisión."}
+];
+const T7=[
+ {q:"La función «Dictar» de la pestaña Inicio permite:",o:["Escribir con la voz.","Leer el documento en voz alta.","Traducir.","Grabar macros."],c:0,e:"Voz."},
+ {q:"«Leer en voz alta» está en:",o:["Revisar (y en el Lector inmersivo).","Inicio > Fuente.","Disposición.","Correspondencia."],c:0,e:"Herramientas de lectura."},
+ {q:"Desde el 22 de abril de 2026, para los suscriptores de Microsoft 365, el modo agente de Copilot en Word:",o:["Es la experiencia por defecto.","Se ha retirado.","Solo funciona en Word en la web.","Requiere Office LTSC 2024."],c:0,e:"Reformatea y reorganiza con una instrucción."},
+ {q:"Copilot en Word puede, entre otras cosas:",o:["Redactar, resumir y reescribir a partir de instrucciones.","Sustituir la licencia de Word.","Formatear el disco duro.","Crear macros VBA obligatoriamente."],c:0,e:"Asistente de IA."},
+ {q:"Publisher:",o:["Deja de tener soporte en octubre de 2026.","Se integra en Excel.","Sustituye a Word.","Se lanza en 2026."],c:0,e:"Word asume la maquetación."},
+ {q:"El cuadro Fuente se abre con:",o:["Ctrl + Mayús + F.","Ctrl + F.","Ctrl + Mayús + P obligatoriamente.","Alt + F."],c:0,e:"Inicio > Fuente."},
+ {q:"El espacio de no separación se inserta con:",o:["Ctrl + Mayús + barra espaciadora.","Ctrl + barra espaciadora.","Alt + barra espaciadora.","Mayús + barra espaciadora."],c:0,e:"Evita que se separen dos palabras."},
+ {q:"Hoy el Editor de Word subraya en azul:",o:["Los errores de gramática.","Los errores de ortografía.","Los comentarios.","Los hipervínculos."],c:0,e:"Ortografía en rojo; estilo en morado."},
+ {q:"El superíndice se aplica con:",o:["Ctrl + Mayús + +.","Ctrl + +.","Ctrl + S.","Ctrl + 2."],c:0,e:"Ctrl + + es subíndice."},
+ {q:"La función «Investigador» que el esquema sitúa en Referencias:",o:["Se retiró de Word a partir de enero de 2025.","Sigue en Referencias sin cambios.","Está ahora en Inicio.","Requiere Office LTSC 2024."],c:0,e:"Microsoft propone Copilot."},
+ {q:"En Imprimir se puede configurar:",o:["Intervalo de páginas, una o dos caras, orientación y páginas por hoja.","Solo el número de copias.","Los estilos.","La tabla de contenido."],c:0,e:"Archivo > Imprimir."},
+ {q:"El número de página se inserta desde:",o:["Insertar > Encabezado y pie de página.","Referencias.","Revisar.","Vista."],c:0,e:"Arriba, abajo, márgenes."},
+ {q:"«Vincular al anterior» en un encabezado sirve para:",o:["Enlazar o separar el encabezado de una sección del de la anterior.","Insertar un hipervínculo.","Repetir la tabla.","Copiar formato."],c:0,e:"Secciones."},
+ {q:"La pestaña Diseño contiene:",o:["Temas, conjuntos de estilos, marca de agua, color y bordes de página.","Márgenes y saltos.","Tabla de contenido.","Control de cambios."],c:0,e:"Fondo de página."},
+ {q:"La pestaña Disposición contiene:",o:["Márgenes, orientación, tamaño, columnas, saltos y guiones.","Marca de agua.","Notas al pie.","Macros."],c:0,e:"Configurar página."},
+ {q:"La pestaña Referencias contiene:",o:["Tabla de contenido, notas, citas, títulos e índice.","Sobres y etiquetas.","Márgenes.","Comentarios."],c:0,e:"Documentos largos."},
+ {q:"Los sobres y etiquetas se crean en:",o:["Correspondencia.","Insertar.","Referencias.","Diseño."],c:0,e:"Grupo Crear."},
+ {q:"La pestaña dedicada a la escritura táctil con lápiz o dedo es:",o:["Dibujar.","Diseño.","Insertar.","Vista."],c:0,e:"Según el esquema."},
+ {q:"El panel de navegación permite:",o:["Moverse por los títulos, las páginas y los resultados de búsqueda.","Combinar correspondencia.","Proteger el documento.","Insertar notas."],c:0,e:"Vista > Mostrar."},
+ {q:"Según el esquema, la barra de acceso rápido contiene:",o:["Autoguardado, Guardar, Deshacer, Rehacer y Tabla.","Copiar, Cortar y Pegar.","Fuente y Párrafo.","Márgenes y Orientación."],c:0,e:"Arriba a la izquierda."}
+];
+const T8=[
+ {q:"Redactas un informe de 40 páginas y quieres un índice que se actualice solo. Lo correcto es:",o:["Aplicar estilos de título y luego Referencias > Tabla de contenido.","Escribir el índice a mano.","Usar tabulaciones de barra.","Insertar un SmartArt."],c:0,e:"Se actualiza con F9."},
+ {q:"Un anexo con una tabla muy ancha debe ir en horizontal y el resto en vertical. Debes:",o:["Insertar saltos de sección (página siguiente) y cambiar la orientación solo de esa sección.","Cambiar la orientación de todo el documento.","Insertar un salto de columna.","Usar la vista Diseño web."],c:0,e:"Cada sección, su orientación."},
+ {q:"Hay que enviar la misma carta a 300 interesados con sus datos de un Excel. Usas:",o:["Combinar correspondencia.","Copiar y pegar 300 veces.","Control de cambios.","Un documento maestro."],c:0,e:"Correspondencia."},
+ {q:"Un título aparece solo al pie de una página y su texto en la siguiente. Aplicas al título:",o:["Conservar con el siguiente.","Conservar líneas juntas.","Salto de columna.","Sangría francesa."],c:0,e:"Líneas y saltos de página."},
+ {q:"Quieres que todos los borradores lleven «BORRADOR» en diagonal detrás del texto. Usas:",o:["Diseño > Marca de agua.","Insertar > WordArt en cada página.","Encabezado en negrita.","Inicio > Resaltado."],c:0,e:"Fondo de página."},
+ {q:"Vas a pasar un documento a un compañero para que proponga cambios que luego aceptarás o rechazarás. Activas:",o:["Revisar > Control de cambios.","Restringir edición: solo lectura.","Marcar como final.","Modo de lectura."],c:0,e:"Seguimiento."},
+ {q:"Antes de publicar un documento en la sede electrónica quieres eliminar autores y comentarios ocultos. Usas:",o:["Archivo > Información > Inspeccionar documento.","Revisar > Ortografía.","Vista > Borrador.","Inicio > Borrar formato."],c:0,e:"Comprobar si hay problemas."},
+ {q:"Quieres alinear una columna de importes por la coma decimal. Usas:",o:["Un tabulador decimal.","Un tabulador de barra.","Alineación justificada.","Sangría francesa."],c:0,e:"Tabulaciones."},
+ {q:"En una bibliografía cada referencia debe tener la primera línea al margen y las demás hacia dentro. Aplicas:",o:["Sangría francesa.","Sangría de primera línea.","Alineación distribuida.","Interlineado doble."],c:0,e:"Todas menos la primera."},
+ {q:"Necesitas sustituir «Ley 30/1992» por «Ley 39/2015» en todo el documento. Pulsas:",o:["Ctrl + L.","Ctrl + B.","Ctrl + R.","Ctrl + E."],c:0,e:"Reemplazar."},
+ {q:"Quieres que una persona solo pueda rellenar los campos de un formulario de Word. Usas:",o:["Restringir edición: rellenado de formularios.","Control de cambios.","Marca de agua.","Modo de lectura."],c:0,e:"Revisar > Proteger."},
+ {q:"Un documento debe circular sin que nadie lo abra sin clave. Usas:",o:["Proteger documento > Cifrar con contraseña.","Marcar como final.","Restringir edición: comentarios.","Guardar como .rtf."],c:0,e:"Archivo > Información."},
+ {q:"Tras actualizar el documento, los números de página del índice no coinciden. Pulsas sobre el índice:",o:["F9 (actualizar campos).","F7.","Ctrl + Z.","F12."],c:0,e:"Actualizar tabla."},
+ {q:"Quieres que el título ocupe todo el ancho y el texto de debajo, en la misma página, vaya a dos columnas. Insertas:",o:["Un salto de sección continuo.","Un salto de página.","Un salto de columna.","Un salto de línea."],c:0,e:"Sección en la misma página."},
+ {q:"Necesitas que un procedimiento repetitivo de formato se ejecute con un solo clic y guardarlo en el documento. Guardas como:",o:[".docm, con una macro.",".docx.",".txt.",".odt."],c:0,e:"Documento habilitado para macros."},
+ {q:"Quieres un modelo de oficio con logotipo y estilos para reutilizarlo siempre. Lo guardas como:",o:["Plantilla .dotx.","Documento .doc.","Texto .txt.","Página .mht."],c:0,e:"Archivo > Nuevo la usa."},
+ {q:"Has de enviar un documento a otra Administración que trabaja con LibreOffice y formatos abiertos. Lo guardas como:",o:[".odt",".docm",".dotm",".xps"],c:0,e:"OpenDocument."},
+ {q:"Quieres repetir el mismo formato en diez títulos dispersos. Lo más rápido es:",o:["Doble clic en Copiar formato y aplicarlo a cada título.","Ctrl + C y Ctrl + V.","Reescribir los títulos.","Usar Control de cambios."],c:0,e:"O, mejor, un estilo."},
+ {q:"En una tabla de varias páginas la fila de encabezado debe verse en todas. Activas:",o:["Repetir filas de título.","Conservar con el siguiente.","Autoajustar a la ventana.","Combinar celdas."],c:0,e:"Disposición de tabla."},
+ {q:"En la combinación de correspondencia el saludo debe ser «Estimada» o «Estimado» según el tratamiento. Usas:",o:["Una regla «Si… entonces… si no».","Dos documentos distintos.","Buscar y reemplazar.","Una macro obligatoriamente."],c:0,e:"Correspondencia > Reglas."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🪟",name:"Entorno, vistas y archivos",desc:"Cinta, vistas, atajos de archivo y formatos.",qs:T1},
+ {id:"t2",ic:"🖱️",name:"Desplazamiento, selección y edición",desc:"Teclado, ratón, portapapeles y buscar.",qs:T2},
+ {id:"t3",ic:"🔤",name:"Fuente y párrafo",desc:"Atajos de formato, sangrías e interlineado.",qs:T3},
+ {id:"t4",ic:"📄",name:"Tabulaciones, página y saltos",desc:"Tabuladores, estilos, configurar página y paginación.",qs:T4},
+ {id:"t5",ic:"📚",name:"Referencias, tablas y gráficos",desc:"Notas, índices, tablas e ilustraciones.",qs:T5},
+ {id:"t6",ic:"✉️",name:"Correspondencia y revisión",desc:"Combinar, revisar, proteger y macros.",qs:T6},
+ {id:"t7",ic:"🤖",name:"Herramientas, pestañas y Copilot",desc:"Ubicación de comandos y novedades.",qs:T7},
+ {id:"t8",ic:"🧠",name:"Casos prácticos",desc:"Situaciones reales en la oficina.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));const POOL=TESTS.flatMap(t=>t.qs);
+
+const ESQ=[
+ {id:"e1",title:"Ordena los pasos de combinar correspondencia",intro:"Pestaña Correspondencia.",type:"order",
+  items:[{t:"Iniciar combinación de correspondencia",why:"Elegir el tipo de documento."},{t:"Seleccionar destinatarios",why:"Origen de datos."},{t:"Editar lista de destinatarios",why:"Ordenar y filtrar."},{t:"Insertar campos combinados",why:"En el documento principal."},{t:"Vista previa de resultados",why:"Comprobar registros."},{t:"Finalizar y combinar",why:"Generar los documentos."}]},
+ {id:"e2",title:"Ordena las pestañas de la cinta",intro:"De izquierda a derecha.",type:"order",
+  items:[{t:"Archivo",why:"Backstage."},{t:"Inicio",why:"Formato básico."},{t:"Insertar",why:"Objetos."},{t:"Dibujar",why:"Entrada manuscrita."},{t:"Diseño",why:"Temas y fondo."},{t:"Disposición",why:"Página."},{t:"Referencias",why:"Índices y notas."},{t:"Correspondencia",why:"Combinaciones."},{t:"Revisar",why:"Revisión."},{t:"Vista",why:"Vistas y macros."}]},
+ {id:"e3",title:"Las vistas",intro:"Pestaña Vista.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Vistas de Word</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Como se imprimirá</b>{{0}}</div>
+   <div class="sch-box alt"><b>Niveles de título y documentos maestros</b>{{1}}</div>
+   <div class="sch-box"><b>Solo texto, sin encabezados</b>{{2}}</div>
+   <div class="sch-box alt"><b>Vista previa de impresión</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Diseño de impresión","Diseño web","Borrador","Modo de lectura"],why:"La habitual."},{o:["Esquema","Borrador","Diseño web","Modo de lectura"],why:"Documentos maestros."},{o:["Borrador","Esquema","Diseño de impresión","Diseño web"],why:"Edición rápida."},{o:["Archivo > Imprimir","Vista > Esquema","Revisar","Disposición"],why:"No es una vista."}]},
+ {id:"e4",title:"Formatos de archivo",intro:"Guardar como.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Extensiones</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Documento actual</b>{{0}}</div>
+   <div class="sch-box alt"><b>Plantilla con macros</b>{{1}}</div>
+   <div class="sch-box"><b>Documento con macros</b>{{2}}</div>
+   <div class="sch-box alt"><b>Plantilla de Word 97-2003</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:[".docx",".doc",".dotx",".odt"],why:"Desde 2007."},{o:[".dotm",".docm",".dotx",".dot"],why:"Normal.dotm."},{o:[".docm",".dotm",".docx",".rtf"],why:"VBA."},{o:[".dot",".doc",".dotx",".dotm"],why:"Binario."}]},
+ {id:"e5",title:"Atajos de archivo",intro:"Word en español.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Archivo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Nuevo</b>{{0}}</div>
+   <div class="sch-box alt"><b>Guardar</b>{{1}}</div>
+   <div class="sch-box"><b>Guardar como</b>{{2}}</div>
+   <div class="sch-box alt"><b>Imprimir</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Ctrl + U","Ctrl + N","Ctrl + A","Ctrl + G"],why:"N es negrita."},{o:["Ctrl + G","Ctrl + S","Ctrl + U","F12"],why:"S es subrayado."},{o:["F12","F7","Ctrl + G","F5"],why:"Cuadro Guardar como."},{o:["Ctrl + P","Ctrl + I","Ctrl + F4","Alt + P"],why:"También Ctrl + F2."}]},
+ {id:"e6",title:"Selección con el ratón",intro:"Clics.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Seleccionar</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Una palabra</b>{{0}}</div>
+   <div class="sch-box alt"><b>Un párrafo (sobre el texto)</b>{{1}}</div>
+   <div class="sch-box"><b>Una línea</b>{{2}}</div>
+   <div class="sch-box alt"><b>Bloque rectangular</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Doble clic","Un clic","Triple clic","Clic derecho"],why:"Sobre la palabra."},{o:["Triple clic","Doble clic","Ctrl + clic","Alt + clic"],why:"Sobre el texto."},{o:["Un clic en el margen izquierdo","Doble clic","Ctrl + clic","Mayús + clic"],why:"Área de selección."},{o:["Alt + arrastrar","Ctrl + arrastrar","Mayús + arrastrar","Tab + arrastrar"],why:"Selección vertical."}]},
+ {id:"e7",title:"Atajos de fuente",intro:"Word en español.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Fuente</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Negrita</b>{{0}}</div>
+   <div class="sch-box alt"><b>Cursiva</b>{{1}}</div>
+   <div class="sch-box"><b>Subrayado</b>{{2}}</div>
+   <div class="sch-box alt"><b>Quitar formato de carácter</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Ctrl + N","Ctrl + B","Ctrl + K","Ctrl + G"],why:"N de negrita."},{o:["Ctrl + K","Ctrl + I","Ctrl + C","Ctrl + U"],why:"I es Ir a."},{o:["Ctrl + S","Ctrl + U","Ctrl + D","Ctrl + G"],why:"S de subrayado."},{o:["Ctrl + barra espaciadora","Ctrl + Q","Ctrl + Z","Ctrl + E"],why:"Formato de carácter."}]},
+ {id:"e8",title:"Alineación del párrafo",intro:"Inicio > Párrafo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Alineación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Izquierda</b>{{0}}</div>
+   <div class="sch-box alt"><b>Centrada</b>{{1}}</div>
+   <div class="sch-box"><b>Derecha</b>{{2}}</div>
+   <div class="sch-box alt"><b>Justificada</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Ctrl + Q","Ctrl + I","Ctrl + L","Ctrl + E"],why:"Q."},{o:["Ctrl + T","Ctrl + E","Ctrl + C","Ctrl + M"],why:"T."},{o:["Ctrl + D","Ctrl + R","Ctrl + Mayús + D","Ctrl + G"],why:"D."},{o:["Ctrl + J","Ctrl + Mayús + J","Ctrl + U","Ctrl + B"],why:"Ctrl + Mayús + J es distribuida."}]},
+ {id:"e9",title:"Sangrías e interlineado",intro:"Formato de párrafo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Párrafo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Todas las líneas menos la primera</b>Sangría {{0}}</div>
+   <div class="sch-box alt"><b>Interlineado 1,5</b>{{1}}</div>
+   <div class="sch-box"><b>Interlineado doble</b>{{2}}</div>
+   <div class="sch-box alt"><b>Interlineado por defecto</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["francesa","de primera línea","derecha","negativa"],why:"Bibliografías."},{o:["Ctrl + 5","Ctrl + 1","Ctrl + 2","Ctrl + 15"],why:"5."},{o:["Ctrl + 2","Ctrl + D","Ctrl + 5","Ctrl + Mayús + D"],why:"2."},{o:["1,15","1","1,16","1,5"],why:"No 1,16."}]},
+ {id:"e10",title:"Tabuladores",intro:"Regla.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Tabuladores</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Por la coma decimal</b>{{0}}</div>
+   <div class="sch-box alt"><b>Línea vertical</b>{{1}}</div>
+   <div class="sch-box"><b>Texto centrado en la posición</b>{{2}}</div>
+   <div class="sch-box alt"><b>Puntos hasta la tabulación</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Decimal","Derecha","Barra","Centrado"],why:"Importes."},{o:["Barra","Izquierda","Decimal","Justificado"],why:"No alinea texto."},{o:["Centrado","Justificado","Decimal","Barra"],why:"Tipo de tabulador."},{o:["Relleno","Sangría","Borde","Viñeta"],why:"Índices."}]},
+ {id:"e11",title:"Saltos",intro:"Disposición > Saltos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Saltos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Página</b>{{0}}</div>
+   <div class="sch-box alt"><b>Columna</b>{{1}}</div>
+   <div class="sch-box"><b>Línea</b>{{2}}</div>
+   <div class="sch-box alt"><b>Sección en la misma página</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Ctrl + Intro","Mayús + Intro","Alt + Intro","Ctrl + Mayús + Intro"],why:"Página nueva."},{o:["Ctrl + Mayús + Intro","Ctrl + Intro","Mayús + Intro","Tab"],why:"Columnas."},{o:["Mayús + Intro","Intro","Ctrl + Intro","Alt + Intro"],why:"Mismo párrafo."},{o:["Continua","Página siguiente","Página par","Página impar"],why:"Disposición > Saltos."}]},
+ {id:"e12",title:"Control de paginación",intro:"Líneas y saltos de página.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Líneas y saltos de página</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Última línea sola arriba</b>{{0}}</div>
+   <div class="sch-box alt"><b>Primera línea sola abajo</b>{{1}}</div>
+   <div class="sch-box"><b>No separar del párrafo siguiente</b>{{2}}</div>
+   <div class="sch-box alt"><b>No partir el párrafo</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Viuda","Huérfana","Sangría","Salto"],why:"Arriba."},{o:["Huérfana","Viuda","Capital","Francesa"],why:"Abajo."},{o:["Conservar con el siguiente","Conservar líneas juntas","Salto de página anterior","Continua"],why:"Títulos."},{o:["Conservar líneas juntas","Conservar con el siguiente","Control de viudas","Salto de columna"],why:"Dentro del párrafo."}]},
+ {id:"e13",title:"¿En qué pestaña?",intro:"Ubicación de comandos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Cinta de opciones</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Marca de agua</b>{{0}}</div>
+   <div class="sch-box alt"><b>Márgenes y columnas</b>{{1}}</div>
+   <div class="sch-box"><b>Tabla de contenido y notas</b>{{2}}</div>
+   <div class="sch-box alt"><b>Control de cambios</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Diseño","Insertar","Disposición","Vista"],why:"Fondo de página."},{o:["Disposición","Diseño","Inicio","Vista"],why:"Configurar página."},{o:["Referencias","Insertar","Revisar","Correspondencia"],why:"Documentos largos."},{o:["Revisar","Vista","Referencias","Archivo"],why:"Seguimiento."}]},
+ {id:"e14",title:"Revisión y protección",intro:"Revisar y Archivo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Revisar y proteger</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ortografía y gramática</b>{{0}}</div>
+   <div class="sch-box alt"><b>Sinónimos</b>{{1}}</div>
+   <div class="sch-box"><b>Cifrar con contraseña</b>{{2}}</div>
+   <div class="sch-box alt"><b>Datos ocultos antes de compartir</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["F7","F9","F12","F5"],why:"Editor."},{o:["Mayús + F7","Mayús + F3","Ctrl + F7","Alt + F7"],why:"Tesauro."},{o:["Archivo > Información > Proteger documento","Revisar > Ortografía","Vista > Macros","Diseño > Marca de agua"],why:"Proteger."},{o:["Inspeccionar documento","Control de cambios","Comparar","Contar palabras"],why:"Archivo > Información."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("in4c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("in4c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
