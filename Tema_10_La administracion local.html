@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Estudio AGE - Tema 10: Administración Local</title>
+    <!-- Tipografía moderna Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #f1f5f9;
+            --bg-gradient: radial-gradient(circle at top right, #e0e7ff 0%, #f1f5f9 45%);
+            --card-bg: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --primary-hover: #4338ca;
+            --accent: #06b6d4;
+            --correct-bg: #ecfdf5;
+            --correct-border: #10b981;
+            --correct-text: #065f46;
+            --wrong-bg: #fef2f2;
+            --wrong-border: #ef4444;
+            --wrong-text: #991b1b;
+            --explain-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0b0f19;
+            --bg-gradient: radial-gradient(circle at top right, #1e1b4b 0%, #0b0f19 50%);
+            --card-bg: #131a2a;
+            --glass-bg: rgba(19, 26, 42, 0.85);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-light: rgba(99, 102, 241, 0.15);
+            --primary-hover: #818cf8;
+            --accent: #22d3ee;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: #10b981;
+            --correct-text: #6ee7b7;
+            --wrong-bg: rgba(239, 68, 68, 0.15);
+            --wrong-border: #ef4444;
+            --wrong-text: #fca5a5;
+            --explain-bg: #1e293b;
+            --border-color: #1e293b;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.65;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Barra de progreso de lectura superior */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            z-index: 2000;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Header estilo Glassmorphism */
+        header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-top {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-age {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 99px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-main) 30%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.08);
+            border-color: var(--primary);
+        }
+
+        /* Enlaces de recursos en formato Chips modernos */
+        .pdf-links {
+            max-width: 900px;
+            margin: 12px auto 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .pdf-links span {
+            font-weight: 600;
+            margin-right: 2px;
+        }
+
+        .resource-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--primary-light);
+            color: var(--primary);
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .resource-chip:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        /* Navegación Sticky Horizontal */
+        .nav-wrapper {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 93px; /* Se ajusta dinámicamente por JS */
+            z-index: 999;
+        }
+
+        nav.sticky-nav {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 20px;
+            gap: 8px;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE/Edge */
+            scroll-behavior: smooth;
+        }
+
+        nav.sticky-nav::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        nav.sticky-nav button {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 8px 16px;
+            border-radius: 99px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        nav.sticky-nav button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        nav.sticky-nav button.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 860px;
+            margin: 24px auto 60px;
+            padding: 0 16px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Barra de herramientas del Esquema (Audio + Buscador) */
+        .toolbar-esquema {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            margin-bottom: 24px;
+            background: var(--card-bg);
+            padding: 14px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Tarjetas */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .q-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .question-text {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0 0 12px 0;
+            line-height: 1.45;
+        }
+
+        .answer-text {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            padding-left: 14px;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Botones de Acción */
+        .btn-action {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-action:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-action:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-action:disabled {
+            background: var(--border-color);
+            color: var(--text-muted);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--bg-main);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
+        }
+
+        .test-footer-actions {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Opciones del Test */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0;
+            background: var(--bg-main);
+            font-size: 0.96rem;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .option-label:has(input:checked) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .option-label input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            margin-right: 14px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s;
+        }
+
+        .option-label input[type="radio"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 0.15s transform ease-in-out;
+            background-color: var(--primary);
+        }
+
+        .option-label input[type="radio"]:checked {
+            border-color: var(--primary);
+        }
+
+        .option-label input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        /* Estados Correcto / Incorrecto */
+        .option-label.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: var(--correct-text) !important;
+            font-weight: 700;
+        }
+
+        .option-label.wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-border) !important;
+            color: var(--wrong-text) !important;
+        }
+
+        .explanation-box {
+            background-color: var(--explain-bg);
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+            border-left: 4px solid var(--primary);
+            display: none;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            animation: fadeIn 0.25s ease;
+        }
+
+        /* Marcador de Puntuación */
+        .score-display {
+            font-size: 1.15rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 0 0 24px 0;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--primary);
+            box-shadow: var(--shadow-md);
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .test-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 18px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Optimizaciones específicas para Móvil */
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 14px;
+            }
+            header h1 {
+                font-size: 1.05rem;
+            }
+            .pdf-links {
+                margin-top: 8px;
+                gap: 6px;
+            }
+            .resource-chip {
+                font-size: 0.76rem;
+                padding: 4px 10px;
+            }
+            nav.sticky-nav {
+                padding: 8px 14px;
+            }
+            .container {
+                margin-top: 16px;
+                padding: 0 12px;
+            }
+            .toolbar-esquema {
+                grid-template-columns: 1fr;
+                padding: 12px;
+            }
+            .audio-controls .btn-action {
+                width: 100%;
+            }
+            .card {
+                padding: 18px 16px;
+                border-radius: 14px;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .option-label {
+                padding: 14px 12px;
+                font-size: 0.94rem;
+            }
+            .test-footer-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <header id="mainHeader">
+        <div class="header-top">
+            <div class="brand-title">
+                <span class="badge-age">AGE · T10</span>
+                <h1>Administración Local</h1>
+            </div>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+                🌙
+            </button>
+        </div>
+        <div class="pdf-links">
+            <span>Fuentes:</span>
+            <a href="Tema_10.pdf" target="_blank" class="resource-chip">📄 Tema_10.pdf</a>
+            <a href="Tema_10_DC_LaProvincia.pdf" target="_blank" class="resource-chip">📄 Tema_10_DC_LaProvincia.pdf</a>
+            <a href="Tema_10_Administracion_Local_Provincia_Municipio_Isla_claude.html" target="_blank" class="resource-chip">🔗 Tema_10_Administracion_Local_Provincia_Municipio_Isla_claude.html</a>
+        </div>
+    </header>
+
+    <div class="nav-wrapper" id="navWrapper">
+        <nav class="sticky-nav" id="navMenu">
+            <!-- Generado por JS -->
+        </nav>
+    </div>
+
+    <div class="container" id="mainContainer">
+        <!-- Contenido generado por JS -->
+    </div>
+
+    <script>
+        // === BASE DE CONOCIMIENTO (Extraída estrictamente de los PDF adjuntos) ===
+        const generadorPreguntas = [
+            { p: "¿Qué ley regula las Bases del Régimen Local?", r: "La Ley 7/1985, de 2 de abril." },
+            { p: "¿Qué norma aprueba el texto refundido de la Ley reguladora de las Haciendas Locales?", r: "El Real Decreto Legislativo 2/2004, de 5 de marzo." },
+            { p: "¿Cuáles son las entidades locales territoriales?", r: "El Municipio, la Provincia y la Isla (en los archipiélagos balear y canario)." },
+            { p: "¿La Administración Local está integrada por entes o por órganos?", r: "Está integrada por entes, es decir, por sujetos de Derecho con personalidad jurídica propia." },
+            { p: "¿Qué define a la provincia según el artículo 141 de la Constitución?", r: "Se define por su carácter dual: entidad local con personalidad jurídica propia determinada por la agrupación de municipios y división territorial para el cumplimiento de actividades estatales." },
+            { p: "¿Qué ley orgánica se requiere para alterar los límites provinciales?", r: "Una Ley Orgánica, que debe ser aprobada por las Cortes Generales (art. 141.1 CE)." },
+            { p: "¿Cuáles son los tres elementos básicos de la provincia?", r: "El territorio, la población y la organización administrativa." },
+            { p: "¿Qué órganos existen en todas las Diputaciones Provinciales?", r: "El Presidente, los Vicepresidentes, la Junta de Gobierno y el Pleno, además de los órganos de estudio, informe o consulta (Comisiones Informativas)." },
+            { p: "¿Cuántos Diputados provinciales corresponden a una provincia de 450.000 residentes?", r: "25 Diputados (tramo hasta 500.000 residentes)." },
+            { p: "¿Cuántos Diputados provinciales corresponden a una provincia de 800.000 residentes?", r: "27 Diputados (tramo de 500.001 a 1.000.000 residentes)." },
+            { p: "¿Cuántos Diputados provinciales corresponden a una provincia de 2.000.000 residentes?", r: "31 Diputados (tramo de 1.000.001 a 3.500.000 residentes)." },
+            { p: "¿Cuántos Diputados provinciales corresponden a una provincia de 4.000.000 residentes?", r: "51 Diputados (tramo de 3.500.001 en adelante)." },
+            { p: "¿Cuál es el límite máximo de Diputados provinciales que puede tener un partido judicial?", r: "Ningún partido judicial puede contar con más de tres quintos (3/5) del número total de Diputados provinciales, y todos deben contar al menos con uno." },
+            { p: "¿A qué órgano de la Diputación corresponde la aprobación de los Presupuestos?", r: "Al Pleno de la Diputación." },
+            { p: "¿Qué mayorías se necesitan para elegir al Presidente de la Diputación?", r: "Mayoría absoluta en primera votación y simple en la segunda." },
+            { p: "¿A qué asuntos se puede vincular una cuestión de confianza planteada por el Presidente de la Diputación?", r: "A los presupuestos anuales, el reglamento orgánico, y el plan provincial de cooperación a las obras y servicios de competencia municipal." },
+            { p: "¿Cuál es el límite de miembros de la Junta de Gobierno de una Diputación?", r: "Un número de Diputados no superior al tercio del número legal de miembros de la Corporación." },
+            { p: "¿Quién sustituye al Presidente de la Diputación en caso de vacante, ausencia o enfermedad?", r: "Los Vicepresidentes, por el orden de su nombramiento." },
+            { p: "¿Cómo se llama el órgano de gobierno en las Islas Canarias?", r: "Cabildos, que se rigen por las normas de las Diputaciones Provinciales." },
+            { p: "¿Cómo se llama el órgano de gobierno en las Islas Baleares?", r: "Consejos Insulares." },
+            { p: "¿Cuáles son los elementos que señalan la presencia de un municipio?", r: "Un territorio (término municipal), una población (vecinos) y una organización." },
+            { p: "¿Cuál es el requisito de población para crear un nuevo municipio?", r: "Debe realizarse sobre la base de núcleos territorialmente diferenciados, de al menos 4.000 habitantes, siendo financieramente sostenibles." },
+            { p: "¿Quiénes constituyen la población del municipio?", r: "El conjunto de personas inscritas en el Padrón municipal (los vecinos)." },
+            { p: "¿En qué municipios es obligatoria la existencia de la Junta de Gobierno Local?", r: "En los municipios con población superior a 5.000 habitantes." },
+            { p: "¿En qué municipios existe obligatoriamente la Comisión Especial de Cuentas?", r: "En todos los municipios." },
+            { p: "¿Qué función tiene la Comisión Especial de Sugerencias y Reclamaciones y dónde existe?", r: "Existe en los municipios de gran población y en aquellos donde lo acuerde el Pleno por mayoría absoluta. Informa y canaliza quejas vecinales." },
+            { p: "¿Qué mayoría se exige para presentar una moción de censura contra el Alcalde?", r: "Mayoría absoluta del número legal de miembros de la Corporación, incluyendo un candidato alternativo a la Alcaldía." },
+            { p: "¿Cuántos Concejales se eligen en un municipio de 80 habitantes?", r: "3 Concejales (tramo hasta 100 residentes, salvo régimen de Concejo Abierto)." },
+            { p: "¿Cuántos Concejales corresponden a un municipio de 200 habitantes?", r: "5 Concejales (tramo 101 a 250)." },
+            { p: "¿Cuántos Concejales corresponden a un municipio de 600 habitantes?", r: "7 Concejales (tramo 251 a 1.000)." },
+            { p: "¿Quién aprueba la Oferta de Empleo Público en el Ayuntamiento?", r: "El Alcalde." },
+            { p: "¿Quién tiene la jefatura superior de todo el personal del Ayuntamiento y de la Policía Local?", r: "El Alcalde." },
+            { p: "¿Qué órganos componen el Concejo Abierto?", r: "Un Alcalde y una Asamblea vecinal de la que forman parte todos los electores." },
+            { p: "¿Qué población debe tener un municipio, si no es capital, para considerarse de 'gran población' automáticamente?", r: "Su población debe superar los 250.000 habitantes." },
+            { p: "¿Qué población debe tener una capital de provincia para considerarse municipio de gran población?", r: "Superior a 175.000 habitantes." },
+            { p: "¿Qué servicios mínimos debe prestar todo municipio, independientemente de su población?", r: "Alumbrado público, cementerio, recogida de residuos, limpieza viaria, abastecimiento domiciliario de agua potable, alcantarillado, acceso a núcleos y pavimentación." },
+            { p: "¿Qué servicios adicionales debe prestar un municipio de más de 5.000 habitantes?", r: "Parque público, biblioteca pública y tratamiento de residuos." },
+            { p: "¿Qué servicios adicionales debe prestar un municipio de más de 20.000 habitantes?", r: "Protección civil, evaluación e información de situaciones de necesidad social (atención inmediata en riesgo de exclusión), prevención y extinción de incendios, e instalaciones deportivas de uso público." },
+            { p: "¿Qué servicios adicionales debe prestar un municipio de más de 50.000 habitantes?", r: "Transporte colectivo urbano de viajeros y medio ambiente urbano." },
+            { p: "¿Qué son las mancomunidades de municipios?", r: "Son entidades institucionales constituidas por la asociación voluntaria de dos o más municipios para la ejecución en común de obras o servicios determinados de su competencia." }
+        ];
+
+        const esquemaPreguntas = generadorPreguntas.slice(0, 40);
+        const examenes = [];
+        
+        for (let i = 0; i < 10; i++) {
+            let test = [];
+            for (let j = 0; j < 20; j++) {
+                let baseIndex = (i * 3 + j * 7) % generadorPreguntas.length; 
+                let base = generadorPreguntas[baseIndex];
+                let correcta = base.r;
+                let distractores = [
+                    "El dato solicitado no se encuentra en la documentación adjunta.",
+                    "Corresponde a la Comunidad Autónoma correspondiente.",
+                    "Es competencia exclusiva de la Administración General del Estado.",
+                    "Requiere mayoría simple de los presentes.",
+                    "Solo en municipios de más de 50.000 habitantes.",
+                    "La Ley 39/2015, de 1 de octubre.",
+                    "El Pleno, previo dictamen de la Comisión.",
+                    "A y B son correctas.",
+                    "Todas son correctas."
+                ];
+
+                let pool = [
+                    correcta, 
+                    distractores[(j)%distractores.length], 
+                    distractores[(j+1)%distractores.length], 
+                    distractores[(j+2)%distractores.length]
+                ];
+                pool.sort(() => Math.random() - 0.5);
+                
+                test.push({
+                    pregunta: base.p,
+                    opciones: pool,
+                    respuesta_correcta: correcta,
+                    explicacion: `Según la documentación (Ley 7/1985 / CE): ${correcta}`
+                });
+            }
+            examenes.push(test);
+        }
+
+        // --- LÓGICA DE UI / UX ---
+        const navMenu = document.getElementById('navMenu');
+        const mainContainer = document.getElementById('mainContainer');
+        let respuestasUsuario = {};
+        let isSpeaking = false;
+
+        function init() {
+            ajustarStickyNav();
+            window.addEventListener('resize', ajustarStickyNav);
+            window.addEventListener('scroll', actualizarProgresoScroll);
+            
+            // Cargar preferencia de tema
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeToggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+            renderNav();
+            renderEsquema();
+            renderTodosLosTest();
+            switchTab('esquema');
+        }
+
+        function ajustarStickyNav() {
+            const header = document.getElementById('mainHeader');
+            const navWrapper = document.getElementById('navWrapper');
+            if (header && navWrapper) {
+                navWrapper.style.top = header.offsetHeight + 'px';
+            }
+        }
+
+        function actualizarProgresoScroll() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            document.getElementById("scrollProgress").style.width = scrolled + "%";
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+        }
+
+        function renderNav() {
+            let navHtml = `<button id="btn-esquema" onclick="switchTab('esquema')">📚 Esquema (40)</button>`;
+            for(let i=1; i<=10; i++) {
+                navHtml += `<button id="btn-test-${i}" onclick="switchTab('test-${i}')">📝 Test ${i}</button>`;
+            }
+            navMenu.innerHTML = navHtml;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('nav.sticky-nav button').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.add('active');
+            
+            // Centrar botón activo en móvil
+            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`content-${tabId}`).classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderEsquema() {
+            let html = `
+                <div id="content-esquema" class="tab-content">
+                    <div class="toolbar-esquema">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="searchInput" placeholder="Filtrar conceptos (ej. Diputados, Alcalde, 5.000...)" onkeyup="filtrarEsquema()">
+                        </div>
+                        <div class="audio-controls">
+                            <button class="btn-action" id="btnAudioPlay" onclick="toggleAudio()">🔊 Escuchar Tema</button>
+                        </div>
+                    </div>
+                    <div id="esquemaCardsList">
+            `;
+            esquemaPreguntas.forEach((item, index) => {
+                html += `
+                    <div class="card esquema-card">
+                        <div class="card-header">
+                            <span class="q-badge">Concepto #${index + 1}</span>
+                        </div>
+                        <p class="question-text">${item.p}</p>
+                        <p class="answer-text">${item.r}</p>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+            mainContainer.insertAdjacentHTML('beforeend', html);
+        }
+
+        function filtrarEsquema() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.esquema-card');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        function renderTodosLosTest() {
+            examenes.forEach((test, testIndex) => {
+                let html = `
+                    <div id="content-test-${testIndex+1}" class="tab-content">
+                        <div class="test-status-bar">
+                            <span>Simulacro Oficial #${testIndex + 1}</span>
+                            <span id="counter-${testIndex}">Respondidas: 0 / 20</span>
+                        </div>
+                        <div id="score-top-${testIndex}" class="score-display"></div>
+                `;
+                
+                test.forEach((q, qIndex) => {
+                    html += `
+                        <div class="card" id="card-${testIndex}-${qIndex}">
+                            <div class="card-header">
+                                <span class="q-badge">Pregunta ${qIndex + 1} de 20</span>
+                            </div>
+                            <p class="question-text">${q.pregunta}</p>
+                            <div class="options-group">
+                    `;
+                    
+                    q.opciones.forEach((opt, optIndex) => {
+                        let uniqueId = `opt-${testIndex}-${qIndex}-${optIndex}`;
+                        html += `
+                            <label class="option-label" id="label-${uniqueId}">
+                                <input type="radio" id="${uniqueId}" name="q-${testIndex}-${qIndex}" value="${opt.replace(/"/g, '&quot;')}" onchange="registrarRespuesta(${testIndex}, ${qIndex}, this.value)">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                            <div class="explanation-box" id="expl-${testIndex}-${qIndex}">
+                                <strong>💡 Explicación:</strong> ${q.explicacion}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        <div id="score-bottom-${testIndex}" class="score-display" style="margin-top:24px;"></div>
+                        <div class="test-footer-actions">
+                            <button class="btn-action" id="btn-corregir-${testIndex}" onclick="corregirExamen(${testIndex})">✅ Corregir Examen</button>
+                            <button class="btn-action btn-secondary" onclick="reiniciarExamen(${testIndex})">🔄 Reiniciar</button>
+                        </div>
+                    </div>
+                `;
+                mainContainer.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function registrarRespuesta(testIndex, qIndex, value) {
+            if(!respuestasUsuario[testIndex]) respuestasUsuario[testIndex] = {};
+            respuestasUsuario[testIndex][qIndex] = value;
+            
+            const count = Object.keys(respuestasUsuario[testIndex]).length;
+            document.getElementById(`counter-${testIndex}`).innerText = `Respondidas: ${count} / 20`;
+        }
+
+        function corregirExamen(testIndex) {
+            let aciertos = 0;
+            let fallos = 0;
+            let test = examenes[testIndex];
+
+            document.querySelectorAll(`input[name^="q-${testIndex}-"]`).forEach(input => {
+                input.disabled = true;
+            });
+            document.getElementById(`btn-corregir-${testIndex}`).disabled = true;
+
+            test.forEach((q, qIndex) => {
+                let selectedVal = respuestasUsuario[testIndex] ? respuestasUsuario[testIndex][qIndex] : null;
+                let inputs = document.querySelectorAll(`input[name="q-${testIndex}-${qIndex}"]`);
+                
+                inputs.forEach(input => {
+                    let lbl = input.parentElement;
+                    if (input.value === q.respuesta_correcta) {
+                        lbl.classList.add('correct');
+                    } else if (input.checked && input.value !== q.respuesta_correcta) {
+                        lbl.classList.add('wrong');
+                    }
+                });
+
+                if (selectedVal === q.respuesta_correcta) {
+                    aciertos++;
+                } else {
+                    fallos++;
+                    document.getElementById(`expl-${testIndex}-${qIndex}`).style.display = 'block';
+                }
+            });
+
+            let blancos = 20 - (aciertos + fallos);
+            let nota = ((aciertos / 20) * 10).toFixed(2);
+            let emoji = aciertos >= 16 ? '🏆' : (aciertos >= 10 ? '👍' : '📚');
+            
+            let scoreHtml = `${emoji} Nota: ${nota} / 10 &nbsp;|&nbsp; ✅ ${aciertos} Aciertos · ❌ ${fallos} Fallos · ⚪ ${blancos} Blancos`;
+            
+            let scoreTop = document.getElementById(`score-top-${testIndex}`);
+            let scoreBottom = document.getElementById(`score-bottom-${testIndex}`);
+            
+            scoreTop.innerHTML = scoreHtml;
+            scoreTop.style.display = 'block';
+            scoreBottom.innerHTML = scoreHtml;
+            scoreBottom.style.display = 'block';
+            
+            scoreTop.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function reiniciarExamen(testIndex) {
+            if(respuestasUsuario[testIndex]) delete respuestasUsuario[testIndex];
+            document.getElementById(`counter-${testIndex}`).innerText = `Respondidas: 0 / 20`;
+            
+            document.querySelectorAll(`input[name^="q-${testIndex}-"]`).forEach(input => {
+                input.disabled = false;
+                input.checked = false;
+            });
+            
+            document.querySelectorAll(`#content-test-${testIndex+1} .option-label`).forEach(lbl => {
+                lbl.classList.remove('correct', 'wrong');
+            });
+            
+            document.querySelectorAll(`#content-test-${testIndex+1} .explanation-box`).forEach(box => {
+                box.style.display = 'none';
+            });
+
+            document.getElementById(`score-top-${testIndex}`).style.display = 'none';
+            document.getElementById(`score-bottom-${testIndex}`).style.display = 'none';
+            document.getElementById(`btn-corregir-${testIndex}`).disabled = false;
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleAudio() {
+            const btn = document.getElementById('btnAudioPlay');
+            if ('speechSynthesis' in window) {
+                if (isSpeaking) {
+                    window.speechSynthesis.cancel();
+                    isSpeaking = false;
+                    btn.innerHTML = '🔊 Escuchar Tema';
+                    btn.classList.remove('btn-danger');
+                    return;
+                }
+
+                window.speechSynthesis.cancel();
+                let textoCompleto = "Esquema del Tema 10. Administración Local. ";
+                esquemaPreguntas.forEach((item, i) => {
+                    textoCompleto += `Concepto ${i + 1}. ${item.p} Respuesta: ${item.r}. `;
+                });
+
+                let utterance = new SpeechSynthesisUtterance(textoCompleto);
+                utterance.lang = 'es-ES';
+                utterance.rate = 1.02;
+                
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    btn.innerHTML = '🔊 Escuchar Tema';
+                    btn.classList.remove('btn-danger');
+                };
+
+                isSpeaking = true;
+                btn.innerHTML = '⏹️ Detener Audio';
+                btn.classList.add('btn-danger');
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("La síntesis de voz no está soportada en este navegador.");
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque 1 · Tema 10 · La Administración local · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">OE10</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Organización del Estado y de la Administración Pública</small>
+      <b>La Administración local</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .of{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+    .of div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem}
+    .of div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .tr{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .tr div{padding:10px 14px;border-radius:12px;border-left:5px solid var(--a1);background:var(--card2);font-size:.92rem}
+    .tr div.l2{margin-left:18px;border-left-color:#0aa37f}
+    .tr div.l3{margin-left:36px;border-left-color:#f59e0b}
+    .tr div.no{opacity:.55;border-left-color:var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque 1 · Tema 10 · Organización del Estado y de la Administración Pública</span>
+    <h1>La Administración local <span>Entidades que la integran: la provincia, el municipio y la isla</span></h1>
+    <p>Resumen de alto rendimiento del manual y del anexo «La Provincia» (CE, LRBRL, LOREG y ROF), actualizado a <strong>noviembre de 2026</strong>: elecciones locales del 23 de mayo de 2027, 8.132 municipios y última reforma de la LRBRL (RDL 13/2026). Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un simulador de municipio: concejales, mayoría absoluta, Junta de Gobierno, servicios obligatorios, gran población y concejo abierto.</li>
+      <li>Una calculadora de la Diputación, con el reparto de diputados por partidos judiciales.</li>
+      <li>Calculadoras de la moción de censura y de la elección del Alcalde.</li>
+      <li>Entrenadores de qué entidad local es cada caso y de qué órgano es competente.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">16</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">102</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('mu').scrollIntoView({behavior:'smooth'})">Simulador de municipio ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('dp').scrollIntoView({behavior:'smooth'})">Diputación ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('al').scrollIntoView({behavior:'smooth'})">Alcalde ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado respecto al manual:</strong>
+    <ul>
+      <li><span class="upd">2026</span> <strong>Elecciones locales</strong>: serán el <strong>23 de mayo de 2027</strong> (cuarto domingo de mayo, cada 4 años). Los ciudadanos de la UE que quieran votar pueden manifestarlo hasta el 30-12-2026.</li>
+      <li><span class="upd">2026</span> <strong>Planta municipal</strong>: <strong>8.132 municipios</strong>. Elegirán 66.976 concejales en 2027.</li>
+      <li><span class="upd">2026</span> <strong>LRBRL</strong>: el <strong>RDL 13/2026</strong>, de 2 de junio, dio nueva redacción al art. 92 bis.6. La provisión de los puestos de los funcionarios con habilitación nacional es por <strong>concurso</strong> como sistema normal, con libre designación excepcional en Diputaciones, Cabildos, Consejos insulares, grandes municipios, Ceuta y Melilla.</li>
+      <li><strong>Moción de censura</strong>: la STC 151/2017 anuló el inciso que extendía el aumento de la mayoría a los concejales que hubieran dejado el grupo «por cualquier causa». Sigue vigente el aumento por los firmantes que forman o han formado parte del grupo del Alcalde.</li>
+      <li><strong>Erratas y precisiones</strong>:
+        <ul>
+          <li>«Sistema <em>D'Hont</em>»: es D'Hondt.</li>
+          <li>En el anexo, «De 1.00.001 a 3.500.000» debe ser 1.000.001, y el segundo tramo empieza en 500.001.</li>
+          <li>La coordinación de servicios por la Diputación del art. 26.2 LRBRL solo se aplica a los <strong>municipios de menos de 20.000 habitantes</strong> y a determinados servicios (residuos, agua, alcantarillado, limpieza viaria, accesos, pavimentación y alumbrado); el manual no menciona ese límite.</li>
+          <li>Las entidades de ámbito inferior al municipio (art. 24 bis) se crean desde 2013 <strong>sin personalidad jurídica</strong>; las anteriores la conservan (DT 4.ª de la Ley 27/2013).</li>
+          <li>Los Consejos Insulares de Baleares son hoy cuatro (Mallorca, Menorca, Ibiza y Formentera).</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="mu">
+    <div><span class="kicker">LRBRL · art. 179 LOREG</span><h2>Simulador de municipio</h2></div>
+    <p>Introduce la población y te digo cómo se organiza el municipio.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Residentes<input type="number" id="mu-p" value="23500" min="1"></label>
+      <label>¿Capital de provincia?<select id="mu-cp"><option value="no">No</option><option value="si">Sí</option></select></label>
+      <label>¿Capital autonómica o sede de instituciones?<select id="mu-ca"><option value="no">No</option><option value="si">Sí</option></select></label>
+      <label>¿Circunstancias especiales y acuerdo de la Asamblea autonómica?<select id="mu-es"><option value="no">No</option><option value="si">Sí</option></select></label>
+    </div>
+    <div class="rsv" id="mu-k"></div>
+    <div class="verdict" id="mu-out"></div>
+  </div>
+
+  <div class="section-title" id="dp">
+    <div><span class="kicker">Arts. 204-206 LOREG</span><h2>Calculadora de la Diputación</h2></div>
+    <p>Escribe un partido judicial por línea con sus residentes (por ejemplo, «Sede: 300000»).</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label style="grid-column:1/-1">Partidos judiciales y residentes<textarea id="dp-t" rows="6" style="width:100%;font:inherit;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit">Capital: 410000
+Norte: 95000
+Sur: 72000
+Sierra: 31000
+Costa: 140000
+Vega: 18000</textarea></label>
+    </div>
+    <div class="rsv" id="dp-k"></div>
+    <div class="tr" id="dp-out"></div>
+    <div class="verdict" id="dp-v"></div>
+  </div>
+
+  <div class="section-title" id="al">
+    <div><span class="kicker">Arts. 196-197 bis LOREG</span><h2>Elección y cese del Alcalde</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="al-tabs"><button class="on" data-p="e">Elección del Alcalde</button><button data-p="m">Moción de censura</button><button data-p="q">Cuestión de confianza</button></div>
+    <div class="pane on" id="al-e">
+      <div class="tool-grid">
+        <label>Residentes del municipio<input type="number" id="ae-p" value="12000" min="1"></label>
+        <label>Votos de concejales al candidato más votado<input type="number" id="ae-v" value="7" min="0"></label>
+        <label>Lista más votada por los vecinos<select id="ae-l"><option value="A">Lista A</option><option value="B">Lista B</option></select></label>
+        <label>Candidato que recibe esos votos<select id="ae-c"><option value="B">Cabeza de la lista B</option><option value="A">Cabeza de la lista A</option></select></label>
+      </div>
+      <div class="verdict" id="ae-out"></div>
+    </div>
+    <div class="pane" id="al-m">
+      <div class="tool-grid">
+        <label>Número legal de concejales<input type="number" id="am-n" value="21" min="3"></label>
+        <label>Concejales firmantes<input type="number" id="am-f" value="12" min="0"></label>
+        <label>Firmantes que forman o han formado parte del grupo del Alcalde<input type="number" id="am-g" value="1" min="0"></label>
+        <label>¿Incluye un candidato que acepta?<select id="am-c"><option value="si">Sí</option><option value="no">No</option></select></label>
+      </div>
+      <div class="verdict" id="am-out"></div>
+    </div>
+    <div class="pane" id="al-q">
+      <div class="tool-grid">
+        <label>Asunto al que se vincula<select id="aq-a"><option value="p">Presupuestos anuales</option><option value="r">Reglamento orgánico</option><option value="f">Ordenanzas fiscales</option><option value="u">Aprobación final del planeamiento general</option><option value="c">Plan provincial de cooperación</option><option value="x">Plantilla de personal</option></select></label>
+        <label>¿Obtiene los votos necesarios?<select id="aq-o"><option value="no">No</option><option value="si">Sí</option></select></label>
+        <label>Órgano<select id="aq-g"><option value="a">Alcalde</option><option value="d">Presidente de Diputación</option></select></label>
+      </div>
+      <div class="verdict" id="aq-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="en">
+    <div><span class="kicker">Arts. 3, 24 bis y 42-44 LRBRL</span><h2>¿Qué entidad local es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="en-case"></div>
+    <div class="choice" id="en-opts"></div>
+    <div class="verdict" id="en-out" style="display:none"></div>
+    <div class="score"><span id="en-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="en-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="og">
+    <div><span class="kicker">Arts. 21-23, 33-35 LRBRL</span><h2>¿Qué órgano es competente?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="og-case"></div>
+    <div class="choice" id="og-opts"></div>
+    <div class="verdict" id="og-out" style="display:none"></div>
+    <div class="score"><span id="og-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="og-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Clasificación de los entes locales</span><h2>Mapa de entidades locales</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>Arts. 140-142 CE</b><span>Municipio (140), provincia e isla (141) y Haciendas locales (142)</span></div>
+    <div class="num"><b>Ley 7/1985</b><span>LRBRL, de 2 de abril; reformada por la Ley 57/2003 y la Ley 27/2013</span></div>
+    <div class="num"><b>8.132 <span class="upd">2026</span></b><span>Municipios en España</span></div>
+    <div class="num"><b>23-5-2027 <span class="upd">2026</span></b><span>Próximas elecciones locales</span></div>
+    <div class="num"><b>25 · 27 · 31 · 51</b><span>Diputados provinciales según los residentes (500.000 / 1.000.000 / 3.500.000)</span></div>
+    <div class="num"><b>3/5</b><span>Máximo de diputados provinciales para un partido judicial</span></div>
+    <div class="num"><b>1/3</b><span>Máximo de miembros de la Junta de Gobierno sobre el número legal</span></div>
+    <div class="num"><b>5.000</b><span>Junta de Gobierno Local y comisiones informativas obligatorias; parque, biblioteca y tratamiento de residuos</span></div>
+    <div class="num"><b>20.000</b><span>Protección civil, servicios sociales, incendios e instalaciones deportivas</span></div>
+    <div class="num"><b>50.000</b><span>Transporte colectivo urbano y medio ambiente urbano</span></div>
+    <div class="num"><b>250.000 · 175.000 · 75.000</b><span>Umbrales de los municipios de gran población (art. 121)</span></div>
+    <div class="num"><b>4.000</b><span>Habitantes mínimos del núcleo para crear un nuevo municipio</span></div>
+    <div class="num"><b>&lt; 100</b><span>Residentes: el Alcalde puede convocar el concejo abierto para decisiones trascendentes</span></div>
+    <div class="num"><b>3 a 25</b><span>Concejales hasta 100.000 residentes; después, uno más por cada 100.000 o fracción, y otro si sale par</span></div>
+    <div class="num"><b>2/5 + mitad del censo</b><span>Oposición municipal que impide crear una comarca</span></div>
+    <div class="num"><b>4 años</b><span>Mandato de concejales y diputados provinciales</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual y anexo</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · La Administración local</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Normativa y características</h3><small>Manual 1.1 y 1.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Normativa</strong>:
+            <ul>
+              <li><strong>Ley 7/1985</strong>, de 2 de abril, reguladora de las Bases del Régimen Local (LRBRL);</li>
+              <li>la legislación autonómica de régimen local;</li>
+              <li>el <strong>TRRL</strong> (RDLeg 781/1986) y sus reglamentos, entre ellos el <strong>ROF</strong> (RD 2568/1986);</li>
+              <li>la <strong>Ley 57/2003</strong>, de modernización del gobierno local;</li>
+              <li>el <strong>TRLRHL</strong> (RDLeg 2/2004), de Haciendas Locales;</li>
+              <li>la <strong>Ley 27/2013</strong>, de racionalización y sostenibilidad de la Administración Local (LRSAL).</li>
+            </ul>
+          </li>
+          <li><strong>Características</strong>:
+            <ul>
+              <li>forma parte de la Administración Pública;</li>
+              <li>está integrada por <strong>entes</strong> con personalidad jurídica propia, no por órganos (a diferencia de la periférica del Estado);</li>
+              <li>sus entes son <strong>territoriales</strong> y tienen fines generales (a diferencia de los institucionales).</li>
+            </ul>
+          </li>
+          <li><strong>Autonomía local</strong>: los arts. 137, 140 y 141 CE la garantizan para la gestión de sus intereses. Es una garantía institucional.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Entes que integran la Administración local</h3><small>Art. 3 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Entidades locales territoriales</strong>:
+            <ul>
+              <li>el <strong>municipio</strong>;</li>
+              <li>la <strong>provincia</strong>;</li>
+              <li>la <strong>isla</strong> en los archipiélagos balear y canario.</li>
+            </ul>
+          </li>
+          <li><strong>Otras entidades locales</strong>:
+            <ul>
+              <li>las <strong>comarcas</strong> u otras agrupaciones de municipios creadas por las Comunidades;</li>
+              <li>las <strong>áreas metropolitanas</strong>;</li>
+              <li>las <strong>mancomunidades</strong> de municipios.</li>
+            </ul>
+          </li>
+          <li><strong>Entidades de ámbito territorial inferior al municipio</strong>:
+            <ul>
+              <li>la Ley 27/2013 vació el art. 45 e introdujo el <strong>art. 24 bis</strong>;</li>
+              <li>las existentes al entrar en vigor esa ley (31-12-2013) conservan su personalidad y su condición de entidad local (DT 4.ª);</li>
+              <li>las que hubieran iniciado su constitución antes del 1-1-2013 la adquieren al constituirse (DT 5.ª).</li>
+            </ul>
+          </li>
+          <li><strong>Regímenes especiales municipales</strong>: gran población, concejo abierto y pequeños municipios o rurales.</li>
+          <li><strong>Regímenes especiales provinciales</strong>:
+            <ul>
+              <li>los <strong>territorios históricos</strong> vascos (Álava, Gipuzkoa y Bizkaia);</li>
+              <li>Navarra y las Comunidades uniprovinciales;</li>
+              <li>los <strong>Cabildos</strong> (Canarias) y los <strong>Consejos Insulares</strong> (Baleares).</li>
+            </ul>
+          </li>
+          <li>También se citan los <strong>consorcios</strong> y las entidades consuetudinarias.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · La provincia (manual y anexo)</h3>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>La provincia: concepto y elementos</h3><small>Art. 141 CE · art. 31 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Carácter dual</strong> (art. 141.1 CE):
+            <ul>
+              <li><strong>entidad local</strong> con personalidad jurídica propia, determinada por la <strong>agrupación de municipios</strong>;</li>
+              <li><strong>división territorial</strong> para el cumplimiento de las actividades del Estado.</li>
+            </ul>
+          </li>
+          <li><strong>Garantía constitucional</strong>:
+            <ul>
+              <li>las Comunidades no pueden suprimir la provincia;</li>
+              <li>sus límites solo se alteran por las Cortes mediante <strong>ley orgánica</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Gobierno</strong>: las <strong>Diputaciones</strong> u otras corporaciones de carácter representativo (art. 141.2).</li>
+          <li><strong>Art. 31 LRBRL</strong>: plena capacidad. Sus fines son garantizar la <strong>solidaridad y el equilibrio intermunicipales</strong>.</li>
+          <li><strong>Elementos</strong>:
+            <ul>
+              <li><strong>territorio</strong>: la suma de los términos municipales;</li>
+              <li><strong>población</strong>: la suma de las poblaciones municipales;</li>
+              <li><strong>organización</strong>: la Diputación, que según el art. 55 ROF es el órgano de gobierno y administración de la provincia, con carácter de corporación de Derecho público.</li>
+            </ul>
+          </li>
+          <li><strong>Competencias</strong> (anexo, art. 36 LRBRL):
+            <ul>
+              <li>asistencia y cooperación jurídica, económica y técnica a los municipios;</li>
+              <li>servicios supramunicipales y supracomarcales;</li>
+              <li>coordinación de los servicios municipales;</li>
+              <li>fomento de los intereses peculiares de la provincia.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Órganos de la Diputación</h3><small>Art. 32 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>En todas las Diputaciones</strong>: el <strong>Presidente</strong>, los <strong>Vicepresidentes</strong>, la <strong>Junta de Gobierno</strong> y el <strong>Pleno</strong>.</li>
+          <li><strong>Órganos de estudio, informe o consulta</strong> (las comisiones informativas):
+            <ul>
+              <li>también existen en todas las Diputaciones;</li>
+              <li>todos los grupos participan en proporción a sus diputados.</li>
+            </ul>
+          </li>
+          <li><strong>Órganos complementarios</strong>:
+            <ul>
+              <li>los regula cada Diputación, respetando la organización básica;</li>
+              <li>el art. 119 ROF incluye a los diputados delegados, la Comisión Especial de Cuentas, los consejos sectoriales y los órganos desconcentrados;</li>
+              <li>desde la Ley 11/1999, las comisiones informativas son órganos <strong>necesarios</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Vicepresidentes</strong>:
+            <ul>
+              <li>los nombra y cesa libremente el Presidente entre los miembros de la Junta de Gobierno;</li>
+              <li>lo sustituyen por orden de nombramiento.</li>
+            </ul>
+          </li>
+          <li><strong>Junta de Gobierno</strong>:
+            <ul>
+              <li>la forman el Presidente y diputados en número <strong>no superior al tercio</strong> del número legal, nombrados libremente por él dando cuenta al Pleno;</li>
+              <li>su atribución propia e indelegable es la <strong>asistencia permanente al Presidente</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Pleno</strong>:
+            <ul>
+              <li>organización, ordenanzas, presupuestos y control;</li>
+              <li>vota la moción de censura y la cuestión de confianza.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Elección de los diputados provinciales</h3><small>Arts. 204-206 LOREG</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Número de diputados</strong>:
+            <ul>
+              <li>hasta 500.000 residentes: <strong>25</strong>;</li>
+              <li>de 500.001 a 1.000.000: <strong>27</strong>;</li>
+              <li>de 1.000.001 a 3.500.000: <strong>31</strong>;</li>
+              <li>más de 3.500.000: <strong>51</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Circunscripción</strong>: el <strong>partido judicial</strong>. La Junta Electoral Provincial reparte los puestos el <strong>décimo día</strong> posterior a la convocatoria:
+            <ul>
+              <li>todo partido judicial tiene al menos <strong>un diputado</strong>;</li>
+              <li>ninguno puede tener más de <strong>3/5</strong> del total;</li>
+              <li>las fracciones de 0,50 o más se redondean al alza;</li>
+              <li>si sobran puestos, se restan a los partidos con menos residentes por diputado; si faltan, se suman a los que tienen más.</li>
+            </ul>
+          </li>
+          <li><strong>Elección indirecta</strong>:
+            <ul>
+              <li>constituidos los Ayuntamientos, la Junta Electoral de Zona reparte los puestos entre las formaciones con concejales en cada partido judicial, por el sistema <strong>D'Hondt</strong> según los votos;</li>
+              <li>en los 5 días siguientes, los concejales de cada formación eligen a los diputados entre listas avaladas por al menos <strong>1/3</strong> de ellos;</li>
+              <li>se eligen además <strong>3 suplentes</strong>;</li>
+              <li>las listas deben ser <strong>paritarias</strong> (40-60 %) y alternar mujeres y hombres.</li>
+            </ul>
+          </li>
+          <li><strong>Mandato</strong>: 4 años.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>El Presidente de la Diputación</h3><small>Arts. 34 LRBRL · 207 LOREG</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Elección</strong>:
+            <ul>
+              <li>puede ser candidato cualquier diputado;</li>
+              <li>hace falta <strong>mayoría absoluta en la primera votación</strong> y <strong>simple en la segunda</strong>;</li>
+              <li>toma posesión ante el Pleno.</li>
+            </ul>
+          </li>
+          <li><strong>Cese</strong>:
+            <ul>
+              <li><strong>moción de censura</strong>, con las mismas reglas que la del Alcalde;</li>
+              <li><strong>cuestión de confianza</strong> (LO 8/1999), vinculada a los <strong>presupuestos</strong>, el <strong>reglamento orgánico</strong> o el <strong>plan provincial de cooperación</strong> a las obras y servicios municipales;</li>
+              <li><strong>renuncia</strong>, sin perder la condición de diputado;</li>
+              <li>fin del mandato.</li>
+            </ul>
+          </li>
+          <li><strong>Funciones</strong>:
+            <ul>
+              <li>dirigir el gobierno y la administración de la provincia;</li>
+              <li>representar a la Diputación;</li>
+              <li>convocar y presidir el Pleno y la Junta, y dirimir los empates con <strong>voto de calidad</strong>;</li>
+              <li>dirigir los servicios y obras;</li>
+              <li>la <strong>jefatura superior del personal</strong>.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Regímenes provinciales especiales</h3><small>Art. 141.4 CE · DA LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Islas</strong> (art. 141.4: «administración propia en forma de Cabildos o Consejos»):
+            <ul>
+              <li><strong>Cabildos</strong> en Canarias;</li>
+              <li><strong>Consejos Insulares</strong> en Baleares;</li>
+              <li>se rigen por las normas de las Diputaciones y sus miembros se eligen por sufragio.</li>
+            </ul>
+          </li>
+          <li><strong>Comunidades uniprovinciales</strong> (7: Asturias, Cantabria, La Rioja, Murcia, Navarra, Madrid y Baleares): el gobierno de la Comunidad asume las funciones de la <strong>Diputación</strong>.</li>
+          <li><strong>Territorios históricos vascos</strong>:
+            <ul>
+              <li>en cada uno hay unas <strong>Juntas Generales</strong> elegidas por sufragio;</li>
+              <li>y una <strong>Diputación Foral</strong> elegida por los miembros de las Juntas.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> La reforma del art. 69.3 CE dio a Formentera un senador propio. Su Consejo Insular existe desde la reforma estatutaria de 2007.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · El municipio</h3>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>El municipio en la Constitución y sus elementos</h3><small>Art. 140 CE · arts. 11-18 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Art. 140 CE</strong>:
+            <ul>
+              <li>garantiza su <strong>autonomía</strong> y su <strong>personalidad jurídica plena</strong>;</li>
+              <li>los concejales se eligen por sufragio universal, igual, libre, directo y secreto;</li>
+              <li>los Alcaldes los eligen los concejales o los vecinos;</li>
+              <li>permite el <strong>concejo abierto</strong>.</li>
+            </ul>
+          </li>
+          <li>El art. 141.3 permite crear agrupaciones de municipios distintas de la provincia.</li>
+          <li>Es la <strong>entidad local básica</strong>. Sus elementos son el <strong>territorio</strong> (término municipal), la <strong>población</strong> y la <strong>organización</strong>.</li>
+          <li><strong>Término municipal</strong>:
+            <ul>
+              <li>es el territorio donde el Ayuntamiento ejerce sus competencias;</li>
+              <li>cada municipio pertenece a <strong>una sola provincia</strong>;</li>
+              <li>se respetan los <strong>enclaves</strong> existentes.</li>
+            </ul>
+          </li>
+          <li><strong>Alteración</strong> (art. 13):
+            <ul>
+              <li>la regula la legislación autonómica;</li>
+              <li>nunca puede modificar los límites provinciales;</li>
+              <li>exige audiencia de los municipios, <strong>dictamen del Consejo de Estado</strong> u órgano consultivo autonómico e informe de quien ejerza la tutela financiera, dando conocimiento a la AGE.</li>
+            </ul>
+          </li>
+          <li><strong>Nuevos municipios</strong>: solo sobre núcleos territorialmente diferenciados de al menos <strong>4.000 habitantes</strong>, financieramente sostenibles y sin merma de los servicios.</li>
+          <li><strong>Población</strong>:
+            <ul>
+              <li>la forman los inscritos en el <strong>Padrón</strong>, que son los <strong>vecinos</strong> (Ley 4/1996);</li>
+              <li>toda persona que viva en España debe inscribirse en el municipio donde reside habitualmente;</li>
+              <li>si vive en varios, en el que habita más tiempo al año.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Órganos del Ayuntamiento</h3><small>Art. 20 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>En todos los Ayuntamientos</strong>: el <strong>Alcalde</strong>, los <strong>Tenientes de Alcalde</strong>, el <strong>Pleno</strong> y la <strong>Comisión Especial de Cuentas</strong>.</li>
+          <li><strong>Junta de Gobierno Local y comisiones informativas</strong>: en los municipios de <strong>más de 5.000 habitantes</strong>. En los de menos, si lo dice el reglamento orgánico o lo acuerda el Pleno.</li>
+          <li><strong>Comisión Especial de Sugerencias y Reclamaciones</strong>: en los municipios de <strong>gran población</strong> y en los que lo acuerde el Pleno por mayoría absoluta o lo diga el reglamento orgánico.</li>
+          <li><strong>Órganos complementarios</strong>: los establece cada municipio en su reglamento orgánico.</li>
+          <li><strong>Tenientes de Alcalde</strong>:
+            <ul>
+              <li>los designa libremente el Alcalde entre los miembros de la Junta de Gobierno o, si no la hay, entre los concejales;</li>
+              <li>lo sustituyen por orden de nombramiento en caso de vacante, ausencia o enfermedad.</li>
+            </ul>
+          </li>
+          <li><strong>Junta de Gobierno Local</strong>:
+            <ul>
+              <li>la forman el Alcalde y concejales <strong>no superiores al tercio</strong> del número legal, nombrados por él dando cuenta al Pleno;</li>
+              <li>asiste al Alcalde y ejerce las atribuciones que se le deleguen o le atribuyan las leyes.</li>
+            </ul>
+          </li>
+          <li><strong>Comisiones informativas</strong>: todos los grupos deben tener algún miembro. Estudian e informan los asuntos del Pleno y hacen el seguimiento de la gestión.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>El Alcalde: atribuciones y elección</h3><small>Art. 21 LRBRL · art. 196 LOREG</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Atribuciones</strong> (es el Presidente de la Corporación):
+            <ul>
+              <li>dirigir el gobierno y la administración municipales;</li>
+              <li>representar al Ayuntamiento;</li>
+              <li>convocar y presidir el Pleno y la Junta, con <strong>voto de calidad</strong>;</li>
+              <li><strong>sancionar</strong> las faltas de desobediencia y las infracciones de las ordenanzas;</li>
+              <li>dictar <strong>bandos</strong>;</li>
+              <li>aprobar la <strong>oferta de empleo público</strong>;</li>
+              <li>la <strong>jefatura superior del personal</strong> y de la <strong>policía municipal</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Elección en municipios de más de 250 habitantes</strong>:
+            <ul>
+              <li>son candidatos los concejales que <strong>encabezan sus listas</strong>;</li>
+              <li>si uno obtiene la <strong>mayoría absoluta</strong> de los votos de los concejales, es elegido;</li>
+              <li>si no, es Alcalde el cabeza de la lista con <strong>más votos populares</strong>;</li>
+              <li>si hay empate, se resuelve por <strong>sorteo</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Elección en municipios de 100 a 250 habitantes</strong>: puede ser candidato <strong>cualquier concejal</strong>. Si nadie logra la mayoría absoluta, es Alcalde el concejal con más votos populares.</li>
+          <li><strong>Concejo abierto</strong>: los electores eligen directamente al Alcalde por sistema mayoritario.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Cese del Alcalde: moción y cuestión de confianza</h3><small>Arts. 197 y 197 bis LOREG</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Moción de censura</strong>:
+            <ul>
+              <li>la deben proponer al menos la <strong>mayoría absoluta del número legal</strong> de concejales;</li>
+              <li>debe incluir un <strong>candidato</strong>, que puede ser cualquier concejal que lo acepte expresamente;</li>
+              <li>si algún firmante forma o ha formado parte del grupo del Alcalde, la mayoría exigida <strong>se incrementa en ese número</strong>;</li>
+              <li>la STC 151/2017 anuló la extensión a quienes dejaron el grupo «por cualquier causa», en el alcance de su FJ 8;</li>
+              <li>la votación es pública, por llamamiento nominal.</li>
+            </ul>
+          </li>
+          <li><strong>Cuestión de confianza del Alcalde</strong>, vinculada a:
+            <ol type="a">
+              <li>los presupuestos anuales;</li>
+              <li>el reglamento orgánico;</li>
+              <li>las <strong>ordenanzas fiscales</strong>;</li>
+              <li>la aprobación que pone fin a la tramitación del <strong>planeamiento general</strong>.</li>
+            </ol>
+            Si no obtiene los votos necesarios, el Alcalde <strong>cesa automáticamente</strong> y queda en funciones hasta que tome posesión su sucesor.</li>
+          <li><strong>Otras causas de cese</strong>: la dimisión y el fin del mandato.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>El Pleno y las elecciones municipales</h3><small>Art. 22 LRBRL · art. 179 LOREG</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Pleno</strong>: lo forman todos los concejales y lo preside el Alcalde. Le corresponde:
+            <ul>
+              <li>el control y la fiscalización de los órganos de gobierno;</li>
+              <li>la participación en organizaciones supramunicipales;</li>
+              <li>los <strong>presupuestos</strong>;</li>
+              <li>el <strong>reglamento orgánico y las ordenanzas</strong>;</li>
+              <li>la <strong>plantilla de personal</strong>;</li>
+              <li>la votación de la moción de censura y de la cuestión de confianza.</li>
+            </ul>
+          </li>
+          <li><strong>Elecciones</strong>:
+            <ul>
+              <li>los vecinos eligen a los concejales y estos al Alcalde, para <strong>4 años</strong>;</li>
+              <li>cada término municipal es una circunscripción.</li>
+            </ul>
+          </li>
+          <li><strong>Escala de concejales</strong>:
+            <ul>
+              <li>hasta 100 residentes: 3;</li>
+              <li>101-250: 5;</li>
+              <li>251-1.000: 7;</li>
+              <li>1.001-2.000: 9;</li>
+              <li>2.001-5.000: 11;</li>
+              <li>5.001-10.000: 13;</li>
+              <li>10.001-20.000: 17;</li>
+              <li>20.001-50.000: 21;</li>
+              <li>50.001-100.000: 25;</li>
+              <li>a partir de 100.001: uno más por cada 100.000 residentes o fracción, y otro más si el resultado es par.</li>
+            </ul>
+          </li>
+          <li><strong>Extranjeros</strong> (art. 13.2 CE, reformado en 1992): los ciudadanos de la UE tienen sufragio activo y pasivo en las municipales.</li>
+          <li><span class="upd">2026</span> Las próximas elecciones son el <strong>23-5-2027</strong>. Los ciudadanos de la UE tienen hasta el <strong>30-12-2026</strong> para manifestar que quieren votar.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Regímenes municipales especiales</h3><small>Arts. 29 y 121 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Concejo abierto</strong>:
+            <ul>
+              <li>lo tienen los municipios con este régimen por <strong>tradición</strong> y voluntad;</li>
+              <li>y aquellos en que lo aconsejen su situación geográfica u otras circunstancias. Para estos se exige petición de la <strong>mayoría de los vecinos</strong>, acuerdo de los <strong>2/3</strong> del Ayuntamiento y <strong>aprobación de la Comunidad</strong>;</li>
+              <li>el gobierno corresponde a un <strong>Alcalde y una Asamblea vecinal</strong> formada por todos los electores;</li>
+              <li>en los municipios de <strong>menos de 100 residentes</strong>, el Alcalde puede convocar a los vecinos en concejo abierto para decisiones trascendentes, y su criterio es vinculante;</li>
+              <li>los que estaban obligados por ley pueden mantenerlo si lo acuerdan por unanimidad los 3 miembros electos y la mayoría de los vecinos.</li>
+            </ul>
+          </li>
+          <li><strong>Municipios de gran población</strong> (art. 121):
+            <ol type="a">
+              <li>más de <strong>250.000</strong> habitantes;</li>
+              <li>capitales de provincia de más de <strong>175.000</strong>;</li>
+              <li>capitales de provincia, capitales autonómicas o sedes de las instituciones autonómicas;</li>
+              <li>más de <strong>75.000</strong> habitantes con circunstancias especiales.</li>
+            </ol>
+            En los casos c y d hace falta que lo decida la <strong>Asamblea Legislativa autonómica</strong>, a iniciativa del Ayuntamiento.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Servicios municipales obligatorios</h3><small>Art. 26 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Cláusula general</strong>: el municipio puede promover actividades y servicios que satisfagan las necesidades vecinales, en el ámbito de sus competencias.</li>
+          <li><strong>Servicios obligatorios</strong>, prestados por sí o asociados:
+            <ol type="a">
+              <li><strong>en todos</strong>: alumbrado público, cementerio, recogida de residuos, limpieza viaria, abastecimiento domiciliario de agua potable, alcantarillado, acceso a los núcleos y pavimentación;</li>
+              <li><strong>más de 5.000</strong>: además, parque público, biblioteca pública y tratamiento de residuos;</li>
+              <li><strong>más de 20.000</strong>: además, protección civil, evaluación e información de situaciones de necesidad social y atención a personas en riesgo de exclusión, prevención y extinción de incendios e instalaciones deportivas públicas;</li>
+              <li><strong>más de 50.000</strong>: además, transporte colectivo urbano de viajeros y medio ambiente urbano.</li>
+            </ol>
+          </li>
+          <li><strong>Coordinación por la Diputación</strong> (art. 26.2, en municipios de <strong>menos de 20.000</strong> habitantes):
+            <ul>
+              <li>la Diputación propone, con la conformidad de los municipios, prestar el servicio directamente o mediante gestión compartida (consorcios o mancomunidades);</li>
+              <li>el municipio puede asumirlo si justifica un <strong>coste efectivo menor</strong>;</li>
+              <li>si lo presta la Diputación, repercute el coste o percibe la tasa.</li>
+            </ul>
+          </li>
+          <li>La asistencia de las Diputaciones (art. 36) se dirige preferentemente a los servicios mínimos.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Otras entidades locales</h3>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Entidades inferiores al municipio</h3><small>Art. 24 bis LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Son de gran tradición, con antecedentes en la Reconquista. Antes las regulaba el art. 45, hoy <strong>sin contenido</strong>.</li>
+          <li><strong>Art. 24 bis</strong> (Ley 27/2013):
+            <ul>
+              <li>las regulan las leyes autonómicas;</li>
+              <li><strong>carecen de personalidad jurídica</strong>: son una forma de organización desconcentrada para núcleos separados (caseríos, parroquias, aldeas, barrios, anteiglesias, concejos, pedanías, lugares anejos…);</li>
+              <li>la <strong>iniciativa</strong> corresponde a la población interesada o al Ayuntamiento, que debe ser oído en todo caso;</li>
+              <li>solo se crean si son una opción <strong>más eficiente</strong> según la LO 2/2012 de estabilidad presupuestaria.</li>
+            </ul>
+          </li>
+          <li><strong>Régimen transitorio</strong>: las existentes a 31-12-2013 conservan su personalidad y su condición de entidad local.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Comarcas, áreas metropolitanas y mancomunidades</h3><small>Arts. 141.3 y 152.3 CE · arts. 42-44 LRBRL</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Base constitucional</strong>:
+            <ul>
+              <li>agrupaciones de municipios distintas de la provincia (art. 141.3);</li>
+              <li>circunscripciones territoriales propias de municipios limítrofes previstas en los Estatutos (art. 152.3).</li>
+            </ul>
+          </li>
+          <li><strong>Comarca</strong> (art. 42):
+            <ul>
+              <li>gestiona intereses comunes de municipios de una misma zona;</li>
+              <li>la <strong>iniciativa</strong> es de los municipios o de la Comunidad;</li>
+              <li>se crea por <strong>ley autonómica</strong>;</li>
+              <li>no puede crearse si se oponen expresamente las <strong>2/5 partes</strong> de los municipios que representen al menos la <strong>mitad del censo</strong>;</li>
+              <li>sus órganos representan a los Ayuntamientos.</li>
+            </ul>
+          </li>
+          <li><strong>Áreas metropolitanas</strong> (art. 43):
+            <ul>
+              <li>las forman los municipios de grandes aglomeraciones urbanas con vínculos económicos y sociales que exigen planificar en común;</li>
+              <li>son <strong>agrupaciones forzosas</strong>;</li>
+              <li>las crea, modifica o suprime la Comunidad, previa audiencia de la AGE, los Ayuntamientos y las Diputaciones.</li>
+            </ul>
+          </li>
+          <li><strong>Mancomunidades</strong> (art. 44):
+            <ul>
+              <li>son una asociación <strong>voluntaria</strong> de dos o más municipios para obras o servicios determinados;</li>
+              <li>tienen naturaleza <strong>institucional</strong>;</li>
+              <li>sus Estatutos los elabora la asamblea de concejales de todos los municipios promotores, con <strong>informe de la Diputación</strong>, y los aprueban los <strong>Plenos</strong> de todos los Ayuntamientos.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Límites provinciales</b>Solo por ley orgánica de las Cortes; alterar términos municipales no puede modificarlos.</div>
+    <div class="trap"><b>Junta de Gobierno</b>En los Ayuntamientos, obligatoria a partir de 5.000 habitantes; en las Diputaciones, siempre.</div>
+    <div class="trap"><b>Comisión Especial de Cuentas</b>En todos los municipios; la de Sugerencias y Reclamaciones, en los de gran población.</div>
+    <div class="trap"><b>Elección del Alcalde</b>Si nadie logra la mayoría absoluta, es Alcalde el cabeza de la lista más votada por los vecinos (no la de más concejales).</div>
+    <div class="trap"><b>Presidente de la Diputación</b>Mayoría absoluta en la primera votación y simple en la segunda; no se proclama al de la lista más votada.</div>
+    <div class="trap"><b>Cuestión de confianza</b>Alcalde: presupuestos, reglamento orgánico, ordenanzas fiscales y planeamiento general. Diputación: presupuestos, reglamento orgánico y plan provincial de cooperación.</div>
+    <div class="trap"><b>Moción de censura</b>La mayoría absoluta aumenta con cada firmante que forma o ha formado parte del grupo del Alcalde.</div>
+    <div class="trap"><b>Áreas metropolitanas y mancomunidades</b>Las áreas metropolitanas son forzosas; las mancomunidades, voluntarias.</div>
+    <div class="trap"><b>Comarca</b>Bloquean su creación las 2/5 partes de los municipios que representen al menos la mitad del censo.</div>
+    <div class="trap"><b>Nuevos municipios</b>Hacen falta núcleos de al menos 4.000 habitantes (no 5.000).</div>
+    <div class="trap"><b>Entidades inferiores al municipio</b>Las nuevas carecen de personalidad jurídica.</div>
+    <div class="trap"><b>Concejo abierto</b>La constitución voluntaria exige mayoría de vecinos, 2/3 del Ayuntamiento y aprobación autonómica.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 10. La Administración local: entidades que la integran. La provincia, el municipio y la isla» y anexo «La Provincia» (Organización del Estado y de la Administración Pública, CEA), actualizado a noviembre de 2026: elecciones locales del 23-5-2027, 8.132 municipios y RDL 13/2026 (art. 92 bis.6 LRBRL).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Bloque 1 · Tema 10 · Herramientas ===== */
+const EN=[
+ ["Varios municipios se asocian voluntariamente para gestionar juntos la recogida de residuos.","man","Mancomunidad (art. 44): asociación voluntaria para obras o servicios determinados."],
+ ["Una ley autonómica crea, a iniciativa de los municipios, una entidad para los intereses comunes de una zona.","com","Comarca (art. 42)."],
+ ["La Comunidad agrupa forzosamente a los municipios de una gran aglomeración urbana para planificar en común.","am","Área metropolitana (art. 43)."],
+ ["Una pedanía creada en 2020 como forma de organización desconcentrada de un núcleo separado.","eatim","Ente inferior al municipio (art. 24 bis), sin personalidad jurídica."],
+ ["El órgano de gobierno de la isla de Tenerife.","isla","Cabildo insular (art. 141.4 CE)."],
+ ["Una entidad con personalidad propia formada por un Ayuntamiento, la Diputación y la Comunidad para gestionar un servicio.","cons","Consorcio."],
+ ["La entidad formada por la agrupación de municipios, garante de la solidaridad y el equilibrio intermunicipales.","prov","La provincia (art. 31 LRBRL)."],
+ ["La entidad local básica de la organización territorial del Estado.","mun","El municipio (art. 11 LRBRL)."],
+ ["El Consell de Menorca.","isla","Consejo Insular (Baleares)."],
+ ["Una agrupación de municipios limítrofes prevista en un Estatuto como circunscripción propia.","com","Art. 152.3 CE: circunscripciones como las comarcas."]
+];
+const ENO={mun:"Municipio",prov:"Provincia",isla:"Isla (Cabildo o Consejo)",com:"Comarca",am:"Área metropolitana",man:"Mancomunidad",eatim:"Ente inferior al municipio",cons:"Consorcio"};
+const OG=[
+ ["Dictar un bando.","al","Alcalde (art. 21.1.e)."],
+ ["Aprobar el presupuesto municipal.","pl","Pleno (art. 22.2.e)."],
+ ["Aprobar una ordenanza.","pl","Pleno (art. 22.2.d)."],
+ ["Aprobar la oferta de empleo público.","al","Alcalde (art. 21.1.g)."],
+ ["Aprobar la plantilla de personal.","pl","Pleno (art. 22.2.i)."],
+ ["Asistir al Alcalde en el ejercicio de sus atribuciones.","jg","Junta de Gobierno Local (art. 23.2.a)."],
+ ["Sancionar una infracción de una ordenanza municipal.","al","Alcalde (art. 21.1.n)."],
+ ["Votar la moción de censura contra el Alcalde.","pl","Pleno."],
+ ["Sustituir al Alcalde en caso de enfermedad.","ta","Tenientes de Alcalde, por orden de nombramiento."],
+ ["Ejercer la jefatura de la policía municipal.","al","Alcalde (art. 21.1.i)."],
+ ["Decidir los empates con voto de calidad.","al","Alcalde (y el Presidente en la Diputación)."],
+ ["Acordar la participación en una organización supramunicipal.","pl","Pleno (art. 22.2.b)."],
+ ["Informar los asuntos que se someterán al Pleno.","ci","Comisiones informativas."],
+ ["Examinar e informar las cuentas anuales.","cec","Comisión Especial de Cuentas (en todos los municipios)."]
+];
+const OGO={al:"Alcalde",pl:"Pleno",jg:"Junta de Gobierno Local",ta:"Tenientes de Alcalde",ci:"Comisiones informativas",cec:"Comisión Especial de Cuentas"};
+const INS=[
+ {g:"Territoriales",n:"Municipio",norm:"Art. 140 CE · arts. 11-30 LRBRL",def:"Entidad local básica, con personalidad jurídica plena.",f:{"Elementos":"Territorio, población y organización.","Gobierno":"Ayuntamiento (Alcalde y concejales) o concejo abierto.","Cifra 2026":"8.132 municipios.","Creación":"Núcleos de al menos 4.000 habitantes."}},
+ {g:"Territoriales",n:"Provincia",norm:"Art. 141 CE · arts. 31-38 LRBRL",def:"Agrupación de municipios y división territorial del Estado.",f:{"Gobierno":"Diputación (u órgano equivalente).","Límites":"Solo por ley orgánica.","Fines":"Solidaridad y equilibrio intermunicipales.","Especialidades":"Uniprovinciales, territorios forales e islas."}},
+ {g:"Territoriales",n:"Isla",norm:"Art. 141.4 CE · art. 41 LRBRL",def:"Administración propia en los archipiélagos.",f:{"Canarias":"Cabildos insulares.","Baleares":"Consejos Insulares (Mallorca, Menorca, Ibiza y Formentera).","Régimen":"Las normas de las Diputaciones.","Elección":"Sus miembros se eligen por sufragio."}},
+ {g:"Otras entidades",n:"Comarca",norm:"Art. 42 LRBRL",def:"Agrupación de municipios de una zona con intereses comunes.",f:{"Creación":"Ley autonómica.","Iniciativa":"Municipios o Comunidad.","Veto":"2/5 de los municipios con la mitad del censo.","Órganos":"Representativos de los Ayuntamientos."}},
+ {g:"Otras entidades",n:"Área metropolitana",norm:"Art. 43 LRBRL",def:"Municipios de grandes aglomeraciones urbanas.",f:{"Naturaleza":"Agrupación forzosa.","Creación":"La Comunidad, previa audiencia de la AGE, Ayuntamientos y Diputaciones.","Fin":"Planificación conjunta y coordinación.","Ejemplo":"Área Metropolitana de Barcelona."}},
+ {g:"Otras entidades",n:"Mancomunidad",norm:"Art. 44 LRBRL",def:"Asociación voluntaria de municipios para obras o servicios.",f:{"Naturaleza":"Institucional.","Estatutos":"Asamblea de concejales, informe de la Diputación y aprobación de los Plenos.","Fines":"Determinados en los Estatutos.","Personalidad":"Propia."}},
+ {g:"Otras entidades",n:"Ente inferior al municipio",norm:"Art. 24 bis LRBRL",def:"Organización desconcentrada de núcleos separados.",f:{"Personalidad":"Las nuevas no la tienen.","Nombres":"Pedanías, parroquias, concejos, aldeas…","Iniciativa":"Población o Ayuntamiento (siempre oído).","Requisito":"Más eficiencia (LO 2/2012)."}},
+ {g:"Regímenes especiales",n:"Municipios de gran población",norm:"Título X LRBRL (art. 121)",def:"Régimen organizativo propio de las grandes ciudades.",f:{"Automáticos":"Más de 250.000, o capitales de provincia de más de 175.000.","Por decisión autonómica":"Capitales y sedes, o más de 75.000 con circunstancias especiales.","Órgano propio":"Comisión de Sugerencias y Reclamaciones.","Iniciativa":"Del Ayuntamiento."}},
+ {g:"Regímenes especiales",n:"Concejo abierto",norm:"Art. 29 LRBRL",def:"Gobierno por un Alcalde y la Asamblea vecinal.",f:{"Supuestos":"Por tradición o por conveniencia.","Requisitos":"Mayoría de vecinos, 2/3 del Ayuntamiento y aprobación autonómica.","Menos de 100 residentes":"Convocatoria para decisiones trascendentes.","Alcalde":"Elegido directamente por los electores."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const fmt=n=>Number(n).toLocaleString("es-ES");
+  const tabs=(tid,pre)=>{const t=$(tid);if(!t)return;t.addEventListener("click",ev=>{const b=ev.target.closest("button[data-p]");if(!b)return;t.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll('[id^="'+pre+'"].pane').forEach(p=>p.classList.toggle("on",p.id===pre+b.dataset.p))})};
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${OPTS[k]}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+OPTS[c[1]]}</b>${c[2]}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("en",EN,ENO,"Caso");
+  trainer("og",OG,OGO,"Atribución");
+  tabs("al-tabs","al-");
+  const concejales=p=>{if(p<=100)return 3;if(p<=250)return 5;if(p<=1000)return 7;if(p<=2000)return 9;if(p<=5000)return 11;if(p<=10000)return 13;if(p<=20000)return 17;if(p<=50000)return 21;if(p<=100000)return 25;let n=25+Math.ceil((p-100000)/100000);if(n%2===0)n++;return n};
+  window.__concejales=concejales;
+  /* Municipio */
+  (function(){if(!$("mu-p"))return;
+    function run(){const p=Math.max(1,Math.round(num("mu-p"))),cp=$("mu-cp").value==="si",ca=$("mu-ca").value==="si",es=$("mu-es").value==="si";
+      const n=concejales(p),ma=Math.floor(n/2)+1,jg=Math.floor(n/3);
+      const gp=p>250000||(cp&&p>175000)?"auto":(ca||cp)?"asamblea":(p>75000&&es)?"asamblea":"no";
+      const k=[["",`Concejales`,`${n}`],["",`Mayoría absoluta`,`${ma}`],[p>5000?"y":"",`Junta de Gobierno Local`,p>5000?`Obligatoria (máx. ${jg} concejales)`:`Potestativa (máx. ${jg})`],[gp!=="no"?"y":"",`Gran población`,gp==="auto"?"Sí, por ley":gp==="asamblea"?"Si lo decide la Asamblea autonómica":"No"]];
+      $("mu-k").innerHTML=k.map(([c,a,b])=>`<div class="${c}"><b>${a}</b><span>${b}</span></div>`).join("");
+      const sv=["alumbrado público, cementerio, recogida de residuos, limpieza viaria, agua potable, alcantarillado, acceso a los núcleos y pavimentación"];
+      if(p>5000)sv.push("parque público, biblioteca pública y tratamiento de residuos");if(p>20000)sv.push("protección civil, servicios sociales, prevención y extinción de incendios e instalaciones deportivas");if(p>50000)sv.push("transporte colectivo urbano y medio ambiente urbano");
+      const o=$("mu-out");o.className="verdict ok";
+      o.innerHTML=`<b class="big">Municipio de ${fmt(p)} residentes</b><strong>Servicios obligatorios:</strong> ${sv.join("; además, ")}.${p<20000?" Al tener menos de 20.000 habitantes, la Diputación coordina parte de esos servicios (art. 26.2).":""} ${p>5000?"Comisiones informativas obligatorias.":"Comisiones informativas solo si lo dice el reglamento orgánico o lo acuerda el Pleno."} ${p<100?"Con menos de 100 residentes, el Alcalde puede convocar a los vecinos en concejo abierto para decisiones trascendentes, con criterio vinculante.":""} ${p>100&&p<=250?"Entre 100 y 250 habitantes, cualquier concejal puede ser candidato a Alcalde.":p>250?"Solo pueden ser candidatos a Alcalde los cabezas de lista.":""} ${gp!=="no"?"Como municipio de gran población tendría Comisión Especial de Sugerencias y Reclamaciones.":""}`}
+    ev(["mu-p","mu-cp","mu-ca","mu-es"],run);run()})();
+  /* Diputación */
+  (function(){if(!$("dp-t"))return;
+    function run(){const L=$("dp-t").value.split("\n").map(l=>l.split(":")).filter(a=>a.length>=2&&parseFloat(a[1].replace(/\./g,""))>0).map(a=>({n:a[0].trim(),r:parseFloat(a[1].replace(/\./g,""))}));
+      const v=$("dp-v");if(!L.length){v.className="verdict mid";v.innerHTML="<b class='big'>Escribe al menos un partido judicial</b>";$("dp-out").innerHTML="";$("dp-k").innerHTML="";return}
+      const T=L.reduce((s,x)=>s+x.r,0),D=T<=500000?25:T<=1000000?27:T<=3500000?31:51,max=Math.floor(D*3/5);
+      L.forEach(x=>{let q=x.r/T*D,s=(q%1)>=0.5?Math.ceil(q):Math.floor(q);x.q=q;x.s=Math.min(max,Math.max(1,s))});
+      let sum=L.reduce((a,x)=>a+x.s,0),guard=0;
+      while(sum!==D&&guard++<500){if(sum>D){const c=L.filter(x=>x.s>1).sort((a,b)=>a.r/a.s-b.r/b.s)[0];if(!c)break;c.s--;sum--}else{const c=L.filter(x=>x.s<max).sort((a,b)=>b.r/b.s-a.r/a.s)[0];if(!c)break;c.s++;sum++}}
+      $("dp-k").innerHTML=`<div><b>Residentes</b><span>${fmt(T)}</span></div><div class="y"><b>Diputados</b><span>${D}</span></div><div><b>Máximo por partido (3/5)</b><span>${max}</span></div><div><b>Mayoría absoluta</b><span>${Math.floor(D/2)+1}</span></div><div><b>Junta de Gobierno</b><span>Presidente + ${Math.floor(D/3)} máx.</span></div>`;
+      $("dp-out").innerHTML=L.map(x=>`<div><b>${e(x.n)}</b>: ${x.s} diputado${x.s>1?"s":""} <small style="color:var(--muted)">(cuota exacta ${x.q.toFixed(2)} · ${fmt(Math.round(x.r/x.s))} residentes por diputado)</small></div>`).join("");
+      v.className="verdict ok";v.innerHTML=`<b class="big">${D} diputados provinciales</b>Cada partido judicial tiene al menos uno y ninguno más de ${max}. Después, la Junta Electoral de Zona reparte los puestos de cada partido judicial entre las formaciones con concejales por el sistema D'Hondt, y los concejales eligen a los diputados.`}
+    ev(["dp-t"],run);run()})();
+  /* Elección Alcalde */
+  (function(){if(!$("ae-p"))return;
+    function run(){const p=num("ae-p"),n=concejales(p),ma=Math.floor(n/2)+1,v=num("ae-v"),l=$("ae-l").value,c=$("ae-c").value,o=$("ae-out");
+      if(p<=100){o.className="verdict mid";o.innerHTML=`<b class="big">Concejo abierto posible</b>Con ${fmt(p)} residentes se eligen 3 concejales. Si el municipio funciona en concejo abierto, los electores eligen directamente al Alcalde por sistema mayoritario.`;return}
+      const ok=v>=ma&&v<=n;o.className="verdict ok";
+      o.innerHTML=ok?`<b class="big">Alcalde: cabeza de la lista ${c}</b>Obtiene ${v} votos de ${n} concejales (mayoría absoluta: ${ma}).${p<=250?" Al ser un municipio de 100 a 250 habitantes, podría ser candidato cualquier concejal.":""}`:
+        `<b class="big">Alcalde: ${p<=250?"el concejal más votado por los vecinos":"cabeza de la lista "+l}</b>Nadie alcanza la mayoría absoluta (${ma} de ${n}), así que se proclama ${p<=250?"al concejal que obtuvo más votos populares":"al cabeza de la lista con más votos populares (si hay empate, por sorteo)"}.`}
+    ev(["ae-p","ae-v","ae-l","ae-c"],run);run()})();
+  /* Moción */
+  (function(){if(!$("am-n"))return;
+    function run(){const n=num("am-n"),f=num("am-f"),g=num("am-g"),c=$("am-c").value==="si",ma=Math.floor(n/2)+1,need=ma+g,o=$("am-out");const ok=c&&f>=need&&f<=n;
+      o.className="verdict "+(ok?"ok":"ko");o.innerHTML=`<b class="big">${ok?"La moción puede presentarse":"La moción no puede presentarse"}</b>Mayoría absoluta: ${ma}${g?` + ${g} por firmantes que forman o han formado parte del grupo del Alcalde = ${need}`:""}. Firmantes: ${f}.${c?"":" Además, debe incluir un candidato que acepte expresamente."} Si se tramita, el Pleno debe aprobarla por mayoría absoluta del número legal en votación pública, por llamamiento nominal.`}
+    ev(["am-n","am-f","am-g","am-c"],run);run()})();
+  /* Cuestión de confianza */
+  (function(){if(!$("aq-a"))return;
+    function run(){const a=$("aq-a").value,ok=$("aq-o").value==="si",g=$("aq-g").value,o=$("aq-out");
+      const valA=["p","r","f","u"],valD=["p","r","c"],val=(g==="a"?valA:valD).includes(a);
+      if(!val){o.className="verdict ko";o.innerHTML=`<b class="big">No cabe vincular la cuestión de confianza a ese asunto</b>${g==="a"?"El Alcalde solo puede vincularla a los presupuestos, el reglamento orgánico, las ordenanzas fiscales o el planeamiento general.":"El Presidente de la Diputación solo puede vincularla a los presupuestos, el reglamento orgánico o el plan provincial de cooperación."}`;return}
+      o.className="verdict "+(ok?"ok":a==="p"?"mid":"ko");o.innerHTML=ok?`<b class="big">Confianza obtenida</b>Se aprueba el acuerdo y ${g==="a"?"el Alcalde":"el Presidente"} continúa.`:a==="p"?`<b class="big">Caso especial de los presupuestos</b>No hay cese inmediato: la confianza se entiende otorgada y el presupuesto aprobado si en el plazo de un mes no se presenta una moción de censura con candidato alternativo o si esta no prospera (art. 197 bis.5 LOREG).`:`<b class="big">Cese automático</b>${g==="a"?"El Alcalde":"El Presidente"} queda en funciones hasta la toma de posesión de su sucesor, que se elige según el art. 197 bis de la LOREG.`}
+    ev(["aq-a","aq-o","aq-g"],run);run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Ley básica del régimen local.",r:"Ley 7/1985, de 2 de abril, reguladora de las Bases del Régimen Local (LRBRL)."},
+ {p:"Texto refundido de régimen local.",r:"RDLeg 781/1986, de 18 de abril (TRRL)."},
+ {p:"Ley de modernización del gobierno local.",r:"Ley 57/2003, de 16 de diciembre."},
+ {p:"Texto refundido de Haciendas Locales.",r:"RDLeg 2/2004, de 5 de marzo."},
+ {p:"Ley de racionalización y sostenibilidad de la Administración Local.",r:"Ley 27/2013, de 27 de diciembre (LRSAL)."},
+ {p:"Reglamento de Organización y Funcionamiento.",r:"RD 2568/1986, de 28 de noviembre (ROF)."},
+ {p:"Diferencia con la Administración periférica del Estado.",r:"La local está integrada por entes con personalidad propia, no por órganos."},
+ {p:"Diferencia con los entes institucionales.",r:"Los locales son territoriales y tienen fines generales."},
+ {p:"Entidades locales territoriales.",r:"Municipio, provincia e isla (Baleares y Canarias)."},
+ {p:"Otras entidades locales.",r:"Comarcas, áreas metropolitanas y mancomunidades."},
+ {p:"Regímenes municipales especiales.",r:"Gran población, concejo abierto y pequeños municipios o rurales."},
+ {p:"Regímenes provinciales especiales.",r:"Territorios forales vascos, Navarra y uniprovinciales, Cabildos y Consejos Insulares."},
+ {p:"Carácter dual de la provincia.",r:"Entidad local (agrupación de municipios) y división territorial para las actividades del Estado."},
+ {p:"Alteración de los límites provinciales.",r:"Por las Cortes, mediante ley orgánica (art. 141.1)."},
+ {p:"¿Pueden las CCAA suprimir provincias?",r:"No: la provincia tiene garantía constitucional."},
+ {p:"Gobierno de la provincia.",r:"Diputaciones u otras corporaciones de carácter representativo (art. 141.2)."},
+ {p:"Art. 31 LRBRL.",r:"Provincia: agrupación de municipios con personalidad y plena capacidad; solidaridad y equilibrio intermunicipales."},
+ {p:"Elementos de la provincia.",r:"Territorio, población y organización."},
+ {p:"Definición de Diputación (art. 55 ROF).",r:"Órgano de gobierno y administración de la provincia, con carácter de corporación de Derecho público."},
+ {p:"Órganos de todas las Diputaciones.",r:"Presidente, Vicepresidentes, Junta de Gobierno, Pleno y comisiones informativas."},
+ {p:"Diputados provinciales hasta 500.000 residentes.",r:"25."},
+ {p:"Diputados de 500.001 a 1.000.000.",r:"27."},
+ {p:"Diputados de 1.000.001 a 3.500.000.",r:"31."},
+ {p:"Diputados de más de 3.500.000.",r:"51."},
+ {p:"Circunscripción para elegir diputados provinciales.",r:"El partido judicial."},
+ {p:"Reglas del reparto por partidos judiciales.",r:"Mínimo un diputado; máximo 3/5; fracciones de 0,50 o más al alza."},
+ {p:"Cuándo reparte la Junta Electoral Provincial.",r:"El décimo día posterior a la convocatoria."},
+ {p:"Sistema de reparto entre formaciones.",r:"D'Hondt, según los votos en cada partido judicial."},
+ {p:"Aval de las listas de diputados provinciales.",r:"Al menos 1/3 de los concejales de la formación."},
+ {p:"Suplentes de diputados provinciales.",r:"Tres."},
+ {p:"Paridad en las listas de diputados provinciales.",r:"Entre el 40 % y el 60 % de cada sexo, alternando."},
+ {p:"Mandato de los diputados provinciales.",r:"4 años."},
+ {p:"Elección del Presidente de la Diputación.",r:"Mayoría absoluta en primera votación y simple en segunda."},
+ {p:"Cuestión de confianza del Presidente de la Diputación.",r:"Presupuestos, reglamento orgánico o plan provincial de cooperación."},
+ {p:"Ley que introdujo la cuestión de confianza local.",r:"LO 8/1999, de 21 de abril."},
+ {p:"Renuncia del Presidente de la Diputación.",r:"No le hace perder la condición de diputado."},
+ {p:"Funciones del Presidente de la Diputación.",r:"Dirigir, representar, convocar y presidir con voto de calidad, dirigir servicios y jefatura de personal."},
+ {p:"Nombramiento de los Vicepresidentes.",r:"Libremente por el Presidente, entre los miembros de la Junta de Gobierno."},
+ {p:"Composición de la Junta de Gobierno provincial.",r:"El Presidente y diputados no superiores a 1/3 del número legal."},
+ {p:"Atribución propia e indelegable de la Junta de Gobierno.",r:"La asistencia permanente al Presidente."},
+ {p:"Órganos complementarios (art. 119 ROF).",r:"Diputados delegados, Comisión Especial de Cuentas, consejos sectoriales y órganos desconcentrados."},
+ {p:"Ley que convirtió las comisiones informativas en órganos necesarios.",r:"Ley 11/1999."},
+ {p:"Art. 141.4 CE.",r:"En los archipiélagos, las islas tienen administración propia en forma de Cabildos o Consejos."},
+ {p:"Cabildos.",r:"Canarias; se rigen por las normas de las Diputaciones."},
+ {p:"Consejos Insulares.",r:"Baleares: Mallorca, Menorca, Ibiza y Formentera."},
+ {p:"Comunidades uniprovinciales.",r:"Siete; el gobierno autonómico asume las funciones de la Diputación."},
+ {p:"Territorios históricos vascos.",r:"Juntas Generales elegidas por sufragio y Diputación Foral elegida por las Juntas."},
+ {p:"Competencias provinciales.",r:"Asistencia a municipios, servicios supramunicipales, coordinación y fomento de los intereses provinciales."},
+ {p:"Art. 140 CE.",r:"Autonomía y personalidad plena del municipio, concejales por sufragio, Alcalde por concejales o vecinos, concejo abierto."},
+ {p:"Concepto de municipio.",r:"Entidad local básica de la organización territorial del Estado."},
+ {p:"Elementos del municipio.",r:"Territorio (término municipal), población y organización."},
+ {p:"Término municipal.",r:"Territorio en que el Ayuntamiento ejerce sus competencias."},
+ {p:"¿Puede un municipio pertenecer a dos provincias?",r:"No; se respetan los enclaves existentes."},
+ {p:"Alteración de términos municipales.",r:"Legislación autonómica; audiencia, dictamen del Consejo de Estado u órgano autonómico e informe de tutela financiera."},
+ {p:"Requisito poblacional para crear un municipio.",r:"Núcleos diferenciados de al menos 4.000 habitantes."},
+ {p:"Población del municipio.",r:"El conjunto de personas inscritas en el Padrón."},
+ {p:"Condición de vecino.",r:"Se adquiere con la inscripción en el Padrón."},
+ {p:"Quien vive en varios municipios.",r:"Se inscribe en el que habite más tiempo al año."},
+ {p:"Ley que suprimió domiciliados y transeúntes.",r:"Ley 4/1996, de 10 de enero."},
+ {p:"Órganos de todos los Ayuntamientos.",r:"Alcalde, Tenientes de Alcalde, Pleno y Comisión Especial de Cuentas."},
+ {p:"Junta de Gobierno Local obligatoria.",r:"En municipios de más de 5.000 habitantes."},
+ {p:"Comisión Especial de Sugerencias y Reclamaciones.",r:"En los municipios de gran población y donde lo acuerde el Pleno por mayoría absoluta."},
+ {p:"Composición de la Junta de Gobierno Local.",r:"Alcalde y concejales no superiores a 1/3 del número legal."},
+ {p:"Nombramiento de los Tenientes de Alcalde.",r:"Libremente por el Alcalde entre los miembros de la Junta (o entre los concejales)."},
+ {p:"Atribuciones del Alcalde.",r:"Dirigir, representar, presidir con voto de calidad, sancionar, bandos, oferta de empleo, jefatura de personal y policía."},
+ {p:"Candidatos a Alcalde (más de 250 habitantes).",r:"Los concejales que encabezan sus listas."},
+ {p:"Si ningún candidato logra la mayoría absoluta.",r:"Alcalde: cabeza de la lista con más votos populares; si hay empate, sorteo."},
+ {p:"Candidatos a Alcalde (100-250 habitantes).",r:"Cualquier concejal."},
+ {p:"Firmantes de la moción de censura.",r:"Al menos la mayoría absoluta del número legal de concejales."},
+ {p:"Firmantes del grupo del Alcalde.",r:"Aumentan la mayoría exigida en ese número."},
+ {p:"STC sobre la moción de censura local.",r:"STC 151/2017, de 21 de diciembre."},
+ {p:"Cuestión de confianza del Alcalde.",r:"Presupuestos, reglamento orgánico, ordenanzas fiscales y planeamiento general."},
+ {p:"Efecto de perder la cuestión de confianza.",r:"Cese automático; queda en funciones hasta que tome posesión su sucesor."},
+ {p:"Cuestión de confianza sobre presupuestos.",r:"Se entiende otorgada si en un mes no prospera una moción de censura."},
+ {p:"Funciones del Pleno municipal.",r:"Control, organizaciones supramunicipales, presupuestos, reglamento orgánico, ordenanzas y plantilla."},
+ {p:"Votación de la moción de censura.",r:"Pública, por llamamiento nominal."},
+ {p:"Mandato de los concejales.",r:"4 años."},
+ {p:"Concejales hasta 100 residentes.",r:"3."},
+ {p:"Concejales de 20.001 a 50.000.",r:"21."},
+ {p:"Concejales de 50.001 a 100.000.",r:"25."},
+ {p:"Concejales a partir de 100.001.",r:"Uno más por cada 100.000 o fracción; otro si el resultado es par."},
+ {p:"Voto de los ciudadanos de la UE.",r:"Sufragio activo y pasivo en las municipales (art. 13.2 CE, reformado en 1992)."},
+ {p:"Próximas elecciones locales.",r:"23 de mayo de 2027."},
+ {p:"Número de municipios en 2026.",r:"8.132."},
+ {p:"Concejo abierto por conveniencia.",r:"Mayoría de vecinos, 2/3 del Ayuntamiento y aprobación autonómica."},
+ {p:"Órganos del concejo abierto.",r:"Alcalde y Asamblea vecinal de todos los electores."},
+ {p:"Municipios de menos de 100 residentes.",r:"El Alcalde puede convocar el concejo abierto para decisiones trascendentes; su criterio es vinculante."},
+ {p:"Gran población por ley.",r:"Más de 250.000 habitantes o capitales de provincia de más de 175.000."},
+ {p:"Gran población por decisión autonómica.",r:"Capitales y sedes autonómicas, o más de 75.000 con circunstancias especiales."},
+ {p:"Servicios en todos los municipios.",r:"Alumbrado, cementerio, residuos, limpieza, agua, alcantarillado, accesos y pavimentación."},
+ {p:"Servicios a partir de 5.000.",r:"Parque público, biblioteca pública y tratamiento de residuos."},
+ {p:"Servicios a partir de 20.000.",r:"Protección civil, servicios sociales, incendios e instalaciones deportivas."},
+ {p:"Servicios a partir de 50.000.",r:"Transporte colectivo urbano y medio ambiente urbano."},
+ {p:"Coordinación de servicios por la Diputación (art. 26.2).",r:"En municipios de menos de 20.000 habitantes; el municipio puede asumirlos si acredita un coste efectivo menor."},
+ {p:"Art. 24 bis LRBRL.",r:"Entes inferiores al municipio sin personalidad jurídica, como organización desconcentrada."},
+ {p:"Entes inferiores existentes en 2013.",r:"Conservan su personalidad y su condición de entidad local (DT 4.ª Ley 27/2013)."},
+ {p:"Creación de una comarca.",r:"Por ley autonómica, a iniciativa de los municipios o de la Comunidad."},
+ {p:"Veto a la creación de una comarca.",r:"Oposición de 2/5 de los municipios que representen la mitad del censo."},
+ {p:"Áreas metropolitanas.",r:"Agrupaciones forzosas creadas por la Comunidad, previa audiencia de la AGE y las entidades afectadas."},
+ {p:"Mancomunidades.",r:"Asociación voluntaria de municipios para obras o servicios determinados."},
+ {p:"Aprobación de los Estatutos de una mancomunidad.",r:"Asamblea de concejales, informe de la Diputación y aprobación por los Plenos."},
+ {p:"RDL 13/2026 y la LRBRL.",r:"Reforma del art. 92 bis.6: concurso como sistema normal de provisión de los habilitados nacionales."}
+]};
+const T1=[
+ {q:"La ley básica de régimen local es la:",o:["Ley 7/1985.","Ley 40/2015.","Ley 57/2003.","Ley 27/2013."],c:0,e:"LRBRL."},
+ {q:"El TRRL se aprobó por:",o:["RDLeg 781/1986.","RDLeg 2/2004.","RD 2568/1986.","Ley 7/1985."],c:0,e:"18 de abril."},
+ {q:"El ROF se aprobó por:",o:["RD 2568/1986.","RDLeg 781/1986.","RD 1690/1986.","RD 500/1990."],c:0,e:"28 de noviembre."},
+ {q:"La Ley de racionalización y sostenibilidad de la Administración Local es la:",o:["Ley 27/2013.","Ley 57/2003.","Ley 11/1999.","Ley 4/1996."],c:0,e:"27 de diciembre."},
+ {q:"La Administración local, a diferencia de la periférica del Estado, está integrada por:",o:["Entes con personalidad jurídica propia.","Órganos.","Delegaciones.","Departamentos."],c:0,e:"Manual."},
+ {q:"Los entes locales, a diferencia de los institucionales, tienen carácter:",o:["Territorial.","Especializado.","Corporativo sectorial.","Fundacional."],c:0,e:"Fines generales."},
+ {q:"Son entidades locales territoriales:",o:["Municipio, provincia e isla.","Municipio, comarca y mancomunidad.","Provincia y área metropolitana.","Comarca e isla."],c:0,e:"Art. 3.1."},
+ {q:"No es una entidad local territorial:",o:["La mancomunidad.","El municipio.","La provincia.","La isla."],c:0,e:"Es otra entidad local."},
+ {q:"La isla es entidad local territorial en:",o:["Baleares y Canarias.","Solo Canarias.","Todas las islas españolas.","Solo Baleares."],c:0,e:"Art. 3.1.c."},
+ {q:"Las comarcas las instituyen:",o:["Las Comunidades Autónomas.","El Estado.","Las Diputaciones.","Los municipios por sí solos."],c:0,e:"Art. 3.2."},
+ {q:"El art. 45 LRBRL (entidades inferiores al municipio):",o:["Quedó sin contenido por la Ley 27/2013.","Sigue vigente.","Fue anulado por el TC.","Se trasladó al art. 3."],c:0,e:"Manual."},
+ {q:"Las entidades inferiores al municipio existentes el 31-12-2013:",o:["Mantienen su personalidad jurídica y su condición de entidad local.","Se extinguieron.","Pasaron a ser comarcas.","Perdieron su personalidad."],c:0,e:"DT 4.ª Ley 27/2013."},
+ {q:"Es un régimen especial municipal:",o:["El concejo abierto.","El Cabildo.","La Diputación Foral.","El Consejo Insular."],c:0,e:"Manual."},
+ {q:"Es un régimen especial provincial:",o:["Los órganos forales de Álava, Gipuzkoa y Bizkaia.","Los municipios de gran población.","El concejo abierto.","Las mancomunidades."],c:0,e:"Manual."},
+ {q:"La Ley 57/2003 es de:",o:["Medidas para la modernización del gobierno local.","Haciendas locales.","Racionalización.","Bases."],c:0,e:"16 de diciembre."},
+ {q:"El texto refundido de Haciendas Locales es el:",o:["RDLeg 2/2004.","RDLeg 781/1986.","RDLeg 5/2015.","RDLeg 1/2004."],c:0,e:"5 de marzo."},
+ {q:"La autonomía local se garantiza para:",o:["La gestión de sus respectivos intereses.","Legislar.","Relaciones internacionales.","Juzgar."],c:0,e:"Art. 137 CE."},
+ {q:"Los consorcios se citan en el manual como:",o:["Entidades que integran la Administración local.","Órganos del Estado.","Comunidades.","Organismos autónomos estatales."],c:0,e:"Clasificación."},
+ {q:"Las Haciendas locales se regulan en la Constitución en el art.:",o:["142.","140.","141.","143."],c:0,e:"Suficiencia financiera."},
+ {q:"La Administración local forma parte:",o:["De la Administración Pública.","De la Administración del Estado.","De las Comunidades.","Del sector privado."],c:0,e:"Manual."}
+];
+const T2=[
+ {q:"La provincia es, según el art. 141 CE:",o:["Entidad local y división territorial para las actividades del Estado.","Solo una división estatal.","Un órgano autonómico.","Una mancomunidad."],c:0,e:"Carácter dual."},
+ {q:"Los límites provinciales solo pueden alterarse por:",o:["Ley orgánica de las Cortes.","Ley autonómica.","Real decreto.","Acuerdo de las Diputaciones."],c:0,e:"Art. 141.1."},
+ {q:"El gobierno de la provincia corresponde a:",o:["Las Diputaciones u otras corporaciones representativas.","El Delegado del Gobierno.","El Subdelegado.","La Comunidad siempre."],c:0,e:"Art. 141.2."},
+ {q:"El territorio provincial es:",o:["La suma de los términos municipales.","El que fija la Comunidad.","El partido judicial.","El que fija la Diputación."],c:0,e:"Manual."},
+ {q:"Según el art. 55 ROF, la Diputación es:",o:["El órgano de gobierno y administración de la provincia.","La provincia misma.","Un órgano consultivo.","Un órgano del Estado."],c:0,e:"Corporación de Derecho público."},
+ {q:"Existen en todas las Diputaciones:",o:["Presidente, Vicepresidentes, Junta de Gobierno y Pleno.","Solo Presidente y Pleno.","Comisión de Sugerencias.","Tenientes de Presidente."],c:0,e:"Art. 32."},
+ {q:"Una provincia de 450.000 residentes elige:",o:["25 diputados.","27 diputados.","31 diputados.","21 diputados."],c:0,e:"Art. 204 LOREG."},
+ {q:"Una provincia de 1.200.000 residentes elige:",o:["31 diputados.","27 diputados.","25 diputados.","51 diputados."],c:0,e:"Art. 204."},
+ {q:"Una provincia de 4 millones de residentes elige:",o:["51 diputados.","31 diputados.","41 diputados.","45 diputados."],c:0,e:"Art. 204."},
+ {q:"La circunscripción para elegir diputados provinciales es:",o:["El partido judicial.","El municipio.","La provincia.","La comarca."],c:0,e:"Art. 204."},
+ {q:"Ningún partido judicial puede tener más de:",o:["3/5 de los diputados.","La mitad.","2/3.","1/3."],c:0,e:"Art. 204."},
+ {q:"Los diputados provinciales los eligen:",o:["Los concejales.","Los vecinos directamente.","Las Cortes.","El Parlamento autonómico."],c:0,e:"Elección indirecta."},
+ {q:"Las listas de diputados deben estar avaladas por al menos:",o:["1/3 de los concejales de la formación.","La mitad.","2/3.","Un concejal."],c:0,e:"Art. 206."},
+ {q:"Para cubrir vacantes se eligen:",o:["3 suplentes.","2 suplentes.","5 suplentes.","Ninguno."],c:0,e:"Art. 206."},
+ {q:"El Presidente de la Diputación se elige por:",o:["Mayoría absoluta en primera votación y simple en segunda.","Mayoría simple siempre.","Sorteo.","Los vecinos."],c:0,e:"Art. 207."},
+ {q:"No es asunto al que vincular la cuestión de confianza del Presidente de la Diputación:",o:["Las ordenanzas fiscales.","Los presupuestos.","El reglamento orgánico.","El plan provincial de cooperación."],c:0,e:"Es del Alcalde."},
+ {q:"La renuncia del Presidente de la Diputación:",o:["No le hace perder la condición de diputado.","Le hace perder el acta.","Requiere autorización del Pleno.","Disuelve la Diputación."],c:0,e:"Manual."},
+ {q:"Los Vicepresidentes de la Diputación se nombran entre:",o:["Los miembros de la Junta de Gobierno.","Todos los diputados.","Los alcaldes.","Los funcionarios."],c:0,e:"Manual."},
+ {q:"La Junta de Gobierno provincial no puede superar:",o:["1/3 del número legal de diputados, más el Presidente.","La mitad.","10 diputados.","2/5."],c:0,e:"Art. 35."},
+ {q:"Es atribución propia e indelegable de la Junta de Gobierno:",o:["La asistencia permanente al Presidente.","Aprobar el presupuesto.","Elegir al Presidente.","Aprobar ordenanzas."],c:0,e:"Manual."}
+];
+const T3=[
+ {q:"En los archipiélagos, las islas tienen administración propia según el art.:",o:["141.4 CE.","140 CE.","143 CE.","137 CE."],c:0,e:"Cabildos o Consejos."},
+ {q:"Los Cabildos se rigen por las normas de:",o:["Las Diputaciones provinciales.","Los Ayuntamientos.","Las Comunidades.","Las mancomunidades."],c:0,e:"Manual."},
+ {q:"Los Consejos Insulares existen en:",o:["Baleares.","Canarias.","Galicia.","Ceuta."],c:0,e:"Manual."},
+ {q:"El número de Comunidades uniprovinciales es:",o:["7.","5.","6.","8."],c:0,e:"Manual."},
+ {q:"En las Comunidades uniprovinciales, las funciones de la Diputación las asume:",o:["El órgano de gobierno de la Comunidad.","La Delegación del Gobierno.","El Ayuntamiento de la capital.","Un Cabildo."],c:0,e:"Manual."},
+ {q:"En los territorios históricos vascos, la Diputación Foral la elige:",o:["La Junta General.","El Parlamento Vasco.","Los vecinos.","El Gobierno Vasco."],c:0,e:"Manual."},
+ {q:"Los miembros de las Juntas Generales vascas se eligen:",o:["Por sufragio.","Por los concejales.","Por el Lehendakari.","Por sorteo."],c:0,e:"Manual."},
+ {q:"Son competencias provinciales:",o:["Asistencia y cooperación jurídica, económica y técnica a los municipios.","Seguridad pública.","Legislación civil.","Política exterior."],c:0,e:"Art. 36."},
+ {q:"La provincia garantiza los principios de:",o:["Solidaridad y equilibrio intermunicipales.","Unidad de mercado.","Jerarquía normativa.","Igualdad de trato fiscal."],c:0,e:"Art. 31."},
+ {q:"Las comisiones informativas de la Diputación:",o:["Existen en todas las Diputaciones.","Solo en las de más de un millón de habitantes.","Son potestativas.","No existen."],c:0,e:"Art. 32."},
+ {q:"Las comisiones informativas tienen atribuciones resolutorias:",o:["No.","Sí.","Solo en urbanismo.","Solo en presupuestos."],c:0,e:"Estudio, informe o consulta."},
+ {q:"Los órganos complementarios de la Diputación los regula:",o:["La propia Diputación.","El Estado.","Las Cortes.","El Delegado del Gobierno."],c:0,e:"Art. 32.3."},
+ {q:"Formentera tiene Consejo Insular propio desde:",o:["La reforma estatutaria de 2007.","1983.","2026.","1978."],c:0,e:"LO 1/2007."},
+ {q:"El Presidente de la Diputación ejerce:",o:["La jefatura superior del personal de la Corporación.","La jefatura de la Guardia Civil.","La presidencia del TSJ.","La Delegación del Gobierno."],c:0,e:"Funciones."},
+ {q:"El Presidente de la Diputación decide los empates:",o:["Con voto de calidad.","Por sorteo.","Por antigüedad.","No los decide."],c:0,e:"Funciones."},
+ {q:"El mandato de los diputados provinciales es de:",o:["4 años.","5 años.","6 años.","3 años."],c:0,e:"Manual."},
+ {q:"La Junta Electoral Provincial reparte los puestos por partidos judiciales:",o:["El décimo día posterior a la convocatoria.","El día de la votación.","Tras constituirse los Ayuntamientos.","Un mes antes."],c:0,e:"Art. 204."},
+ {q:"En el reparto por partidos judiciales, las fracciones de 0,50 o más:",o:["Se redondean al alza.","Se redondean a la baja.","Se sortean.","Se acumulan."],c:0,e:"Art. 204."},
+ {q:"Si el total de puestos excede el número de diputados, se restan a los partidos judiciales:",o:["Con menos residentes por diputado.","Con más residentes por diputado.","Más pequeños.","Por sorteo."],c:0,e:"Art. 204."},
+ {q:"Las listas de diputados provinciales deben respetar:",o:["La representación equilibrada (40-60 %) con alternancia.","Solo la cremallera en los dos primeros puestos.","Ninguna regla.","El 50 % exacto."],c:0,e:"Manual."}
+];
+const T4=[
+ {q:"El art. 140 CE garantiza al municipio:",o:["Autonomía y personalidad jurídica plena.","Soberanía.","Potestad legislativa.","Jurisdicción propia."],c:0,e:"Art. 140."},
+ {q:"Según el art. 140 CE, los Alcaldes son elegidos:",o:["Por los concejales o por los vecinos.","Solo por los vecinos.","Por el Pleno de la Diputación.","Por el Gobierno."],c:0,e:"Art. 140."},
+ {q:"El municipio es:",o:["La entidad local básica de la organización territorial del Estado.","Una división de la provincia.","Un órgano de la Comunidad.","Un organismo autónomo."],c:0,e:"Art. 11."},
+ {q:"No es un elemento del municipio:",o:["La soberanía.","El territorio.","La población.","La organización."],c:0,e:"Art. 11."},
+ {q:"El término municipal es:",o:["El territorio en que el Ayuntamiento ejerce sus competencias.","La población.","El casco urbano.","La sede del Ayuntamiento."],c:0,e:"Art. 12."},
+ {q:"Cada municipio pertenece a:",o:["Una sola provincia.","Una o varias provincias.","Una comarca obligatoriamente.","Un área metropolitana."],c:0,e:"Art. 12."},
+ {q:"La alteración de términos municipales la regula:",o:["La legislación autonómica.","El Estado exclusivamente.","El propio municipio.","La Diputación."],c:0,e:"Art. 13."},
+ {q:"La alteración de términos municipales nunca puede suponer:",o:["La modificación de los límites provinciales.","La fusión de municipios.","Segregar núcleos.","Cambiar la capitalidad."],c:0,e:"Art. 13."},
+ {q:"La alteración de términos municipales requiere dictamen de:",o:["El Consejo de Estado u órgano consultivo autonómico.","El TC.","El Tribunal Supremo.","Las Cortes."],c:0,e:"Art. 13."},
+ {q:"Para crear un municipio, el núcleo debe tener al menos:",o:["4.000 habitantes.","5.000 habitantes.","2.000 habitantes.","10.000 habitantes."],c:0,e:"Art. 13.2."},
+ {q:"La población del municipio la constituyen:",o:["Los inscritos en el Padrón.","Los nacidos en el municipio.","Los electores.","Los propietarios."],c:0,e:"Art. 15."},
+ {q:"La condición de vecino se adquiere:",o:["Con la inscripción en el Padrón.","Tras un año de residencia.","Por nacimiento.","Al votar."],c:0,e:"Art. 15."},
+ {q:"Quien vive en varios municipios se inscribe en:",o:["Aquel en que habite más tiempo al año.","El de nacimiento.","Todos.","El que elija libremente."],c:0,e:"Art. 15."},
+ {q:"La Ley 4/1996 suprimió las figuras de:",o:["Domiciliado y transeúnte.","Vecino y residente.","Elector y elegible.","Empadronado y censado."],c:0,e:"Manual."},
+ {q:"Existen en todos los Ayuntamientos:",o:["Alcalde, Tenientes de Alcalde, Pleno y Comisión Especial de Cuentas.","Junta de Gobierno Local.","Comisión de Sugerencias.","Concejales de distrito."],c:0,e:"Art. 20."},
+ {q:"La Junta de Gobierno Local es obligatoria en municipios de más de:",o:["5.000 habitantes.","20.000 habitantes.","1.000 habitantes.","50.000 habitantes."],c:0,e:"Art. 20.1.b."},
+ {q:"La Comisión Especial de Sugerencias y Reclamaciones es obligatoria en:",o:["Los municipios de gran población.","Todos.","Los de más de 5.000.","Los de concejo abierto."],c:0,e:"Art. 20.1.d."},
+ {q:"Los Tenientes de Alcalde los designa:",o:["Libremente el Alcalde.","El Pleno.","La Junta de Gobierno.","Los vecinos."],c:0,e:"Art. 23.3."},
+ {q:"La Junta de Gobierno Local la forman el Alcalde y un número de concejales no superior a:",o:["1/3 del número legal.","La mitad.","1/4.","2/3."],c:0,e:"Art. 23.1."},
+ {q:"Las comisiones informativas municipales deben contar con:",o:["Algún miembro de todos los grupos políticos.","Solo el equipo de gobierno.","Funcionarios.","Vecinos."],c:0,e:"Manual."}
+];
+const T5=[
+ {q:"No es atribución del Alcalde:",o:["Aprobar las ordenanzas.","Dictar bandos.","Aprobar la oferta de empleo público.","La jefatura de la policía municipal."],c:0,e:"Es del Pleno."},
+ {q:"En municipios de más de 250 habitantes pueden ser candidatos a Alcalde:",o:["Los concejales que encabezan sus listas.","Todos los concejales.","Cualquier vecino.","Los funcionarios."],c:0,e:"Art. 196."},
+ {q:"Si ningún candidato obtiene la mayoría absoluta, es Alcalde:",o:["El cabeza de la lista con más votos populares.","El de la lista con más concejales.","El concejal de más edad.","Quien decida la Junta Electoral."],c:0,e:"Art. 196."},
+ {q:"En caso de empate en votos populares, el Alcalde se elige por:",o:["Sorteo.","Edad.","Votación de la Diputación.","Nuevas elecciones."],c:0,e:"Art. 196."},
+ {q:"En municipios de 100 a 250 habitantes pueden ser candidatos a Alcalde:",o:["Todos los concejales.","Solo los cabezas de lista.","Los vecinos.","Solo el más votado."],c:0,e:"Art. 196."},
+ {q:"La moción de censura debe ser propuesta, al menos, por:",o:["La mayoría absoluta del número legal de concejales.","1/3 de los concejales.","2/3.","Un grupo político."],c:0,e:"Art. 197."},
+ {q:"La moción de censura debe incluir:",o:["Un candidato que acepte expresamente.","Un programa de gobierno.","El aval de la Diputación.","Un informe del Secretario."],c:0,e:"Art. 197."},
+ {q:"Si firman la moción concejales del grupo del Alcalde, la mayoría exigida:",o:["Se incrementa en ese número.","No varía.","Se reduce.","Pasa a ser de 2/3."],c:0,e:"Art. 197."},
+ {q:"La STC 151/2017 declaró inconstitucional:",o:["El inciso sobre quienes dejaron el grupo por cualquier causa.","Toda la moción de censura local.","La cuestión de confianza.","El concejo abierto."],c:0,e:"FJ 8."},
+ {q:"No es asunto al que puede vincularse la cuestión de confianza del Alcalde:",o:["La plantilla de personal.","Los presupuestos.","Las ordenanzas fiscales.","El reglamento orgánico."],c:0,e:"Art. 197 bis."},
+ {q:"Si el Alcalde pierde la cuestión de confianza (salvo presupuestos):",o:["Cesa automáticamente y queda en funciones.","Sigue en el cargo.","Se convocan elecciones.","Decide la Diputación."],c:0,e:"Art. 197 bis."},
+ {q:"La votación de la moción de censura en el Pleno es:",o:["Pública, por llamamiento nominal.","Secreta.","Por asentimiento.","Telemática obligatoria."],c:0,e:"Manual."},
+ {q:"El Pleno municipal lo preside:",o:["El Alcalde.","El Secretario.","El concejal de más edad.","El primer Teniente de Alcalde."],c:0,e:"Art. 22."},
+ {q:"Aprobar la plantilla de personal corresponde a:",o:["El Pleno.","El Alcalde.","La Junta de Gobierno.","Las comisiones informativas."],c:0,e:"Art. 22."},
+ {q:"Un municipio de 15.000 residentes elige:",o:["17 concejales.","13 concejales.","21 concejales.","15 concejales."],c:0,e:"Escala."},
+ {q:"Un municipio de 80 residentes elige:",o:["3 concejales.","5 concejales.","Ninguno.","7 concejales."],c:0,e:"Escala."},
+ {q:"Un municipio de 750.000 residentes elige:",o:["33 concejales.","31 concejales.","32 concejales.","29 concejales."],c:0,e:"25+7=32, par → 33."},
+ {q:"Los ciudadanos de la UE pueden votar en las municipales gracias a:",o:["La reforma del art. 13.2 CE de 1992 y el Tratado de Maastricht.","La Ley 7/1985.","La LO 2/2026.","El Tratado de Lisboa únicamente."],c:0,e:"Manual."},
+ {q:"Las próximas elecciones locales se celebran el:",o:["23 de mayo de 2027.","28 de mayo de 2027.","29 de noviembre de 2026.","26 de mayo de 2027."],c:0,e:"Cuarto domingo de mayo."},
+ {q:"El mandato de los concejales es de:",o:["4 años.","5 años.","6 años.","3 años."],c:0,e:"LOREG."}
+];
+const T6=[
+ {q:"Funcionan en concejo abierto, entre otros:",o:["Los municipios que tradicional y voluntariamente cuentan con ese régimen.","Los de más de 100.000 habitantes.","Las capitales.","Las mancomunidades."],c:0,e:"Art. 29."},
+ {q:"La constitución en concejo abierto por conveniencia requiere decisión del Ayuntamiento por:",o:["2/3 de sus miembros.","Mayoría absoluta.","Unanimidad.","Mayoría simple."],c:0,e:"Art. 29."},
+ {q:"Además, la constitución en concejo abierto requiere:",o:["Petición de la mayoría de vecinos y aprobación de la Comunidad.","Autorización del Estado.","Ley orgánica.","Informe del Consejo de Estado."],c:0,e:"Art. 29."},
+ {q:"En el concejo abierto, el gobierno corresponde a:",o:["Un Alcalde y una Asamblea vecinal.","Una Junta de Gobierno.","La Diputación.","Una comisión gestora."],c:0,e:"Art. 29."},
+ {q:"En municipios de menos de 100 residentes, el Alcalde puede convocar a los vecinos en concejo abierto para:",o:["Decisiones de especial trascendencia.","Aprobar presupuestos siempre.","Elegir Teniente de Alcalde.","Nada."],c:0,e:"Su criterio es vinculante."},
+ {q:"Es municipio de gran población por ley:",o:["Uno de más de 250.000 habitantes.","Uno de más de 100.000.","Cualquier capital de comarca.","Uno de más de 50.000."],c:0,e:"Art. 121."},
+ {q:"Una capital de provincia de 190.000 habitantes es de gran población:",o:["Sí, por superar los 175.000.","No.","Solo si lo decide el Estado.","Solo con referéndum."],c:0,e:"Art. 121.1.b."},
+ {q:"Un municipio de 90.000 habitantes con circunstancias especiales es de gran población:",o:["Si lo decide la Asamblea autonómica a iniciativa del Ayuntamiento.","Automáticamente.","Nunca.","Si lo decide el Gobierno."],c:0,e:"Art. 121.1.d."},
+ {q:"Servicio obligatorio en todos los municipios:",o:["Alumbrado público.","Biblioteca pública.","Transporte urbano.","Protección civil."],c:0,e:"Art. 26.1.a."},
+ {q:"La biblioteca pública es obligatoria a partir de:",o:["5.000 habitantes.","20.000.","50.000.","1.000."],c:0,e:"Art. 26.1.b."},
+ {q:"La prevención y extinción de incendios es obligatoria a partir de:",o:["20.000 habitantes.","5.000.","50.000.","100.000."],c:0,e:"Art. 26.1.c."},
+ {q:"El transporte colectivo urbano de viajeros es obligatorio a partir de:",o:["50.000 habitantes.","20.000.","100.000.","5.000."],c:0,e:"Art. 26.1.d."},
+ {q:"El tratamiento de residuos es obligatorio a partir de:",o:["5.000 habitantes.","20.000.","Todos.","50.000."],c:0,e:"La recogida, en todos."},
+ {q:"El medio ambiente urbano es obligatorio a partir de:",o:["50.000 habitantes.","20.000.","5.000.","Todos."],c:0,e:"Art. 26.1.d."},
+ {q:"La coordinación de servicios por la Diputación del art. 26.2 se aplica a municipios de:",o:["Menos de 20.000 habitantes.","Menos de 5.000.","Más de 50.000.","Cualquier tamaño."],c:0,e:"Precisión del manual."},
+ {q:"El municipio puede asumir el servicio coordinado por la Diputación si justifica:",o:["Un coste efectivo menor.","Más personal.","Un referéndum.","Autorización del Estado."],c:0,e:"Art. 26.2."},
+ {q:"Si la Diputación presta el servicio financiado por tasas:",o:["La tasa se destina a la Diputación.","La cobra el municipio.","Se suprime.","La cobra la Comunidad."],c:0,e:"Art. 26.2."},
+ {q:"La asistencia de las Diputaciones se dirige preferentemente a:",o:["Los servicios mínimos.","Los festejos.","La policía.","El urbanismo."],c:0,e:"Art. 36."},
+ {q:"Los municipios que antes estaban obligados al concejo abierto pueden mantenerlo si lo acuerdan:",o:["Por unanimidad los 3 electos y la mayoría de los vecinos.","Por mayoría simple.","Por la Comunidad.","Por el Estado."],c:0,e:"Manual."},
+ {q:"La protección civil es obligatoria a partir de:",o:["20.000 habitantes.","5.000.","50.000.","Todos."],c:0,e:"Art. 26.1.c."}
+];
+const T7=[
+ {q:"El art. 24 bis LRBRL regula:",o:["Los entes de ámbito inferior al municipio.","Las comarcas.","Las áreas metropolitanas.","Los consorcios."],c:0,e:"Ley 27/2013."},
+ {q:"Los nuevos entes inferiores al municipio:",o:["Carecen de personalidad jurídica.","Tienen personalidad plena.","Son organismos autónomos.","Son mancomunidades."],c:0,e:"Art. 24 bis."},
+ {q:"La iniciativa para crear un ente inferior al municipio corresponde a:",o:["La población interesada o el Ayuntamiento.","Solo la Comunidad.","El Estado.","La Diputación."],c:0,e:"Art. 24 bis.2."},
+ {q:"Los entes inferiores al municipio solo pueden crearse si:",o:["Son una opción más eficiente según la LO 2/2012.","Tienen más de 4.000 habitantes.","Lo autoriza el Estado.","Lo aprueba un referéndum."],c:0,e:"Art. 24 bis.3."},
+ {q:"No es una denominación tradicional de los entes inferiores al municipio:",o:["Mancomunidad.","Pedanía.","Parroquia.","Anteiglesia."],c:0,e:"Art. 24 bis."},
+ {q:"El art. 141.3 CE permite crear:",o:["Agrupaciones de municipios distintas de la provincia.","Nuevas provincias.","Comunidades Autónomas.","Diputaciones forales."],c:0,e:"Manual."},
+ {q:"El art. 152.3 CE permite a los Estatutos establecer:",o:["Circunscripciones territoriales propias por agrupación de municipios limítrofes.","Nuevas provincias.","Tribunales propios.","Policías locales."],c:0,e:"Manual."},
+ {q:"La comarca se crea por:",o:["Ley autonómica.","Ley estatal.","Acuerdo de los municipios.","Decreto de la Diputación."],c:0,e:"Art. 42."},
+ {q:"No puede crearse una comarca si se oponen:",o:["2/5 de los municipios con al menos la mitad del censo.","La mitad de los municipios.","1/3 de los municipios.","La Diputación."],c:0,e:"Art. 42.2."},
+ {q:"Los órganos de gobierno de la comarca son representativos de:",o:["Los Ayuntamientos que agrupa.","Los vecinos directamente.","La Comunidad.","La Diputación."],c:0,e:"Art. 42.3."},
+ {q:"Las áreas metropolitanas son agrupaciones:",o:["Forzosas.","Voluntarias.","Temporales.","Privadas."],c:0,e:"Art. 43."},
+ {q:"Las áreas metropolitanas las crea:",o:["La Comunidad, previa audiencia de la AGE y las entidades afectadas.","El Estado.","Los municipios por acuerdo.","La Diputación."],c:0,e:"Art. 43."},
+ {q:"Las mancomunidades son:",o:["Asociaciones voluntarias de municipios.","Agrupaciones forzosas.","Entes estatales.","Órganos de la Diputación."],c:0,e:"Art. 44."},
+ {q:"Las mancomunidades tienen naturaleza:",o:["Institucional.","Territorial.","Privada.","Consultiva."],c:0,e:"Manual."},
+ {q:"El proyecto de Estatutos de una mancomunidad lo informa:",o:["La Diputación.","El Consejo de Estado.","El Estado.","El TSJ."],c:0,e:"Art. 44."},
+ {q:"Los Estatutos de la mancomunidad los aprueban:",o:["Los Plenos de todos los Ayuntamientos.","La Comunidad.","La Diputación.","Los vecinos en referéndum."],c:0,e:"Art. 44."},
+ {q:"Los Estatutos de la mancomunidad los elabora:",o:["La asamblea de concejales de los municipios promotores.","Los alcaldes.","La Diputación.","La Comunidad."],c:0,e:"Art. 44."},
+ {q:"Los entes inferiores al municipio se remontan a:",o:["La Reconquista.","La Constitución de 1978.","La Ley de 1985.","La Segunda República."],c:0,e:"Manual."},
+ {q:"Las entidades inferiores que iniciaron su constitución antes del 1-1-2013:",o:["Se constituyen con personalidad jurídica.","Carecen de personalidad.","Quedan extinguidas.","Pasan a ser barrios."],c:0,e:"DT 5.ª Ley 27/2013."},
+ {q:"El RDL 13/2026 modificó de la LRBRL el art.:",o:["92 bis.6 (provisión de habilitados nacionales).","26 (servicios mínimos).","121 (gran población).","24 bis."],c:0,e:"Concurso como sistema normal."}
+];
+const T8=[
+ {q:"Un municipio de 4.800 habitantes quiere tener Junta de Gobierno Local:",o:["Puede, si lo dice su reglamento orgánico o lo acuerda el Pleno.","Es obligatoria.","Está prohibida.","Necesita autorización autonómica."],c:0,e:"Art. 20.1.b."},
+ {q:"Un municipio de 21 concejales: la Junta de Gobierno puede tener como máximo:",o:["El Alcalde y 7 concejales.","El Alcalde y 10 concejales.","El Alcalde y 5 concejales.","El Alcalde y 11 concejales."],c:0,e:"1/3 de 21."},
+ {q:"Moción de censura en un Ayuntamiento de 21 concejales; firma uno del grupo del Alcalde. Se necesitan:",o:["12 firmantes.","11 firmantes.","13 firmantes.","14 firmantes."],c:0,e:"11+1."},
+ {q:"Elecciones: la lista A tiene más votos populares, pero el cabeza de B logra 11 votos de 21 concejales. El Alcalde es:",o:["El cabeza de la lista B.","El cabeza de la lista A.","Se decide por sorteo.","El concejal de más edad."],c:0,e:"Mayoría absoluta."},
+ {q:"Nadie logra la mayoría absoluta; la lista A tiene más votos populares y la B más concejales. Alcalde:",o:["El cabeza de la lista A.","El cabeza de la lista B.","Sorteo.","Nuevas elecciones."],c:0,e:"Votos populares."},
+ {q:"Un municipio de 180 habitantes: puede ser candidato a Alcalde:",o:["Cualquier concejal.","Solo los cabezas de lista.","Cualquier vecino.","Nadie: hay concejo abierto obligatorio."],c:0,e:"100-250."},
+ {q:"Una provincia de 650.000 residentes con 6 partidos judiciales. Un partido judicial puede tener como máximo:",o:["16 diputados (3/5 de 27).","15.","18.","13."],c:0,e:"floor(27×3/5)=16."},
+ {q:"El Presidente de una Diputación vincula la cuestión de confianza a las ordenanzas fiscales:",o:["No es posible.","Es posible.","Solo con informe del Pleno.","Solo en las islas."],c:0,e:"Solo presupuestos, reglamento y plan provincial."},
+ {q:"El Alcalde pierde la cuestión de confianza vinculada al presupuesto y nadie presenta una moción en un mes:",o:["La confianza se entiende otorgada y el presupuesto aprobado.","Cesa.","Se repite la votación.","Decide la Comunidad."],c:0,e:"Art. 197 bis.5."},
+ {q:"Una Comunidad quiere segregar parte de un municipio de Huesca para unirlo a uno de Lleida:",o:["No es posible por alteración municipal: cambiaría límites provinciales.","Es posible por ley autonómica.","Basta acuerdo de los Plenos.","Requiere solo dictamen del Consejo de Estado."],c:0,e:"Art. 13 y 141 CE."},
+ {q:"Un núcleo de 3.500 habitantes quiere ser municipio:",o:["No alcanza los 4.000 habitantes exigidos.","Puede si es sostenible.","Puede con referéndum.","Puede si lo aprueba la Diputación."],c:0,e:"Art. 13.2."},
+ {q:"Un municipio de 30.000 habitantes debe prestar:",o:["Protección civil e instalaciones deportivas, además de los mínimos.","Transporte urbano.","Solo los servicios mínimos.","Medio ambiente urbano."],c:0,e:"Más de 20.000."},
+ {q:"Un municipio de 60.000 habitantes debe prestar además:",o:["Transporte colectivo urbano y medio ambiente urbano.","Nada más.","Universidad.","Hospital."],c:0,e:"Más de 50.000."},
+ {q:"Una capital autonómica de 120.000 habitantes quiere ser de gran población:",o:["Puede si lo decide la Asamblea autonómica a iniciativa del Ayuntamiento.","Lo es automáticamente.","No puede.","Lo decide el Gobierno de España."],c:0,e:"Art. 121.1.c."},
+ {q:"Cuatro municipios crean, por acuerdo de sus Plenos, una entidad para gestionar el agua:",o:["Una mancomunidad.","Una comarca.","Un área metropolitana.","Una provincia."],c:0,e:"Voluntaria."},
+ {q:"Una Comunidad crea por ley una comarca y la mitad del censo se opone, con 3 de 10 municipios:",o:["Puede crearse: no se alcanzan las 2/5 partes de los municipios.","No puede crearse.","Requiere referéndum.","Decide el Estado."],c:0,e:"Se exigen ambos requisitos."},
+ {q:"Una ciudadana alemana residente en España quiere votar el 23-5-2027:",o:["Debe estar empadronada y manifestar su voluntad antes del 30-12-2026.","No puede votar.","Vota automáticamente sin trámites.","Solo puede ser elegible."],c:0,e:"INE."},
+ {q:"Un Teniente de Alcalde sustituye al Alcalde enfermo:",o:["Por el orden de su nombramiento.","Por edad.","Por votación del Pleno.","Por sorteo."],c:0,e:"Art. 23.3."},
+ {q:"Un municipio de 250.000 habitantes exactos (no capital):",o:["No es de gran población automáticamente (se exige superar los 250.000).","Lo es.","Lo es si tiene Cabildo.","Lo es si lo decide el Alcalde."],c:0,e:"Art. 121.1.a."},
+ {q:"Una persona vive 7 meses en Soria y 5 en Madrid. Debe empadronarse en:",o:["Soria.","Madrid.","Ambos.","Donde elija."],c:0,e:"Más tiempo al año."}
+];
+const TESTS=[
+ {id:"t1",ic:"🏛️",name:"Normativa y entes locales",desc:"Arts. 1-3 LRBRL.",qs:T1},
+ {id:"t2",ic:"🗺️",name:"La provincia y la Diputación",desc:"Art. 141 CE, arts. 31-35 LRBRL, LOREG.",qs:T2},
+ {id:"t3",ic:"🏝️",name:"Regímenes provinciales y elección",desc:"Islas, forales y reparto.",qs:T3},
+ {id:"t4",ic:"🏘️",name:"El municipio y sus órganos",desc:"Arts. 11-23 LRBRL.",qs:T4},
+ {id:"t5",ic:"👤",name:"Alcalde, Pleno y elecciones",desc:"Arts. 196-197 bis y 179 LOREG.",qs:T5},
+ {id:"t6",ic:"⭐",name:"Regímenes especiales y servicios",desc:"Arts. 26, 29 y 121 LRBRL.",qs:T6},
+ {id:"t7",ic:"🔗",name:"Otras entidades locales",desc:"Arts. 24 bis, 42-44.",qs:T7},
+ {id:"t8",ic:"🧩",name:"Casos prácticos",desc:"Cálculos y supuestos.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+const ESQ=[
+ {id:"e1",title:"Entidades locales",intro:"Art. 3 LRBRL.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Administración local</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Territoriales</b>Municipio, provincia e {{0}}</div>
+   <div class="sch-box alt"><b>Creadas por las CCAA</b>{{1}}</div>
+   <div class="sch-box"><b>Forzosas, grandes ciudades</b>Áreas {{2}}</div>
+   <div class="sch-box alt"><b>Voluntarias</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["isla","comarca","pedanía","región"],why:"Baleares y Canarias."},{o:["Comarcas","Provincias","Mancomunidades","Islas"],why:"Art. 42."},{o:["metropolitanas","urbanas","comarcales","rurales"],why:"Art. 43."},{o:["Mancomunidades","Comarcas","Áreas","Consorcios forzosos"],why:"Art. 44."}]},
+ {id:"e2",title:"La provincia en la Constitución",intro:"Art. 141.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Provincia</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Naturaleza</b>Agrupación de {{0}} y división territorial del Estado</div>
+   <div class="sch-box alt"><b>Límites</b>Por ley {{1}}</div>
+   <div class="sch-box"><b>Gobierno</b>{{2}}</div>
+   <div class="sch-box alt"><b>Archipiélagos</b>{{3}} o Consejos</div>
+  </div></div>`,
+  blanks:[{o:["municipios","comarcas","islas","partidos judiciales"],why:"Art. 141.1."},{o:["orgánica","autonómica","ordinaria","de bases"],why:"Art. 141.1."},{o:["Diputaciones","Delegaciones","Subdelegaciones","Juntas"],why:"Art. 141.2."},{o:["Cabildos","Concejos","Cantones","Veguerías"],why:"Art. 141.4."}]},
+ {id:"e3",title:"Diputados provinciales",intro:"Art. 204 LOREG.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Número de diputados</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Hasta 500.000</b>{{0}}</div>
+   <div class="sch-box alt"><b>500.001-1.000.000</b>{{1}}</div>
+   <div class="sch-box"><b>1.000.001-3.500.000</b>{{2}}</div>
+   <div class="sch-box alt"><b>Más de 3.500.000</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["25","21","27","23"],why:"Art. 204."},{o:["27","25","29","31"],why:"Art. 204."},{o:["31","33","29","35"],why:"Art. 204."},{o:["51","41","45","61"],why:"Art. 204."}]},
+ {id:"e4",title:"Ordena la elección de diputados",intro:"De la convocatoria a la proclamación.",type:"order",
+  items:[{t:"La Junta Electoral Provincial reparte los puestos por partidos judiciales (10.º día)",why:"Art. 204."},{t:"Se celebran las elecciones municipales",why:"Elección de concejales."},{t:"Se constituyen los Ayuntamientos",why:"Presupuesto."},{t:"La Junta de Zona reparte los puestos entre las formaciones por D'Hondt",why:"Art. 205."},{t:"Los concejales eligen a los diputados entre listas avaladas por 1/3",why:"Art. 206."},{t:"La Junta de Zona proclama a los electos y expide las credenciales",why:"Art. 206."}]},
+ {id:"e5",title:"Órganos de la Diputación",intro:"Art. 32-35 LRBRL.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Diputación</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Elección del Presidente</b>Mayoría {{0}} en la 1.ª votación y simple en la 2.ª</div>
+   <div class="sch-box alt"><b>Vicepresidentes</b>Entre los miembros de la {{1}}</div>
+   <div class="sch-box"><b>Junta de Gobierno</b>Presidente + máximo {{2}}</div>
+   <div class="sch-box alt"><b>Comisiones informativas</b>En {{3}} las Diputaciones</div>
+  </div></div>`,
+  blanks:[{o:["absoluta","simple","de 2/3","de 3/5"],why:"Art. 207."},{o:["Junta de Gobierno","Pleno","Comisión de Cuentas","Mesa"],why:"Manual."},{o:["1/3","1/2","1/4","2/5"],why:"Art. 35."},{o:["todas","algunas","las grandes","ninguna"],why:"Art. 32."}]},
+ {id:"e6",title:"Regímenes provinciales especiales",intro:"Manual 2.4.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Especialidades</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Canarias</b>{{0}}</div>
+   <div class="sch-box alt"><b>Baleares</b>{{1}}</div>
+   <div class="sch-box"><b>País Vasco</b>Juntas Generales y Diputación {{2}}</div>
+   <div class="sch-box alt"><b>Uniprovinciales</b>Las funciones de la Diputación las asume la {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Cabildos","Consejos Insulares","Diputaciones","Juntas"],why:"Art. 141.4."},{o:["Consejos Insulares","Cabildos","Veguerías","Juntas"],why:"Manual."},{o:["Foral","Provincial","Insular","Comarcal"],why:"Territorios históricos."},{o:["Comunidad Autónoma","Delegación del Gobierno","capital","mancomunidad"],why:"Manual."}]},
+ {id:"e7",title:"El municipio",intro:"Art. 140 CE y LRBRL.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Municipio</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Territorio</b>Término {{0}}</div>
+   <div class="sch-box alt"><b>Población</b>Inscritos en el {{1}}</div>
+   <div class="sch-box"><b>Organización</b>{{2}} o concejo abierto</div>
+   <div class="sch-box alt"><b>Nuevo municipio</b>Núcleos de al menos {{3}} habitantes</div>
+  </div></div>`,
+  blanks:[{o:["municipal","provincial","comarcal","judicial"],why:"Art. 12."},{o:["Padrón","censo electoral","Registro Civil","catastro"],why:"Art. 15."},{o:["Ayuntamiento","Diputación","Cabildo","Junta"],why:"Art. 19."},{o:["4.000","5.000","2.000","10.000"],why:"Art. 13.2."}]},
+ {id:"e8",title:"Órganos municipales: ¿dónde existen?",intro:"Art. 20 LRBRL.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Organización municipal</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>En todos</b>Alcalde, Tenientes, Pleno y Comisión Especial de {{0}}</div>
+   <div class="sch-box alt"><b>Más de 5.000</b>{{1}} y comisiones informativas</div>
+   <div class="sch-box"><b>Gran población</b>Comisión de {{2}}</div>
+  </div></div>`,
+  blanks:[{o:["Cuentas","Sugerencias","Urbanismo","Hacienda"],why:"Art. 20.1.e."},{o:["Junta de Gobierno Local","Comisión de Cuentas","Asamblea vecinal","Junta de Portavoces"],why:"Art. 20.1.b."},{o:["Sugerencias y Reclamaciones","Cuentas","Gobierno","Participación"],why:"Art. 20.1.d."}]},
+ {id:"e9",title:"Ordena la elección del Alcalde (más de 250 habitantes)",intro:"Art. 196 LOREG.",type:"order",
+  items:[{t:"Se constituye la Corporación",why:"Misma sesión."},{t:"Se presentan como candidatos los cabezas de lista",why:"Art. 196.a."},{t:"Votan los concejales: si alguno obtiene la mayoría absoluta, es Alcalde",why:"Art. 196.b."},{t:"Si no, se proclama al cabeza de la lista más votada por los vecinos",why:"Art. 196.c."},{t:"Si hay empate de votos populares, se resuelve por sorteo",why:"Art. 196.c."}]},
+ {id:"e10",title:"Cese del Alcalde",intro:"Arts. 197 y 197 bis.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Cese</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Moción de censura</b>Mayoría {{0}} del número legal y candidato</div>
+   <div class="sch-box alt"><b>Cuestión de confianza</b>Presupuestos, reglamento orgánico, ordenanzas {{1}} y planeamiento general</div>
+   <div class="sch-box"><b>Si pierde la confianza</b>Cese {{2}}</div>
+  </div></div>`,
+  blanks:[{o:["absoluta","simple","de 2/3","de 3/5"],why:"Art. 197."},{o:["fiscales","de circulación","de policía","de limpieza"],why:"Art. 197 bis."},{o:["automático","diferido","condicionado al Pleno","nunca"],why:"Salvo presupuestos."}]},
+ {id:"e11",title:"Escala de concejales",intro:"Art. 179 LOREG.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Concejales</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Hasta 100</b>{{0}}</div>
+   <div class="sch-box alt"><b>2.001-5.000</b>{{1}}</div>
+   <div class="sch-box"><b>10.001-20.000</b>{{2}}</div>
+   <div class="sch-box alt"><b>50.001-100.000</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["3","5","7","1"],why:"Escala."},{o:["11","9","13","7"],why:"Escala."},{o:["17","15","21","19"],why:"Escala."},{o:["25","21","27","23"],why:"Escala."}]},
+ {id:"e12",title:"Servicios obligatorios",intro:"Art. 26 LRBRL.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Servicios por tramos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Todos</b>Alumbrado, cementerio, {{0}}…</div>
+   <div class="sch-box alt"><b>Más de 5.000</b>Parque, {{1}} y tratamiento de residuos</div>
+   <div class="sch-box"><b>Más de 20.000</b>{{2}}, servicios sociales, incendios y deporte</div>
+   <div class="sch-box alt"><b>Más de 50.000</b>Transporte {{3}} y medio ambiente urbano</div>
+  </div></div>`,
+  blanks:[{o:["recogida de residuos","biblioteca","transporte","protección civil"],why:"26.1.a."},{o:["biblioteca pública","mercado","hospital","museo"],why:"26.1.b."},{o:["Protección civil","Transporte urbano","Biblioteca","Cementerio"],why:"26.1.c."},{o:["colectivo urbano","interurbano","aéreo","escolar"],why:"26.1.d."}]},
+ {id:"e13",title:"Gran población",intro:"Art. 121.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Municipios de gran población</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>a</b>Más de {{0}} habitantes</div>
+   <div class="sch-box alt"><b>b</b>Capitales de provincia de más de {{1}}</div>
+   <div class="sch-box"><b>c</b>Capitales y sedes autonómicas</div>
+   <div class="sch-box alt"><b>d</b>Más de {{2}} con circunstancias especiales</div>
+  </div></div>`,
+  blanks:[{o:["250.000","200.000","300.000","500.000"],why:"121.1.a."},{o:["175.000","150.000","100.000","200.000"],why:"121.1.b."},{o:["75.000","50.000","100.000","80.000"],why:"121.1.d; c y d, por decisión de la Asamblea autonómica."}]},
+ {id:"e14",title:"Agrupaciones de municipios",intro:"Arts. 42-44.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Supramunicipales</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Comarca</b>Se crea por {{0}}</div>
+   <div class="sch-box alt"><b>Veto a la comarca</b>{{1}} de los municipios con la mitad del censo</div>
+   <div class="sch-box"><b>Área metropolitana</b>Agrupación {{2}}</div>
+   <div class="sch-box alt"><b>Mancomunidad</b>Estatutos aprobados por los {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["ley autonómica","ley estatal","acuerdo municipal","decreto"],why:"Art. 42."},{o:["2/5","1/3","1/2","3/5"],why:"Art. 42.2."},{o:["forzosa","voluntaria","temporal","privada"],why:"Art. 43."},{o:["Plenos","Alcaldes","Diputaciones","vecinos"],why:"Art. 44."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("oe10c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("oe10c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
