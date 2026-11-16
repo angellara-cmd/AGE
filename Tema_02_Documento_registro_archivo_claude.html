@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque 2 · Tema 2 · Documento, registro y archivo · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">OP2</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Organización de oficinas públicas</small>
+      <b>Documento, registro y archivo</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .steps-out{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .steps-out div{padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .steps-out div b{color:var(--a1)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .chks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-top:6px}
+    .chks label{display:flex;flex-direction:row;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem;font-weight:500;cursor:pointer}
+    .chks input{margin-top:3px;flex:none;width:auto}
+    .chks label small{display:block;color:var(--muted);font-size:.76rem}
+    .cv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+    .cv div{padding:10px 8px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.8rem;text-align:center;line-height:1.3}
+    .cv div b{display:block;font-size:.9rem;margin-bottom:2px}
+    .cv div.on{border-color:var(--a1);background:rgba(124,58,237,.12);box-shadow:0 0 0 2px rgba(124,58,237,.25)}
+    .cv div.past{opacity:.55}
+    @media(max-width:560px){.cv{grid-template-columns:repeat(2,1fr)}}
+    .olist{display:flex;flex-direction:column;gap:6px;margin-top:10px;counter-reset:o}
+    .olist div{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card2);font-size:.9rem;display:flex;gap:10px;align-items:baseline}
+    .olist div:before{counter-increment:o;content:counter(o);font-weight:800;color:var(--a1);min-width:18px}
+    .olist div small{color:var(--muted);margin-left:auto;font-size:.76rem;text-align:right}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque 2 · Tema 2 · Organización de oficinas públicas</span>
+    <h1>Documento, registro y archivo: <span>funciones, clases y ordenación</span></h1>
+    <p>Resumen de alto rendimiento del manual, actualizado a <strong>noviembre de 2026</strong>: la Comisión de Archivos de la AGE ya está constituida y la Comisión Superior Calificadora queda adscrita a ella; hay un nuevo Archivo Histórico Provincial de Madrid; y he corregido las referencias desfasadas del manual (compulsas, Ley 11/2007). Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un entrenador para clasificar documentos administrativos (resolutorios, de instrucción, de constancia, de comunicación).</li>
+      <li>Un comprobador del asiento registral, de los lugares de presentación y del plazo de las notificaciones electrónicas.</li>
+      <li>Un simulador del ciclo vital del documento: de la oficina al archivo histórico.</li>
+      <li>Un ordenador de documentos por criterios (cronológico, alfabético, geográfico, numérico).</li>
+      <li>Un comprobador de acceso a documentos con datos personales (art. 57 LPHE y Ley 19/2013).</li>
+      <li>Un mapa de los grandes archivos y órganos archivísticos del Estado.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">16</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">77</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('da').scrollIntoView({behavior:'smooth'})">Documentos ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('rg').scrollIntoView({behavior:'smooth'})">Registro ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('cv').scrollIntoView({behavior:'smooth'})">Archivo ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado o corregido respecto al manual:</strong>
+    <ul>
+      <li><strong>Comisión de Archivos de la AGE</strong>: el manual dice que la Comisión Superior Calificadora de Documentos Administrativos (CSCDA) actúa «hasta la constitución» de la Comisión de Archivos. Esa Comisión <strong>se constituyó el 16-10-2024</strong> y la regula la <strong>Orden PJC/493/2025</strong>. Está adscrita al Ministerio de la Presidencia, Justicia y Relaciones con las Cortes, la preside su Subsecretaría y la CSCDA queda adscrita a ella como <strong>órgano consultivo superior</strong>.</li>
+      <li><strong>Archivo Histórico Provincial de Madrid</strong>: creado por la <strong>Orden CLT/7/2025</strong>. Es de titularidad estatal y gestión de la Comunidad de Madrid, e integra el antiguo Archivo Histórico de Protocolos.</li>
+      <li><strong>Compulsas</strong>: el manual sigue hablando de «copias compulsadas» y de «cotejos». Desde la Ley 39/2015 la figura es la <strong>copia auténtica</strong> (art. 27), hecha por funcionario habilitado o por actuación automatizada. Los habilitados se inscriben en el registro de la Orden PCM/1383/2021.</li>
+      <li><strong>Ley 11/2007</strong>: el RD 1708/2011 define el documento y el expediente electrónicos remitiéndose a esa ley, que está derogada. Hoy hay que acudir al art. 26 LPA, al art. 70 LPA y al art. 46 del RD 203/2021.</li>
+      <li><strong>Ley 19/2013 (transparencia)</strong>: sigue vigente sin la reforma anunciada. El anteproyecto de Ley de Administración Abierta no llegó a aprobarse antes de la disolución de las Cortes en octubre de 2026.</li>
+      <li>Siguen vigentes el RD 1708/2011 (Sistema Español de Archivos), el RD 203/2021 y las Órdenes PCM/1382/2021 (REG-AGE) y PCM/1383/2021 (funcionarios habilitados).</li>
+    </ul></span></div>
+
+  <div class="section-title" id="da">
+    <div><span class="kicker">González Navarro · clasificación del manual</span><h2>¿Qué clase de documento administrativo es?</h2></div>
+    <p>Clasifica cada documento. Ojo: algunos no son documentos administrativos.</p>
+  </div>
+  <div class="card tool">
+    <div class="case" id="da-case"></div>
+    <div class="choice" id="da-opts"></div>
+    <div class="verdict" id="da-out" style="display:none"></div>
+    <div class="score"><span id="da-score">0 de 0</span><button class="btn btn-g btn-sm" id="da-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="rg">
+    <div><span class="kicker">Art. 16 LPA · arts. 37-42 RD 203/2021</span><h2>Registro y notificaciones electrónicas</h2></div>
+    <p>Comprueba si un asiento está completo, si un lugar de presentación es válido y cuándo se entiende rechazada una notificación electrónica.</p>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="rg-tabs"><button class="on" data-p="a">Asiento</button><button data-p="l">Lugar</button><button data-p="n">Notificación</button></div>
+    <div class="pane on" id="rg-a">
+      <div class="tool-grid">
+        <label>Número del último asiento<input type="number" id="ra-n" min="0" value="1572"></label>
+        <label>Fecha y hora de presentación<input type="datetime-local" id="ra-f" value="2026-11-16T10:30"></label>
+      </div>
+      <div class="chks" id="ra-chks">
+        <label><input type="checkbox" checked data-k="epi"><span>Epígrafe expresivo de su naturaleza</span></label>
+        <label><input type="checkbox" checked data-k="int"><span>Identificación del interesado</span></label>
+        <label><input type="checkbox" data-k="rem"><span>Órgano administrativo remitente (si procede)</span></label>
+        <label><input type="checkbox" checked data-k="des"><span>Persona u órgano al que se envía</span></label>
+        <label><input type="checkbox" checked data-k="ref"><span>Referencia al documento que se registra (en su caso)</span></label>
+      </div>
+      <div class="verdict" id="ra-out"></div>
+    </div>
+    <div class="pane" id="rg-l">
+      <div class="tool-grid">
+        <label>¿Dónde presenta el documento?<select id="rl-s">
+          <option value="reo">Registro electrónico del órgano al que se dirige</option>
+          <option value="rex">Registro electrónico de otra Administración (por ejemplo, un ayuntamiento)</option>
+          <option value="cor">Oficina de Correos</option>
+          <option value="con">Consulado de España en el extranjero</option>
+          <option value="oar">Oficina de asistencia en materia de registros</option>
+          <option value="mail">Correo electrónico ordinario al funcionario</option>
+          <option value="pap">Papel, presentado por una sociedad limitada</option>
+          <option value="esp">Documento cuyo régimen especial exige otra forma de presentación</option>
+        </select></label>
+      </div>
+      <div class="verdict" id="rl-out"></div>
+    </div>
+    <div class="pane" id="rg-n">
+      <div class="tool-grid">
+        <label>Puesta a disposición en la DEHú o la sede<input type="date" id="rn-f" value="2026-11-16"></label>
+        <label>¿Accede el interesado?<select id="rn-a"><option value="no">No accede</option><option value="si">Accede</option><option value="re">Rechaza expresamente</option></select></label>
+        <label>Día en que accede o rechaza<input type="date" id="rn-d" value="2026-11-20"></label>
+      </div>
+      <div class="verdict" id="rn-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="cv">
+    <div><span class="kicker">RD 1708/2011 · Decreto 914/1969</span><h2>Ciclo vital del documento: ¿en qué archivo está?</h2></div>
+    <p>Indica el estado del expediente y los años transcurridos desde que se cerró. Los plazos de transferencia tradicionales (Decreto 914/1969) se están sustituyendo por calendarios de conservación de cada serie.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Estado del expediente<select id="cv-e"><option value="tra">En tramitación o de consulta frecuente</option><option value="fin" selected>Finalizado</option></select></label>
+      <label>Años desde que se cerró<input type="number" id="cv-a" min="0" max="200" value="18"></label>
+      <label>¿Valor histórico (conservación permanente)?<select id="cv-h"><option value="si">Sí</option><option value="no">No: eliminable según su calendario</option></select></label>
+    </div>
+    <div class="cv" id="cv-v"></div>
+    <div class="verdict" id="cv-out"></div>
+  </div>
+
+  <div class="section-title" id="od">
+    <div><span class="kicker">Criterios de ordenación</span><h2>Ordena tú: cronológico, alfabético, geográfico o numérico</h2></div>
+    <p>Elige un criterio y verás cómo quedan estos ocho expedientes, con las reglas para los datos que faltan.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Criterio de ordenación<select id="od-c"><option value="cro">Cronológico (año-mes-día)</option><option value="alf">Alfabético-onomástico</option><option value="geo">Geográfico (provincia-municipio)</option><option value="num">Numérico</option></select></label>
+    </div>
+    <div class="olist" id="od-l"></div>
+    <div class="verdict" id="od-out"></div>
+  </div>
+
+  <div class="section-title" id="ax">
+    <div><span class="kicker">Art. 105.b CE · art. 57 LPHE · arts. 14-15 Ley 19/2013</span><h2>¿Se puede consultar este documento?</h2></div>
+    <p>Comprueba el acceso a un documento de archivo con datos personales.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Datos que contiene<select id="ax-t">
+        <option value="ide">Ideología, afiliación sindical, religión o creencias</option>
+        <option value="sal" selected>Salud, origen racial, vida sexual, genéticos o biométricos</option>
+        <option value="inf">Infracciones penales o administrativas (sin amonestación pública)</option>
+        <option value="mer">Solo datos meramente identificativos</option>
+        <option value="otr">Otros datos personales</option>
+        <option value="no">Ningún dato personal</option>
+      </select></label>
+      <label>Fecha del documento<input type="number" id="ax-d" min="1800" max="2026" value="1980"></label>
+      <label>Año de fallecimiento del afectado<input type="number" id="ax-m" min="0" max="2026" placeholder="Si se desconoce, déjalo vacío" value=""></label>
+      <label>¿Consentimiento expreso del afectado?<select id="ax-c"><option value="no">No</option><option value="si">Sí</option></select></label>
+      <label>¿Se pueden disociar (anonimizar) los datos?<select id="ax-x"><option value="no">No</option><option value="si">Sí</option></select></label>
+    </div>
+    <div class="verdict" id="ax-out"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">RD 1708/2011 · LPHE · Ley 20/2022</span><h2>Mapa de los archivos y órganos archivísticos del Estado</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras y fechas clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>40 · 100 años</b><span>Antigüedad para ser Patrimonio Documental: entidades políticas, sindicales, religiosas y culturales privadas · otras entidades y particulares (art. 49 LPHE)</span></div>
+    <div class="num"><b>Art. 49 · 59 LPHE</b><span>Definición de documento · de archivo</span></div>
+    <div class="num"><b>Art. 16 · 17 LPA</b><span>Registros · archivo de documentos</span></div>
+    <div class="num"><b>Art. 70 LPA</b><span>Expediente administrativo</span></div>
+    <div class="num"><b>Art. 105.b CE</b><span>Acceso a archivos y registros (salvo seguridad y defensa, averiguación de delitos e intimidad)</span></div>
+    <div class="num"><b>12 límites</b><span>Del derecho de acceso a la información pública (art. 14 Ley 19/2013)</span></div>
+    <div class="num"><b>25 · 50 años</b><span>Datos personales sensibles: desde la muerte · desde la fecha del documento si se desconoce (art. 57 LPHE)</span></div>
+    <div class="num"><b>10 días naturales</b><span>Para acceder a una notificación electrónica; si no, se entiende rechazada (art. 43.2 LPA)</span></div>
+    <div class="num"><b>15 días hábiles</b><span>Para que el sucesor del interesado comunique la sucesión (art. 42 RD 203/2021)</span></div>
+    <div class="num"><b>2-4-2021</b><span>Entrada en vigor del registro y archivo electrónicos (RD 203/2021)</span></div>
+    <div class="num"><b>4 edades</b><span>Gestión · central · intermedio · histórico</span></div>
+    <div class="num"><b>3-5 años</b><span>Notas interiores, relaciones de envíos y duplicados pueden destruirse</span></div>
+    <div class="num"><b>50-200 · 100-300</b><span>Palabras de un resumen indicativo · informativo</span></div>
+    <div class="num"><b>20 %-50 %</b><span>Extensión del compendio respecto del original</span></div>
+    <div class="num"><b>≥ 49 · 5-48 págs.</b><span>Libro · folleto</span></div>
+    <div class="num"><b>16-10-2024</b><span>Constitución de la Comisión de Archivos de la AGE <span class="upd">2026</span></span></div>
+    <div class="num"><b>1180 · 1866 · 1785</b><span>Corona de Aragón · Histórico Nacional · Indias</span></div>
+    <div class="num"><b>1588</b><span>Instrucción de Felipe II para el Archivo de Simancas</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El documento</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Concepto de documento</h3><small>Doctrina · LPHE · LPA · tipos · valores</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Etimología</strong>: <em>documentum</em>, de <em>docere</em> (enseñar, instruir).</li>
+          <li><strong>Antonia Heredia</strong>: «testimonio de la actividad del hombre fijado en un soporte perdurable que contiene información».</li>
+          <li><strong>Art. 49 LPHE</strong>: toda expresión en lenguaje natural o convencional, y cualquier otra gráfica, sonora o en imagen, en cualquier soporte, incluso informático. Se excluyen los <strong>ejemplares no originales de ediciones</strong>.</li>
+          <li><strong>Patrimonio Documental</strong> (art. 49 LPHE):
+            <ul>
+              <li>de cualquier época: los de organismos públicos, empresas con capital público mayoritario y gestores privados de servicios públicos (en esa gestión);</li>
+              <li>de más de <strong>40 años</strong>: entidades políticas, sindicales, religiosas y culturales o educativas privadas;</li>
+              <li>de más de <strong>100 años</strong>: cualquier otra entidad o particular;</li>
+              <li>y los que la AGE declare, aunque no tengan esa antigüedad.</li>
+            </ul>
+          </li>
+          <li><strong>LPA</strong>: documento público administrativo es el válidamente emitido por los órganos de las Administraciones, por escrito y por medios electrónicos salvo que su naturaleza exija otra forma.</li>
+          <li><strong>Tipos</strong>:
+            <ul>
+              <li>Por soporte: papel, película, magnético y electrónico.</li>
+              <li>Por contenido: <strong>primarios</strong> (originales), <strong>secundarios</strong> (representación condensada de los primarios) y <strong>terciarios</strong> (listas de secundarios).</li>
+              <li>Por autor: públicos y privados.</li>
+            </ul>
+          </li>
+          <li><strong>Valores</strong>: histórico, administrativo (se va perdiendo con los años mientras se gana valor histórico) y legal (garantía de derechos, aunque el contenido no sea jurídico).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>El documento administrativo</h3><small>Notas · figuras afines · documento electrónico</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Documento oficial</strong>: tiene autenticidad y emana de autoridad administrativa; es de oficio.</li>
+          <li><strong>Documento administrativo</strong>:
+            <ol>
+              <li>lo produce un <strong>órgano administrativo</strong>;</li>
+              <li>debe poder <strong>incorporarse a un expediente</strong> (el libro de actas de una entidad local no lo es);</li>
+              <li>normalmente es escrito, pero no siempre (un plano o un mapa).</li>
+            </ol>
+          </li>
+          <li><strong>No confundir con</strong>:
+            <ul>
+              <li>el <strong>impreso</strong>: medio para obtener y normalizar información; solo el cumplimentado por la Administración es, en sentido estricto, documento administrativo;</li>
+              <li>el <strong>expediente</strong>: conjunto de documentos;</li>
+              <li>los <strong>documentos de los particulares</strong> (instancias, alegaciones, recursos): producen efectos, pero no son administrativos.</li>
+            </ul>
+          </li>
+          <li><strong>Documento administrativo electrónico</strong> (art. 46 RD 203/2021): información de cualquier naturaleza en forma electrónica, en un soporte electrónico y con un formato admitido en el Esquema Nacional de Interoperabilidad, generada, recibida o incorporada por las Administraciones en funciones sujetas a Derecho administrativo. El ejemplar puede sustituirse por la entrega de los datos para acceder a él.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Clases de documentos administrativos</h3><small>González Navarro (1972): cinco grupos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ol>
+          <li><strong>Resolutorios</strong>: de impulsión (<strong>providencias</strong>), de cuestiones incidentales y de fondo (<strong>resoluciones</strong>, <strong>acuerdos</strong>, licencias y autorizaciones).</li>
+          <li><strong>De instrucción</strong>: denuncias, <strong>informes</strong>, <strong>dictámenes</strong>, mociones, atestados, pliegos de cargo, <strong>propuestas</strong> y traducciones oficiales.</li>
+          <li><strong>De constancia</strong>:
+            <ul>
+              <li>interna: <strong>diligencias</strong>, <strong>actas</strong>, copias, carpetas y fichas;</li>
+              <li>externa: <strong>certificados</strong>, títulos y documentos de exhibición (DNI, pasaporte, permiso de conducir…);</li>
+              <li>mixta: recibos y resguardos, índices, listas (de admitidos en oposiciones) y estadillos.</li>
+            </ul>
+          </li>
+          <li><strong>De comunicación</strong>:
+            <ul>
+              <li>con destinatario determinado: notas interiores, partes, <strong>oficios</strong> (notificaciones, requerimientos, emplazamientos, citaciones), notas diplomáticas, cartas, saludas y besalamanos, telegramas;</li>
+              <li>con destinatario indeterminado: <strong>anuncios, edictos y boletines oficiales</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Otros</strong>: duplicados, contables, de formalización de contratos, peticiones a otros órganos (oficios rogatorios, mandamientos), poderes y documentos de crédito (billetes, títulos de deuda).</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Definiciones de los principales documentos</h3><small>Providencia, resolución, acuerdo, informe, propuesta, moción, diligencia…</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Providencia</strong>: decisión que <strong>no pone fin</strong> al asunto; la dicta el funcionario tramitador; documento sencillo (fecha, lo decidido y quién decide).</li>
+          <li><strong>Resolución</strong>: decide definitivamente; la dicta la autoridad competente; más solemne; si es motivada, con sucinta referencia de hechos y fundamentos de derecho. Si procede de un <strong>órgano colegiado</strong>, se llama <strong>acuerdo</strong>.</li>
+          <li><strong>Informe y dictamen</strong>: pareceres de órganos distintos de los que resuelven o proponen. El <strong>dictamen</strong> se reserva a órganos importantes.</li>
+          <li><strong>Propuesta</strong>: proposición de resolución del instructor al órgano que decide (<strong>preceptiva</strong>). <strong>Moción</strong>: proposición por iniciativa propia (<strong>voluntaria</strong>); hoy, sobre todo la de un vocal en un órgano colegiado.</li>
+          <li><strong>Diligencia</strong>: constancia de un hecho, normalmente procedimental. <strong>Certificación</strong>: declaración solemne de conocimiento de lo que consta en archivos. <strong>Copia certificada</strong>: reproducción literal con diligencia que da fe.</li>
+          <li><strong>Oficio</strong>: comunicación escrita con destinatario nominativamente determinado. Variantes:
+            <ul>
+              <li><strong>notificación</strong>: comunica una resolución o acto importante;</li>
+              <li><strong>citación</strong>: sitio, día y <strong>hora</strong> para comparecer;</li>
+              <li><strong>emplazamiento</strong>: comparecer dentro de un <strong>plazo</strong>;</li>
+              <li><strong>requerimiento</strong>: intimación para que se entregue, haga o deje de hacer algo.</li>
+            </ul>
+          </li>
+          <li><strong>Edicto</strong>: anuncio para dar conocimiento general o cuando no se puede notificar personalmente.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Documentos parlamentarios y judiciales · análisis documental</h3><small>Fases · catalogación · indización · resúmenes · fuentes</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Parlamentarios</strong>: legislativos (leyes, proposiciones de ley, convalidación de decretos-leyes), de control (moción de censura, cuestión de confianza, proposiciones no de ley, interpelaciones, preguntas) y otros (mensajes, reglamentos, resoluciones).</li>
+          <li><strong>Judiciales</strong>: providencias (ordenación material del proceso), autos (incidentes, recursos contra providencias, presupuestos procesales), sentencias (deciden el pleito) y ejecutoria (documento solemne con la sentencia firme).</li>
+          <li><strong>Proceso documental</strong>: <strong>entrada</strong> (selección de fuentes) → <strong>tratamiento</strong> (análisis y búsqueda) → <strong>salida</strong> (comunicación). El análisis documental está en el tratamiento y produce un <strong>documento secundario</strong>.</li>
+          <li><strong>Descripción-catalogación</strong>: referencia única para identificar y localizar; elementos de descripción interna (fechas, procedencia, materias), externa (tipo, formato, soporte, lengua) y de identificación (signaturas).</li>
+          <li><strong>Descripción del contenido</strong>: <strong>indización</strong> (lenguaje natural o documental: palabras clave, descriptores, materias), <strong>clasificación</strong> (categorías) y <strong>condensación</strong> (resumen).</li>
+          <li><strong>Nueve tipos de resumen</strong>: título, anotación, telegráfico, <strong>indicativo</strong> (50-200 palabras, sin conclusiones), <strong>informativo</strong> (100-300, con conclusiones; el de más valor), extracto (frases del propio texto), reseña (con crítica; no es propiamente resumen), <strong>compendio</strong> (20 %-50 %) y el texto mismo.</li>
+          <li><strong>Fuentes</strong>: primarias (libros de 49 páginas o más, folletos de más de 5 y menos de 49, monografías, informes, tesis, revistas, patentes, normas) y secundarias (bibliografías, catálogos, índices, boletines de sumarios y de resúmenes).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Formación del expediente y copias</h3><small>Minuta, original, copia · copias auténticas · art. 53 LPA</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>El documento administrativo <strong>no se produce aislado</strong>: forma parte de un expediente, unido a los demás por una relación de <strong>causa-efecto</strong>.</li>
+          <li><strong>Minuta</strong> (borrador) · <strong>original</strong> (autógrafo o heterógrafo; garantiza la autenticidad diplomática y jurídica, no la veracidad) · <strong>copia</strong>.</li>
+          <li>Copias en la doctrina clásica: simples, certificadas y compulsadas. <span class="upd">2026</span> Desde la Ley 39/2015, la compulsa se sustituye por la <strong>copia auténtica</strong> (art. 27):
+            <ul>
+              <li>la hace un <strong>funcionario habilitado</strong> o una <strong>actuación administrativa automatizada</strong>;</li>
+              <li>tiene la <strong>misma validez y eficacia que el original</strong>, y vale ante todas las Administraciones;</li>
+              <li>la de un documento privado solo tiene <strong>efectos administrativos</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Registro de Funcionarios Habilitados</strong> (Orden PCM/1383/2021): habilitados para identificar o firmar por el interesado no obligado (art. 12 LPA), para expedir copias auténticas y el personal de las oficinas de asistencia en registros. Pueden ser funcionarios de carrera o interinos en activo.</li>
+          <li>La digitalización de una copia en papel aportada por el interesado genera una copia electrónica con el mismo valor (art. 49 RD 203/2021).</li>
+          <li><strong>Notas del expediente</strong>: serie ordenada (no una carpeta de papeles); documentos internos y externos; documentos de contenido esencial, de enlace y de <strong>apoyo informativo</strong> (estos no forman parte de él).</li>
+          <li><strong>Derechos del art. 53 LPA</strong>: acceder y obtener copia; no presentar originales (salvo excepción, con copia autenticada); no aportar lo que ya tiene la Administración; aportar documentos antes del trámite de audiencia.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · El registro</h3>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Concepto y Registro Electrónico General</h3><small>Art. 16 LPA · art. 37 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Registro: libro en el que se asientan los documentos que se expiden o reciben. Las oficinas de registro tienen la consideración de <strong>órgano administrativo</strong> (efectos frente a terceros).</li>
+          <li><strong>Tipos</strong>: comunes (general, de entrada y de salida) y específicos (de personal, de intervención, de la propiedad…).</li>
+          <li><strong>Registro Electrónico General</strong> (art. 16.1 LPA, en vigor desde el 2-4-2021): cada Administración tiene uno, donde se asienta <strong>todo documento presentado o recibido</strong>; también puede anotarse la salida.
+            <ul>
+              <li>Los organismos pueden tener el suyo, <strong>interoperable e interconectado</strong>.</li>
+              <li>Funciona como un portal hacia los registros de cada organismo.</li>
+              <li>La disposición de creación se publica en el diario oficial y en la sede, y fija el órgano responsable, la <strong>fecha y hora oficial</strong> y los <strong>días inhábiles</strong>.</li>
+              <li>La sede publica la relación actualizada de trámites que pueden iniciarse en él.</li>
+            </ul>
+          </li>
+          <li>Los registros admiten documentos normalizados y <strong>cualquier</strong> solicitud, escrito o comunicación dirigido a cualquier Administración.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Asientos y lugares de presentación</h3><small>Art. 16.3 y 16.4-8 LPA · art. 39 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Asientos</strong>, en orden temporal y con fecha: <strong>número</strong>, <strong>epígrafe</strong>, <strong>fecha y hora</strong>, <strong>interesado</strong>, órgano <strong>remitente</strong> (si procede), <strong>destinatario</strong> y <strong>referencia</strong> al documento. Después se cursan <strong>sin dilación</strong>.</li>
+          <li><strong>Lugares de presentación</strong> (art. 16.4):
+            <ol type="a">
+              <li>registro electrónico del destinatario o de <strong>cualquier</strong> sujeto del art. 2.1 LPA;</li>
+              <li>oficinas de <strong>Correos</strong>;</li>
+              <li>representaciones diplomáticas y <strong>consulares</strong>;</li>
+              <li><strong>oficinas de asistencia en materia de registros</strong>;</li>
+              <li>cualquier otro que prevean las normas.</li>
+            </ol>
+          </li>
+          <li>Lo presentado en papel se <strong>digitaliza</strong> en la oficina y se devuelve el original (salvo custodia obligatoria u objetos no digitalizables). La copia digitalizada es copia electrónica auténtica.</li>
+          <li>Pagos por transferencia; relación pública de oficinas de asistencia; <strong>no se tienen por presentados</strong> los documentos con régimen especial de presentación (art. 16.8).</li>
+          <li><strong>Art. 39 RD 203/2021</strong>: formatos según el ENI; subsanación si hay <strong>código malicioso</strong>; si se excede la capacidad del <strong>SIR</strong>, puesta a disposición en un repositorio público; los documentos no recogidos se tratan conforme al art. 53 del Reglamento; el archivo corresponde al órgano que tramita.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Funciones del registro y REG-AGE</h3><small>Triple constancia · funciones · art. 38 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>El registro da fe en un triple sentido: <strong>positivo</strong> (entró o salió), <strong>negativo</strong> (si no está registrado, se presume que no entró) y <strong>cronológico</strong> (fecha).</li>
+          <li><strong>Funciones</strong>: análisis o descripción; control y tramitación de expedientes; <strong>garante legal</strong>; inventarial y estadística.</li>
+          <li><strong>Oficinas</strong>: recibir; dar recibos; anotar asientos; remitir; dar copias selladas; antes, cotejos y compulsas (hoy, copias auténticas).</li>
+          <li><strong>REG-AGE</strong> (art. 38 RD 203/2021 y Orden PCM/1382/2021): lo gestiona el Ministerio de <strong>Función Pública</strong> con el de Transformación Digital. Agrega los asientos de las aplicaciones de registro, las de procedimientos específicos y las del servicio de presentación genérica del <strong>Punto de Acceso General</strong>. Sus anotaciones valen ante <strong>todas</strong> las Administraciones.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Oficinas de asistencia, comunicaciones y notificaciones</h3><small>Arts. 40-45 RD 203/2021 · arts. 41-43 LPA</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Oficinas de asistencia en materia de registros</strong>: son <strong>órganos administrativos</strong>. Se crean, modifican o suprimen por orden del Ministro respectivo, previa autorización del de Función Pública. Directorio geográfico gestionado por Función Pública.
+            <ul><li>Funciones: digitalizar y anotar; asientos de salida; recibos; copias electrónicas auténticas; información sobre identificación y firma; identificar o firmar por el no obligado; notificar si el interesado comparece espontáneamente; comunicar el código del órgano destinatario; iniciar el <strong>apoderamiento apud acta</strong>.</li></ul>
+          </li>
+          <li><strong>Comunicaciones electrónicas obligatorias</strong> (art. 41 RD) a quien se relaciona electrónicamente: fecha de inicio del cómputo; recepción por el órgano, plazo para resolver y efectos del silencio; y las suspensiones del art. 22 LPA (órgano de la UE, informe preceptivo, pronunciamiento judicial, requerimiento entre Administraciones).</li>
+          <li><strong>Notificaciones electrónicas</strong> (art. 42 RD): por comparecencia en la <strong>sede</strong> o en la <strong>Dirección Electrónica Habilitada única (DEHú)</strong>, o ambas. Si se usan ambas, cuenta el <strong>primer</strong> acceso o rechazo. La comparecencia voluntaria del no obligado tiene plenos efectos. Acuse de recibo con identificación, puesta a disposición y acceso o rechazo.
+            <ul>
+              <li>Los emisores estatales notifican siempre a través de la DEHú, y pueden hacerlo también en su sede.</li>
+              <li>Pasados <strong>10 días naturales</strong> desde la puesta a disposición sin acceder, se entiende <strong>rechazada</strong> (art. 43.2 LPA).</li>
+              <li><strong>Sucesión</strong>: el sucesor la comunica en <strong>15 días hábiles</strong>; si lo hace tarde, los defectos de notificación anteriores le son imputables.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · El archivo</h3>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Concepto de archivo</h3><small>Heredia · LPHE · LPA · LRJSP · RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Archivo es tanto el continente (edificio, mueble) como el contenido (documentos).</li>
+          <li><strong>Heredia</strong>: conjuntos de documentos acumulados en un <strong>proceso natural</strong> por una persona o institución en su gestión, conservados respetando ese orden, para servir de testimonio e información o de fuente de la historia.</li>
+          <li><strong>Art. 59 LPHE</strong>: conjuntos orgánicos de documentos reunidos en el ejercicio de sus actividades para la investigación, la cultura, la información y la gestión administrativa; y también las <strong>instituciones culturales</strong> que los reúnen y difunden. Los archivos estatales de carácter nacional se crean por <strong>real decreto</strong> (art. 61.2).</li>
+          <li><strong>Art. 17 LPA</strong>: <strong>archivo electrónico único</strong> de los documentos de procedimientos <strong>finalizados</strong> (no de los que están en tramitación); formatos que garanticen autenticidad, integridad y conservación; eliminación autorizada; medidas del <strong>Esquema Nacional de Seguridad</strong>. CCAA y EELL pueden adherirse a las plataformas de la AGE; si no, deben justificarlo por eficiencia (DA 2.ª LPA).</li>
+          <li><strong>Art. 46 LRJSP</strong>: todo se almacena electrónicamente salvo que no sea posible. Censo electoral, padrón, datos fiscales y del SNS deben alojarse <strong>dentro de la UE</strong>.</li>
+          <li><strong>Art. 55 RD 203/2021</strong>: el archivo electrónico único es el conjunto de sistemas y servicios para gestionar, custodiar y recuperar documentos y expedientes una vez finalizados los procedimientos, garantizando autenticidad, integridad, confidencialidad, disponibilidad y <strong>cadena de custodia</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Derecho de acceso a archivos y registros</h3><small>Art. 105.b CE · Ley 19/2013 · art. 57 LPHE</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Art. 105.b CE</strong>: acceso salvo en lo que afecte a la <strong>seguridad y defensa del Estado</strong>, la <strong>averiguación de los delitos</strong> y la <strong>intimidad</strong>.</li>
+          <li><strong>Ley 19/2013</strong>: todas las personas tienen derecho a la información pública (contenidos o documentos en poder de los sujetos obligados, elaborados o adquiridos en sus funciones).
+            <ul>
+              <li><strong>12 límites</strong> (art. 14): seguridad nacional, defensa, relaciones exteriores, seguridad pública, prevención de ilícitos, igualdad procesal, vigilancia e inspección, intereses económicos, política económica, secreto profesional y propiedad intelectual, confidencialidad en la toma de decisiones y medio ambiente. Se aplican de forma justificada y proporcionada, y cabe acceso <strong>parcial</strong>.</li>
+              <li><strong>Datos personales</strong> (art. 15): ideología, afiliación sindical, religión o creencias, solo con <strong>consentimiento expreso y por escrito</strong> (o si el afectado los hizo públicos); origen racial, salud, vida sexual, genéticos, biométricos o infracciones sin amonestación pública, con consentimiento expreso o si lo ampara una ley; los demás, previa <strong>ponderación</strong>.</li>
+              <li>Para ponderar se tiene en cuenta, entre otros, el <strong>art. 57 LPHE</strong>: los documentos con datos que afecten a la intimidad o la seguridad solo son consultables con consentimiento o pasados <strong>25 años desde la muerte</strong> o, si se desconoce, <strong>50 desde la fecha del documento</strong>.</li>
+              <li>Con datos <strong>disociados</strong> (anonimizados), no rigen estas limitaciones.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> La reforma anunciada de la Ley 19/2013 (Ley de Administración Abierta) no llegó a aprobarse.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Sistema Español de Archivos (RD 1708/2011)</h3><small>Objeto · definiciones · cooperación · órganos</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Objeto</strong>: establecer el Sistema Español de Archivos (art. 66 LPHE), regular el Sistema de Archivos de la AGE y el <strong>procedimiento común de acceso</strong>.</li>
+          <li><strong>Definiciones clave</strong>:
+            <ul>
+              <li><strong>ciclo vital</strong>: etapas desde la producción hasta la eliminación o conservación permanente;</li>
+              <li><strong>calendario de conservación</strong>: fruto de la valoración; fija el plazo de cada fase y el destino (eliminación o conservación);</li>
+              <li><strong>identificación</strong>: investigar las categorías en que se sustenta un fondo;</li>
+              <li><strong>valoración</strong>: estudio de los valores administrativos, jurídicos, fiscales, informativos e históricos;</li>
+              <li><strong>eliminación</strong>: destrucción física sin posibilidad de reconstrucción;</li>
+              <li><strong>metadato</strong>: descripción estandarizada de un conjunto de datos.</li>
+            </ul>
+          </li>
+          <li><strong>Forman parte</strong>: el Sistema de Archivos de la AGE; los sistemas autonómicos, provinciales y locales (cooperación <strong>voluntaria</strong>); y los archivos públicos y privados que se incorporen por convenio.</li>
+          <li><strong>Cooperación</strong>: planes aprobados por el <strong>Consejo de Ministros</strong>, convenios, patronatos y presencia internacional. El <strong>Consejo de Cooperación Archivística</strong> (Ministerio de Cultura) es el órgano de cooperación entre Administraciones.</li>
+          <li><span class="upd">2026</span> <strong>Comisión de Archivos de la AGE</strong>: coordina el Sistema de Archivos de la AGE. Constituida el 16-10-2024 (Orden PJC/493/2025); la <strong>CSCDA</strong> (RD 1401/2007) es su órgano consultivo superior sobre conservación, eliminación y acceso.</li>
+          <li>Las normas y plazos de transferencia del Decreto 914/1969 se sustituyen progresivamente por <strong>calendarios de conservación</strong>, que se publican en el BOE ministerio a ministerio.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Los archivos de la AGE según el ciclo vital</h3><small>Gestión · central · intermedio · histórico</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ol>
+          <li><strong>De oficina o gestión</strong> (1.ª edad): en todas las unidades; documentos en tramitación o de uso continuo. Apoyan la gestión, acreditan, organizan, <strong>transfieren al central</strong> según el calendario y <strong>eliminan los documentos de apoyo informativo</strong> antes de transferir.</li>
+          <li><strong>Generales o centrales</strong> (2.ª edad): en cada Ministerio y organismo. Coordinan los de gestión; identifican series y elaboran el <strong>cuadro de clasificación</strong>; describen; valoran y proponen eliminaciones; tramitan los expedientes de eliminación; transfieren al intermedio.</li>
+          <li><strong>Intermedio</strong> (3.ª edad): el <strong>Archivo General de la Administración (AGA)</strong>, creado por el Decreto 914/1969 y adscrito al Ministerio de Cultura. Conserva lo que llega de los centrales; aplica las resoluciones de la CSCDA (eliminación y conservación); valora fondos acumulados; estrategias de conservación electrónica a <strong>medio plazo</strong> (emulación, migración, conversión); macrodescripción; transfiere al histórico.</li>
+          <li><strong>Históricos</strong> (4.ª edad): el <strong>Archivo Histórico Nacional</strong> ejerce de archivo histórico de la AGE: conserva lo de valor histórico, reproduce, preserva a <strong>largo plazo</strong>, describe las unidades documentales y difunde.</li>
+        </ol>
+        <ul><li>En la periferia, los <strong>Archivos Históricos Provinciales</strong> hacen de intermedio e histórico. <span class="upd">2026</span> El de Madrid se creó por la Orden CLT/7/2025.</li></ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Archivos históricos estatales y archivos privados</h3><small>AHN · Corona de Aragón · Simancas · Indias · CDMH · Nobleza</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Archivo Histórico Nacional</strong> (Madrid, RD de <strong>28-3-1866</strong>): nació de la documentación de la desamortización eclesiástica; es el más joven de los grandes, pero el más amplio y de mayor volumen.</li>
+          <li><strong>Corona de Aragón</strong> (Barcelona): el primero con «partida de nacimiento» conocida, una escritura de <strong>1180</strong>; con el Vaticano, el gran archivo medieval.</li>
+          <li><strong>Simancas</strong> (Valladolid): fundado por <strong>Carlos V</strong> para la documentación de Castilla; <strong>Instrucción de Felipe II de 1588</strong>; fondos de los siglos XV a XVIII.</li>
+          <li><strong>Indias</strong> (Sevilla): creado por <strong>Carlos III en 1785</strong> para la documentación de América y Filipinas.</li>
+          <li><strong>Centro Documental de la Memoria Histórica</strong> (Salamanca, <strong>RD 697/2007</strong>): integra el Archivo General de la Guerra Civil; fondos de <strong>1936 a 1978</strong>. La Ley 20/2022 de Memoria Democrática lo reconoce como lugar de memoria.</li>
+          <li><strong>Archivo Histórico de la Nobleza</strong> (Toledo, <strong>RD 836/2017</strong>): antes, Sección Nobleza del AHN.</li>
+          <li><strong>Acceso</strong>: toda persona puede acceder a los archivos del RD 1708/2011 (no a los de gestión), con asistencia del responsable y respeto a las lenguas cooficiales.</li>
+          <li><strong>Archivos privados</strong>: de empresas, de asociaciones, eclesiásticos…</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Ordenación y gestión del archivo de oficina</h3><small>Procedencia · clasificación · ordenación · servicios · archivo de gestión</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Principio de respeto a la procedencia</strong>: criterio básico; los documentos de una unidad nunca se mezclan con los de otra.</li>
+          <li><strong>Clasificar</strong> (ligado al <strong>inventario</strong>): operación intelectual por grupos orgánicos. En los archivos administrativos, la ordenación <strong>sigue</strong> a la clasificación. Tipos: funcional, orgánica y por materias (se prefieren las dos primeras; lo habitual es la mixta orgánico-funcional). <strong>Ordenar</strong> va ligado a la <strong>catalogación</strong>.</li>
+          <li><strong>Métodos de ordenación</strong>: orgánico, funcional, numérico, decimal (CDU, en bibliotecas), <strong>cronológico</strong> (año-mes-día; sin día, al final del mes; sin mes, al final del año), <strong>geográfico</strong> (de continente a pueblo; sin dato, al final del grupo superior), <strong>alfabético</strong> (de materias, geográfico u onomástico) y <strong>mixto</strong> (el más usado).</li>
+          <li><strong>Operaciones</strong>: desdoble; signaturación y sellado (ángulo <strong>inferior izquierdo</strong>); datación (a lápiz, arriba); numeración (ángulo <strong>superior izquierdo</strong>); foliación (ángulo <strong>superior derecho</strong>, clave para microfilmar); agregación (con testigo y tras el inventario completo).</li>
+          <li><strong>Servicios de archivo</strong> (Heredia): comunicación del <strong>documento</strong> (consulta directa o préstamo, copias y certificaciones, exposiciones) y de la <strong>información</strong> (instrumentos de descripción, memorias). En el préstamo: solicitud por escrito, impreso con datos y firma, y un <strong>testigo</strong> en el lugar del documento.</li>
+          <li><strong>Archivo de gestión</strong>: documentos corrientes, cerca del tramitador; prevalece el valor <strong>primario</strong>; etapa <strong>prearchivística</strong>; transfiere al central y no recibe transferencias; conservación total, sin expurgo de originales (solo de copias); <strong>no es de libre consulta</strong> (la libre consulta empieza en los centrales, art. 57.1 LPHE). Notas interiores, relaciones de envío y duplicados pueden destruirse a los <strong>3-5 años</strong>. Ante la duda, consultar a un archivero.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>40 y 100 años</b>40 para entidades políticas, sindicales, religiosas y culturales privadas; 100 para el resto de particulares.</div>
+    <div class="trap"><b>Libro de actas</b>El de una entidad local no es documento administrativo: no se incorpora a un expediente.</div>
+    <div class="trap"><b>Instancias</b>Los escritos de los particulares producen efectos, pero no son documentos administrativos.</div>
+    <div class="trap"><b>Propuesta o moción</b>La propuesta es preceptiva; la moción, voluntaria.</div>
+    <div class="trap"><b>Citación o emplazamiento</b>Citación: día y hora. Emplazamiento: dentro de un plazo.</div>
+    <div class="trap"><b>Resumen</b>Indicativo, sin conclusiones (50-200 palabras). Informativo, con conclusiones (100-300).</div>
+    <div class="trap"><b>Archivo electrónico único</b>Solo para procedimientos finalizados.</div>
+    <div class="trap"><b>Notificación</b>Con sede y DEHú, cuenta el primer acceso. A los 10 días naturales sin acceder, se entiende rechazada.</div>
+    <div class="trap"><b>REG-AGE</b>Lo gestiona el Ministerio de Función Pública, en colaboración con el de Transformación Digital.</div>
+    <div class="trap"><b>Archivo intermedio</b>Es el AGA, no el Histórico Nacional.</div>
+    <div class="trap"><b>Archivo de gestión</b>No recibe transferencias, no es de libre consulta y solo expurga copias.</div>
+    <div class="trap"><b>Esquinas</b>Sello y signatura abajo a la izquierda; numeración arriba a la izquierda; foliación arriba a la derecha.</div>
+    <div class="trap"><b>Clasificar y ordenar</b>Clasificar va con el inventario; ordenar, con la catalogación. En los archivos administrativos, primero se clasifica.</div>
+    <div class="trap"><b>Compulsa</b>Hoy se habla de copia auténtica (art. 27 LPA), con la misma validez que el original.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 2. Concepto de documento, registro y archivo. Funciones del registro y del archivo. Clases de archivo y criterios de ordenación» (Organización de oficinas públicas), actualizado a noviembre de 2026: Orden PJC/493/2025 (Comisión de Archivos de la AGE), Orden CLT/7/2025 (Archivo Histórico Provincial de Madrid), Ley 39/2015 (copias auténticas), RD 203/2021 y Órdenes PCM/1382 y 1383/2021.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Bloque 2 · Tema 2 · Herramientas ===== */
+const FEST={2026:["01-01","01-06","04-03","05-01","08-15","10-12","12-08","12-25"],2027:["01-01","01-06","03-26","05-01","10-12","11-01","12-06","12-08","12-25"]};
+const DA=[
+ ["El jefe de negociado acuerda incorporar al expediente un informe técnico y dar traslado al interesado (mero trámite).","res","Resolutorio de impulsión: una providencia. No pone fin al asunto y la dicta el funcionario que tramita."],
+ ["El Pleno de un ayuntamiento aprueba conceder una licencia de apertura.","res","Resolutorio de fondo dictado por un órgano colegiado: se llama acuerdo."],
+ ["El Consejo de Estado emite su parecer sobre una reclamación de responsabilidad patrimonial.","ins","De instrucción: un dictamen, el parecer de un órgano consultivo importante distinto del que resuelve."],
+ ["El instructor de un expediente disciplinario eleva al órgano competente su propuesta de sanción.","ins","De instrucción: una propuesta de resolución, que es preceptiva."],
+ ["El secretario hace constar en el expediente que se ha desglosado un documento original.","con","De constancia interna: una diligencia."],
+ ["Se expide un certificado de antecedentes penales.","con","De constancia externa: un certificado típico."],
+ ["Se publica la lista de admitidos y excluidos de una oposición.","con","De constancia mixta: una lista personal."],
+ ["Se cita a una persona para que comparezca el día 3 a las 10:00 en la Subdelegación.","com","De comunicación con destinatario determinado: un oficio en forma de citación (sitio, día y hora)."],
+ ["Un ayuntamiento publica en el boletín un anuncio porque no ha podido notificar personalmente a un interesado.","com","De comunicación con destinatario indeterminado: un edicto."],
+ ["Un ciudadano presenta un recurso de alzada contra una sanción.","no","No es un documento administrativo: lo produce un particular, aunque surta efectos ante la Administración."],
+ ["El libro de actas de las sesiones del Pleno de un ayuntamiento.","no","Según el manual, no es documento administrativo porque no puede incorporarse a un expediente."],
+ ["Un órgano administrativo dirige un oficio rogatorio a otro órgano para que practique una diligencia.","otr","Otros documentos administrativos: peticiones de órganos administrativos (oficios rogatorios)."],
+ ["Un vocal de una junta presenta por iniciativa propia una propuesta para que el órgano se pronuncie.","ins","De instrucción: una moción, que es voluntaria."],
+ ["Se expide el permiso de conducir.","con","De constancia externa: documento de exhibición."]
+];
+const DAO={res:"Resolutorio",ins:"De instrucción",con:"De constancia",com:"De comunicación",otr:"Otros",no:"No es administrativo"};
+const ODOCS=[
+ {n:"Expediente de López Ruiz, Ana",f:[2025,3,14],p:"Sevilla",m:"Écija",num:47},
+ {n:"Expediente de Abad Gil, Luis",f:[2024,11,null],p:"Cáceres",m:"Plasencia",num:12},
+ {n:"Expediente de Martín Sanz, Eva",f:[2025,3,2],p:"Sevilla",m:null,num:5},
+ {n:"Expediente de Abad Gil, Carmen",f:[2025,null,null],p:"Ávila",m:"Arévalo",num:31},
+ {n:"Expediente de Zamora Peña, Iván",f:[2024,11,28],p:"Cáceres",m:"Coria",num:8},
+ {n:"Expediente de Díaz Ortega, Sara",f:[2025,3,null],p:"Ávila",m:"Ávila",num:19},
+ {n:"Expediente de Benítez Lara, Raúl",f:[2024,2,9],p:"Sevilla",m:"Carmona",num:3},
+ {n:"Expediente de Cano Ibáñez, Pilar",f:[2025,1,30],p:"Cáceres",m:"Cáceres",num:26}
+];
+const INS=[
+ {g:"Órganos",n:"Comisión de Archivos de la AGE",norm:"RD 1708/2011 · Orden PJC/493/2025",def:"Órgano que coordina el Sistema de Archivos de la AGE.",f:{"Constitución":"16 de octubre de 2024.","Adscripción":"Ministerio de la Presidencia, Justicia y Relaciones con las Cortes.","Presidencia":"Subsecretaría de ese Ministerio.","CSCDA":"Adscrita a ella como órgano consultivo superior."}},
+ {g:"Órganos",n:"Comisión Superior Calificadora de Documentos Administrativos",norm:"RD 1401/2007",def:"Órgano consultivo superior en la conservación, eliminación y acceso de los documentos de la AGE.",f:{"Dictámenes":"Calendarios de conservación de las series documentales.","Eliminación":"Sus resoluciones las aplica el AGA.","Comisiones departamentales":"Cada Ministerio tiene la suya o un grupo de trabajo.","Desde 2024":"Órgano consultivo superior de la Comisión de Archivos de la AGE."}},
+ {g:"Órganos",n:"Consejo de Cooperación Archivística",norm:"Art. 5 RD 1708/2011",def:"Órgano de cooperación entre las Administraciones en materia de archivos.",f:{"Adscripción":"Ministerio de Cultura.","Ámbito":"Sistema Español de Archivos.","Base":"Cooperación voluntaria.","Planes":"Los planes de cooperación los aprueba el Consejo de Ministros."}},
+ {g:"Archivos de la AGE",n:"Archivo General de la Administración (AGA)",norm:"Decreto 914/1969",def:"Archivo intermedio de la AGE.",f:{"Recibe":"Las transferencias de los archivos centrales de los Ministerios.","Funciones":"Aplicar las resoluciones de la CSCDA, valorar, conservar a medio plazo, macrodescripción.","Transfiere":"Al archivo histórico (AHN).","Adscripción":"Ministerio de Cultura."}},
+ {g:"Archivos de la AGE",n:"Archivo Histórico Nacional",norm:"RD de 28-3-1866",def:"Archivo histórico de la AGE, en Madrid.",f:{"Origen":"Documentación de la desamortización eclesiástica, en la Academia de la Historia.","Rasgos":"El más joven de los grandes, pero el más amplio y voluminoso.","Funciones":"Conservar, reproducir, preservar a largo plazo, describir unidades documentales y difundir.","Secciones":"Cada una es casi un archivo independiente."}},
+ {g:"Archivos de la AGE",n:"Archivos Históricos Provinciales",norm:"RD 1708/2011",def:"Hacen de archivo intermedio e histórico en la periferia del Estado.",f:{"Titularidad":"Estatal; la gestión suele estar transferida a las CCAA.","Fondos típicos":"Protocolos notariales de más de 100 años, documentos de la AGE periférica.","Novedad":"Archivo Histórico Provincial de Madrid (Orden CLT/7/2025), que integra el de Protocolos.","Futuro":"También los que se creen en las Delegaciones del Gobierno."}},
+ {g:"Archivos históricos",n:"Archivo de la Corona de Aragón",norm:"Barcelona",def:"El primer archivo español con «partida de nacimiento» conocida.",f:{"Fecha":"Escritura de 25 de octubre de 1180.","Importancia":"Con el Vaticano, el gran archivo medieval.","Alcance":"Corona de Aragón, buena parte de Francia y casi toda Italia.","Gestión":"Estatal, Ministerio de Cultura."}},
+ {g:"Archivos históricos",n:"Archivo General de Simancas",norm:"Simancas (Valladolid)",def:"Archivo de la documentación de la Corona de Castilla.",f:{"Fundación":"Carlos V.","Instrucción":"Felipe II, 1588.","Fondos":"Siglos XV a XVIII.","Antes":"La documentación se guardaba en Medina."}},
+ {g:"Archivos históricos",n:"Archivo General de Indias",norm:"Sevilla",def:"Reúne la documentación de los órganos de gobierno de América y Filipinas.",f:{"Creación":"Carlos III, 1785.","Objeto":"Un único depósito para toda la documentación americana.","Gestión":"Estatal.","Sede":"Casa Lonja de Sevilla."}},
+ {g:"Archivos históricos",n:"Centro Documental de la Memoria Histórica",norm:"RD 697/2007 · Ley 20/2022",def:"Centro en Salamanca para los fondos de 1936 a 1978.",f:{"Integra":"El Archivo General de la Guerra Civil Española.","Periodo":"1936-1978.","Dependencia":"Subdirección General de los Archivos Estatales.","Ley 20/2022":"Lugar de memoria democrática."}},
+ {g:"Archivos históricos",n:"Archivo Histórico de la Nobleza",norm:"RD 836/2017",def:"Archivo con sede en Toledo.",f:{"Antes":"Sección Nobleza del Archivo Histórico Nacional.","Fondos":"Archivos de la nobleza adquiridos por el Estado o depositados.","Programa":"Reunir, conservar, restaurar, organizar, describir y difundir.","Sede":"Hospital Tavera, Toledo."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+  const fd=d=>d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+  const tabs=(tid,pre)=>{const t=$(tid);if(!t)return;t.addEventListener("click",ev=>{const b=ev.target.closest("button[data-p]");if(!b)return;t.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll('[id^="'+pre+'"].pane').forEach(p=>p.classList.toggle("on",p.id===pre+b.dataset.p))})};
+  tabs("rg-tabs","rg-");
+  /* Clasificador */
+  (function(){if(!$("da-case"))return;let ord=DA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DA[ord[pos%ord.length]];done=false;$("da-case").innerHTML=`<small>Documento ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $("da-opts").innerHTML=Object.entries(DAO).map(([k,v])=>`<button data-k="${k}">${v}</button>`).join("");$("da-out").style.display="none"}
+    $("da-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $("da-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$("da-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+DAO[c[1]].toLowerCase()}</b>${c[2]}`;$("da-score").textContent=`${ok} de ${tot} aciertos`});
+    $("da-next").addEventListener("click",()=>{pos++;show()});show()})();
+  /* Asiento */
+  (function(){if(!$("ra-n"))return;
+    const L={epi:"Epígrafe expresivo de su naturaleza",int:"Identificación del interesado",rem:"Órgano remitente",des:"Persona u órgano destinatario",ref:"Referencia al documento"};
+    function run(){const n=Math.floor(num("ra-n"))+1,f=$("ra-f").value,o=$("ra-out");const miss=[];
+      document.querySelectorAll("#ra-chks input").forEach(i=>{if(!i.checked&&i.dataset.k!=="rem"&&i.dataset.k!=="ref")miss.push(L[i.dataset.k])});
+      const rem=$("ra-chks").querySelector('[data-k="rem"]').checked,ref=$("ra-chks").querySelector('[data-k="ref"]').checked;
+      const fh=f?new Date(f):null;const fs=fh?fh.toLocaleString("es-ES",{dateStyle:"long",timeStyle:"short"}):"(sin fecha)";
+      let st=`<div><b>Número</b>: ${n.toLocaleString("es-ES")} (el siguiente al último, por orden temporal).</div><div><b>Fecha y hora</b>: ${fs}.</div><div><b>Recibo</b>: la oficina emite un recibo que acredita la fecha y hora de presentación.</div><div><b>Después</b>: el escrito se cursa <strong>sin dilación</strong> al destinatario.</div>`;
+      if(!rem)st+=`<div><b>Órgano remitente</b>: no consta. Solo es obligatorio «si procede», es decir, cuando el documento procede de otro órgano administrativo.</div>`;
+      if(!ref)st+=`<div><b>Referencia</b>: no consta. Se exige «en su caso».</div>`;
+      if(miss.length){o.className="verdict ko";o.innerHTML=`<b class="big">Asiento incompleto</b>Falta: ${miss.join(", ")} (art. 16.3 LPA).<div class="steps-out">${st}</div>`;return}
+      o.className="verdict ok";o.innerHTML=`<b class="big">Asiento n.º ${n.toLocaleString("es-ES")} correcto</b>Contiene los elementos del art. 16.3 LPA.<div class="steps-out">${st}</div>`}
+    ["ra-n","ra-f"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});document.querySelectorAll("#ra-chks input").forEach(i=>i.addEventListener("change",run));run()})();
+  /* Lugar */
+  (function(){if(!$("rl-s"))return;
+    const R={reo:["ok","Válido","Registro electrónico de la Administración u organismo al que se dirige (art. 16.4.a LPA)."],rex:["ok","Válido","Se puede presentar en el registro electrónico de cualquier sujeto del art. 2.1 LPA, aunque no sea el destinatario: los registros son interoperables (art. 16.4.a)."],cor:["ok","Válido","Oficinas de Correos, en la forma que se determine reglamentariamente (art. 16.4.b). Para las personas no obligadas a relacionarse electrónicamente."],con:["ok","Válido","Representaciones diplomáticas u oficinas consulares de España en el extranjero (art. 16.4.c)."],oar:["ok","Válido","Oficinas de asistencia en materia de registros (art. 16.4.d). Digitalizan el documento y devuelven el original."],mail:["ko","No válido","El correo electrónico ordinario no es un registro. Hay que usar el registro electrónico (por ejemplo, el servicio de presentación genérica del Punto de Acceso General)."],pap:["ko","No válido","Las personas jurídicas están obligadas a relacionarse electrónicamente (art. 14.2 LPA). Si presenta en papel, se le requerirá la subsanación por medios electrónicos y la fecha será la de la subsanación (art. 68.4)."],esp:["ko","No se tiene por presentado","No se tienen por presentados en el registro los documentos cuyo régimen especial establezca otra forma de presentación. El órgano informa al interesado de los requisitos (art. 16.8 LPA; art. 37 RD 203/2021)."]};
+    function run(){const r=R[$("rl-s").value],o=$("rl-out");o.className="verdict "+r[0];o.innerHTML=`<b class="big">${r[1]}</b>${r[2]}`}
+    $("rl-s").addEventListener("change",run);run()})();
+  /* Notificación */
+  (function(){if(!$("rn-f"))return;
+    function run(){const f=$("rn-f").value,a=$("rn-a").value,d=$("rn-d").value,o=$("rn-out");$("rn-d").closest("label").style.opacity=a==="no"?.45:1;
+      if(!f){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha de puesta a disposición</b>";return}
+      const p=pd(f),lim=addD(p,10);
+      if(a==="no"){o.className="verdict mid";o.innerHTML=`<b class="big">Rechazada el ${lim.toLocaleDateString("es-ES")}</b>Si no accede en <strong>10 días naturales</strong> desde la puesta a disposición (hasta el ${fd(lim)}), la notificación se entiende <strong>rechazada</strong> y se da por efectuado el trámite (art. 43.2 LPA).<div class="tool-note">Los emisores estatales notifican siempre a través de la DEHú, y pueden hacerlo también en su sede electrónica (art. 42 RD 203/2021). El aviso al correo o al móvil no es requisito de validez.</div>`;return}
+      if(!d){o.className="verdict mid";o.innerHTML="<b class='big'>Indica el día de acceso o rechazo</b>";return}
+      const x=pd(d);
+      if(x<p){o.className="verdict ko";o.innerHTML="<b class='big'>Fecha imposible</b>No puede acceder antes de la puesta a disposición.";return}
+      if(x>lim){o.className="verdict mid";o.innerHTML=`<b class="big">Ya estaba rechazada</b>El plazo de 10 días naturales venció el ${fd(lim)}: la notificación se entendió rechazada ese día. Acceder después no cambia el cómputo.`;return}
+      if(a==="re"){o.className="verdict mid";o.innerHTML=`<b class="big">Rechazada el ${x.toLocaleDateString("es-ES")}</b>El rechazo expreso produce efectos desde ese día: el trámite se da por efectuado y se sigue el procedimiento (art. 41.5 LPA).`;return}
+      o.className="verdict ok";o.innerHTML=`<b class="big">Notificada el ${x.toLocaleDateString("es-ES")}</b>Se entiende practicada en el momento del acceso a su contenido (art. 43.2 LPA). Los plazos para recurrir empiezan a contar desde el día siguiente.<div class="tool-note">Si se notificó por la sede y por la DEHú, cuenta el primer acceso en cualquiera de ellas.</div>`}
+    ["rn-f","rn-a","rn-d"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Ciclo vital */
+  (function(){if(!$("cv-e"))return;
+    const A=[["Gestión","1.ª edad · unidad"],["Central","2.ª edad · Ministerio"],["Intermedio","3.ª edad · AGA"],["Histórico","4.ª edad · AHN"]];
+    function run(){const es=$("cv-e").value,a=Math.max(0,num("cv-a")),h=$("cv-h").value,o=$("cv-out");let i,t;
+      if(es==="tra"){i=0;t="Está en el <strong>archivo de oficina o gestión</strong> de la unidad que lo tramita: documentos en tramitación o de consulta continua. Conservación total; no es de libre consulta."}
+      else if(a<5){i=0;t=`Lleva ${a} año${a===1?"":"s"} cerrado: suele seguir en el <strong>archivo de gestión</strong> hasta que se agota su plazo de permanencia (referencia clásica: 5 años) y se transfiere al central. Antes se eliminan los documentos de apoyo informativo.`}
+      else if(a<15){i=1;t=`Lleva ${a} años cerrado: está en el <strong>archivo central</strong> del Ministerio u organismo, que lo describe, lo valora y propone su eliminación o conservación. La referencia clásica es transferirlo al intermedio a los 15 años.`}
+      else if(a<40){i=2;t=`Lleva ${a} años cerrado: corresponde al <strong>archivo intermedio</strong>, el Archivo General de la Administración (AGA). Allí se aplican las resoluciones de la CSCDA sobre eliminación o conservación permanente.`}
+      else{i=3;t=`Lleva ${a} años cerrado: los documentos con valor histórico pasan al <strong>archivo histórico</strong> (Archivo Histórico Nacional; en la periferia, el Archivo Histórico Provincial). La referencia clásica es 25 años en el intermedio.`}
+      if(h==="no"&&i>=2){i=2;t+=" <strong>Al no tener valor histórico</strong>, no llega al histórico: se elimina en la fase que marque su calendario de conservación, con destrucción que impida su reconstrucción."}
+      $("cv-v").innerHTML=A.map((x,k)=>`<div class="${k===i?"on":k<i?"past":""}"><b>${x[0]}</b>${x[1]}</div>`).join("");
+      o.className="verdict ok";o.innerHTML=`<b class="big">${A[i][0]}</b>${t}<div class="tool-note">Los plazos de 5, 15 y 25 años son orientativos (práctica del Decreto 914/1969). Hoy mandan los calendarios de conservación de cada serie, dictaminados por la CSCDA y publicados en el BOE.</div>`}
+    ["cv-e","cv-a","cv-h"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Ordenación */
+  (function(){if(!$("od-c"))return;
+    const M=["","ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+    const fstr=f=>`${f[2]?f[2]+" ":""}${f[1]?M[f[1]]+" ":""}${f[0]}`;
+    const ape=n=>n.replace("Expediente de ","");
+    function run(){const c=$("od-c").value,o=$("od-out");let L=ODOCS.slice(),why="",info=d=>"";
+      if(c==="cro"){L.sort((a,b)=>a.f[0]-b.f[0]||(a.f[1]||13)-(b.f[1]||13)||(a.f[2]||32)-(b.f[2]||32));info=d=>fstr(d.f);why="Año, mes y día. El documento sin día va al final de su mes; el que no tiene mes, al final de su año."}
+      else if(c==="alf"){L.sort((a,b)=>ape(a.n).localeCompare(ape(b.n),"es"));info=d=>"1.er apellido: "+ape(d.n).split(" ")[0];why="Alfabético-onomástico: por el primer apellido, después el segundo y luego el nombre."}
+      else if(c==="geo"){L.sort((a,b)=>a.p.localeCompare(b.p,"es")||(a.m===null)-(b.m===null)||(a.m||"").localeCompare(b.m||"","es"));info=d=>`${d.p} · ${d.m||"municipio desconocido"}`;why="De lo general a lo particular (provincia → municipio), alfabéticamente en cada nivel. Si falta un dato que no se puede averiguar, va al final del grupo inmediatamente superior."}
+      else{L.sort((a,b)=>a.num-b.num);info=d=>"n.º "+d.num;why="Números progresivos y correlativos atribuidos a cada unidad documental."}
+      $("od-l").innerHTML=L.map(d=>`<div>${e(ape(d.n))}<small>${e(info(d))}</small></div>`).join("");
+      o.className="verdict ok";o.innerHTML=`<b class="big">Criterio: ${$("od-c").selectedOptions[0].text}</b>${why}<div class="tool-note">En la práctica se usa sobre todo la ordenación <strong>mixta</strong>, que combina criterios. Y siempre dentro del principio de <strong>respeto a la procedencia</strong>: nunca se mezclan los documentos de unidades distintas.</div>`}
+    $("od-c").addEventListener("change",run);run()})();
+  /* Acceso */
+  (function(){if(!$("ax-t"))return;
+    function run(){const t=$("ax-t").value,d=Math.floor(num("ax-d")),mv=$("ax-m").value,m=mv?Math.floor(+mv):null,c=$("ax-c").value,x=$("ax-x").value,o=$("ax-out");const Y=2026;
+      if(t==="no"){o.className="verdict ok";o.innerHTML=`<b class="big">Acceso, salvo que concurra otro límite</b>Sin datos personales solo pueden oponerse los límites del art. 14 Ley 19/2013 (seguridad nacional, defensa, etc.), de forma justificada y proporcionada, y con acceso parcial si es posible.`;return}
+      if(x==="si"){o.className="verdict ok";o.innerHTML=`<b class="big">Acceso con los datos disociados</b>Si se anonimizan los datos de modo que no se pueda identificar a los afectados, no rigen las limitaciones de protección de datos (art. 15.4 Ley 19/2013).`;return}
+      if(c==="si"){o.className="verdict ok";o.innerHTML=`<b class="big">Acceso con consentimiento</b>${t==="ide"?"Para estos datos el consentimiento debe ser <strong>expreso y por escrito</strong>.":"El consentimiento expreso del afectado permite el acceso."}`;return}
+      const lp=m?m+25:d+50,ok57=Y>=lp;
+      const base=m?`Pasados 25 años desde la muerte (${m}): libre a partir de ${lp}.`:`Como no consta la muerte, 50 años desde la fecha del documento (${d}): libre a partir de ${lp}.`;
+      if(t==="mer"){o.className="verdict ok";o.innerHTML=`<b class="big">Acceso, por regla general</b>Con datos meramente identificativos relacionados con la organización o la actividad pública, se concede el acceso salvo que prevalezca la protección de datos (art. 15.2 Ley 19/2013).`;return}
+      if(ok57){o.className="verdict ok";o.innerHTML=`<b class="big">Consultable</b>${base} Como documento de archivo, ya ha pasado el plazo del art. 57.1.c LPHE, que el art. 15.3 de la Ley 19/2013 manda tener en cuenta (cuanto más tiempo, menor perjuicio).`;return}
+      if(t==="ide"){o.className="verdict ko";o.innerHTML=`<b class="big">No, sin consentimiento expreso y por escrito</b>Ideología, afiliación sindical, religión o creencias: solo con consentimiento expreso y escrito, salvo que el afectado los hubiera hecho públicos (art. 15.1 Ley 19/2013). ${base}`;return}
+      if(t==="sal"||t==="inf"){o.className="verdict ko";o.innerHTML=`<b class="big">No, salvo consentimiento o ley</b>Datos especialmente protegidos: solo con consentimiento expreso del afectado o si lo ampara una norma con rango de ley (art. 15.1). ${base}`;return}
+      o.className="verdict mid";o.innerHTML=`<b class="big">Depende de la ponderación</b>Se pondera el interés público frente a la protección de datos (art. 15.3): el tiempo transcurrido (art. 57 LPHE), si el solicitante es investigador con fines históricos o científicos, si los datos son solo identificativos y si afectan a menores o a la seguridad. ${base}`}
+    ["ax-t","ax-d","ax-m","ax-c","ax-x"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Etimología de «documento».",r:"Del latín documentum, de docere: enseñar, instruir."},
+ {p:"Documento según Antonia Heredia.",r:"Testimonio de la actividad del hombre fijado en un soporte perdurable que contiene información."},
+ {p:"Documento según el art. 49 LPHE.",r:"Toda expresión en lenguaje natural o convencional y cualquier otra gráfica, sonora o en imagen, en cualquier soporte, incluso informático. Se excluyen los ejemplares no originales de ediciones."},
+ {p:"Patrimonio Documental: documentos de cualquier época.",r:"Los de organismos públicos, personas jurídicas con capital público mayoritario y gestores privados de servicios públicos (en esa gestión)."},
+ {p:"Patrimonio Documental: más de 40 años.",r:"Los de entidades y asociaciones políticas, sindicales o religiosas, y de entidades culturales y educativas privadas."},
+ {p:"Patrimonio Documental: más de 100 años.",r:"Los de cualesquiera otras entidades particulares o personas físicas."},
+ {p:"Documento público administrativo (LPA).",r:"El válidamente emitido por los órganos de las Administraciones, por escrito y por medios electrónicos salvo que su naturaleza exija otra forma."},
+ {p:"Documentos por su contenido.",r:"Primarios (originales), secundarios (representación condensada de los primarios) y terciarios (listas de secundarios)."},
+ {p:"Valores del documento.",r:"Histórico, administrativo y legal."},
+ {p:"Documento oficial.",r:"El que tiene autenticidad y emana de autoridad administrativa; es de oficio, no particular."},
+ {p:"Notas del documento administrativo.",r:"Lo produce un órgano administrativo, puede incorporarse a un expediente y normalmente es escrito (no siempre: un plano o un mapa)."},
+ {p:"¿Es documento administrativo el impreso?",r:"Es un medio para obtener información. Solo el cumplimentado por la Administración es documento administrativo en sentido estricto."},
+ {p:"¿Son documentos administrativos las instancias de los particulares?",r:"No: producen efectos ante la Administración, pero no los produce un órgano administrativo."},
+ {p:"Documento administrativo electrónico (art. 46 RD 203/2021).",r:"Información en forma electrónica, en soporte electrónico y formato admitido en el ENI, generada, recibida o incorporada por la Administración en funciones de Derecho administrativo."},
+ {p:"Clasificación de González Navarro (1972).",r:"Resolutorios, de instrucción, de constancia, de comunicación y otros."},
+ {p:"Providencia.",r:"Decisión que no pone fin al asunto; la dicta el funcionario que tramita; documento sencillo."},
+ {p:"Resolución y acuerdo.",r:"La resolución decide definitivamente y la dicta la autoridad competente. Si procede de un órgano colegiado, se llama acuerdo."},
+ {p:"Informe y dictamen.",r:"Pareceres de órganos distintos del que resuelve. El dictamen se reserva a órganos importantes."},
+ {p:"Propuesta y moción.",r:"Propuesta: proposición de resolución del instructor (preceptiva). Moción: proposición por iniciativa propia (voluntaria)."},
+ {p:"Diligencia.",r:"Declaración de constancia de un hecho, generalmente procedimental."},
+ {p:"Certificación.",r:"Declaración solemne de conocimiento de lo que consta en archivos o se conoce por otro medio."},
+ {p:"Oficio.",r:"Comunicación escrita de un órgano administrativo con destinatario nominativamente determinado."},
+ {p:"Citación y emplazamiento.",r:"Citación: sitio, día y hora para comparecer. Emplazamiento: comparecer dentro de un plazo."},
+ {p:"Requerimiento.",r:"Intimación para que alguien entregue, haga o deje de hacer algo."},
+ {p:"Edicto.",r:"Anuncio para dar conocimiento general o cuando no se puede notificar personalmente."},
+ {p:"Documentos judiciales.",r:"Providencias (ordenación del proceso), autos (incidentes), sentencias (deciden el pleito) y ejecutoria (sentencia firme)."},
+ {p:"Fases del proceso documental.",r:"Entrada (selección), tratamiento (análisis y búsqueda) y salida (comunicación)."},
+ {p:"Análisis documental.",r:"Operaciones para representar el contenido de un documento de forma distinta a la original, generando un documento secundario."},
+ {p:"Elementos de la descripción.",r:"De descripción interna (fechas, procedencia), externa (tipo, formato, soporte) y de identificación (signaturas)."},
+ {p:"Indización.",r:"Retener nociones que representan el contenido de un documento y adecuarlas a un lenguaje natural o documental."},
+ {p:"Resumen indicativo.",r:"Describe el contenido sin las conclusiones; de 50 a 200 palabras."},
+ {p:"Resumen informativo.",r:"Añade las conclusiones; el más completo y de más valor; de 100 a 300 palabras."},
+ {p:"Compendio.",r:"Versión abreviada y más literaria: del 20 al 50 % del original."},
+ {p:"Libro y folleto.",r:"Libro: al menos 49 páginas. Folleto: más de 5 y menos de 49."},
+ {p:"Minuta.",r:"Borrador o escrito preparatorio del que surge el original."},
+ {p:"Original autógrafo y heterógrafo.",r:"Autógrafo: de puño y letra del autor. Heterógrafo: redactado por otro por voluntad del autor y validado por él."},
+ {p:"Copia auténtica (art. 27 LPA).",r:"La hace un órgano competente (funcionario habilitado o actuación automatizada) y tiene la misma validez y eficacia que el original."},
+ {p:"Copia auténtica de un documento privado.",r:"Solo surte efectos administrativos."},
+ {p:"Registro de Funcionarios Habilitados de la AGE.",r:"Orden PCM/1383/2021. Funcionarios de carrera o interinos en activo."},
+ {p:"Documentos de apoyo informativo.",r:"Necesarios para las actuaciones, pero no forman parte del expediente (fotocopias de disposiciones…)."},
+ {p:"Registro Electrónico General (art. 16.1 LPA).",r:"Cada Administración tiene uno, donde se asienta todo documento presentado o recibido; también puede anotarse la salida."},
+ {p:"Contenido de la disposición de creación de un registro electrónico.",r:"Órgano responsable, fecha y hora oficial y días inhábiles. Se publica en el diario oficial y en la sede."},
+ {p:"Contenido del asiento (art. 16.3 LPA).",r:"Número, epígrafe, fecha y hora, interesado, órgano remitente (si procede), destinatario y referencia (en su caso)."},
+ {p:"Lugares de presentación (art. 16.4 LPA).",r:"Registros electrónicos de cualquier Administración, Correos, representaciones diplomáticas y consulares, oficinas de asistencia en registros y los demás que establezcan las normas."},
+ {p:"Documentos presentados en papel.",r:"Se digitalizan en la oficina de asistencia y se devuelven los originales (salvo custodia obligatoria u objetos no digitalizables)."},
+ {p:"Art. 16.8 LPA.",r:"No se tienen por presentados los documentos cuyo régimen especial establezca otra forma de presentación."},
+ {p:"Triple constancia del registro.",r:"Positiva, negativa y cronológica."},
+ {p:"Funciones del registro.",r:"Análisis o descripción; control y tramitación; garante legal; inventarial y estadística."},
+ {p:"REG-AGE.",r:"Lo gestiona el Ministerio de Función Pública con el de Transformación Digital (art. 38 RD 203/2021; Orden PCM/1382/2021). Sus anotaciones valen ante todas las Administraciones."},
+ {p:"Oficinas de asistencia en materia de registros: naturaleza y creación.",r:"Órganos administrativos; orden del Ministro respectivo, previa autorización del de Función Pública."},
+ {p:"SIR.",r:"Sistema de Interconexión de Registros. Si se excede su capacidad, los documentos se ponen a disposición en un repositorio público."},
+ {p:"Notificación electrónica: sistemas.",r:"Comparecencia en la sede electrónica o en la Dirección Electrónica Habilitada única (DEHú), o ambas. Cuenta el primer acceso."},
+ {p:"Notificación electrónica no abierta.",r:"Pasados 10 días naturales desde la puesta a disposición, se entiende rechazada (art. 43.2 LPA)."},
+ {p:"Sucesión del interesado.",r:"Debe comunicarse en 15 días hábiles; si no, los defectos de notificación anteriores le son imputables."},
+ {p:"Archivo según Antonia Heredia.",r:"Conjuntos de documentos acumulados en un proceso natural en la gestión de una persona o institución, conservados respetando ese orden."},
+ {p:"Archivo según el art. 59 LPHE.",r:"Conjuntos orgánicos de documentos al servicio de la investigación, la cultura, la información y la gestión, y las instituciones culturales que los reúnen."},
+ {p:"Creación de archivos estatales de carácter nacional.",r:"Por real decreto (art. 61.2 LPHE)."},
+ {p:"Archivo electrónico único (art. 17 LPA).",r:"De los documentos electrónicos de procedimientos finalizados."},
+ {p:"Datos que deben alojarse en la UE (art. 46 LRJSP).",r:"Censo electoral, padrón, datos fiscales de tributos propios o cedidos y datos del Sistema Nacional de Salud."},
+ {p:"Límites del art. 105.b CE.",r:"Seguridad y defensa del Estado, averiguación de los delitos e intimidad de las personas."},
+ {p:"Datos de ideología, religión o afiliación sindical (Ley 19/2013).",r:"Solo con consentimiento expreso y por escrito, salvo que el afectado los hubiera hecho públicos."},
+ {p:"Datos de salud, origen racial o vida sexual (Ley 19/2013).",r:"Solo con consentimiento expreso o si lo ampara una norma con rango de ley."},
+ {p:"Plazos del art. 57.1.c LPHE.",r:"25 años desde la muerte del afectado o, si se desconoce, 50 años desde la fecha del documento."},
+ {p:"Objeto del RD 1708/2011.",r:"Establecer el Sistema Español de Archivos, regular el Sistema de Archivos de la AGE y el procedimiento común de acceso."},
+ {p:"Calendario de conservación.",r:"Instrumento fruto de la valoración que fija la permanencia en cada fase y el destino: eliminación o conservación permanente."},
+ {p:"Consejo de Cooperación Archivística.",r:"Órgano de cooperación entre Administraciones en archivos; adscrito al Ministerio de Cultura."},
+ {p:"Comisión de Archivos de la AGE.",r:"Coordina el Sistema de Archivos de la AGE; constituida el 16-10-2024; Orden PJC/493/2025; la CSCDA es su órgano consultivo superior."},
+ {p:"Archivos de la AGE según el ciclo vital.",r:"De oficina o gestión, centrales, intermedio (AGA) e históricos (AHN)."},
+ {p:"Archivo General de la Administración.",r:"Archivo intermedio de la AGE (Decreto 914/1969), adscrito al Ministerio de Cultura."},
+ {p:"Archivo Histórico Nacional.",r:"Archivo histórico de la AGE. Creado en 1866 con la documentación de la desamortización."},
+ {p:"Archivo de la Corona de Aragón.",r:"Barcelona; escritura de 1180; el primero con «partida de nacimiento»."},
+ {p:"Archivo General de Indias.",r:"Sevilla; Carlos III, 1785; documentación de América y Filipinas."},
+ {p:"Centro Documental de la Memoria Histórica.",r:"Salamanca; RD 697/2007; fondos de 1936 a 1978; integra el Archivo General de la Guerra Civil."},
+ {p:"Principio de respeto a la procedencia.",r:"Criterio básico: los documentos de una unidad nunca se mezclan con los de otra."},
+ {p:"Ordenación cronológica con datos incompletos.",r:"Sin día, al final del mes; sin mes, al final del año."},
+ {p:"Signatura, numeración y foliación.",r:"Sello y signatura: ángulo inferior izquierdo. Numeración: superior izquierdo. Foliación: superior derecho."},
+ {p:"Archivo de gestión: notas.",r:"1.ª edad; valor primario; no recibe transferencias; conservación total (solo expurgo de copias); no es de libre consulta."}
+]};
+
+const T1=[
+ {q:"La palabra «documento» deriva del verbo latino:",o:["Docere.","Ducere.","Dicere.","Dare."],c:0,e:"Enseñar, instruir."},
+ {q:"La definición de documento de la Ley del Patrimonio Histórico Español está en su art.:",o:["49.","59.","57.","61."],c:0,e:"El 59 define el archivo."},
+ {q:"El art. 49 LPHE excluye del concepto de documento:",o:["Los ejemplares no originales de ediciones.","Los soportes informáticos.","Las fotografías.","Las grabaciones sonoras."],c:0,e:"Incluye cualquier soporte, también el informático."},
+ {q:"Los documentos de una asociación religiosa forman parte del Patrimonio Documental si tienen más de:",o:["40 años.","100 años.","25 años.","50 años."],c:0,e:"Art. 49.3 LPHE."},
+ {q:"Los documentos de un particular forman parte del Patrimonio Documental si tienen más de:",o:["100 años.","40 años.","50 años.","25 años."],c:0,e:"Art. 49.4 LPHE."},
+ {q:"Los documentos de una empresa privada que gestiona un servicio público, relacionados con esa gestión, son Patrimonio Documental:",o:["Sea cual sea su antigüedad.","Si tienen más de 40 años.","Si tienen más de 100 años.","Nunca."],c:0,e:"Art. 49.2 LPHE."},
+ {q:"La representación condensada de documentos primarios es un documento:",o:["Secundario.","Terciario.","Primario.","Privado."],c:0,e:"Clasificación por contenido."},
+ {q:"Las listas de publicaciones secundarias son documentos:",o:["Terciarios.","Secundarios.","Primarios.","Públicos."],c:0,e:"Por contenido."},
+ {q:"El documento que con el tiempo pierde valor administrativo y gana valor:",o:["Histórico.","Legal.","Económico.","Fiscal."],c:0,e:"Valores del documento."},
+ {q:"El nombramiento de un funcionario tiene valor legal porque:",o:["El valor legal no depende de que el contenido sea jurídico.","Es un contrato.","Lo exige la LPHE.","Es un documento privado."],c:0,e:"Garantía de derechos."},
+ {q:"No es una nota del documento administrativo:",o:["Que esté firmado por un particular.","Que lo produzca un órgano administrativo.","Que pueda incorporarse a un expediente.","Que normalmente sea escrito."],c:0,e:"Los escritos de particulares no lo son."},
+ {q:"Según el manual, el libro de actas de una entidad local:",o:["No es documento administrativo.","Es un documento resolutorio.","Es un expediente.","Es un registro."],c:0,e:"No puede incorporarse a un expediente."},
+ {q:"Un escrito de alegaciones de un interesado:",o:["No es documento administrativo.","Es documento de instrucción.","Es documento resolutorio.","Es documento de constancia."],c:0,e:"No lo produce un órgano administrativo."},
+ {q:"Un plano elaborado por los servicios técnicos municipales:",o:["Puede ser documento administrativo aunque no sea escrito.","Nunca es documento administrativo.","Es documento privado.","Solo lo es si se publica."],c:0,e:"Normalmente escrito, pero no siempre."},
+ {q:"El documento administrativo electrónico se define en el art. 46 del:",o:["RD 203/2021.","RD 1708/2011.","RD 4/2010.","RD 1401/2007."],c:0,e:"Reglamento de actuación por medios electrónicos."},
+ {q:"El formato del documento administrativo electrónico debe estar admitido en:",o:["El Esquema Nacional de Interoperabilidad.","El Esquema Nacional de Seguridad.","La LPHE.","El RGPD."],c:0,e:"Art. 46 RD 203/2021."},
+ {q:"Las Administraciones emiten los documentos administrativos:",o:["Por escrito, a través de medios electrónicos, salvo que su naturaleza exija otra forma.","Siempre en papel.","Verbalmente.","A elección del funcionario."],c:0,e:"Art. 26 LPA."},
+ {q:"Documento oficial es el que:",o:["Tiene autenticidad y emana de autoridad administrativa.","Firma un notario.","Presenta un particular.","Publica la prensa."],c:0,e:"Es de oficio."},
+ {q:"Para Antonia Heredia, el documento es testimonio de la actividad del hombre fijado en:",o:["Un soporte perdurable que contiene información.","Papel.","Un registro público.","Un archivo histórico."],c:0,e:"Concepto amplio."},
+ {q:"La Administración del Estado puede declarar Patrimonio Documental documentos que:",o:["No alcancen la antigüedad exigida.","Sean ediciones no originales.","Sean privados de menos de 10 años en todo caso.","Estén en el extranjero."],c:0,e:"Art. 49.5 LPHE."}
+];
+const T2=[
+ {q:"La clasificación de los documentos administrativos que sigue el manual es de:",o:["González Navarro.","Antonia Heredia.","García de Enterría.","Schellenberg."],c:0,e:"1972."},
+ {q:"Las providencias son documentos:",o:["Resolutorios de impulsión.","De instrucción.","De constancia.","De comunicación."],c:0,e:"Impulsan el procedimiento."},
+ {q:"La decisión de un órgano colegiado se denomina:",o:["Acuerdo.","Providencia.","Diligencia.","Decreto."],c:0,e:"En lugar de resolución."},
+ {q:"La providencia, frente a la resolución:",o:["No pone fin al asunto.","Es más solemne.","La dicta la autoridad competente para resolver.","Debe ser motivada siempre."],c:0,e:"Decisión de trámite."},
+ {q:"Los informes y dictámenes son documentos:",o:["De instrucción.","Resolutorios.","De constancia.","De comunicación."],c:0,e:"Pareceres."},
+ {q:"El término dictamen se reserva para pareceres de:",o:["Órganos importantes.","Particulares.","El instructor.","Órganos colegiados de base."],c:0,e:"Diferencia con el informe."},
+ {q:"La propuesta es:",o:["Preceptiva.","Voluntaria.","Un acto de constancia.","Un documento de comunicación."],c:0,e:"La moción es voluntaria."},
+ {q:"La moción se usa hoy sobre todo para:",o:["La proposición de un vocal en un órgano colegiado.","La resolución del recurso.","La notificación.","El acta."],c:0,e:"Iniciativa propia."},
+ {q:"La diligencia es un documento:",o:["De constancia.","De instrucción.","Resolutorio.","De comunicación."],c:0,e:"Constancia de un hecho."},
+ {q:"Los certificados de antecedentes penales son documentos de constancia:",o:["Externa.","Interna.","Mixta.","De comunicación."],c:0,e:"Certificados típicos."},
+ {q:"Las listas de admitidos en oposiciones son documentos de constancia:",o:["Mixta.","Interna.","Externa.","Resolutoria."],c:0,e:"Índices, relaciones y listas."},
+ {q:"La convocatoria para comparecer en un día y hora concretos es una:",o:["Citación.","Emplazamiento.","Notificación.","Requerimiento."],c:0,e:"El emplazamiento fija un plazo."},
+ {q:"El emplazamiento es la convocatoria para comparecer:",o:["Dentro de un término.","En un día y hora concretos.","Ante notario.","Sin plazo."],c:0,e:"Diferencia con la citación."},
+ {q:"El acto formal de intimación para que alguien haga o deje de hacer algo es un:",o:["Requerimiento.","Emplazamiento.","Edicto.","Oficio rogatorio."],c:0,e:"Variante del oficio."},
+ {q:"Los edictos son documentos de comunicación con destinatario:",o:["Indeterminado.","Nominativamente determinado.","Colegiado.","Interno."],c:0,e:"Como los anuncios y boletines."},
+ {q:"El oficio es una comunicación escrita con destinatario:",o:["Nominativamente determinado.","Indeterminado.","Siempre colectivo.","Interno exclusivamente."],c:0,e:"Término genérico."},
+ {q:"La copia certificada es:",o:["La reproducción literal con diligencia que da fe.","Un certificado.","Una copia simple.","Un original heterógrafo."],c:0,e:"Distinta de la certificación."},
+ {q:"Los oficios rogatorios pertenecen al grupo de:",o:["Otros documentos administrativos.","Documentos de comunicación.","Documentos resolutorios.","Documentos de constancia."],c:0,e:"Peticiones de órganos."},
+ {q:"En la sentencia judicial firme consignada solemnemente hablamos de:",o:["Ejecutoria.","Auto.","Providencia.","Diligencia."],c:0,e:"Documentos judiciales."},
+ {q:"La cuestión de confianza es un documento parlamentario:",o:["De control.","Legislativo.","De régimen interior.","Judicial."],c:0,e:"Congreso."}
+];
+const T3=[
+ {q:"El análisis documental se incluye en la fase de:",o:["Tratamiento.","Entrada.","Salida.","Selección."],c:0,e:"Entrada, tratamiento y salida."},
+ {q:"El análisis documental da lugar a un documento:",o:["Secundario.","Primario.","Original.","Terciario."],c:0,e:"Representa el contenido de otra forma."},
+ {q:"La descripción física o bibliográfica se llama comúnmente:",o:["Catalogación.","Indización.","Condensación.","Clasificación."],c:0,e:"Primera etapa."},
+ {q:"La signatura es un elemento de:",o:["Identificación de unidades.","Descripción interna.","Descripción externa.","Condensación."],c:0,e:"Elementos descriptivos."},
+ {q:"El formato y el soporte son elementos de descripción:",o:["Externa.","Interna.","De identificación.","De contenido."],c:0,e:"Tipo, formato, volumen, soporte, lengua."},
+ {q:"Retener nociones del contenido y adecuarlas a un lenguaje es:",o:["Indizar.","Catalogar.","Resumir.","Foliar."],c:0,e:"Indización."},
+ {q:"El resumen que no incluye las conclusiones del autor es el:",o:["Indicativo.","Informativo.","Compendio.","Extracto."],c:0,e:"También llamado descriptivo."},
+ {q:"El resumen indicativo tiene una extensión de:",o:["50 a 200 palabras.","100 a 300 palabras.","20 a 50 % del original.","Una frase."],c:0,e:"Indicativo."},
+ {q:"El resumen más completo y de más valor documental es el:",o:["Informativo.","Indicativo.","Telegráfico.","Extracto."],c:0,e:"Incluye las conclusiones."},
+ {q:"El resumen a base de frases del propio texto es el:",o:["Extracto.","Compendio.","Reseña.","Telegráfico."],c:0,e:"Riesgo de elección equivocada."},
+ {q:"El resumen con comentarios críticos personales del analista es la:",o:["Reseña.","Anotación.","Compendio.","Extracto."],c:0,e:"No es propiamente resumen."},
+ {q:"El compendio representa del original entre el:",o:["20 y el 50 %.","5 y el 10 %.","50 y el 80 %.","1 y el 5 %."],c:0,e:"Versión abreviada y literaria."},
+ {q:"Cuántos tipos de resumen se citan:",o:["Nueve.","Siete.","Cinco.","Doce."],c:0,e:"Del título al texto mismo."},
+ {q:"Un libro tiene al menos:",o:["49 páginas.","100 páginas.","25 páginas.","5 páginas."],c:0,e:"Fuentes."},
+ {q:"Un folleto tiene:",o:["Más de 5 y menos de 49 páginas.","Menos de 5 páginas.","Más de 49 páginas.","Exactamente 49 páginas."],c:0,e:"Fuentes."},
+ {q:"Las bibliografías son fuentes:",o:["Secundarias.","Primarias.","Terciarias.","Unitarias."],c:0,e:"Información sobre documentos primarios."},
+ {q:"Las tesis doctorales son fuentes:",o:["Primarias.","Secundarias.","Terciarias.","De referencia."],c:0,e:"Trabajos originales."},
+ {q:"Los principales instrumentos para buscar literatura periódica son:",o:["Los boletines de sumarios.","Las tesis.","Las patentes.","Los folletos."],c:0,e:"Index Medicus, Chemical Titles."},
+ {q:"La Clasificación Decimal Universal es una variante de la ordenación:",o:["Numérica.","Cronológica.","Geográfica.","Orgánica."],c:0,e:"Decimal."},
+ {q:"El lenguaje documental supone:",o:["Un vocabulario estereotipado previo.","Usar solo palabras del autor.","No indizar.","Resumir."],c:0,e:"Traducir el lenguaje natural."}
+];
+const T4=[
+ {q:"El borrador del que surge el documento original es la:",o:["Minuta.","Copia.","Diligencia.","Ejecutoria."],c:0,e:"Escrito preparatorio."},
+ {q:"El original redactado por otra persona por voluntad del autor y validado por este es:",o:["Heterógrafo.","Autógrafo.","Copia simple.","Minuta."],c:0,e:"Original."},
+ {q:"La originalidad de un documento no garantiza:",o:["La veracidad de su contenido.","La autenticidad diplomática.","La autenticidad jurídica.","Su autoría."],c:0,e:"El autor pudo mentir."},
+ {q:"Desde la Ley 39/2015, la antigua compulsa se sustituye por:",o:["La copia auténtica.","La copia simple.","El cotejo notarial.","La copia sellada."],c:0,e:"Art. 27 LPA."},
+ {q:"Las copias auténticas tienen:",o:["La misma validez y eficacia que los originales.","Menor valor que el original.","Solo valor informativo.","Validez solo en el órgano que las expide."],c:0,e:"Art. 27.2 LPA."},
+ {q:"Las copias auténticas de documentos privados surten efectos:",o:["Solo administrativos.","Civiles y penales.","Ante notario.","Ninguno."],c:0,e:"Art. 27.1 LPA."},
+ {q:"Las copias auténticas pueden hacerse mediante funcionario habilitado o:",o:["Actuación administrativa automatizada.","El propio interesado.","Un notario en exclusiva.","Un abogado."],c:0,e:"Art. 27.1 LPA."},
+ {q:"El Registro de Funcionarios Habilitados de la AGE se regula en la:",o:["Orden PCM/1383/2021.","Orden PCM/1382/2021.","Orden PJC/493/2025.","Orden CLT/7/2025."],c:0,e:"La 1382 regula el REG-AGE."},
+ {q:"Pueden ser funcionarios habilitados:",o:["Funcionarios de carrera e interinos en activo.","Solo funcionarios de carrera A1.","El personal laboral.","Cualquier empleado."],c:0,e:"Art. 8.2.a y b TREBEP."},
+ {q:"La digitalización de una copia en papel aportada por el interesado genera una copia electrónica con:",o:["El mismo valor que la copia en papel.","Valor de original.","Ningún valor.","Valor solo informativo."],c:0,e:"Art. 49 RD 203/2021."},
+ {q:"Los documentos de un expediente están unidos por una relación de:",o:["Causa-efecto.","Jerarquía.","Antigüedad.","Materia."],c:0,e:"Notas del expediente."},
+ {q:"Las fotocopias de disposiciones legales usadas en la tramitación son documentos de:",o:["Apoyo informativo.","Contenido esencial.","Enlace.","Constancia."],c:0,e:"No forman parte del expediente."},
+ {q:"No forman parte del expediente (art. 70.4 LPA):",o:["Notas, borradores y opiniones.","Los informes preceptivos.","La resolución.","Las notificaciones."],c:0,e:"Información auxiliar o de apoyo."},
+ {q:"Los informes preceptivos y facultativos solicitados antes de la resolución:",o:["Sí forman parte del expediente.","No forman parte del expediente.","Son auxiliares.","Se destruyen."],c:0,e:"Excepción del art. 70.4."},
+ {q:"Cuando se remite el expediente electrónico, debe ir:",o:["Completo, foliado, autentificado y con índice autentificado.","Solo con la resolución.","En papel.","Sin índice."],c:0,e:"Art. 70.3 LPA."},
+ {q:"Un mismo documento puede formar parte de:",o:["Distintos expedientes electrónicos.","Un solo expediente.","Ningún expediente.","Solo del archivo."],c:0,e:"Art. 70.3."},
+ {q:"En el expediente debe constar copia electrónica certificada de:",o:["La resolución adoptada.","Todas las alegaciones.","Los borradores.","El DNI."],c:0,e:"Art. 70.2."},
+ {q:"El interesado no está obligado a aportar documentos que:",o:["Ya obren en poder de las Administraciones.","Sean originales en ningún caso.","Le pidan en plazo.","Sean electrónicos."],c:0,e:"Art. 53.1.d LPA."},
+ {q:"Los interesados pueden aportar documentos en cualquier fase:",o:["Anterior al trámite de audiencia.","Posterior a la resolución.","Solo en la iniciación.","Solo en la prueba."],c:0,e:"Art. 53.1.e."},
+ {q:"Si excepcionalmente debe presentarse un original, el interesado tiene derecho a:",o:["Obtener una copia autenticada.","Que se le devuelva en el acto.","No presentarlo.","Una indemnización."],c:0,e:"Art. 53.1.c."}
+];
+const T5=[
+ {q:"Las oficinas de registro de la AGE tienen la consideración de:",o:["Órgano administrativo.","Unidad sin efectos externos.","Entidad pública.","Servicio privado."],c:0,e:"Funciones con efectos frente a terceros."},
+ {q:"El Registro Electrónico General se regula en el art.:",o:["16 LPA.","17 LPA.","70 LPA.","26 LPA."],c:0,e:"El 17 regula el archivo."},
+ {q:"Los registros electrónicos entraron en vigor el:",o:["2 de abril de 2021.","2 de octubre de 2016.","1 de enero de 2020.","2 de octubre de 2018."],c:0,e:"Con el RD 203/2021."},
+ {q:"La disposición de creación de un registro electrónico debe especificar, entre otros:",o:["La fecha y hora oficial y los días inhábiles.","El nombre de los funcionarios.","El presupuesto.","El horario de verano."],c:0,e:"Art. 16.1 LPA."},
+ {q:"No es un elemento del asiento (art. 16.3 LPA):",o:["La firma del funcionario de registro.","El número.","La fecha y hora.","La identificación del interesado."],c:0,e:"Siete elementos."},
+ {q:"Los asientos se anotan respetando el orden:",o:["Temporal de recepción o salida.","Alfabético.","De importancia.","Por órganos."],c:0,e:"Art. 16.3."},
+ {q:"Puede presentarse un escrito dirigido a la AGE en el registro electrónico de un ayuntamiento:",o:["Sí.","No.","Solo si hay convenio.","Solo en papel."],c:0,e:"Art. 16.4.a LPA."},
+ {q:"No es un lugar de presentación del art. 16.4 LPA:",o:["El correo electrónico ordinario del funcionario.","Las oficinas de Correos.","Los consulados.","Las oficinas de asistencia en registros."],c:0,e:"No es un registro."},
+ {q:"Los documentos presentados en papel se:",o:["Digitalizan y se devuelven los originales.","Archivan en papel.","Destruyen.","Envían por correo."],c:0,e:"Salvo excepciones."},
+ {q:"No se tienen por presentados en el registro los documentos:",o:["Cuyo régimen especial establezca otra forma de presentación.","En papel.","Fuera de horario.","En lengua cooficial."],c:0,e:"Art. 16.8."},
+ {q:"Si se detecta código malicioso en un documento ya registrado:",o:["Se requiere la subsanación al interesado.","Se archiva.","Se considera no presentado sin más.","Se denuncia."],c:0,e:"Art. 39 RD 203/2021."},
+ {q:"Si los documentos exceden la capacidad del SIR:",o:["Se ponen a disposición en un repositorio de intercambio.","Se rechazan.","Se envían en papel.","Se fraccionan."],c:0,e:"Art. 39."},
+ {q:"El registro da fe en sentido negativo cuando:",o:["Se presume que el documento no registrado no entró.","Rechaza un documento.","Anula un asiento.","Borra datos."],c:0,e:"Triple constancia."},
+ {q:"El REG-AGE lo gestiona el Ministerio competente en:",o:["Función Pública.","Hacienda.","Interior.","Cultura."],c:0,e:"Con Transformación Digital."},
+ {q:"Las anotaciones en el REG-AGE tienen eficacia:",o:["Ante todas las Administraciones.","Solo en la AGE.","Solo en el Ministerio.","Ninguna."],c:0,e:"Art. 38 RD 203/2021."},
+ {q:"Las oficinas de asistencia en registros se crean por:",o:["Orden del Ministro respectivo, previa autorización del de Función Pública.","Real decreto.","Ley.","Resolución del Subsecretario."],c:0,e:"Art. 59.2 LRJSP."},
+ {q:"Iniciar el apoderamiento apud acta presencial es función de:",o:["Las oficinas de asistencia en registros.","El archivo central.","El AGA.","La CSCDA."],c:0,e:"Art. 40 RD 203/2021."},
+ {q:"Con notificación por sede y por DEHú, cuenta:",o:["El primer acceso o rechazo.","El último acceso.","La sede siempre.","La DEHú siempre."],c:0,e:"Art. 42 RD."},
+ {q:"Una notificación electrónica no abierta se entiende rechazada a los:",o:["10 días naturales.","10 días hábiles.","15 días hábiles.","1 mes."],c:0,e:"Art. 43.2 LPA."},
+ {q:"El sucesor del interesado debe comunicar la sucesión en:",o:["15 días hábiles.","10 días naturales.","1 mes.","3 meses."],c:0,e:"Art. 42 RD 203/2021."}
+];
+const T6=[
+ {q:"La definición legal de archivo de la LPHE está en el art.:",o:["59.","49.","57.","66."],c:0,e:"Conjuntos orgánicos."},
+ {q:"Los archivos estatales de carácter nacional se crean por:",o:["Real decreto.","Ley.","Orden ministerial.","Resolución."],c:0,e:"Art. 61.2 LPHE."},
+ {q:"El archivo electrónico único (art. 17 LPA) es para documentos de procedimientos:",o:["Finalizados.","En tramitación.","Iniciados de oficio.","Sancionadores."],c:0,e:"Idea clave."},
+ {q:"Las medidas de seguridad del archivo electrónico siguen el:",o:["Esquema Nacional de Seguridad.","Esquema Nacional de Interoperabilidad.","Código Penal.","Reglamento de la LPHE."],c:0,e:"Art. 17.3."},
+ {q:"Si una CCAA no se adhiere a las plataformas de la AGE para el archivo, debe justificarlo en términos de:",o:["Eficiencia.","Lengua.","Soberanía.","Urgencia."],c:0,e:"Art. 7 LO 2/2012."},
+ {q:"Deben alojarse dentro de la UE los datos de:",o:["Censo electoral y padrón.","Contratación menor.","Nóminas.","Correo interno."],c:0,e:"Art. 46 LRJSP."},
+ {q:"El art. 105.b CE no excluye el acceso cuando afecte a:",o:["La eficacia administrativa.","La seguridad y defensa.","La averiguación de delitos.","La intimidad."],c:0,e:"Tres excepciones."},
+ {q:"La Ley 19/2013 prevé un número de límites al acceso de:",o:["12.","3.","8.","20."],c:0,e:"Art. 14."},
+ {q:"Para acceder a datos sobre religión de un tercero hace falta:",o:["Su consentimiento expreso y por escrito.","Una ponderación.","Una ley.","Nada."],c:0,e:"Salvo que los hiciera públicos."},
+ {q:"Para datos de salud de un tercero hace falta:",o:["Su consentimiento expreso o una norma con rango de ley.","Su consentimiento verbal.","La autorización del archivero.","Nada."],c:0,e:"Art. 15.1."},
+ {q:"Según el art. 57 LPHE, si se conoce la fecha de la muerte, los documentos con datos personales sensibles son consultables pasados:",o:["25 años desde la muerte.","50 años desde la muerte.","100 años.","10 años."],c:0,e:"Si no, 50 años desde el documento."},
+ {q:"Si se desconoce la fecha de la muerte, el plazo es de:",o:["50 años desde la fecha del documento.","25 años desde el documento.","100 años.","75 años."],c:0,e:"Art. 57.1.c LPHE."},
+ {q:"Si el acceso se efectúa con los datos disociados:",o:["No rigen las limitaciones de datos personales.","Se deniega siempre.","Requiere consentimiento.","Requiere ley."],c:0,e:"Art. 15.4."},
+ {q:"Si un límite no afecta a toda la información:",o:["Se concede acceso parcial.","Se deniega todo.","Se suspende.","Se pide consentimiento."],c:0,e:"Art. 16 Ley 19/2013."},
+ {q:"El archivo electrónico único de cada Administración se define en el art. 55 del:",o:["RD 203/2021.","RD 1708/2011.","RD 1401/2007.","RD 4/2010."],c:0,e:"Conjunto de sistemas y servicios."},
+ {q:"La gestión del archivo electrónico único garantiza, entre otras, la:",o:["Cadena de custodia.","Publicidad total.","Eliminación automática.","Gratuidad."],c:0,e:"Art. 55 RD 203/2021."},
+ {q:"Los documentos electrónicos que afecten a derechos deben conservarse en soportes:",o:["Electrónicos.","De papel.","Microfilmados.","Magnéticos exclusivamente."],c:0,e:"Art. 46 LRJSP."},
+ {q:"Según Heredia, los documentos del archivo se acumulan en un proceso:",o:["Natural.","Artificial.","Aleatorio.","Planificado por el archivero."],c:0,e:"En la gestión."},
+ {q:"La reforma de la Ley 19/2013 (Ley de Administración Abierta), a noviembre de 2026:",o:["No se ha aprobado.","Está en vigor.","Se aprobó por decreto-ley.","Derogó la Ley 19/2013."],c:0,e:"Disolución de las Cortes."},
+ {q:"El Esquema Nacional de Seguridad vigente se aprobó por el:",o:["RD 311/2022.","RD 4/2010.","RD 203/2021.","RD 1708/2011."],c:0,e:"El ENI es el RD 4/2010."}
+];
+const T7=[
+ {q:"El Sistema Español de Archivos se establece por el:",o:["RD 1708/2011.","RD 1401/2007.","Decreto 914/1969.","RD 203/2021."],c:0,e:"Art. 66 LPHE."},
+ {q:"La cooperación de los sistemas autonómicos con el Sistema Español de Archivos es:",o:["Voluntaria.","Obligatoria.","Prohibida.","Automática."],c:0,e:"Principio de voluntariedad."},
+ {q:"Los planes de cooperación archivística los aprueba:",o:["El Consejo de Ministros.","El Consejo de Cooperación Archivística.","Las Cortes.","Cada CCAA."],c:0,e:"RD 1708/2011."},
+ {q:"El órgano de cooperación entre Administraciones en materia de archivos es el:",o:["Consejo de Cooperación Archivística.","CSCDA.","AGA.","Consejo de Estado."],c:0,e:"Ministerio de Cultura."},
+ {q:"El instrumento que fija la permanencia de los documentos en cada fase es el:",o:["Calendario de conservación.","Cuadro de clasificación.","Inventario.","Catálogo."],c:0,e:"Fruto de la valoración."},
+ {q:"El estudio de los valores administrativos, jurídicos, fiscales e históricos de los documentos es la:",o:["Valoración documental.","Identificación.","Descripción.","Eliminación."],c:0,e:"RD 1708/2011."},
+ {q:"La Comisión de Archivos de la AGE se constituyó el:",o:["16 de octubre de 2024.","18 de noviembre de 2011.","1 de enero de 2012.","14 de mayo de 2025."],c:0,e:"Orden PJC/493/2025."},
+ {q:"La CSCDA es hoy, respecto de la Comisión de Archivos de la AGE:",o:["Su órgano consultivo superior.","Su presidencia.","Un órgano independiente sin relación.","Un órgano suprimido."],c:0,e:"Orden PJC/493/2025."},
+ {q:"Los archivos de la AGE se clasifican según el ciclo vital en:",o:["Gestión, centrales, intermedio e históricos.","Públicos y privados.","Primarios y secundarios.","Estatales y locales."],c:0,e:"Cuatro edades."},
+ {q:"Eliminar los documentos de apoyo informativo antes de transferir es función de:",o:["El archivo de gestión.","El archivo central.","El AGA.","El AHN."],c:0,e:"RD 1708/2011."},
+ {q:"Elaborar el cuadro de clasificación corresponde al:",o:["Archivo central.","Archivo de gestión.","Archivo histórico.","Registro."],c:0,e:"Identificación de series."},
+ {q:"El archivo intermedio de la AGE es el:",o:["Archivo General de la Administración.","Archivo Histórico Nacional.","Archivo de Simancas.","Archivo central de cada Ministerio."],c:0,e:"Decreto 914/1969."},
+ {q:"Las estrategias de conservación electrónica a medio plazo corresponden al:",o:["AGA.","AHN.","Archivo de gestión.","Archivo central."],c:0,e:"El AHN, a largo plazo."},
+ {q:"El archivo histórico de la AGE es el:",o:["Archivo Histórico Nacional.","AGA.","Archivo de Indias.","Archivo de Simancas."],c:0,e:"Ministerio de Cultura."},
+ {q:"En la periferia hacen de archivo intermedio e histórico:",o:["Los Archivos Históricos Provinciales.","Las Delegaciones del Gobierno.","Los ayuntamientos.","Las Subdelegaciones."],c:0,e:"RD 1708/2011."},
+ {q:"El Archivo Histórico Provincial de Madrid se creó por:",o:["La Orden CLT/7/2025.","El RD 836/2017.","El RD 697/2007.","La Ley 20/2022."],c:0,e:"Integra el de Protocolos."},
+ {q:"El Archivo Histórico Nacional se creó en:",o:["1866.","1785.","1180.","1969."],c:0,e:"RD de 28 de marzo de 1866."},
+ {q:"El Archivo General de Indias lo creó:",o:["Carlos III en 1785.","Carlos V.","Felipe II en 1588.","Isabel II."],c:0,e:"Sevilla."},
+ {q:"El Centro Documental de la Memoria Histórica está en:",o:["Salamanca.","Madrid.","Toledo.","Alcalá de Henares."],c:0,e:"RD 697/2007."},
+ {q:"El Archivo Histórico de la Nobleza tiene su sede en:",o:["Toledo.","Madrid.","Simancas.","Sevilla."],c:0,e:"RD 836/2017."}
+];
+const T8=[
+ {q:"Un expediente de 2010, cerrado ese año y sin valor histórico, ¿dónde está en 2026 según los plazos clásicos?",o:["En el AGA, pendiente de su calendario.","En el archivo de gestión.","En el AHN.","En el registro."],c:0,e:"16 años: intermedio (referencia de 15 años)."},
+ {q:"Un expediente sigue en tramitación. ¿Puede un investigador consultarlo libremente?",o:["No: los archivos de gestión no son de libre consulta.","Sí.","Sí, con un año de espera.","Solo en el AHN."],c:0,e:"Art. 57.1 LPHE."},
+ {q:"Ordenando cronológicamente, ¿dónde va un documento de marzo de 2025 sin día?",o:["Al final de marzo de 2025.","Al principio de marzo.","Al final de 2025.","Al principio de 2025."],c:0,e:"Sin día, al final del mes."},
+ {q:"Ordenando geográficamente, un documento de Sevilla sin municipio va:",o:["Al final del grupo de Sevilla.","Al principio de Sevilla.","Al final de todo.","Se descarta."],c:0,e:"Al final del grupo inmediatamente superior."},
+ {q:"Un archivero quiere foliar un expediente para microfilmarlo. ¿Dónde escribe el número de folio?",o:["Ángulo superior derecho, a lápiz.","Ángulo inferior izquierdo.","Ángulo superior izquierdo.","Centro inferior."],c:0,e:"La numeración va arriba a la izquierda."},
+ {q:"Un compañero se lleva un expediente del archivo de gestión. Lo correcto es:",o:["Solicitud por escrito y dejar un testigo en su lugar.","No dejar rastro.","Fotocopiarlo siempre.","Avisar al AHN."],c:0,e:"Préstamo."},
+ {q:"Una notificación se puso a disposición en la DEHú el 16-11-2026 y no se abre. Se entiende rechazada el:",o:["26-11-2026.","30-11-2026.","16-12-2026.","27-11-2026."],c:0,e:"10 días naturales."},
+ {q:"La misma notificación se abre en la sede el 18-11 y en la DEHú el 20-11. Se entiende practicada el:",o:["18-11.","20-11.","26-11.","19-11."],c:0,e:"Cuenta el primer acceso."},
+ {q:"Una sociedad limitada presenta una solicitud en papel en una oficina de registro. Procede:",o:["Requerirle la subsanación electrónica.","Admitirla.","Archivarla.","Devolverla sin más."],c:0,e:"Art. 68.4 LPA."},
+ {q:"El último asiento de un registro es el 1.572. El siguiente documento recibe el número:",o:["1.573.","1.572 bis.","1.","1.572-2."],c:0,e:"Número de orden."},
+ {q:"Un ciudadano quiere presentar un escrito a la AGE desde Buenos Aires en papel. Puede hacerlo en:",o:["El consulado de España.","La embajada argentina.","Una notaría argentina.","No puede."],c:0,e:"Art. 16.4.c."},
+ {q:"Un historiador pide en 2026 un expediente clínico de 1950 de una persona cuya fecha de muerte se desconoce. ¿Puede consultarlo?",o:["Sí: han pasado más de 50 años desde el documento.","No, nunca.","Solo con autorización judicial.","Solo en 2050."],c:0,e:"Art. 57.1.c LPHE."},
+ {q:"El mismo historiador pide un expediente clínico de 1990 de una persona fallecida en 2010. ¿Puede consultarlo libremente?",o:["No hasta 2035 (25 años desde la muerte), salvo consentimiento o disociación.","Sí.","No hasta 2040.","No hasta 2060."],c:0,e:"25 años desde la muerte."},
+ {q:"Un ciudadano entrega una fotocopia simple de su título. La oficina de registro:",o:["La digitaliza y genera una copia electrónica con el mismo valor que la copia presentada.","La compulsa.","La rechaza.","Exige el original siempre."],c:0,e:"Art. 49 RD 203/2021."},
+ {q:"Un funcionario tramita un expediente y anota que se ha recibido un informe. Ha extendido una:",o:["Diligencia.","Providencia.","Certificación.","Moción."],c:0,e:"Constancia de un hecho."},
+ {q:"Un órgano necesita convocar a un interesado para que comparezca en los 10 días siguientes. Le dirige un:",o:["Emplazamiento.","Citación.","Edicto.","Requerimiento."],c:0,e:"Dentro de un plazo."},
+ {q:"Un expediente electrónico debe remitirse al juzgado. Debe enviarse:",o:["Completo, foliado, autentificado y con índice.","Solo la resolución.","En papel.","Sin índice."],c:0,e:"Art. 70.3 LPA."},
+ {q:"Se pide información con datos de ideología de un afectado que no los ha hecho públicos ni consiente. Procede:",o:["Denegar el acceso, salvo disociación.","Ponderar.","Conceder.","Pedir informe al Consejo de Estado."],c:0,e:"Art. 15.1 Ley 19/2013."},
+ {q:"Una unidad quiere destruir notas interiores y duplicados de hace 4 años. ¿Es posible?",o:["Sí: pueden destruirse entre los 3 y 5 años.","No, nunca.","Solo tras 25 años.","Solo con orden judicial."],c:0,e:"Manual."},
+ {q:"En el archivo de gestión, ¿puede eliminarse un documento original?",o:["No: el expurgo solo alcanza a las copias.","Sí, si es antiguo.","Sí, siempre.","Solo los lunes."],c:0,e:"Ante la duda, consultar a un archivero."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"📄",name:"Concepto de documento",desc:"Doctrina, LPHE, LPA, tipos y valores.",qs:T1},
+ {id:"t2",ic:"🗂️",name:"Clases de documentos administrativos",desc:"González Navarro y definiciones.",qs:T2},
+ {id:"t3",ic:"🔎",name:"Análisis documental y fuentes",desc:"Catalogación, indización, resúmenes.",qs:T3},
+ {id:"t4",ic:"📑",name:"Expediente y copias",desc:"Originales, copias auténticas, art. 70 LPA.",qs:T4},
+ {id:"t5",ic:"📥",name:"Registro y notificaciones",desc:"Art. 16 LPA, RD 203/2021, REG-AGE, DEHú.",qs:T5},
+ {id:"t6",ic:"🔐",name:"Archivo: concepto y acceso",desc:"LPHE, LPA, LRJSP, Ley 19/2013.",qs:T6},
+ {id:"t7",ic:"🏛️",name:"Sistema de Archivos y ciclo vital",desc:"RD 1708/2011 y archivos históricos.",qs:T7},
+ {id:"t8",ic:"🧩",name:"Casos prácticos",desc:"Ordenación, plazos, acceso y registro.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+const ESQ=[
+ {id:"e1",title:"Patrimonio Documental (art. 49 LPHE)",intro:"Antigüedad exigida.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Patrimonio Documental</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Organismos públicos</b>De {{0}} época</div>
+   <div class="sch-box alt"><b>Entidades políticas, sindicales, religiosas</b>Más de {{1}} años</div>
+   <div class="sch-box"><b>Otros particulares</b>Más de {{2}} años</div>
+   <div class="sch-box alt"><b>Excluidos</b>Ejemplares no {{3}} de ediciones</div>
+  </div></div>`,
+  blanks:[{o:["cualquier","la última","la contemporánea","la medieval"],why:"Art. 49.2."},{o:["40","25","50","100"],why:"Art. 49.3."},{o:["100","40","50","200"],why:"Art. 49.4."},{o:["originales","digitales","oficiales","firmados"],why:"Art. 49.1."}]},
+ {id:"e2",title:"Notas del documento administrativo",intro:"Y figuras afines.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Documento administrativo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Autor</b>Un órgano {{0}}</div>
+   <div class="sch-box alt"><b>Destino</b>Incorporable a un {{1}}</div>
+   <div class="sch-box"><b>Forma</b>Normalmente {{2}}, no siempre</div>
+   <div class="sch-box alt"><b>No lo son</b>Las {{3}} de los particulares</div>
+  </div></div>`,
+  blanks:[{o:["administrativo","judicial","privado","parlamentario"],why:"Primera nota."},{o:["expediente","archivo","registro","boletín"],why:"El libro de actas no lo es."},{o:["escrito","verbal","digital","firmado"],why:"Un plano puede serlo."},{o:["instancias","copias auténticas","providencias","diligencias"],why:"Producen efectos, pero no son administrativas."}]},
+ {id:"e3",title:"Ordena: los cinco grupos de González Navarro",intro:"En el orden del manual.",type:"order",
+  items:[{t:"Resolutorios",why:"Providencias, resoluciones, acuerdos, licencias."},{t:"De instrucción",why:"Informes, dictámenes, propuestas, mociones."},{t:"De constancia",why:"Diligencias, actas, certificados, títulos."},{t:"De comunicación",why:"Oficios, notificaciones, edictos, boletines."},{t:"Otros documentos administrativos",why:"Duplicados, contables, oficios rogatorios, poderes."}]},
+ {id:"e4",title:"Variantes del oficio",intro:"Documentos de comunicación.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Oficio (destinatario determinado)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>{{0}}</b>Comunica una resolución o acto importante</div>
+   <div class="sch-box alt"><b>{{1}}</b>Sitio, día y hora</div>
+   <div class="sch-box"><b>{{2}}</b>Comparecer dentro de un plazo</div>
+   <div class="sch-box alt"><b>{{3}}</b>Que entregue, haga o deje de hacer algo</div>
+  </div></div>`,
+  blanks:[{o:["Notificación","Edicto","Anuncio","Diligencia"],why:"Acto formal."},{o:["Citación","Emplazamiento","Requerimiento","Providencia"],why:"Fecha y hora concretas."},{o:["Emplazamiento","Citación","Notificación","Moción"],why:"Término."},{o:["Requerimiento","Emplazamiento","Dictamen","Acuerdo"],why:"Intimación."}]},
+ {id:"e5",title:"Tipos de resumen",intro:"Condensación.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Resúmenes</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Indicativo</b>Sin conclusiones · {{0}} palabras</div>
+   <div class="sch-box alt"><b>Informativo</b>Con conclusiones · {{1}} palabras</div>
+   <div class="sch-box"><b>{{2}}</b>Frases del propio texto</div>
+   <div class="sch-box alt"><b>Compendio</b>Del {{3}} del original</div>
+  </div></div>`,
+  blanks:[{o:["50-200","100-300","10-50","300-500"],why:"Descriptivo."},{o:["100-300","50-200","200-500","20-50"],why:"El de más valor."},{o:["Extracto","Reseña","Anotación","Telegráfico"],why:"Riesgo de mala elección."},{o:["20 al 50 %","5 al 10 %","50 al 80 %","1 al 5 %"],why:"Versión abreviada literaria."}]},
+ {id:"e6",title:"Ordena: fases del proceso documental",intro:"Del documento en bruto a la comunicación.",type:"order",
+  items:[{t:"Entrada: selección de fuentes",why:"Exteriores e interiores."},{t:"Tratamiento: análisis (catalogación, indización, resumen)",why:"Genera un documento secundario."},{t:"Tratamiento: búsqueda e instrumentos de recuperación",why:"Selección."},{t:"Salida: comunicación del documento o de la información",why:"Fase final."}]},
+ {id:"e7",title:"Copias auténticas (art. 27 LPA)",intro:"Sustituyen a la compulsa.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Copia auténtica</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Quién</b>Funcionario {{0}} o actuación automatizada</div>
+   <div class="sch-box alt"><b>Valor</b>Igual que el {{1}}</div>
+   <div class="sch-box"><b>De documento privado</b>Solo efectos {{2}}</div>
+   <div class="sch-box alt"><b>Registro de habilitados</b>Orden PCM/{{3}}/2021</div>
+  </div></div>`,
+  blanks:[{o:["habilitado","de carrera A1","jefe de servicio","notario"],why:"Art. 27.1."},{o:["original","borrador","resumen","duplicado"],why:"Art. 27.2."},{o:["administrativos","civiles","penales","mercantiles"],why:"Art. 27.1."},{o:["1383","1382","493","7"],why:"La 1382 es la del REG-AGE."}]},
+ {id:"e8",title:"El asiento registral (art. 16.3 LPA)",intro:"Elementos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Asiento</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Orden</b>{{0}} de recepción o salida</div>
+   <div class="sch-box alt"><b>Identificación</b>Número y {{1}} expresivo</div>
+   <div class="sch-box"><b>Momento</b>Fecha y {{2}}</div>
+   <div class="sch-box alt"><b>Después</b>Se cursa sin {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Temporal","Alfabético","Jerárquico","Aleatorio"],why:"Art. 16.3."},{o:["epígrafe","resumen","título","sello"],why:"Naturaleza del documento."},{o:["hora","lugar","firma","sello"],why:"De presentación."},{o:["dilación","firma","copia","registro"],why:"A los destinatarios."}]},
+ {id:"e9",title:"Lugares de presentación (art. 16.4 LPA)",intro:"Cinco opciones.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">¿Dónde presentar?</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>a)</b>Registro electrónico de {{0}} Administración</div>
+   <div class="sch-box alt"><b>b)</b>Oficinas de {{1}}</div>
+   <div class="sch-box"><b>c)</b>Representaciones diplomáticas y oficinas {{2}}</div>
+   <div class="sch-box alt"><b>d)</b>Oficinas de {{3}} en materia de registros</div>
+  </div></div>`,
+  blanks:[{o:["cualquier","la destinataria solo","la autonómica","la local"],why:"Interoperabilidad."},{o:["Correos","Hacienda","Empleo","Tráfico"],why:"Reglamentariamente."},{o:["consulares","comerciales","de turismo","militares"],why:"En el extranjero."},{o:["asistencia","información","gestión","calidad"],why:"Digitalizan."}]},
+ {id:"e10",title:"Notificaciones electrónicas",intro:"Art. 42 RD 203/2021 y art. 43 LPA.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Notificación electrónica</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Sistemas</b>Sede electrónica o {{0}}</div>
+   <div class="sch-box alt"><b>Si ambos</b>Cuenta el {{1}} acceso</div>
+   <div class="sch-box"><b>Sin acceso</b>Rechazada a los {{2}} días naturales</div>
+   <div class="sch-box alt"><b>Sucesión</b>Comunicarla en {{3}} días hábiles</div>
+  </div></div>`,
+  blanks:[{o:["DEHú","SIR","REG-AGE","Cl@ve"],why:"Dirección Electrónica Habilitada única."},{o:["primer","último","segundo","más reciente"],why:"Art. 42.1."},{o:["10","15","20","5"],why:"Art. 43.2 LPA."},{o:["15","10","30","5"],why:"Art. 42 RD 203/2021."}]},
+ {id:"e11",title:"Acceso a datos personales en archivos",intro:"Ley 19/2013 y art. 57 LPHE.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Datos personales</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ideología, religión</b>Consentimiento expreso y por {{0}}</div>
+   <div class="sch-box alt"><b>Salud, origen racial</b>Consentimiento o norma con rango de {{1}}</div>
+   <div class="sch-box"><b>Art. 57 LPHE</b>{{2}} años desde la muerte</div>
+   <div class="sch-box alt"><b>Muerte desconocida</b>{{3}} años desde el documento</div>
+  </div></div>`,
+  blanks:[{o:["escrito","teléfono","notario","juez"],why:"Art. 15.1."},{o:["ley","reglamento","orden","circular"],why:"Art. 15.1."},{o:["25","50","10","100"],why:"Art. 57.1.c."},{o:["50","25","100","75"],why:"Art. 57.1.c."}]},
+ {id:"e12",title:"Ordena: el ciclo vital en la AGE",intro:"De la 1.ª a la 4.ª edad.",type:"order",
+  items:[{t:"Archivo de oficina o gestión",why:"Documentos en tramitación."},{t:"Archivo central del Ministerio u organismo",why:"Tras finalizar la tramitación."},{t:"Archivo intermedio (AGA)",why:"Decreto 914/1969."},{t:"Archivo histórico (AHN)",why:"Valor histórico."}]},
+ {id:"e13",title:"Órganos del Sistema de Archivos",intro:"RD 1708/2011 y novedades.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Órganos archivísticos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Cooperación entre Administraciones</b>Consejo de {{0}} Archivística</div>
+   <div class="sch-box alt"><b>Coordina el sistema de la AGE</b>Comisión de {{1}} de la AGE</div>
+   <div class="sch-box"><b>Constituida</b>16-10-{{2}}</div>
+   <div class="sch-box alt"><b>Órgano consultivo superior</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Cooperación","Coordinación","Calificación","Conservación"],why:"Ministerio de Cultura."},{o:["Archivos","Documentos","Calidad","Patrimonio"],why:"Orden PJC/493/2025."},{o:["2024","2011","2022","2025"],why:"Orden PJC/493/2025."},{o:["CSCDA","AGA","AHN","SIR"],why:"Comisión Superior Calificadora."}]},
+ {id:"e14",title:"Operaciones de ordenación",intro:"Dónde se anota cada cosa.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Operaciones</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Sello y signatura</b>Ángulo {{0}} izquierdo</div>
+   <div class="sch-box alt"><b>Numeración</b>Ángulo superior {{1}}</div>
+   <div class="sch-box"><b>Foliación</b>Ángulo superior {{2}}</div>
+   <div class="sch-box alt"><b>Agregación</b>Tras el {{3}} completo</div>
+  </div></div>`,
+  blanks:[{o:["inferior","superior","central","exterior"],why:"Medida de seguridad."},{o:["izquierdo","derecho","central","inferior"],why:"Número de orden en la serie."},{o:["derecho","izquierdo","central","inferior"],why:"Clave para microfilmar."},{o:["inventario","expurgo","préstamo","catálogo"],why:"Con testigo."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("op2c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("op2c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
