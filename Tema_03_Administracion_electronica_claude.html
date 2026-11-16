@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque 2 · Tema 3 · Administración electrónica y servicios al ciudadano · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">OP3</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Organización de oficinas públicas</small>
+      <b>Administración electrónica</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .steps-out{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .steps-out div{padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .steps-out div b{color:var(--a1)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px;word-break:break-word}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .chks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-top:6px}
+    .chks label{display:flex;flex-direction:row;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem;font-weight:500;cursor:pointer}
+    .chks input{margin-top:3px;flex:none;width:auto}
+    .chks label small{display:block;color:var(--muted);font-size:.76rem}
+    .lvl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+    .lvl div{padding:10px 8px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.8rem;text-align:center;line-height:1.3}
+    .lvl div b{display:block;font-size:.92rem;margin-bottom:2px}
+    .lvl div.on{border-color:var(--a1);background:rgba(124,58,237,.12);box-shadow:0 0 0 2px rgba(124,58,237,.25)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque 2 · Tema 3 · Organización de oficinas públicas</span>
+    <h1>Administración electrónica <span>y servicios al ciudadano</span></h1>
+    <p>Resumen de alto rendimiento del manual, actualizado a <strong>noviembre de 2026</strong>: la cartera europea de identidad digital (eIDAS 2) debe estar disponible antes del 24-12-2026, el DNI en el móvil (MiDNI) y la desaparición de la Sociedad Limitada Nueva Empresa. También corrijo los servicios del manual que ya no existen. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un comprobador de quién está obligado a relacionarse electrónicamente, con la fecha de efectos del cambio de canal.</li>
+      <li>Un simulador de notificación electrónica en la sede y en la DEHú: primer acceso, rechazo y aviso.</li>
+      <li>Un entrenador de los contenidos y servicios mínimos de una sede electrónica.</li>
+      <li>Un asistente para crear sedes, sedes asociadas y portales en el ámbito estatal.</li>
+      <li>Un clasificador de los niveles de las oficinas integradas.</li>
+      <li>Un entrenador «¿de quién es esta web?» y un mapa de los servicios comunes de administración electrónica.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">15</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">75</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('ob').scrollIntoView({behavior:'smooth'})">¿Obligado? ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('nt').scrollIntoView({behavior:'smooth'})">Notificaciones ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('sd').scrollIntoView({behavior:'smooth'})">Sede ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado o corregido respecto al manual:</strong>
+    <ul>
+      <li><strong>eIDAS 2 (Reglamento (UE) 2024/1183)</strong>: en vigor desde el 20-5-2024. Cada Estado debe ofrecer <strong>al menos una cartera europea de identidad digital gratuita antes del 24-12-2026</strong>; su uso será voluntario. En España está en audiencia pública (septiembre de 2026) un proyecto de real decreto que regula ese ecosistema.</li>
+      <li><strong>DNI en el móvil</strong>: la app <strong>MiDNI</strong> funciona desde 2025, y el permiso de conducir digital está en miDGT.</li>
+      <li><strong>Sociedad Limitada Nueva Empresa (SLNE)</strong>: el manual la presenta como vigente, pero la <strong>Ley 18/2022 «Crea y Crece»</strong> la suprimió. Hoy cualquier sociedad limitada se constituye por vía telemática con el <strong>DUE a través de CIRCE</strong>, con un capital mínimo de 1 euro.</li>
+      <li><strong>Servicios del manual que han cambiado</strong>:
+        <ul>
+          <li>La «Dirección Electrónica Única» y la antigua DEH se sustituyen por la <strong>Dirección Electrónica Habilitada única (DEHú)</strong>.</li>
+          <li>El proyecto STORK dio paso a los <strong>nodos eIDAS</strong>.</li>
+          <li>La sustitución de certificados en papel (SCSP) funciona hoy a través de la <strong>Plataforma de Intermediación de Datos</strong>.</li>
+          <li>La «Red 060» y su marca han quedado en el teléfono 060 y el Punto de Acceso General.</li>
+        </ul>
+      </li>
+      <li><strong>Oficina presencial del Punto de Acceso General</strong>: el manual la sitúa en la calle María de Molina, 50. La carta de servicios del Centro de Información Administrativa la ubica en la <strong>calle Francisco de Rojas, 12</strong> (Madrid).</li>
+      <li><strong>Organismos citados en el manual</strong>:
+        <ul>
+          <li>La DG de Organización Administrativa y Procedimientos ya no existe: hoy es la <strong>DG de Gobernanza Pública</strong>.</li>
+          <li>La Secretaría General de Administración Digital está suprimida: hoy es la <strong>Agencia Estatal de Administración Digital</strong> (RD 1118/2024), como el propio manual advierte.</li>
+          <li>El preámbulo del RD 203/2021 cita la Agenda <strong>España Digital 2025</strong>, actualizada después como España Digital 2026.</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="ob">
+    <div><span class="kicker">Art. 14 LPA · arts. 3-4 RD 203/2021</span><h2>¿Está obligado a relacionarse electrónicamente?</h2></div>
+    <p>Elige quién se relaciona con la Administración. Si es una persona física que cambia de canal, calcula desde cuándo produce efectos.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>¿Quién es?<select id="ob-t">
+        <option value="pf">Persona física (particular)</option>
+        <option value="pj">Persona jurídica (S.L., asociación, fundación…)</option>
+        <option value="esp">Entidad sin personalidad (comunidad de bienes, herencia yacente…)</option>
+        <option value="col">Profesional colegiado, en el ejercicio de su profesión</option>
+        <option value="not">Notario o registrador</option>
+        <option value="rep">Representante de una persona jurídica</option>
+        <option value="rpf">Representante de una persona física no obligada</option>
+        <option value="emp">Empleado público, en trámites como empleado</option>
+        <option value="reg">Persona física de un colectivo obligado por reglamento</option>
+      </select></label>
+      <label>Si es persona física: ¿cambia de canal?<select id="ob-c"><option value="no">No</option><option value="el">Pasa a electrónico</option><option value="pa">Vuelve a papel</option></select></label>
+      <label>Día en que el órgano tiene constancia<input type="date" id="ob-f" value="2026-11-16"></label>
+    </div>
+    <div class="verdict" id="ob-out"></div>
+  </div>
+
+  <div class="section-title" id="nt">
+    <div><span class="kicker">Arts. 41-43 LPA · arts. 42-45 RD 203/2021</span><h2>Simulador de notificación electrónica</h2></div>
+    <p>La notificación se pone a disposición en la DEHú y, si quieres, también en la sede. Indica cuándo accede el interesado en cada sistema.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Puesta a disposición<input type="date" id="nt-p" value="2026-11-16"></label>
+      <label>¿También en la sede electrónica?<select id="nt-s"><option value="si">Sí, en sede y DEHú</option><option value="no">Solo DEHú</option></select></label>
+      <label>Acceso en la DEHú<input type="date" id="nt-d" value="2026-11-20"></label>
+      <label>Acceso en la sede<input type="date" id="nt-e" value="2026-11-18"></label>
+      <label>¿Rechazo expreso en lugar de acceso?<select id="nt-r"><option value="no">No</option><option value="si">Sí</option></select></label>
+      <label>¿Se envió el aviso al correo o al móvil?<select id="nt-a"><option value="si">Sí</option><option value="no">No</option></select></label>
+    </div>
+    <div class="verdict" id="nt-out"></div>
+  </div>
+
+  <div class="section-title" id="sd">
+    <div><span class="kicker">Art. 11 RD 203/2021</span><h2>¿Contenido mínimo, servicio mínimo o ninguno de los dos?</h2></div>
+    <p>Clasifica cada elemento de una sede electrónica. Es pregunta frecuente de examen.</p>
+  </div>
+  <div class="card tool">
+    <div class="case" id="sd-case"></div>
+    <div class="choice" id="sd-opts"></div>
+    <div class="verdict" id="sd-out" style="display:none"></div>
+    <div class="score"><span id="sd-score">0 de 0</span><button class="btn btn-g btn-sm" id="sd-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="cr">
+    <div><span class="kicker">Arts. 5 y 10 RD 203/2021</span><h2>¿Cómo se crea? Sedes, sedes asociadas y portales en el ámbito estatal</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Qué se quiere crear<select id="cr-t">
+        <option value="sa">Sede asociada a la sede del PAGe (de un Ministerio)</option>
+        <option value="so">Sede o sede asociada de un organismo público</option>
+        <option value="pm">Portal de internet de un Ministerio</option>
+        <option value="po">Portal de internet de un organismo público</option>
+        <option value="sl">Sede electrónica de un ayuntamiento</option>
+      </select></label>
+      <label>¿Creación o supresión?<select id="cr-a"><option value="c">Creación</option><option value="s">Supresión</option></select></label>
+    </div>
+    <div class="verdict" id="cr-out"></div>
+  </div>
+
+  <div class="section-title" id="oi">
+    <div><span class="kicker">Red de oficinas integradas</span><h2>¿Qué nivel tiene esta oficina integrada?</h2></div>
+    <p>Marca los servicios que presta la oficina.</p>
+  </div>
+  <div class="card tool">
+    <div class="chks">
+      <label><input type="checkbox" id="oi-1" checked><span>Recibe, registra y remite comunicaciones del ciudadano</span></label>
+      <label><input type="checkbox" id="oi-2" checked><span>Atiende y orienta de forma personalizada sobre los servicios de las Administraciones que participan</span></label>
+      <label><input type="checkbox" id="oi-3"><span>Tramita de forma conjunta procedimientos de varias Administraciones</span></label>
+    </div>
+    <div class="lvl" id="oi-v"></div>
+    <div class="verdict" id="oi-out"></div>
+  </div>
+
+  <div class="section-title" id="wb">
+    <div><span class="kicker">Principales páginas web de carácter público</span><h2>¿De quién es esta web?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="wb-case"></div>
+    <div class="choice" id="wb-opts"></div>
+    <div class="verdict" id="wb-out" style="display:none"></div>
+    <div class="score"><span id="wb-score">0 de 0</span><button class="btn btn-g btn-sm" id="wb-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Servicios comunes e identidad digital</span><h2>Mapa de la administración electrónica</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras y fechas clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>5.º día hábil</b><span>Efectos del cambio de canal de una persona física, desde la constancia del órgano</span></div>
+    <div class="num"><b>10 días naturales</b><span>Sin acceder a la notificación electrónica: se entiende rechazada</span></div>
+    <div class="num"><b>15 días hábiles</b><span>Para comunicar la sucesión del interesado</span></div>
+    <div class="num"><b>2 meses · 10 días</b><span>Antes de que surta efecto un sistema de identificación «otro» (art. 9.2.c LPA) · informe vinculante de la Secretaría de Estado de Seguridad</span></div>
+    <div class="num"><b>6 principios</b><span>Del art. 2 RD 203/2021: neutralidad tecnológica, accesibilidad, facilidad de uso, interoperabilidad, proporcionalidad, personalización y proactividad</span></div>
+    <div class="num"><b>6 canales</b><span>De asistencia (art. 4 RD 203/2021): presencial, portales y sedes, redes sociales, teléfono, correo electrónico y otros</span></div>
+    <div class="num"><b>9 · 9</b><span>Contenidos mínimos y servicios mínimos de una sede electrónica (art. 11 RD 203/2021)</span></div>
+    <div class="num"><b>3 niveles</b><span>Oficinas integradas: contacto · información · gestión integral</span></div>
+    <div class="num"><b>Orden HAP/1949/2014</b><span>Regula el Punto de Acceso General y crea su sede electrónica</span></div>
+    <div class="num"><b>sede.administracion.gob.es</b><span>Dirección de la sede del PAG, sede central de la AGE</span></div>
+    <div class="num"><b>Nivel 30</b><span>Nivel mínimo de los representantes ministeriales en el grupo de trabajo del PAG</span></div>
+    <div class="num"><b>2003 · 2006</b><span>Tramitación telemática de la SLNE (RD 682/2003) · de toda sociedad limitada (RD 1332/2006)</span></div>
+    <div class="num"><b>2022</b><span>La Ley 18/2022 suprime la SLNE; sociedad limitada con capital mínimo de 1 € <span class="upd">2026</span></span></div>
+    <div class="num"><b>24-12-2026</b><span>Fecha límite para que cada Estado ofrezca la cartera europea de identidad digital <span class="upd">2026</span></span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Marco y derechos</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Evolución normativa de la administración electrónica</h3><small>Ley 11/2007 → Leyes 39 y 40/2015 → RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Antecedentes</strong>: la Ley 30/1992 y la <strong>Ley 58/2003 General Tributaria</strong>, la primera que recogió la actuación automatizada y las imágenes electrónicas con el mismo valor que el original.</li>
+          <li><strong>Ley 11/2007</strong> (acceso electrónico de los ciudadanos): fue un hito porque construyó todo sobre el <strong>derecho</strong> del ciudadano a relacionarse electrónicamente. Reconocía el derecho a obtener medios de identificación, a elegir el canal y el medio de autenticación, y a la igualdad (accesibilidad, género, colectivos y territorios). Está <strong>derogada</strong>.</li>
+          <li><strong>Ley 39/2015</strong>: la tramitación electrónica pasa a ser la actuación <strong>habitual</strong>. Una Administración sin papel es más eficaz y eficiente, y refuerza las garantías y la transparencia.</li>
+          <li><strong>RD 203/2021</strong> (Reglamento de actuación y funcionamiento del sector público por medios electrónicos): en vigor desde el <strong>2-4-2021</strong>. Desarrolla las Leyes 39 y 40/2015 y deroga el RD 1671/2009.</li>
+          <li><span class="upd">2026</span> <strong>Marco europeo</strong>: el Reglamento eIDAS (UE 910/2014), modificado por <strong>eIDAS 2 (UE 2024/1183)</strong>, que crea la cartera europea de identidad digital; y la Ley 6/2020 de servicios electrónicos de confianza.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Derecho y obligación de relacionarse electrónicamente</h3><small>Art. 14 LPA · art. 3 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Personas físicas</strong>: eligen en todo momento y pueden cambiar de medio. Lo comunican al órgano, al inicio o después, y el cambio produce efectos desde el <strong>quinto día hábil</strong> siguiente a la constancia.</li>
+          <li><strong>Obligados</strong> en cualquier trámite:
+            <ul>
+              <li>las <strong>personas jurídicas</strong>;</li>
+              <li>las <strong>entidades sin personalidad</strong>;</li>
+              <li>los profesionales con <strong>colegiación obligatoria</strong>, en esa actividad (siempre los <strong>notarios y registradores</strong>);</li>
+              <li>quienes <strong>representen</strong> a un obligado;</li>
+              <li>los <strong>empleados públicos</strong>, en sus trámites como tales.</li>
+            </ul>
+          </li>
+          <li><strong>Por reglamento</strong> puede obligarse a colectivos de personas físicas con acceso y disponibilidad acreditados de medios. En el Estado, por <strong>real decreto</strong> del Consejo de Ministros u <strong>orden</strong> ministerial, publicada en el PAGe y en la sede correspondiente.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Asistencia en el uso de medios electrónicos</h3><small>Art. 12 LPA · arts. 4 y 30 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Las Administraciones deben garantizar que los interesados puedan relacionarse electrónicamente, con los canales, sistemas y aplicaciones necesarios.</li>
+          <li><strong>Canales de asistencia</strong> (art. 4 RD): presencial (oficinas de asistencia), portales y sedes, redes sociales, teléfono, correo electrónico y cualquier otro.</li>
+          <li>Se asiste especialmente a los <strong>no obligados</strong> que lo pidan: identificación y firma, presentación en el registro y copias auténticas.</li>
+          <li><strong>Firma por funcionario habilitado</strong>: si el interesado no tiene medios, un funcionario puede identificarle o firmar por él con su propio sistema. Requisitos:
+            <ul>
+              <li>el interesado se <strong>identifica</strong> ante el funcionario;</li>
+              <li>presta su <strong>consentimiento expreso</strong>, del que queda constancia;</li>
+              <li>se le entrega la documentación del trámite y copia del consentimiento (formulario en el PAGe);</li>
+              <li>en el Estado, el funcionario debe estar inscrito en el <strong>Registro de Funcionarios Habilitados</strong>, y solo para los trámites que cada Ministerio haya determinado (orden conjunta de Función Pública y Transformación Digital).</li>
+            </ul>
+          </li>
+          <li>Los registros de habilitados de todas las Administraciones son interoperables; en ellos constan, al menos, los funcionarios de las oficinas de asistencia en materia de registros.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Principios de la actuación electrónica</h3><small>Art. 2 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ol type="a">
+          <li><strong>Neutralidad tecnológica y adaptabilidad</strong>: estándares abiertos (y, de forma complementaria, de uso generalizado); herramientas no discriminatorias y compatibles.</li>
+          <li><strong>Accesibilidad</strong>: igualdad de acceso, en especial de personas con discapacidad y mayores.</li>
+          <li><strong>Facilidad de uso</strong>: diseño centrado en el usuario, con el menor conocimiento necesario.</li>
+          <li><strong>Interoperabilidad</strong>: capacidad de los sistemas de compartir datos e intercambiar información.</li>
+          <li><strong>Proporcionalidad</strong>: solo las garantías de seguridad adecuadas a cada trámite.</li>
+          <li><strong>Personalización y proactividad</strong>: servicios <strong>precumplimentados</strong> y anticipación a las necesidades.</li>
+        </ol>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Sedes, PAGe y Carpeta Ciudadana</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Sedes electrónicas: concepto y creación</h3><small>Art. 38 LRJSP · arts. 9-10 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Sede electrónica</strong> (art. 38 LRJSP): dirección electrónica disponible para los ciudadanos, para las actuaciones que requieren identificar a la Administración y, en su caso, a los interesados. Su titular es una Administración o uno o varios organismos.</li>
+          <li><strong>Sede asociada</strong>: se crea por razones técnicas y organizativas y es sede <strong>a todos los efectos</strong>.</li>
+          <li><strong>Publicidad</strong>: el acto de creación o supresión se publica en el boletín oficial correspondiente (las entidades locales, en el de la <strong>provincia</strong>) y en el directorio del PAGe.</li>
+          <li><strong>El acto de creación fija, al menos</strong>: el ámbito; la dirección electrónica de referencia (y la de las sedes asociadas); el titular; y los órganos de gestión.</li>
+          <li><strong>En el Estado</strong>: orden del Ministro o resolución del presidente o director del organismo, con <strong>informe previo favorable</strong> de Función Pública y de Transformación Digital. Requiere una <strong>memoria justificativa y económica</strong> (volumen de trámites, efectos presupuestarios, reducción de tiempos y cargas).</li>
+          <li><strong>Responsabilidad</strong>: el titular responde de la integridad, veracidad y actualización. Si enlaza a otra sede, responde el titular de esta; si aloja procedimientos de otro órgano, el titular de la competencia, sin perjuicio de la diligencia debida.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Contenidos y servicios mínimos de la sede</h3><small>Art. 11 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Contenidos mínimos</strong>:
+            <ol type="a">
+              <li>identificación de la sede, del titular y de los órganos de gestión;</li>
+              <li>acto de creación (o enlace a su publicación);</li>
+              <li>información para usarla: mapa, propiedad intelectual, protección de datos y accesibilidad;</li>
+              <li>sistemas de identificación y firma admitidos;</li>
+              <li>normativa del registro;</li>
+              <li><strong>fecha y hora oficial</strong> y calendario de <strong>días inhábiles</strong>;</li>
+              <li>incidencias técnicas y ampliaciones de plazo;</li>
+              <li>relación de servicios, procedimientos y trámites;</li>
+              <li>relación de <strong>actuaciones automatizadas</strong>, con su diseño, funcionamiento, rendición de cuentas y datos de configuración y aprendizaje.</li>
+            </ol>
+          </li>
+          <li><strong>Servicios mínimos</strong>:
+            <ol type="a">
+              <li>acceso a los trámites, con su <strong>plazo máximo</strong> de duración;</li>
+              <li>enlace para <strong>quejas y sugerencias</strong>;</li>
+              <li>reclamaciones sobre <strong>accesibilidad</strong> web y de apps;</li>
+              <li>verificación de los <strong>certificados de la sede</strong>;</li>
+              <li>verificación de los <strong>sellos electrónicos</strong>;</li>
+              <li>comprobación de documentos mediante <strong>CSV</strong>;</li>
+              <li>modelos y sistemas de <strong>presentación masiva</strong> voluntarios;</li>
+              <li>modelos normalizados de solicitud;</li>
+              <li>directorio geográfico de <strong>oficinas de asistencia en registros</strong>.</li>
+            </ol>
+          </li>
+          <li>Además, cada Administración mantiene en su sede el listado de <strong>códigos de identificación</strong> de sus órganos y unidades.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Punto de Acceso General electrónico y portales</h3><small>Arts. 5 y 7 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Cada Administración tiene un <strong>PAGe</strong>: el portal que facilita el acceso a los servicios, trámites e información de sus órganos y entidades, y aglutina o conduce a sus sedes.</li>
+          <li>El PAGe tiene una <strong>sede</strong> desde la que se accede a todas las sedes de esa Administración, con un <strong>área personalizada</strong> para el interesado.</li>
+          <li><strong>PAGe de la AGE</strong>: lo gestiona el Ministerio para la Transformación Digital y de la Función Pública. En su sede se aloja la <strong>DEHú</strong> y se comprueban los documentos con <strong>CSV</strong> o sello cualificado. Puede interoperar con los portales de la UE.</li>
+          <li><strong>Portal de internet</strong>: punto de acceso cuya titularidad es de una Administración u organismo, que da acceso a la información y, en su caso, a la sede.
+            <ul>
+              <li>En el Estado se crea por <strong>orden</strong> del Ministro o resolución del órgano superior (o del presidente o director del organismo).</li>
+              <li>Requiere informe favorable de la <strong>Comisión Ministerial de Administración Digital</strong> y comunicación posterior al Ministerio de Transformación Digital. Hay que justificar la eficiencia y el interés prioritario.</li>
+              <li>La supresión solo requiere comunicación previa.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Carpeta Ciudadana del sector público estatal</h3><small>Art. 8 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Es el <strong>área personalizada</strong> del interesado en su relación con el sector público estatal, accesible desde la sede del PAGe.</li>
+          <li><strong>Pueden acceder</strong>: el interesado, sus <strong>representantes legales</strong> y quien tenga un <strong>poder general</strong> inscrito en el Registro Electrónico de Apoderamientos.</li>
+          <li><strong>Funcionalidades</strong>: seguir el estado de los procedimientos; acceder a comunicaciones y notificaciones; saber qué datos suyos tiene el sector público estatal; obtener certificaciones.</li>
+          <li>Se accede con los sistemas de identificación del art. 9.2 LPA. El interesado debe velar por el buen uso de esos sistemas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Notificaciones e identidad</h3>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Notificaciones electrónicas</h3><small>Art. 43 LPA · arts. 42-45 RD 203/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Se practican por comparecencia en la <strong>sede</strong>, en la <strong>DEHú</strong> o en ambas. Si se usan las dos, cuenta el <strong>primer</strong> acceso o rechazo, y los estados se sincronizan.</li>
+          <li>Los emisores <strong>estatales</strong> ponen siempre la notificación en la DEHú, y pueden ponerla también en su sede.</li>
+          <li>La comparecencia voluntaria del <strong>no obligado</strong> en la sede o la DEHú tiene plenos efectos.</li>
+          <li><strong>Acuse de recibo</strong>: acto notificado, destinatario, fecha y hora de puesta a disposición y de acceso o rechazo.</li>
+          <li>El acceso, el rechazo expreso o el transcurso de <strong>10 días naturales</strong> sin acceder dan por efectuado el trámite. La obligación de notificar en plazo se cumple con la <strong>puesta a disposición</strong>.</li>
+          <li><strong>Aviso</strong> (art. 43 RD): al correo o dispositivo que el interesado haya comunicado. Es <strong>meramente informativo</strong>: su falta no invalida la notificación. Si un obligado no ha dado datos de contacto, en procedimientos de oficio la <strong>primera notificación va en papel</strong>, advirtiendo de que las siguientes serán electrónicas.</li>
+          <li><strong>DEHú</strong> (art. 44 RD): sistema de notificación alojado en la sede del PAGe; aspira a reunir todas las notificaciones (papel y electrónicas) de todas las Administraciones. Si hay una incidencia técnica, puede ampliarse el plazo no vencido.</li>
+          <li><strong>Sucesión</strong>: comunicarla en 15 días hábiles. Si el sucesor es persona física no obligada y no opta por lo electrónico, las notificaciones siguientes van en papel.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Identificación y certificación digital</h3><small>Art. 9 LPA · FNMT-RCM · Cl@ve · eIDAS 2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>La Administración debe <strong>verificar la identidad</strong> (nombre y apellidos o razón social según el DNI o equivalente).</li>
+          <li><strong>Sistemas de identificación</strong> (art. 9.2 LPA):
+            <ol type="a">
+              <li>certificados electrónicos cualificados de <strong>firma</strong>, de prestadores de la «lista de confianza»;</li>
+              <li>certificados cualificados de <strong>sello</strong>;</li>
+              <li>otros sistemas válidos con registro previo del usuario (por ejemplo, <strong>Cl@ve</strong>), previa comunicación a la Agencia Estatal de Administración Digital con declaración responsable. Surten efecto a los <strong>2 meses</strong>, durante los cuales el Estado puede acudir a los tribunales por seguridad pública, previo informe vinculante de la Secretaría de Estado de Seguridad en <strong>10 días</strong>.</li>
+            </ol>
+          </li>
+          <li><strong>CERES</strong> (FNMT-RCM): entidad pública de certificación basada en <strong>clave pública</strong>; la identidad se guarda en una tarjeta con PIN o en un fichero; es transparente para el usuario.</li>
+          <li><strong>Certificado FNMT de ciudadano</strong> (de persona física): gratuito para cualquier español o extranjero <strong>mayor de edad o emancipado</strong> con DNI o NIE.</li>
+          <li><span class="upd">2026</span> <strong>MiDNI</strong>: el DNI en el móvil, desde 2025. <strong>Cartera europea de identidad digital</strong> (eIDAS 2): cada Estado debe ofrecer al menos una, gratuita y de uso voluntario, antes del <strong>24-12-2026</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Servicios comunes de administración electrónica</h3><small>Red SARA, @firma, SIR, ENI, ENS…</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Red SARA</strong>: infraestructura que interconecta a las Administraciones.</li>
+          <li><strong>@firma</strong>: plataforma multi-PKI de validación y firma. <strong>VALIDe</strong>: validación de certificados y firmas en línea.</li>
+          <li><strong>TS@</strong>: sellado de tiempo.</li>
+          <li>Verificación de datos de identidad y residencia; <strong>sustitución de certificados en papel</strong> (SCSP, hoy en la Plataforma de Intermediación de Datos); comunicación de cambio de domicilio.</li>
+          <li>Notificaciones electrónicas (hoy, la <strong>DEHú</strong>); inscripción en pruebas selectivas; <strong>pasarela de pagos</strong>; georreferenciación de oficinas.</li>
+          <li><strong>SIR</strong> (Sistema de Interconexión de Registros); Sistema de Información Administrativa; Centro de Transferencia de Tecnología; herramienta de rediseño de procedimientos; Observatorio de Administración Electrónica; plan de direccionamiento IP.</li>
+          <li><strong>ENI</strong> (RD 4/2010) y <strong>ENS</strong> (RD 311/2022).</li>
+          <li><strong>STORK</strong>: aceptación transfronteriza del DNIe (hoy, nodos eIDAS).</li>
+          <li>Otros: <strong>cartas de servicios electrónicos</strong> (compromisos de calidad) y el <strong>Catálogo General de Publicaciones Oficiales</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Webs, oficinas integradas, empresas y PAG</h3>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Principales páginas web de carácter público</h3><small>Estado, CCAA, poderes, órganos constitucionales, UE e internacionales</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Punto de partida: <strong>administracion.gob.es</strong> (antes 060.es). La accesibilidad web es obligatoria en la UE y en España desde <strong>2002</strong>.</li>
+          <li><strong>Jefatura del Estado</strong>: casareal.es · <strong>Presidencia</strong>: lamoncloa.gob.es · los Ministerios usan dominios <strong>.gob.es</strong> (exteriores, defensa, hacienda, interior, transportes, mites, mapa, miteco, mivau, cultura, sanidad, dsca, ciencia, igualdad, inclusion, digital.gob.es…).</li>
+          <li><strong>Cortes</strong>: congreso.es y senado.es · <strong>Poder Judicial</strong>: poderjudicial.es (CGPJ, Supremo y órganos judiciales).</li>
+          <li><strong>Otros</strong>: consejo-estado.es, tribunalconstitucional.es, tcu.es, defensordelpueblo.es, bde.es, aepd.es, csn.es, ces.es.</li>
+          <li><strong>UE</strong>: european-union.europa.eu, eur-lex.europa.eu (Diario Oficial), europarl, consilium, commission, curia (TJUE), eca (Tribunal de Cuentas), ombudsman, edps (protección de datos), ecb, eib, eesc, cor, op (publicaciones), eu-careers (EPSO), <strong>Tu Europa</strong>, <strong>SOLVIT</strong> y e-justice.</li>
+          <li><strong>Internacionales</strong>: Banco Mundial, FAO, FMI, OCDE, OEA, OIT, ONU, OMI, UNICEF, OSCE, OTAN (nato.int), Mercosur y UNESCO.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Oficinas integradas y Ventanilla Única Empresarial</h3><small>Tres niveles · VUE · PAE · CIRCE · DUE</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Oficinas integradas (060)</strong>: espacios comunes de atención presencial de varias Administraciones.
+            <ul>
+              <li><strong>Nivel 1, de contacto</strong>: recepción, registro y remisión.</li>
+              <li><strong>Nivel 2, de información</strong>: además, atención y orientación personalizada.</li>
+              <li><strong>Nivel 3, de gestión integral</strong>: además, tramitación conjunta de procedimientos de varias Administraciones.</li>
+            </ul>
+            Usan infraestructuras existentes, sin cambiar su adscripción, con un símbolo común de la red.
+          </li>
+          <li><strong>Ventanilla Única Empresarial (VUE)</strong>: apoyo a los emprendedores; programa de todas las Administraciones con las <strong>Cámaras de Comercio</strong>, donde están ubicadas las ventanillas físicas.
+            <ul>
+              <li>Tres áreas: <strong>información y direccionamiento</strong>, <strong>orientación</strong> y <strong>tramitación</strong>.</li>
+              <li>Versión virtual con herramientas de asesoramiento y de tramitación.</li>
+            </ul>
+          </li>
+          <li><strong>Tramitación telemática</strong>: los <strong>Puntos de Atención al Emprendedor (PAE)</strong> y el Sistema de Tramitación Telemática del <strong>CIRCE</strong>, mediante el <strong>Documento Único Electrónico (DUE)</strong>. Primero para la SLNE (RD 682/2003) y después para toda sociedad limitada (RD 1332/2006).</li>
+          <li><span class="upd">2026</span> La <strong>Ley 18/2022</strong> suprimió la SLNE y la formación sucesiva. Hoy se constituye una sociedad limitada ordinaria con <strong>1 € de capital</strong> mediante el DUE.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>El Punto de Acceso General (PAG)</h3><small>Orden HAP/1949/2014</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Orden HAP/1949/2014</strong>: regula el PAG (administracion.es y <strong>administracion.gob.es</strong>) y crea su sede.</li>
+          <li><strong>Contenido</strong>: portales y sedes de los Ministerios y organismos; servicios más usados; Portal de Transparencia; datos abiertos; Ventanilla Única de la Directiva de Servicios; áreas privadas; comprobación por CSV; información horizontal (ayudas, becas, empleo público, legislación); participación ciudadana y redes sociales.</li>
+          <li>La información de otras Administraciones se incorpora por convenio. La coordinación con los portales de la UE se canaliza a través de la <strong>Representación Permanente</strong>.</li>
+          <li><strong>Canales</strong>: internet; presencial (oficina 060 central y oficinas de Delegaciones, Subdelegaciones y Direcciones Insulares); teléfono <strong>060</strong>.</li>
+          <li><strong>Titularidad</strong>: Ministerio de Transformación Digital. <strong>Gestión tecnológica</strong>: Agencia Estatal de Administración Digital. Cada Ministerio provee y actualiza su información.</li>
+          <li><strong>Gobernanza</strong>: un <strong>grupo de trabajo</strong> con un representante de cada Ministerio (al menos de <strong>nivel 30</strong>, designado por su Subsecretaría). Los contenidos de otras Administraciones se siguen en el <strong>Comité Sectorial de Administración Electrónica</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>La sede electrónica del PAG</h3><small>Sede central de la AGE</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Abarca todos los Ministerios y organismos, y es la <strong>sede central de la AGE</strong>: <strong>https://sede.administracion.gob.es</strong>.</li>
+          <li>Da acceso a los procedimientos que requieren autenticación (a medida que sea posible, sin volver a identificarse). Cumple la accesibilidad, el ENS y el ENI.</li>
+          <li><strong>Contenidos específicos</strong>: trámites en línea; Registro Electrónico Común; DEHú; <strong>Registro Electrónico de Apoderamientos</strong>; Registro de Funcionarios Habilitados; servicios como la inscripción en pruebas selectivas o el cambio de domicilio; orden de creación; buzón; <strong>Carpeta Ciudadana</strong>. Progresivamente, en lenguas cooficiales.</li>
+          <li><strong>Titularidad</strong>: Ministerio competente en administración electrónica. <strong>Gestión</strong>: DG de Gobernanza Pública, con el apoyo de la Agencia Estatal de Administración Digital. No responde de los enlaces de otros.</li>
+          <li><strong>Quejas y sugerencias</strong>: presenciales o por correo ante los registros del Ministerio, o electrónicas a través del servicio de la <strong>Inspección General</strong>. Los servicios de ayuda al usuario <strong>no</strong> son un medio de queja.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Quinto día hábil</b>El cambio de canal de una persona física produce efectos desde el 5.º día hábil desde la constancia, no desde el día siguiente.</div>
+    <div class="trap"><b>Notarios y registradores</b>Siempre obligados, como profesionales colegiados.</div>
+    <div class="trap"><b>Representante</b>Solo está obligado si representa a un obligado.</div>
+    <div class="trap"><b>Aviso</b>Es meramente informativo: sin aviso, la notificación es igualmente válida.</div>
+    <div class="trap"><b>Sede + DEHú</b>Cuenta el primer acceso, en cualquiera de los dos sistemas.</div>
+    <div class="trap"><b>10 días</b>Naturales, no hábiles, para entender rechazada la notificación.</div>
+    <div class="trap"><b>Sede asociada</b>Es sede a todos los efectos.</div>
+    <div class="trap"><b>Entidades locales</b>El acto de creación de su sede se publica en el boletín de la provincia.</div>
+    <div class="trap"><b>Portal o sede</b>El portal necesita informe de la Comisión Ministerial de Administración Digital; la sede, informe de Función Pública y de Transformación Digital.</div>
+    <div class="trap"><b>Fecha y hora oficial</b>Es contenido mínimo de la sede, no servicio.</div>
+    <div class="trap"><b>Carpeta Ciudadana</b>También acceden los representantes legales y los apoderados con poder general inscrito.</div>
+    <div class="trap"><b>Oficinas integradas</b>Nivel 1: contacto. Nivel 2: información. Nivel 3: gestión integral.</div>
+    <div class="trap"><b>SLNE</b>Ya no existe: la suprimió la Ley 18/2022.</div>
+    <div class="trap"><b>Certificado FNMT</b>Gratuito, para mayores de edad o emancipados con DNI o NIE.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 3. Administración electrónica y servicios al ciudadano» (Organización de oficinas públicas), actualizado a noviembre de 2026: Reglamento (UE) 2024/1183 (eIDAS 2, cartera europea de identidad digital), MiDNI, Ley 18/2022 (supresión de la SLNE), RD 1118/2024 (Agencia Estatal de Administración Digital) y RD 203/2021.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Bloque 2 · Tema 3 · Herramientas ===== */
+const FEST={2026:["01-01","01-06","04-03","05-01","08-15","10-12","12-08","12-25"],2027:["01-01","01-06","03-26","05-01","10-12","11-01","12-06","12-08","12-25"]};
+const SD=[
+ ["La fecha y hora oficial y el calendario de días inhábiles.","c","Contenido mínimo (art. 11.1.f RD 203/2021)."],
+ ["Un enlace para formular quejas y sugerencias.","s","Servicio mínimo (art. 11.2.b)."],
+ ["La relación de sistemas de identificación y firma admitidos.","c","Contenido mínimo (art. 11.1.d)."],
+ ["Un servicio para comprobar documentos mediante código seguro de verificación (CSV).","s","Servicio mínimo (art. 11.2.f)."],
+ ["La relación de actuaciones administrativas automatizadas, con su diseño y los datos de configuración y aprendizaje.","c","Contenido mínimo (art. 11.1.i)."],
+ ["El directorio geográfico de las oficinas de asistencia en materia de registros.","s","Servicio mínimo (art. 11.2.i)."],
+ ["Un sistema de verificación de los certificados de la sede.","s","Servicio mínimo (art. 11.2.d)."],
+ ["La normativa reguladora del registro al que se accede.","c","Contenido mínimo (art. 11.1.e)."],
+ ["Información sobre incidencias técnicas y las ampliaciones de plazo acordadas.","c","Contenido mínimo (art. 11.1.g)."],
+ ["Los mecanismos de reclamación sobre la accesibilidad de webs y apps.","s","Servicio mínimo (art. 11.2.c)."],
+ ["Acceso a los modelos de presentación masiva de uso voluntario.","s","Servicio mínimo (art. 11.2.g)."],
+ ["La identificación del acto de creación de la sede, o un enlace a su publicación.","c","Contenido mínimo (art. 11.1.b)."],
+ ["Un chat con inteligencia artificial que resuelve dudas jurídicas sobre cualquier norma.","n","No es obligatorio: no figura en el art. 11. Además, la orientación nunca puede ser una interpretación normativa."],
+ ["Una sección de noticias y notas de prensa del Ministerio.","n","No es un contenido mínimo de la sede: es propio del portal de internet."],
+ ["El mapa de la sede, con la información sobre protección de datos y accesibilidad.","c","Contenido mínimo (art. 11.1.c)."],
+ ["Acceso a los trámites con indicación de su plazo máximo de duración.","s","Servicio mínimo (art. 11.2.a)."]
+];
+const SDO={c:"Contenido mínimo",s:"Servicio mínimo",n:"No es obligatorio"};
+const WB=[
+ ["tcu.es","tcu","Tribunal de Cuentas."],["curia.europa.eu","tjue","Tribunal de Justicia de la Unión Europea."],["eca.europa.eu","tce","Tribunal de Cuentas Europeo."],["consejo-estado.es","ce","Consejo de Estado."],["poderjudicial.es","cgpj","Consejo General del Poder Judicial (también el Tribunal Supremo y los órganos judiciales)."],["tribunalconstitucional.es","tc","Tribunal Constitucional."],["lamoncloa.gob.es","pg","Presidencia del Gobierno."],["casareal.es","cr","Casa de Su Majestad el Rey (Jefatura del Estado)."],["edps.europa.eu","sepd","Supervisor Europeo de Protección de Datos."],["eur-lex.europa.eu","doue","Acceso al Derecho de la UE y al Diario Oficial."],["ec.europa.eu/solvit","solvit","SOLVIT: soluciones a problemas con tus derechos en la UE."],["eu-careers.europa.eu","epso","Oficina de Selección de Personal de la UE (EPSO)."],["nato.int","otan","Organización del Tratado del Atlántico Norte."],["ilo.org","oit","Organización Internacional del Trabajo."],["imo.org","omi","Organización Marítima Internacional."],["aepd.es","aepd","Agencia Española de Protección de Datos (el manual aún cita agpd.es)."]
+];
+const WBN={tcu:"Tribunal de Cuentas",tjue:"Tribunal de Justicia UE",tce:"Tribunal de Cuentas Europeo",ce:"Consejo de Estado",cgpj:"CGPJ y juzgados",tc:"Tribunal Constitucional",pg:"Presidencia del Gobierno",cr:"Casa Real",sepd:"Supervisor Europeo de Protección de Datos",doue:"EUR-Lex / Diario Oficial UE",solvit:"SOLVIT",epso:"Selección de personal UE",otan:"OTAN",oit:"OIT",omi:"OMI",aepd:"AEPD"};
+const INS=[
+ {g:"Acceso y atención",n:"Punto de Acceso General (PAG)",norm:"Orden HAP/1949/2014 · art. 7 RD 203/2021",def:"Portal que da acceso a los servicios, trámites e información de la AGE y conduce a sus sedes.",f:{"Dominio":"administracion.gob.es.","Sede":"sede.administracion.gob.es, sede central de la AGE.","Titularidad":"Ministerio de Transformación Digital.","Canales":"Internet, oficinas 060 y teléfono 060."}},
+ {g:"Acceso y atención",n:"Carpeta Ciudadana",norm:"Art. 8 RD 203/2021",def:"Área personalizada del interesado en el sector público estatal.",f:{"Acceso":"Interesado, representantes legales y apoderados con poder general inscrito.","Funciones":"Seguimiento de expedientes, notificaciones, datos que tiene la Administración y certificados.","Ubicación":"Sede del PAGe.","Identificación":"Sistemas del art. 9.2 LPA."}},
+ {g:"Acceso y atención",n:"DEHú",norm:"Art. 44 RD 203/2021",def:"Dirección Electrónica Habilitada única: sistema de notificación electrónica.",f:{"Ubicación":"Sede del PAGe de la AGE.","Estatales":"Todos los emisores estatales notifican a través de ella.","Plazo":"10 días naturales sin acceso = rechazo.","Objetivo":"Reunir todas las notificaciones de todas las Administraciones, en papel o electrónicas."}},
+ {g:"Identidad y firma",n:"Cl@ve",norm:"Art. 9.2.c LPA",def:"Sistema de identificación con registro previo del usuario.",f:{"Modalidades":"Cl@ve PIN, Cl@ve permanente y Cl@ve móvil.","Base legal":"«Otros sistemas» del art. 9.2.c LPA.","Requisito":"Registro previo que garantice la identidad.","Uso":"Identificación y, en su caso, firma en la nube."}},
+ {g:"Identidad y firma",n:"FNMT-RCM y CERES",norm:"Proyecto CERES",def:"Entidad pública de certificación de la Fábrica Nacional de Moneda y Timbre.",f:{"Tecnología":"Criptografía de clave pública.","Soporte":"Tarjeta inteligente con PIN o fichero con PIN.","Certificado de ciudadano":"Gratuito, para mayores de edad o emancipados con DNI o NIE.","Garantías":"Identidad, confidencialidad e integridad."}},
+ {g:"Identidad y firma",n:"MiDNI y cartera europea",norm:"Reglamento (UE) 2024/1183 (eIDAS 2)",def:"Identidad digital en el móvil y cartera europea de identidad digital.",f:{"MiDNI":"DNI en el móvil desde 2025.","Cartera EUDI":"Cada Estado debe ofrecerla antes del 24-12-2026.","Uso":"Voluntario y gratuito.","España":"Proyecto de real decreto en audiencia pública (septiembre de 2026)."}},
+ {g:"Identidad y firma",n:"@firma, VALIDe y TS@",norm:"Servicios comunes",def:"Plataformas de validación de firma, verificación en línea y sellado de tiempo.",f:{"@firma":"Plataforma multi-PKI de autenticación y firma avanzada.","VALIDe":"Validación de certificados y firmas en línea.","TS@":"Sellado, validación y resellado de tiempo.","Destinatarios":"Todas las Administraciones."}},
+ {g:"Interconexión",n:"Red SARA",norm:"Servicios comunes",def:"Infraestructura que interconecta las redes de las Administraciones.",f:{"Función":"Intercambio de información y servicios entre Administraciones.","Ámbito":"Estado, CCAA, EELL e instituciones europeas.","Relación":"Soporta SIR, intermediación de datos, etc.","Seguridad":"Conforme al ENS."}},
+ {g:"Interconexión",n:"SIR",norm:"Sistema de Interconexión de Registros",def:"Transmite la información registral del registro de entrada al de destino.",f:{"Efecto":"Evita trasladar papel entre Administraciones.","Base":"Interoperabilidad de los registros (art. 16 LPA).","Límite":"Si se excede su capacidad, repositorio de intercambio.","Relación":"Registro Electrónico General."}},
+ {g:"Interconexión",n:"Plataforma de Intermediación de Datos (antes SCSP)",norm:"Art. 28 LPA",def:"Permite a la Administración consultar datos que ya tiene otra Administración.",f:{"Efecto":"El ciudadano no aporta certificados que la Administración ya conoce.","Ejemplos":"Identidad, residencia, títulos, estar al corriente.","Derecho":"No aportar documentos ya en poder de la Administración.","Antes":"Sustitución de Certificados en Soporte Papel (SCSP)."}},
+ {g:"Empresas",n:"CIRCE, PAE y DUE",norm:"RD 682/2003 · RD 1332/2006 · Ley 18/2022",def:"Sistema para constituir empresas por vía telemática.",f:{"CIRCE":"Centro de Información y Red de Creación de Empresas.","PAE":"Puntos de Atención al Emprendedor.","DUE":"Documento Único Electrónico.","2022":"Suprimida la SLNE; sociedad limitada con 1 € de capital."}},
+ {g:"Empresas",n:"Ventanilla Única Empresarial",norm:"Programa de todas las Administraciones y las Cámaras de Comercio",def:"Apoyo integral a la creación de empresas.",f:{"Ubicación":"Cámaras de Comercio.","Áreas":"Información y direccionamiento, orientación y tramitación.","Virtual":"Herramientas de asesoramiento y de tramitación en línea.","Fase inicial":"36 ventanillas en 16 CCAA, según el manual."}},
+ {g:"Esquemas",n:"ENI y ENS",norm:"RD 4/2010 · RD 311/2022",def:"Esquema Nacional de Interoperabilidad y Esquema Nacional de Seguridad.",f:{"ENI":"Criterios de interoperabilidad de los servicios públicos.","ENS":"Política de seguridad en el uso de medios electrónicos.","Sede del PAG":"Cumple ambos.","Archivo":"El archivo electrónico también se rige por ellos."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+  const fd=d=>d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const fs=d=>d.toLocaleDateString("es-ES");
+  const iso=d=>`${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const hab=d=>{const w=d.getDay();if(w===0||w===6)return false;const f=FEST[d.getFullYear()];return !(f&&f.includes(iso(d)))};
+  const addH=(d,n)=>{let x=new Date(d);let k=0;while(k<n){x.setDate(x.getDate()+1);if(hab(x))k++}return x};
+  const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    const opts=c=>{if(Object.keys(OPTS).length<=6)return Object.keys(OPTS);const ks=Object.keys(OPTS).filter(k=>k!==c[1]).sort(()=>Math.random()-.5).slice(0,3);ks.push(c[1]);return ks.sort(()=>Math.random()-.5)};
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=opts(c).map(k=>`<button data-k="${k}">${OPTS[k]}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+OPTS[c[1]]}</b>${c[2]}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("sd",SD,SDO,"Elemento");
+  trainer("wb",WB,WBN,"Web");
+  /* Obligación */
+  (function(){if(!$("ob-t"))return;
+    const R={pj:"Persona jurídica: obligada en cualquier trámite (art. 14.2.a LPA).",esp:"Entidad sin personalidad jurídica: obligada (art. 14.2.b).",col:"Profesional con colegiación obligatoria: obligado en los trámites de su actividad profesional (art. 14.2.c). Fuera de ella, como particular, puede elegir.",not:"Notarios y registradores de la propiedad y mercantiles: siempre incluidos entre los profesionales obligados (art. 14.2.c).",rep:"Quien representa a un interesado obligado está obligado (art. 14.2.d).",emp:"Empleado público: obligado en los trámites que realice por razón de su condición, en la forma que fije cada Administración (art. 14.2.e).",reg:"Obligado por reglamento: colectivo de personas físicas con acceso y disponibilidad acreditados de medios (art. 14.3 LPA). En el Estado, por real decreto u orden ministerial, publicada en el PAGe y en la sede (art. 3 RD 203/2021)."};
+    function run(){const t=$("ob-t").value,c=$("ob-c").value,f=$("ob-f").value,o=$("ob-out");const pf=t==="pf"||t==="rpf";
+      $("ob-c").closest("label").style.opacity=pf?1:.45;$("ob-f").closest("label").style.opacity=pf&&c!=="no"?1:.45;
+      if(!pf){o.className="verdict ko";o.innerHTML=`<b class="big">Obligado a relacionarse electrónicamente</b>${R[t]}<div class="tool-note">Si presenta en papel, se le requiere para que subsane presentando por vía electrónica; la fecha de presentación es la de la subsanación (art. 68.4 LPA).</div>`;return}
+      let x=t==="rpf"?"El representante de una persona física no obligada no está obligado por ese motivo (salvo que lo esté por otro: por ejemplo, si es abogado actuando como tal).":"Persona física: puede elegir en todo momento si se relaciona electrónicamente o no, y cambiar de medio (art. 14.1 LPA).";
+      let st="";if(c!=="no"&&f){const d=pd(f),ef=addH(d,5);st=`<div class="steps-out"><div><b>Comunicación</b>: el órgano tiene constancia el ${fd(d)}.</div><div><b>Efectos</b>: desde el <strong>quinto día hábil</strong> siguiente, el ${fd(ef)} (art. 3.2 RD 203/2021).</div><div><b>Hasta entonces</b>: ${c==="el"?"sigue recibiendo las notificaciones en papel":"las notificaciones siguen siendo electrónicas"}.</div></div>`}
+      o.className="verdict ok";o.innerHTML=`<b class="big">No obligado: elige</b>${x}${st}<div class="tool-note">Tiene derecho a asistencia en el uso de medios electrónicos y, si no dispone de ellos, un funcionario habilitado puede identificarle o firmar por él con su consentimiento expreso (art. 12 LPA).</div>`}
+    ["ob-t","ob-c","ob-f"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Notificación */
+  (function(){if(!$("nt-p"))return;
+    function run(){const p=$("nt-p").value,s=$("nt-s").value,dv=$("nt-d").value,ev=$("nt-e").value,r=$("nt-r").value,a=$("nt-a").value,o=$("nt-out");
+      $("nt-e").closest("label").style.opacity=s==="si"?1:.45;
+      if(!p){o.className="verdict mid";o.innerHTML="<b class='big'>Indica la puesta a disposición</b>";return}
+      const P=pd(p),lim=addD(P,10);const acc=[];if(dv)acc.push(["DEHú",pd(dv)]);if(s==="si"&&ev)acc.push(["sede electrónica",pd(ev)]);
+      const val=acc.filter(x=>x[1]>=P&&x[1]<=lim).sort((x,y)=>x[1]-y[1]);
+      const av=a==="si"?"Se envió el aviso, que es meramente informativo.":"No se envió el aviso: <strong>no afecta a la validez</strong> de la notificación (art. 41.6 LPA; art. 43 RD 203/2021).";
+      let st=`<div><b>Puesta a disposición</b>: ${fd(P)}${s==="si"?", en la DEHú y en la sede":", en la DEHú"}. Con ella la Administración cumple su obligación de notificar en plazo.</div><div><b>Aviso</b>: ${av}</div>`;
+      if(!val.length){st+=`<div><b>Sin acceso en plazo</b>: el ${fd(lim)} vencen los 10 días naturales.</div>`;o.className="verdict mid";o.innerHTML=`<b class="big">Rechazada el ${fs(lim)}</b>Se da por efectuado el trámite y sigue el procedimiento (art. 43.2 LPA).<div class="steps-out">${st}</div>`;return}
+      const f=val[0];
+      st+=acc.map(x=>`<div><b>${x[0]}</b>: ${x[1]<P?"fecha anterior a la puesta a disposición (no válida)":x[1]>lim?"después del plazo (ya rechazada)":fd(x[1])}</div>`).join("");
+      if(val.length>1)st+=`<div><b>Primer acceso</b>: cuenta el de la ${f[0]} y los sistemas se sincronizan (art. 42 RD 203/2021).</div>`;
+      if(r==="si"){o.className="verdict mid";o.innerHTML=`<b class="big">Rechazo expreso el ${fs(f[1])}</b>El rechazo en la ${f[0]} da por efectuado el trámite desde ese día (art. 41.5 LPA).<div class="steps-out">${st}</div>`;return}
+      o.className="verdict ok";o.innerHTML=`<b class="big">Notificada el ${fs(f[1])}</b>Practicada con el acceso al contenido en la ${f[0]}. Los plazos de recurso cuentan desde el día siguiente.<div class="steps-out">${st}</div>`}
+    ["nt-p","nt-s","nt-d","nt-e","nt-r","nt-a"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Creación */
+  (function(){if(!$("cr-t"))return;
+    function run(){const t=$("cr-t").value,a=$("cr-a").value,o=$("cr-out");let h,st;
+      if(t==="sa"||t==="so"){h=a==="c"?"Orden ministerial o resolución, con dos informes previos favorables":"Orden ministerial o resolución, con dos informes previos favorables";
+        st=`<div><b>Instrumento</b>: ${t==="sa"?"orden de la persona titular del Ministerio":"resolución de la persona titular de la Presidencia o Dirección del organismo"}.</div><div><b>Informes previos favorables</b>: del Ministerio competente en <strong>Función Pública</strong> y del competente en <strong>Transformación Digital</strong> (hoy, el mismo Ministerio).</div>${a==="c"?`<div><b>Memoria justificativa y económica</b>: volumen de trámites, efectos presupuestarios, reducción de tiempos y cargas, interés general.</div><div><b>Contenido del acto</b>: ámbito, dirección electrónica de referencia, titular y órganos de gestión.</div>`:""}<div><b>Publicación</b>: BOE y directorio del PAGe.</div>`}
+      else if(t==="pm"||t==="po"){h=a==="c"?"Orden o resolución, con informe de la Comisión Ministerial de Administración Digital":"Basta la comunicación previa";
+        st=a==="c"?`<div><b>Instrumento</b>: ${t==="pm"?"orden del Ministro o resolución del órgano superior":"resolución de la persona titular de la Presidencia o Dirección del organismo"}.</div><div><b>Informe favorable</b>: de la <strong>Comisión Ministerial de Administración Digital</strong> respectiva.</div><div><b>Después</b>: comunicación al Ministerio de Transformación Digital.</div><div><b>Memoria</b>: eficiencia e interés prioritario para una política pública o la aplicación de normas europeas o nacionales.</div>`:`<div><b>Supresión de un portal</b>: solo requiere la comunicación previa al Ministerio de Transformación Digital (art. 5 RD 203/2021).</div>`}
+      else{h="Acto del ayuntamiento publicado en el boletín de la provincia";st=`<div><b>Publicación</b>: en el <strong>boletín oficial de la provincia</strong> a la que pertenece la entidad y en el directorio del PAGe correspondiente (art. 10 RD 203/2021).</div><div><b>Contenido del acto</b>: ámbito, dirección de referencia, titular y órganos de gestión.</div><div><b>Alternativa</b>: puede adherirse a la sede de su diputación, de su comunidad autónoma o a las herramientas estatales.</div>`}
+      o.className="verdict ok";o.innerHTML=`<b class="big">${h}</b><div class="steps-out">${st}</div>`}
+    ["cr-t","cr-a"].forEach(id=>$(id).addEventListener("change",run));run()})();
+  /* Oficinas integradas */
+  (function(){if(!$("oi-1"))return;
+    const L=[["Nivel 1","Contacto"],["Nivel 2","Información"],["Nivel 3","Gestión integral"]];
+    function run(){const a=$("oi-1").checked,b=$("oi-2").checked,c=$("oi-3").checked,o=$("oi-out");let n=0;
+      if(a)n=1;if(a&&b)n=2;if(a&&b&&c)n=3;
+      $("oi-v").innerHTML=L.map((x,i)=>`<div class="${i+1===n?"on":""}"><b>${x[0]}</b>${x[1]}</div>`).join("");
+      if(!n){o.className="verdict ko";o.innerHTML="<b class='big'>No llega al nivel 1</b>Todas las oficinas integradas, como mínimo, reciben, registran y remiten las comunicaciones del ciudadano.";return}
+      const T={1:"Oficina de contacto: servicios de nivel primario (recepción, registro y remisión).",2:"Oficina de información: además, atención y orientación personalizada sobre los servicios de las Administraciones que participan.",3:"Oficina de gestión integral: además, tramitación conjunta de procedimientos de las distintas Administraciones."};
+      let x="";if(!a&&(b||c))x=" Los niveles son acumulativos: cada uno incluye los servicios de los anteriores.";if(a&&!b&&c)x=" No puede ser de gestión integral sin prestar la orientación del nivel 2: los niveles son acumulativos.";
+      o.className="verdict ok";o.innerHTML=`<b class="big">${L[n-1][0]}: ${L[n-1][1]}</b>${T[n]}${x}`}
+    ["oi-1","oi-2","oi-3"].forEach(id=>$(id).addEventListener("change",run));run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Ley 11/2007.",r:"Ley de Acceso Electrónico de los Ciudadanos a los Servicios Públicos. Construyó la regulación sobre el derecho del ciudadano. Derogada por la Ley 39/2015."},
+ {p:"Primera ley que recogió la actuación automatizada.",r:"La Ley 58/2003, General Tributaria."},
+ {p:"Derechos específicos de la Ley 11/2007.",r:"Obtener medios de identificación electrónica, elegir el canal y el medio de autenticación, e igualdad (accesibilidad, género, colectivos y territorios)."},
+ {p:"RD 203/2021.",r:"Reglamento de actuación y funcionamiento del sector público por medios electrónicos; en vigor desde el 2-4-2021; desarrolla las Leyes 39 y 40/2015."},
+ {p:"Personas físicas y canal electrónico.",r:"Eligen en todo momento y pueden cambiar de medio (art. 14.1 LPA)."},
+ {p:"Efectos del cambio de canal.",r:"Desde el quinto día hábil siguiente a la constancia del órgano competente."},
+ {p:"Sujetos obligados (art. 14.2 LPA).",r:"Personas jurídicas, entidades sin personalidad, profesionales colegiados en su actividad, representantes de obligados y empleados públicos en sus trámites como tales."},
+ {p:"Notarios y registradores.",r:"Se incluyen siempre entre los profesionales colegiados obligados."},
+ {p:"Obligación por reglamento en el Estado.",r:"Real decreto del Consejo de Ministros u orden ministerial, publicada en el PAGe y en la sede correspondiente."},
+ {p:"Canales de asistencia (art. 4 RD 203/2021).",r:"Presencial, portales y sedes, redes sociales, teléfono, correo electrónico y cualquier otro."},
+ {p:"Asistencia preferente a los no obligados.",r:"En identificación y firma, presentación en el registro electrónico y obtención de copias auténticas."},
+ {p:"Requisitos para que un funcionario firme por el interesado.",r:"Que el interesado se identifique y preste consentimiento expreso, del que queda constancia."},
+ {p:"Funcionario habilitado en el ámbito estatal.",r:"Debe estar inscrito en el Registro de Funcionarios Habilitados de la AGE, y solo para los trámites determinados previamente."},
+ {p:"Qué entrega el funcionario habilitado.",r:"La documentación acreditativa del trámite y copia del documento de consentimiento expreso (art. 30 RD 203/2021)."},
+ {p:"Sede electrónica (art. 38 LRJSP).",r:"Dirección electrónica disponible para los ciudadanos para las actuaciones que requieren identificar a la Administración y, en su caso, al interesado."},
+ {p:"Sede electrónica asociada.",r:"Se crea por razones técnicas y organizativas y tiene la consideración de sede a todos los efectos."},
+ {p:"Publicación de la creación de sedes.",r:"En el boletín oficial correspondiente (EELL: el de la provincia) y en el directorio del PAGe."},
+ {p:"Contenido mínimo del acto de creación de una sede.",r:"Ámbito, dirección electrónica de referencia, titular y órganos de gestión."},
+ {p:"Creación de sedes en el Estado.",r:"Orden ministerial o resolución del organismo, con informe previo favorable de Función Pública y de Transformación Digital y memoria justificativa y económica."},
+ {p:"Responsabilidad del titular de la sede.",r:"Integridad, veracidad y actualización de la información y servicios de su competencia."},
+ {p:"Contenido mínimo: fecha y hora.",r:"La fecha y hora oficial y el calendario de días inhábiles son contenido mínimo."},
+ {p:"Contenido mínimo sobre automatización.",r:"Relación de actuaciones automatizadas con su diseño, funcionamiento, rendición de cuentas y datos de configuración y aprendizaje."},
+ {p:"Servicios mínimos de la sede.",r:"Trámites con plazos, quejas y sugerencias, reclamaciones de accesibilidad, verificación de certificados y sellos, CSV, presentación masiva, modelos normalizados y directorio de oficinas de registro."},
+ {p:"Códigos de identificación.",r:"Cada Administración mantiene en su sede la lista de códigos de identificación de sus órganos y unidades."},
+ {p:"PAGe.",r:"Portal que facilita el acceso a los servicios, trámites e información de una Administración y aglutina o conduce a sus sedes."},
+ {p:"Qué se aloja en la sede del PAGe de la AGE.",r:"La Dirección Electrónica Habilitada única y la comprobación de documentos por CSV."},
+ {p:"Portal de internet (art. 5 RD 203/2021).",r:"Punto de acceso cuya titularidad es de una Administración u organismo y que da acceso a la información y, en su caso, a la sede."},
+ {p:"Creación de portales en el Estado.",r:"Orden o resolución, con informe favorable de la Comisión Ministerial de Administración Digital y comunicación posterior a Transformación Digital."},
+ {p:"Supresión de portales.",r:"Solo requiere comunicación previa al Ministerio de Transformación Digital."},
+ {p:"Carpeta Ciudadana.",r:"Área personalizada del interesado en el sector público estatal, accesible desde la sede del PAGe."},
+ {p:"Quién accede a la Carpeta Ciudadana.",r:"El interesado, sus representantes legales y quien tenga un poder general inscrito en el Registro Electrónico de Apoderamientos."},
+ {p:"Funciones de la Carpeta Ciudadana.",r:"Seguir los procedimientos, acceder a notificaciones, conocer los datos que tiene el sector público y obtener certificaciones."},
+ {p:"Red SARA.",r:"Infraestructura que interconecta a las Administraciones para intercambiar información y servicios."},
+ {p:"@firma.",r:"Plataforma multi-PKI de validación y firma electrónica."},
+ {p:"VALIDe.",r:"Servicio en línea de validación de certificados y verificación y generación de firmas."},
+ {p:"TS@.",r:"Plataforma de sellado de tiempo para todas las Administraciones."},
+ {p:"SCSP.",r:"Sustitución de Certificados en Soporte Papel: el ciudadano no aporta datos que la Administración ya conoce. Hoy, Plataforma de Intermediación de Datos."},
+ {p:"SIR.",r:"Sistema de Interconexión de Registros: transmite la información registral al registro de destino."},
+ {p:"STORK.",r:"Proyecto de aceptación del DNIe en otras Administraciones europeas; hoy, nodos eIDAS."},
+ {p:"Notificación electrónica: sistemas.",r:"Comparecencia en la sede, en la DEHú o en ambas. Cuenta el primer acceso o rechazo."},
+ {p:"Emisores estatales.",r:"Ponen toda notificación a disposición a través de la DEHú, y pueden hacerlo también en su sede."},
+ {p:"Comparecencia voluntaria del no obligado.",r:"El acceso o rechazo tiene plenos efectos jurídicos."},
+ {p:"Contenido del acuse de recibo.",r:"Acto notificado, destinatario, fecha y hora de la puesta a disposición y del acceso o rechazo."},
+ {p:"Aviso de puesta a disposición.",r:"Meramente informativo; su falta no impide que la notificación sea válida."},
+ {p:"Obligado sin datos de contacto electrónico.",r:"En procedimientos de oficio, la primera notificación va en papel, advirtiendo de que las siguientes serán electrónicas."},
+ {p:"DEHú.",r:"Sistema de notificación electrónica alojado en la sede del PAGe de la AGE (art. 44 RD 203/2021)."},
+ {p:"Incidencia técnica en la DEHú.",r:"Los emisores pueden ampliar el plazo no vencido para comparecer y acceder."},
+ {p:"Cumplimiento de la obligación de notificar en plazo.",r:"Basta la puesta a disposición en la sede o en la DEHú."},
+ {p:"Cartas de servicios electrónicos.",r:"Informan de los servicios electrónicos disponibles, sus requisitos técnicos y los compromisos de calidad."},
+ {p:"CERES.",r:"Proyecto de la FNMT-RCM de entidad pública de certificación, basado en criptografía de clave pública."},
+ {p:"Sistemas de identificación (art. 9.2 LPA).",r:"Certificados cualificados de firma, certificados cualificados de sello y otros sistemas con registro previo del usuario."},
+ {p:"«Otros sistemas» de identificación: plazos.",r:"Efectos a los 2 meses de la comunicación; informe vinculante de la Secretaría de Estado de Seguridad en 10 días."},
+ {p:"Certificado FNMT de ciudadano.",r:"Gratuito, para españoles o extranjeros mayores de edad o emancipados con DNI o NIE."},
+ {p:"Principios del art. 2 RD 203/2021.",r:"Neutralidad tecnológica y adaptabilidad, accesibilidad, facilidad de uso, interoperabilidad, proporcionalidad, personalización y proactividad."},
+ {p:"Principio de proactividad.",r:"Ofrecer servicios precumplimentados y anticiparse a las necesidades a partir del conocimiento del usuario."},
+ {p:"Principio de proporcionalidad.",r:"Solo se exigen las garantías y medidas de seguridad adecuadas a cada trámite."},
+ {p:"Portal del ciudadano.",r:"administracion.gob.es (antes 060.es)."},
+ {p:"Web del Tribunal de Justicia de la UE.",r:"curia.europa.eu"},
+ {p:"Web del Tribunal de Cuentas.",r:"tcu.es"},
+ {p:"SOLVIT.",r:"Servicio de la UE para resolver problemas con los derechos en el mercado interior."},
+ {p:"Oficinas integradas: nivel 1.",r:"De contacto: recepción, registro y remisión."},
+ {p:"Oficinas integradas: nivel 2.",r:"De información: además, atención y orientación personalizada."},
+ {p:"Oficinas integradas: nivel 3.",r:"De gestión integral: además, tramitación conjunta de procedimientos de varias Administraciones."},
+ {p:"Ventanilla Única Empresarial.",r:"Programa de todas las Administraciones y las Cámaras de Comercio para apoyar la creación de empresas."},
+ {p:"Áreas de la VUE física.",r:"Información y direccionamiento, orientación y tramitación."},
+ {p:"CIRCE y DUE.",r:"Centro de Información y Red de Creación de Empresas; Documento Único Electrónico para tramitar la creación."},
+ {p:"SLNE.",r:"Sociedad Limitada Nueva Empresa: tramitación telemática desde 2003 (RD 682/2003); suprimida por la Ley 18/2022."},
+ {p:"Norma que regula el PAG.",r:"Orden HAP/1949/2014, de 13 de octubre, que también crea su sede."},
+ {p:"Titularidad del PAG.",r:"Ministerio competente en Transformación Digital."},
+ {p:"Coordinación del PAG con portales de la UE.",r:"A través de la Representación Permanente de España ante la UE."},
+ {p:"Grupo de trabajo del PAG.",r:"Un representante por Ministerio, al menos de nivel 30, designado por la Subsecretaría."},
+ {p:"Seguimiento de contenidos de otras Administraciones en el PAG.",r:"Comité Sectorial de Administración Electrónica."},
+ {p:"Sede electrónica del PAG.",r:"https://sede.administracion.gob.es; sede central de la AGE."},
+ {p:"Quejas sobre la sede del PAG por vía electrónica.",r:"Servicio electrónico de quejas y sugerencias de la Inspección General del Ministerio competente."},
+ {p:"Cartera europea de identidad digital.",r:"Reglamento (UE) 2024/1183 (eIDAS 2): cada Estado debe ofrecerla gratis antes del 24-12-2026; uso voluntario."}
+]};
+
+const T1=[
+ {q:"La Ley 11/2007 regulaba:",o:["El acceso electrónico de los ciudadanos a los servicios públicos.","El procedimiento administrativo común.","La firma electrónica.","La transparencia."],c:0,e:"Derogada por la Ley 39/2015."},
+ {q:"La primera ley que recogió la automatización de la actuación administrativa fue la:",o:["Ley 58/2003, General Tributaria.","Ley 11/2007.","Ley 30/1992.","Ley 39/2015."],c:0,e:"También las imágenes electrónicas con valor de original."},
+ {q:"La Ley 11/2007 construyó su regulación sobre la base de:",o:["El derecho de los ciudadanos a usar medios electrónicos.","La obligación de las empresas.","La potestad sancionadora.","La firma manuscrita."],c:0,e:"El ciudadano como portador de derechos."},
+ {q:"El RD 203/2021 entró en vigor el:",o:["2 de abril de 2021.","2 de octubre de 2016.","31 de marzo de 2021.","1 de enero de 2022."],c:0,e:"Reglamento de actuación por medios electrónicos."},
+ {q:"El RD 203/2021 deroga el:",o:["RD 1671/2009.","RD 4/2010.","RD 311/2022.","RD 1112/2018."],c:0,e:"Desarrollo de la Ley 11/2007."},
+ {q:"Las personas físicas pueden elegir si se relacionan electrónicamente:",o:["En todo momento, salvo que estén obligadas.","Solo al iniciar el procedimiento.","Nunca.","Solo con autorización."],c:0,e:"Art. 14.1 LPA."},
+ {q:"El cambio de canal de una persona física produce efectos desde:",o:["El quinto día hábil siguiente a la constancia del órgano.","El día siguiente.","El décimo día natural.","El mes siguiente."],c:0,e:"Art. 3.2 RD 203/2021."},
+ {q:"No está obligado por ley a relacionarse electrónicamente:",o:["Un particular que solicita una beca.","Una sociedad limitada.","Una comunidad de bienes.","Un notario en su actividad."],c:0,e:"Las personas físicas eligen."},
+ {q:"Un abogado colegiado que presenta un recurso como abogado:",o:["Está obligado a hacerlo electrónicamente.","Puede elegir.","Debe hacerlo en papel.","Debe hacerlo en persona."],c:0,e:"Art. 14.2.c LPA."},
+ {q:"El representante de una persona jurídica:",o:["Está obligado a relacionarse electrónicamente.","Puede elegir.","Debe presentar en papel.","No puede representar."],c:0,e:"Art. 14.2.d LPA."},
+ {q:"En el Estado, la obligación de relación electrónica para colectivos de personas físicas se establece por:",o:["Real decreto u orden ministerial.","Ley orgánica.","Resolución del Subsecretario.","Instrucción."],c:0,e:"Art. 3 RD 203/2021."},
+ {q:"No es un canal de asistencia del art. 4 RD 203/2021:",o:["El fax.","Las redes sociales.","El teléfono.","El correo electrónico."],c:0,e:"Además: presencial, portales y sedes, y otros."},
+ {q:"La asistencia a los no obligados abarca especialmente:",o:["Identificación y firma, presentación en el registro y copias auténticas.","Redacción de recursos.","Asesoramiento jurídico.","Pago de tasas."],c:0,e:"Art. 12 LPA."},
+ {q:"Para que un funcionario firme por el interesado, este debe:",o:["Identificarse y prestar consentimiento expreso.","Otorgar poder notarial.","Pagar una tasa.","Presentar un certificado médico."],c:0,e:"Art. 12.2 LPA."},
+ {q:"En el Estado, el funcionario que firma por el interesado debe estar inscrito en:",o:["El Registro de Funcionarios Habilitados.","El Registro de Apoderamientos.","El Registro Central de Personal.","El Registro Mercantil."],c:0,e:"Art. 30 RD 203/2021."},
+ {q:"El funcionario habilitado entrega al interesado:",o:["La documentación del trámite y copia del consentimiento firmado.","Un certificado digital.","Su firma electrónica.","Nada."],c:0,e:"Art. 30."},
+ {q:"No es un principio del art. 2 RD 203/2021:",o:["Jerarquía tecnológica.","Neutralidad tecnológica.","Facilidad de uso.","Proporcionalidad."],c:0,e:"Seis principios."},
+ {q:"Ofrecer servicios precumplimentados responde al principio de:",o:["Personalización y proactividad.","Proporcionalidad.","Neutralidad.","Accesibilidad."],c:0,e:"Anticiparse a las necesidades."},
+ {q:"El principio que obliga a usar estándares abiertos es el de:",o:["Neutralidad tecnológica.","Facilidad de uso.","Interoperabilidad.","Proactividad."],c:0,e:"Y adaptabilidad al progreso."},
+ {q:"Los empleados públicos están obligados a relacionarse electrónicamente:",o:["En los trámites que realicen como empleados.","Siempre, también como particulares.","Nunca.","Solo si son A1."],c:0,e:"Art. 14.2.e LPA."}
+];
+const T2=[
+ {q:"La sede electrónica se define en el art.:",o:["38 LRJSP.","14 LPA.","9 LPA.","16 LPA."],c:0,e:"Ley 40/2015."},
+ {q:"Las sedes electrónicas se regulan en el RD 203/2021 en los arts.:",o:["9 a 12.","1 a 4.","37 a 40.","42 a 45."],c:0,e:"Sedes."},
+ {q:"Una sede electrónica asociada tiene la consideración de:",o:["Sede a todos los efectos.","Portal.","Registro.","Mero enlace."],c:0,e:"Art. 10 RD 203/2021."},
+ {q:"La sede de un ayuntamiento se publica en el:",o:["Boletín oficial de la provincia.","BOE.","Diario autonómico.","Tablón de anuncios exclusivamente."],c:0,e:"Art. 10."},
+ {q:"No es contenido mínimo del acto de creación de una sede:",o:["El presupuesto anual de la sede.","El ámbito.","La dirección de referencia.","El titular."],c:0,e:"También los órganos de gestión."},
+ {q:"La creación de una sede asociada a la del PAGe exige informe previo favorable de:",o:["Función Pública y Transformación Digital.","El Consejo de Estado.","La AEPD.","El Ministerio de Hacienda."],c:0,e:"Art. 10.3."},
+ {q:"La propuesta de creación de una sede debe acompañarse de:",o:["Una memoria justificativa y económica.","Un informe del Consejo de Estado.","Un dictamen de la AEPD.","Una ley habilitante."],c:0,e:"Eficiencia."},
+ {q:"La fecha y hora oficial de la sede es:",o:["Contenido mínimo.","Servicio mínimo.","Opcional.","Exclusiva del PAGe."],c:0,e:"Art. 11.1.f."},
+ {q:"El enlace para quejas y sugerencias es:",o:["Servicio mínimo.","Contenido mínimo.","Opcional.","Prohibido."],c:0,e:"Art. 11.2.b."},
+ {q:"La comprobación de documentos mediante CSV es:",o:["Servicio mínimo.","Contenido mínimo.","Un servicio exclusivo del BOE.","Opcional."],c:0,e:"Art. 11.2.f."},
+ {q:"La relación de actuaciones automatizadas debe incluir:",o:["Los datos usados en su configuración y aprendizaje.","El código fuente completo.","El nombre de los programadores.","Solo el título."],c:0,e:"Art. 11.1.i."},
+ {q:"Si una sede enlaza con otra sede, de la información de esta última responde:",o:["El titular de la sede enlazada.","El titular de la primera.","Nadie.","El PAGe."],c:0,e:"Sin perjuicio de la diligencia debida."},
+ {q:"La sede del PAGe de la AGE aloja:",o:["La Dirección Electrónica Habilitada única.","El BOE.","El Registro Mercantil.","El Portal de Transparencia en exclusiva."],c:0,e:"Art. 7 RD 203/2021."},
+ {q:"El PAGe de la AGE permite comprobar documentos mediante:",o:["CSV o sello basado en certificado cualificado.","Fotocopias compulsadas.","Firma manuscrita.","Huella dactilar."],c:0,e:"Art. 7."},
+ {q:"La creación de un portal de internet de un Ministerio requiere informe favorable de:",o:["La Comisión Ministerial de Administración Digital.","El Consejo de Ministros.","La Secretaría de Estado de Seguridad.","El Comité Sectorial."],c:0,e:"Art. 5 RD 203/2021."},
+ {q:"La supresión de un portal estatal requiere:",o:["Comunicación previa al Ministerio de Transformación Digital.","Ley.","Real decreto.","Informe del Consejo de Estado."],c:0,e:"Art. 5."},
+ {q:"La Carpeta Ciudadana es:",o:["El área personalizada del interesado en el sector público estatal.","Un registro de documentos.","Un archivo en papel.","Un portal de transparencia."],c:0,e:"Art. 8 RD 203/2021."},
+ {q:"Puede acceder a la Carpeta Ciudadana de otro:",o:["Quien tenga un poder general inscrito en el Registro Electrónico de Apoderamientos.","Cualquier familiar.","Cualquier funcionario.","Nadie más que el interesado."],c:0,e:"También los representantes legales."},
+ {q:"No es una funcionalidad de la Carpeta Ciudadana:",o:["Presentar recursos judiciales.","Seguir los procedimientos.","Acceder a notificaciones.","Obtener certificaciones."],c:0,e:"Art. 8.2."},
+ {q:"El directorio geográfico de oficinas de asistencia en registros en la sede es:",o:["Servicio mínimo.","Contenido mínimo.","Opcional.","Exclusivo de los ayuntamientos."],c:0,e:"Art. 11.2.i."}
+];
+const T3=[
+ {q:"Las notificaciones electrónicas se practican por comparecencia en:",o:["La sede, la DEHú o ambas.","Correo electrónico ordinario.","SMS.","Redes sociales."],c:0,e:"Art. 43.1 LPA."},
+ {q:"Si se notifica por sede y DEHú, para el cómputo de plazos cuenta:",o:["El primer acceso o rechazo.","El último.","Siempre la DEHú.","Siempre la sede."],c:0,e:"Art. 42 RD 203/2021."},
+ {q:"Los emisores del ámbito estatal ponen la notificación a disposición:",o:["Siempre a través de la DEHú.","Solo en su sede.","Solo en papel.","A elección del interesado."],c:0,e:"Y opcionalmente en su sede."},
+ {q:"La comparecencia voluntaria de un no obligado en la DEHú y el acceso a la notificación:",o:["Tiene plenos efectos.","No tiene efectos.","Requiere ratificación.","Solo vale si lo autoriza el órgano."],c:0,e:"Art. 42.3 RD 203/2021."},
+ {q:"El acuse de recibo de la notificación electrónica no contiene:",o:["La firma manuscrita del interesado.","El acto notificado.","La fecha y hora de puesta a disposición.","La fecha y hora del acceso o rechazo."],c:0,e:"Contenido mínimo."},
+ {q:"Pasados 10 días naturales sin acceder, la notificación:",o:["Se entiende rechazada.","Se repite.","Caduca el procedimiento.","Se publica en el BOE."],c:0,e:"Art. 43.2 LPA."},
+ {q:"La falta de aviso de puesta a disposición:",o:["No impide que la notificación sea válida.","Anula la notificación.","Suspende el plazo.","Obliga a notificar en papel."],c:0,e:"Es meramente informativo."},
+ {q:"El aviso se envía:",o:["Al dispositivo o correo que el interesado haya comunicado.","Siempre por SMS.","Por correo postal.","Al BOE."],c:0,e:"Art. 41.1 LPA."},
+ {q:"Si un obligado no ha dado datos de contacto, en un procedimiento de oficio la primera notificación se hace:",o:["En papel, advirtiendo de que las siguientes serán electrónicas.","Por edicto.","Solo en la DEHú.","Por teléfono."],c:0,e:"Art. 43 RD 203/2021."},
+ {q:"La DEHú se regula en el art.:",o:["44 RD 203/2021.","38 LRJSP.","16 LPA.","7 RD 203/2021."],c:0,e:"Sistema de notificación."},
+ {q:"Ante una incidencia técnica en la DEHú, los emisores pueden:",o:["Ampliar el plazo no vencido.","Anular las notificaciones.","Notificar por teléfono.","Suspender el procedimiento indefinidamente."],c:0,e:"Publicándolo también en su sede."},
+ {q:"La Administración cumple su obligación de notificar en plazo con:",o:["La puesta a disposición en la sede o la DEHú.","El acceso del interesado.","El envío del aviso.","La publicación en el BOE."],c:0,e:"Art. 45 RD 203/2021."},
+ {q:"El sucesor del interesado debe comunicar la sucesión en:",o:["15 días hábiles.","10 días naturales.","1 mes.","5 días hábiles."],c:0,e:"Art. 42 RD."},
+ {q:"Si el sucesor comunica tarde, los defectos de notificación anteriores son imputables:",o:["Al interesado.","A la Administración.","Al notario.","A nadie."],c:0,e:"Art. 42.5 RD."},
+ {q:"Si el sucesor es persona física no obligada y no opta por lo electrónico, las siguientes notificaciones se practican:",o:["En papel.","En la DEHú.","Por edicto.","No se practican."],c:0,e:"Art. 42 RD."},
+ {q:"Las Administraciones pueden crear bases de datos de contacto electrónico para:",o:["Los avisos de puesta a disposición.","Sancionar.","Publicidad.","Encuestas."],c:0,e:"Art. 43 RD."},
+ {q:"El estado de la notificación en la DEHú se sincroniza con:",o:["La sede donde también se puso a disposición.","El BOE.","El Registro Civil.","La AEAT."],c:0,e:"Automáticamente."},
+ {q:"Antes de acceder a la notificación en la DEHú, el interesado es informado de que:",o:["El acceso, el rechazo o los 10 días naturales dan por efectuado el trámite.","Puede recurrir en un mes.","Debe pagar una tasa.","Tiene 20 días para leerla."],c:0,e:"Art. 44 RD."},
+ {q:"El interesado que comunica un correo para avisos y luego pierde el acceso debe:",o:["Comunicar que no se realice el aviso en ese medio.","No hacer nada.","Solicitar notificación en papel siempre.","Darse de baja en la DEHú."],c:0,e:"Si no, la Administración no responde."},
+ {q:"La antigua «Dirección Electrónica Única» del servicio de notificaciones telemáticas se sustituye hoy por:",o:["La DEHú.","Cl@ve.","La Carpeta Ciudadana.","El SIR."],c:0,e:"Dirección Electrónica Habilitada única."}
+];
+const T4=[
+ {q:"La Administración debe verificar la identidad del interesado mediante:",o:["El nombre y apellidos o la razón social del DNI o equivalente.","Una fotografía.","Su firma manuscrita.","Su domicilio."],c:0,e:"Art. 9.1 LPA."},
+ {q:"No es un sistema de identificación del art. 9.2 LPA:",o:["El correo electrónico ordinario.","Certificado cualificado de firma.","Certificado cualificado de sello.","Otros sistemas con registro previo."],c:0,e:"Tres tipos."},
+ {q:"Los prestadores de certificados válidos deben figurar en la:",o:["Lista de confianza de prestadores.","Lista de la AEPD.","Lista del BOE.","Lista de la FNMT exclusivamente."],c:0,e:"Art. 9.2 LPA."},
+ {q:"Los «otros sistemas» de identificación deben comunicarse previamente a:",o:["La Agencia Estatal de Administración Digital.","El Consejo de Estado.","La AEPD.","El Defensor del Pueblo."],c:0,e:"Con declaración responsable."},
+ {q:"Los «otros sistemas» surten efectos tras:",o:["2 meses desde la comunicación.","10 días.","6 meses.","1 año."],c:0,e:"Art. 9.2.c LPA."},
+ {q:"El informe vinculante sobre esos sistemas lo emite la:",o:["Secretaría de Estado de Seguridad, en 10 días.","AEPD, en un mes.","FNMT, en 2 meses.","Abogacía del Estado, en 15 días."],c:0,e:"Seguridad pública."},
+ {q:"Cl@ve es un ejemplo de sistema:",o:["Con registro previo del usuario (art. 9.2.c).","De certificado cualificado de sello.","De firma manuscrita.","Prohibido."],c:0,e:"Cl@ve PIN, permanente, móvil."},
+ {q:"El proyecto CERES lo lidera:",o:["La FNMT-RCM.","La Policía Nacional.","El Banco de España.","La AEAT."],c:0,e:"Entidad pública de certificación."},
+ {q:"CERES utiliza un sistema criptográfico de:",o:["Clave pública.","Clave única simétrica.","Contraseña simple.","Huella dactilar."],c:0,e:"Clave pública."},
+ {q:"El certificado FNMT de persona física puede obtenerlo:",o:["Un mayor de edad o emancipado con DNI o NIE.","Solo un español mayor de 25 años.","Cualquier menor.","Solo las empresas."],c:0,e:"Gratuito."},
+ {q:"El certificado FNMT de ciudadano es:",o:["Gratuito.","De pago.","Solo para funcionarios.","Solo para empresas."],c:0,e:"Manual."},
+ {q:"La plataforma multi-PKI de validación de firma de las Administraciones es:",o:["@firma.","TS@.","SIR.","Red SARA."],c:0,e:"Servicios comunes."},
+ {q:"El sellado de tiempo lo presta la plataforma:",o:["TS@.","@firma.","VALIDe.","SIR."],c:0,e:"Sellado, validación y resellado."},
+ {q:"La infraestructura que interconecta a las Administraciones es:",o:["La Red SARA.","El SIR.","La DEHú.","El PAG."],c:0,e:"Intercambio de información."},
+ {q:"El servicio que evita aportar certificados que la Administración ya tiene era el:",o:["SCSP (hoy, Plataforma de Intermediación de Datos).","STORK.","VALIDe.","TS@."],c:0,e:"Art. 28 LPA."},
+ {q:"STORK tenía por objeto:",o:["La aceptación del DNIe en otras Administraciones europeas.","El sellado de tiempo.","La interconexión de registros.","La pasarela de pagos."],c:0,e:"Hoy, nodos eIDAS."},
+ {q:"El Reglamento eIDAS 2 es el:",o:["Reglamento (UE) 2024/1183.","Reglamento (UE) 910/2014.","Reglamento (UE) 2016/679.","Reglamento (UE) 2024/1689."],c:0,e:"Modifica el 910/2014."},
+ {q:"Cada Estado debe ofrecer una cartera europea de identidad digital antes del:",o:["24 de diciembre de 2026.","20 de mayo de 2024.","1 de enero de 2030.","31 de diciembre de 2025."],c:0,e:"Gratuita y voluntaria."},
+ {q:"El uso de la cartera europea de identidad digital será:",o:["Voluntario.","Obligatorio para todos.","Obligatorio para funcionarios.","De pago."],c:0,e:"Según la Comisión Europea."},
+ {q:"La app oficial que permite llevar el DNI en el móvil se llama:",o:["MiDNI.","miDGT.","Cl@ve.","Carpeta Ciudadana."],c:0,e:"Desde 2025."}
+];
+const T5=[
+ {q:"El punto de partida para acceder a las webs públicas es:",o:["administracion.gob.es.","boe.es.","lamoncloa.gob.es.","congreso.es."],c:0,e:"Antes 060.es."},
+ {q:"La web de la Casa Real es:",o:["casareal.es.","lamoncloa.gob.es.","jefaturadelestado.es.","rey.gob.es."],c:0,e:"Jefatura del Estado."},
+ {q:"La web de la Presidencia del Gobierno es:",o:["lamoncloa.gob.es.","presidencia.es.","casareal.es.","mpr.gob.es."],c:0,e:"Moncloa."},
+ {q:"tcu.es es la web del:",o:["Tribunal de Cuentas.","Tribunal Constitucional.","Tribunal Supremo.","Tribunal de Cuentas Europeo."],c:0,e:"El TC es tribunalconstitucional.es."},
+ {q:"curia.europa.eu corresponde al:",o:["Tribunal de Justicia de la UE.","Consejo de la UE.","Defensor del Pueblo Europeo.","Tribunal Europeo de Derechos Humanos."],c:0,e:"TJUE."},
+ {q:"eca.europa.eu corresponde al:",o:["Tribunal de Cuentas Europeo.","Banco Central Europeo.","Comité de las Regiones.","Parlamento Europeo."],c:0,e:"European Court of Auditors."},
+ {q:"El Supervisor Europeo de Protección de Datos tiene la web:",o:["edps.europa.eu.","aepd.es.","ombudsman.europa.eu.","eesc.europa.eu."],c:0,e:"EDPS."},
+ {q:"eu-careers.europa.eu es la web de la:",o:["Oficina de Selección de Personal de la UE.","Comisión Europea.","Oficina de Publicaciones.","Agencia de Empleo."],c:0,e:"EPSO."},
+ {q:"SOLVIT ayuda a resolver:",o:["Problemas con los derechos en el mercado interior de la UE.","Litigios penales.","Recursos ante el TJUE.","Quejas sobre el Gobierno español."],c:0,e:"Red de la UE."},
+ {q:"El Diario Oficial de la UE se consulta en:",o:["eur-lex.europa.eu.","boe.es.","op.europa.eu exclusivamente.","curia.europa.eu."],c:0,e:"EUR-Lex."},
+ {q:"poderjudicial.es es la web del:",o:["CGPJ, el Tribunal Supremo y los órganos judiciales.","Ministerio de Justicia.","Tribunal Constitucional.","Consejo de Estado."],c:0,e:"Poder Judicial."},
+ {q:"nato.int corresponde a la:",o:["OTAN.","ONU.","OSCE.","OCDE."],c:0,e:"North Atlantic Treaty Organization."},
+ {q:"ilo.org es la web de la:",o:["Organización Internacional del Trabajo.","Organización Marítima Internacional.","FAO.","OCDE."],c:0,e:"International Labour Organization."},
+ {q:"imo.org es la web de la:",o:["Organización Marítima Internacional.","OIT.","OMS.","FMI."],c:0,e:"International Maritime Organization."},
+ {q:"La accesibilidad web se aplica en la UE y España, según el manual, desde:",o:["2002.","2018.","2010.","1995."],c:0,e:"Manual."},
+ {q:"La web del Ministerio para la Transformación Digital y de la Función Pública es:",o:["digital.gob.es.","mpt.gob.es.","hacienda.gob.es.","funcionpublica.es."],c:0,e:"Manual."},
+ {q:"La web del Ministerio de Trabajo y Economía Social es:",o:["mites.gob.es.","inclusion.gob.es.","sepe.es.","seg-social.es."],c:0,e:"Manual."},
+ {q:"El portal Tu Europa (Your Europe) está dirigido a:",o:["Ciudadanos y empresas.","Solo funcionarios.","Solo Estados.","Solo jueces."],c:0,e:"Dos secciones."},
+ {q:"El portal europeo para la cooperación judicial es:",o:["e-justice.europa.eu.","curia.europa.eu.","eurojust.eu.","solvit."],c:0,e:"Portal Europeo de e-Justicia."},
+ {q:"cor.europa.eu es la web del:",o:["Comité de las Regiones.","Consejo de la UE.","Consejo de Europa.","Tribunal de Cuentas Europeo."],c:0,e:"Committee of the Regions."}
+];
+const T6=[
+ {q:"Las oficinas integradas de nivel 1 son las de:",o:["Contacto.","Información.","Gestión integral.","Registro central."],c:0,e:"Recepción, registro y remisión."},
+ {q:"Las oficinas de información son de nivel:",o:["2.","1.","3.","4."],c:0,e:"Atención y orientación personalizada."},
+ {q:"La tramitación conjunta de procedimientos de varias Administraciones corresponde al nivel:",o:["3: gestión integral.","1: contacto.","2: información.","0."],c:0,e:"Nivel avanzado."},
+ {q:"Los niveles de las oficinas integradas son:",o:["Acumulativos.","Excluyentes.","Alternativos.","Temporales."],c:0,e:"Cada uno incluye los anteriores."},
+ {q:"Las oficinas integradas se ubican:",o:["Aprovechando infraestructuras públicas existentes.","En locales privados alquilados.","Solo en Madrid.","En las Cámaras de Comercio."],c:0,e:"Sin cambiar su adscripción."},
+ {q:"La Ventanilla Única Empresarial la impulsan las Administraciones junto con:",o:["Las Cámaras de Comercio.","Los sindicatos.","Los bancos.","Los notarios en exclusiva."],c:0,e:"Programa de simplificación."},
+ {q:"Las ventanillas físicas de la VUE se ubican en:",o:["Las Cámaras de Comercio.","Las Delegaciones del Gobierno.","Los ayuntamientos.","Las notarías."],c:0,e:"Espacios integrados."},
+ {q:"No es un área de atención de la VUE física:",o:["Financiación directa.","Información y direccionamiento.","Orientación.","Tramitación."],c:0,e:"Tres áreas."},
+ {q:"La tramitación telemática de la SLNE se previó por el:",o:["RD 682/2003.","RD 1332/2006.","RD 203/2021.","RD 4/2010."],c:0,e:"Año 2003."},
+ {q:"La tramitación telemática se extendió a toda sociedad limitada por el:",o:["RD 1332/2006.","RD 682/2003.","RD 1671/2009.","RD 311/2022."],c:0,e:"Año 2006."},
+ {q:"El documento electrónico para crear empresas es el:",o:["DUE.","CSV.","DNIe.","NIF provisional."],c:0,e:"Documento Único Electrónico."},
+ {q:"El sistema que tramita el DUE es el de:",o:["CIRCE.","SIR.","Red SARA.","Cl@ve."],c:0,e:"Centro de Información y Red de Creación de Empresas."},
+ {q:"Los puntos donde se asesora al emprendedor y se inicia la tramitación telemática son los:",o:["PAE.","PAG.","SIR.","OAMR."],c:0,e:"Puntos de Atención al Emprendedor."},
+ {q:"La Sociedad Limitada Nueva Empresa:",o:["Fue suprimida por la Ley 18/2022.","Sigue plenamente vigente.","Se creó en 2022.","Exige 3.000 € de capital."],c:0,e:"Ley Crea y Crece."},
+ {q:"Desde la Ley 18/2022, el capital mínimo de una sociedad limitada es de:",o:["1 euro.","3.000 euros.","60.000 euros.","100 euros."],c:0,e:"Y se suprime la formación sucesiva."},
+ {q:"Las cartas de servicios electrónicos informan de:",o:["Los servicios electrónicos y los compromisos de calidad.","Las sanciones.","Los presupuestos.","El personal."],c:0,e:"Y requisitos técnicos."},
+ {q:"El Catálogo General de Publicaciones Oficiales contiene:",o:["Las publicaciones de la AGE y cómo adquirirlas.","Las leyes en vigor.","Las sentencias.","Los contratos."],c:0,e:"Servicio de publicaciones."},
+ {q:"El Sistema de Información Administrativa (SIA) es:",o:["El catálogo de procedimientos de la AGE.","Un registro.","Una red de comunicaciones.","Un sistema de firma."],c:0,e:"Servicios comunes."},
+ {q:"El ENI se aprobó por el:",o:["RD 4/2010.","RD 311/2022.","RD 203/2021.","RD 1671/2009."],c:0,e:"Esquema Nacional de Interoperabilidad."},
+ {q:"El ENS vigente se aprobó por el:",o:["RD 311/2022.","RD 3/2010.","RD 4/2010.","RD 203/2021."],c:0,e:"Esquema Nacional de Seguridad."}
+];
+const T7=[
+ {q:"El PAG se regula por la:",o:["Orden HAP/1949/2014.","Orden PCM/1382/2021.","Ley 11/2007.","Orden HAP/7/2014."],c:0,e:"Que crea también su sede."},
+ {q:"Los dominios del PAG son:",o:["administracion.es y administracion.gob.es.","060.gob.es y sede.es.","gob.es y boe.es.","mpt.gob.es."],c:0,e:"Orden HAP/1949/2014."},
+ {q:"La coordinación del PAG con los portales de la UE se canaliza a través de:",o:["La Representación Permanente de España ante la UE.","El Ministerio de Hacienda.","El Comité Sectorial.","La Comisión Europea."],c:0,e:"Orden HAP/1949/2014."},
+ {q:"No es un contenido del PAG:",o:["Las sentencias de los juzgados.","El Portal de Transparencia.","El portal de datos abiertos.","La información sobre empleo público."],c:0,e:"Contenido y funcionalidades."},
+ {q:"El teléfono de información del PAG es el:",o:["060.","010.","012.","112."],c:0,e:"Canal telefónico."},
+ {q:"La titularidad del PAG corresponde al Ministerio competente en:",o:["Transformación Digital.","Hacienda.","Presidencia.","Interior."],c:0,e:"Fija sus principios."},
+ {q:"La gestión tecnológica de la sede del PAG corresponde a:",o:["La Agencia Estatal de Administración Digital.","La FNMT.","El INAP.","La AEAT."],c:0,e:"Antes, la SGAD."},
+ {q:"La Secretaría General de Administración Digital:",o:["Fue suprimida por el RD 1118/2024.","Sigue vigente.","Se integró en Hacienda.","Es un organismo autónomo."],c:0,e:"Estatuto de la AEAD."},
+ {q:"Los representantes ministeriales en el grupo de trabajo del PAG son al menos de nivel:",o:["30.","28.","26.","22."],c:0,e:"Designados por la Subsecretaría."},
+ {q:"La participación de otras Administraciones en los contenidos del PAG se sigue en el:",o:["Comité Sectorial de Administración Electrónica.","Consejo de Ministros.","Consejo de Estado.","Grupo de trabajo del PAG."],c:0,e:"Gobernanza."},
+ {q:"La sede electrónica del PAG se considera:",o:["La sede central de la AGE.","Una sede asociada menor.","Un portal.","Un registro."],c:0,e:"Orden HAP/1949/2014."},
+ {q:"La dirección de la sede del PAG es:",o:["sede.administracion.gob.es.","administracion.gob.es/sede.","sede.gob.es.","060.es/sede."],c:0,e:"Dirección de referencia."},
+ {q:"La sede del PAG debe cumplir:",o:["El ENS y el ENI.","Solo el ENS.","Solo la LPHE.","El RGPD exclusivamente."],c:0,e:"Seguridad e interoperabilidad."},
+ {q:"No es un contenido específico de la sede del PAG:",o:["El Registro Civil.","El Registro Electrónico de Apoderamientos.","La DEHú.","El Registro de Funcionarios Habilitados."],c:0,e:"Contenidos específicos."},
+ {q:"La sede del PAG posibilitará el acceso en lenguas cooficiales:",o:["A medida que los recursos lo permitan.","Nunca.","Solo en Cataluña.","Desde 2014 en todo caso."],c:0,e:"Progresivamente."},
+ {q:"El titular de la sede del PAG no responde de:",o:["Los enlaces cuya responsabilidad corresponde a otro órgano.","Su propia información.","Su actualización.","Su integridad."],c:0,e:"Orden HAP/1949/2014."},
+ {q:"Las quejas electrónicas sobre la sede del PAG se presentan en el servicio de:",o:["La Inspección General del Ministerio competente.","El Defensor del Pueblo.","La AEPD.","El 060."],c:0,e:"Enlazado en la sede."},
+ {q:"Los servicios de asesoramiento al usuario de la sede:",o:["No son medios para formular quejas.","Son el único medio de queja.","Sustituyen al registro.","Son recursos."],c:0,e:"Orden HAP/1949/2014."},
+ {q:"La sede del PAG extiende su ámbito a otras Administraciones:",o:["Según los instrumentos de colaboración que se formalicen.","Siempre.","Nunca.","Por ley."],c:0,e:"Ámbito."},
+ {q:"El PAG tiene un espacio dedicado a:",o:["La participación ciudadana.","La publicidad comercial.","Los partidos políticos.","Las oposiciones privadas."],c:0,e:"Y a las redes sociales."}
+];
+const T8=[
+ {q:"Una persona física comunica el lunes 16-11-2026 que quiere pasar a lo electrónico. ¿Desde cuándo produce efectos?",o:["Desde el lunes 23-11-2026 (5.º día hábil).","Desde el 17-11-2026.","Desde el 21-11-2026.","Desde el 26-11-2026."],c:0,e:"17, 18, 19, 20 y 23 de noviembre."},
+ {q:"Una notificación se pone en la DEHú y en la sede el 16-11. El interesado accede en la sede el 18 y en la DEHú el 20. Fecha de la notificación:",o:["18-11.","20-11.","26-11.","16-11."],c:0,e:"Primer acceso."},
+ {q:"La misma notificación no se abre nunca. Se entiende rechazada el:",o:["26-11-2026.","30-11-2026.","16-12-2026.","1-12-2026."],c:0,e:"10 días naturales."},
+ {q:"Una notificación válida se hizo sin enviar el aviso al correo del interesado. Consecuencia:",o:["Es válida: el aviso es meramente informativo.","Es nula.","Es anulable.","Debe repetirse."],c:0,e:"Art. 41.6 LPA."},
+ {q:"Una comunidad de propietarios presenta una solicitud en papel. Procede:",o:["Requerir subsanación electrónica: es entidad sin personalidad obligada.","Admitirla.","Archivarla.","Pedir poder notarial."],c:0,e:"Art. 14.2.b."},
+ {q:"Un jubilado sin certificado digital quiere firmar electrónicamente un trámite estatal. Puede hacerlo:",o:["Un funcionario habilitado inscrito, con su identificación y consentimiento expreso.","Su vecino con su certificado.","Nadie.","Un notario en todo caso."],c:0,e:"Art. 12 LPA; art. 30 RD."},
+ {q:"Un Ministerio quiere crear una sede asociada a la del PAGe. Necesita:",o:["Orden ministerial, informes de Función Pública y Transformación Digital y memoria.","Solo una nota interna.","Una ley.","Un acuerdo del Consejo de Ministros."],c:0,e:"Art. 10 RD 203/2021."},
+ {q:"Un organismo quiere suprimir su portal de internet. Necesita:",o:["Comunicación previa al Ministerio de Transformación Digital.","Informe de la Comisión Ministerial de Administración Digital.","Ley.","Real decreto."],c:0,e:"Art. 5."},
+ {q:"Un ayuntamiento crea su sede electrónica. La publica en:",o:["El boletín oficial de la provincia.","El BOE.","Solo en su web.","El diario autonómico necesariamente."],c:0,e:"Art. 10."},
+ {q:"Una sede no muestra la fecha y hora oficial. Incumple:",o:["Un contenido mínimo.","Un servicio mínimo.","Nada.","La LPHE."],c:0,e:"Art. 11.1.f."},
+ {q:"Una oficina integrada recibe, registra, remite y orienta, pero no tramita procedimientos de otras Administraciones. Su nivel es:",o:["2: información.","1: contacto.","3: gestión integral.","No es integrada."],c:0,e:"Niveles acumulativos."},
+ {q:"Una emprendedora quiere constituir en 2026 una Sociedad Limitada Nueva Empresa. Se le debe informar de que:",o:["Ya no existe; puede constituir una SL ordinaria con el DUE y 1 € de capital.","Debe aportar 3.012 €.","Debe ir al Registro Civil.","Solo puede hacerlo en papel."],c:0,e:"Ley 18/2022."},
+ {q:"Un ciudadano quiere ver en un solo sitio sus expedientes con la AGE y sus notificaciones. Debe usar:",o:["La Carpeta Ciudadana.","El BOE.","El SIR.","La Red SARA."],c:0,e:"Art. 8 RD 203/2021."},
+ {q:"Un hijo quiere acceder a la Carpeta Ciudadana de su padre. Puede si:",o:["Tiene un poder general inscrito en el Registro Electrónico de Apoderamientos.","Es su hijo.","Vive con él.","Lo pide por teléfono."],c:0,e:"Art. 8."},
+ {q:"Un organismo quiere usar un sistema de identificación propio con usuario y contraseña. Debe:",o:["Comunicarlo a la Agencia Estatal de Administración Digital y esperar 2 meses.","Aprobar una ley.","Pedir permiso a la UE.","Nada."],c:0,e:"Art. 9.2.c LPA."},
+ {q:"Un ciudadano quiere verificar un documento recibido con CSV de un organismo estatal. Lo hace en:",o:["La sede del PAGe o la sede del organismo.","Un notario.","El Registro Civil.","La AEPD."],c:0,e:"Arts. 7 y 11 RD 203/2021."},
+ {q:"Un menor no emancipado de 16 años pide el certificado FNMT de ciudadano. ¿Puede?",o:["No: hace falta ser mayor de edad o estar emancipado.","Sí.","Sí, con 14 años.","Solo si es extranjero."],c:0,e:"Manual."},
+ {q:"Hay una caída de la DEHú durante tres días. El órgano emisor puede:",o:["Ampliar el plazo no vencido para comparecer.","Anular las notificaciones.","Dar por notificados a todos.","Nada."],c:0,e:"Art. 44 RD."},
+ {q:"El heredero de un interesado fallecido el 1-12-2026 (inscripción ese día) debe comunicarlo en:",o:["15 días hábiles.","10 días naturales.","1 mes.","3 meses."],c:0,e:"Art. 42 RD."},
+ {q:"Un funcionario quiere solicitar una licencia por asuntos propios. Debe hacerlo:",o:["Por medios electrónicos, por su condición de empleado.","En papel.","A elección.","Por teléfono."],c:0,e:"Art. 14.2.e LPA."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"⚡",name:"Marco, derechos y asistencia",desc:"Ley 11/2007, art. 14 LPA, art. 12 LPA, principios.",qs:T1},
+ {id:"t2",ic:"🏛️",name:"Sedes, PAGe, portales y Carpeta Ciudadana",desc:"Arts. 5-11 RD 203/2021.",qs:T2},
+ {id:"t3",ic:"📬",name:"Notificaciones electrónicas",desc:"Sede, DEHú, avisos, sucesión.",qs:T3},
+ {id:"t4",ic:"🔑",name:"Identificación, firma y servicios comunes",desc:"Art. 9 LPA, FNMT, Cl@ve, eIDAS 2.",qs:T4},
+ {id:"t5",ic:"🌐",name:"Páginas web de carácter público",desc:"Estado, UE e internacionales.",qs:T5},
+ {id:"t6",ic:"🏢",name:"Oficinas integradas, VUE y servicios",desc:"Niveles, CIRCE, DUE, Ley 18/2022.",qs:T6},
+ {id:"t7",ic:"🧭",name:"PAG y su sede electrónica",desc:"Orden HAP/1949/2014.",qs:T7},
+ {id:"t8",ic:"🧩",name:"Casos prácticos",desc:"Plazos, obligados, sedes y notificaciones.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+
+const ESQ=[
+ {id:"e1",title:"Obligados a relacionarse electrónicamente (art. 14.2 LPA)",intro:"Cinco sujetos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Obligados</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>a)</b>Personas {{0}}</div>
+   <div class="sch-box alt"><b>b)</b>Entidades sin {{1}}</div>
+   <div class="sch-box"><b>c)</b>Profesionales con colegiación {{2}}</div>
+   <div class="sch-box alt"><b>e)</b>Empleados {{3}}, en sus trámites como tales</div>
+  </div></div>`,
+  blanks:[{o:["jurídicas","físicas","mayores","extranjeras"],why:"Art. 14.2.a."},{o:["personalidad jurídica","ánimo de lucro","domicilio","NIF"],why:"Art. 14.2.b."},{o:["obligatoria","voluntaria","autonómica","europea"],why:"Incluye notarios y registradores."},{o:["públicos","privados","interinos solo","laborales solo"],why:"Art. 14.2.e."}]},
+ {id:"e2",title:"Persona física y cambio de canal",intro:"Art. 14.1 LPA y art. 3 RD 203/2021.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Persona física</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Elección</b>En todo {{0}}</div>
+   <div class="sch-box alt"><b>Efectos del cambio</b>Desde el {{1}} día hábil</div>
+   <div class="sch-box"><b>Obligación reglamentaria (Estado)</b>Real decreto u {{2}}</div>
+   <div class="sch-box alt"><b>Publicación</b>En el {{3}} y en la sede</div>
+  </div></div>`,
+  blanks:[{o:["momento","procedimiento único","caso con permiso","plazo de 10 días"],why:"Art. 14.1."},{o:["quinto","décimo","primer","tercer"],why:"Art. 3.2 RD."},{o:["orden ministerial","ley","instrucción","circular"],why:"Art. 3 RD."},{o:["PAGe","BOE exclusivamente","Registro Civil","DOUE"],why:"Art. 3 RD."}]},
+ {id:"e3",title:"Canales de asistencia (art. 4 RD 203/2021)",intro:"Seis canales.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Canales de asistencia</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>a)</b>{{0}}, en oficinas de asistencia</div>
+   <div class="sch-box alt"><b>b)</b>Portales y {{1}}</div>
+   <div class="sch-box"><b>c)</b>Redes {{2}}</div>
+   <div class="sch-box alt"><b>d-e)</b>Teléfono y {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Presencial","Postal","Notarial","Judicial"],why:"Art. 4.a."},{o:["sedes electrónicas","registros","archivos","boletines"],why:"Art. 4.b."},{o:["sociales","privadas","SARA","de cajeros"],why:"Art. 4.c."},{o:["correo electrónico","fax","telégrafo","burofax"],why:"Art. 4.d-e."}]},
+ {id:"e4",title:"Firma por funcionario habilitado",intro:"Art. 12 LPA y art. 30 RD 203/2021.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Funcionario habilitado</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Requisito 1</b>El interesado se {{0}}</div>
+   <div class="sch-box alt"><b>Requisito 2</b>Consentimiento {{1}}</div>
+   <div class="sch-box"><b>Estado</b>Inscrito en el Registro de Funcionarios {{2}}</div>
+   <div class="sch-box alt"><b>Entrega</b>Documentación y copia del {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["identifica","registra","empadrona","certifica"],why:"Ante el funcionario."},{o:["expreso","tácito","presunto","verbal"],why:"Con constancia."},{o:["Habilitados","de Carrera","Interinos","Colegiados"],why:"Art. 30 RD."},{o:["consentimiento","DNI","certificado","poder"],why:"Formulario en el PAGe."}]},
+ {id:"e5",title:"Ordena: principios del art. 2 RD 203/2021",intro:"Letras a) a f).",type:"order",
+  items:[{t:"Neutralidad tecnológica y adaptabilidad",why:"a)."},{t:"Accesibilidad",why:"b)."},{t:"Facilidad de uso",why:"c)."},{t:"Interoperabilidad",why:"d)."},{t:"Proporcionalidad",why:"e)."},{t:"Personalización y proactividad",why:"f)."}]},
+ {id:"e6",title:"Sedes electrónicas: creación",intro:"Art. 10 RD 203/2021.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Sede o sede asociada</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Sede asociada</b>Sede a todos los {{0}}</div>
+   <div class="sch-box alt"><b>EELL</b>Boletín de la {{1}}</div>
+   <div class="sch-box"><b>Estado</b>Informes de Función Pública y {{2}}</div>
+   <div class="sch-box alt"><b>Justificación</b>Memoria justificativa y {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["efectos","fines informativos","trámites menores","casos"],why:"Art. 10.1."},{o:["provincia","comunidad autónoma","nación","comarca"],why:"Art. 10.2."},{o:["Transformación Digital","Hacienda","Justicia","Interior"],why:"Art. 10.3."},{o:["económica","jurídica","técnica solo","política"],why:"Eficiencia."}]},
+ {id:"e7",title:"Contenidos mínimos de la sede (selección)",intro:"Art. 11.1 RD 203/2021.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Contenido mínimo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Tiempo</b>Fecha y hora oficial y días {{0}}</div>
+   <div class="sch-box alt"><b>Identidad</b>Sistemas de identificación y {{1}} admitidos</div>
+   <div class="sch-box"><b>Algoritmos</b>Actuaciones {{2}}</div>
+   <div class="sch-box alt"><b>Incidencias</b>Y ampliaciones de {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["inhábiles","hábiles","festivos locales solo","de apertura"],why:"Art. 11.1.f."},{o:["firma","pago","acceso","contraseña"],why:"Art. 11.1.d."},{o:["automatizadas","manuales","presenciales","judiciales"],why:"Art. 11.1.i."},{o:["plazo","horario","personal","presupuesto"],why:"Art. 11.1.g."}]},
+ {id:"e8",title:"Servicios mínimos de la sede (selección)",intro:"Art. 11.2 RD 203/2021.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Servicio mínimo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Participación</b>Enlace para quejas y {{0}}</div>
+   <div class="sch-box alt"><b>Verificación</b>Documentos mediante {{1}}</div>
+   <div class="sch-box"><b>Presentación</b>Sistemas de presentación {{2}}</div>
+   <div class="sch-box alt"><b>Oficinas</b>Directorio de oficinas de asistencia en {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["sugerencias","recursos","denuncias","peticiones"],why:"Art. 11.2.b."},{o:["CSV","fotocopia","huella","firma manuscrita"],why:"Código seguro de verificación."},{o:["masiva","presencial","verbal","postal"],why:"Voluntaria."},{o:["registros","archivos","información","empleo"],why:"Art. 11.2.i."}]},
+ {id:"e9",title:"Carpeta Ciudadana",intro:"Art. 8 RD 203/2021.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Carpeta Ciudadana</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Qué es</b>Área {{0}} del interesado</div>
+   <div class="sch-box alt"><b>Dónde</b>Sede del {{1}}</div>
+   <div class="sch-box"><b>Acceden</b>Interesado, representantes legales y apoderados con poder {{2}}</div>
+   <div class="sch-box alt"><b>Ofrece</b>Saber qué {{3}} suyos tiene el sector público</div>
+  </div></div>`,
+  blanks:[{o:["personalizada","pública","compartida","temporal"],why:"Art. 8.1."},{o:["PAGe","BOE","SIR","Registro Civil"],why:"Sede del PAGe."},{o:["general inscrito","especial verbal","notarial cualquiera","apud acta solo"],why:"Registro Electrónico de Apoderamientos."},{o:["datos","bienes","deudas","expedientes judiciales"],why:"Art. 8.2.c."}]},
+ {id:"e10",title:"Notificación electrónica",intro:"Arts. 41-43 LPA y 42-45 RD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Notificación electrónica</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Sistemas</b>Sede o {{0}}</div>
+   <div class="sch-box alt"><b>Ambos</b>Cuenta el {{1}} acceso</div>
+   <div class="sch-box"><b>Sin acceso</b>{{2}} días naturales = rechazo</div>
+   <div class="sch-box alt"><b>Aviso</b>Meramente {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["DEHú","SIR","Red SARA","TS@"],why:"Dirección Electrónica Habilitada única."},{o:["primer","último","segundo","más largo"],why:"Art. 42.2 RD."},{o:["10","15","20","5"],why:"Art. 43.2 LPA."},{o:["informativo","constitutivo","obligatorio para la validez","sancionador"],why:"Su falta no invalida."}]},
+ {id:"e11",title:"Sistemas de identificación (art. 9.2 LPA)",intro:"Tres tipos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Identificación electrónica</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>a)</b>Certificado cualificado de {{0}}</div>
+   <div class="sch-box alt"><b>b)</b>Certificado cualificado de {{1}}</div>
+   <div class="sch-box"><b>c)</b>Otros con registro {{2}} del usuario</div>
+   <div class="sch-box alt"><b>Efecto de los «otros»</b>A los {{3}} meses</div>
+  </div></div>`,
+  blanks:[{o:["firma electrónica","residencia","nacimiento","empadronamiento"],why:"Lista de confianza."},{o:["sello electrónico","tiempo","calidad","garantía"],why:"Personas jurídicas y órganos."},{o:["previo","posterior","notarial","judicial"],why:"Cl@ve, por ejemplo."},{o:["2","6","1","12"],why:"Art. 9.2.c."}]},
+ {id:"e12",title:"Oficinas integradas",intro:"Tres niveles acumulativos.",type:"order",
+  items:[{t:"Nivel 1 · Contacto: recepción, registro y remisión",why:"Nivel primario."},{t:"Nivel 2 · Información: atención y orientación personalizada",why:"Nivel intermedio."},{t:"Nivel 3 · Gestión integral: tramitación conjunta",why:"Nivel avanzado."}]},
+ {id:"e13",title:"Creación de empresas",intro:"VUE, PAE, CIRCE y Ley 18/2022.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Emprender</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>VUE</b>En las Cámaras de {{0}}</div>
+   <div class="sch-box alt"><b>Documento</b>{{1}} (Documento Único Electrónico)</div>
+   <div class="sch-box"><b>Sistema</b>{{2}}</div>
+   <div class="sch-box alt"><b>Ley 18/2022</b>Suprime la {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Comercio","Cuentas","Diputados","Representantes"],why:"Programa conjunto."},{o:["DUE","CSV","NIF","DNIe"],why:"Intercambio de documentación."},{o:["CIRCE","SIR","SARA","TS@"],why:"Centro de Información y Red de Creación de Empresas."},{o:["SLNE","sociedad anónima","cooperativa","sociedad laboral"],why:"Sociedad Limitada Nueva Empresa."}]},
+ {id:"e14",title:"El PAG (Orden HAP/1949/2014)",intro:"Titularidad, gestión y gobernanza.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Punto de Acceso General</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Titular</b>Ministerio de {{0}}</div>
+   <div class="sch-box alt"><b>Gestión tecnológica</b>Agencia Estatal de {{1}}</div>
+   <div class="sch-box"><b>Grupo de trabajo</b>Representantes de nivel {{2}}</div>
+   <div class="sch-box alt"><b>Otras Administraciones</b>Comité {{3}} de Administración Electrónica</div>
+  </div></div>`,
+  blanks:[{o:["Transformación Digital","Hacienda","Presidencia","Interior"],why:"Fija principios y directrices."},{o:["Administración Digital","Seguridad","Protección de Datos","Tributaria"],why:"RD 1118/2024."},{o:["30","28","26","24"],why:"Al menos."},{o:["Sectorial","Ministerial","Interministerial","Técnico"],why:"Seguimiento."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("op3c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("op3c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
