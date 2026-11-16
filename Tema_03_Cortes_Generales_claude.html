@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque 1 · Tema 3 · Las Cortes Generales · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">OE3</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Organización del Estado y de la Administración Pública</small>
+      <b>Las Cortes Generales</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .steps-out{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .steps-out div{padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .steps-out div b{color:var(--a1)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .dh{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:10px}
+    .dh th,.dh td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+    .dh th:first-child,.dh td:first-child{text-align:left}
+    .dh td.w{background:rgba(10,163,127,.14);font-weight:800}
+    .dh td.x{color:var(--muted);text-decoration:line-through}
+    .dh-wrap{overflow-x:auto}
+    .pt{display:grid;grid-template-columns:1.4fr 1fr;gap:6px;margin-bottom:6px}
+    .pt input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:inherit;font:inherit}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque 1 · Tema 3 · Organización del Estado y de la Administración Pública</span>
+    <h1>Las Cortes Generales <span>Congreso, Senado, funciones y elaboración de las leyes</span></h1>
+    <p>Resumen de alto rendimiento del manual (Título III CE y LOREG) y de sus dos anexos (el Congreso en la Constitución y los órganos y funciones de las Cortes), actualizado a <strong>noviembre de 2026</strong>: la <strong>cuarta reforma constitucional</strong> (art. 69.3, Formentera), un Senado de 209 senadores de elección directa, las Cortes disueltas con la Diputación Permanente convalidando decretos-leyes y las elecciones del 29-N. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Una calculadora D'Hondt con la barrera del 3 %.</li>
+      <li>Un comprobador de grupo parlamentario y una calculadora de senadores autonómicos.</li>
+      <li>Un simulador de la tramitación de una ley en el Senado (veto, enmiendas, plazos).</li>
+      <li>Simuladores de la moción de censura y de la cuestión de confianza.</li>
+      <li>Entrenadores de mayorías parlamentarias y de tipos de tratado.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">14</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">95</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('dh').scrollIntoView({behavior:'smooth'})">D'Hondt ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('lg').scrollIntoView({behavior:'smooth'})">Tramitación de leyes ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('my').scrollIntoView({behavior:'smooth'})">Mayorías ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado respecto al manual:</strong>
+    <ul>
+      <li><strong>Cuarta reforma de la Constitución (art. 69.3)</strong>: publicada en el BOE el <strong>20-5-2026</strong>. Separa Ibiza y Formentera en dos circunscripciones senatoriales de 1 senador cada una. Fue iniciativa del Parlamento balear y se aprobó por el art. 167 sin referéndum. La LO 2/2026 adaptó la LOREG. Se aplica por primera vez en las elecciones del <strong>29-11-2026</strong>, con lo que el Senado pasa a tener <strong>209 senadores de elección directa</strong> (antes, 208).</li>
+      <li><strong>Senadores autonómicos</strong>: el manual habla de 57 y un total de 265. En la última fase de la XV Legislatura eran 58, con 266 senadores en total. La cifra cambia con la población de cada comunidad y con sus elecciones autonómicas.</li>
+      <li><strong>Cortes disueltas</strong>: el RD 806/2026 disolvió las Cámaras el 6-10-2026. Las nuevas se constituyen el 23-12-2026. Mientras tanto actúa la <strong>Diputación Permanente</strong>, que en el Congreso tiene 69 miembros y ha convalidado decretos-leyes, como el RDL 25/2026.</li>
+      <li><strong>Control político en 2026</strong>: el 25-6-2026 el Congreso aprobó una moción (consecuencia de interpelación) que instaba al Presidente a someterse a una cuestión de confianza. No es vinculante: la cuestión de confianza solo puede plantearla el Presidente del Gobierno (art. 112), y la única vía para forzar su caída es la moción de censura.</li>
+      <li><strong>Precisión</strong>: el art. 86 no impide a los decretos-leyes tocar todo el Título I, sino afectar a «los derechos, deberes y libertades de los ciudadanos regulados en el Título I».</li>
+    </ul></span></div>
+
+  <div class="section-title" id="dh">
+    <div><span class="kicker">Art. 68 CE · art. 163 LOREG</span><h2>Calculadora D'Hondt</h2></div>
+    <p>Reparto de los escaños de una provincia en el Congreso. Solo entran en el reparto las candidaturas con al menos el 3 % de los votos válidos (que incluyen los votos en blanco).</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Escaños de la circunscripción<input type="number" id="dh-s" min="1" max="40" value="7"></label>
+      <label>Votos en blanco<input type="number" id="dh-b" min="0" value="4000"></label>
+    </div>
+    <div id="dh-p" style="margin-top:10px"></div>
+    <div class="dh-wrap"><table class="dh" id="dh-t"></table></div>
+    <div class="verdict" id="dh-out"></div>
+  </div>
+
+  <div class="section-title" id="gp">
+    <div><span class="kicker">Reglamentos de las Cámaras · art. 69.5 CE</span><h2>Grupos parlamentarios y senadores autonómicos</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="gp-tabs"><button class="on" data-p="g">¿Puede formar grupo?</button><button data-p="s">Senadores autonómicos</button></div>
+    <div class="pane on" id="gp-g">
+      <div class="tool-grid">
+        <label>Cámara<select id="gg-c"><option value="c">Congreso</option><option value="s">Senado</option></select></label>
+        <label>Escaños obtenidos<input type="number" id="gg-e" min="0" value="6"></label>
+        <label>% de votos en las circunscripciones donde se presentó<input type="number" id="gg-p" min="0" max="100" step="0.1" value="17"></label>
+        <label>% de votos en toda España<input type="number" id="gg-n" min="0" max="100" step="0.1" value="1.2"></label>
+      </div>
+      <div class="verdict" id="gg-out"></div>
+    </div>
+    <div class="pane" id="gp-s">
+      <div class="tool-grid">
+        <label>Población de la Comunidad Autónoma<input type="number" id="gs-p" min="0" step="1000" value="8500000"></label>
+      </div>
+      <div class="verdict" id="gs-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="lg">
+    <div><span class="kicker">Arts. 87-91 CE</span><h2>Simulador: la ley en el Senado y su vuelta al Congreso</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Tipo de ley<select id="lg-t"><option value="o">Ordinaria</option><option value="lo">Orgánica</option></select></label>
+      <label>¿Declarada urgente?<select id="lg-u"><option value="no">No</option><option value="si">Sí (por el Gobierno o el Congreso)</option></select></label>
+      <label>Recepción del texto en el Senado<input type="date" id="lg-f" value="2026-03-02"></label>
+      <label>Decisión del Senado<select id="lg-d"><option value="a">Aprueba sin enmiendas</option><option value="e">Introduce enmiendas</option><option value="v" selected>Veto (mayoría absoluta)</option></select></label>
+      <label>Fecha del veto (si lo hay)<input type="date" id="lg-vf" value="2026-04-15"></label>
+      <label>Votos a favor del texto en el Congreso (de 350)<input type="number" id="lg-c" min="0" max="350" value="170"></label>
+      <label>Votos en contra en el Congreso<input type="number" id="lg-n" min="0" max="350" value="160"></label>
+    </div>
+    <div class="verdict" id="lg-out"></div>
+  </div>
+
+  <div class="section-title" id="mc">
+    <div><span class="kicker">Arts. 112-114 CE</span><h2>Moción de censura y cuestión de confianza</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="mc-tabs"><button class="on" data-p="m">Moción de censura</button><button data-p="c">Cuestión de confianza</button></div>
+    <div class="pane on" id="mc-m">
+      <div class="tool-grid">
+        <label>Diputados que la firman<input type="number" id="mm-f" min="0" max="350" value="40"></label>
+        <label>¿Incluye candidato alternativo?<select id="mm-k"><option value="si">Sí</option><option value="no">No</option></select></label>
+        <label>Fecha de presentación<input type="date" id="mm-d" value="2027-03-01"></label>
+        <label>Votos a favor<input type="number" id="mm-v" min="0" max="350" value="172"></label>
+      </div>
+      <div class="verdict" id="mm-out"></div>
+    </div>
+    <div class="pane" id="mc-c">
+      <div class="tool-grid">
+        <label>¿Quién la plantea?<select id="mq-q"><option value="p">El Presidente del Gobierno, previa deliberación del Consejo de Ministros</option><option value="x">La oposición, mediante una moción</option></select></label>
+        <label>Votos a favor<input type="number" id="mq-s" min="0" max="350" value="150"></label>
+        <label>Votos en contra<input type="number" id="mq-n" min="0" max="350" value="140"></label>
+      </div>
+      <div class="verdict" id="mq-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="my">
+    <div><span class="kicker">CE · Reglamentos</span><h2>¿Qué mayoría hace falta?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="my-case"></div>
+    <div class="choice" id="my-opts"></div>
+    <div class="verdict" id="my-out" style="display:none"></div>
+    <div class="score"><span id="my-score">0 de 0</span><button class="btn btn-g btn-sm" id="my-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="tt">
+    <div><span class="kicker">Arts. 93-96 CE</span><h2>¿Qué tipo de tratado es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="tt-case"></div>
+    <div class="choice" id="tt-opts"></div>
+    <div class="verdict" id="tt-out" style="display:none"></div>
+    <div class="score"><span id="tt-score">0 de 0</span><button class="btn btn-g btn-sm" id="tt-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Anexo · órganos de las Cámaras</span><h2>Mapa de órganos</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>300-400 · 350</b><span>Diputados según la Constitución · según la LOREG</span></div>
+    <div class="num"><b>2 + 1 + 1 + 248</b><span>Mínimo por provincia · Ceuta · Melilla · reparto proporcional</span></div>
+    <div class="num"><b>3 % · D'Hondt</b><span>Barrera por circunscripción y fórmula del Congreso</span></div>
+    <div class="num"><b>4 · 3 · 1 · 2</b><span>Senadores por provincia peninsular · isla mayor · isla menor · Ceuta y Melilla</span></div>
+    <div class="num"><b>209 <span class="upd">2026</span></b><span>Senadores de elección directa desde el 29-N (Formentera, 4.ª reforma)</span></div>
+    <div class="num"><b>1 + 1/millón</b><span>Senadores designados por cada Comunidad Autónoma</span></div>
+    <div class="num"><b>4 años · 30-60 · 25 · 15</b><span>Mandato · elecciones · constitución · días de campaña</span></div>
+    <div class="num"><b>Sep-dic · feb-jun</b><span>Periodos ordinarios de sesiones</span></div>
+    <div class="num"><b>4 + 4 · 2 + 4</b><span>Vicepresidentes y Secretarios de la Mesa: Congreso · Senado</span></div>
+    <div class="num"><b>15 · 5 + 15 % / 5 % · 10</b><span>Grupo en el Congreso · vía alternativa · grupo en el Senado</span></div>
+    <div class="num"><b>21</b><span>Mínimo de miembros de la Diputación Permanente</span></div>
+    <div class="num"><b>1/10 · 5 días · 2 días</b><span>Moción de censura: firmas · enfriamiento · alternativas</span></div>
+    <div class="num"><b>15 diputados · 25 senadores · 500.000</b><span>Iniciativa legislativa: Congreso · Senado · popular</span></div>
+    <div class="num"><b>9 + 3 meses</b><span>Plazo para recoger las firmas de la iniciativa popular</span></div>
+    <div class="num"><b>2 meses · 20 días</b><span>Plazo del Senado · si la ley es urgente</span></div>
+    <div class="num"><b>30 días</b><span>Convalidación de un decreto-ley por el Congreso</span></div>
+    <div class="num"><b>15 · 20 días</b><span>Sanción regia · entrada en vigor por defecto</span></div>
+    <div class="num"><b>1 año</b><span>Sin nueva disolución discrecional (art. 115.3)</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Composición</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Las Cortes Generales: normas y características</h3><small>Título III (arts. 66-96)</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Normas</strong>: Constitución (Título III, arts. 66-96); <strong>LOREG</strong> (LO 5/1985, de 19 de junio); Reglamento del Congreso (10-2-1982); texto refundido del Reglamento del Senado (3-5-1994). <span class="upd">2026</span> La LO 2/2026 adaptó la LOREG a la reforma del art. 69.3.</li>
+          <li><strong>Características</strong>:
+            <ul>
+              <li><strong>representativas</strong> de la soberanía;</li>
+              <li>órgano de poder político, cuyos actos solo revisa el TC;</li>
+              <li><strong>deliberantes</strong>;</li>
+              <li><strong>bicamerales</strong>, mientras que los parlamentos autonómicos son unicamerales;</li>
+              <li><strong>legislativas</strong>;</li>
+              <li>de <strong>control</strong> del Gobierno;</li>
+              <li><strong>permanentes</strong>, gracias a la Diputación Permanente;</li>
+              <li>de <strong>publicidad</strong>: las sesiones plenarias son públicas, salvo acuerdo por mayoría absoluta o con arreglo al Reglamento (art. 80).</li>
+            </ul>
+          </li>
+          <li><strong>Mandato</strong>: los parlamentarios no están ligados por mandato imperativo (art. 67.2), aunque pueden someterse a la disciplina de su grupo. Representan al pueblo español en su conjunto.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>El Congreso de los Diputados</h3><small>Art. 68 CE · LOREG · anexo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Composición</strong>: entre 300 y 400 diputados según la Constitución; <strong>350</strong> según la LOREG. Cámara de representación <strong>poblacional</strong>.</li>
+          <li><strong>Reparto</strong>: la circunscripción es la <strong>provincia</strong>, con un mínimo inicial de <strong>2</strong> diputados. Ceuta y Melilla eligen <strong>1</strong> cada una. Los <strong>248</strong> restantes se reparten en proporción a la población.</li>
+          <li><strong>Elección</strong>: sufragio universal, libre, igual, directo y secreto; sistema proporcional con <strong>D'Hondt</strong> y barrera del <strong>3 %</strong> de los votos válidos de la circunscripción. Mandato de <strong>4 años</strong>.</li>
+          <li><strong>Calendario</strong>:
+            <ul>
+              <li>Elecciones entre <strong>30 y 60 días</strong> desde la terminación del mandato.</li>
+              <li>El real decreto de convocatoria fija la fecha de las elecciones, la duración de la campaña (<strong>15 días</strong>), los diputados por circunscripción y la sesión constitutiva, que debe celebrarse en <strong>25 días</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Sesión constitutiva</strong>:
+            <ul>
+              <li>La preside al inicio el diputado electo de <strong>mayor edad</strong>, con los dos más jóvenes como secretarios.</li>
+              <li>Se elige la Mesa y se presta juramento o promesa de acatar la Constitución, por orden alfabético.</li>
+              <li>Se comunica la constitución al Rey, al Senado y al Gobierno.</li>
+              <li>La sesión solemne de apertura se celebra en los 15 días siguientes.</li>
+            </ul>
+          </li>
+          <li><strong>Funciones exclusivas del Congreso</strong>:
+            <ul>
+              <li>investidura (art. 99), cuestión de confianza y moción de censura;</li>
+              <li><strong>convalidar o derogar los decretos-leyes</strong> (art. 86);</li>
+              <li>autorizar la prórroga del estado de alarma y la declaración y prórroga del de excepción; declarar el estado de sitio;</li>
+              <li>acusar al Gobierno por traición o delitos contra la seguridad del Estado (art. 102.2: iniciativa de 1/4 y mayoría absoluta);</li>
+              <li>autorizar el referéndum consultivo (art. 92).</li>
+            </ul>
+          </li>
+          <li><strong>Otras posiciones del Congreso</strong> (anexo): conoce primero de los proyectos de ley y de los Presupuestos, y confirma o rechaza las enmiendas y vetos del Senado.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>El Senado</h3><small>Art. 69 CE · reforma de 2026</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Cámara de <strong>representación territorial</strong>, aunque en la práctica es una cámara de segunda lectura. Su número de miembros <strong>no es fijo</strong>.</li>
+          <li><strong>Elección directa</strong>:
+            <ul>
+              <li><strong>4</strong> por provincia peninsular;</li>
+              <li><strong>3</strong> por cada isla mayor (Gran Canaria, Mallorca, Tenerife);</li>
+              <li><strong>1</strong> por cada isla o agrupación menor;</li>
+              <li><strong>2</strong> por Ceuta y por Melilla.</li>
+            </ul>
+            <span class="upd">2026</span> Desde la reforma del art. 69.3, <strong>Ibiza</strong> y <strong>Formentera</strong> eligen 1 senador cada una (antes eran una sola circunscripción). Las islas menores son ahora Ibiza, Formentera, Menorca, Fuerteventura, La Gomera, El Hierro, Lanzarote y La Palma, y los senadores de elección directa pasan de 208 a <strong>209</strong>.</li>
+          <li><strong>Designación autonómica</strong> (art. 69.5): <strong>1</strong> por cada Comunidad y <strong>1 más por cada millón</strong> de habitantes (sin contar la fracción). Los designa la Asamblea Legislativa o, en su defecto, el órgano colegiado superior de la Comunidad. El manual dice 57 (265 en total); en 2026 eran 58 (266).</li>
+          <li><strong>Funciones que empiezan en el Senado</strong>: los acuerdos de cooperación entre CCAA (art. 145) y la distribución del Fondo de Compensación Interterritorial (art. 158), por el procedimiento del art. 74.2.</li>
+          <li><strong>Función exclusiva</strong>: aprobar por <strong>mayoría absoluta</strong> las medidas del <strong>art. 155</strong> para obligar a una Comunidad a cumplir sus obligaciones.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Disolución de las Cámaras</h3><small>Arts. 99, 115 y 168</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Automática</strong>:
+            <ul>
+              <li>por fin de la legislatura (4 años);</li>
+              <li>por la cláusula del <strong>art. 99.5</strong> (sin investidura en 2 meses, refrenda el Presidente del Congreso);</li>
+              <li>por la aprobación del principio de una reforma del <strong>art. 168</strong> (2/3).</li>
+            </ul>
+          </li>
+          <li><strong>Discrecional</strong> (art. 115): a iniciativa exclusiva del <strong>Presidente del Gobierno</strong>, previa deliberación (no aprobación) del Consejo de Ministros. Puede afectar a una Cámara o a las dos. <span class="upd">2026</span> Ejemplo: RD 806/2026.</li>
+          <li><strong>Límites</strong>:
+            <ul>
+              <li>no cabe la discrecional mientras se tramita una <strong>moción de censura</strong>;</li>
+              <li>ni antes de <strong>1 año</strong> desde la anterior disolución, salvo el caso del art. 99.5;</li>
+              <li>el Congreso no puede disolverse durante los estados de alarma, excepción o sitio.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Estatuto de los parlamentarios</h3><small>Arts. 67, 70 y 71</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Prerrogativas</strong> (art. 71):
+            <ul>
+              <li><strong>inviolabilidad</strong> por las opiniones y votos emitidos en el ejercicio de sus funciones;</li>
+              <li><strong>inmunidad</strong>: solo pueden ser detenidos en flagrante delito, y para inculparlos o procesarlos hace falta autorización de la Cámara (<strong>suplicatorio</strong>);</li>
+              <li><strong>fuero</strong> ante la Sala de lo Penal del <strong>Tribunal Supremo</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Derechos</strong>: voto, preguntas e interpelaciones, formar parte de comisiones y grupos, asignación. En el Congreso pueden usar las <strong>lenguas cooficiales</strong> (reforma del Reglamento de 2023).</li>
+          <li><strong>Deberes</strong>: asistencia, acatar la autoridad del Presidente, guardar secreto y presentar la declaración de bienes y actividades al tomar posesión y al cesar.</li>
+          <li><strong>Incompatibilidades</strong>:
+            <ul>
+              <li><strong>Art. 67</strong>: no se puede ser miembro de las dos Cámaras. Tampoco diputado y miembro de una asamblea autonómica (el senador, en cambio, sí puede).</li>
+              <li><strong>Art. 70</strong>: magistrados del TC; altos cargos (salvo los miembros del Gobierno; la LOREG permite también a los Secretarios de Estado); Defensor del Pueblo; magistrados, jueces y fiscales en activo; militares y miembros de las Fuerzas y Cuerpos de Seguridad en activo; miembros de las Juntas Electorales.</li>
+              <li>Se completan con los arts. 6 (inelegibilidad) y 155 (incompatibilidad) de la LOREG.</li>
+            </ul>
+          </li>
+          <li>Las actas y credenciales están sometidas a control judicial.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Principios de funcionamiento</h3><small>Arts. 72-79</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Autonomía</strong>:
+            <ul>
+              <li>Cada Cámara aprueba su <strong>Reglamento</strong> por <strong>mayoría absoluta</strong> en una votación final sobre la totalidad.</li>
+              <li>Aprueban sus presupuestos.</li>
+              <li>Regulan de común acuerdo el Estatuto del Personal de las Cortes.</li>
+              <li>El Reglamento de las Cortes Generales para las sesiones conjuntas está previsto, pero aún no se ha aprobado.</li>
+            </ul>
+          </li>
+          <li><strong>Periodos de sesiones</strong>: <strong>septiembre a diciembre</strong> y <strong>febrero a junio</strong>.</li>
+          <li><strong>Sesiones extraordinarias</strong>: a petición del <strong>Gobierno</strong>, de la <strong>Diputación Permanente</strong> o de la <strong>mayoría absoluta</strong> de los miembros de cualquiera de las Cámaras, sobre un orden del día determinado.</li>
+          <li>Las Cámaras funcionan en <strong>Pleno</strong> y en <strong>Comisiones</strong>. Las convoca su Presidente; la sesión constitutiva la convoca el <strong>Rey</strong>.</li>
+          <li><strong>Acuerdos</strong> (art. 79): mayoría de los miembros <strong>presentes</strong>, sin perjuicio de las mayorías especiales. El voto es <strong>personal e indelegable</strong>.</li>
+          <li><strong>Sesión conjunta</strong>: solo para las competencias no legislativas del Título II. La preside el <strong>Presidente del Congreso</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Organización interna</h3>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Órganos de gobierno y funcionales</h3><small>Presidente, Mesa, Pleno y Comisiones · anexo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Presidente</strong>:
+            <ul>
+              <li>Representa a la Cámara y ejerce los poderes de <strong>policía</strong>; dirige los trabajos y hace cumplir el Reglamento.</li>
+              <li><strong>Elección</strong> en la sesión constitutiva, en votación secreta: <strong>mayoría absoluta</strong> en la primera votación; si no, una segunda entre los dos más votados, en la que gana el que obtiene más votos.</li>
+            </ul>
+          </li>
+          <li><strong>Mesa</strong>: órgano rector, que organiza el trabajo y gestiona la actividad económica interna.
+            <ul>
+              <li><strong>Congreso</strong>: Presidente, <strong>4 Vicepresidentes</strong> y <strong>4 Secretarios</strong>.</li>
+              <li><strong>Senado</strong>: Presidente, <strong>2 Vicepresidentes</strong> y 4 Secretarios.</li>
+            </ul>
+          </li>
+          <li><strong>Pleno</strong>: puede recabar en cualquier momento el debate y la votación de cualquier proyecto o proposición de ley.</li>
+          <li><strong>Comisiones</strong> (arts. 74-76): en ellas se desarrolla el trabajo parlamentario. Sus miembros los designan los grupos en proporción a su importancia, con al menos uno por grupo. Los ministros pueden asistir con voz.
+            <ul>
+              <li><strong>Legislativas permanentes</strong>: el Pleno puede delegarles la aprobación de leyes, salvo la reforma constitucional, las cuestiones internacionales, las leyes orgánicas y de bases y los Presupuestos.</li>
+              <li><strong>No legislativas permanentes</strong>: Reglamento, Estatuto de los Diputados, Peticiones, Suplicatorios…</li>
+              <li><strong>No permanentes</strong>, entre ellas las de <strong>investigación</strong> (art. 76). Sus conclusiones no vinculan a los tribunales, pero pueden comunicarse al Ministerio Fiscal; la comparecencia es obligatoria.</li>
+              <li><strong>Mixtas</strong>: con igual número de miembros de cada Cámara. Unas buscan acuerdo entre las Cámaras (arts. 74.2 y 167) y otras son permanentes, como la de Relaciones con el Defensor del Pueblo.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Diputación Permanente, grupos y Junta de Portavoces</h3><small>Art. 78 · Reglamentos · anexo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Diputación Permanente</strong>:
+            <ul>
+              <li>Vela por los poderes de la Cámara entre periodos de sesiones o cuando está disuelta, hasta que se constituyan las nuevas Cámaras.</li>
+              <li>Tiene <strong>21 miembros como mínimo</strong>, en proporción a los grupos, y la preside el Presidente de la Cámara.</li>
+              <li><strong>Funciones</strong>: pedir sesiones extraordinarias y, si el Congreso está disuelto, asumir las facultades sobre los <strong>estados excepcionales</strong> y la <strong>convalidación de los decretos-leyes</strong>.</li>
+              <li><span class="upd">2026</span> La del Congreso tiene 69 miembros y convalidó, por ejemplo, el RDL 25/2026 el 16-10-2026.</li>
+            </ul>
+          </li>
+          <li><strong>Grupos parlamentarios</strong>:
+            <ul>
+              <li><strong>Congreso</strong>: 15 diputados; o al menos 5 escaños y el 15 % de los votos de las circunscripciones donde se presentaron, o el 5 % de los votos nacionales.</li>
+              <li><strong>Senado</strong>: 10 senadores.</li>
+              <li>Se constituyen en los <strong>5 días</strong> siguientes a la sesión constitutiva.</li>
+              <li>No puede haber grupos separados de un mismo partido, ni de formaciones que no se enfrentaron en las elecciones.</li>
+              <li>Quien no alcanza los mínimos va al <strong>Grupo Mixto</strong>. El grupo se disuelve si queda por debajo de la mitad del mínimo.</li>
+            </ul>
+          </li>
+          <li><strong>Junta de Portavoces</strong>: el Presidente y los portavoces de los grupos. Decide por <strong>voto ponderado</strong>, fija el calendario y es oída sobre la composición de las comisiones.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Funciones</h3>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Funciones generales, de la Corona, internas y financieras</h3><small>Arts. 66, 57-60, 72, 131 y 136 · anexo</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Art. 66</strong>: representan al pueblo español, ejercen la <strong>potestad legislativa</strong>, aprueban los <strong>Presupuestos</strong> y <strong>controlan</strong> al Gobierno.</li>
+          <li><strong>Otras</strong> (anexo):
+            <ul>
+              <li>eligen al Presidente del Gobierno y designan al Defensor del Pueblo;</li>
+              <li>proponen <strong>8 magistrados del TC</strong> y <strong>20 vocales del CGPJ</strong>;</li>
+              <li>aprueban la reforma constitucional;</li>
+              <li>autorizan tratados y distribuyen el Fondo de Compensación Interterritorial.</li>
+            </ul>
+          </li>
+          <li><strong>Funciones relacionadas con la Corona</strong>:
+            <ul>
+              <li>prohibir matrimonios (art. 57.4);</li>
+              <li>proclamar al Rey y recibir los juramentos del Rey, del Príncipe y del Regente;</li>
+              <li>reconocer la inhabilitación;</li>
+              <li>nombrar tutor y Regencia;</li>
+              <li>resolver por ley orgánica las abdicaciones y dudas sucesorias.</li>
+            </ul>
+          </li>
+          <li><strong>Orden interno</strong> (art. 72): Reglamentos por mayoría absoluta, presupuestos propios, elección de las Mesas y Estatuto del Personal.</li>
+          <li><strong>Funciones financieras</strong>: planificar por ley la actividad económica general (art. 131). El <strong>Tribunal de Cuentas</strong> depende de las Cortes (art. 136).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Control del Gobierno</h3><small>Título V · arts. 108-116</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Controlan las dos Cámaras, pero solo el <strong>Congreso</strong> puede exigir responsabilidad política.</li>
+          <li><strong>Cuestión de confianza</strong> (art. 112):
+            <ul>
+              <li>La plantea solo el <strong>Presidente del Gobierno</strong>, previa deliberación del Consejo de Ministros, sobre su programa o sobre una declaración de política general.</li>
+              <li>Se aprueba por <strong>mayoría simple</strong>, solo ante el Congreso.</li>
+              <li>Si no se aprueba, el Gobierno dimite y se abre el procedimiento del art. 99.</li>
+            </ul>
+          </li>
+          <li><strong>Moción de censura</strong> (art. 113):
+            <ul>
+              <li>La firman al menos <strong>1/10</strong> de los diputados e incluye un <strong>candidato</strong> (es constructiva).</li>
+              <li>No se vota hasta pasados <strong>5 días</strong>; en los <strong>2 primeros</strong> caben mociones alternativas.</li>
+              <li>Requiere <strong>mayoría absoluta</strong>. Si prospera, cae el Gobierno y el candidato queda investido.</li>
+              <li>Si fracasa, sus firmantes no pueden presentar otra en el mismo periodo de sesiones.</li>
+            </ul>
+          </li>
+          <li><strong>Otros instrumentos</strong> (ambas Cámaras):
+            <ul>
+              <li>información (art. 109) y comparecencias (art. 110);</li>
+              <li><strong>preguntas</strong> (cuestiones concretas, sin moción posterior) e <strong>interpelaciones</strong> (política general, que pueden dar lugar a una <strong>moción</strong>) (art. 111);</li>
+              <li>comisiones de investigación (art. 76).</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> La moción del 25-6-2026 que instaba al Presidente a someterse a una cuestión de confianza no le obligaba a nada.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Los tratados internacionales</h3><small>Arts. 93-96</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Son competencia exclusiva del Estado. Las CCAA solo pueden pedir que se celebren si su Estatuto lo prevé.</li>
+          <li>Una vez <strong>publicados oficialmente</strong> forman parte del ordenamiento interno y solo se modifican conforme a sus propias normas o al Derecho internacional. Su <strong>denuncia</strong> sigue el mismo procedimiento que su aprobación (art. 96).</li>
+          <li><strong>Art. 93</strong>: los que atribuyen competencias constitucionales a una organización internacional (por ejemplo, la UE) se autorizan por <strong>ley orgánica</strong>.</li>
+          <li><strong>Art. 94.1</strong>: necesitan <strong>autorización previa de las Cortes</strong> los tratados políticos, militares, los que afecten a la integridad territorial o a los derechos del Título I, los que impliquen obligaciones financieras y los que modifiquen o deroguen leyes o exijan medidas legislativas. La autorización sigue el art. 74.2: empieza en el Congreso, cada Cámara decide por mayoría simple, puede intervenir una comisión mixta y, en último término, decide el Congreso por mayoría absoluta.</li>
+          <li><strong>Art. 94.2</strong>: los demás tratados solo requieren <strong>informar inmediatamente</strong> a las Cámaras.</li>
+          <li><strong>Art. 95</strong>: un tratado con estipulaciones contrarias a la Constitución exige la <strong>previa revisión constitucional</strong>. El Gobierno o cualquiera de las Cámaras pueden pedir al TC que lo declare (precedente: Maastricht y la reforma del 13.2).</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Elaboración de las leyes</h3>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>La iniciativa legislativa</h3><small>Arts. 87-89 · LO 3/1984</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Titulares</strong>:
+            <ul>
+              <li>el <strong>Gobierno</strong> presenta <strong>proyectos de ley</strong>, que entran por el Congreso con exposición de motivos y antecedentes y tienen preferencia de tramitación;</li>
+              <li>el <strong>Congreso</strong> (1 diputado con la firma de otros 14, o un grupo);</li>
+              <li>el <strong>Senado</strong> (25 senadores o un grupo);</li>
+              <li>las <strong>asambleas autonómicas</strong>, que pueden pedir al Gobierno un proyecto o remitir una proposición al Congreso con hasta 3 miembros para defenderla;</li>
+              <li>el <strong>pueblo</strong>.</li>
+            </ul>
+            Salvo los proyectos del Gobierno, las demás iniciativas son <strong>proposiciones de ley</strong>.</li>
+          <li><strong>Iniciativa legislativa popular</strong> (art. 87.3; LO 3/1984): la comisión promotora presenta la proposición y, una vez admitida, recoge <strong>500.000 firmas</strong> en <strong>9 meses</strong>, prorrogables 3 meses más por causa mayor.
+            <ul>
+              <li>No cabe en materias de <strong>ley orgánica</strong>, tributarias, internacionales, prerrogativa de gracia, planificación económica (art. 131) ni Presupuestos (art. 134.1).</li>
+            </ul>
+          </li>
+          <li>Los proyectos de ley no necesitan toma en consideración. Las proposiciones sí, y las del Senado las toma en consideración el Senado, sin que el Congreso pueda negarse a tramitarlas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Tramitación parlamentaria e integración de la eficacia</h3><small>Arts. 90-91</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Congreso</strong>:
+            <ol>
+              <li>La Mesa ordena la publicación del texto y abre <strong>15 días</strong> de enmiendas.</li>
+              <li>Las enmiendas a la <strong>totalidad</strong> (devolución o texto alternativo) se debaten en el Pleno; las <strong>parciales</strong> (de adición, supresión o modificación), en Comisión, sobre el informe de una Ponencia.</li>
+              <li>El Pleno aprueba el texto por mayoría simple, o absoluta si es ley orgánica, salvo que haya delegado en la Comisión (art. 75.2).</li>
+            </ol>
+          </li>
+          <li><strong>Senado</strong>: dispone de <strong>2 meses</strong> (<strong>20 días naturales</strong> si la ley es urgente) y puede hacer tres cosas.
+            <ul>
+              <li><strong>Aprobar</strong> el texto, y concluye la tramitación.</li>
+              <li><strong>Enmendarlo</strong> por mayoría simple: el Congreso acepta o rechaza las enmiendas por mayoría simple.</li>
+              <li><strong>Vetarlo</strong> por mayoría absoluta: el Congreso puede levantar el veto de inmediato por mayoría absoluta, o pasados 2 meses por mayoría simple (absoluta si es orgánica).</li>
+            </ul>
+          </li>
+          <li><strong>Eficacia</strong>:
+            <ul>
+              <li><strong>sanción</strong> por el Rey en <strong>15 días</strong>, como acto debido;</li>
+              <li><strong>promulgación</strong> y <strong>publicación</strong> en el BOE;</li>
+              <li>entrada en vigor a los <strong>20 días</strong> de la publicación, salvo que la ley disponga otra cosa (art. 2.1 del Código Civil).</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Normas con rango de ley y leyes especiales</h3><small>Arts. 82-86 y 150</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Decretos legislativos</strong> (arts. 82-85):
+            <ul>
+              <li>Son legislación delegada por las Cortes. Para un <strong>texto articulado</strong>, la delegación se hace por <strong>ley de bases</strong>; para un <strong>texto refundido</strong>, por <strong>ley ordinaria</strong>.</li>
+              <li>La delegación es <strong>expresa</strong>, para una materia concreta y con plazo, y se agota al publicarse el texto. <strong>No cabe subdelegar</strong>.</li>
+              <li>No pueden regular materias de ley orgánica.</li>
+              <li>La ley de bases no puede autorizar a modificarla ni a dictar normas retroactivas.</li>
+              <li>Los controlan los tribunales, además de los controles adicionales que fije la ley de delegación.</li>
+            </ul>
+          </li>
+          <li><strong>Decretos-leyes</strong> (art. 86):
+            <ul>
+              <li>Se dictan en casos de <strong>extraordinaria y urgente necesidad</strong> y son disposiciones provisionales.</li>
+              <li>El Congreso los convalida o deroga en <strong>30 días</strong> desde su promulgación. En ese plazo pueden tramitarse como proyecto de ley por urgencia.</li>
+              <li>No pueden afectar a las instituciones básicas del Estado, a los derechos, deberes y libertades del Título I, al régimen de las CCAA ni al Derecho electoral general.</li>
+            </ul>
+          </li>
+          <li><strong>Leyes del art. 150</strong>:
+            <ul>
+              <li><strong>Ley marco</strong> (150.1): ordinaria; permite a las CCAA legislar en materias estatales dentro de sus principios. Controlan los tribunales y las Cortes.</li>
+              <li><strong>Ley de transferencia o delegación</strong> (150.2): <strong>orgánica</strong>; incluye los medios financieros y los controles que se reserva el Estado.</li>
+              <li><strong>Ley de armonización</strong> (150.3): la necesidad la aprecian las Cortes por <strong>mayoría absoluta</strong>, pero la ley es ordinaria.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>350</b>Lo fija la LOREG; la Constitución dice entre 300 y 400.</div>
+    <div class="trap"><b>Senado</b>Su composición no es fija. Desde el 29-N hay 209 senadores de elección directa (Formentera).</div>
+    <div class="trap"><b>Cuatro reformas</b>13.2 (1992), 135 (2011), 49 (2024) y 69.3 (2026).</div>
+    <div class="trap"><b>Senador y asamblea autonómica</b>Es compatible; ser diputado y miembro de una asamblea autonómica, no.</div>
+    <div class="trap"><b>Mesa del Senado</b>Tiene 2 Vicepresidentes, no 4.</div>
+    <div class="trap"><b>Sesión conjunta</b>Solo para las competencias no legislativas del Título II; la preside el Presidente del Congreso.</div>
+    <div class="trap"><b>Cuestión de confianza</b>Mayoría simple, y solo la plantea el Presidente. La moción de censura exige mayoría absoluta.</div>
+    <div class="trap"><b>Art. 155</b>Lo aprueba solo el Senado, por mayoría absoluta.</div>
+    <div class="trap"><b>Veto del Senado</b>Mayoría absoluta. El Congreso lo levanta de inmediato por mayoría absoluta, o a los 2 meses por mayoría simple.</div>
+    <div class="trap"><b>Iniciativa popular</b>500.000 firmas. Nunca en materias de ley orgánica, tributarias, internacionales o de gracia.</div>
+    <div class="trap"><b>Delegación legislativa</b>Texto articulado por ley de bases; texto refundido por ley ordinaria.</div>
+    <div class="trap"><b>Comisiones legislativas</b>No pueden aprobar leyes orgánicas, de bases, internacionales, Presupuestos ni la reforma constitucional.</div>
+    <div class="trap"><b>Tratados</b>Art. 93 por ley orgánica; art. 94.1 con autorización previa; art. 94.2 con información.</div>
+    <div class="trap"><b>Decreto-ley</b>Lo convalida el Congreso en 30 días (o su Diputación Permanente), no las Cortes.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 3. Las Cortes Generales: composición, atribuciones y funcionamiento del Congreso de los Diputados y del Senado» (Organización del Estado y de la Administración Pública, CEA) y anexos «Congreso de los Diputados en la Constitución» y «Cortes Generales: órganos y funciones», actualizado a noviembre de 2026: cuarta reforma constitucional (art. 69.3, BOE de 20-5-2026) y LO 2/2026, RD 806/2026 de disolución y actividad de la Diputación Permanente.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Bloque 1 · Tema 3 · Herramientas ===== */
+const MY=[
+ ["Investidura del candidato a Presidente del Gobierno en la primera votación.","abs","Art. 99.3. En la segunda votación, 48 horas después, basta la mayoría simple."],
+ ["Investidura en la segunda votación.","sim","Art. 99.3: más votos a favor que en contra."],
+ ["Aprobación de una moción de censura.","abs","Art. 113.1."],
+ ["Aprobación de una cuestión de confianza.","sim","Art. 112."],
+ ["Votación final sobre el conjunto de una ley orgánica en el Congreso.","abs","Art. 81.2."],
+ ["Veto del Senado a un proyecto de ley.","abs","Art. 90.2."],
+ ["Levantamiento inmediato del veto por el Congreso.","abs","Art. 90.2."],
+ ["Levantamiento del veto a una ley ordinaria pasados 2 meses.","sim","Art. 90.2."],
+ ["Aprobación del Reglamento del Congreso o de su reforma.","abs","Art. 72.1: votación final sobre la totalidad."],
+ ["Declaración del estado de sitio.","abs","Art. 116.4, por el Congreso."],
+ ["Aprobación por el Senado de las medidas del art. 155.","abs","Art. 155.1."],
+ ["Elección del Presidente de la Cámara en la primera votación.","abs","Reglamentos de las Cámaras; en la segunda votación basta la mayoría relativa."],
+ ["Acuerdo de celebrar una sesión plenaria no pública.","abs","Art. 80 CE."],
+ ["Reforma constitucional por el art. 167.","35","3/5 de cada Cámara (o mayoría absoluta del Senado y 2/3 del Congreso)."],
+ ["Aprobación del principio de una revisión total de la Constitución.","23","Art. 168.1."],
+ ["Propuesta de 4 magistrados del TC por el Congreso.","35","Art. 159.1."],
+ ["Apreciación de la necesidad de una ley de armonización.","abs","Art. 150.3; después, la ley es ordinaria."],
+ ["Convalidación de un decreto-ley.","sim","Art. 86.2."],
+ ["Autorización de un tratado del art. 94.1 en cada Cámara.","sim","Art. 74.2. Si persiste el desacuerdo, decide el Congreso por mayoría absoluta."],
+ ["Aprobación de una acusación contra el Presidente del Gobierno por traición.","abs","Art. 102.2: iniciativa de 1/4 del Congreso y aprobación por mayoría absoluta."]
+];
+const MYO={sim:"Simple",abs:"Absoluta","35":"3/5","23":"2/3"};
+const TT=[
+ ["Tratado de adhesión de España a una organización a la que se atribuyen competencias derivadas de la Constitución.","93","Art. 93: se autoriza por ley orgánica."],
+ ["Tratado de alianza militar.","941","Art. 94.1.b: carácter militar."],
+ ["Convenio que obliga a España a aportar fondos a un programa internacional.","941","Art. 94.1.d: obligaciones financieras para la Hacienda Pública."],
+ ["Tratado de amistad y cooperación política con otro Estado.","941","Art. 94.1.a: carácter político."],
+ ["Tratado que afecta a la integridad territorial del Estado.","941","Art. 94.1.c."],
+ ["Convenio que exige modificar una ley española para aplicarlo.","941","Art. 94.1.e."],
+ ["Tratado que afecta al derecho a la intimidad de los ciudadanos.","941","Art. 94.1.c: afecta a derechos del Título I."],
+ ["Acuerdo técnico de intercambio cultural sin gasto ni cambios legislativos.","942","Art. 94.2: basta con informar inmediatamente a las Cámaras."],
+ ["Tratado que contiene una estipulación contraria a la Constitución.","95","Art. 95: exige la previa revisión constitucional; el TC puede declararlo a petición del Gobierno o de una Cámara."],
+ ["El Tratado de Maastricht, que permitía a los ciudadanos de la UE ser elegidos en las municipales.","95","Art. 95: dio lugar a la reforma del art. 13.2 en 1992."]
+];
+const TTO={"93":"Art. 93 (ley orgánica)","941":"Art. 94.1 (autorización de las Cortes)","942":"Art. 94.2 (solo información)","95":"Art. 95 (revisión constitucional previa)"};
+const PART=[["Partido A",145000],["Partido B",118000],["Partido C",52000],["Partido D",21000],["Partido E",7500]];
+const INS=[
+ {g:"Órganos de gobierno",n:"Presidente de la Cámara",norm:"Art. 72.2 CE · Reglamentos",def:"Representa a la Cámara y dirige sus trabajos.",f:{"Elección":"Mayoría absoluta; si no, segunda votación entre los dos más votados.","Funciones":"Policía, dirección de los debates, cumplimiento del Reglamento.","Sesión conjunta":"La preside el Presidente del Congreso.","Refrendo":"El del Congreso refrenda los actos del art. 99."}},
+ {g:"Órganos de gobierno",n:"Mesa",norm:"Art. 72.2 CE",def:"Órgano rector de la Cámara.",f:{"Congreso":"Presidente, 4 Vicepresidentes, 4 Secretarios.","Senado":"Presidente, 2 Vicepresidentes, 4 Secretarios.","Funciones":"Organiza el trabajo y gestiona la actividad económica interna.","Elección":"En la sesión constitutiva, por el Pleno."}},
+ {g:"Órganos de gobierno",n:"Junta de Portavoces",norm:"Reglamentos de las Cámaras",def:"Órgano político formado por el Presidente y los portavoces de los grupos.",f:{"Voto":"Ponderado.","Funciones":"Dirección política, calendario de actividades.","Comisiones":"Es oída sobre su composición.","Composición":"Presidente + portavoces."}},
+ {g:"Órganos funcionales",n:"Pleno",norm:"Art. 75 CE",def:"Reunión de todos los miembros de la Cámara.",f:{"Funciones":"Debates, investidura, aprobación de leyes.","Avocación":"Puede recabar cualquier proyecto o proposición.","Delegación":"Puede delegar en las comisiones legislativas, con excepciones.","Publicidad":"Sesiones públicas, salvo acuerdo por mayoría absoluta."}},
+ {g:"Órganos funcionales",n:"Comisiones",norm:"Arts. 75-76 CE",def:"Órganos de trabajo especializados.",f:{"Tipos":"Legislativas permanentes, no legislativas, no permanentes (investigación) y mixtas.","Composición":"La designan los grupos, en proporción, con al menos un miembro por grupo.","Investigación":"No vinculan a los tribunales; pueden informar al Ministerio Fiscal.","Excepciones a la delegación":"Reforma constitucional, internacionales, orgánicas, de bases y Presupuestos."}},
+ {g:"Órganos funcionales",n:"Diputación Permanente",norm:"Art. 78 CE",def:"Garantiza la continuidad de la Cámara.",f:{"Miembros":"Mínimo 21; la del Congreso tiene 69 en 2026.","Presidencia":"El Presidente de la Cámara.","Funciones":"Sesiones extraordinarias; con el Congreso disuelto, decretos-leyes y estados excepcionales.","2026":"Funciona desde la disolución del 6-10-2026 hasta las nuevas Cortes (23-12-2026)."}},
+ {g:"Órganos políticos",n:"Grupos parlamentarios",norm:"Reglamentos de las Cámaras",def:"Agrupan a los parlamentarios de un mismo partido o coalición.",f:{"Congreso":"15 diputados, o 5 escaños con el 15 % en sus circunscripciones o el 5 % nacional.","Senado":"10 senadores.","Plazo":"5 días desde la sesión constitutiva.","Grupo Mixto":"Para quien no alcanza los mínimos."}},
+ {g:"Órganos políticos",n:"Comisiones Mixtas",norm:"Arts. 74.2 y 167 CE",def:"Compuestas por igual número de diputados y senadores.",f:{"De conciliación":"Arts. 74.2 (tratados, acuerdos entre CCAA, Fondo de Compensación) y 167 (comisión paritaria).","Permanentes":"Defensor del Pueblo, Unión Europea, adicciones…","Desacuerdo final":"En el art. 74.2 decide el Congreso por mayoría absoluta.","Origen":"Ambas Cámaras."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+  const fd=d=>d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const sd=d=>d.toLocaleDateString("es-ES");
+  const addD=(d,n)=>{const t=new Date(d);t.setDate(t.getDate()+n);return t};
+  const addM=(d,m)=>{const t=new Date(d.getFullYear(),d.getMonth()+m,1);const last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();return new Date(t.getFullYear(),t.getMonth(),Math.min(d.getDate(),last))};
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const fmt=n=>Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+  const tabs=(tid,pre)=>{const t=$(tid);if(!t)return;t.addEventListener("click",ev=>{const b=ev.target.closest("button[data-p]");if(!b)return;t.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll('[id^="'+pre+'"].pane').forEach(p=>p.classList.toggle("on",p.id===pre+b.dataset.p))})};
+  tabs("gp-tabs","gp-");tabs("mc-tabs","mc-");
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${OPTS[k]}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+OPTS[c[1]]}</b>${c[2]}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("my",MY,MYO,"Votación");
+  trainer("tt",TT,TTO,"Tratado");
+  /* D'Hondt */
+  (function(){const P=$("dh-p");if(!P)return;
+    P.innerHTML=PART.map((p,i)=>`<div class="pt"><input id="dh-n${i}" value="${e(p[0])}" aria-label="Candidatura ${i+1}"><input type="number" id="dh-v${i}" min="0" value="${p[1]}" aria-label="Votos ${i+1}"></div>`).join("");
+    function run(){const S=Math.max(1,Math.min(40,Math.floor(num("dh-s")))),B=num("dh-b");
+      const ps=PART.map((_,i)=>({n:($("dh-n"+i).value||"Candidatura "+(i+1)),v:num("dh-v"+i)})).filter(p=>p.v>0);
+      const val=ps.reduce((a,p)=>a+p.v,0)+B,thr=val*0.03;
+      ps.forEach(p=>p.ok=p.v>=thr);const el=ps.filter(p=>p.ok);
+      const q=[];el.forEach(p=>{for(let d=1;d<=S;d++)q.push({p,d,v:p.v/d})});q.sort((a,b)=>b.v-a.v||b.p.v-a.p.v);
+      const win=new Set(q.slice(0,S).map(x=>x.p.n+"|"+x.d));el.forEach(p=>p.s=0);q.slice(0,S).forEach(x=>x.p.s++);
+      const cols=Math.min(S,10);
+      $("dh-t").innerHTML=`<tr><th>Candidatura</th><th>Votos</th>${Array.from({length:cols},(_,i)=>`<th>÷${i+1}</th>`).join("")}<th>Escaños</th></tr>`+ps.map(p=>`<tr><td>${e(p.n)}${p.ok?"":" <small>(&lt;3 %)</small>"}</td><td>${fmt(p.v)}</td>${Array.from({length:cols},(_,i)=>p.ok?`<td class="${win.has(p.n+"|"+(i+1))?"w":""}">${fmt(p.v/(i+1))}</td>`:`<td class="x">—</td>`).join("")}<td><b>${p.ok?p.s:0}</b></td></tr>`).join("");
+      const last=q[S-1];o=$("dh-out");o.className="verdict ok";
+      o.innerHTML=`<b class="big">${el.map(p=>`${e(p.n)}: ${p.s}`).join(" · ")}</b>Votos válidos: ${fmt(val)} (incluidos ${fmt(B)} en blanco); la barrera del 3 % es de ${fmt(thr)} votos.${ps.some(p=>!p.ok)?` Quedan fuera: ${ps.filter(p=>!p.ok).map(p=>e(p.n)).join(", ")}.`:""} Se ordenan de mayor a menor los cocientes (votos ÷ 1, 2, 3…) y se asignan los ${S} mayores.${last?` El último escaño sale con un cociente de ${fmt(last.v)}.`:""} Los empates se resuelven a favor de la candidatura con más votos.`}
+    let o;ev(["dh-s","dh-b",...PART.flatMap((_,i)=>["dh-n"+i,"dh-v"+i])],run);run()})();
+  /* Grupo parlamentario */
+  (function(){if(!$("gg-c"))return;
+    function run(){const c=$("gg-c").value,s=Math.floor(num("gg-e")),p=num("gg-p"),n=num("gg-n"),o=$("gg-out");
+      $("gg-p").closest("label").style.opacity=c==="c"?1:.45;$("gg-n").closest("label").style.opacity=c==="c"?1:.45;
+      if(c==="s"){const ok=s>=10;o.className="verdict "+(ok?"ok":"ko");o.innerHTML=ok?`<b class="big">Puede formar grupo en el Senado</b>Tiene ${s} senadores (mínimo 10). Debe constituirlo en los 5 días siguientes a la sesión constitutiva.`:`<b class="big">No llega: va al Grupo Mixto</b>En el Senado hacen falta 10 senadores; tiene ${s}.`;return}
+      let ok=false,via="";if(s>=15){ok=true;via=`tiene ${s} escaños (mínimo 15)`}else if(s>=5&&(p>=15||n>=5)){ok=true;via=`tiene ${s} escaños y ${p>=15?`el ${p} % de los votos de las circunscripciones donde se presentó (mínimo 15 %)`:`el ${n} % de los votos nacionales (mínimo 5 %)`}`}
+      o.className="verdict "+(ok?"ok":"ko");o.innerHTML=ok?`<b class="big">Puede formar grupo en el Congreso</b>Porque ${via}. Debe constituirse en los 5 días siguientes a la sesión constitutiva. No pueden formar grupos separados diputados de un mismo partido ni de formaciones que no se enfrentaron en las elecciones. El grupo se disuelve si sus miembros bajan de la mitad del mínimo exigido.`:`<b class="big">No llega: va al Grupo Mixto</b>Hacen falta 15 diputados, o al menos 5 escaños con el 15 % de los votos en las circunscripciones donde se presentó o el 5 % de los votos nacionales.${s>=5?" Tiene los 5 escaños, pero no los porcentajes.":""}`}
+    ev(["gg-c","gg-e","gg-p","gg-n"],run);run()})();
+  /* Senadores autonómicos */
+  (function(){if(!$("gs-p"))return;
+    function run(){const p=Math.max(0,num("gs-p")),n=1+Math.floor(p/1e6),o=$("gs-out");o.className="verdict ok";
+      o.innerHTML=`<b class="big">${n} senador${n>1?"es":""} de designación autonómica</b>1 por ser Comunidad Autónoma + ${n-1} por cada millón completo de habitantes (${fmt(p)}; no cuenta la fracción). Los designa la Asamblea Legislativa o, en su defecto, el órgano colegiado superior, asegurando la representación proporcional (art. 69.5). Son la parte variable del Senado: el manual cuenta 57, que en 2026 eran 58.`}
+    ev(["gs-p"],run);run()})();
+  /* Tramitación */
+  (function(){if(!$("lg-t"))return;
+    function run(){const t=$("lg-t").value,u=$("lg-u").value,f=$("lg-f").value,d=$("lg-d").value,vf=$("lg-vf").value,c=num("lg-c"),n=num("lg-n"),o=$("lg-out");
+      $("lg-vf").closest("label").style.opacity=d==="v"?1:.45;
+      if(!f){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha</b>";return}
+      const r=pd(f),lim=u==="si"?addD(r,20):addM(r,2);const st=[`<div><b>Plazo del Senado</b>: ${u==="si"?"20 días naturales (urgente)":"2 meses"} desde la recepción, hasta el ${fd(lim)}.</div>`];
+      let fin="";
+      if(d==="a"){st.push(`<div><b>Aprobación sin enmiendas</b>: termina la tramitación parlamentaria.</div>`);fin="ok"}
+      else if(d==="e"){st.push(`<div><b>Enmiendas</b>: el Senado las aprueba por mayoría simple y el Congreso acepta o rechaza cada una por mayoría simple.</div>`);fin="ok"}
+      else{if(!vf){o.className="verdict mid";o.innerHTML="<b class='big'>Indica la fecha del veto</b>";return}
+        const v=pd(vf),v2=addM(v,2),abs=c>=176,sim=c>n;
+        st.push(`<div><b>Veto</b>: aprobado por la mayoría absoluta del Senado el ${sd(v)}.</div>`);
+        if(abs){st.push(`<div><b>Levantamiento inmediato</b>: ${c} votos alcanzan la mayoría absoluta (176) y el veto se levanta.</div>`);fin="ok"}
+        else if(t==="o"&&sim){st.push(`<div><b>Levantamiento a los 2 meses</b>: con ${c} sí frente a ${n} no no se llega a 176, pero pasados 2 meses desde el veto (desde el ${fd(v2)}) basta la mayoría simple, y la hay.</div>`);fin="ok"}
+        else{st.push(`<div><b>Veto no levantado</b>: ${t==="lo"?"en una ley orgánica hace falta siempre mayoría absoluta (176)":"no hay mayoría absoluta ni simple"}.</div>`);fin="ko"}}
+      if(fin==="ok")st.push(`<div><b>Eficacia</b>: sanción y promulgación por el Rey en 15 días, publicación en el BOE y entrada en vigor a los 20 días si la ley no dice otra cosa.</div>`);
+      o.className="verdict "+(fin==="ok"?"ok":"ko");o.innerHTML=`<b class="big">${fin==="ok"?"La ley sale adelante":"La ley no sale adelante"}</b><div class="steps-out">${st.join("")}</div>`}
+    ev(["lg-t","lg-u","lg-f","lg-d","lg-vf","lg-c","lg-n"],run);run()})();
+  /* Moción de censura */
+  (function(){if(!$("mm-f"))return;
+    function run(){const f=Math.floor(num("mm-f")),k=$("mm-k").value,d=$("mm-d").value,v=Math.floor(num("mm-v")),o=$("mm-out");
+      if(f<35||k==="no"){o.className="verdict ko";o.innerHTML=`<b class="big">No se admite</b>${f<35?`Debe firmarla al menos 1/10 de los diputados (35); tiene ${f}. `:""}${k==="no"?"Debe incluir un candidato a la Presidencia del Gobierno: es una moción constructiva.":""}`;return}
+      if(!d){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha</b>";return}
+      const p=pd(d),alt=addD(p,2),vot=addD(p,5);const ok=v>=176;
+      o.className="verdict "+(ok?"ok":"ko");o.innerHTML=`<b class="big">${ok?"Moción aprobada":"Moción rechazada"}: ${v} votos a favor (mayoría absoluta: 176)</b><div class="steps-out"><div><b>Mociones alternativas</b>: pueden presentarse en los 2 primeros días, hasta el ${fd(alt)}.</div><div><b>Votación</b>: no antes de que pasen 5 días desde la presentación; como pronto, el ${fd(vot)}.</div><div><b>Efecto</b>: ${ok?"el Gobierno cesa y el candidato queda investido de la confianza del Congreso; el Rey lo nombra Presidente (art. 114.2).":"sus firmantes no pueden presentar otra durante el mismo periodo de sesiones (art. 113.4)."}</div><div><b>Disolución</b>: mientras se tramita una moción de censura, el Presidente no puede disolver las Cámaras (art. 115.2).</div></div>`}
+    ev(["mm-f","mm-k","mm-d","mm-v"],run);run()})();
+  /* Cuestión de confianza */
+  (function(){if(!$("mq-q"))return;
+    function run(){const q=$("mq-q").value,s=num("mq-s"),n=num("mq-n"),o=$("mq-out");
+      if(q==="x"){o.className="verdict mid";o.innerHTML=`<b class="big">No es una cuestión de confianza</b>Solo puede plantearla el Presidente del Gobierno, previa deliberación del Consejo de Ministros (art. 112). Una moción de la oposición que le insta a hacerlo, como la aprobada el 25-6-2026, es un acto de control sin efectos jurídicos vinculantes. Para forzar el cese del Gobierno, la oposición tiene la moción de censura.`;return}
+      const ok=s>n;o.className="verdict "+(ok?"ok":"ko");o.innerHTML=ok?`<b class="big">Confianza otorgada (${s} a favor, ${n} en contra)</b>Basta la mayoría simple de los diputados. El Gobierno continúa reforzado.`:`<b class="big">Confianza denegada</b>El Gobierno presenta su dimisión al Rey y se elige un nuevo Presidente por el procedimiento del art. 99 (art. 114.1).`}
+    ev(["mq-q","mq-s","mq-n"],run);run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Regulación de las Cortes en la Constitución.",r:"Título III, arts. 66 a 96."},
+ {p:"LOREG.",r:"LO 5/1985, de 19 de junio, del Régimen Electoral General."},
+ {p:"Reglamento del Congreso.",r:"De 10 de febrero de 1982."},
+ {p:"Reglamento del Senado.",r:"Texto refundido de 3 de mayo de 1994."},
+ {p:"Reglamento de las Cortes Generales.",r:"Previsto para las sesiones conjuntas (art. 72.2), aún no aprobado."},
+ {p:"Características de las Cortes.",r:"Representativas, políticas, deliberantes, bicamerales, legislativas, de control, permanentes y públicas."},
+ {p:"Publicidad de las sesiones (art. 80).",r:"Las plenarias son públicas, salvo acuerdo por mayoría absoluta o con arreglo al Reglamento."},
+ {p:"Mandato imperativo.",r:"Los miembros de las Cortes no están ligados por mandato imperativo (art. 67.2)."},
+ {p:"Diputados según la Constitución.",r:"Entre 300 y 400 (art. 68.1)."},
+ {p:"Diputados según la LOREG.",r:"350."},
+ {p:"Circunscripción del Congreso.",r:"La provincia, con un mínimo inicial de 2 diputados; Ceuta y Melilla, 1 cada una."},
+ {p:"Diputados repartidos por población.",r:"248."},
+ {p:"Fórmula electoral del Congreso.",r:"D'Hondt, con barrera del 3 % de los votos válidos de la circunscripción."},
+ {p:"Duración del mandato.",r:"4 años, para ambas Cámaras."},
+ {p:"Celebración de las elecciones.",r:"Entre 30 y 60 días desde la terminación del mandato."},
+ {p:"Campaña electoral.",r:"15 días."},
+ {p:"Sesión constitutiva.",r:"Dentro de los 25 días siguientes a las elecciones; la convoca el Rey."},
+ {p:"Mesa de edad del Congreso.",r:"El diputado de mayor edad, asistido por los dos más jóvenes."},
+ {p:"Sesión solemne de apertura.",r:"En los 15 días siguientes a la sesión constitutiva."},
+ {p:"Funciones exclusivas del Congreso.",r:"Investidura, cuestión de confianza, moción de censura, convalidación de decretos-leyes, estados excepcionales, acusación del art. 102.2 y autorización del referéndum consultivo."},
+ {p:"Acusación del Presidente por traición (art. 102.2).",r:"Iniciativa de 1/4 del Congreso y aprobación por mayoría absoluta."},
+ {p:"Senado.",r:"Cámara de representación territorial; su composición no es fija."},
+ {p:"Senadores por provincia peninsular.",r:"4."},
+ {p:"Senadores de las islas mayores.",r:"3 cada una: Gran Canaria, Mallorca y Tenerife."},
+ {p:"Islas menores del art. 69.3 (2026).",r:"1 senador cada una: Ibiza, Formentera, Menorca, Fuerteventura, La Gomera, El Hierro, Lanzarote y La Palma."},
+ {p:"Senadores de Ceuta y Melilla.",r:"2 cada una."},
+ {p:"Senadores de elección directa desde el 29-N.",r:"209 (antes 208), por la reforma del art. 69.3."},
+ {p:"Cuarta reforma constitucional.",r:"Art. 69.3, publicada en el BOE el 20-5-2026: Formentera elige un senador propio."},
+ {p:"LO 2/2026.",r:"Modifica la LOREG para adaptarla a la reforma del art. 69.3."},
+ {p:"Senadores autonómicos (art. 69.5).",r:"1 por Comunidad y 1 más por cada millón de habitantes."},
+ {p:"Designación de los senadores autonómicos.",r:"La Asamblea Legislativa o, en su defecto, el órgano colegiado superior de la Comunidad."},
+ {p:"Funciones que empiezan en el Senado.",r:"Acuerdos de cooperación entre CCAA (art. 145) y distribución del Fondo de Compensación Interterritorial (art. 158)."},
+ {p:"Función exclusiva del Senado.",r:"Aprobar por mayoría absoluta las medidas del art. 155."},
+ {p:"Disolución automática.",r:"Fin de la legislatura, art. 99.5 (sin investidura en 2 meses) y aprobación del principio de reforma del art. 168."},
+ {p:"Disolución discrecional (art. 115).",r:"A propuesta exclusiva del Presidente del Gobierno, previa deliberación del Consejo de Ministros."},
+ {p:"Límites a la disolución discrecional.",r:"No mientras se tramita una moción de censura, ni antes de 1 año desde la anterior (salvo el art. 99.5)."},
+ {p:"Disolución del Congreso en estados excepcionales.",r:"No procede (art. 116.5)."},
+ {p:"Inviolabilidad parlamentaria.",r:"Por las opiniones y votos emitidos en el ejercicio de sus funciones (art. 71.1)."},
+ {p:"Inmunidad parlamentaria.",r:"Solo detenidos en flagrante delito; inculpación y procesamiento con autorización de la Cámara (suplicatorio)."},
+ {p:"Fuero de los parlamentarios.",r:"Sala de lo Penal del Tribunal Supremo."},
+ {p:"Lenguas cooficiales en el Congreso.",r:"Pueden usarse en toda la actividad parlamentaria (reforma del Reglamento de 2023)."},
+ {p:"Incompatibilidad del art. 67.",r:"No se puede pertenecer a las dos Cámaras, ni ser diputado y miembro de una asamblea autonómica."},
+ {p:"Senador y asamblea autonómica.",r:"Es compatible."},
+ {p:"Incompatibilidades del art. 70.",r:"TC, altos cargos (salvo Gobierno), Defensor del Pueblo, jueces y fiscales, militares y policías en activo y Juntas Electorales."},
+ {p:"Secretarios de Estado.",r:"La LOREG les permite compatibilizar su cargo con el de parlamentario."},
+ {p:"Reglamentos de las Cámaras.",r:"Se aprueban y reforman por mayoría absoluta en una votación final sobre la totalidad."},
+ {p:"Periodos de sesiones.",r:"De septiembre a diciembre y de febrero a junio."},
+ {p:"Sesiones extraordinarias.",r:"A petición del Gobierno, de la Diputación Permanente o de la mayoría absoluta de los miembros de una Cámara."},
+ {p:"Quién convoca las sesiones.",r:"El Presidente de cada Cámara; la constitutiva, el Rey."},
+ {p:"Adopción de acuerdos (art. 79).",r:"Por mayoría de los miembros presentes, salvo mayorías especiales."},
+ {p:"El voto parlamentario.",r:"Personal e indelegable."},
+ {p:"Sesión conjunta.",r:"Para las competencias no legislativas del Título II; la preside el Presidente del Congreso."},
+ {p:"Elección del Presidente de la Cámara.",r:"Mayoría absoluta; si no, segunda votación entre los dos más votados."},
+ {p:"Mesa del Congreso.",r:"Presidente, 4 Vicepresidentes y 4 Secretarios."},
+ {p:"Mesa del Senado.",r:"Presidente, 2 Vicepresidentes y 4 Secretarios."},
+ {p:"Pleno.",r:"Puede recabar en cualquier momento el debate y la votación de cualquier proyecto o proposición."},
+ {p:"Delegación en comisiones (art. 75.3).",r:"Excluidas la reforma constitucional, las cuestiones internacionales, las leyes orgánicas y de bases y los Presupuestos."},
+ {p:"Comisiones de investigación (art. 76).",r:"Sus conclusiones no vinculan a los tribunales; pueden comunicarse al Ministerio Fiscal."},
+ {p:"Comisiones mixtas.",r:"Igual número de diputados y senadores; arts. 74.2 y 167, y permanentes como la del Defensor del Pueblo."},
+ {p:"Diputación Permanente.",r:"Mínimo 21 miembros, presidida por el Presidente de la Cámara; actúa entre periodos o con la Cámara disuelta."},
+ {p:"Funciones de la Diputación Permanente con el Congreso disuelto.",r:"Convalidar decretos-leyes y asumir las facultades sobre los estados excepcionales."},
+ {p:"Diputación Permanente del Congreso en 2026.",r:"69 miembros; convalidó el RDL 25/2026 el 16-10-2026."},
+ {p:"Grupo parlamentario en el Congreso.",r:"15 diputados, o 5 escaños con el 15 % de los votos de sus circunscripciones o el 5 % nacional."},
+ {p:"Grupo parlamentario en el Senado.",r:"10 senadores."},
+ {p:"Plazo para constituir los grupos.",r:"5 días desde la sesión constitutiva."},
+ {p:"Disolución de un grupo.",r:"Si sus miembros bajan de la mitad del mínimo exigido: pasan al Grupo Mixto."},
+ {p:"Junta de Portavoces.",r:"Presidente y portavoces de los grupos; voto ponderado."},
+ {p:"Funciones del art. 66.",r:"Representar al pueblo, potestad legislativa, aprobar los Presupuestos y controlar al Gobierno."},
+ {p:"Nombramientos con intervención de las Cortes.",r:"8 magistrados del TC, 20 vocales del CGPJ y el Defensor del Pueblo."},
+ {p:"Tribunal de Cuentas.",r:"Depende directamente de las Cortes Generales (art. 136)."},
+ {p:"Cuestión de confianza.",r:"La plantea el Presidente, previa deliberación del Consejo de Ministros; mayoría simple."},
+ {p:"Efecto de la confianza denegada.",r:"El Gobierno dimite y se elige un nuevo Presidente por el art. 99."},
+ {p:"Firmas de la moción de censura.",r:"Al menos 1/10 de los diputados (35)."},
+ {p:"Plazos de la moción de censura.",r:"Votación pasados 5 días; mociones alternativas en los 2 primeros."},
+ {p:"Mayoría de la moción de censura.",r:"Absoluta (176)."},
+ {p:"Moción de censura rechazada.",r:"Sus firmantes no pueden presentar otra en el mismo periodo de sesiones."},
+ {p:"Preguntas e interpelaciones.",r:"Las interpelaciones versan sobre política general y pueden dar lugar a una moción; las preguntas, no."},
+ {p:"Art. 93.",r:"Tratados que atribuyen competencias constitucionales a organizaciones internacionales: ley orgánica."},
+ {p:"Art. 94.1.",r:"Tratados que requieren autorización previa de las Cortes: políticos, militares, territoriales, de derechos, financieros y legislativos."},
+ {p:"Art. 94.2.",r:"El resto de tratados: información inmediata a las Cámaras."},
+ {p:"Art. 95.",r:"Tratados con estipulaciones contrarias a la Constitución: previa revisión constitucional."},
+ {p:"Denuncia de un tratado.",r:"Por el mismo procedimiento que su aprobación (art. 96.2)."},
+ {p:"Iniciativa legislativa del Congreso.",r:"Un diputado con la firma de otros 14, o un grupo parlamentario."},
+ {p:"Iniciativa legislativa del Senado.",r:"25 senadores o un grupo parlamentario."},
+ {p:"Iniciativa de las asambleas autonómicas.",r:"Pedir un proyecto al Gobierno o remitir una proposición al Congreso, con hasta 3 miembros para defenderla."},
+ {p:"Iniciativa legislativa popular.",r:"500.000 firmas en 9 meses, prorrogables 3 (LO 3/1984)."},
+ {p:"Materias excluidas de la iniciativa popular.",r:"Ley orgánica, tributarias, internacionales, prerrogativa de gracia, arts. 131 y 134.1."},
+ {p:"Plazo de enmiendas en el Congreso.",r:"15 días."},
+ {p:"Plazo del Senado.",r:"2 meses; 20 días naturales si la ley es urgente."},
+ {p:"Veto del Senado.",r:"Mayoría absoluta; el Congreso lo levanta de inmediato por mayoría absoluta o a los 2 meses por mayoría simple."},
+ {p:"Entrada en vigor de las leyes.",r:"A los 20 días de su publicación en el BOE, salvo que dispongan otra cosa."},
+ {p:"Delegación legislativa.",r:"Ley de bases para textos articulados; ley ordinaria para textos refundidos; sin subdelegación."},
+ {p:"Decreto-ley.",r:"Extraordinaria y urgente necesidad; convalidación por el Congreso en 30 días desde su promulgación."},
+ {p:"Límites del decreto-ley.",r:"Instituciones básicas, derechos, deberes y libertades del Título I, régimen de las CCAA y Derecho electoral general."},
+ {p:"Leyes del art. 150.",r:"Marco (ordinaria), de transferencia o delegación (orgánica) y de armonización (mayoría absoluta para apreciar su necesidad)."}
+]};
+const T1=[
+ {q:"Las Cortes Generales se regulan en el Título:",o:["III de la Constitución.","II de la Constitución.","IV de la Constitución.","V de la Constitución."],c:0,e:"Arts. 66-96."},
+ {q:"El Reglamento del Congreso es de:",o:["10 de febrero de 1982.","3 de mayo de 1994.","19 de junio de 1985.","27 de diciembre de 1978."],c:0,e:"El del Senado es el texto refundido de 1994."},
+ {q:"La LOREG es la Ley Orgánica:",o:["5/1985.","3/1984.","2/1979.","6/1985."],c:0,e:"De 19 de junio."},
+ {q:"Los actos de las Cortes solo pueden ser revisados, en cuanto contrarios a la Constitución, por:",o:["El Tribunal Constitucional.","El Tribunal Supremo.","La Audiencia Nacional.","El Consejo de Estado."],c:0,e:"Son órgano de poder político."},
+ {q:"Las sesiones plenarias de las Cámaras son:",o:["Públicas, salvo acuerdo en contrario por mayoría absoluta o con arreglo al Reglamento.","Secretas.","Públicas siempre.","Públicas solo en el Congreso."],c:0,e:"Art. 80 CE."},
+ {q:"Los miembros de las Cortes:",o:["No están ligados por mandato imperativo.","Están sujetos a mandato imperativo de su partido.","Representan solo a su circunscripción.","Están sujetos a revocación popular."],c:0,e:"Art. 67.2 CE."},
+ {q:"El Congreso se compone, según la Constitución, de:",o:["Un mínimo de 300 y un máximo de 400 diputados.","350 diputados.","Entre 250 y 350 diputados.","400 diputados."],c:0,e:"La LOREG fija 350."},
+ {q:"El mínimo inicial de diputados por provincia según la LOREG es:",o:["2.","1.","3.","4."],c:0,e:"Ceuta y Melilla, 1 cada una."},
+ {q:"Los diputados repartidos en proporción a la población son:",o:["248.","250.","300.","200."],c:0,e:"350 − 100 − 2."},
+ {q:"La barrera electoral en el Congreso es del:",o:["3 % de los votos válidos de la circunscripción.","5 % nacional.","3 % nacional.","5 % de la circunscripción."],c:0,e:"Art. 163 LOREG."},
+ {q:"La fórmula electoral del Congreso es:",o:["D'Hondt.","Sainte-Laguë.","Mayoritaria.","Hare."],c:0,e:"Proporcional corregida."},
+ {q:"La campaña electoral dura:",o:["15 días.","21 días.","10 días.","30 días."],c:0,e:"LOREG."},
+ {q:"La sesión constitutiva debe celebrarse dentro de los:",o:["25 días siguientes a las elecciones.","15 días.","30 días.","60 días."],c:0,e:"Art. 68.6 CE."},
+ {q:"La sesión constitutiva del Congreso la preside inicialmente:",o:["El diputado electo de mayor edad.","El Presidente saliente.","El diputado más joven.","El Rey."],c:0,e:"Con los dos más jóvenes como secretarios."},
+ {q:"La sesión solemne de apertura de la legislatura se celebra:",o:["En los 15 días siguientes a la sesión constitutiva.","El mismo día.","En 30 días.","En 2 meses."],c:0,e:"Según el manual."},
+ {q:"Corresponde exclusivamente al Congreso:",o:["Convalidar los decretos-leyes.","Aprobar las medidas del art. 155.","Autorizar los acuerdos entre CCAA.","Ejercer la potestad legislativa."],c:0,e:"Art. 86 CE."},
+ {q:"La autorización del referéndum consultivo corresponde a:",o:["El Congreso.","El Senado.","Las Cortes en sesión conjunta.","El Consejo de Estado."],c:0,e:"Art. 92 CE."},
+ {q:"La iniciativa para acusar al Presidente del Gobierno por traición requiere:",o:["1/4 del Congreso y aprobación por mayoría absoluta.","1/10 del Congreso.","50 diputados.","Mayoría simple."],c:0,e:"Art. 102.2 CE."},
+ {q:"Las Cortes Generales son, frente a los parlamentos autonómicos:",o:["Bicamerales.","Unicamerales.","Tricamerales.","Federales."],c:0,e:"Los autonómicos son unicamerales."},
+ {q:"A noviembre de 2026, el Congreso y el Senado se constituirán el:",o:["23 de diciembre de 2026.","29 de noviembre de 2026.","6 de octubre de 2026.","13 de enero de 2027."],c:0,e:"RD 806/2026."}
+];
+const T2=[
+ {q:"Cada provincia peninsular elige:",o:["4 senadores.","3 senadores.","2 senadores.","5 senadores."],c:0,e:"Art. 69.2 CE."},
+ {q:"Las islas mayores eligen:",o:["3 senadores cada una.","4 senadores.","2 senadores.","1 senador."],c:0,e:"Gran Canaria, Mallorca y Tenerife."},
+ {q:"Ceuta y Melilla eligen cada una:",o:["2 senadores.","1 senador.","3 senadores.","4 senadores."],c:0,e:"Art. 69.4 CE."},
+ {q:"La cuarta reforma de la Constitución afecta al art.:",o:["69.3.","68.2.","13.2.","49."],c:0,e:"BOE de 20-5-2026."},
+ {q:"Tras la reforma de 2026, Formentera:",o:["Elige un senador propio, separada de Ibiza.","Elige 2 senadores con Ibiza.","Se integra en la circunscripción de Mallorca.","Elige un diputado propio."],c:0,e:"Art. 69.3 CE."},
+ {q:"Desde las elecciones del 29-11-2026, los senadores de elección directa son:",o:["209.","208.","265.","210."],c:0,e:"Antes eran 208."},
+ {q:"La reforma del art. 69.3 de 2026 se tramitó:",o:["Por el art. 167, sin referéndum.","Por el art. 168.","Por el art. 167, con referéndum.","Por ley orgánica."],c:0,e:"Iniciativa del Parlamento balear."},
+ {q:"La ley que adaptó la LOREG a la reforma del art. 69.3 es la:",o:["LO 2/2026.","LO 1/2026.","Ley 2/2026.","LO 5/2026."],c:0,e:"De 30 de junio."},
+ {q:"Las Comunidades Autónomas designan:",o:["1 senador y otro más por cada millón de habitantes.","2 senadores cada una.","1 senador por cada 500.000 habitantes.","1 senador por provincia."],c:0,e:"Art. 69.5 CE."},
+ {q:"Una Comunidad con 2,9 millones de habitantes designa:",o:["3 senadores.","2 senadores.","4 senadores.","1 senador."],c:0,e:"1 + 2 (no cuenta la fracción)."},
+ {q:"Los senadores autonómicos los designa:",o:["La Asamblea Legislativa o, en su defecto, el órgano colegiado superior de la Comunidad.","El Presidente autonómico.","El Gobierno autonómico siempre.","Los ciudadanos de la Comunidad."],c:0,e:"Art. 69.5 CE."},
+ {q:"El número total de senadores:",o:["No es fijo.","Es de 265.","Es de 208.","Lo fija la LOREG en 266."],c:0,e:"Depende de la población de las CCAA."},
+ {q:"Comienzan a tramitarse en el Senado:",o:["Los acuerdos de cooperación entre CCAA.","Los proyectos de ley.","Los Presupuestos.","Los decretos-leyes."],c:0,e:"Art. 74.2 CE."},
+ {q:"La distribución del Fondo de Compensación Interterritorial se inicia en:",o:["El Senado.","El Congreso.","La Comisión Mixta.","El Consejo de Política Fiscal."],c:0,e:"Art. 74.2 CE."},
+ {q:"La función exclusiva del Senado es:",o:["Aprobar por mayoría absoluta las medidas del art. 155.","Convalidar los decretos-leyes.","La investidura.","Autorizar el referéndum consultivo."],c:0,e:"Coerción estatal."},
+ {q:"El Senado es, según la Constitución, la Cámara de representación:",o:["Territorial.","Poblacional.","Autonómica exclusivamente.","Provincial exclusivamente."],c:0,e:"Art. 69.1 CE."},
+ {q:"En los plazos para las elecciones y la sesión constitutiva, al Senado se le aplica por analogía:",o:["Lo establecido para el Congreso.","Un plazo propio de 90 días.","Lo que fije su Reglamento.","Lo que decida el Gobierno."],c:0,e:"Según el manual."},
+ {q:"¿Cuál de estas islas eligió un senador propio por primera vez en 2026?",o:["Formentera.","Ibiza.","Menorca.","La Gomera."],c:0,e:"Antes compartía circunscripción con Ibiza."},
+ {q:"El mandato de los senadores es de:",o:["4 años.","6 años.","5 años.","3 años."],c:0,e:"Art. 69.6 CE."},
+ {q:"En la XV Legislatura, el número de senadores autonómicos llegó a:",o:["58.","57.","51.","60."],c:0,e:"Con 266 senadores en total."}
+];
+const T3=[
+ {q:"Es causa de disolución automática:",o:["Que el Congreso no elija Presidente en 2 meses desde la primera votación.","Que fracase una moción de censura.","Que fracase una cuestión de confianza.","Que lo pida el Senado."],c:0,e:"Art. 99.5 CE."},
+ {q:"La disolución discrecional corresponde a la iniciativa de:",o:["El Presidente del Gobierno, previa deliberación del Consejo de Ministros.","El Consejo de Ministros por mayoría.","El Rey.","El Congreso."],c:0,e:"Art. 115 CE."},
+ {q:"No puede presentarse la disolución discrecional:",o:["Mientras se tramita una moción de censura.","Durante el periodo de sesiones.","En año electoral autonómico.","En verano."],c:0,e:"Art. 115.2 CE."},
+ {q:"No procede una nueva disolución discrecional antes de que pase:",o:["1 año desde la anterior.","2 años.","6 meses.","4 años."],c:0,e:"Art. 115.3 CE."},
+ {q:"Durante la vigencia de un estado de alarma:",o:["No puede disolverse el Congreso.","Puede disolverse con autorización del Senado.","Se disuelven automáticamente las Cortes.","Solo puede disolverse el Senado."],c:0,e:"Art. 116.5 CE."},
+ {q:"Los parlamentarios gozan de inviolabilidad por:",o:["Las opiniones manifestadas en el ejercicio de sus funciones.","Cualquier delito.","Sus actos privados.","Todos sus actos durante el mandato."],c:0,e:"Art. 71.1 CE."},
+ {q:"Los parlamentarios solo pueden ser detenidos:",o:["En caso de flagrante delito.","Con orden judicial.","Con autorización del Presidente de la Cámara.","Nunca."],c:0,e:"Art. 71.2 CE."},
+ {q:"La autorización de la Cámara para procesar a un parlamentario se denomina:",o:["Suplicatorio.","Venia.","Exequátur.","Placet."],c:0,e:"Inmunidad."},
+ {q:"Las causas contra diputados y senadores las conoce:",o:["La Sala de lo Penal del Tribunal Supremo.","La Audiencia Nacional.","El TSJ.","El Tribunal Constitucional."],c:0,e:"Art. 71.3 CE."},
+ {q:"Es compatible:",o:["Ser senador y miembro de una asamblea autonómica.","Ser diputado y senador.","Ser diputado y miembro de una asamblea autonómica.","Ser diputado y juez en activo."],c:0,e:"Art. 67 CE."},
+ {q:"Es compatible con la condición de parlamentario:",o:["Ser miembro del Gobierno.","Ser magistrado del TC.","Ser Defensor del Pueblo.","Ser militar profesional en activo."],c:0,e:"Art. 70 CE."},
+ {q:"La LOREG permite compatibilizar con el cargo de parlamentario el de:",o:["Secretario de Estado.","Subsecretario.","Director General.","Delegado del Gobierno."],c:0,e:"Según el manual."},
+ {q:"Son incompatibles con el cargo de parlamentario los miembros de:",o:["Las Juntas Electorales.","Los partidos políticos.","Los sindicatos.","Las Reales Academias."],c:0,e:"Art. 70.1 CE."},
+ {q:"Las actas y credenciales de los parlamentarios están sometidas a:",o:["Control judicial.","Control del Gobierno.","Control del Defensor del Pueblo.","Ningún control."],c:0,e:"Art. 70.2 CE."},
+ {q:"Los diputados pueden usar las lenguas cooficiales:",o:["En toda la actividad parlamentaria, oral y escrita.","Solo en las comisiones.","Solo con autorización de la Mesa.","Nunca."],c:0,e:"Reforma del Reglamento del Congreso de 2023."},
+ {q:"Es un deber de los parlamentarios:",o:["Presentar declaración de bienes y actividades.","Afiliarse a un partido.","Residir en su circunscripción.","Votar con su grupo."],c:0,e:"Al tomar posesión y al cesar."},
+ {q:"El voto de los parlamentarios es:",o:["Personal e indelegable.","Delegable en el portavoz.","Delegable en otro parlamentario.","Ponderado."],c:0,e:"Art. 79.3 CE."},
+ {q:"La disolución del art. 99.5 la refrenda:",o:["El Presidente del Congreso.","El Presidente del Gobierno.","El Presidente del Senado.","Nadie."],c:0,e:"Art. 64 CE."},
+ {q:"Puede disolverse el Senado sin disolver el Congreso:",o:["Sí, la disolución discrecional puede afectar a una sola Cámara.","No, nunca.","Solo con autorización del Congreso.","Solo en la cláusula del art. 99."],c:0,e:"Art. 115.1 CE."},
+ {q:"Los parlamentarios de las Cortes NO son incompatibles con:",o:["La afiliación a un partido político.","La condición de fiscal en activo.","La condición de Defensor del Pueblo.","La de magistrado del TC."],c:0,e:"Art. 70 CE."}
+];
+const T4=[
+ {q:"Los periodos ordinarios de sesiones son:",o:["Septiembre-diciembre y febrero-junio.","Enero-junio y septiembre-diciembre.","Octubre-diciembre y febrero-julio.","Todo el año."],c:0,e:"Art. 73.1 CE."},
+ {q:"NO puede pedir una sesión extraordinaria:",o:["El Rey.","El Gobierno.","La Diputación Permanente.","La mayoría absoluta de los miembros de una Cámara."],c:0,e:"Art. 73.2 CE."},
+ {q:"Los Reglamentos de las Cámaras se aprueban por:",o:["Mayoría absoluta.","Mayoría simple.","3/5.","2/3."],c:0,e:"Art. 72.1 CE."},
+ {q:"Las Cámaras se reúnen en sesión conjunta para:",o:["Las competencias no legislativas del Título II.","Aprobar los Presupuestos.","Las leyes orgánicas.","La investidura."],c:0,e:"Art. 74.1 CE."},
+ {q:"Las sesiones conjuntas las preside:",o:["El Presidente del Congreso.","El Presidente del Senado.","El Rey.","El de mayor edad."],c:0,e:"Art. 72.2 CE."},
+ {q:"La sesión constitutiva de las Cámaras la convoca:",o:["El Rey.","El Presidente saliente.","El Gobierno.","La Diputación Permanente."],c:0,e:"Mediante el decreto de convocatoria."},
+ {q:"Los acuerdos de las Cámaras se adoptan, en general, por mayoría de:",o:["Los miembros presentes.","Los miembros de derecho.","Los grupos parlamentarios.","Los votos ponderados."],c:0,e:"Art. 79.2 CE."},
+ {q:"El Presidente de la Cámara se elige en primera votación por:",o:["Mayoría absoluta.","Mayoría simple.","3/5.","Unanimidad."],c:0,e:"Si no, segunda votación entre los dos más votados."},
+ {q:"La Mesa del Congreso tiene:",o:["Presidente, 4 Vicepresidentes y 4 Secretarios.","Presidente, 2 Vicepresidentes y 4 Secretarios.","Presidente, 4 Vicepresidentes y 2 Secretarios.","Presidente, 3 Vicepresidentes y 3 Secretarios."],c:0,e:"Anexo."},
+ {q:"La Mesa del Senado tiene:",o:["Presidente, 2 Vicepresidentes y 4 Secretarios.","Presidente, 4 Vicepresidentes y 4 Secretarios.","Presidente, 2 Vicepresidentes y 2 Secretarios.","Presidente y 4 Secretarios."],c:0,e:"Anexo."},
+ {q:"Las facultades de policía en la Cámara corresponden a:",o:["El Presidente.","La Mesa.","La Junta de Portavoces.","El Letrado Mayor."],c:0,e:"Art. 72.3 CE."},
+ {q:"El Pleno NO puede delegar en las Comisiones la aprobación de:",o:["Leyes orgánicas.","Leyes ordinarias sobre cultura.","Proposiciones sobre transporte.","Leyes de régimen administrativo."],c:0,e:"Art. 75.3 CE."},
+ {q:"Las conclusiones de las comisiones de investigación:",o:["No son vinculantes para los tribunales.","Vinculan a los tribunales.","Tienen fuerza de sentencia.","Solo vinculan al Gobierno."],c:0,e:"Art. 76.1 CE."},
+ {q:"La Diputación Permanente tiene un mínimo de:",o:["21 miembros.","15 miembros.","25 miembros.","30 miembros."],c:0,e:"Art. 78.1 CE."},
+ {q:"Con el Congreso disuelto, convalida los decretos-leyes:",o:["La Diputación Permanente del Congreso.","El Senado.","El Gobierno.","La Mesa del Congreso."],c:0,e:"Art. 78.2 CE."},
+ {q:"La Diputación Permanente la preside:",o:["El Presidente de la Cámara.","El Vicepresidente primero.","El portavoz del grupo mayoritario.","El de mayor edad."],c:0,e:"Art. 78.2 CE."},
+ {q:"Para formar grupo propio en el Senado hacen falta:",o:["10 senadores.","15 senadores.","5 senadores.","25 senadores."],c:0,e:"Reglamento del Senado."},
+ {q:"Una formación con 6 diputados y el 16 % de los votos de las circunscripciones donde se presentó:",o:["Puede formar grupo en el Congreso.","Va al Grupo Mixto.","Necesita el 5 % nacional.","Necesita 15 diputados."],c:0,e:"Vía alternativa: 5 escaños + 15 %."},
+ {q:"Los grupos parlamentarios se constituyen dentro de los:",o:["5 días siguientes a la sesión constitutiva.","15 días.","10 días.","30 días."],c:0,e:"Reglamento del Congreso."},
+ {q:"La Junta de Portavoces adopta sus decisiones por:",o:["Voto ponderado.","Mayoría simple de sus miembros.","Unanimidad.","Mayoría absoluta."],c:0,e:"Cada portavoz vota con el peso de su grupo."}
+];
+const T5=[
+ {q:"Según el art. 66, NO es función de las Cortes:",o:["Dirigir la política interior y exterior.","Ejercer la potestad legislativa.","Aprobar los Presupuestos.","Controlar la acción del Gobierno."],c:0,e:"Corresponde al Gobierno (art. 97)."},
+ {q:"Las Cortes proponen al Rey:",o:["8 magistrados del TC.","12 magistrados del TC.","4 magistrados del TC.","Todos los vocales del CGPJ y el Fiscal General."],c:0,e:"4 el Congreso y 4 el Senado."},
+ {q:"Las Cortes proponen:",o:["20 vocales del CGPJ.","12 vocales del CGPJ.","10 vocales del CGPJ.","8 vocales del CGPJ."],c:0,e:"10 cada Cámara."},
+ {q:"El Tribunal de Cuentas depende de:",o:["Las Cortes Generales.","El Gobierno.","El Ministerio de Hacienda.","El Tribunal Supremo."],c:0,e:"Art. 136 CE."},
+ {q:"Es una función de las Cortes relacionada con la Corona:",o:["Reconocer la inhabilitación del Rey.","Elegir al Rey.","Nombrar al Jefe de la Casa del Rey.","Refrendar los actos del Rey."],c:0,e:"Art. 59.2 CE."},
+ {q:"Puede exigir la responsabilidad política del Gobierno:",o:["Solo el Congreso.","Ambas Cámaras.","Solo el Senado.","El Tribunal Supremo."],c:0,e:"Arts. 108-114 CE."},
+ {q:"La cuestión de confianza la plantea:",o:["El Presidente del Gobierno, previa deliberación del Consejo de Ministros.","Un 1/10 de los diputados.","El Consejo de Ministros por mayoría.","El Rey."],c:0,e:"Art. 112 CE."},
+ {q:"La cuestión de confianza se aprueba por:",o:["Mayoría simple.","Mayoría absoluta.","3/5.","2/3."],c:0,e:"Art. 112 CE."},
+ {q:"Si el Congreso niega la confianza:",o:["El Gobierno dimite y se procede según el art. 99.","Se disuelven las Cortes.","Se presenta una moción de censura.","Se convoca referéndum."],c:0,e:"Art. 114.1 CE."},
+ {q:"La moción de censura debe firmarla al menos:",o:["La décima parte de los diputados.","La cuarta parte.","Un grupo parlamentario.","La mayoría absoluta."],c:0,e:"Art. 113.2 CE."},
+ {q:"La moción de censura no puede votarse hasta que pasen:",o:["5 días desde su presentación.","2 días.","48 horas.","10 días."],c:0,e:"Art. 113.3 CE."},
+ {q:"Las mociones de censura alternativas pueden presentarse:",o:["En los 2 primeros días.","En los 5 primeros días.","Hasta la votación.","En las 24 primeras horas."],c:0,e:"Art. 113.3 CE."},
+ {q:"La moción de censura se aprueba por:",o:["Mayoría absoluta.","Mayoría simple.","3/5.","2/3."],c:0,e:"Art. 113.1 CE."},
+ {q:"Si se aprueba la moción de censura:",o:["El candidato propuesto se entiende investido de la confianza del Congreso.","Se convocan elecciones.","El Rey propone un nuevo candidato.","El Senado debe ratificarla."],c:0,e:"Art. 114.2 CE."},
+ {q:"Si fracasa una moción de censura, sus firmantes:",o:["No pueden presentar otra en el mismo periodo de sesiones.","No pueden presentar otra en la legislatura.","Pueden presentar otra a los 5 días.","Pierden su escaño."],c:0,e:"Art. 113.4 CE."},
+ {q:"La moción del 25-6-2026 que instaba al Presidente a someterse a una cuestión de confianza:",o:["No era vinculante: solo el Presidente puede plantearla.","Le obligaba a plantearla en 5 días.","Equivalía a una moción de censura.","Provocó la disolución de las Cortes."],c:0,e:"Art. 112 CE."},
+ {q:"La interpelación se diferencia de la pregunta en que:",o:["Puede dar lugar a una moción.","Solo la puede hacer un grupo.","Es siempre escrita.","Se dirige al Rey."],c:0,e:"Art. 111.2 CE."},
+ {q:"Las Cámaras pueden recabar información del Gobierno según el art.:",o:["109.","110.","111.","112."],c:0,e:"A través de sus Presidentes."},
+ {q:"Las comisiones de investigación pueden crearlas:",o:["El Congreso, el Senado o ambas conjuntamente.","Solo el Congreso.","Solo el Senado.","El Gobierno."],c:0,e:"Art. 76.1 CE."},
+ {q:"La planificación de la actividad económica general se hace mediante:",o:["Ley.","Real decreto.","Orden ministerial.","Acuerdo del Consejo de Ministros."],c:0,e:"Art. 131 CE."}
+];
+const T6=[
+ {q:"Los tratados que atribuyen a una organización internacional competencias derivadas de la Constitución se autorizan por:",o:["Ley orgánica.","Ley ordinaria.","Mayoría simple de cada Cámara.","Real decreto."],c:0,e:"Art. 93 CE."},
+ {q:"Requiere autorización previa de las Cortes un tratado de carácter:",o:["Militar.","Técnico sin gasto.","Cultural sin obligaciones.","Administrativo menor."],c:0,e:"Art. 94.1 CE."},
+ {q:"Los tratados no incluidos en el art. 94.1 requieren:",o:["La información inmediata a las Cámaras.","Ley orgánica.","Autorización del Congreso.","Referéndum."],c:0,e:"Art. 94.2 CE."},
+ {q:"Un tratado con estipulaciones contrarias a la Constitución exige:",o:["La previa revisión constitucional.","Su ratificación por ley orgánica.","Un referéndum consultivo.","El dictamen del Consejo de Estado."],c:0,e:"Art. 95.1 CE."},
+ {q:"Pueden requerir al TC sobre la constitucionalidad de un tratado:",o:["El Gobierno o cualquiera de las Cámaras.","50 diputados.","El Defensor del Pueblo.","Las CCAA."],c:0,e:"Art. 95.2 CE."},
+ {q:"Los tratados forman parte del ordenamiento interno:",o:["Una vez publicados oficialmente en España.","Desde su firma.","Desde su ratificación.","Desde su aprobación por el Congreso."],c:0,e:"Art. 96.1 CE."},
+ {q:"La denuncia de un tratado del art. 94 se hace:",o:["Por el mismo procedimiento que su aprobación.","Por el Gobierno libremente.","Por ley orgánica.","Por el Rey."],c:0,e:"Art. 96.2 CE."},
+ {q:"La autorización de los tratados del art. 94.1 se inicia en:",o:["El Congreso.","El Senado.","La Comisión Mixta.","El Consejo de Estado."],c:0,e:"Art. 74.2 CE."},
+ {q:"Si persiste el desacuerdo entre las Cámaras sobre un tratado del art. 94.1, decide:",o:["El Congreso por mayoría absoluta.","El Senado por mayoría absoluta.","El Gobierno.","El TC."],c:0,e:"Art. 74.2 CE."},
+ {q:"Pueden presentar proposiciones de ley en el Congreso:",o:["Un diputado con la firma de otros 14, o un grupo.","Un diputado solo.","10 diputados.","50 diputados."],c:0,e:"Reglamento del Congreso."},
+ {q:"En el Senado pueden presentar proposiciones de ley:",o:["25 senadores o un grupo.","10 senadores.","50 senadores.","Un senador."],c:0,e:"Reglamento del Senado."},
+ {q:"La iniciativa del Gobierno se denomina:",o:["Proyecto de ley.","Proposición de ley.","Anteproyecto de ley.","Moción."],c:0,e:"Art. 88 CE."},
+ {q:"Los proyectos de ley gozan de:",o:["Preferencia en la tramitación.","Aprobación automática.","Exención de enmiendas.","Tramitación en el Senado primero."],c:0,e:"Art. 89.1 CE."},
+ {q:"Las asambleas autonómicas pueden delegar ante el Congreso la defensa de su proposición en un máximo de:",o:["3 miembros.","5 miembros.","1 miembro.","2 miembros."],c:0,e:"Art. 87.2 CE."},
+ {q:"La iniciativa legislativa popular exige al menos:",o:["500.000 firmas acreditadas.","1.000.000 de firmas.","250.000 firmas.","100.000 firmas."],c:0,e:"Art. 87.3 CE."},
+ {q:"El plazo para recoger las firmas de la iniciativa popular es de:",o:["9 meses, prorrogable 3 meses.","6 meses.","1 año.","3 meses."],c:0,e:"LO 3/1984."},
+ {q:"No cabe la iniciativa legislativa popular en materia:",o:["Tributaria.","Medioambiental.","De vivienda.","De consumo."],c:0,e:"Art. 87.3 CE."},
+ {q:"La iniciativa legislativa popular se regula en la:",o:["LO 3/1984.","LO 5/1985.","LO 2/1980.","LO 4/2001."],c:0,e:"De 26 de marzo."},
+ {q:"Las proposiciones de ley del Senado:",o:["Las toma en consideración el Senado, y el Congreso no puede negarse a tramitarlas.","Las toma en consideración el Congreso.","No existen.","Se tramitan solo en el Senado."],c:0,e:"Art. 89.2 CE."},
+ {q:"Los proyectos de ley deben ir acompañados de:",o:["Una exposición de motivos y los antecedentes necesarios.","Un dictamen del Consejo de Estado siempre.","500.000 firmas.","Un informe del Tribunal de Cuentas."],c:0,e:"Art. 88 CE."}
+];
+const T7=[
+ {q:"El plazo para presentar enmiendas en el Congreso es de:",o:["15 días.","10 días.","20 días.","30 días."],c:0,e:"Según el manual."},
+ {q:"Las enmiendas a la totalidad se debaten en:",o:["El Pleno.","La Comisión.","La Ponencia.","La Mesa."],c:0,e:"Las parciales, en Comisión."},
+ {q:"Las enmiendas parciales pueden ser de:",o:["Adición, supresión o modificación.","Devolución.","Totalidad.","Veto."],c:0,e:"Al articulado."},
+ {q:"El informe que sirve de base al debate en Comisión lo redacta:",o:["La Ponencia.","La Mesa.","El Pleno.","La Junta de Portavoces."],c:0,e:"Según el manual."},
+ {q:"El Senado dispone para pronunciarse sobre un proyecto de:",o:["2 meses.","1 mes.","3 meses.","20 días."],c:0,e:"Art. 90.2 CE."},
+ {q:"En los proyectos declarados urgentes, el Senado dispone de:",o:["20 días naturales.","20 días hábiles.","1 mes.","15 días."],c:0,e:"Art. 90.3 CE."},
+ {q:"El veto del Senado requiere:",o:["Mayoría absoluta.","Mayoría simple.","3/5.","2/3."],c:0,e:"Art. 90.2 CE."},
+ {q:"El Congreso puede levantar el veto de inmediato por:",o:["Mayoría absoluta.","Mayoría simple.","3/5.","2/3."],c:0,e:"Art. 90.2 CE."},
+ {q:"Pasados 2 meses desde el veto, el Congreso puede levantarlo en una ley ordinaria por:",o:["Mayoría simple.","Mayoría absoluta.","3/5.","Unanimidad."],c:0,e:"Art. 90.2 CE."},
+ {q:"Las enmiendas del Senado se incorporan si el Congreso las acepta por:",o:["Mayoría simple.","Mayoría absoluta.","3/5.","2/3."],c:0,e:"Art. 90.2 CE."},
+ {q:"El Rey sanciona las leyes en el plazo de:",o:["15 días.","10 días.","20 días.","1 mes."],c:0,e:"Art. 91 CE."},
+ {q:"Salvo que dispongan otra cosa, las leyes entran en vigor:",o:["A los 20 días de su publicación en el BOE.","Al día siguiente.","A los 15 días.","Al mes."],c:0,e:"Art. 2.1 del Código Civil."},
+ {q:"Para formar un texto articulado, la delegación legislativa se hace mediante:",o:["Ley de bases.","Ley ordinaria.","Ley orgánica.","Decreto-ley."],c:0,e:"Art. 82.2 CE."},
+ {q:"Para refundir varios textos legales, la delegación se hace mediante:",o:["Ley ordinaria.","Ley de bases.","Ley orgánica.","Resolución del Congreso."],c:0,e:"Art. 82.2 CE."},
+ {q:"La delegación legislativa:",o:["No admite subdelegación.","Puede subdelegarse en los ministros.","No tiene plazo.","Puede ser tácita."],c:0,e:"Art. 82.3 CE."},
+ {q:"Los decretos-leyes deben someterse al Congreso en el plazo de:",o:["30 días desde su promulgación.","15 días.","2 meses.","20 días."],c:0,e:"Art. 86.2 CE."},
+ {q:"Los decretos-leyes NO pueden afectar a:",o:["El régimen de las Comunidades Autónomas.","Las materias tributarias en general.","La economía.","La vivienda."],c:0,e:"Art. 86.1 CE."},
+ {q:"La ley de transferencia o delegación del art. 150.2 es:",o:["Orgánica.","Ordinaria.","De bases.","Marco."],c:0,e:"Art. 150.2 CE."},
+ {q:"En las leyes de armonización, la mayoría absoluta se exige para:",o:["Apreciar la necesidad de dictarlas.","Aprobar la ley.","Su toma en consideración.","Su publicación."],c:0,e:"Art. 150.3 CE; la ley es ordinaria."},
+ {q:"El control de las normas autonómicas dictadas en virtud de una ley marco corresponde a:",o:["Los tribunales y las Cortes Generales.","Solo el TC.","El Gobierno.","El Senado exclusivamente."],c:0,e:"Art. 150.1 CE."}
+];
+const T8=[
+ {q:"En una provincia de 3 escaños, A obtiene 60.000 votos, B 40.000 y C 25.000. Por D'Hondt, el reparto es:",o:["A 2, B 1, C 0.","A 1, B 1, C 1.","A 2, B 0, C 1.","A 3, B 0, C 0."],c:0,e:"Cocientes: 60.000, 40.000, 30.000 (A÷2), 25.000…"},
+ {q:"En una provincia hay 200.000 votos válidos. Una candidatura con 5.500 votos:",o:["No entra en el reparto: no llega al 3 % (6.000).","Entra en el reparto.","Obtiene un escaño seguro.","Depende del voto nulo."],c:0,e:"Barrera del 3 %."},
+ {q:"Una formación obtiene 7 escaños y el 4 % de los votos nacionales, pero el 20 % en las circunscripciones donde se presentó. ¿Puede formar grupo?",o:["Sí.","No: necesita 15 diputados.","No: necesita el 5 % nacional.","Solo en el Senado."],c:0,e:"5 escaños + 15 %."},
+ {q:"Una Comunidad tiene 6,8 millones de habitantes. Designa:",o:["7 senadores.","6 senadores.","8 senadores.","5 senadores."],c:0,e:"1 + 6."},
+ {q:"El Senado recibe un proyecto urgente el 2-3-2026. Debe pronunciarse antes del:",o:["22-3-2026.","2-5-2026.","2-4-2026.","17-3-2026."],c:0,e:"20 días naturales."},
+ {q:"El Senado veta una ley ordinaria y el Congreso obtiene 170 votos a favor y 160 en contra de inmediato. ¿Qué ocurre?",o:["No se levanta todavía; pasados 2 meses bastará la mayoría simple.","Se levanta el veto.","La ley decae definitivamente.","Decide una Comisión Mixta."],c:0,e:"Art. 90.2 CE."},
+ {q:"El Senado veta una ley orgánica. Pasados 2 meses, el Congreso obtiene 170 votos a favor. ¿Se levanta el veto?",o:["No: la ley orgánica requiere siempre mayoría absoluta (176).","Sí, basta la mayoría simple.","Sí, si el Senado no se opone.","Solo con el refrendo del Rey."],c:0,e:"Art. 81.2 CE."},
+ {q:"Se presenta una moción de censura el 1-3-2027. Se puede votar a partir del:",o:["6-3-2027.","3-3-2027.","1-4-2027.","4-3-2027."],c:0,e:"Pasados 5 días."},
+ {q:"Una moción de censura obtiene 172 votos a favor. Resultado:",o:["Rechazada: hacen falta 176.","Aprobada por mayoría simple.","Se repite en 48 horas.","Pasa al Senado."],c:0,e:"Mayoría absoluta."},
+ {q:"Una moción de censura la firman 30 diputados. ¿Se admite?",o:["No: hacen falta 35 (1/10).","Sí.","Sí, si es de un grupo.","Solo con candidato."],c:0,e:"Art. 113.2 CE."},
+ {q:"El Presidente plantea una cuestión de confianza: 150 sí, 140 no, 60 abstenciones. Resultado:",o:["Confianza otorgada (mayoría simple).","Confianza denegada: no llega a 176.","Se repite la votación.","Decide el Senado."],c:0,e:"Art. 112 CE."},
+ {q:"El Congreso está disuelto y el Gobierno aprueba un decreto-ley. Lo convalidará:",o:["La Diputación Permanente del Congreso.","El nuevo Congreso, cuando se constituya.","El Senado.","Nadie: queda en vigor."],c:0,e:"Art. 78.2 CE (como el RDL 25/2026)."},
+ {q:"El Gobierno quiere firmar un tratado de alianza militar. Necesita:",o:["La autorización previa de las Cortes.","Una ley orgánica.","Solo informar a las Cámaras.","La revisión constitucional."],c:0,e:"Art. 94.1.b CE."},
+ {q:"Un tratado atribuye a una organización internacional competencias derivadas de la Constitución. Se autoriza:",o:["Por ley orgánica.","Por mayoría simple de cada Cámara.","Por real decreto.","Por referéndum."],c:0,e:"Art. 93 CE."},
+ {q:"Un diputado quiere presentar solo una proposición de ley. Puede:",o:["Si cuenta con la firma de otros 14 diputados.","Siempre.","Nunca.","Si lo autoriza el Presidente."],c:0,e:"O hacerlo a través de un grupo."},
+ {q:"Una iniciativa popular sobre el IRPF:",o:["No es admisible: materia tributaria.","Es admisible con 500.000 firmas.","Requiere 1.000.000 de firmas.","Es admisible si lo autoriza el Gobierno."],c:0,e:"Art. 87.3 CE."},
+ {q:"Un diputado es elegido además miembro de una asamblea autonómica. Debe:",o:["Optar, porque es incompatible.","Nada: es compatible.","Renunciar a la asamblea siempre.","Pedir autorización a la Mesa."],c:0,e:"Art. 67.1 CE."},
+ {q:"El Presidente disolvió las Cortes el 6-10-2026. Podrá disolverlas de nuevo discrecionalmente a partir del:",o:["6-10-2027.","6-4-2027.","23-12-2026.","29-11-2027."],c:0,e:"1 año (art. 115.3), salvo el art. 99.5."},
+ {q:"Formentera, en las elecciones del 29-11-2026:",o:["Elige por primera vez un senador propio.","Comparte senador con Ibiza.","No elige senador.","Elige 2 senadores."],c:0,e:"Cuarta reforma constitucional."},
+ {q:"Una ley se publica en el BOE el 1-6-2026 sin indicar su entrada en vigor. Entra en vigor el:",o:["21-6-2026.","2-6-2026.","16-6-2026.","1-7-2026."],c:0,e:"A los 20 días."}
+];
+const TESTS=[
+ {id:"t1",ic:"🏛️",name:"Cortes y Congreso",desc:"Características, composición, elecciones.",qs:T1},
+ {id:"t2",ic:"🗺️",name:"El Senado",desc:"Composición, reforma de 2026, funciones.",qs:T2},
+ {id:"t3",ic:"🛡️",name:"Disolución y estatuto parlamentario",desc:"Arts. 67, 70, 71, 115.",qs:T3},
+ {id:"t4",ic:"⚙️",name:"Funcionamiento y órganos",desc:"Sesiones, Mesa, comisiones, grupos.",qs:T4},
+ {id:"t5",ic:"🔍",name:"Funciones y control del Gobierno",desc:"Arts. 66, 108-116.",qs:T5},
+ {id:"t6",ic:"🌐",name:"Tratados e iniciativa legislativa",desc:"Arts. 87-89 y 93-96.",qs:T6},
+ {id:"t7",ic:"📜",name:"Tramitación y normas con rango de ley",desc:"Arts. 82-91 y 150.",qs:T7},
+ {id:"t8",ic:"🧩",name:"Casos prácticos",desc:"D'Hondt, plazos, mayorías.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+const ESQ=[
+ {id:"e1",title:"El Congreso",intro:"Anexo: composición y elección.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Congreso de los Diputados</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Constitución</b>Entre 300 y {{0}}</div>
+   <div class="sch-box alt"><b>LOREG</b>{{1}} diputados</div>
+   <div class="sch-box"><b>Circunscripción</b>La {{2}}</div>
+   <div class="sch-box alt"><b>Fórmula</b>{{3}}, con barrera del 3 %</div>
+  </div></div>`,
+  blanks:[{o:["400","350","450","500"],why:"Art. 68.1."},{o:["350","300","400","375"],why:"Art. 162 LOREG."},{o:["provincia","Comunidad Autónoma","municipio","nación"],why:"Art. 68.2."},{o:["D'Hondt","Sainte-Laguë","Hare","mayoritaria"],why:"Art. 163 LOREG."}]},
+ {id:"e2",title:"El Senado",intro:"Art. 69 tras la reforma de 2026.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Senado</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Provincia peninsular</b>{{0}} senadores</div>
+   <div class="sch-box alt"><b>Islas mayores</b>{{1}} senadores</div>
+   <div class="sch-box"><b>Formentera (2026)</b>{{2}} senador propio</div>
+   <div class="sch-box alt"><b>CCAA</b>1 + 1 por cada {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["4","3","2","5"],why:"Art. 69.2."},{o:["3","4","2","1"],why:"Gran Canaria, Mallorca, Tenerife."},{o:["1","2","0","3"],why:"Cuarta reforma constitucional."},{o:["millón de habitantes","500.000 habitantes","provincia","100.000 habitantes"],why:"Art. 69.5."}]},
+ {id:"e3",title:"Calendario electoral",intro:"Arts. 68.6 CE y LOREG.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Elecciones generales</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Elecciones</b>Entre 30 y {{0}} días</div>
+   <div class="sch-box alt"><b>Campaña</b>{{1}} días</div>
+   <div class="sch-box"><b>Sesión constitutiva</b>En {{2}} días</div>
+   <div class="sch-box alt"><b>Mandato</b>{{3}} años</div>
+  </div></div>`,
+  blanks:[{o:["60","90","45","50"],why:"Desde la terminación del mandato."},{o:["15","21","10","30"],why:"LOREG."},{o:["25","15","30","20"],why:"Art. 68.6."},{o:["4","5","6","3"],why:"Ambas Cámaras."}]},
+ {id:"e4",title:"Prerrogativas parlamentarias",intro:"Art. 71.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 71 CE</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Opiniones y votos</b>{{0}}</div>
+   <div class="sch-box alt"><b>Detención</b>Solo en flagrante {{1}}</div>
+   <div class="sch-box"><b>Procesamiento</b>Autorización de la {{2}}</div>
+   <div class="sch-box alt"><b>Fuero</b>Sala de lo Penal del {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Inviolabilidad","Inmunidad","Aforamiento","Indemnidad penal"],why:"Art. 71.1."},{o:["delito","falta","infracción","acto"],why:"Art. 71.2."},{o:["Cámara","Mesa","Junta de Portavoces","Gobierno"],why:"Suplicatorio."},{o:["Tribunal Supremo","TSJ","Audiencia Nacional","TC"],why:"Art. 71.3."}]},
+ {id:"e5",title:"Ordena: causas de disolución automática",intro:"Según el manual.",type:"order",
+  items:[{t:"Fin del mandato de 4 años",why:"Primera causa."},{t:"Cláusula del art. 99.5 (sin investidura en 2 meses)",why:"Segunda causa."},{t:"Aprobación del principio de reforma del art. 168",why:"Tercera causa."}]},
+ {id:"e6",title:"Mesas de las Cámaras",intro:"Anexo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Mesa</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Congreso: Vicepresidentes</b>{{0}}</div>
+   <div class="sch-box alt"><b>Senado: Vicepresidentes</b>{{1}}</div>
+   <div class="sch-box"><b>Secretarios (ambas)</b>{{2}}</div>
+   <div class="sch-box alt"><b>Presidente: 1.ª votación</b>Mayoría {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["4","2","3","5"],why:"Mesa del Congreso."},{o:["2","4","1","3"],why:"Mesa del Senado."},{o:["4","2","3","6"],why:"En ambas."},{o:["absoluta","simple","de 3/5","de 2/3"],why:"Después, entre los dos más votados."}]},
+ {id:"e7",title:"Órganos políticos",intro:"Anexo.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Órganos políticos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Grupo en el Congreso</b>{{0}} diputados</div>
+   <div class="sch-box alt"><b>Grupo en el Senado</b>{{1}} senadores</div>
+   <div class="sch-box"><b>Diputación Permanente</b>Mínimo {{2}} miembros</div>
+   <div class="sch-box alt"><b>Junta de Portavoces</b>Voto {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["15","10","5","20"],why:"O 5 + 15 % / 5 %."},{o:["10","15","5","25"],why:"Reglamento del Senado."},{o:["21","15","30","25"],why:"Art. 78.1."},{o:["ponderado","secreto","nominal","unánime"],why:"Según el peso de cada grupo."}]},
+ {id:"e8",title:"Moción de censura",intro:"Art. 113.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Moción de censura</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Firmas</b>{{0}} de los diputados</div>
+   <div class="sch-box alt"><b>Votación</b>Pasados {{1}} días</div>
+   <div class="sch-box"><b>Alternativas</b>En los {{2}} primeros días</div>
+   <div class="sch-box alt"><b>Mayoría</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["1/10","1/4","1/5","1/3"],why:"Art. 113.2."},{o:["5","2","3","7"],why:"Art. 113.3."},{o:["2","5","3","1"],why:"Art. 113.3."},{o:["Absoluta","Simple","3/5","2/3"],why:"Art. 113.1."}]},
+ {id:"e9",title:"Ordena: tipos de tratado por exigencia",intro:"De más a menos exigente.",type:"order",
+  items:[{t:"Estipulación contraria a la Constitución: revisión constitucional (art. 95)",why:"La más exigente."},{t:"Cesión de competencias: ley orgánica (art. 93)",why:"Mayoría absoluta."},{t:"Políticos, militares, financieros…: autorización previa (art. 94.1)",why:"Procedimiento del art. 74.2."},{t:"Los demás: información a las Cámaras (art. 94.2)",why:"La menos exigente."}]},
+ {id:"e10",title:"Iniciativa legislativa",intro:"Art. 87.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Iniciativa</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Gobierno</b>Proyecto de {{0}}</div>
+   <div class="sch-box alt"><b>Senado</b>{{1}} senadores o un grupo</div>
+   <div class="sch-box"><b>Popular</b>{{2}} firmas</div>
+   <div class="sch-box alt"><b>Asambleas autonómicas</b>Hasta {{3}} miembros la defienden</div>
+  </div></div>`,
+  blanks:[{o:["ley","decreto","reglamento","resolución"],why:"Art. 88."},{o:["25","15","10","50"],why:"Reglamento del Senado."},{o:["500.000","1.000.000","250.000","100.000"],why:"Art. 87.3."},{o:["3","5","2","1"],why:"Art. 87.2."}]},
+ {id:"e11",title:"Ordena el procedimiento legislativo",intro:"Proyecto de ley ordinaria.",type:"order",
+  items:[{t:"El Gobierno aprueba el proyecto y lo remite al Congreso",why:"Iniciativa."},{t:"La Mesa ordena su publicación y abre el plazo de enmiendas",why:"15 días."},{t:"Debate de totalidad en el Pleno",why:"Enmiendas a la totalidad."},{t:"Ponencia y Comisión debaten las enmiendas parciales",why:"Informe y dictamen."},{t:"Aprobación por el Pleno del Congreso",why:"Mayoría simple."},{t:"Tramitación en el Senado (2 meses)",why:"Aprobar, enmendar o vetar."},{t:"Sanción, promulgación y publicación",why:"El Rey, en 15 días."}]},
+ {id:"e12",title:"El veto del Senado",intro:"Art. 90.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Veto</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Senado</b>Mayoría {{0}}</div>
+   <div class="sch-box alt"><b>Congreso, de inmediato</b>Mayoría {{1}}</div>
+   <div class="sch-box"><b>Congreso, pasado el plazo</b>{{2}} meses, mayoría simple</div>
+   <div class="sch-box alt"><b>Si es urgente</b>Plazo del Senado: {{3}} días</div>
+  </div></div>`,
+  blanks:[{o:["absoluta","simple","de 3/5","de 2/3"],why:"Art. 90.2."},{o:["absoluta","simple","de 3/5","de 2/3"],why:"Art. 90.2."},{o:["2","1","3","6"],why:"Art. 90.2."},{o:["20","15","10","30"],why:"Naturales (art. 90.3)."}]},
+ {id:"e13",title:"Legislación del Gobierno",intro:"Arts. 82-86.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Normas con rango de ley</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Texto articulado</b>Ley de {{0}}</div>
+   <div class="sch-box alt"><b>Texto refundido</b>Ley {{1}}</div>
+   <div class="sch-box"><b>Decreto-ley</b>Extraordinaria y {{2}} necesidad</div>
+   <div class="sch-box alt"><b>Convalidación</b>{{3}} días</div>
+  </div></div>`,
+  blanks:[{o:["bases","armonización","transferencia","marco"],why:"Art. 82.2."},{o:["ordinaria","orgánica","de bases","marco"],why:"Art. 82.2."},{o:["urgente","grave","excepcional","inaplazable"],why:"Art. 86.1."},{o:["30","15","60","20"],why:"Art. 86.2."}]},
+ {id:"e14",title:"Leyes del art. 150",intro:"Leyes especiales.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 150 CE</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Ley marco</b>Ley {{0}}</div>
+   <div class="sch-box alt"><b>Transferencia o delegación</b>Ley {{1}}</div>
+   <div class="sch-box"><b>Armonización</b>Necesidad: mayoría {{2}}</div>
+   <div class="sch-box alt"><b>Control de la ley marco</b>Tribunales y {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["ordinaria","orgánica","de bases","de armonización"],why:"Art. 150.1."},{o:["orgánica","ordinaria","marco","de bases"],why:"Art. 150.2."},{o:["absoluta","simple","de 3/5","de 2/3"],why:"Art. 150.3."},{o:["Cortes Generales","Senado","Gobierno","TC"],why:"Art. 150.1."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("oe3c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("oe3c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
