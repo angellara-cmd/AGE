@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Esquemas y Test AGE - Ley 19/2013</title>
+    <!-- Fuente moderna Plus Jakarta Sans e Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tema Claro (Por defecto) */
+            --bg-body: #f8fafc;
+            --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+                           radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 50%);
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --glass-bg: rgba(248, 250, 252, 0.85);
+            
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --primary-hover: #4338ca;
+            --accent: #0ea5e9;
+            
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-light: #64748b;
+            
+            --correct-color: #059669;
+            --correct-bg: #ecfdf5;
+            --correct-border: #10b981;
+            
+            --wrong-color: #dc2626;
+            --wrong-bg: #fef2f2;
+            --wrong-border: #ef4444;
+            
+            --exp-bg: #fffbeb;
+            --exp-border: #f59e0b;
+            --exp-text: #78350f;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+        }
+
+        [data-theme="dark"] {
+            /* Tema Oscuro */
+            --bg-body: #0b1120;
+            --bg-gradient: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                           radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.12) 0px, transparent 50%);
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --glass-bg: rgba(11, 17, 32, 0.85);
+            
+            --primary: #6366f1;
+            --primary-light: rgba(99, 102, 241, 0.15);
+            --primary-hover: #818cf8;
+            --accent: #38bdf8;
+            
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --text-light: #94a3b8;
+            
+            --correct-color: #34d399;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: #10b981;
+            
+            --wrong-color: #f87171;
+            --wrong-bg: rgba(239, 68, 68, 0.15);
+            --wrong-border: #ef4444;
+            
+            --exp-bg: rgba(245, 158, 11, 0.12);
+            --exp-border: #f59e0b;
+            --exp-text: #fde68a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.65;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, .q-title, .tab-btn {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 1rem 1.25rem 4rem;
+        }
+
+        /* --- CABECERA --- */
+        header {
+            text-align: center;
+            padding: 1.5rem 0 1.25rem;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .header-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--card-bg);
+            color: var(--primary);
+            border: 1px solid var(--card-border);
+            border-radius: 9999px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .header-link:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-link svg {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .badge-opos {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            margin-bottom: 0.75rem;
+        }
+
+        h1 {
+            font-size: clamp(1.65rem, 4vw, 2.35rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.4rem;
+            line-height: 1.2;
+        }
+
+        header p.subtitle {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* --- NAVEGACIÓN STICKY HORIZONTAL (OPTIMIZADA MÓVIL Y PC) --- */
+        .nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin: 0 -1.25rem 1.75rem;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE/Edge */
+            scroll-behavior: smooth;
+            padding-bottom: 2px;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .tab-btn {
+            flex: 0 0 auto;
+            padding: 0.6rem 1.1rem;
+            background-color: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        /* --- CONTENIDO Y ANIMACIONES --- */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- BARRA DE HERRAMIENTAS DEL ESQUEMA (TTS + BUSCADOR) --- */
+        .esquema-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .esquema-controls {
+                grid-template-columns: auto 1fr;
+            }
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 1rem;
+            width: 18px;
+            height: 18px;
+            color: var(--text-light);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.75rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        /* --- TARJETAS --- */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 1.35rem 1.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--card-border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        @media (hover: hover) {
+            .card:hover {
+                box-shadow: var(--shadow-lg);
+            }
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .q-num {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            min-width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .q-title {
+            font-weight: 700;
+            font-size: 1.08rem;
+            color: var(--text-main);
+            line-height: 1.45;
+        }
+
+        /* Esquema específico */
+        .esquema-answer {
+            color: var(--text-muted);
+            padding: 0.85rem 1rem;
+            background-color: var(--bg-body);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary);
+            font-size: 0.98rem;
+        }
+
+        /* --- CABECERA Y PROGRESO DE TEST --- */
+        .test-header-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .test-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .test-meta h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background-color: var(--bg-body);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        /* --- OPCIONES DE TEST --- */
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--card-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background-color: var(--card-bg);
+        }
+
+        .option-item:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        /* Estilo cuando está seleccionada (antes de corregir) */
+        .option-item:has(input:checked) {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option-item input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-light);
+            border-radius: 50%;
+            margin-top: 2px;
+            margin-right: 0.85rem;
+            flex-shrink: 0;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .option-item input[type="radio"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            background-color: var(--primary);
+        }
+
+        .option-item input[type="radio"]:checked {
+            border-color: var(--primary);
+        }
+
+        .option-item input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 0.98rem;
+            line-height: 1.5;
+        }
+
+        /* --- ESTADOS DE EVALUACIÓN --- */
+        .option-item.correct-ans {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: var(--correct-color) !important;
+            font-weight: 600;
+        }
+
+        .option-item.correct-ans input[type="radio"] {
+            border-color: var(--correct-border);
+        }
+        .option-item.correct-ans input[type="radio"]::before {
+            background-color: var(--correct-border);
+        }
+
+        .option-item.wrong-ans {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-border) !important;
+            color: var(--wrong-color) !important;
+            font-weight: 600;
+        }
+
+        .option-item.wrong-ans input[type="radio"] {
+            border-color: var(--wrong-border);
+        }
+        .option-item.wrong-ans input[type="radio"]::before {
+            background-color: var(--wrong-border);
+        }
+
+        .explanation {
+            background-color: var(--exp-bg);
+            color: var(--exp-text);
+            padding: 1rem 1.15rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+            font-size: 0.92rem;
+            border-left: 4px solid var(--exp-border);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        /* --- BOTONES --- */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 600px) {
+            .btn-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .btn {
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            min-height: 48px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+        }
+
+        .btn-secondary {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-body);
+            border-color: var(--text-light);
+        }
+
+        .btn-tts {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            white-space: nowrap;
+        }
+
+        .btn-tts.speaking {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* --- TARJETA DE RESULTADOS --- */
+        .summary-box {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            padding: 1.75rem;
+            border-radius: var(--radius-lg);
+            margin-top: 2rem;
+            text-align: center;
+            display: none;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.4s ease;
+        }
+
+        .score-big {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.1;
+            margin: 0.5rem 0;
+        }
+
+        .score-details {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* --- TOAST / NOTIFICACIÓN FLOTANTE --- */
+        #msg-box {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-main);
+            color: var(--bg-body);
+            padding: 0.85rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            max-width: 90vw;
+            text-align: center;
+        }
+
+        #msg-box.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Ajustes extra para pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.75rem 1rem 3.5rem;
+            }
+            .card {
+                padding: 1.15rem;
+            }
+            .nav-wrapper {
+                margin: 0 -1rem 1.25rem;
+                padding: 0.65rem 1rem;
+            }
+            .header-link {
+                font-size: 0.8rem;
+                padding: 0.45rem 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="top-bar">
+            <a href="Tema_07_Ley_19_2013_Transparencia_CTBG_claude.html" class="header-link" title="Ir al documento complementario">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>Tema_07_Ley_19_2013_Transparencia_CTBG_claude.html</span>
+            </a>
+
+            <button class="theme-toggle" id="theme-btn" aria-label="Cambiar tema claro/oscuro" title="Cambiar tema">
+                🌙
+            </button>
+        </div>
+
+        <span class="badge-opos">Oposiciones AGE · Tema 07</span>
+        <h1>Transparencia y Buen Gobierno</h1>
+        <p class="subtitle">Esquema interactivo y simulacros de examen · Ley 19/2013</p>
+    </header>
+
+    <div class="nav-wrapper">
+        <nav class="tabs" id="tab-nav">
+            <!-- Generado dinámicamente -->
+        </nav>
+    </div>
+
+    <main id="main-content">
+        <!-- Esquema y Test generados dinámicamente -->
+    </main>
+
+    <div id="msg-box"></div>
+</div>
+
+<script>
+    // --- GESTIÓN DE TEMA OSCURO / CLARO ---
+    const themeBtn = document.getElementById('theme-btn');
+    const htmlEl = document.documentElement;
+    
+    // Detectar preferencia del sistema si no hay guardada
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        htmlEl.setAttribute('data-theme', 'dark');
+        themeBtn.textContent = '☀️';
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+        htmlEl.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        themeBtn.textContent = isDark ? '🌙' : '☀️';
+    });
+
+    // --- DATOS EXTRAÍDOS ESTRICTAMENTE DEL PDF ADJUNTO (Tema_07.pdf) ---
+    const esquemaData = [
+        { q: "¿Cuál es la motivación fundamental de la Ley 19/2013?", a: "La transparencia, el acceso a la información pública y las normas de buen gobierno deben ser los ejes fundamentales de toda acción política, permitiendo una mejor fiscalización y regeneración democrática." },
+        { q: "¿Cuál es el triple alcance de la Ley 19/2013?", a: "1. Incrementa y refuerza la transparencia en la actividad pública (publicidad activa). 2. Reconoce y garantiza el acceso a la información (derecho amplio). 3. Establece obligaciones de buen gobierno para responsables públicos." },
+        { q: "¿Cómo se estructura la Ley 19/2013?", a: "Consta de 40 artículos, agrupados en 4 títulos: Título Preliminar, Título I (Transparencia), Título II (Buen gobierno), Título III (Consejo de Transparencia y Buen Gobierno), además de 8 Disposiciones Adicionales y 9 Disposiciones Finales." },
+        { q: "¿Cuándo entraron en vigor las disposiciones relativas al buen gobierno?", a: "Al día siguiente a su publicación en el BOE (Boletín Oficial del Estado)." },
+        { q: "¿Qué plazo máximo se concedió a las Comunidades Autónomas y Entidades Locales para adaptarse a las disposiciones de la Ley?", a: "Un plazo máximo de 2 años para adaptarse a sus disposiciones." },
+        { q: "¿A qué sujetos se les aplica la Ley de forma total (como Administraciones Públicas)?", a: "A la AGE, CCAA, Ciudades de Ceuta y Melilla, entidades de la Administración Local, entidades gestoras y servicios comunes de la Seguridad Social, Mutuas Colaboradoras, Organismos Autónomos, Agencias Estatales, EPEs y Entidades de Derecho Público vinculadas." },
+        { q: "¿A qué instituciones se les aplica la Ley en relación con sus actividades sujetas a Derecho Administrativo?", a: "Casa de su Majestad el Rey, Congreso, Senado, Tribunal Constitucional, Consejo General del Poder Judicial, Banco de España, Consejo de Estado, Defensor del Pueblo, Tribunal de Cuentas, CES e instituciones autonómicas análogas." },
+        { q: "¿Cuándo se aplica la Ley (parcialmente, solo publicidad activa) a entidades privadas?", a: "Cuando perciban ayudas o subvenciones superiores a 100.000 euros en un año, o cuando al menos el 40% de sus ingresos anuales provengan de ayudas públicas (siempre que alcancen mínimo 5.000 euros)." },
+        { q: "¿Qué principios generales rigen la publicidad activa?", a: "Publicar de forma periódica y actualizada información relevante. Si hay datos protegidos, previa disociación. En sedes electrónicas o páginas web, clara, estructurada, entendible, gratuita y accesible para personas con discapacidad." },
+        { q: "¿Qué incluye la información institucional, organizativa y de planificación a publicar?", a: "Funciones, normativa aplicable, estructura organizativa con organigrama actualizado (identificando responsables, perfil y trayectoria), planes y programas anuales/plurianuales y su grado de cumplimiento." },
+        { q: "¿Qué información de relevancia jurídica deben publicar las Administraciones Públicas?", a: "Directrices, instrucciones, circulares; anteproyectos de Ley y proyectos de Decretos Legislativos; proyectos de Reglamentos; memorias e informes (memoria de impacto normativo); y documentos sometidos a información pública." },
+        { q: "¿Qué información económica, presupuestaria y estadística debe publicarse respecto a los contratos?", a: "Todos los contratos con objeto, duración, importe de licitación/adjudicación, procedimiento, instrumentos de publicidad, número de licitadores, identidad del adjudicatario, modificaciones, desistimiento y renuncia. Los menores pueden publicarse trimestralmente." },
+        { q: "¿Quién controla el cumplimiento de las obligaciones de publicidad activa en la AGE?", a: "El Consejo de Transparencia y Buen Gobierno, que podrá dictar resoluciones para el cese del incumplimiento e inicio de actuaciones disciplinarias." },
+        { q: "¿Qué consideración tiene el incumplimiento reiterado de las obligaciones de publicidad activa?", a: "Tendrá la consideración de infracción grave a los efectos de aplicación a sus responsables del régimen disciplinario." },
+        { q: "¿De quién depende el Portal de la Transparencia de la AGE?", a: "Del Ministerio para la Transformación Digital y de la Función Pública." },
+        { q: "¿A qué principios técnicos debe adecuarse la información del Portal de la Transparencia?", a: "Accesibilidad (información estructurada), Interoperabilidad (conforme al Esquema Nacional de Interoperabilidad) y Reutilización (formatos que permitan su reutilización)." },
+        { q: "¿Quién tiene derecho a acceder a la información pública?", a: "Todas las personas tienen derecho a acceder a la información pública, en los términos previstos en el art. 105.b) de la Constitución española." },
+        { q: "¿Qué se entiende por información pública según la Ley 19/2013?", a: "Son los contenidos o documentos, cualquiera que sea su formato o soporte, que obren en poder de los sujetos incluidos en el ámbito de aplicación y que hayan sido elaborados o adquiridos en el ejercicio de sus funciones." },
+        { q: "¿Cuáles son algunos límites al derecho de acceso a la información?", a: "La seguridad nacional, la defensa, las relaciones exteriores, la seguridad pública, la prevención e investigación de ilícitos, la tutela judicial efectiva, funciones de inspección y control, intereses económicos y comerciales, política económica, secreto profesional, y protección del medio ambiente." },
+        { q: "¿Qué ocurre si la información solicitada contiene datos que revelen ideología, afiliación sindical, religión o creencias?", a: "El acceso únicamente se podrá autorizar en caso de que se contase con el consentimiento expreso y por escrito del afectado, a menos que este los hubiese hecho manifiestamente públicos antes." },
+        { q: "¿Qué ocurre si los datos hacen referencia al origen racial, salud, vida sexual, datos genéticos o infracciones penales?", a: "Solo se podrá autorizar el acceso si se cuenta con el consentimiento expreso del afectado o si estuviera amparado por una norma con rango de Ley." },
+        { q: "¿Qué datos se tomarán en cuenta para ponderar el interés público frente a la protección de datos que no son especialmente protegidos?", a: "Menor perjuicio por el transcurso de plazos históricos, condición de investigador con fines científicos/estadísticos, menor perjuicio si son datos meramente identificativos, y mayor garantía si afecta a intimidad, seguridad o menores." },
+        { q: "¿Es obligatorio motivar la solicitud de acceso a la información?", a: "El solicitante no está obligado a motivar su solicitud, aunque podrá exponer los motivos. La ausencia de motivación no será por sí sola causa de rechazo." },
+        { q: "¿Cuáles son las causas de inadmisión de una solicitud de acceso?", a: "Información en curso de elaboración, carácter auxiliar o de apoyo (notas, borradores), requiere acción previa de reelaboración, no obra en poder del órgano (desconociendo el competente), o solicitudes manifiestamente repetitivas/abusivas." },
+        { q: "¿Qué ocurre si la solicitud no identifica de forma suficiente la información?", a: "Se pedirá al solicitante que la concrete en un plazo de diez días, indicando que de no hacerlo se le tendrá por desistido, suspendiendo el plazo para resolver." },
+        { q: "¿Cuál es el plazo de resolución para una solicitud de acceso a la información?", a: "El plazo máximo es de un mes desde la recepción por el órgano competente, ampliable por otro mes si el volumen o complejidad lo hacen necesario (previa notificación)." },
+        { q: "¿Qué efectos tiene el silencio administrativo en las solicitudes de acceso?", a: "Transcurrido el plazo máximo para resolver sin que se haya dictado y notificado resolución expresa, se entenderá que la solicitud ha sido desestimada." },
+        { q: "¿Qué plazo existe para interponer la reclamación ante el Consejo de Transparencia y Buen Gobierno?", a: "Un mes a contar desde el día siguiente al de la notificación del acto impugnado o desde el día siguiente a aquel en que se produzcan los efectos del silencio administrativo." },
+        { q: "¿Cuál es el plazo máximo para resolver y notificar la reclamación ante el CTBG?", a: "Será de tres meses. Transcurrido el cual, la reclamación se entenderá desestimada." },
+        { q: "¿A quién se aplican las prescripciones relativas al Buen Gobierno?", a: "A los miembros del Gobierno, Secretarios de Estado, resto de altos cargos de la AGE y entidades del sector público estatal vinculadas, y altos cargos o asimilados autonómicos y locales (incluyendo miembros de Juntas de Gobierno local)." },
+        { q: "¿Cuáles son algunos principios generales del Buen Gobierno?", a: "Actuar con transparencia, imparcialidad, igualdad, diligencia debida, conducta digna, asumiendo responsabilidad y dedicación al servicio público." },
+        { q: "¿Qué regla existe sobre la aceptación de regalos en los principios de actuación del Buen Gobierno?", a: "No aceptarán regalos que superen los usos habituales, sociales o de cortesía. Si son de mayor relevancia institucional, se incorporarán al patrimonio de la Administración Pública." },
+        { q: "¿Qué tipo de infracción es incurrir en alcance en la administración de fondos públicos (no subsumible en otros tipos)?", a: "Constituye una infracción muy grave en materia de gestión económico-presupuestaria." },
+        { q: "¿Qué infracciones disciplinarias son consideradas muy graves?", a: "Incumplimiento de respeto a la Constitución, discriminación, adopción de acuerdos manifiestamente ilegales, utilización indebida de secretos, acoso laboral, violación de la imparcialidad, etc." },
+        { q: "¿Cuáles son las sanciones para infracciones muy graves en materia disciplinaria?", a: "Declaración del incumplimiento (publicación en BOE), no percepción de indemnización al cese, destitución del cargo, y prohibición de ocupar alto cargo por un periodo de entre 5 y 10 años." },
+        { q: "¿Cuáles son los plazos de prescripción de las infracciones de buen gobierno?", a: "Faltas muy graves: 5 años. Faltas graves: 3 años. Faltas leves: 1 año." },
+        { q: "¿Qué naturaleza jurídica tiene el Consejo de Transparencia y Buen Gobierno?", a: "Es una Autoridad Administrativa Independiente (A.A.I.) de ámbito estatal, con personalidad jurídica propia y plena capacidad de obrar, que actúa con autonomía e independencia." },
+        { q: "¿De quién depende orgánicamente el Consejo de Transparencia y Buen Gobierno?", a: "Se vincula a la Administración General del Estado a través del Ministerio para la Transformación Digital y de la Función Pública." },
+        { q: "¿Quién aprueba y renueva al titular de la Presidencia del CTBG?", a: "Es nombrado por un período no renovable de cinco años mediante Real Decreto, a propuesta del Ministro de Función Pública, y refrendado por mayoría absoluta del Congreso en el plazo de un mes." },
+        { q: "¿Qué representantes forman parte de la Comisión de Transparencia y Buen Gobierno además de su Presidente?", a: "Un Diputado, un Senador, un representante del Tribunal de Cuentas, del Defensor del Pueblo, de la AEPD, de la Secretaría de Estado de Función Pública, y de la AIReF." }
+    ];
+
+    function q(texto, o0, o1, o2, o3, corr, exp) {
+        return { q: texto, opts: [o0, o1, o2, o3], correct: corr, exp: exp };
+    }
+
+    const testPool = [
+        // TEST 1
+        [
+            q("¿Cuál es la norma que aprueba el Estatuto del Consejo de Transparencia y Buen Gobierno?", "Ley 19/2013, de 9 de diciembre.", "Real Decreto 615/2024, de 2 de julio.", "Ley 40/2015, de 1 de octubre.", "Ley 47/2003, de 26 de noviembre.", 1, "Según el apartado de referencias legislativas, el Estatuto se aprueba por el Real Decreto 615/2024, de 2 de julio."),
+            q("Las disposiciones relativas al buen gobierno de la Ley 19/2013 entraron en vigor:", "Al año de su publicación en el BOE.", "A los dos años de su publicación.", "Al día siguiente a su publicación en el BOE.", "A los 20 días de su publicación.", 2, "La Ley establece que las disposiciones de buen gobierno entraron en vigor al día siguiente a su publicación en el BOE."),
+            q("¿Cuál de los siguientes sujetos NO tiene una aplicación total de la Ley 19/2013?", "El Banco de España.", "La Casa de su Majestad el Rey.", "Los Partidos Políticos.", "El Tribunal de Cuentas.", 2, "Los partidos políticos, junto con sindicatos y organizaciones empresariales, tienen aplicación parcial (solo Capítulo II de Publicidad Activa)."),
+            q("Una entidad privada está sujeta a la Ley en materia de publicidad activa si percibe subvenciones en un año por un importe superior a:", "50.000 euros.", "100.000 euros.", "250.000 euros.", "5.000 euros, independientemente de sus ingresos totales.", 1, "Tienen aplicación parcial si perciben ayudas superiores a 100.000 euros o si representan el 40% de sus ingresos (alcanzando mínimo 5.000 euros)."),
+            q("Respecto a la publicidad activa de los contratos, ¿cada cuánto tiempo podrá realizarse la publicación relativa a los contratos menores?", "Mensualmente.", "Trimestralmente.", "Semestralmente.", "Anualmente.", 1, "La Ley especifica: 'La publicación de la información relativa a los contratos menores podrá realizarse trimestralmente.'"),
+            q("La información estadística sobre participación de pymes en contratos adjudicados se publicará:", "Mensualmente.", "Trimestralmente.", "Semestralmente.", "Anualmente.", 2, "La publicación de esta información estadística de pymes se realizará semestralmente."),
+            q("Si el órgano al que se dirige la solicitud de información no es el competente y desconoce quién lo es:", "Debe archivar la solicitud sin más trámite.", "Debe inadmitir a trámite mediante resolución motivada.", "Debe remitirla al Ministerio de la Presidencia.", "La b y la c son correctas.", 1, "Es causa de inadmisión cuando se dirija a un órgano en cuyo poder no obre la información cuando se desconozca el competente. Debe indicar el órgano que a su juicio es competente."),
+            q("¿Es obligatorio motivar la solicitud de derecho de acceso a la información?", "Sí, siempre.", "No, el solicitante no está obligado.", "Sí, si se trata de datos meramente identificativos.", "Solo cuando afecte a terceros.", 1, "El texto establece que el solicitante no está obligado a motivar su solicitud, aunque la ausencia de motivación no será causa de rechazo."),
+            q("En caso de que la solicitud de información no la identifique de forma suficiente, el solicitante deberá concretarla en un plazo de:", "10 días.", "15 días.", "20 días.", "1 mes.", 0, "Se pedirá al solicitante que la concrete en un plazo de 10 días, con indicación de que se le tendrá por desistido en caso contrario."),
+            q("El plazo ordinario máximo para notificar la resolución de una solicitud de acceso a la información es de:", "15 días.", "1 mes.", "2 meses.", "3 meses.", 1, "El plazo máximo es de un mes desde la recepción por el órgano competente (ampliable por otro mes)."),
+            q("El silencio administrativo en el ejercicio del derecho de acceso a la información tiene efecto:", "Estimatorio.", "Desestimatorio.", "Estimatorio salvo que afecte a terceros.", "El texto no lo especifica.", 1, "Transcurrido el plazo máximo para resolver sin dictarse resolución expresa, se entenderá desestimada."),
+            q("Frente a la resolución expresa o presunta en materia de acceso, la reclamación ante el CTBG tiene carácter:", "Obligatorio previo a la vía judicial.", "Potestativo y previo a la vía contencioso-administrativa.", "Exclusivo, no cabe vía judicial posterior.", "Ninguna es correcta.", 1, "Podrá interponerse reclamación ante el CTBG con carácter potestativo y previo a su impugnación en vía contencioso-administrativa."),
+            q("El plazo para interponer la reclamación ante el CTBG es de:", "10 días.", "15 días.", "1 mes.", "3 meses.", 2, "El plazo es de un mes a contar desde el día siguiente al de la notificación o efectos del silencio."),
+            q("El plazo máximo para resolver y notificar la reclamación interpuesta ante el CTBG es de:", "1 mes.", "2 meses.", "3 meses.", "6 meses.", 2, "El plazo máximo para resolver y notificar la resolución será de tres meses (silencio desestimatorio)."),
+            q("En materia de Buen Gobierno, el incumplimiento de la obligación de rendir cuentas regulada en la Ley General Presupuestaria constituye:", "Infracción leve.", "Infracción grave.", "Infracción muy grave.", "No constituye infracción en esta Ley.", 2, "Constituye infracción muy grave en materia de gestión económico-presupuestaria (punto 17)."),
+            q("Una sanción por infracción disciplinaria muy grave de Buen Gobierno comporta la imposibilidad de ocupar cargo alto o asimilado por un período de:", "Entre 1 y 3 años.", "Entre 3 y 5 años.", "Entre 5 y 10 años.", "Para toda la vida.", 2, "Los sancionados serán destituidos y no podrán ocupar cargo alto durante un período de entre 5 y 10 años."),
+            q("El plazo de prescripción para las faltas graves tipificadas en el Título de Buen Gobierno es de:", "1 año.", "2 años.", "3 años.", "5 años.", 2, "La prescripción es: Muy graves 5 años, Graves 3 años, Leves 1 año."),
+            q("El Consejo de Transparencia y Buen Gobierno es:", "Un Organismo Autónomo.", "Una Agencia Estatal.", "Una Autoridad Administrativa Independiente (A.A.I.).", "Una Entidad Pública Empresarial.", 2, "El CTBG es una autoridad administrativa independiente de ámbito estatal regulada en la Ley 40/2015."),
+            q("¿A qué ministerio se vincula el CTBG a efectos orgánicos?", "Ministerio de Hacienda.", "Ministerio del Interior.", "Ministerio para la Transformación Digital y de la Función Pública.", "Ministerio de la Presidencia.", 2, "Se vincula a la AGE a través del Ministerio para la Transformación Digital y de la Función Pública."),
+            q("¿Cuánto dura el mandato de la persona titular de la Presidencia del CTBG?", "4 años renovables.", "5 años no renovables.", "5 años renovables una vez.", "Carácter indefinido hasta su cese.", 1, "Será nombrado por un período no renovable de cinco años mediante Real Decreto.")
+        ],
+        // TEST 2
+        [
+            q("¿Cuál de las siguientes informaciones se considera 'Institucional, organizativa y de planificación'?", "Anteproyectos de Ley.", "Contratos y convenios.", "Estructura organizativa y organigrama actualizado.", "Retribuciones de altos cargos.", 2, "La estructura organizativa y organigrama pertenece a la información Institucional. Los contratos/retribuciones a la Económica, y anteproyectos a la Jurídica."),
+            q("Las entidades de Derecho Público que tengan atribuidas funciones de regulación sobre un sector con independencia funcional, ¿cómo aplican la ley?", "No se les aplica.", "Aplicación parcial.", "Aplicación total.", "Solo para Buen Gobierno.", 2, "Están entre los sujetos de aplicación total (art. 1)."),
+            q("Si una entidad privada recibe 150.000€ en subvenciones públicas anuales, ¿qué obligaciones tiene según esta ley?", "Se le aplica la totalidad de la Ley.", "Solo se le aplica el Capítulo II del Título I (Publicidad activa).", "Solo obligaciones de Buen Gobierno.", "No se le aplica la ley.", 1, "Entidades privadas con ayudas > 100.000€ tienen aplicación parcial (solo Capítulo II de publicidad activa)."),
+            q("En la información económica, respecto a convenios suscritos, se publicará:", "Partes firmantes, objeto y duración.", "Modificaciones, obligados y obligaciones económicas.", "Las dos anteriores son correctas.", "Solo se publican los contratos, no los convenios.", 2, "Se publicarán convenios con mención de partes, objeto, plazo, modificaciones, obligados a realizar prestaciones y obligaciones económicas."),
+            q("Las indemnizaciones percibidas por el abandono del cargo de altos cargos:", "Son información reservada.", "Deberán hacerse públicas dentro de la información económica.", "Solo se publican con el consentimiento expreso.", "Ninguna es correcta.", 1, "Igualmente, se harán públicas las indemnizaciones percibidas, en su caso, con ocasión del abandono del cargo."),
+            q("¿Qué ocurre si el acceso a la información supone un perjuicio para las relaciones exteriores?", "El derecho de acceso podrá ser limitado.", "Se debe conceder el acceso completo siempre.", "El documento debe ser destruido.", "Se transfiere la solicitud a Naciones Unidas.", 0, "Las relaciones exteriores son uno de los límites explícitos al derecho de acceso previstos en el art. 14."),
+            q("¿Qué tipo de consentimiento se requiere si la información solicitada contiene datos que revelen religión o creencias?", "Consentimiento verbal.", "Consentimiento expreso.", "Consentimiento expreso y por escrito.", "No se pueden facilitar bajo ninguna circunstancia.", 2, "Se requiere consentimiento expreso y por escrito del afectado (salvo que los hubiese hecho manifiestamente públicos)."),
+            q("¿Se puede otorgar el acceso parcial a la información si un límite afecta a una parte del documento?", "No, el acceso debe ser total o denegado.", "Sí, indicando qué parte ha sido omitida, salvo que resulte información distorsionada.", "Sí, pero cobrando una tasa.", "Solo en casos de seguridad nacional.", 1, "Se concederá acceso parcial previa omisión de la información afectada, indicándose qué parte se ha omitido, salvo que resulte carente de sentido."),
+            q("¿En qué plazo se informará a terceros si la solicitud afecta a sus derechos o intereses?", "Se les concederá 10 días.", "Se les concederá 15 días.", "Se les concederá 1 mes.", "No se les informa.", 1, "Si pudiera afectar a derechos o intereses de terceros debidamente identificados, se les concederá 15 días para alegaciones."),
+            q("¿Cómo debe resolverse una inadmisión a trámite de solicitud de acceso?", "De forma automática sin notificación.", "Mediante silencio administrativo.", "Mediante resolución motivada.", "Solo por vía electrónica, sin fundamentar.", 2, "Se inadmitirán a trámite, mediante resolución motivada..."),
+            q("Transcurrido el plazo máximo para resolver una solicitud de acceso sin resolución expresa:", "Se entenderá estimada (silencio positivo).", "Se entenderá desestimada (silencio negativo).", "Caduca el procedimiento y debe volver a iniciarse.", "A y C son correctas.", 1, "Transcurrido el plazo máximo sin resolución expresa se entenderá que la solicitud ha sido desestimada."),
+            q("¿Qué coste tiene el acceso a la información pública?", "Será gratuito, aunque la expedición de copias o paso a formato diferente puede exigir exacciones.", "Es de pago mediante tasa estatal única.", "10 euros por solicitud.", "Completamente gratuito en cualquier formato y soporte.", 0, "El acceso será gratuito. No obstante, la expedición de copias o trasposición de formato podrá dar lugar a la exigencia de exacciones."),
+            q("Contra las resoluciones del Defensor del Pueblo en materia de acceso a sus actividades sujetas a Derecho Administrativo:", "Cabe reclamación ante el CTBG.", "Solo cabrá recurso contencioso-administrativo.", "Cabe recurso de alzada ante las Cortes.", "Ninguna es correcta.", 1, "Excepción: contra resoluciones de Congreso, Senado, TCu, Defensor Pueblo, etc., solo cabrá recurso contencioso-administrativo (no CTBG)."),
+            q("¿Quién es el órgano competente para tramitar solicitudes de acceso a la información en poder de la Casa de Su Majestad el Rey?", "El Ministerio de la Presidencia.", "El Consejo de Transparencia.", "La Secretaría General de la Presidencia del Gobierno.", "El Defensor del Pueblo.", 2, "La Secretaría General de la Presidencia del Gobierno será el órgano competente para tramitar este procedimiento."),
+            q("En el Buen Gobierno, el principio de guardar reserva de los hechos conocidos por razón del cargo es un:", "Principio General.", "Principio de Actuación.", "Principio Económico.", "Límite del Derecho de Acceso.", 1, "Guardar la debida reserva es uno de los 'Principios de actuación' de Buen Gobierno (junto con dedicación plena, incompatibilidades...)."),
+            q("Incurrir en alcance en la administración de los fondos públicos es calificado como infracción:", "Leve.", "Grave.", "Muy grave.", "Penal exclusivamente, no disciplinaria.", 2, "Constituye infracción muy grave en materia de gestión económico-presupuestaria."),
+            q("La incorrección con superiores, compañeros o subordinados en el ámbito de aplicación del buen gobierno es infracción:", "Leve.", "Grave.", "Muy grave.", "Atípica.", 0, "Se enumera expresamente como 'Infracciones leves'."),
+            q("El Presidente del CTBG, para ser nombrado, requiere:", "Mayoría simple del Senado.", "Mayoría absoluta del Congreso en 1 mes.", "Aprobación del Tribunal Supremo.", "No requiere refrendo parlamentario.", 1, "El Congreso, a través de la Comisión competente y por mayoría absoluta, deberá refrendar el nombramiento en 1 mes."),
+            q("¿Cuál de estos órganos del CTBG tiene rango de subdirección general?", "La Presidencia.", "La Comisión de Transparencia.", "La Secretaría General.", "Todas las anteriores.", 2, "De la Presidencia dependen con rango de subdirección general: Subd. Transparencia, Subd. Reclamaciones (x2) y la Secretaría General."),
+            q("La representación legal e institucional del CTBG recae en:", "La Comisión de Transparencia.", "El Secretario de Estado de Función Pública.", "La Presidencia del CTBG.", "El Gobierno de España.", 2, "Se atribuye a la Presidencia la función de ostentar la representación legal e institucional del Consejo.")
+        ],
+        // TEST 3
+        [
+            q("El plazo que se concedió a la AGE para aplicar la Ley tras su publicación en el BOE fue de:", "1 mes (excepto Buen Gobierno).", "1 año (excepto Buen Gobierno).", "2 años.", "Al día siguiente íntegramente.", 1, "Las disposiciones de Buen Gobierno entraron en vigor al día siguiente; el resto de disposiciones (para AGE), al año de publicación."),
+            q("La publicación de planes y programas en la que se fijen objetivos concretos corresponde a:", "Información de relevancia jurídica.", "Información institucional, organizativa y de planificación.", "Información económica.", "Información de altos cargos.", 1, "Los planes y programas (junto con funciones y normativa) son información institucional, organizativa y de planificación."),
+            q("Cuando la información contenga datos genéticos o biométricos, el acceso:", "Es libre si no incluye el nombre.", "Se autorizará solo con consentimiento expreso o amparado por Ley.", "Se autorizará con consentimiento verbal.", "Está prohibido en todos los casos.", 1, "Datos raciales, salud, sexuales, genéticos, biométricos requieren consentimiento expreso o amparo por norma con rango de Ley."),
+            q("Si una solicitud referida al derecho de acceso incluye peticiones abusivas no justificadas:", "Se debe contestar concediendo el acceso para evitar quejas.", "Se inadmitirá a trámite mediante resolución motivada.", "Se sanciona al solicitante con multa.", "Se remitirá al Defensor del Pueblo de inmediato.", 1, "Es causa de inadmisión que sean manifiestamente repetitivas o de carácter abusivo no justificado."),
+            q("El acceso a la información se formalizará preferentemente por vía electrónica y el plazo será:", "El mismo de la notificación, o en su defecto no superior a 10 días.", "Máximo 1 mes desde el pago de la tasa.", "Mínimo 15 días.", "Ninguna de las opciones es cierta.", 0, "Cuando no pueda darse en el momento de la notificación, deberá otorgarse en plazo no superior a 10 días."),
+            q("Las resoluciones del Consejo de Transparencia y Buen Gobierno:", "Son secretas.", "Se publicarán, previa disociación de datos personales, por medios electrónicos tras notificar a interesados.", "Se envían únicamente a los tribunales.", "Solo se publican en el BOE.", 1, "Se publicarán, previa disociación de datos, por medios electrónicos una vez notificadas."),
+            q("En materia de Buen Gobierno, el incumplimiento de la obligación del destino del superávit a reducir el endeudamiento es:", "Infracción leve.", "Infracción grave.", "Infracción muy grave.", "Una mera recomendación, sin sanción.", 2, "El incumplimiento de destinar superávit a reducción de deuda es infracción muy grave en gestión económico-presupuestaria."),
+            q("La sanción por cometer una infracción leve en materia de Buen Gobierno es:", "Destitución.", "Multa de 3.000 euros.", "Amonestación.", "Suspensión de empleo y sueldo 30 días.", 2, "La sanción establecida para infracciones leves es la amonestación."),
+            q("El órgano competente para instruir el procedimiento sancionador de Buen Gobierno a un Secretario de Estado es:", "El Consejo de Ministros.", "El Ministro de Función Pública.", "La Oficina de Conflictos de Intereses.", "La Fiscalía General del Estado.", 2, "La instrucción de los procedimientos corresponderá a la Oficina de Conflictos de Intereses (AGE)."),
+            q("La competencia para imponer sanción de Buen Gobierno a un Ministro (miembro del Gobierno) recae en:", "El Congreso de los Diputados.", "La Oficina de Conflictos de Intereses.", "El Consejo de Ministros.", "El Rey.", 2, "La competencia de sanción corresponde al Consejo de Ministros cuando el cargo sea miembro del Gobierno o Secretario de Estado."),
+            q("El mandato de los Vocales de la Comisión del CTBG (Diputado, Senador, etc.) será de:", "3 años no renovables.", "4 años renovables.", "5 años, pudiendo prorrogarse por un periodo de igual duración.", "Indefinido.", 2, "Desempeñarán su cargo durante 5 años, pudiendo prorrogarse por un periodo de igual duración."),
+            q("El Consejo de Transparencia elaborará un Plan Estratégico de carácter:", "Anual.", "Bienal.", "Trienal.", "Cuatrienal.", 3, "La Presidencia aprobará con carácter cuatrienal un Plan Estratégico (sujeto a evaluación bienal)."),
+            q("La memoria anual del CTBG se remitirá a:", "El Defensor del Pueblo.", "El Consejo de Ministros en exclusiva.", "Las Cortes Generales.", "El Rey de España.", 2, "Se remitirá a las Cortes Generales y el Presidente comparecerá en la Comisión correspondiente para dar cuenta."),
+            q("Quien asiste a las reuniones de la Comisión del CTBG con voz pero sin voto, y ejerce la Secretaría es:", "El Presidente del CTBG.", "El Subdirector General de Transparencia y Buen Gobierno.", "El Abogado del Estado.", "Un vocal del Tribunal de Cuentas.", 1, "El titular de la Subdirección General de Transparencia y Buen Gobierno ejercerá funciones de Secretaría (con voz, sin voto)."),
+            q("La gestión de los recursos humanos, planificación de prevención de riesgos y gestión patrimonial del CTBG corresponde a:", "La Secretaría General del Consejo.", "El Gabinete del Presidente.", "El Ministerio de Hacienda directamente.", "La Comisión de Transparencia.", 0, "La Secretaría General tiene la gestión de servicios comunes, recursos humanos, materiales, presupuestos, etc."),
+            q("Las Universidades Públicas, frente a la Ley 19/2013, tienen aplicación:", "Solo del Buen Gobierno.", "Exclusiva de la publicidad activa.", "Parcial.", "Total.", 3, "Se incluyen expresamente en la aplicación total como entidades de Derecho Público vinculadas."),
+            q("La memoria del análisis de impacto normativo se encuadra en:", "Información institucional.", "Información de relevancia jurídica.", "Información económica.", "Información estadística.", 1, "Las memorias que conformen expedientes normativos (como la de análisis de impacto) son de relevancia jurídica."),
+            q("¿Cuál de estos límites al acceso a la información NO aparece expresamente en el art. 14?", "La garantía de la confidencialidad en la toma de decisión.", "Los intereses económicos y comerciales.", "La protección del medio ambiente.", "El derecho a la vivienda digna.", 3, "Los límites previstos incluyen seguridad, defensa, exteriores, medio ambiente... pero no el derecho a la vivienda."),
+            q("Si se deniega una solicitud para proteger derechos de terceros y se recurre, ¿cuándo se dará acceso en caso de resolución favorable del CTBG?", "Inmediatamente.", "Solo cuando transcurra el plazo para recurso contencioso sin que se formalice o haya sentencia firme favorable.", "A los 3 meses.", "Nunca si hay oposición de tercero.", 1, "Si hubo oposición, el acceso tendrá lugar solo cuando transcurra plazo para contencioso o se confirme el derecho judicialmente."),
+            q("El incumplimiento reiterado de la obligación de resolver en plazo una solicitud de acceso es considerado infracción:", "Leve.", "Grave.", "Muy grave.", "Exenta de sanción si el silencio es desestimatorio.", 1, "Tendrá la consideración de infracción grave a efectos del régimen disciplinario.")
+        ],
+        // TEST 4
+        [
+            q("¿Qué corporaciones están sujetas a la Ley 19/2013 en su totalidad?", "Las corporaciones de Derecho Público, en lo relativo a sus actividades sujetas a Derecho Administrativo.", "Las corporaciones mercantiles privadas.", "Todas las ONGs.", "Ninguna corporación está sujeta.", 0, "Las corporaciones de Derecho Público aplican la ley totalmente en sus actividades sujetas a Derecho Administrativo."),
+            q("¿Las sociedades mercantiles con participación pública están sujetas a esta Ley?", "Solo si la participación pública supera el 10%.", "Solo si el capital público es del 100%.", "Sí, aquellas en las que la participación directa o indirecta pública sea superior al 50%.", "No, al ser mercantiles operan al margen.", 2, "Están sujetas las sociedades mercantiles con participación pública, directa o indirecta, superior al 50%."),
+            q("¿Cómo debe entregarse la información si el destinatario es una persona con discapacidad?", "En papel impreso con letras grandes.", "Se cobrará un suplemento por la adaptación.", "Estará a disposición en formatos accesibles y comprensibles (principio de accesibilidad universal).", "La Ley no contempla este supuesto.", 2, "La Ley exige que la información esté a disposición en formatos accesibles y diseño para todos, gratis."),
+            q("Las entidades sin ánimo de lucro < 50.000€ de presupuesto, para cumplir obligaciones de publicidad activa:", "Están exentas de la Ley.", "Deben crear una web propia y exclusiva.", "Podrán usar los medios electrónicos de la Administración de la que reciban más ayudas.", "Deberán publicarlo en el BOE obligatoriamente.", 2, "Pueden utilizar los medios electrónicos puestos a disposición por la Administración de la que provenga la mayor parte de las ayudas."),
+            q("Los proyectos de Reglamentos cuya iniciativa corresponda a una Administración Pública:", "Son secretos hasta su publicación definitiva.", "Se publican una vez solicitados los dictámenes a los órganos consultivos, sin obligar a apertura de audiencia.", "Se encuadran en información económica.", "La a y la c son correctas.", 1, "Se publican una vez solicitados dictámenes, sin que suponga necesariamente apertura de trámite de audiencia pública."),
+            q("Dentro de la información institucional se incluye publicar:", "Solo la dirección postal.", "Las multas de tráfico del personal.", "El organigrama con el perfil y trayectoria profesional de los responsables.", "Ninguna de las opciones es correcta.", 2, "Se debe publicar el organigrama identificando responsables, su perfil y trayectoria profesional."),
+            q("¿Qué contratos menores deben publicarse según la ley y con qué frecuencia?", "Trimestralmente, de forma opcional/permitida por la norma.", "Mensualmente de forma obligatoria.", "Los menores no se publican nunca.", "Anualmente el 31 de diciembre.", 0, "La publicación de la información relativa a los contratos menores podrá realizarse trimestralmente."),
+            q("Sobre los partidos políticos, la Ley 19/2013 les resulta de aplicación:", "Total.", "Parcial (sólo publicidad activa).", "Están completamente exentos.", "Depende de si están en el Gobierno o en la oposición.", 1, "Tienen aplicación parcial (solo Capítulo II del Título I, referido a publicidad activa)."),
+            q("Respecto al derecho de acceso, la ponderación del interés público frente a datos personales:", "Siempre prevalece el interés público sin importar el dato.", "Prevalece siempre la ocultación del documento.", "Si no hay datos especialmente protegidos, se concede previa ponderación razonada.", "No hay ponderación en la Ley española.", 2, "Se concederá acceso previa ponderación suficientemente razonada del interés público vs derechos de los afectados."),
+            q("¿Puede un solicitante presentar su petición de información en gallego a un órgano de la AGE radicado en Galicia?", "No, solo en castellano al ser AGE.", "Sí, en cualquiera de las lenguas cooficiales en el territorio en que radique la Administración.", "Depende de la voluntad del funcionario.", "Solo si aporta traducción jurada.", 1, "Podrán dirigirse en cualquiera de las lenguas cooficiales del Estado en el territorio en el que radique la Administración."),
+            q("Si la información pertenece a un ente u órgano que no es el que la tiene (fue elaborada íntegramente por otro):", "Se deniega el acceso.", "Se remitirá la solicitud a este (el elaborador) para que decida sobre el acceso.", "Se remite al Defensor del Pueblo.", "Se archiva el expediente.", 1, "Cuando la info haya sido generada en su integridad o parte principal por otro, se remitirá la solicitud a este para que decida."),
+            q("¿Es sustitutiva la reclamación ante el CTBG?", "No, es un recurso de alzada más.", "Sí, tendrá consideración de sustitutiva de los recursos administrativos.", "Sí, y además excluye la vía judicial posterior.", "Solo en el ámbito local.", 1, "Tendrá la consideración de sustitutiva de los recursos administrativos (previo al Contencioso)."),
+            q("En materia disciplinaria, la prevalencia de la condición de alto cargo para obtener beneficio para sí o para otro es infracción:", "Leve.", "Grave.", "Muy grave.", "Excluida de la Ley 19/2013.", 2, "La prevalencia de la condición de alto cargo para obtener beneficio indebido es infracción muy grave (letra h)."),
+            q("Acoso moral, sexual y por razón de sexo como infracción disciplinaria es calificado como:", "Leve.", "Grave.", "Muy grave.", "Solo afecta al derecho laboral común.", 2, "Está tipificada expresamente como infracción muy grave disciplinaria (letra b)."),
+            q("Una infracción grave se comete cuando el autor hubiera sido sancionado por:", "Dos infracciones leves en el año anterior contra las que no quepa recurso.", "Una falta muy grave previa.", "Llegar tarde al puesto tres días.", "No se recoge este tipo de acumulación.", 0, "Es infracción grave la comisión de una infracción leve cuando haya sido sancionado por dos leves en el año anterior firme."),
+            q("Si las infracciones de Buen Gobierno pudieran ser constitutivas de delito:", "Se impone doble sanción.", "Se pondrán los hechos en conocimiento del Fiscal General del Estado y se abstendrá de seguir el procedimiento administrativo.", "El Ministro dicta sentencia penal.", "Continúa el proceso administrativo ignorando lo judicial.", 1, "Se pondrá en conocimiento del Fiscal General del Estado y se suspenderá el proceso administrativo hasta resolución judicial."),
+            q("El CTBG rinde y envía un resumen de su Memoria anual al:", "Boletín Oficial del Estado (BOE).", "Diario de Sesiones.", "Tribunal Supremo.", "Ministerio de Justicia.", 0, "Tras su aprobación, un resumen de la memoria anual del Consejo se publicará en el BOE."),
+            q("La asesoría jurídica del CTBG, representación y defensa en juicio corresponde a:", "Fiscalía del Estado.", "Abogacía General del Estado.", "Gabinete Jurídico del Ministerio de Función Pública.", "Despachos privados externos exclusivamente.", 1, "Se encomienda a la Abogacía General del Estado mediante formalización del oportuno convenio."),
+            q("Respecto al control interno de la gestión económico-financiera del CTBG:", "Corresponde a la IGAE bajo modalidades de control permanente y auditoría.", "No existe control interno por ser independiente.", "Corresponde exclusivamente al Tribunal de Cuentas.", "La Presidencia se audita a sí misma.", 0, "Corresponde a la Intervención General de la Administración del Estado (IGAE) a través de su Intervención Delegada."),
+            q("El inventario de bienes y derechos del CTBG se revisará anualmente con referencia a:", "31 de enero.", "31 de diciembre.", "El último día del mes de aprobación de los presupuestos.", "La fecha de nombramiento del Presidente.", 1, "Dicho inventario se revisará anualmente, con referencia a 31 de diciembre, y se someterá a aprobación del Presidente.")
+        ]
+    ];
+
+    while (testPool.length < 10) {
+        let clonedTest = JSON.parse(JSON.stringify(testPool[testPool.length % 4]));
+        clonedTest.sort(() => Math.random() - 0.5);
+        testPool.push(clonedTest);
+    }
+
+    // --- RENDERIZADO DE LA INTERFAZ ---
+    const nav = document.getElementById('tab-nav');
+    const main = document.getElementById('main-content');
+    
+    // 1. Esquema
+    let navEsquema = document.createElement('button');
+    navEsquema.className = 'tab-btn active';
+    navEsquema.textContent = '📚 Esquema (40)';
+    navEsquema.onclick = (e) => showTab('esquema', e.currentTarget);
+    nav.appendChild(navEsquema);
+
+    let contentEsquema = document.createElement('section');
+    contentEsquema.id = 'esquema';
+    contentEsquema.className = 'tab-content active';
+    
+    // Controles del Esquema (TTS + Buscador)
+    let controlsDiv = document.createElement('div');
+    controlsDiv.className = 'esquema-controls';
+
+    let ttsBtn = document.createElement('button');
+    ttsBtn.className = 'btn btn-tts';
+    ttsBtn.innerHTML = '<span>🔊</span> <span>Escuchar Esquema</span>';
+    let isSpeaking = false;
+
+    ttsBtn.onclick = () => {
+        if ('speechSynthesis' in window) {
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+                ttsBtn.classList.remove('speaking');
+                ttsBtn.innerHTML = '<span>🔊</span> <span>Escuchar Esquema</span>';
+                showMsg("Lectura detenida.");
+                return;
+            }
+            window.speechSynthesis.cancel();
+            let texto = esquemaData.map((e, i) => `Pregunta ${i+1}. ${e.q} Respuesta: ${e.a}`).join('. ');
+            let utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.05;
+            utterance.onend = () => {
+                isSpeaking = false;
+                ttsBtn.classList.remove('speaking');
+                ttsBtn.innerHTML = '<span>🔊</span> <span>Escuchar Esquema</span>';
+            };
+            window.speechSynthesis.speak(utterance);
+            isSpeaking = true;
+            ttsBtn.classList.add('speaking');
+            ttsBtn.innerHTML = '<span>⏹️</span> <span>Detener Audio</span>';
+            showMsg("Reproduciendo esquema en voz alta...");
+        } else {
+            showMsg("Tu navegador no soporta Texto a Voz.");
+        }
+    };
+
+    let searchBox = document.createElement('div');
+    searchBox.className = 'search-box';
+    searchBox.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="search" class="search-input" placeholder="Filtrar conceptos en el esquema (ej: plazo, CTBG, contrato...)" id="esquema-search">
+    `;
+
+    controlsDiv.appendChild(ttsBtn);
+    controlsDiv.appendChild(searchBox);
+    contentEsquema.appendChild(controlsDiv);
+
+    let esquemaListContainer = document.createElement('div');
+    esquemaListContainer.id = 'esquema-cards';
+
+    esquemaData.forEach((item, index) => {
+        let div = document.createElement('div');
+        div.className = 'card esquema-card';
+        div.innerHTML = `
+            <div class="q-header">
+                <span class="q-num">${index + 1}</span>
+                <div class="q-title">${item.q}</div>
+            </div>
+            <div class="esquema-answer">${item.a}</div>
+        `;
+        esquemaListContainer.appendChild(div);
+    });
+    contentEsquema.appendChild(esquemaListContainer);
+    main.appendChild(contentEsquema);
+
+    // Lógica de filtrado instantáneo
+    document.getElementById('esquema-search').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.esquema-card').forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(term) ? 'block' : 'none';
+        });
+    });
+
+    // 2. Tests (1 a 10)
+    testPool.forEach((test, testIndex) => {
+        let tNum = testIndex + 1;
+        
+        let navTest = document.createElement('button');
+        navTest.className = 'tab-btn';
+        navTest.textContent = 'Test ' + tNum;
+        navTest.onclick = (e) => showTab('test-' + tNum, e.currentTarget);
+        nav.appendChild(navTest);
+
+        let contentTest = document.createElement('section');
+        contentTest.id = 'test-' + tNum;
+        contentTest.className = 'tab-content';
+        
+        // Cabecera con barra de progreso del test
+        let testHeader = document.createElement('div');
+        testHeader.className = 'test-header-card';
+        testHeader.innerHTML = `
+            <div class="test-meta">
+                <h2>Simulacro Test ${tNum}</h2>
+                <span class="progress-text" id="prog-text-${tNum}">0 / ${test.length} respondidas</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="prog-fill-${tNum}"></div>
+            </div>
+        `;
+        contentTest.appendChild(testHeader);
+
+        let form = document.createElement('form');
+        form.id = 'form-test-' + tNum;
+        
+        test.forEach((qObj, qIndex) => {
+            let qBlock = document.createElement('div');
+            qBlock.className = 'card question-block';
+            qBlock.dataset.correct = qObj.correct;
+            
+            let qHeader = document.createElement('div');
+            qHeader.className = 'q-header';
+            qHeader.innerHTML = `
+                <span class="q-num">${qIndex + 1}</span>
+                <div class="q-title">${qObj.q}</div>
+            `;
+            qBlock.appendChild(qHeader);
+
+            let ul = document.createElement('ul');
+            ul.className = 'options-list';
+
+            qObj.opts.forEach((optText, optIndex) => {
+                let li = document.createElement('li');
+                let label = document.createElement('label');
+                label.className = 'option-item';
+                
+                let input = document.createElement('input');
+                input.type = 'radio';
+                input.name = `t${tNum}-q${qIndex}`;
+                input.value = optIndex;
+                input.onchange = () => updateProgress(tNum, test.length);
+                
+                let span = document.createElement('span');
+                span.className = 'option-text';
+                span.textContent = optText;
+
+                label.appendChild(input);
+                label.appendChild(span);
+                li.appendChild(label);
+                ul.appendChild(li);
+            });
+            
+            qBlock.appendChild(ul);
+            
+            let expBox = document.createElement('div');
+            expBox.className = 'explanation';
+            expBox.innerHTML = `<strong>💡 Fundamento:</strong> ${qObj.exp}`;
+            qBlock.appendChild(expBox);
+
+            form.appendChild(qBlock);
+        });
+
+        let btns = document.createElement('div');
+        btns.className = 'btn-group';
+        
+        let btnEval = document.createElement('button');
+        btnEval.type = 'button';
+        btnEval.className = 'btn btn-primary';
+        btnEval.innerHTML = '<span>✅ Corregir Test</span>';
+        btnEval.onclick = () => evaluarTest(tNum);
+
+        let btnReset = document.createElement('button');
+        btnReset.type = 'button';
+        btnReset.className = 'btn btn-secondary';
+        btnReset.innerHTML = '<span>🔄 Reiniciar</span>';
+        btnReset.onclick = () => resetTest(tNum, test.length);
+
+        btns.appendChild(btnEval);
+        btns.appendChild(btnReset);
+        form.appendChild(btns);
+
+        let summary = document.createElement('div');
+        summary.id = 'summary-test-' + tNum;
+        summary.className = 'summary-box';
+        form.appendChild(summary);
+
+        contentTest.appendChild(form);
+        main.appendChild(contentTest);
+    });
+
+    // --- FUNCIONALIDADES JS ---
+    function showTab(id, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(id).classList.add('active');
+        btnElement.classList.add('active');
+        
+        // Centrar pestaña activa en la barra horizontal en móviles
+        btnElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgress(tNum, total) {
+        const form = document.getElementById('form-test-' + tNum);
+        const answered = form.querySelectorAll('input[type="radio"]:checked').length;
+        const pct = Math.round((answered / total) * 100);
+        
+        document.getElementById(`prog-text-${tNum}`).textContent = `${answered} / ${total} respondidas`;
+        document.getElementById(`prog-fill-${tNum}`).style.width = `${pct}%`;
+    }
+
+    function evaluarTest(tNum) {
+        const form = document.getElementById('form-test-' + tNum);
+        const questions = form.querySelectorAll('.question-block');
+        let aciertos = 0;
+        let errores = 0;
+
+        questions.forEach((qBlock) => {
+            const inputs = qBlock.querySelectorAll('input[type="radio"]');
+            const correctIndex = parseInt(qBlock.dataset.correct);
+            let contestado = false;
+
+            inputs.forEach((input) => {
+                input.disabled = true;
+                const label = input.closest('.option-item');
+                const optIndex = parseInt(input.value);
+
+                label.classList.remove('correct-ans', 'wrong-ans');
+
+                if (input.checked) {
+                    contestado = true;
+                    if (optIndex === correctIndex) {
+                        aciertos++;
+                        label.classList.add('correct-ans');
+                    } else {
+                        errores++;
+                        label.classList.add('wrong-ans');
+                    }
+                }
+                
+                if (optIndex === correctIndex && (!input.checked || !contestado)) {
+                    label.classList.add('correct-ans');
+                }
+            });
+
+            if (!contestado) errores++;
+            qBlock.querySelector('.explanation').style.display = 'block';
+        });
+
+        const nota = ((aciertos / questions.length) * 10).toFixed(2);
+        const summary = document.getElementById('summary-test-' + tNum);
+        summary.innerHTML = `
+            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light);">Calificación obtenida</div>
+            <div class="score-big">${nota} <span style="font-size: 1.2rem; color: var(--text-muted);">/ 10</span></div>
+            <div class="score-details">
+                <span style="color:var(--correct-color)">✔ ${aciertos} Aciertos</span>
+                <span style="color:var(--wrong-color)">✖ ${errores} Fallos / Blancos</span>
+            </div>
+        `;
+        summary.style.display = 'block';
+        
+        form.querySelector('.btn-primary').style.display = 'none';
+        summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showMsg("¡Test corregido! Revisa los fundamentos en cada pregunta.");
+    }
+
+    function resetTest(tNum, total) {
+        const form = document.getElementById('form-test-' + tNum);
+        const inputs = form.querySelectorAll('input[type="radio"]');
+        
+        inputs.forEach(input => {
+            input.disabled = false;
+            input.checked = false;
+            const label = input.closest('.option-item');
+            label.classList.remove('correct-ans', 'wrong-ans');
+        });
+
+        form.querySelectorAll('.explanation').forEach(el => el.style.display = 'none');
+        form.querySelector('.summary-box').style.display = 'none';
+        form.querySelector('.btn-primary').style.display = 'inline-flex';
+        
+        updateProgress(tNum, total);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showMsg("Test reiniciado. ¡A por el 10!");
+    }
+
+    let msgTimeout;
+    function showMsg(text) {
+        const msg = document.getElementById('msg-box');
+        msg.textContent = text;
+        msg.classList.add('show');
+        clearTimeout(msgTimeout);
+        msgTimeout = setTimeout(() => { msg.classList.remove('show'); }, 3200);
+    }
+</script>
+</body>
+</html>
