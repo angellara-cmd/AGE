@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque Informática · Tema 3 · El Explorador de Windows · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">IN3</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Informática básica y ofimática</small>
+      <b>El Explorador de Windows</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .of{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+    .of div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem}
+    .of div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .tr{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .tr div{padding:10px 14px;border-radius:12px;border-left:5px solid var(--a1);background:var(--card2);font-size:.92rem}
+    .tr div.l2{margin-left:18px;border-left-color:#0aa37f}
+    .tr div.l3{margin-left:36px;border-left-color:#f59e0b}
+    .tr div.no{opacity:.55;border-left-color:var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque de Informática · Tema 3 · Ofimática</span>
+    <h1>El Explorador de Windows <span>Archivos y carpetas, búsquedas, «Este equipo», Configuración, Administrador de tareas y herramientas del sistema</span></h1>
+    <p>Resumen de alto rendimiento del manual (actualización de enero de 2026), puesto al día a <strong>noviembre de 2026</strong>: Windows 11 26H2, compresión nativa en 7z y TAR, límites reales de NTFS, retirada de las acciones de Copilot del Explorador, columnas de NPU en el Administrador de tareas y herramientas en desuso. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un simulador de arrastrar y soltar: ¿se mueve, se copia o se crea un acceso directo?</li>
+      <li>Un validador de nombres de archivo.</li>
+      <li>Un constructor de búsquedas con operadores y un probador de comodines.</li>
+      <li>Un simulador de eliminación y Papelera de reciclaje.</li>
+      <li>Un comparador de sistemas de archivos con calculadora de límites de NTFS.</li>
+      <li>Entrenadores de comandos de Ejecutar, secciones del Administrador de tareas, categorías de Configuración y Herramientas de Windows.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">17</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">144</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('dd').scrollIntoView({behavior:'smooth'})">Arrastrar y soltar ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('sq').scrollIntoView({behavior:'smooth'})">Búsquedas ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('rn').scrollIntoView({behavior:'smooth'})">Comandos de Ejecutar ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado respecto al manual</strong> (actualización de enero de 2026):
+    <ul>
+      <li><span class="upd">2026</span> <strong>Explorador de archivos en Windows 11 26H2</strong> (versión vigente, del 29-9-2026):
+        <ul>
+          <li>El menú contextual se reorganiza con submenús para mostrar menos entradas.</li>
+          <li>Se puede cambiar el nombre de un archivo dictándolo por voz, y la vista Inicio abre más deprisa.</li>
+          <li>Admite más formatos de archivo comprimido (uu, cpio, xar y nupkg).</li>
+          <li>Añade «acciones de IA» para editar imágenes y resumir documentos. En cambio, Microsoft retira entre mediados de noviembre y diciembre de 2026 las ocho acciones de Copilot ligadas a OneDrive (Resumir, Crear FAQ, Comparar archivos, Extraer texto…).</li>
+        </ul></li>
+      <li><span class="upd">2026</span> <strong>Compresión</strong>: el manual solo cita ZIP. Desde la versión 23H2 el Explorador extrae RAR, 7z y TAR, y desde la 24H2 crea archivos <strong>ZIP, 7z y TAR</strong> («Comprimir en…»). No puede crear RAR.</li>
+      <li><span class="upd">2026</span> <strong>Límites de NTFS</strong>: el manual da 256 TB por volumen y 16 TB por archivo. Desde Windows 10 versión 1709, NTFS admite volúmenes y archivos de hasta <strong>8 PB</strong> con clústeres de 2 MB; los 16 TB corresponden al clúster de 4 KB por defecto y los 256 TB, al de 64 KB.</li>
+      <li><span class="upd">2026</span> <strong>Administrador de tareas</strong>: incorpora columnas opcionales con el uso de la NPU por proceso (equipos con IA). También se abre con clic derecho sobre la barra de tareas, forma que el manual omite.</li>
+      <li><span class="upd">2026</span> <strong>Herramientas en desuso o retiradas</strong>:
+        <ul>
+          <li><strong>Grabación de acciones de usuario</strong> (psr.exe): en desuso; Microsoft remite a Recortes, a la barra de juegos o a Clipchamp.</li>
+          <li><strong>Windows PowerShell 2.0</strong>: eliminado de Windows 11 desde agosto de 2025. <strong>WMIC</strong>: eliminado de todas las versiones con soporte en 2026.</li>
+          <li><strong>Windows PowerShell ISE</strong>: sigue incluido, pero ya no se desarrolla. <strong>PowerShell 7</strong> es un producto aparte que no viene con Windows.</li>
+          <li><strong>WordPad</strong>: eliminado desde la versión 24H2.</li>
+        </ul></li>
+      <li><span class="upd">2026</span> <strong>Panel de control</strong>: Microsoft confirmó en abril de 2026 que está trasladando todo lo que queda a Configuración para acabar retirándolo, sin fecha.</li>
+      <li><strong>Erratas y precisiones</strong>:
+        <ul>
+          <li><strong>La cinta de opciones no existe en el Explorador de Windows 11</strong>. El propio manual lo dice (apartado 1.1.1), pero en los apartados 2.1 y 3 sigue citando las pestañas «Inicio», «Compartir» y «Herramientas de búsqueda» de Windows 10. Hoy esas órdenes están en la barra de comandos, en el menú contextual y en «Ver más» (…).</li>
+          <li>La idea clave 8 dice que «Este equipo» muestra las carpetas del perfil; en Windows 11 ya no es así, como explica el apartado 4.</li>
+          <li><strong>Configuración</strong>: la barra lateral incluye también <strong>Inicio</strong> y <strong>Juegos</strong>, que el manual no enumera. Las «características opcionales» están hoy en Sistema, no en Aplicaciones.</li>
+          <li><strong>Ejecutar</strong>: <code>defrag</code> es la orden de consola; la ventana «Desfragmentar y optimizar unidades» se abre con <code>dfrgui</code>. <code>chkdsk</code>, <code>ipconfig</code> y <code>ping</code> son órdenes de consola: conviene lanzarlas desde el Símbolo del sistema o Terminal para ver el resultado.</li>
+          <li>Los <strong>cmdlets</strong> no son «pequeños scripts»: son comandos ligeros de PowerShell con nombre Verbo-Sustantivo (<code>Get-Process</code>).</li>
+          <li>El panel de navegación incluye además <strong>Galería</strong>. La «Grabadora de voz» se llama <strong>Grabadora de sonido</strong> en Windows 11.</li>
+          <li>En Linux, el sistema habitual hoy es <strong>ext4</strong>, que el manual no cita; «swap» es espacio de intercambio, no un sistema para guardar archivos.</li>
+          <li>Erratas de imprenta: «New Tecnology» (Technology), «re-nombrar», «Es-critorio», «anteriores en Windows 10» (idea clave 3; es Windows 11) y el signo «k» en lugar de «&gt;» en las rutas de menú.</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="dd">
+    <div><span class="kicker">Arrastrar y soltar</span><h2>¿Se mueve, se copia o se crea un acceso directo?</h2></div>
+    <p>Elige el destino, el botón del ratón y la tecla que mantienes pulsada al soltar.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Destino<select id="dd-u"><option value="same">Otra carpeta de la misma unidad (C: → C:)</option><option value="other">Otra unidad o memoria USB (C: → E:)</option><option value="net">Una carpeta de red (\\Servidor\Datos)</option></select></label>
+      <label>Botón del ratón<select id="dd-b"><option value="l">Izquierdo</option><option value="r">Derecho</option></select></label>
+      <label>Tecla pulsada<select id="dd-k"><option value="">Ninguna</option><option value="ctrl">Ctrl</option><option value="shift">Mayús</option><option value="alt">Alt</option><option value="cs">Ctrl + Mayús</option></select></label>
+    </div>
+    <div class="verdict" id="dd-v"></div>
+  </div>
+
+  <div class="section-title" id="fn">
+    <div><span class="kicker">255 caracteres · \ / : * ? " &lt; &gt; |</span><h2>Validador de nombres de archivo</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Nombre del archivo o carpeta<input type="text" id="fn-v" value="Acta 12/11/2026.docx" autocomplete="off"></label>
+    </div>
+    <div class="rsv" id="fn-k"></div>
+    <div class="verdict" id="fn-out"></div>
+  </div>
+
+  <div class="section-title" id="sq">
+    <div><span class="kicker">Operadores · comodines · booleanos</span><h2>Constructor de búsquedas</h2></div>
+    <p>Rellena lo que necesites y copia la consulta en el cuadro de búsqueda del Explorador.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Nombre o patrón<input type="text" id="sq-n" value="acta*" autocomplete="off"></label>
+      <label>Tipo (extensión)<select id="sq-t"><option value="">Cualquiera</option><option value=".pdf" selected>.pdf</option><option value=".docx">.docx</option><option value=".xlsx">.xlsx</option><option value=".jpg">.jpg</option></select></label>
+      <label>Fecha<select id="sq-f"><option value="">Cualquiera</option><option value="hoy">Hoy</option><option value="ayer">Ayer</option><option value=">01/01/2026">Posterior al 1-1-2026</option></select></label>
+      <label>Tamaño<select id="sq-s"><option value="">Cualquiera</option><option value=">10MB">Mayor de 10 MB</option><option value="<1GB">Menor de 1 GB</option></select></label>
+      <label>Operador booleano<select id="sq-b"><option value="">Ninguno</option><option value="AND">AND (los dos términos)</option><option value="OR">OR (al menos uno)</option><option value="NOT">NOT (excluir el segundo)</option></select></label>
+      <label>Segundo término<input type="text" id="sq-w" value="borrador" autocomplete="off"></label>
+    </div>
+    <div class="rsv" id="sq-q"></div>
+    <div class="verdict" id="sq-v"></div>
+    <div class="tool-grid" style="margin-top:14px">
+      <label>Probador de comodines (* y ?)<input type="text" id="wc-p" value="c?lor*" autocomplete="off"></label>
+    </div>
+    <div class="tr" id="wc-out"></div>
+  </div>
+
+  <div class="section-title" id="rb">
+    <div><span class="kicker">Eliminar · Papelera de reciclaje</span><h2>¿Adónde va el archivo eliminado?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Dónde está el archivo<select id="rb-l"><option value="int">Disco interno (C:)</option><option value="usb">Memoria USB extraíble</option><option value="net">Carpeta de red compartida</option><option value="od">Carpeta sincronizada con OneDrive</option></select></label>
+      <label>Cómo lo eliminas<select id="rb-m"><option value="del">Supr o «Eliminar»</option><option value="shift">Mayús + Supr</option><option value="cfg">Supr, con la Papelera configurada para no almacenar</option></select></label>
+    </div>
+    <div class="verdict" id="rb-v"></div>
+  </div>
+
+  <div class="section-title" id="fs">
+    <div><span class="kicker">NTFS · FAT32 · exFAT · ReFS</span><h2>Comparador de sistemas de archivos</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid"><label>Sistema<select id="fs-a"></select></label><label>Comparar con<select id="fs-b"></select></label></div>
+    <div class="of" id="fs-oa"></div>
+    <div class="of" id="fs-ob"></div>
+    <div class="tool-grid" style="margin-top:14px">
+      <label>Calculadora NTFS: tamaño de clúster<select id="fs-c"></select></label>
+    </div>
+    <div class="verdict" id="fs-cv"></div>
+  </div>
+
+  <div class="section-title" id="rn">
+    <div><span class="kicker">Ejecutar · Win + R</span><h2>¿Qué abre este comando?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="rn-case"></div>
+    <div class="choice" id="rn-opts"></div>
+    <div class="verdict" id="rn-out" style="display:none"></div>
+    <div class="score"><span id="rn-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="rn-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="tm">
+    <div><span class="kicker">Administrador de tareas</span><h2>¿En qué sección lo encuentras?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="tm-case"></div>
+    <div class="choice" id="tm-opts"></div>
+    <div class="verdict" id="tm-out" style="display:none"></div>
+    <div class="score"><span id="tm-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="tm-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="cf">
+    <div><span class="kicker">Configuración · Win + I</span><h2>¿En qué categoría de Configuración está?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="cf-case"></div>
+    <div class="choice" id="cf-opts"></div>
+    <div class="verdict" id="cf-out" style="display:none"></div>
+    <div class="score"><span id="cf-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="cf-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="ht">
+    <div><span class="kicker">Herramientas de Windows</span><h2>¿Qué herramienta usarías?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="ht-case"></div>
+    <div class="choice" id="ht-opts"></div>
+    <div class="verdict" id="ht-out" style="display:none"></div>
+    <div class="score"><span id="ht-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="ht-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Explorador, ubicaciones y sistema</span><h2>Mapa de consulta rápida</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>NTFS</b><span>Sistema de archivos por defecto de Windows 11 (New Technology File System)</span></div>
+    <div class="num"><b>255 caracteres</b><span>Longitud máxima de un nombre de archivo o carpeta, con espacios</span></div>
+    <div class="num"><b>\ / : * ? " &lt; &gt; |</b><span>Los nueve caracteres prohibidos en un nombre</span></div>
+    <div class="num"><b>253</b><span>Caracteres máximos de un nombre creado desde la línea de comandos, según el manual</span></div>
+    <div class="num"><b>16 EB</b><span>Límite teórico de NTFS; el manual da 256 TB por volumen y 16 TB por archivo</span></div>
+    <div class="num"><b>8 PB <span class="upd">2026</span></b><span>Límite real de NTFS desde Windows 10 1709, con clústeres de 2 MB</span></div>
+    <div class="num"><b>8 elementos</b><span>De la ventana del Explorador: título, navegación, direcciones, búsqueda, comandos, panel, contenido y estado</span></div>
+    <div class="num"><b>8 vistas</b><span>Iconos muy grandes, grandes, medianos y pequeños, Lista, Detalles, Mosaicos y Contenido</span></div>
+    <div class="num"><b>* y ?</b><span>Comodines: cualquier número de caracteres y un solo carácter</span></div>
+    <div class="num"><b>AND · OR · NOT</b><span>Operadores booleanos, en mayúsculas; AND es el que se aplica por defecto</span></div>
+    <div class="num"><b>10 categorías</b><span>De Configuración según el manual (la barra lateral tiene además Inicio y Juegos)</span></div>
+    <div class="num"><b>7 secciones</b><span>Del Administrador de tareas, en un panel lateral izquierdo</span></div>
+    <div class="num"><b>Win + E · I · R</b><span>Explorador, Configuración y Ejecutar</span></div>
+    <div class="num"><b>Ctrl + Mayús + Esc</b><span>Abre directamente el Administrador de tareas</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El sistema de archivos y el Explorador</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>El sistema de archivos: NTFS</h3><small>Manual 1.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Sistema de archivos</strong>: la estructura que usa el equipo para organizar los datos en un disco o partición. Un disco nuevo hay que <strong>formatearlo</strong> con un sistema de archivos antes de usarlo.</li>
+          <li><strong>En Windows 11</strong>:
+            <ul>
+              <li>el sistema por defecto y preferido es <strong>NTFS</strong> (New Technology File System);</li>
+              <li>también admite <strong>FAT, FAT32, exFAT y ReFS</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Ventajas de NTFS frente a FAT32</strong>:
+            <ul>
+              <li>se recupera automáticamente de algunos errores de disco;</li>
+              <li>soporta discos más grandes: hasta 16 EB en teoría; el manual da 256 TB por volumen y archivos de 16 TB;</li>
+              <li>ofrece más seguridad, con <strong>permisos y cifrado</strong>;</li>
+              <li>por lo general, una partición de otro tipo puede convertirse a NTFS.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> <strong>Límites reales</strong>: dependen del tamaño de clúster (hasta 2<sup>32</sup> − 1 clústeres).
+            <ul>
+              <li>clúster de 4 KB (por defecto): 16 TB;</li>
+              <li>clúster de 64 KB: 256 TB;</li>
+              <li>clúster de 2 MB (desde Windows 10 1709): <strong>8 PB</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Linux</strong>: usa otros sistemas (ext2, ext3, ReiserFS, XFS, JFS, UFS, ISO9660), aunque también soporta NTFS, FAT32 y FAT. Hoy el habitual es ext4.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Carpetas, nombres y rutas</h3><small>Manual 1.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Estructura</strong>: el sistema se basa en <strong>carpetas</strong>, que contienen archivos y otras carpetas. Es <strong>jerárquico</strong> o en árbol.</li>
+          <li><strong>Nombres de archivo y carpeta</strong>:
+            <ul>
+              <li>máximo de <strong>255 caracteres</strong>, incluidos los espacios;</li>
+              <li>no pueden contener <strong>\ / : * ? " &lt; &gt; |</strong>;</li>
+              <li>desde la línea de comandos, según el manual, solo se pueden crear nombres de hasta 253 caracteres.</li>
+            </ul>
+          </li>
+          <li><strong>Tipos de ruta</strong> que admite la barra de direcciones:
+            <ul>
+              <li><strong>local absoluta</strong>: <code>C:\Usuarios\NombreUsuario\Documentos</code>;</li>
+              <li><strong>de red (UNC, Universal Naming Convention)</strong>: <code>\\Servidor\Compartido</code> o <code>\\192.168.1.10\Datos</code>.</li>
+            </ul>
+          </li>
+          <li><strong>Complemento</strong>: la ruta completa tiene por defecto un límite de 260 caracteres, y Windows reserva nombres como CON, PRN, AUX o NUL.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>La ventana del Explorador de archivos</h3><small>Manual 1.1.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Qué es</strong>: el administrador de archivos oficial de Windows 11. Sirve para crear, copiar, mover, renombrar, eliminar y buscar, y para acceder a dispositivos locales, externos y recursos de red.</li>
+          <li><strong>Formas de abrirlo</strong>:
+            <ul>
+              <li>el icono anclado en la barra de tareas;</li>
+              <li>el menú Inicio;</li>
+              <li>un acceso directo;</li>
+              <li><strong>Win + E</strong>;</li>
+              <li>el comando <code>explorer</code> desde Ejecutar o una consola.</li>
+            </ul>
+          </li>
+          <li><strong>Elementos de la ventana</strong>:
+            <ol>
+              <li><strong>Barra de título</strong>: incorpora <strong>pestañas</strong> para abrir varias carpetas en una misma ventana.</li>
+              <li><strong>Botones de navegación</strong>: atrás, adelante, nivel superior y Actualizar.</li>
+              <li><strong>Barra de direcciones</strong>: muestra la ruta y permite escribirla a mano.</li>
+              <li><strong>Cuadro de búsqueda</strong>: a la derecha; busca en la ubicación actual y sus subcarpetas, con historial.</li>
+              <li><strong>Barra de comandos simplificada</strong>: sustituye a la cinta de opciones clásica y se adapta al elemento seleccionado.</li>
+              <li><strong>Panel de navegación</strong>: a la izquierda, en árbol.</li>
+              <li><strong>Área de contenido</strong>: en el centro.</li>
+              <li><strong>Barra de estado</strong>: abajo.</li>
+            </ol>
+          </li>
+          <li><strong>Barra de comandos</strong>: crear elementos, cortar, copiar, pegar, cambiar nombre, compartir, eliminar, ordenar y agrupar, Ver, «Ver más» y Opciones de carpeta.</li>
+          <li><strong>Barra de estado</strong>: número de elementos, elementos seleccionados, tamaño conjunto de la selección y estado de sincronización con OneDrive.</li>
+          <li><span class="upd">2026</span> <strong>Pestañas</strong> (complemento): Ctrl + T abre una pestaña y Ctrl + W la cierra.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Panel de navegación y control de árboles</h3><small>Manual 1.1.1 y 1.1.3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Expandir y contraer</strong>:
+            <ul>
+              <li>la flecha hacia la <strong>derecha (&gt;)</strong> expande y muestra las subcarpetas;</li>
+              <li>la flecha hacia <strong>abajo</strong> indica que la carpeta está expandida y permite contraerla;</li>
+              <li>las subcarpetas aparecen <strong>sangradas</strong>; en Windows 11 no hay líneas de conexión.</li>
+            </ul>
+          </li>
+          <li><strong>Ubicaciones del panel</strong>:
+            <ul>
+              <li><strong>Inicio</strong>: carpetas frecuentes y archivos recientes;</li>
+              <li><strong>OneDrive</strong> y otras ubicaciones en la nube;</li>
+              <li>carpetas del perfil: Escritorio, Documentos, Descargas, Imágenes…;</li>
+              <li><strong>Este equipo</strong>: unidades locales y dispositivos conectados;</li>
+              <li><strong>Red</strong>: equipos y recursos compartidos;</li>
+              <li><span class="upd">2026</span> también <strong>Galería</strong>, que el manual no cita.</li>
+            </ul>
+          </li>
+          <li><strong>Teclas para el árbol</strong>:
+            <ul>
+              <li><strong>*</strong> del teclado numérico: expande todo lo que hay bajo la selección;</li>
+              <li><strong>+</strong> del teclado numérico: expande la selección;</li>
+              <li><strong>−</strong> del teclado numérico: contrae la selección;</li>
+              <li><strong>flecha derecha</strong>: expande; si ya lo está, va a la primera carpeta secundaria;</li>
+              <li><strong>flecha izquierda</strong>: contrae; si ya lo está, va a la carpeta principal.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Gestión de archivos y carpetas</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Arrastrar y soltar. Atajos para objetos</h3><small>Manual 1.1.2 y 1.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Técnica</strong>: se selecciona el fichero, se arrastra con el botón izquierdo hasta la carpeta de destino (cambia a azul) y se suelta.</li>
+          <li><strong>Comportamiento por defecto</strong>:
+            <ul>
+              <li>dentro de la <strong>misma unidad</strong>: <strong>mover</strong>;</li>
+              <li>entre <strong>unidades distintas</strong>: <strong>copiar</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Teclas que lo cambian</strong>:
+            <ul>
+              <li><strong>Ctrl</strong>: copiar; aparece un signo <strong>+</strong> y el texto «Copiar a…»;</li>
+              <li><strong>Mayús</strong>: mover;</li>
+              <li><strong>Ctrl + Mayús</strong> o <strong>Alt</strong>: crear un acceso directo.</li>
+            </ul>
+          </li>
+          <li><strong>Mover y copiar</strong>: al mover, el archivo desaparece del origen; al copiar, permanece y se crea una copia en el destino.</li>
+          <li><strong>Atajos para un objeto seleccionado</strong>:
+            <ul>
+              <li><strong>F2</strong>: cambiar nombre;</li>
+              <li><strong>F3</strong>: búsqueda;</li>
+              <li><strong>Ctrl + X, C y V</strong>: cortar, copiar y pegar;</li>
+              <li><strong>Mayús + Supr</strong>: eliminar sin pasar por la Papelera;</li>
+              <li><strong>Alt + Intro</strong>: propiedades.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Operaciones con archivos y carpetas</h3><small>Manual 2.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Crear una carpeta</strong>: clic derecho en un espacio vacío &gt; Nuevo &gt; Carpeta, o <strong>Ctrl + Mayús + N</strong>.</li>
+          <li><strong>Copiar</strong>: Ctrl + C y, en el destino, Ctrl + V.</li>
+          <li><strong>Mover</strong>: Ctrl + X y, en el destino, Ctrl + V.</li>
+          <li><strong>Renombrar</strong>: dos clics pausados sobre el nombre o <strong>F2</strong>; se confirma con Intro.</li>
+          <li><strong>Eliminar</strong>:
+            <ul>
+              <li>con <strong>Supr</strong> o «Eliminar», el elemento va a la <strong>Papelera de reciclaje</strong>;</li>
+              <li>con <strong>Mayús + Supr</strong> se elimina de forma permanente;</li>
+              <li>la Papelera puede configurarse para no almacenar lo eliminado.</li>
+            </ul>
+          </li>
+          <li><strong>Restaurar</strong>: en la Papelera, clic derecho &gt; Restaurar; el elemento vuelve a su <strong>ubicación original</strong>.</li>
+          <li><strong>Compartir</strong>: clic derecho &gt; Compartir, para configurar permisos y uso compartido.</li>
+          <li><strong>Propiedades</strong>: tamaño, fecha de creación, atributos y permisos; también permiten personalizar la apariencia de una carpeta.</li>
+          <li><strong>Comprimir y descomprimir</strong>: en ZIP, directamente desde el Explorador. <span class="upd">2026</span> Hoy también crea <strong>7z y TAR</strong> y extrae RAR, 7z y TAR.</li>
+          <li><strong>Aviso</strong>: las referencias del manual a la «cinta de opciones» (pestañas Inicio y Compartir) son de Windows 10; en Windows 11 se usa la barra de comandos o el menú contextual.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Opciones de visualización</h3><small>Manual 2.2 e idea clave 9</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Desde «Ver»</strong> se puede:
+            <ul>
+              <li>modificar el tamaño de los iconos;</li>
+              <li>cambiar el tipo de vista;</li>
+              <li>activar la <strong>vista compacta</strong>;</li>
+              <li>mostrar u ocultar el <strong>panel de detalles</strong>;</li>
+              <li>mostrar u ocultar el <strong>panel de vista previa</strong> (Alt + P);</li>
+              <li>mostrar u ocultar las <strong>extensiones</strong> de nombre de archivo;</li>
+              <li>ver los <strong>elementos ocultos</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Ocho diseños</strong>:
+            <ol>
+              <li>Iconos muy grandes;</li>
+              <li>Iconos grandes;</li>
+              <li>Iconos medianos;</li>
+              <li>Iconos pequeños;</li>
+              <li>Lista;</li>
+              <li>Detalles;</li>
+              <li>Mosaicos;</li>
+              <li>Contenido.</li>
+            </ol>
+          </li>
+          <li><strong>Ordenación</strong>: por nombre, fecha, tipo y otros criterios; también se puede agrupar.</li>
+          <li><strong>Complemento</strong>: Ctrl + Mayús + un número del 1 al 8 cambia de vista en ese mismo orden (Ctrl + Mayús + 6 es Detalles).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Operaciones de búsqueda</h3><small>Manual 3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Dónde</strong>: en el cuadro de búsqueda, arriba a la derecha. La búsqueda se limita a la carpeta actual o se amplía a sus subcarpetas, y se conserva un <strong>historial</strong>.</li>
+          <li><strong>Tipos de búsqueda</strong>:
+            <ul>
+              <li>por <strong>nombre</strong>: basta empezar a escribir;</li>
+              <li><strong>avanzada</strong>, con operadores: <code>nombre:archivo</code>, <code>tipo:.pdf</code>;</li>
+              <li>por <strong>fecha</strong>: <code>fecha:ayer</code>, <code>fecha:&gt;01/01/2025</code>;</li>
+              <li>por <strong>tamaño</strong>: <code>tamaño:&gt;10MB</code>, <code>tamaño:&lt;1GB</code>;</li>
+              <li>en una <strong>ubicación</strong> concreta: <code>C:\Carpeta</code>;</li>
+              <li>en <strong>resultados anteriores</strong> y <strong>búsquedas guardadas</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Comodines</strong>:
+            <ul>
+              <li><strong>*</strong>: cualquier número de caracteres (<code>archi*</code> encuentra archivo1, archivo2…);</li>
+              <li><strong>?</strong>: un solo carácter (<code>c?lor</code> encuentra color y calor).</li>
+            </ul>
+          </li>
+          <li><strong>Operadores booleanos</strong>, en mayúsculas:
+            <ul>
+              <li><strong>AND</strong>: ambos términos; es lo que hace el buscador por defecto;</li>
+              <li><strong>OR</strong>: al menos uno de los términos;</li>
+              <li><strong>NOT</strong>: excluye un término.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · «Este equipo», «Inicio» y configuración</h3>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>«Este equipo», «Inicio» y «Acceso rápido»</h3><small>Manual 4 y 5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Este equipo</strong>: en Windows 11 se orienta a los <strong>dispositivos de almacenamiento</strong>.
+            <ul>
+              <li>Muestra las unidades del sistema, los discos internos, las unidades externas y las de red.</li>
+              <li>Las carpetas del perfil de usuario <strong>ya no aparecen</strong> como elemento principal (la idea clave 8 del manual dice lo contrario).</li>
+            </ul>
+          </li>
+          <li><strong>Inicio</strong>: el Explorador se abre por defecto en esta vista, que asume el papel de <strong>Acceso rápido</strong>. Da acceso a:
+            <ul>
+              <li>las carpetas del perfil más usadas (Escritorio, Documentos, Imágenes, Descargas);</li>
+              <li>los archivos recientes;</li>
+              <li>los elementos marcados como favoritos;</li>
+              <li>los accesos anclados manualmente.</li>
+            </ul>
+          </li>
+          <li><strong>Acceso rápido</strong>: permite anclar <strong>carpetas, no archivos</strong>; los archivos se marcan como favoritos.</li>
+          <li><strong>OneDrive</strong>: el servicio de Microsoft para almacenar, sincronizar y compartir archivos en la nube.</li>
+          <li><span class="upd">2026</span> <strong>Vista Inicio actual</strong>: Acceso rápido arriba y, debajo, un bloque con Recientes, Favoritos y Compartido.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Panel de control, Modo Dios y Configuración</h3><small>Manual 4.1 y 4.1.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Panel de control</strong>: herramienta <strong>heredada</strong> que sigue disponible. Da acceso a opciones avanzadas aún no migradas (hardware, dispositivos, programas, características).</li>
+          <li><strong>Modo Dios</strong> (God Mode): una carpeta que reúne muchas opciones avanzadas. Se crea una carpeta con el nombre <code>GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}</code> y adopta el icono del Panel de control.</li>
+          <li><strong>Configuración</strong>: la herramienta <strong>principal y recomendada</strong>; sustituye progresivamente al Panel de control. Se abre desde:
+            <ul>
+              <li>la búsqueda de la barra de tareas;</li>
+              <li>el menú contextual del botón Inicio (Win + X);</li>
+              <li>el icono de la rueda dentada del menú Inicio;</li>
+              <li>el listado de aplicaciones;</li>
+              <li><strong>Win + I</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Panel Inicio de Configuración</strong>:
+            <ul>
+              <li>arriba, la cuenta de usuario y accesos al estado de la red y a Windows Update;</li>
+              <li>en el centro, <strong>Configuración recomendada</strong> (almacenamiento, inicio y apagado, accesibilidad);</li>
+              <li>a la derecha, tarjetas como Almacenamiento en la nube (OneDrive);</li>
+              <li>abajo, <strong>Personalizar el dispositivo</strong>: fondo, tema y modo claro u oscuro;</li>
+              <li>a la izquierda, el menú de categorías.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> Microsoft confirmó en abril de 2026 que está migrando a Configuración todo lo que queda del Panel de control.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Categorías de Configuración</h3><small>Manual 4.1.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ol>
+          <li><strong>Sistema</strong>: pantalla, sonido, notificaciones, energía y suspensión, almacenamiento, multitarea, proyección, escritorio remoto e información del sistema.</li>
+          <li><strong>Bluetooth y dispositivos</strong>: impresoras, escáneres, cámaras, ratones, teclados, paneles táctiles, lápices y reproducción automática.</li>
+          <li><strong>Red e Internet</strong>: Wi-Fi, Ethernet, consumo de datos, modo avión, proxy y DNS.</li>
+          <li><strong>Personalización</strong>: fondo, colores, temas, pantalla de bloqueo, fuentes, barra de tareas y menú Inicio.</li>
+          <li><strong>Aplicaciones</strong>: instalar y desinstalar, aplicaciones predeterminadas y aplicaciones de inicio.</li>
+          <li><strong>Cuentas</strong>: cuentas locales y Microsoft, opciones de inicio de sesión (Windows Hello), sincronización, correo y acceso al trabajo o al centro educativo. Aquí está también la <strong>Copia de seguridad de Windows</strong>.</li>
+          <li><strong>Hora e idioma</strong>: fecha y hora, zona horaria, región, idioma y teclado.</li>
+          <li><strong>Accesibilidad</strong>: Narrador, Lupa, subtítulos, contraste alto, filtros de color, teclado y ratón.</li>
+          <li><strong>Privacidad y seguridad</strong>: permisos de las aplicaciones (ubicación, cámara, micrófono), antivirus y firewall.</li>
+          <li><strong>Windows Update</strong>: buscar e instalar actualizaciones, historial, horas activas, opciones avanzadas y recuperación.</li>
+        </ol>
+        <ul>
+          <li><span class="upd">2026</span> La barra lateral real tiene doce entradas: se añaden <strong>Inicio</strong> (la primera) y <strong>Juegos</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Ejecutar</h3><small>Manual 4.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Qué es</strong>: una herramienta para abrir programas, gestores, archivos, carpetas o recursos de Internet con <strong>comandos de texto</strong>.</li>
+          <li><strong>Cómo se abre</strong>: con <strong>Win + R</strong> o escribiendo «Ejecutar» en la búsqueda de Inicio.</li>
+          <li><strong>Comandos</strong>:
+            <ul>
+              <li><code>cmd</code>: símbolo del sistema;</li>
+              <li><code>explorer</code>: Explorador de Windows;</li>
+              <li><code>msconfig</code>: Configuración del sistema;</li>
+              <li><code>taskmgr</code>: Administrador de tareas;</li>
+              <li><code>chkdsk</code>: análisis de la partición del disco;</li>
+              <li><code>defrag</code>: desfragmentación de discos (la ventana gráfica es <code>dfrgui</code>);</li>
+              <li><code>ipconfig</code>: configuración de red;</li>
+              <li><code>ping</code>: conectividad entre dispositivos.</li>
+            </ul>
+          </li>
+          <li><strong>Consolas (.msc)</strong>:
+            <ul>
+              <li><code>devmgmt.msc</code>: dispositivos y hardware;</li>
+              <li><code>diskmgmt.msc</code>: volúmenes de disco y particiones;</li>
+              <li><code>perfmon.msc</code>: monitor de rendimiento;</li>
+              <li><code>services.msc</code>: servicios;</li>
+              <li><code>compmgmt.msc</code>: Administración de equipos;</li>
+              <li><code>eventvwr.msc</code>: Visor de eventos;</li>
+              <li><code>certmgr.msc</code>: Administrador de certificados.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>PowerShell, CMD y Windows Terminal</h3><small>Manual 4.2.1 y 4.2.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Situación en Windows 11</strong>: CMD <strong>no ha desaparecido</strong>, pero la administración moderna por línea de comandos gira en torno a <strong>Windows PowerShell</strong>, integrado en <strong>Windows Terminal</strong>, que abre PowerShell, CMD y otros entornos.</li>
+          <li><strong>Símbolo del sistema (CMD)</strong>:
+            <ul>
+              <li>usa el lenguaje de comandos tradicional, heredado de <strong>MS-DOS</strong>;</li>
+              <li>sus comandos son más sencillos y limitados.</li>
+            </ul>
+          </li>
+          <li><strong>PowerShell</strong>:
+            <ul>
+              <li>usa un lenguaje de <strong>scripting avanzado basado en .NET</strong>;</li>
+              <li>ofrece <strong>cmdlets</strong> para tareas complejas y automatizadas;</li>
+              <li>es más potente y versátil que CMD.</li>
+            </ul>
+          </li>
+          <li><strong>Windows PowerShell ISE</strong>: el entorno gráfico para crear, editar y ejecutar scripts.</li>
+          <li><span class="upd">2026</span> <strong>Estado actual</strong>:
+            <ul>
+              <li>Windows incluye Windows PowerShell 5.1; PowerShell 7 se instala aparte;</li>
+              <li>PowerShell 2.0 se eliminó en 2025 y la utilidad WMIC, en 2026;</li>
+              <li>el ISE sigue incluido, pero ya no se desarrolla.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Administrador de tareas, accesorios y herramientas</h3>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>El Administrador de tareas</h3><small>Manual 6</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Qué es</strong>: la aplicación que supervisa y gestiona los programas, procesos y servicios en ejecución y analiza el rendimiento en tiempo real (CPU, memoria, disco, red y GPU).</li>
+          <li><strong>Acciones</strong>: finalizar tareas y aplicar el <strong>Modo de eficiencia</strong>, que reduce el impacto de un proceso en el rendimiento y en el consumo de energía.</li>
+          <li><strong>Formas de abrirlo</strong>:
+            <ul>
+              <li><strong>Ctrl + Mayús + Esc</strong>;</li>
+              <li>Ctrl + Alt + Supr y elegir Administrador de tareas;</li>
+              <li>clic derecho sobre Inicio (menú Win + X);</li>
+              <li>la búsqueda del menú Inicio;</li>
+              <li>la carpeta Herramientas de Windows;</li>
+              <li><span class="upd">2026</span> clic derecho sobre la barra de tareas (el manual no lo cita).</li>
+            </ul>
+          </li>
+          <li><strong>Secciones</strong>, en un panel lateral izquierdo que sustituye a las pestañas:
+            <ol>
+              <li><strong>Procesos</strong>: aplicaciones, procesos en segundo plano y del sistema, con su consumo.</li>
+              <li><strong>Rendimiento</strong>: gráficos en tiempo real del uso global.</li>
+              <li><strong>Historial de aplicaciones</strong>: consumo de CPU y red para la cuenta actual, sobre todo de aplicaciones de Microsoft Store.</li>
+              <li><strong>Aplicaciones de arranque</strong>: habilitar o deshabilitar lo que se inicia con Windows.</li>
+              <li><strong>Usuarios</strong>: cuentas con sesión iniciada y sus recursos.</li>
+              <li><strong>Detalles</strong>: nombre del proceso, identificador (<strong>PID</strong>), estado y prioridad.</li>
+              <li><strong>Servicios</strong>: lista de servicios y su estado.</li>
+            </ol>
+          </li>
+          <li><span class="upd">2026</span> En equipos con IA, Procesos admite columnas opcionales con el uso de la <strong>NPU</strong> por proceso.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Accesorios</h3><small>Manual 7</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>En Windows 11</strong> no existe el grupo «Accesorios de Windows» como bloque del menú Inicio. Las aplicaciones siguen en el sistema como <strong>aplicaciones individuales</strong>.</li>
+          <li><strong>Aplicaciones</strong>:
+            <ul>
+              <li>Bloc de notas;</li>
+              <li>Paint;</li>
+              <li>Calculadora;</li>
+              <li>Herramienta Recortes;</li>
+              <li>Grabadora de voz (hoy, «Grabadora de sonido»);</li>
+              <li>Mapa de caracteres;</li>
+              <li>Conexión a Escritorio remoto (según la edición).</li>
+            </ul>
+          </li>
+          <li><strong>Acceso</strong>: desde el menú Inicio, «Todas las aplicaciones» o el cuadro de búsqueda.</li>
+          <li><span class="upd">2026</span> <strong>WordPad</strong> ya no forma parte de Windows desde la versión 24H2.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Herramientas de Windows (I): administración y diagnóstico</h3><small>Manual 8.1 y 8.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Denominación</strong>: en Windows 11 las utilidades administrativas se agrupan en <strong>Herramientas de Windows</strong>.</li>
+          <li><strong>Acceso</strong>:
+            <ul>
+              <li>menú Inicio &gt; Todas las aplicaciones &gt; Herramientas de Windows;</li>
+              <li>el cuadro de búsqueda;</li>
+              <li>comandos desde Ejecutar, el Símbolo del sistema o PowerShell.</li>
+            </ul>
+          </li>
+          <li><strong>Administración</strong>:
+            <ul>
+              <li><strong>Administración de equipos</strong>: consola que integra Administración de discos, Visor de eventos, Servicios, Usuarios y grupos locales y Administrador de dispositivos;</li>
+              <li><strong>Administración de impresión</strong>: impresoras locales y de red, colas, controladores y puertos;</li>
+              <li><strong>Servicios</strong>: estado y tipo de inicio (automático, manual o deshabilitado);</li>
+              <li><strong>Editor del Registro</strong>: ver y modificar el Registro; para usuarios avanzados;</li>
+              <li><strong>Configuración del sistema</strong>: diagnosticar el arranque, los servicios y los programas de inicio;</li>
+              <li><strong>Programador de tareas</strong>: ejecutar programas o scripts en momentos o condiciones concretos;</li>
+              <li><strong>Windows Defender Firewall</strong>: reglas del tráfico entrante y saliente.</li>
+            </ul>
+          </li>
+          <li><strong>Supervisión y diagnóstico</strong>:
+            <ul>
+              <li><strong>Administrador de tareas</strong>;</li>
+              <li><strong>Monitor de recursos</strong>: uso detallado de CPU, memoria, disco y red por proceso;</li>
+              <li><strong>Monitor de rendimiento</strong>: contadores, gráficos e informes;</li>
+              <li><strong>Información del sistema</strong>: hardware, componentes y entorno de software;</li>
+              <li><strong>Diagnóstico de memoria de Windows</strong>: comprueba la RAM;</li>
+              <li><strong>Grabación de acciones de usuario</strong>: registra clics, pulsaciones y capturas; <span class="upd">2026</span> en desuso.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">17</span><span class="bt"><h3>Herramientas de Windows (II): mantenimiento, consolas y otras</h3><small>Manual 8.2 e ideas clave</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Mantenimiento</strong>:
+            <ul>
+              <li><strong>Desfragmentar y optimizar unidades</strong>: en discos duros desfragmenta; en SSD aplica optimizaciones específicas;</li>
+              <li><strong>Liberador de espacio en disco</strong>: elimina archivos temporales y del sistema innecesarios;</li>
+              <li><strong>Recuperación</strong>: restaurar el sistema, restablecer el equipo y crear unidades de recuperación.</li>
+            </ul>
+          </li>
+          <li><strong>Línea de comandos</strong>:
+            <ul>
+              <li><strong>Símbolo del sistema</strong>;</li>
+              <li><strong>Windows PowerShell</strong>;</li>
+              <li><strong>Windows PowerShell ISE</strong>;</li>
+              <li><strong>Ejecutar</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Otras herramientas</strong>:
+            <ul>
+              <li><strong>Panel de control</strong>;</li>
+              <li><strong>Conexión a Escritorio remoto</strong>;</li>
+              <li><strong>Herramienta Recortes</strong>: capturas completas, parciales o de ventana;</li>
+              <li><strong>Mapa de caracteres</strong>;</li>
+              <li><strong>Orígenes de datos ODBC</strong> (32 y 64 bits);</li>
+              <li><strong>Power Automate</strong>: automatización de tareas y flujos de trabajo;</li>
+              <li><strong>Windows Media Player Legacy</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Copias de seguridad</strong> (idea clave 15):
+            <ul>
+              <li>Configuración &gt; Cuentas &gt; <strong>Copia de seguridad de Windows</strong>, para sincronizar con OneDrive;</li>
+              <li><strong>Historial de archivos</strong> y herramientas clásicas del Panel de control, para copias locales.</li>
+            </ul>
+          </li>
+          <li><strong>Accesibilidad</strong> (idea clave 16): Narrador, Lupa, Subtítulos en directo, Teclado en pantalla y Acceso por voz.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Arrastrar y soltar</b>En la misma unidad mueve; entre unidades distintas copia. Ctrl copia y Mayús mueve.</div>
+    <div class="trap"><b>Acceso directo al arrastrar</b>Se crea con Ctrl + Mayús o con Alt, no con Ctrl solo.</div>
+    <div class="trap"><b>Supr y Mayús + Supr</b>Supr envía a la Papelera; Mayús + Supr elimina sin pasar por ella.</div>
+    <div class="trap"><b>Restaurar</b>La Papelera devuelve el elemento a su ubicación original, no al escritorio.</div>
+    <div class="trap"><b>Comodines</b>El asterisco vale por cualquier número de caracteres; la interrogación, por uno solo.</div>
+    <div class="trap"><b>Operador por defecto</b>Si no escribes ninguno, el buscador aplica AND. Los booleanos van en mayúsculas.</div>
+    <div class="trap"><b>Nombre de archivo</b>255 caracteres como máximo (253 desde la línea de comandos, según el manual).</div>
+    <div class="trap"><b>Este equipo e Inicio</b>Este equipo muestra unidades y dispositivos; las carpetas del perfil se ven en Inicio.</div>
+    <div class="trap"><b>Acceso rápido</b>Ancla carpetas, no archivos.</div>
+    <div class="trap"><b>Cinta de opciones</b>En el Explorador de Windows 11 no hay cinta: hay una barra de comandos simplificada.</div>
+    <div class="trap"><b>Administrador de tareas</b>El PID está en Detalles; los programas de inicio, en Aplicaciones de arranque.</div>
+    <div class="trap"><b>Consolas .msc</b>devmgmt es dispositivos; diskmgmt, discos; compmgmt, Administración de equipos; eventvwr, Visor de eventos.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 3. El explorador de Windows. Gestión de carpetas y archivos. Operaciones de búsqueda. Herramientas «Este equipo» y «Acceso rápido». Accesorios. Herramientas del sistema» (Ofimática, actualización de enero de 2026), puesto al día a noviembre de 2026: Windows 11 26H2, compresión en 7z y TAR, límites de NTFS, retirada de acciones de Copilot del Explorador, NPU en el Administrador de tareas y herramientas en desuso.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Informática · Tema 3 · Explorador de Windows · Herramientas ===== */
+const FS={
+ ntfs:{n:"NTFS",o:"Microsoft · New Technology File System",f:"8 PB con clústeres de 2 MB (16 TB con el clúster de 4 KB por defecto)",v:"8 PB (256 TB con clústeres de 64 KB, la cifra del manual)",s:"Sí: permisos por usuario y cifrado",r:"Sí: se recupera sola de algunos errores de disco",u:"Predeterminado en Windows 11: discos del sistema e internos"},
+ fat32:{n:"FAT32",o:"Microsoft · File Allocation Table de 32 bits",f:"4 GB",v:"2 TB",s:"No: sin permisos ni cifrado",r:"No",u:"Compatibilidad máxima: memorias pequeñas, cámaras, partición de arranque EFI"},
+ exfat:{n:"exFAT",o:"Microsoft · Extended FAT",f:"16 EB en teoría",v:"128 PB recomendados",s:"No: sin permisos de NTFS",r:"No",u:"Memorias USB y tarjetas SD de gran capacidad; lo leen Windows y macOS"},
+ fat:{n:"FAT (FAT16)",o:"Microsoft · heredado de MS-DOS",f:"2 GB (4 GB con clústeres de 64 KB)",v:"4 GB",s:"No",r:"No",u:"Obsoleto; solo por compatibilidad con dispositivos muy antiguos"},
+ refs:{n:"ReFS",o:"Microsoft · Resilient File System",f:"35 PB",v:"35 PB",s:"Permisos sí; sin cifrado de archivos de NTFS",r:"Sí: comprobación de integridad y reparación en línea",u:"Servidores, grandes volúmenes y Dev Drive; no es el sistema habitual del disco de arranque"},
+ ext4:{n:"ext4 (Linux)",o:"Linux · sucesor de ext2 y ext3",f:"16 TB con bloques de 4 KB",v:"1 EB",s:"Permisos de tipo Unix",r:"Sí: registro por diario (journaling)",u:"Habitual en las distribuciones Linux; Windows no lo lee de forma nativa"}
+};
+const FSK=["Origen","Tamaño máximo de archivo","Tamaño máximo de volumen","Seguridad","Recuperación de errores","Uso típico"];
+const CLU=[4,8,16,32,64,128,256,512,1024,2048];
+const SAMPLES=["archivo1.docx","archivo2.pdf","archivador.xlsx","color.png","calor.txt","clamor.txt","colores.jpg","informe_2026.pdf","informe preliminar.docx","factura_marzo.pdf","recibo_marzo.pdf","acta.doc","acta.docx","acta_pleno.pdf","Foto001.jpg","Foto010.jpg"];
+const RESERVED=["CON","PRN","AUX","NUL","COM1","COM2","COM3","COM4","COM5","COM6","COM7","COM8","COM9","LPT1","LPT2","LPT3","LPT4","LPT5","LPT6","LPT7","LPT8","LPT9"];
+const RN=[
+ ["Escribes «cmd» en Ejecutar.","cmd","cmd abre el símbolo del sistema."],
+ ["Escribes «explorer» en Ejecutar.","exp","explorer abre el Explorador de Windows."],
+ ["Escribes «msconfig» en Ejecutar.","msc","msconfig abre la Configuración del sistema."],
+ ["Escribes «taskmgr» en Ejecutar.","tm","taskmgr abre el Administrador de tareas."],
+ ["Escribes «devmgmt.msc» en Ejecutar.","dev","devmgmt.msc: dispositivos y hardware."],
+ ["Escribes «diskmgmt.msc» en Ejecutar.","disk","diskmgmt.msc: volúmenes de disco y particiones."],
+ ["Escribes «perfmon.msc» en Ejecutar.","perf","perfmon.msc: monitor del rendimiento del sistema."],
+ ["Escribes «services.msc» en Ejecutar.","svc","services.msc: servicios del sistema."],
+ ["Escribes «compmgmt.msc» en Ejecutar.","comp","compmgmt.msc: Administración de equipos."],
+ ["Escribes «eventvwr.msc» en Ejecutar.","ev","eventvwr.msc: Visor de eventos."],
+ ["Escribes «certmgr.msc» en Ejecutar.","cert","certmgr.msc: Administrador de certificados."]
+];
+const RNO={cmd:"Símbolo del sistema",exp:"Explorador de archivos",msc:"Configuración del sistema",tm:"Administrador de tareas",dev:"Administrador de dispositivos",disk:"Administración de discos",perf:"Monitor de rendimiento",svc:"Servicios",comp:"Administración de equipos",ev:"Visor de eventos",cert:"Administrador de certificados"};
+const TM=[
+ ["Ver el identificador (PID) y la prioridad de un proceso.","det","Detalles: nombre del proceso, PID, estado y prioridad."],
+ ["Deshabilitar un programa que se abre solo al encender el equipo.","arr","Aplicaciones de arranque: habilita o deshabilita lo que se inicia con Windows."],
+ ["Ver un gráfico en tiempo real del uso de la memoria.","ren","Rendimiento: gráficos del uso global de los recursos."],
+ ["Finalizar una aplicación que no responde.","pro","Procesos: desde aquí se finalizan tareas."],
+ ["Aplicar el Modo de eficiencia a un proceso.","pro","Procesos: desde aquí se finalizan tareas y se activa el modo de eficiencia."],
+ ["Saber qué cuentas tienen la sesión iniciada en el equipo.","usu","Usuarios: cuentas con sesión iniciada, recursos que usan y aplicaciones asociadas."],
+ ["Comprobar si un servicio está en ejecución o detenido.","ser","Servicios: lista de servicios de Windows y su estado."],
+ ["Consultar cuánta CPU y red ha consumido una aplicación de Microsoft Store en tu cuenta.","his","Historial de aplicaciones: consumo de CPU y red para la cuenta actual."],
+ ["Ver el uso global de la GPU y de los discos.","ren","Rendimiento: CPU, memoria, discos, red y GPU en tiempo real."],
+ ["Ver las aplicaciones y los procesos en segundo plano con su consumo.","pro","Procesos: aplicaciones, procesos en segundo plano y del sistema."]
+];
+const TMO={pro:"Procesos",ren:"Rendimiento",his:"Historial de aplicaciones",arr:"Aplicaciones de arranque",usu:"Usuarios",det:"Detalles",ser:"Servicios"};
+const CF=[
+ ["Cambiar la resolución de la pantalla.","sis","Sistema: pantalla, sonido, notificaciones, energía…"],
+ ["Activar el escritorio remoto.","sis","Sistema: incluye el escritorio remoto y la proyección en este equipo."],
+ ["Ver las especificaciones del hardware y la versión de Windows.","sis","Sistema: información del sistema."],
+ ["Añadir una impresora.","blu","Bluetooth y dispositivos: impresoras, escáneres, cámaras, ratones y teclados."],
+ ["Configurar la reproducción automática.","blu","Bluetooth y dispositivos: también las opciones de entrada y la reproducción automática."],
+ ["Configurar un proxy o el modo avión.","red","Red e Internet: Wi-Fi, Ethernet, consumo de datos, modo avión, proxy y DNS."],
+ ["Cambiar la pantalla de bloqueo o el tema.","per","Personalización: fondo, colores, temas, pantalla de bloqueo y fuentes."],
+ ["Configurar la barra de tareas y el menú Inicio.","per","Personalización: también la barra de tareas y el menú Inicio."],
+ ["Elegir el navegador predeterminado.","apl","Aplicaciones: aplicaciones predeterminadas."],
+ ["Desinstalar un programa.","apl","Aplicaciones: instalar, desinstalar y gestionar las aplicaciones de inicio."],
+ ["Configurar el PIN o la huella de Windows Hello.","cue","Cuentas: opciones de inicio de sesión."],
+ ["Abrir la Copia de seguridad de Windows.","cue","Cuentas > Copia de seguridad de Windows (idea clave 15)."],
+ ["Cambiar la zona horaria o añadir un idioma.","hor","Hora e idioma: fecha y hora, zona horaria, región, idioma y teclado."],
+ ["Activar el Narrador o la Lupa.","acc","Accesibilidad: Narrador, Lupa, subtítulos, contraste y filtros de color."],
+ ["Decidir qué aplicaciones pueden usar el micrófono.","pri","Privacidad y seguridad: permisos de ubicación, cámara y micrófono; antivirus y firewall."],
+ ["Configurar las horas activas.","upd","Windows Update: actualizaciones, historial, horas activas y recuperación."]
+];
+const CFO={sis:"Sistema",blu:"Bluetooth y dispositivos",red:"Red e Internet",per:"Personalización",apl:"Aplicaciones",cue:"Cuentas",hor:"Hora e idioma",acc:"Accesibilidad",pri:"Privacidad y seguridad",upd:"Windows Update"};
+const HT=[
+ ["Quieres que un script se ejecute todos los lunes a las 8:00.","prog","Programador de tareas: ejecuta programas o scripts en momentos o condiciones concretos."],
+ ["El equipo se reinicia solo y sospechas de la memoria RAM.","mem","Diagnóstico de memoria de Windows: comprueba la RAM para detectar errores."],
+ ["Necesitas copiar un símbolo que no está en el teclado.","mapa","Mapa de caracteres: muestra los caracteres de las fuentes instaladas y permite copiarlos."],
+ ["Quieres borrar archivos temporales para ganar espacio.","lib","Liberador de espacio en disco: elimina archivos temporales y del sistema innecesarios."],
+ ["Quieres ver, proceso a proceso, el uso detallado de disco y de red.","mon","Monitor de recursos: uso detallado de CPU, memoria, disco y red por proceso."],
+ ["Necesitas un informe del hardware y los componentes instalados.","info","Información del sistema: hardware, componentes, recursos y entorno de software."],
+ ["Hay que modificar una clave donde Windows guarda su configuración.","reg","Editor del Registro (para usuarios avanzados)."],
+ ["Un disco duro mecánico va lento por la fragmentación.","def","Desfragmentar y optimizar unidades: desfragmenta los discos duros y optimiza los SSD."],
+ ["Quieres una sola consola con Discos, Visor de eventos, Servicios y Dispositivos.","adm","Administración de equipos: consola que integra varias herramientas administrativas."],
+ ["Windows no arranca bien y quieres revisar las opciones de arranque y los programas de inicio.","cfg","Configuración del sistema (msconfig)."]
+];
+const HTO={adm:"Administración de equipos",cfg:"Configuración del sistema",def:"Desfragmentar y optimizar",lib:"Liberador de espacio",mem:"Diagnóstico de memoria",reg:"Editor del Registro",prog:"Programador de tareas",mon:"Monitor de recursos",info:"Información del sistema",mapa:"Mapa de caracteres"};
+const INS=[
+ {g:"Explorador",n:"Elementos de la ventana",norm:"Ocho elementos",def:"De arriba abajo y de izquierda a derecha.",f:{"Barra de título":"Con pestañas para varias carpetas.","Navegación y direcciones":"Atrás, adelante, subir y Actualizar; ruta local o UNC.","Búsqueda y comandos":"Cuadro a la derecha; barra de comandos en lugar de cinta.","Panel, contenido y estado":"Árbol a la izquierda, archivos en el centro y datos abajo."}},
+ {g:"Explorador",n:"Vistas y paneles",norm:"Menú Ver",def:"Ocho diseños y varios paneles.",f:{"Iconos":"Muy grandes, grandes, medianos y pequeños.","Otras vistas":"Lista, Detalles, Mosaicos y Contenido.","Paneles":"De detalles y de vista previa (Alt + P).","Mostrar":"Extensiones de nombre de archivo y elementos ocultos."}},
+ {g:"Explorador",n:"Atajos",norm:"Teclado",def:"Los más preguntados.",f:{"Abrir":"Win + E.","Objetos":"F2 renombra, Alt + Intro abre propiedades, Mayús + Supr elimina sin Papelera.","Carpetas":"Ctrl + Mayús + N crea una carpeta.","Pestañas":"Ctrl + T abre una pestaña y Ctrl + W la cierra."}},
+ {g:"Ubicaciones",n:"Inicio y Acceso rápido",norm:"Vista por defecto",def:"El punto principal de acceso al contenido del usuario.",f:{"Carpetas":"Las del perfil más usadas y las ancladas.","Archivos":"Recientes y favoritos.","Acceso rápido":"Ancla carpetas, no archivos.","2026":"Bloque con Recientes, Favoritos y Compartido bajo Acceso rápido."}},
+ {g:"Ubicaciones",n:"Este equipo",norm:"Dispositivos de almacenamiento",def:"Unidades y dispositivos conectados.",f:{"Muestra":"Unidades del sistema, discos internos, externos y de red.","No muestra":"Las carpetas del perfil como elemento principal.","Rutas":"Local (C:\\Usuarios\\…) o UNC (\\\\Servidor\\Compartido).","OneDrive":"Almacenamiento en la nube con estado de sincronización."}},
+ {g:"Sistema",n:"Configuración y Panel de control",norm:"Win + I",def:"Configuración es la herramienta principal y recomendada.",f:{"Configuración":"Sistema, dispositivos, red, personalización, aplicaciones, cuentas, hora, accesibilidad, privacidad y Windows Update.","Panel de control":"Heredado; opciones avanzadas aún no migradas.","Modo Dios":"Carpeta GodMode.{…} con todas las opciones.","2026":"Microsoft está trasladando a Configuración lo que queda del Panel."}},
+ {g:"Sistema",n:"CMD, PowerShell y Terminal",norm:"Línea de comandos",def:"Dos intérpretes y una interfaz que los reúne.",f:{"CMD":"Comandos heredados de MS-DOS; sencillos y limitados.","PowerShell":"Scripting basado en .NET, con cmdlets.","Windows Terminal":"Abre PowerShell, CMD y otros entornos.","2026":"PowerShell 2.0 y WMIC, eliminados; el ISE ya no se desarrolla."}},
+ {g:"Sistema",n:"Administrador de tareas",norm:"Ctrl + Mayús + Esc",def:"Supervisa procesos, rendimiento y servicios.",f:{"Secciones":"Procesos, Rendimiento, Historial de aplicaciones, Aplicaciones de arranque, Usuarios, Detalles y Servicios.","Acciones":"Finalizar tarea y Modo de eficiencia.","Recursos":"CPU, memoria, disco, red y GPU.","2026":"Columnas opcionales de uso de la NPU por proceso."}},
+ {g:"Sistema",n:"Accesorios",norm:"Aplicaciones individuales",def:"Ya no hay grupo «Accesorios de Windows».",f:{"Texto e imagen":"Bloc de notas, Paint y Recortes.","Utilidades":"Calculadora, Grabadora de voz y Mapa de caracteres.","Remoto":"Conexión a Escritorio remoto, según la edición.","2026":"WordPad se eliminó en la versión 24H2."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const $=id=>document.getElementById(id);
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${OPTS[k]}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+OPTS[c[1]]}</b>${c[2]}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("rn",RN,RNO,"Comando");
+  trainer("tm",TM,TMO,"Tarea");
+  trainer("cf",CF,CFO,"Ajuste");
+  trainer("ht",HT,HTO,"Caso");
+  /* Arrastrar y soltar */
+  (function(){if(!$("dd-u"))return;
+    function run(){const u=$("dd-u").value,b=$("dd-b").value,k=$("dd-k").value,o=$("dd-v");
+      if(b==="r"){o.className="verdict mid";o.innerHTML=`<b class="big">Aparece un menú al soltar</b>Con el botón derecho, Windows no decide por ti: ofrece «Copiar aquí», «Mover aquí» y «Crear iconos de acceso directo aquí». Es un complemento; el manual solo describe el arrastre con el botón izquierdo.`;return}
+      const def=u==="same"?"mover":"copiar",why=u==="same"?"dentro de una misma unidad, la opción por defecto es mover":"entre unidades distintas (también hacia una carpeta de red), la opción por defecto es copiar";
+      let op,txt;
+      if(k==="ctrl"){op="copiar";txt="La tecla Ctrl fuerza la copia."}
+      else if(k==="shift"){op="mover";txt="La tecla Mayús fuerza el movimiento."}
+      else if(k==="alt"||k==="cs"){op="link";txt=(k==="alt"?"La tecla Alt":"La combinación Ctrl + Mayús")+" crea un acceso directo."}
+      else{op=def;txt="Sin teclas, "+why+"."}
+      if(op==="copiar"){o.className="verdict ok";o.innerHTML=`<b class="big">Se copia</b>${txt} El archivo permanece en el origen y se crea una copia en el destino. Junto al icono aparece un signo <strong>+</strong> con el texto «Copiar a…».`}
+      else if(op==="mover"){o.className="verdict mid";o.innerHTML=`<b class="big">Se mueve</b>${txt} El archivo se traslada al destino y desaparece de su posición original.`}
+      else{o.className="verdict ok";o.innerHTML=`<b class="big">Se crea un acceso directo</b>${txt} El original no se mueve ni se copia: en el destino aparece un icono con una flecha que apunta a él.`}}
+    ev(["dd-u","dd-b","dd-k"],run);run()})();
+  /* Nombres */
+  (function(){if(!$("fn-v"))return;const BAD='\\/:*?"<>|';
+    function run(){const v=$("fn-v").value,o=$("fn-out"),len=[...v].length,dot=v.lastIndexOf("."),ext=dot>0?v.slice(dot):"",base=dot>0?v.slice(0,dot):v;
+      const bad=[...new Set([...v].filter(c=>BAD.includes(c)))];
+      $("fn-k").innerHTML=`<div><b>Longitud</b><span>${len} de 255 caracteres</span></div><div><b>Nombre</b><span style="word-break:break-all">${e(base)||"(vacío)"}</span></div><div><b>Extensión</b><span>${e(ext)||"(sin extensión)"}</span></div>`;
+      const pr=[];
+      if(!v.trim())pr.push("el nombre está vacío");
+      if(bad.length)pr.push("contiene caracteres no permitidos: <strong>"+bad.map(e).join(" ")+"</strong>");
+      if(len>255)pr.push("supera los 255 caracteres");
+      if(RESERVED.includes(base.trim().toUpperCase()))pr.push("«"+e(base.trim())+"» es un nombre reservado por Windows");
+      if(v.trim()&&/[ .]$/.test(v))pr.push("termina en espacio o en punto, que Windows elimina");
+      if(pr.length){o.className="verdict ko";o.innerHTML=`<b class="big">Nombre no válido</b>${pr.join("; ")}. Recuerda los nueve caracteres prohibidos: \\ / : * ? " &lt; &gt; |`}
+      else{o.className="verdict ok";o.innerHTML=`<b class="big">Nombre válido</b>Se admiten espacios, tildes, guiones, paréntesis y signos como «¿» o «¡». ${len>253?"Ojo: supera los 253 caracteres que, según el manual, se pueden crear desde la línea de comandos.":""}`}}
+    ev(["fn-v"],run);run()})();
+  /* Búsquedas */
+  (function(){if(!$("sq-n"))return;
+    function run(){const n=$("sq-n").value.trim(),t=$("sq-t").value,f=$("sq-f").value,s=$("sq-s").value,b=$("sq-b").value,w=$("sq-w").value.trim();
+      const parts=[],ex=[];let head=n;
+      if(n){ex.push(/[*?]/.test(n)?`cuyo nombre encaje con el patrón «${e(n)}»`:`que contengan «${e(n)}»`)}
+      if(b&&w&&n){head=`${n} ${b} ${w}`;ex.push(b==="AND"?`y también «${e(w)}»`:b==="OR"?`o bien «${e(w)}» (basta uno de los dos)`:`pero no «${e(w)}»`)}
+      if(head)parts.push(head);
+      if(t){parts.push("tipo:"+t);ex.push("de tipo "+t)}
+      if(f){parts.push("fecha:"+f);ex.push(f==="hoy"?"con fecha de hoy":f==="ayer"?"con fecha de ayer":"con fecha posterior al 1-1-2026")}
+      if(s){parts.push("tamaño:"+s);ex.push(s===">10MB"?"de más de 10 MB":"de menos de 1 GB")}
+      const q=parts.join(" ");
+      $("sq-q").innerHTML=`<div style="grid-column:1/-1"><b>Consulta</b><span style="font-family:ui-monospace,Consolas,monospace;word-break:break-all">${q?e(q):"(vacía)"}</span></div>`;
+      const o=$("sq-v");
+      if(!q){o.className="verdict mid";o.innerHTML=`<b class="big">Añade algún criterio</b>Un nombre, un tipo, una fecha o un tamaño.`;return}
+      o.className="verdict ok";o.innerHTML=`<b class="big">Busca archivos ${ex.join(", ")}</b>La búsqueda se hace en la carpeta actual y sus subcarpetas. Los operadores booleanos van en mayúsculas${b&&!w?"; has elegido un operador, pero falta el segundo término":""}${b&&w&&!n?"; el operador necesita también un primer término":""}. Sin operador, el buscador aplica AND.`}
+    ev(["sq-n","sq-t","sq-f","sq-s","sq-b","sq-w"],run);run();
+    function wc(){const p=$("wc-p").value.trim(),o=$("wc-out");
+      if(!p){o.innerHTML="<div>Escribe un patrón, por ejemplo <b>archi*</b>, <b>c?lor</b> o <b>*.pdf</b>.</div>";return}
+      const re=new RegExp("^"+p.replace(/[.+^${}()|[\]\\]/g,"\\$&").replace(/\*/g,".*").replace(/\?/g,".")+"$","i");
+      const hit=SAMPLES.filter(x=>re.test(x)||re.test(x.replace(/\.[^.]+$/,"")));
+      o.innerHTML=`<div><b>${hit.length} de ${SAMPLES.length} archivos de ejemplo encajan con «${e(p)}»</b></div>`+SAMPLES.map(x=>`<div class="l2">${hit.includes(x)?"✅":"▫️"} ${e(x)}</div>`).join("")+`<div>El asterisco vale por cualquier número de caracteres y la interrogación, por uno solo. La comparación es simplificada: con el nombre completo o sin la extensión.</div>`}
+    ev(["wc-p"],wc);wc()})();
+  /* Papelera */
+  (function(){if(!$("rb-l"))return;
+    function run(){const l=$("rb-l").value,m=$("rb-m").value,o=$("rb-v");
+      if(m==="shift"){o.className="verdict ko";o.innerHTML=`<b class="big">Eliminación permanente</b>Mayús + Supr elimina la selección de inmediato, sin enviarla a la Papelera de reciclaje. No se puede restaurar desde ella.`;return}
+      if(m==="cfg"){o.className="verdict ko";o.innerHTML=`<b class="big">Eliminación permanente</b>Si la Papelera está configurada para no almacenar los archivos eliminados, se borran directamente.`;return}
+      if(l==="int"){o.className="verdict ok";o.innerHTML=`<b class="big">Va a la Papelera de reciclaje</b>Puedes recuperarlo con clic derecho &gt; Restaurar: vuelve a su <strong>ubicación original</strong>.`}
+      else if(l==="od"){o.className="verdict ok";o.innerHTML=`<b class="big">Va a la Papelera de reciclaje</b>Se restaura en su ubicación original. Complemento: al estar sincronizado, también queda un tiempo en la papelera de OneDrive en la web.`}
+      else{o.className="verdict mid";o.innerHTML=`<b class="big">No pasa por la Papelera</b>Complemento al manual: la Papelera es un espacio reservado en los discos del equipo. Lo que se borra de ${l==="usb"?"una memoria USB extraíble":"una carpeta de red"} se elimina directamente, y Windows suele pedir confirmación.`}}
+    ev(["rb-l","rb-m"],run);run()})();
+  /* Sistemas de archivos */
+  (function(){const a=$("fs-a"),b=$("fs-b");if(!a)return;const ks=Object.keys(FS);a.innerHTML=ks.map(k=>`<option value="${k}">${FS[k].n}</option>`).join("");b.innerHTML=`<option value="">(ninguno)</option>`+a.innerHTML;a.value="ntfs";b.value="fat32";
+    const card=o=>{const v=[o.o,o.f,o.v,o.s,o.r,o.u];return `<div style="grid-column:1/-1;background:var(--a1);color:#fff;border-color:var(--a1)"><b style="color:#fff;opacity:.8">Sistema de archivos</b><span style="font-weight:800;font-size:1.05rem">${e(o.n)}</span></div>`+FSK.map((k,i)=>`<div><b>${k}</b>${e(v[i])}</div>`).join("")};
+    function run(){$("fs-oa").innerHTML=card(FS[a.value]);$("fs-ob").innerHTML=b.value?card(FS[b.value]):""}
+    ev(["fs-a","fs-b"],run);run();
+    const c=$("fs-c");c.innerHTML=CLU.map(k=>`<option value="${k}">${k>=1024?k/1024+" MB":k+" KB"}${k===4?" (por defecto)":""}</option>`).join("");c.value="4";
+    function calc(){const k=+c.value,tb=k*4,o=$("fs-cv"),txt=tb>=1024?tb/1024+" PB":tb+" TB";
+      o.className="verdict "+(k===4?"ok":k<=64?"mid":"ok");
+      o.innerHTML=`<b class="big">Volumen y archivo máximos: ${txt}</b>NTFS direcciona hasta 2<sup>32</sup> − 1 clústeres, así que el límite es el tamaño de clúster multiplicado por esa cifra. ${k===4?"Con el clúster por defecto salen los 16 TB que el manual da como tamaño máximo de archivo.":k===64?"Estos 256 TB son la cifra «actual» del manual; era el máximo hasta Windows 10 1703.":k>64?"Los clústeres de más de 64 KB existen desde Windows 10 versión 1709; con 2 MB se llega a 8 PB.":""}`}
+    ev(["fs-c"],calc);calc()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Explorador de archivos.",r:"La herramienta principal de Windows para gestionar y organizar archivos y carpetas."},
+ {p:"Sistema de archivos.",r:"Estructura que usa el equipo para organizar los datos en un disco o partición."},
+ {p:"Qué hay que hacer con un disco nuevo antes de usarlo.",r:"Formatearlo con un sistema de archivos."},
+ {p:"Sistema de archivos por defecto de Windows 11.",r:"NTFS (New Technology File System)."},
+ {p:"Otros sistemas de archivos que admite Windows 11.",r:"FAT, FAT32, exFAT y ReFS."},
+ {p:"Ventajas de NTFS frente a FAT32.",r:"Recuperación automática de errores, discos más grandes, más seguridad (permisos y cifrado) y conversión desde otros sistemas."},
+ {p:"Límite teórico de NTFS.",r:"16 EB (exabytes)."},
+ {p:"Límites de NTFS según el manual.",r:"Volúmenes de 256 TB y archivos de 16 TB."},
+ {p:"Límite real de NTFS desde Windows 10 1709.",r:"8 PB por volumen y por archivo, con clústeres de 2 MB."},
+ {p:"Límite de NTFS con el clúster por defecto de 4 KB.",r:"16 TB."},
+ {p:"Tamaño máximo de archivo en FAT32.",r:"4 GB."},
+ {p:"exFAT.",r:"Sistema de Microsoft para memorias USB y tarjetas SD de gran capacidad."},
+ {p:"ReFS.",r:"Resilient File System: sistema de Microsoft orientado a la integridad y a los grandes volúmenes."},
+ {p:"Sistemas de archivos de Linux que cita el manual.",r:"ext2, ext3, ReiserFS, XFS, JFS, UFS e ISO9660 (más el espacio swap)."},
+ {p:"¿Soporta Linux los sistemas de Microsoft?",r:"Sí: NTFS, FAT32 y FAT."},
+ {p:"Estructura del sistema de archivos de Windows.",r:"Basada en carpetas; jerárquica o en árbol."},
+ {p:"Qué puede contener una carpeta.",r:"Archivos y otras carpetas."},
+ {p:"Longitud máxima de un nombre de archivo o carpeta.",r:"255 caracteres, incluidos los espacios."},
+ {p:"Caracteres prohibidos en un nombre.",r:"\\ / : * ? \" < > |"},
+ {p:"Longitud máxima de un nombre creado desde la línea de comandos, según el manual.",r:"253 caracteres."},
+ {p:"Formas de abrir el Explorador.",r:"Icono de la barra de tareas, menú Inicio, acceso directo, Win + E o el comando desde Ejecutar o una consola."},
+ {p:"Win + E.",r:"Abre el Explorador de archivos."},
+ {p:"Ocho elementos de la ventana del Explorador.",r:"Barra de título, botones de navegación, barra de direcciones, cuadro de búsqueda, barra de comandos, panel de navegación, área de contenido y barra de estado."},
+ {p:"Qué incorpora la barra de título del Explorador.",r:"Pestañas, para abrir varias carpetas en una misma ventana."},
+ {p:"Botones de navegación.",r:"Atrás, adelante y nivel superior; guardan un historial de navegación."},
+ {p:"Botón Actualizar.",r:"Vuelve a cargar el contenido de la carpeta actual."},
+ {p:"Barra de direcciones.",r:"Muestra la ruta de la ubicación actual y permite escribir rutas."},
+ {p:"Ruta local absoluta.",r:"Lleva a una ubicación de una unidad del equipo: C:\\Usuarios\\NombreUsuario\\Documentos."},
+ {p:"Ruta UNC.",r:"Universal Naming Convention: \\\\Servidor\\Compartido."},
+ {p:"Cuadro de búsqueda del Explorador.",r:"A la derecha; busca en la ubicación actual y sus subcarpetas y guarda un historial."},
+ {p:"Barra de comandos simplificada.",r:"Sustituye en Windows 11 a la cinta de opciones clásica y se adapta al elemento seleccionado."},
+ {p:"Opciones de la barra de comandos.",r:"Nuevo, cortar, copiar, pegar, cambiar nombre, compartir, eliminar, ordenar, Ver y «Ver más»."},
+ {p:"Panel de navegación.",r:"A la izquierda; estructura jerárquica en árbol con las ubicaciones principales."},
+ {p:"Icono de expandir.",r:"Flecha hacia la derecha (>)."},
+ {p:"Icono de contraer.",r:"Flecha hacia abajo."},
+ {p:"Cómo se representa la jerarquía en el panel de navegación.",r:"Con sangría visual, sin líneas de conexión."},
+ {p:"Ubicaciones del panel de navegación.",r:"Inicio, OneDrive, carpetas del perfil, Este equipo y Red."},
+ {p:"Área de contenido.",r:"Parte central: muestra los archivos y carpetas de la ubicación seleccionada."},
+ {p:"Barra de estado.",r:"Abajo: número de elementos, seleccionados, tamaño de la selección y estado de sincronización."},
+ {p:"F2.",r:"Cambiar el nombre del objeto seleccionado."},
+ {p:"F3.",r:"Herramienta de búsqueda."},
+ {p:"Mayús + Supr.",r:"Eliminar de inmediato, sin enviar a la Papelera de reciclaje."},
+ {p:"Alt + Intro.",r:"Abrir la hoja de propiedades del objeto seleccionado."},
+ {p:"Copiar un archivo arrastrándolo.",r:"Mantener pulsada la tecla Ctrl."},
+ {p:"Crear un acceso directo arrastrando.",r:"Mantener Ctrl + Mayús (o Alt) mientras se arrastra."},
+ {p:"* del teclado numérico en el árbol.",r:"Expande todo lo que hay bajo la selección actual."},
+ {p:"+ del teclado numérico en el árbol.",r:"Expande la selección actual."},
+ {p:"− del teclado numérico en el árbol.",r:"Contrae la selección actual."},
+ {p:"Flecha derecha en el árbol.",r:"Expande la selección; si ya lo está, va a la primera carpeta secundaria."},
+ {p:"Flecha izquierda en el árbol.",r:"Contrae la selección; si ya lo está, va a la carpeta principal."},
+ {p:"Arrastrar dentro de la misma unidad.",r:"Por defecto, mueve."},
+ {p:"Arrastrar entre unidades distintas.",r:"Por defecto, copia."},
+ {p:"Mover entre unidades distintas arrastrando.",r:"Mantener pulsada la tecla Mayús."},
+ {p:"Señal de que se está copiando al arrastrar.",r:"Un signo más (+) con el texto «Copiar a…»."},
+ {p:"Diferencia entre mover y copiar.",r:"Al mover, el archivo desaparece del origen; al copiar, permanece y se crea una copia."},
+ {p:"Crear una carpeta con el teclado.",r:"Ctrl + Mayús + N."},
+ {p:"Copiar y pegar.",r:"Ctrl + C y Ctrl + V."},
+ {p:"Cortar y pegar.",r:"Ctrl + X y Ctrl + V: mueve el elemento."},
+ {p:"Renombrar con el ratón.",r:"Dos clics pausados sobre el nombre."},
+ {p:"Adónde van los archivos eliminados con Supr.",r:"A la Papelera de reciclaje."},
+ {p:"Dos formas de eliminar de forma permanente.",r:"Mayús + Supr o configurar la Papelera para que no almacene."},
+ {p:"Papelera de reciclaje.",r:"Espacio del disco reservado para lo eliminado, por si hay que recuperarlo."},
+ {p:"Dónde se restaura un elemento de la Papelera.",r:"En su ubicación original."},
+ {p:"Propiedades de un archivo.",r:"Tamaño, fecha de creación, atributos y permisos."},
+ {p:"Archivo comprimido.",r:"El resultado de tratar un archivo o carpeta para reducir el espacio que ocupa."},
+ {p:"Formato de compresión que cita el manual.",r:"ZIP."},
+ {p:"Formatos que crea hoy el Explorador.",r:"ZIP, 7z y TAR (desde la versión 24H2)."},
+ {p:"¿Puede Windows 11 crear archivos RAR?",r:"No: puede extraerlos, pero no crearlos."},
+ {p:"Opciones del menú Ver.",r:"Tamaño de iconos, tipo de vista, vista compacta, paneles de detalles y de vista previa, extensiones y elementos ocultos."},
+ {p:"Los ocho diseños de visualización.",r:"Iconos muy grandes, grandes, medianos y pequeños, Lista, Detalles, Mosaicos y Contenido."},
+ {p:"Panel de vista previa.",r:"Muestra el contenido del archivo seleccionado (Alt + P)."},
+ {p:"Dónde se hace una búsqueda en el Explorador.",r:"En la carpeta actual; puede ampliarse a sus subcarpetas."},
+ {p:"Búsqueda por tipo.",r:"tipo:.pdf"},
+ {p:"Búsqueda por fecha.",r:"fecha:ayer o fecha:>01/01/2025"},
+ {p:"Búsqueda por tamaño.",r:"tamaño:>10MB o tamaño:<1GB"},
+ {p:"Comodín asterisco (*).",r:"Representa cualquier número de caracteres."},
+ {p:"Comodín interrogación (?).",r:"Representa un solo carácter."},
+ {p:"Qué encuentra «c?lor».",r:"Palabras como «color» o «calor»."},
+ {p:"Operador AND.",r:"Ambos términos; es lo que hace el buscador por defecto."},
+ {p:"Operador OR.",r:"Al menos uno de los términos."},
+ {p:"Operador NOT.",r:"Excluye un término."},
+ {p:"Cómo se escriben los operadores booleanos.",r:"En mayúsculas."},
+ {p:"Este equipo en Windows 11.",r:"Vista orientada a los dispositivos de almacenamiento: unidades del sistema, discos internos, externos y de red."},
+ {p:"¿Muestra Este equipo las carpetas del perfil?",r:"No como elemento principal: se accede a ellas desde Inicio."},
+ {p:"Vista en la que se abre el Explorador por defecto.",r:"Inicio, que asume el papel de Acceso rápido."},
+ {p:"Contenido de la vista Inicio.",r:"Carpetas del perfil más usadas, archivos recientes, favoritos y accesos anclados."},
+ {p:"Qué se puede anclar en Acceso rápido.",r:"Carpetas, no archivos."},
+ {p:"OneDrive.",r:"Servicio de Microsoft para almacenar, sincronizar y compartir archivos en la nube."},
+ {p:"Panel de control en Windows 11.",r:"Herramienta heredada que sigue disponible para opciones avanzadas aún no migradas."},
+ {p:"Modo Dios.",r:"Carpeta GodMode.{ED7BA470-8E54-465E-825C-99712043E01C} que agrupa las opciones avanzadas."},
+ {p:"Configuración.",r:"Herramienta principal y recomendada para personalizar y administrar Windows 11 (Win + I)."},
+ {p:"Formas de abrir Configuración.",r:"Búsqueda, menú Win + X, rueda dentada de Inicio, lista de aplicaciones y Win + I."},
+ {p:"Bloques del panel Inicio de Configuración.",r:"Cuenta, red y Windows Update, Configuración recomendada, tarjetas y Personalizar el dispositivo."},
+ {p:"Categoría Sistema.",r:"Pantalla, sonido, notificaciones, energía, almacenamiento, multitarea, escritorio remoto e información."},
+ {p:"Categoría Bluetooth y dispositivos.",r:"Impresoras, escáneres, cámaras, ratones, teclados y reproducción automática."},
+ {p:"Categoría Red e Internet.",r:"Wi-Fi, Ethernet, consumo de datos, modo avión, proxy y DNS."},
+ {p:"Categoría Personalización.",r:"Fondo, colores, temas, pantalla de bloqueo, fuentes, barra de tareas y menú Inicio."},
+ {p:"Categoría Aplicaciones.",r:"Instalar y desinstalar, predeterminadas y aplicaciones de inicio."},
+ {p:"Categoría Cuentas.",r:"Cuentas locales y Microsoft, inicio de sesión (Windows Hello), sincronización y copia de seguridad."},
+ {p:"Categoría Privacidad y seguridad.",r:"Permisos de las aplicaciones, antivirus y firewall."},
+ {p:"Categoría Windows Update.",r:"Actualizaciones, historial, horas activas, opciones avanzadas y recuperación."},
+ {p:"Dónde se cambia la configuración de energía.",r:"En Sistema."},
+ {p:"Categorías que el manual no enumera.",r:"Inicio y Juegos."},
+ {p:"Ejecutar.",r:"Abre programas, gestores, archivos, carpetas o recursos con comandos de texto (Win + R)."},
+ {p:"cmd.",r:"Abre el símbolo del sistema."},
+ {p:"msconfig.",r:"Abre la Configuración del sistema."},
+ {p:"taskmgr.",r:"Abre el Administrador de tareas."},
+ {p:"chkdsk.",r:"Analiza la partición del disco."},
+ {p:"ipconfig y ping.",r:"Muestran la configuración de red y verifican la conectividad."},
+ {p:"devmgmt.msc.",r:"Dispositivos y hardware (Administrador de dispositivos)."},
+ {p:"diskmgmt.msc.",r:"Volúmenes de disco y particiones (Administración de discos)."},
+ {p:"perfmon.msc.",r:"Monitor de rendimiento."},
+ {p:"services.msc.",r:"Servicios del sistema."},
+ {p:"compmgmt.msc.",r:"Administración de equipos."},
+ {p:"eventvwr.msc.",r:"Visor de eventos."},
+ {p:"certmgr.msc.",r:"Administrador de certificados."},
+ {p:"CMD.",r:"Símbolo del sistema: comandos heredados de MS-DOS, sencillos y limitados."},
+ {p:"PowerShell.",r:"Línea de comandos con lenguaje de scripting avanzado basado en .NET y cmdlets."},
+ {p:"Windows Terminal.",r:"Interfaz principal para abrir PowerShell, CMD y otros entornos."},
+ {p:"Windows PowerShell ISE.",r:"Entorno gráfico para crear, editar y ejecutar scripts de PowerShell; ya no se desarrolla."},
+ {p:"Administrador de tareas.",r:"Supervisa y gestiona programas, procesos y servicios, y analiza el rendimiento en tiempo real."},
+ {p:"Modo de eficiencia.",r:"Reduce el impacto de un proceso en el rendimiento y el consumo de energía."},
+ {p:"Formas de abrir el Administrador de tareas.",r:"Ctrl + Mayús + Esc, Ctrl + Alt + Supr, menú Win + X, búsqueda y Herramientas de Windows."},
+ {p:"Siete secciones del Administrador de tareas.",r:"Procesos, Rendimiento, Historial de aplicaciones, Aplicaciones de arranque, Usuarios, Detalles y Servicios."},
+ {p:"Sección Detalles.",r:"Nombre del proceso, identificador (PID), estado y prioridad."},
+ {p:"Sección Aplicaciones de arranque.",r:"Habilita o deshabilita los programas que se inician con Windows."},
+ {p:"Sección Historial de aplicaciones.",r:"Consumo de CPU y red de las aplicaciones (sobre todo de Microsoft Store) para la cuenta actual."},
+ {p:"Novedad de 2026 en el Administrador de tareas.",r:"Columnas opcionales con el uso de la NPU por proceso."},
+ {p:"Accesorios en Windows 11.",r:"No existe el grupo en Inicio; son aplicaciones individuales."},
+ {p:"Aplicaciones consideradas accesorios.",r:"Bloc de notas, Paint, Calculadora, Recortes, Grabadora de voz, Mapa de caracteres y Conexión a Escritorio remoto."},
+ {p:"Herramientas de Windows.",r:"Denominación bajo la que se agrupan las utilidades administrativas en Windows 11."},
+ {p:"Acceso a las Herramientas de Windows.",r:"Inicio > Todas las aplicaciones > Herramientas de Windows, la búsqueda o comandos."},
+ {p:"Administración de equipos.",r:"Consola con Administración de discos, Visor de eventos, Servicios, Usuarios y grupos locales y Administrador de dispositivos."},
+ {p:"Desfragmentar y optimizar unidades.",r:"Desfragmenta los discos duros y aplica optimizaciones específicas en los SSD."},
+ {p:"Diagnóstico de memoria de Windows.",r:"Comprueba la RAM para detectar errores."},
+ {p:"Editor del Registro.",r:"Permite ver y modificar el Registro; para usuarios avanzados."},
+ {p:"Grabación de acciones de usuario.",r:"Registra clics, pulsaciones y capturas para documentar incidencias; en desuso."},
+ {p:"Liberador de espacio en disco.",r:"Elimina archivos temporales y del sistema innecesarios."},
+ {p:"Monitor de recursos.",r:"Uso detallado de CPU, memoria, disco y red por proceso."},
+ {p:"Programador de tareas.",r:"Automatiza la ejecución de programas o scripts en momentos o condiciones concretos."},
+ {p:"Tipos de inicio de un servicio.",r:"Automático, manual o deshabilitado."},
+ {p:"Power Automate.",r:"Automatiza tareas y flujos de trabajo entre aplicaciones y servicios."},
+ {p:"Copias de seguridad en Windows 11.",r:"Configuración > Cuentas > Copia de seguridad de Windows, e Historial de archivos en el Panel de control."},
+ {p:"Herramientas de accesibilidad principales.",r:"Narrador, Lupa, Subtítulos en directo, Teclado en pantalla y Acceso por voz."}
+]};
+
+const T1=[
+ {q:"El sistema de archivos por defecto de Windows 11 es:",o:["NTFS.","FAT32.","exFAT.","ext3."],c:0,e:"New Technology File System."},
+ {q:"Un sistema de archivos es:",o:["La estructura que usa el equipo para organizar los datos en un disco o partición.","Un programa para comprimir archivos.","La carpeta raíz de la unidad C:.","El conjunto de controladores del disco."],c:0,e:"Manual 1.1."},
+ {q:"Antes de usar un disco duro nuevo hay que:",o:["Formatearlo con un sistema de archivos.","Desfragmentarlo.","Comprimirlo en ZIP.","Anclarlo a Acceso rápido."],c:0,e:"Manual 1.1."},
+ {q:"Además de NTFS, Windows 11 admite, según el manual:",o:["FAT, FAT32, exFAT y ReFS.","ext2, ext3 y XFS.","Solo FAT32.","ReiserFS y JFS."],c:0,e:"Los otros son de Linux."},
+ {q:"No es una ventaja de NTFS frente a FAT32 citada en el manual:",o:["La compatibilidad con todos los dispositivos multimedia.","La recuperación automática de algunos errores de disco.","El soporte para discos más grandes.","El uso de permisos y cifrado."],c:0,e:"Manual 1.1."},
+ {q:"El tamaño máximo teórico de un volumen NTFS es de:",o:["16 EB.","256 TB.","4 GB.","2 TB."],c:0,e:"Exabytes."},
+ {q:"Según el manual, el tamaño máximo actual de un archivo en NTFS es de:",o:["16 TB.","4 GB.","255 MB.","2 GB."],c:0,e:"Corresponde al clúster de 4 KB."},
+ {q:"Desde Windows 10 versión 1709, con clústeres de 2 MB, un volumen NTFS puede alcanzar:",o:["8 PB.","256 TB.","16 TB.","64 TB."],c:0,e:"Actualización: 256 TB era el límite anterior."},
+ {q:"El tamaño máximo de un archivo en FAT32 es de:",o:["4 GB.","16 TB.","2 TB.","255 GB."],c:0,e:"Limitación clásica de FAT32."},
+ {q:"El sistema de archivos de Windows se organiza en una estructura:",o:["Jerárquica o en árbol.","Lineal.","En anillo.","Relacional."],c:0,e:"Carpetas que contienen archivos y otras carpetas."},
+ {q:"Un nombre de archivo o carpeta puede tener como máximo:",o:["255 caracteres.","8 caracteres.","64 caracteres.","1.024 caracteres."],c:0,e:"Incluidos los espacios."},
+ {q:"No puede usarse en un nombre de archivo:",o:["El signo de interrogación (?).","El guion (-).","El guion bajo (_).","El espacio en blanco."],c:0,e:"Prohibidos: \\ / : * ? \" < > |"},
+ {q:"Es un nombre de archivo válido:",o:["Informe_2026 (v2).docx","Acta:final.docx","Lista<1>.xlsx","Plan*.txt"],c:0,e:"Los otros contienen :, < > o *."},
+ {q:"Según el manual, desde la línea de comandos solo se pueden crear nombres de hasta:",o:["253 caracteres.","255 caracteres.","260 caracteres.","128 caracteres."],c:0,e:"Manual 1.1."},
+ {q:"Es un sistema de archivos propio de Linux:",o:["ext3.","NTFS.","exFAT.","ReFS."],c:0,e:"Manual 1.1."},
+ {q:"Respecto a los sistemas de archivos de Microsoft, Linux:",o:["También los soporta (NTFS, FAT32 o FAT).","No puede leerlos.","Solo lee exFAT.","Los convierte siempre a ext3."],c:0,e:"Manual 1.1."},
+ {q:"NTFS mejora la seguridad porque:",o:["Permite usar permisos y cifrado para restringir el acceso a archivos.","Impide copiar archivos.","Oculta todas las carpetas.","Elimina los virus."],c:0,e:"Manual 1.1."},
+ {q:"Por lo general, una partición con otro sistema de archivos:",o:["Puede convertirse a NTFS.","No puede convertirse nunca.","Solo puede convertirse a FAT.","Debe destruirse."],c:0,e:"Ventaja citada en el manual."},
+ {q:"Las siglas NTFS significan:",o:["New Technology File System.","Network Transfer File Service.","New Table File Storage.","Native Text File System."],c:0,e:"El manual escribe por errata «Tecnology»."},
+ {q:"Una carpeta puede contener:",o:["Archivos y otras carpetas.","Solo archivos.","Solo otras carpetas.","Solo accesos directos."],c:0,e:"Estructura en árbol."}
+];
+const T2=[
+ {q:"El atajo de teclado que abre el Explorador de archivos es:",o:["Win + E.","Win + X.","Win + R.","Ctrl + E."],c:0,e:"Manual 1.1.1."},
+ {q:"En Windows 11, la barra de título del Explorador incorpora:",o:["Pestañas.","La cinta de opciones.","El panel de vista previa.","La barra de estado."],c:0,e:"Varias carpetas en una ventana."},
+ {q:"Los botones de navegación permiten ir:",o:["Atrás, adelante y al nivel superior.","Solo atrás.","A la Papelera.","Al Panel de control."],c:0,e:"Con historial de navegación."},
+ {q:"El elemento que muestra la ruta de la ubicación actual es:",o:["La barra de direcciones.","La barra de estado.","El panel de detalles.","La barra de título."],c:0,e:"Permite escribir rutas."},
+ {q:"Es una ruta de red en formato UNC:",o:["\\\\Servidor\\Compartido","C:\\Usuarios\\Ana\\Documentos","http://servidor/compartido","Servidor:Compartido"],c:0,e:"Universal Naming Convention."},
+ {q:"Las siglas UNC significan:",o:["Universal Naming Convention.","Unified Network Connection.","User Name Control.","Universal Network Code."],c:0,e:"Manual 1.1.1."},
+ {q:"Es una ruta local absoluta:",o:["C:\\Usuarios\\NombreUsuario\\Documentos","\\\\192.168.1.10\\Datos","..\\Documentos","Documentos\\Informe"],c:0,e:"Empieza por la unidad."},
+ {q:"El cuadro de búsqueda del Explorador está situado:",o:["En la parte derecha de la ventana.","En la barra de estado.","En el panel de navegación.","En la barra de tareas."],c:0,e:"Arriba a la derecha."},
+ {q:"En Windows 11, la cinta de opciones clásica del Explorador se sustituye por:",o:["Una barra de comandos simplificada.","Un menú de texto.","El Panel de control.","La barra de estado."],c:0,e:"Se adapta al elemento seleccionado."},
+ {q:"El panel de navegación se sitúa:",o:["A la izquierda, con estructura en árbol.","A la derecha, con vista previa.","En la parte inferior.","En la barra de título."],c:0,e:"Manual 1.1.1."},
+ {q:"En el panel de navegación, el icono de expandir es una flecha orientada:",o:["Hacia la derecha.","Hacia abajo.","Hacia arriba.","Hacia la izquierda."],c:0,e:"Hacia abajo indica que está expandida."},
+ {q:"En Windows 11, la jerarquía del panel de navegación se representa mediante:",o:["Sangría visual, sin líneas de conexión.","Líneas de puntos.","Colores distintos.","Números de nivel."],c:0,e:"Manual 1.1.1."},
+ {q:"El área de contenido:",o:["Ocupa la parte central y muestra los archivos y carpetas de la ubicación seleccionada.","Muestra la ruta de la carpeta.","Contiene los botones de navegación.","Muestra las propiedades del sistema."],c:0,e:"Manual 1.1.1."},
+ {q:"La barra de estado se encuentra:",o:["En la parte inferior de la ventana.","En la parte superior.","A la izquierda.","Dentro del panel de navegación."],c:0,e:"Información contextual."},
+ {q:"No es un dato de la barra de estado según el manual:",o:["El uso de CPU de cada proceso.","El número total de elementos.","El número de elementos seleccionados.","El estado de sincronización con OneDrive."],c:0,e:"Eso es del Administrador de tareas."},
+ {q:"En el árbol de carpetas, el asterisco (*) del teclado numérico:",o:["Expande todo lo que hay bajo la selección actual.","Contrae la selección.","Selecciona todo.","Abre la búsqueda."],c:0,e:"Manual 1.1.3."},
+ {q:"En el árbol de carpetas, el signo menos (−) del teclado numérico:",o:["Contrae la selección actual.","Expande la selección.","Elimina la carpeta.","Sube un nivel."],c:0,e:"Manual 1.1.3."},
+ {q:"En el árbol, la flecha izquierda sobre una carpeta ya contraída:",o:["Va a la carpeta principal.","La elimina.","La expande.","Abre sus propiedades."],c:0,e:"Si está expandida, la contrae."},
+ {q:"No figura entre las ubicaciones del panel de navegación que cita el manual:",o:["El Administrador de tareas.","Inicio.","Este equipo.","Red."],c:0,e:"También OneDrive y las carpetas del perfil."},
+ {q:"El botón Actualizar del Explorador sirve para:",o:["Volver a cargar el contenido de la carpeta actual.","Instalar actualizaciones de Windows.","Cambiar la vista.","Vaciar la Papelera."],c:0,e:"Manual 1.1.1."}
+];
+const T3=[
+ {q:"Al arrastrar un archivo a otra carpeta de la misma unidad, por defecto:",o:["Se mueve.","Se copia.","Se crea un acceso directo.","Se comprime."],c:0,e:"Manual 1.2."},
+ {q:"Al arrastrar un archivo a una unidad distinta, por defecto:",o:["Se copia.","Se mueve.","Se elimina del origen.","Se crea un acceso directo."],c:0,e:"Manual 1.2."},
+ {q:"Para copiar al arrastrar dentro de la misma unidad se mantiene pulsada:",o:["La tecla Ctrl.","La tecla Mayús.","La tecla Tab.","La tecla Esc."],c:0,e:"Aparece un signo +."},
+ {q:"Para mover al arrastrar entre unidades distintas se mantiene pulsada:",o:["La tecla Mayús.","La tecla Ctrl.","La tecla Alt Gr.","La tecla Win."],c:0,e:"Shift."},
+ {q:"Al copiar un archivo arrastrándolo, junto al icono aparece:",o:["Un signo más (+).","Una flecha curva.","Un candado.","Un signo menos (−)."],c:0,e:"Con el texto «Copiar a…»."},
+ {q:"Para crear un acceso directo al arrastrar un archivo se mantiene pulsado:",o:["Ctrl + Mayús (o Alt).","Solo Ctrl.","Solo Mayús.","Win + Mayús."],c:0,e:"Manual 1.1.2."},
+ {q:"El atajo para crear una carpeta nueva es:",o:["Ctrl + Mayús + N.","Ctrl + N.","Alt + N.","Ctrl + Alt + C."],c:0,e:"Manual 2.1."},
+ {q:"Cortar y pegar un archivo equivale a:",o:["Moverlo.","Copiarlo.","Renombrarlo.","Comprimirlo."],c:0,e:"Ctrl + X y Ctrl + V."},
+ {q:"La tecla que permite cambiar el nombre del elemento seleccionado es:",o:["F2.","F3.","F5.","F11."],c:0,e:"F3 es la búsqueda."},
+ {q:"Los archivos eliminados con la tecla Supr:",o:["Se envían a la Papelera de reciclaje.","Se borran definitivamente.","Se mueven a Documentos.","Se comprimen."],c:0,e:"Manual 2.1."},
+ {q:"Para eliminar un archivo sin enviarlo a la Papelera se pulsa:",o:["Mayús + Supr.","Ctrl + Supr.","Alt + Supr.","Supr dos veces."],c:0,e:"Eliminación permanente."},
+ {q:"Al restaurar un elemento desde la Papelera de reciclaje, vuelve:",o:["A su ubicación original.","Al escritorio.","A la carpeta Documentos.","A la raíz de C:."],c:0,e:"Idea clave 10."},
+ {q:"El atajo que abre la hoja de propiedades del objeto seleccionado es:",o:["Alt + Intro.","Ctrl + Intro.","Ctrl + P.","F4."],c:0,e:"Manual 1.1.2."},
+ {q:"El formato de compresión que el manual cita para el Explorador es:",o:["ZIP.","RAR.","ISO.","CAB."],c:0,e:"Desde la 24H2 crea además 7z y TAR."},
+ {q:"Desde la versión 24H2, el Explorador de Windows 11 puede crear archivos comprimidos en:",o:["ZIP, 7z y TAR.","ZIP y RAR.","Solo ZIP.","RAR y ACE."],c:0,e:"RAR solo se puede extraer."},
+ {q:"No es un diseño de visualización del Explorador de Windows 11:",o:["Cascada.","Mosaicos.","Contenido.","Detalles."],c:0,e:"Hay ocho diseños."},
+ {q:"El número de diseños de visualización del contenido de una carpeta es:",o:["Ocho.","Cuatro.","Seis.","Diez."],c:0,e:"Idea clave 9."},
+ {q:"Desde el apartado Ver no se puede:",o:["Formatear una unidad.","Activar la vista compacta.","Mostrar el panel de vista previa.","Ver los elementos ocultos."],c:0,e:"Manual 2.2."},
+ {q:"Con la opción mover, el archivo:",o:["Desaparece de su posición original.","Permanece en el origen.","Se duplica.","Va a la Papelera."],c:0,e:"Con copiar, permanece."},
+ {q:"Para renombrar con el ratón se hacen sobre el nombre:",o:["Dos clics pausados.","Un doble clic rápido.","Tres clics.","Un clic con el botón central."],c:0,e:"El doble clic rápido lo abre."}
+];
+const T4=[
+ {q:"El comodín que representa cualquier número de caracteres es:",o:["El asterisco (*).","La interrogación (?).","La almohadilla (#).","El punto (.)."],c:0,e:"Manual 3."},
+ {q:"El comodín que representa un solo carácter es:",o:["La interrogación (?).","El asterisco (*).","El símbolo %.","El guion (-)."],c:0,e:"Manual 3."},
+ {q:"La búsqueda «c?lor» encontrará:",o:["«color» y «calor».","«clamor».","«colores».","Solo «color»."],c:0,e:"Un único carácter."},
+ {q:"La búsqueda «archi*» encontrará archivos que:",o:["Comiencen por «archi».","Terminen en «archi».","No contengan «archi».","Tengan exactamente cinco letras."],c:0,e:"archivo1, archivo2…"},
+ {q:"Si no se escribe ningún operador booleano, el buscador aplica:",o:["AND.","OR.","NOT.","Ninguno."],c:0,e:"Función por defecto."},
+ {q:"«factura OR recibo» busca archivos que contengan:",o:["Al menos uno de los dos términos.","Los dos términos.","Ninguno de los dos.","El primero pero no el segundo."],c:0,e:"Manual 3."},
+ {q:"«informe NOT preliminar» busca archivos que contengan:",o:["«informe» pero no «preliminar».","Ambos términos.","«preliminar» pero no «informe».","Cualquiera de los dos."],c:0,e:"Manual 3."},
+ {q:"Los operadores booleanos de búsqueda deben escribirse:",o:["En mayúsculas.","En minúsculas.","Entre comillas.","Entre paréntesis."],c:0,e:"AND, OR, NOT."},
+ {q:"Para buscar archivos PDF se usa:",o:["tipo:.pdf","nombre:pdf","fecha:pdf","tamaño:pdf"],c:0,e:"Búsqueda avanzada."},
+ {q:"Para buscar archivos de más de 10 MB se usa:",o:["tamaño:>10MB","tipo:>10MB","fecha:>10MB","nombre:10MB"],c:0,e:"Búsqueda por tamaño."},
+ {q:"«fecha:ayer» busca archivos:",o:["Con fecha de ayer.","Creados hace un año.","Sin fecha.","Mayores de un día de tamaño."],c:0,e:"Creación, modificación o acceso."},
+ {q:"La búsqueda del Explorador se realiza en:",o:["La carpeta actual, ampliable a sus subcarpetas.","Todo Internet.","Solo el escritorio.","Solo la Papelera."],c:0,e:"Manual 3."},
+ {q:"El sistema conserva de las búsquedas:",o:["Un historial de búsquedas recientes.","Una copia de los archivos.","Un informe en PDF.","Nada."],c:0,e:"Para reutilizarlas."},
+ {q:"La tecla que abre la herramienta de búsqueda en el Explorador es:",o:["F3.","F2.","F4.","F10."],c:0,e:"Manual 1.1.2."},
+ {q:"En Windows 11, «Este equipo» se orienta principalmente a:",o:["Los dispositivos de almacenamiento del sistema.","Las carpetas del perfil de usuario.","Los archivos recientes.","Las aplicaciones instaladas."],c:0,e:"Manual 4."},
+ {q:"En «Este equipo» no se presentan como elemento principal:",o:["Las carpetas del perfil de usuario.","Los discos duros internos.","Las unidades externas.","Las unidades de red."],c:0,e:"Se accede desde Inicio."},
+ {q:"En Windows 11, el Explorador se abre por defecto en la vista:",o:["Inicio.","Este equipo.","Red.","Papelera de reciclaje."],c:0,e:"Manual 5."},
+ {q:"La vista Inicio asume el papel que antes tenía:",o:["Acceso rápido.","Mi PC.","Bibliotecas.","Favoritos de Internet."],c:0,e:"Manual 5."},
+ {q:"No se muestra en la vista Inicio del Explorador:",o:["Los servicios de Windows en ejecución.","Los archivos recientes.","Los elementos favoritos.","Los accesos anclados manualmente."],c:0,e:"Manual 5."},
+ {q:"En Acceso rápido se pueden anclar:",o:["Carpetas, pero no archivos.","Archivos, pero no carpetas.","Solo unidades de red.","Solo aplicaciones."],c:0,e:"Idea clave 6."}
+];
+const T5=[
+ {q:"La herramienta principal y recomendada para administrar Windows 11 es:",o:["La aplicación Configuración.","El Panel de control.","El Editor del Registro.","El Administrador de tareas."],c:0,e:"Manual 4.1."},
+ {q:"El atajo que abre Configuración es:",o:["Win + I.","Win + C.","Win + P.","Ctrl + I."],c:0,e:"Manual 4.1."},
+ {q:"En Windows 11, el Panel de control:",o:["Sigue disponible como herramienta heredada.","Ha sido eliminado.","Solo existe en la edición Home.","Sustituye a Configuración."],c:0,e:"Opciones avanzadas no migradas."},
+ {q:"El «Modo Dios» es:",o:["Una carpeta especial que agrupa numerosas opciones avanzadas de configuración.","Una cuenta con privilegios SYSTEM.","Un modo de arranque.","Un tipo de inicio de sesión."],c:0,e:"GodMode.{…}."},
+ {q:"El icono de Configuración en el menú Inicio es:",o:["Una rueda dentada.","Una carpeta amarilla.","Una lupa.","Un escudo."],c:0,e:"Manual 4.1."},
+ {q:"La barra lateral de Configuración incluye una categoría que el manual no enumera:",o:["Juegos.","Sistema.","Cuentas.","Accesibilidad."],c:0,e:"También la página Inicio."},
+ {q:"La resolución y el brillo de la pantalla se configuran en:",o:["Sistema.","Personalización.","Accesibilidad.","Aplicaciones."],c:0,e:"Manual 4.1.2."},
+ {q:"Las impresoras y los escáneres se gestionan en:",o:["Bluetooth y dispositivos.","Sistema.","Red e Internet.","Aplicaciones."],c:0,e:"Manual 4.1.2."},
+ {q:"El proxy y el DNS se configuran en:",o:["Red e Internet.","Sistema.","Privacidad y seguridad.","Cuentas."],c:0,e:"Manual 4.1.2."},
+ {q:"La pantalla de bloqueo, los temas y las fuentes se cambian en:",o:["Personalización.","Sistema.","Cuentas.","Accesibilidad."],c:0,e:"Manual 4.1.2."},
+ {q:"Las aplicaciones predeterminadas se establecen en:",o:["Aplicaciones.","Sistema.","Personalización.","Windows Update."],c:0,e:"Manual 4.1.2."},
+ {q:"Las opciones de inicio de sesión (PIN, huella, rostro) están en:",o:["Cuentas.","Privacidad y seguridad.","Sistema.","Accesibilidad."],c:0,e:"Windows Hello."},
+ {q:"La zona horaria y el idioma del sistema se configuran en:",o:["Hora e idioma.","Sistema.","Personalización.","Cuentas."],c:0,e:"Manual 4.1.2."},
+ {q:"El Narrador y la Lupa se encuentran en:",o:["Accesibilidad.","Sistema.","Aplicaciones.","Bluetooth y dispositivos."],c:0,e:"Manual 4.1.2."},
+ {q:"El acceso de las aplicaciones a la cámara y al micrófono se controla en:",o:["Privacidad y seguridad.","Aplicaciones.","Bluetooth y dispositivos.","Cuentas."],c:0,e:"Manual 4.1.2."},
+ {q:"Las horas activas se configuran en:",o:["Windows Update.","Hora e idioma.","Sistema.","Cuentas."],c:0,e:"Manual 4.1.2."},
+ {q:"El escritorio remoto se activa en:",o:["Sistema.","Red e Internet.","Cuentas.","Privacidad y seguridad."],c:0,e:"Manual 4.1.2."},
+ {q:"La configuración de energía se cambia desde:",o:["Sistema.","Personalización.","Bluetooth y dispositivos.","Windows Update."],c:0,e:"Idea clave 17."},
+ {q:"La «Copia de seguridad de Windows» está en Configuración, dentro de:",o:["Cuentas.","Sistema.","Windows Update.","Privacidad y seguridad."],c:0,e:"Idea clave 15."},
+ {q:"En el panel Inicio de Configuración, el bloque «Personalizar el dispositivo» permite cambiar:",o:["El fondo, el tema y el modo de color.","La contraseña de la cuenta.","El sistema de archivos.","La zona horaria."],c:0,e:"Manual 4.1.1."}
+];
+const T6=[
+ {q:"El atajo que abre el cuadro Ejecutar es:",o:["Win + R.","Win + E.","Win + X.","Ctrl + R."],c:0,e:"Manual 4.2."},
+ {q:"El comando «cmd» abre:",o:["El símbolo del sistema.","El Panel de control.","La Calculadora.","El Administrador de dispositivos."],c:0,e:"Manual 4.2."},
+ {q:"El comando «msconfig» abre:",o:["La Configuración del sistema.","La aplicación Configuración.","El Editor del Registro.","El Monitor de recursos."],c:0,e:"Arranque, servicios e inicio."},
+ {q:"El comando «taskmgr» abre:",o:["El Administrador de tareas.","El Programador de tareas.","La barra de tareas.","La Vista de tareas."],c:0,e:"Manual 4.2."},
+ {q:"«devmgmt.msc» sirve para:",o:["Configurar dispositivos y hardware.","Administrar volúmenes de disco.","Configurar servicios.","Ver eventos."],c:0,e:"Administrador de dispositivos."},
+ {q:"«diskmgmt.msc» sirve para:",o:["Administrar volúmenes de disco y crear particiones.","Desfragmentar el disco.","Liberar espacio.","Configurar dispositivos."],c:0,e:"Administración de discos."},
+ {q:"«perfmon.msc» abre:",o:["El monitor del rendimiento del sistema.","El Visor de eventos.","Servicios.","El Administrador de certificados."],c:0,e:"Manual 4.2."},
+ {q:"«services.msc» sirve para:",o:["Configurar los servicios del sistema.","Administrar discos.","Ver certificados.","Programar tareas."],c:0,e:"Manual 4.2."},
+ {q:"«compmgmt.msc» abre:",o:["La Administración de equipos.","El Administrador de tareas.","La Configuración del sistema.","El Monitor de rendimiento."],c:0,e:"Manual 4.2."},
+ {q:"«eventvwr.msc» abre:",o:["El Visor de eventos.","El Editor del Registro.","Servicios.","La Administración de discos."],c:0,e:"Manual 4.2."},
+ {q:"«certmgr.msc» abre:",o:["El Administrador de certificados.","El Administrador de dispositivos.","El Centro de redes.","El Liberador de espacio."],c:0,e:"Manual 4.2."},
+ {q:"El comando «ping»:",o:["Verifica la conectividad de red entre dispositivos.","Muestra la configuración de red.","Analiza el disco.","Abre el Explorador."],c:0,e:"ipconfig muestra la configuración."},
+ {q:"El comando «chkdsk»:",o:["Realiza un análisis de la partición del disco.","Muestra la configuración de red.","Abre el símbolo del sistema.","Desinstala programas."],c:0,e:"Manual 4.2."},
+ {q:"El Símbolo del sistema (CMD) se basa en comandos heredados de:",o:["MS-DOS.","Unix.",".NET.","Windows Terminal."],c:0,e:"Manual 4.2.2."},
+ {q:"PowerShell utiliza un lenguaje de scripting avanzado basado en:",o:[".NET.","MS-DOS.","Java.","HTML."],c:0,e:"Manual 4.2.2."},
+ {q:"Los comandos propios de PowerShell se denominan:",o:["Cmdlets.","Applets.","Macros.","Widgets."],c:0,e:"Con nombre Verbo-Sustantivo."},
+ {q:"La interfaz principal para abrir PowerShell, CMD y otros entornos en Windows 11 es:",o:["Windows Terminal.","El Panel de control.","El Explorador de archivos.","El Administrador de tareas."],c:0,e:"Manual 4.2.1."},
+ {q:"En Windows 11, CMD:",o:["No ha desaparecido.","Se ha eliminado.","Solo existe en la edición Enterprise.","Se llama ahora PowerShell."],c:0,e:"Manual 4.2.1."},
+ {q:"Windows PowerShell ISE es:",o:["Un entorno gráfico para crear, editar y ejecutar scripts de PowerShell.","Un antivirus.","Un sistema de archivos.","Un comando de red."],c:0,e:"Ya no se desarrolla."},
+ {q:"Windows PowerShell 2.0, que se mantenía por compatibilidad:",o:["Se eliminó de Windows 11 en 2025.","Es la versión predeterminada.","Sustituyó a CMD.","Solo funciona en Windows Terminal."],c:0,e:"Actualización."}
+];
+const T7=[
+ {q:"El atajo que abre directamente el Administrador de tareas es:",o:["Ctrl + Mayús + Esc.","Ctrl + Esc.","Alt + Esc.","Win + Esc."],c:0,e:"Manual 6.1."},
+ {q:"El Modo de eficiencia:",o:["Reduce el impacto de un proceso sobre el rendimiento y el consumo energético.","Cierra todos los procesos.","Aumenta la prioridad de un proceso.","Desinstala la aplicación."],c:0,e:"Introducido en Windows 11."},
+ {q:"En Windows 11, el Administrador de tareas se organiza mediante:",o:["Un panel lateral izquierdo.","Pestañas superiores.","Una cinta de opciones.","Un menú contextual."],c:0,e:"Sustituye a las pestañas clásicas."},
+ {q:"La sección que muestra gráficos en tiempo real del uso global de los recursos es:",o:["Rendimiento.","Procesos.","Detalles.","Usuarios."],c:0,e:"Manual 6.2."},
+ {q:"Los programas que se inician con Windows se habilitan o deshabilitan en:",o:["Aplicaciones de arranque.","Servicios.","Historial de aplicaciones.","Detalles."],c:0,e:"Manual 6.2."},
+ {q:"El identificador (PID), el estado y la prioridad de un proceso se ven en:",o:["Detalles.","Rendimiento.","Usuarios.","Aplicaciones de arranque."],c:0,e:"Manual 6.2."},
+ {q:"El consumo de CPU y red de las aplicaciones para la cuenta actual se consulta en:",o:["Historial de aplicaciones.","Servicios.","Procesos.","Usuarios."],c:0,e:"Sobre todo de Microsoft Store."},
+ {q:"Las cuentas con sesión iniciada y los recursos que usan aparecen en:",o:["Usuarios.","Detalles.","Servicios.","Rendimiento."],c:0,e:"Manual 6.2."},
+ {q:"Desde la sección Procesos se puede:",o:["Finalizar tareas o activar el modo de eficiencia.","Crear particiones.","Instalar controladores.","Editar el Registro."],c:0,e:"Manual 6.2."},
+ {q:"En Windows 11, el grupo «Accesorios de Windows»:",o:["No existe como bloque organizado en el menú Inicio.","Está en el escritorio.","Contiene el Panel de control.","Se llama Herramientas de Windows."],c:0,e:"Manual 7."},
+ {q:"No figura entre los accesorios que cita el manual:",o:["El Editor del Registro.","El Bloc de notas.","Paint.","El Mapa de caracteres."],c:0,e:"Es una Herramienta de Windows."},
+ {q:"Las utilidades administrativas de Windows 11 se agrupan bajo la denominación:",o:["Herramientas de Windows.","Accesorios de Windows.","Herramientas administrativas de Office.","Centro de actividades."],c:0,e:"Manual 8."},
+ {q:"La consola que integra Administración de discos, Visor de eventos, Servicios y Administrador de dispositivos es:",o:["Administración de equipos.","Configuración del sistema.","Información del sistema.","Monitor de recursos."],c:0,e:"Manual 8.2."},
+ {q:"En una unidad SSD, «Desfragmentar y optimizar unidades»:",o:["Aplica optimizaciones específicas.","Realiza la misma desfragmentación que en un disco duro.","No puede usarse.","Formatea la unidad."],c:0,e:"Manual 8.2."},
+ {q:"La herramienta que comprueba el estado de la RAM es:",o:["Diagnóstico de memoria de Windows.","Monitor de rendimiento.","Liberador de espacio en disco.","Información del sistema."],c:0,e:"Manual 8.2."},
+ {q:"La herramienta que registra clics, pulsaciones y capturas para documentar incidencias es:",o:["Grabación de acciones de usuario.","Herramienta Recortes.","Visor de eventos.","Programador de tareas."],c:0,e:"Hoy en desuso."},
+ {q:"Para ejecutar un programa automáticamente en un momento concreto se usa:",o:["El Programador de tareas.","El Administrador de tareas.","Servicios.","Power Automate exclusivamente."],c:0,e:"Manual 8.2."},
+ {q:"La herramienta que elimina archivos temporales e innecesarios es:",o:["El Liberador de espacio en disco.","El Editor del Registro.","El Monitor de recursos.","La Administración de impresión."],c:0,e:"Manual 8.2."},
+ {q:"El tipo de inicio de un servicio puede ser:",o:["Automático, manual o deshabilitado.","Rápido, lento o seguro.","Local, remoto o mixto.","Normal o a prueba de errores."],c:0,e:"Herramienta Servicios."},
+ {q:"El Monitor de recursos muestra:",o:["El uso detallado de CPU, memoria, disco y red por proceso.","Los caracteres especiales de las fuentes.","Las impresoras de red.","Los orígenes de datos ODBC."],c:0,e:"Manual 8.2."}
+];
+const T8=[
+ {q:"Arrastras «informe.docx» de C:\\Datos a C:\\Archivo sin pulsar ninguna tecla. El archivo:",o:["Se mueve a C:\\Archivo.","Se copia en C:\\Archivo.","Queda en ambas carpetas.","Se convierte en acceso directo."],c:0,e:"Misma unidad: mover."},
+ {q:"Arrastras una carpeta de C: a una memoria USB (E:) sin pulsar ninguna tecla. La carpeta:",o:["Se copia en la memoria USB.","Se mueve a la memoria USB.","Se elimina de C:.","Se comprime."],c:0,e:"Unidades distintas: copiar."},
+ {q:"Quieres mover (no copiar) un archivo de C: a la unidad D: arrastrándolo. Debes mantener pulsada:",o:["La tecla Mayús.","La tecla Ctrl.","La tecla Alt.","Ninguna."],c:0,e:"Mayús fuerza el movimiento."},
+ {q:"Intentas guardar un documento como «Acta 12/11/2026.docx». Windows lo rechaza porque:",o:["La barra (/) no está permitida en los nombres.","Los nombres no admiten números.","Los nombres no admiten espacios.","Supera los 255 caracteres."],c:0,e:"Caracteres prohibidos."},
+ {q:"Hay que guardar un vídeo de 6 GB en una memoria con formato FAT32 y da error. La causa es que:",o:["FAT32 no admite archivos de más de 4 GB.","FAT32 no admite vídeos.","La memoria está protegida.","El nombre es demasiado largo."],c:0,e:"Solución: NTFS o exFAT."},
+ {q:"Necesitas localizar todos los PDF cuyo nombre empiece por «acta». Escribes en el cuadro de búsqueda:",o:["acta* tipo:.pdf","acta? fecha:.pdf","*acta tamaño:pdf","acta NOT pdf"],c:0,e:"Comodín y filtro de tipo."},
+ {q:"Buscas documentos que contengan «factura» o «recibo». La consulta es:",o:["factura OR recibo","factura AND recibo","factura NOT recibo","factura recibo"],c:0,e:"Sin operador se aplica AND."},
+ {q:"El equipo va muy lento y quieres saber qué aplicación consume más CPU. Abres el Administrador de tareas en:",o:["Procesos.","Servicios.","Usuarios.","Historial de aplicaciones."],c:0,e:"Consumo por proceso."},
+ {q:"Windows tarda mucho en arrancar porque se abren muchos programas. Los deshabilitas en:",o:["Administrador de tareas > Aplicaciones de arranque.","Administrador de tareas > Detalles.","Explorador > Ver.","Panel de control > Fuentes."],c:0,e:"Manual 6.2."},
+ {q:"Una aplicación se ha quedado bloqueada. Lo más directo es:",o:["Ctrl + Mayús + Esc y finalizar la tarea en Procesos.","Pulsar F5.","Abrir services.msc.","Ejecutar chkdsk."],c:0,e:"Manual 6."},
+ {q:"Hay que crear una partición en un disco nuevo. Desde Ejecutar escribes:",o:["diskmgmt.msc","devmgmt.msc","services.msc","certmgr.msc"],c:0,e:"Administración de discos."},
+ {q:"Un escáner no funciona y quieres revisar su controlador. Desde Ejecutar escribes:",o:["devmgmt.msc","diskmgmt.msc","perfmon.msc","eventvwr.msc"],c:0,e:"Dispositivos y hardware."},
+ {q:"Quieres revisar los errores que ha registrado el sistema. Abres:",o:["El Visor de eventos (eventvwr.msc).","El Mapa de caracteres.","El Liberador de espacio en disco.","La Herramienta Recortes."],c:0,e:"Dentro de Administración de equipos."},
+ {q:"Necesitas insertar un símbolo que no está en el teclado. Usas:",o:["El Mapa de caracteres.","El Editor del Registro.","El Monitor de recursos.","La Grabadora de voz."],c:0,e:"Permite copiarlo."},
+ {q:"El disco está casi lleno y quieres eliminar archivos temporales. Usas:",o:["El Liberador de espacio en disco.","Desfragmentar y optimizar unidades.","El Diagnóstico de memoria.","El Programador de tareas."],c:0,e:"Manual 8.2."},
+ {q:"Te indican que los documentos están en \\\\SRV01\\Contratacion. Para abrirlos:",o:["Escribes esa ruta UNC en la barra de direcciones del Explorador.","La escribes en el Bloc de notas.","Abres el Administrador de tareas.","Ejecutas ipconfig."],c:0,e:"Ruta de red."},
+ {q:"No ves si un archivo es .docx o .pdf porque no aparece la extensión. La activas en:",o:["Ver > Mostrar > Extensiones de nombre de archivo.","Configuración > Cuentas.","Administrador de tareas > Detalles.","Propiedades > Seguridad."],c:0,e:"Manual 2.2."},
+ {q:"Has borrado por error un informe con la tecla Supr. Para recuperarlo:",o:["Abres la Papelera, clic derecho y Restaurar: vuelve a su ubicación original.","No se puede recuperar.","Lo buscas en Descargas.","Ejecutas chkdsk."],c:0,e:"Manual 2.1."},
+ {q:"Quieres trabajar con dos carpetas sin abrir dos ventanas del Explorador. Usas:",o:["Las pestañas de la barra de título.","La barra de estado.","El panel de detalles.","La vista Contenido."],c:0,e:"Manual 1.1.1."},
+ {q:"Un script debe ejecutarse todos los lunes a las 8:00. Lo configuras con:",o:["El Programador de tareas.","El Administrador de tareas.","La Configuración del sistema.","El Monitor de rendimiento."],c:0,e:"Manual 8.2."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🗄️",name:"Sistema de archivos y nombres",desc:"NTFS, límites, nombres y estructura.",qs:T1},
+ {id:"t2",ic:"🗂️",name:"La ventana del Explorador",desc:"Elementos, rutas y panel de navegación.",qs:T2},
+ {id:"t3",ic:"📁",name:"Gestión de archivos y carpetas",desc:"Arrastrar, copiar, eliminar y vistas.",qs:T3},
+ {id:"t4",ic:"🔎",name:"Búsquedas, Este equipo e Inicio",desc:"Comodines, booleanos y ubicaciones.",qs:T4},
+ {id:"t5",ic:"⚙️",name:"Configuración y Panel de control",desc:"Categorías y accesos.",qs:T5},
+ {id:"t6",ic:"⌨️",name:"Ejecutar, CMD y PowerShell",desc:"Comandos, consolas y Terminal.",qs:T6},
+ {id:"t7",ic:"📊",name:"Administrador de tareas y herramientas",desc:"Secciones, accesorios y utilidades.",qs:T7},
+ {id:"t8",ic:"🧠",name:"Casos prácticos",desc:"Situaciones reales en la oficina.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));const POOL=TESTS.flatMap(t=>t.qs);
+
+const ESQ=[
+ {id:"e1",title:"Ordena una ruta",intro:"Del nivel más alto al más bajo.",type:"order",
+  items:[{t:"Este equipo",why:"Reúne las unidades."},{t:"Disco local (C:)",why:"La unidad."},{t:"Usuarios",why:"Carpeta de primer nivel."},{t:"NombreUsuario",why:"Carpeta del perfil."},{t:"Documentos",why:"Carpeta del usuario."},{t:"informe.docx",why:"El archivo."}]},
+ {id:"e2",title:"Ordena las secciones del Administrador de tareas",intro:"De arriba abajo en el panel lateral.",type:"order",
+  items:[{t:"Procesos",why:"Aplicaciones y procesos."},{t:"Rendimiento",why:"Gráficos en tiempo real."},{t:"Historial de aplicaciones",why:"Consumo por cuenta."},{t:"Aplicaciones de arranque",why:"Inicio con Windows."},{t:"Usuarios",why:"Sesiones iniciadas."},{t:"Detalles",why:"PID y prioridad."},{t:"Servicios",why:"Estado de los servicios."}]},
+ {id:"e3",title:"Sistemas de archivos",intro:"Manual 1.1.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Sistemas de archivos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Por defecto en Windows 11</b>{{0}}</div>
+   <div class="sch-box alt"><b>También admitidos</b>FAT, FAT32, {{1}} y ReFS</div>
+   <div class="sch-box"><b>Propio de Linux</b>{{2}}</div>
+   <div class="sch-box alt"><b>Límite teórico de NTFS</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["NTFS","FAT32","exFAT","ext3"],why:"New Technology File System."},{o:["exFAT","ext2","XFS","UFS"],why:"De Microsoft."},{o:["ext3","NTFS","ReFS","exFAT"],why:"Manual 1.1."},{o:["16 EB","4 GB","255 TB","2 TB"],why:"Exabytes."}]},
+ {id:"e4",title:"Nombres de archivo",intro:"Manual 1.1.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Nombre de archivo o carpeta</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Longitud máxima</b>{{0}} caracteres</div>
+   <div class="sch-box alt"><b>Desde la línea de comandos</b>{{1}} caracteres</div>
+   <div class="sch-box"><b>Carácter prohibido</b>{{2}}</div>
+   <div class="sch-box alt"><b>Organización</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["255","8","128","1.024"],why:"Con espacios."},{o:["253","255","260","64"],why:"Según el manual."},{o:["Dos puntos (:)","Guion (-)","Guion bajo (_)","Paréntesis"],why:"\\ / : * ? \" < > |"},{o:["Jerárquica o en árbol","Lineal","Aleatoria","En anillo"],why:"Carpetas dentro de carpetas."}]},
+ {id:"e5",title:"La ventana del Explorador",intro:"Manual 1.1.1.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Explorador de archivos (Win + E)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Barra de título</b>Incorpora {{0}}</div>
+   <div class="sch-box alt"><b>Muestra la ruta</b>Barra de {{1}}</div>
+   <div class="sch-box"><b>Sustituye a la cinta</b>Barra de {{2}}</div>
+   <div class="sch-box alt"><b>Elementos y selección</b>Barra de {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["pestañas","la cinta de opciones","widgets","el reloj"],why:"Varias carpetas en una ventana."},{o:["direcciones","estado","tareas","título"],why:"Local o UNC."},{o:["comandos simplificada","estado","herramientas de acceso rápido","menús"],why:"Windows 11."},{o:["estado","direcciones","comandos","título"],why:"Parte inferior."}]},
+ {id:"e6",title:"Arrastrar y soltar",intro:"Manual 1.2.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Arrastrar y soltar</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Misma unidad, sin teclas</b>{{0}}</div>
+   <div class="sch-box alt"><b>Unidades distintas, sin teclas</b>{{1}}</div>
+   <div class="sch-box"><b>Forzar la copia</b>Tecla {{2}}</div>
+   <div class="sch-box alt"><b>Forzar el movimiento</b>Tecla {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Mover","Copiar","Crear acceso directo","Eliminar"],why:"Por defecto."},{o:["Copiar","Mover","Comprimir","Renombrar"],why:"Por defecto."},{o:["Ctrl","Mayús","Tab","Esc"],why:"Signo +."},{o:["Mayús","Ctrl","Alt Gr","Win"],why:"Shift."}]},
+ {id:"e7",title:"Eliminar y restaurar",intro:"Manual 2.1.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Eliminación de archivos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Tecla Supr</b>Va a {{0}}</div>
+   <div class="sch-box alt"><b>Eliminación permanente</b>{{1}}</div>
+   <div class="sch-box"><b>Restaurar</b>Vuelve a {{2}}</div>
+   <div class="sch-box alt"><b>Cambiar nombre</b>Tecla {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["la Papelera de reciclaje","Documentos","Descargas","OneDrive"],why:"Recuperable."},{o:["Mayús + Supr","Ctrl + Supr","Alt + Supr","Supr"],why:"Sin Papelera."},{o:["su ubicación original","el escritorio","la raíz de C:","Documentos"],why:"Idea clave 10."},{o:["F2","F3","F5","F4"],why:"Manual 1.1.2."}]},
+ {id:"e8",title:"Visualización",intro:"Manual 2.2.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Menú Ver</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Número de diseños</b>{{0}}</div>
+   <div class="sch-box alt"><b>Vista con columnas</b>{{1}}</div>
+   <div class="sch-box"><b>Contenido del archivo sin abrirlo</b>Panel de {{2}}</div>
+   <div class="sch-box alt"><b>Ver .docx o .pdf en el nombre</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Ocho","Cuatro","Seis","Doce"],why:"Idea clave 9."},{o:["Detalles","Mosaicos","Iconos grandes","Contenido"],why:"Nombre, fecha, tipo y tamaño."},{o:["vista previa","navegación","detalles","control"],why:"Alt + P."},{o:["Extensiones de nombre de archivo","Elementos ocultos","Vista compacta","Agrupar por"],why:"Manual 2.2."}]},
+ {id:"e9",title:"Búsquedas",intro:"Manual 3.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Operadores de búsqueda</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Cualquier número de caracteres</b>{{0}}</div>
+   <div class="sch-box alt"><b>Un solo carácter</b>{{1}}</div>
+   <div class="sch-box"><b>Operador por defecto</b>{{2}}</div>
+   <div class="sch-box alt"><b>Excluir un término</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Asterisco (*)","Interrogación (?)","Almohadilla (#)","Arroba (@)"],why:"archi*."},{o:["Interrogación (?)","Asterisco (*)","Punto (.)","Guion (-)"],why:"c?lor."},{o:["AND","OR","NOT","XOR"],why:"Ambos términos."},{o:["NOT","OR","AND","SIN"],why:"informe NOT preliminar."}]},
+ {id:"e10",title:"Este equipo e Inicio",intro:"Manual 4 y 5.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ubicaciones del Explorador</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Unidades y dispositivos</b>{{0}}</div>
+   <div class="sch-box alt"><b>Vista por defecto</b>{{1}}</div>
+   <div class="sch-box"><b>Antes se llamaba</b>{{2}}</div>
+   <div class="sch-box alt"><b>Se puede anclar</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Este equipo","Inicio","Red","OneDrive"],why:"Almacenamiento."},{o:["Inicio","Este equipo","Papelera","Red"],why:"Manual 5."},{o:["Acceso rápido","Mi PC","Bibliotecas","Favoritos"],why:"Asume su papel."},{o:["Carpetas","Archivos","Servicios","Procesos"],why:"No archivos."}]},
+ {id:"e11",title:"Configuración",intro:"Manual 4.1.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Configuración ({{0}})</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Pantalla, sonido, energía</b>{{1}}</div>
+   <div class="sch-box alt"><b>Fondo, temas, pantalla de bloqueo</b>{{2}}</div>
+   <div class="sch-box"><b>Windows Hello y copia de seguridad</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Win + I","Win + R","Win + E","Win + X"],why:"Atajo."},{o:["Sistema","Personalización","Aplicaciones","Accesibilidad"],why:"Manual 4.1.2."},{o:["Personalización","Sistema","Cuentas","Hora e idioma"],why:"Manual 4.1.2."},{o:["Cuentas","Privacidad y seguridad","Sistema","Windows Update"],why:"Manual 4.1.2 e idea clave 15."}]},
+ {id:"e12",title:"Comandos de Ejecutar",intro:"Manual 4.2.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ejecutar (Win + R)</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Dispositivos y hardware</b>{{0}}</div>
+   <div class="sch-box alt"><b>Discos y particiones</b>{{1}}</div>
+   <div class="sch-box"><b>Servicios</b>{{2}}</div>
+   <div class="sch-box alt"><b>Visor de eventos</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["devmgmt.msc","diskmgmt.msc","certmgr.msc","perfmon.msc"],why:"Device management."},{o:["diskmgmt.msc","devmgmt.msc","compmgmt.msc","services.msc"],why:"Disk management."},{o:["services.msc","eventvwr.msc","msconfig","taskmgr"],why:"Manual 4.2."},{o:["eventvwr.msc","perfmon.msc","certmgr.msc","devmgmt.msc"],why:"Event viewer."}]},
+ {id:"e13",title:"CMD y PowerShell",intro:"Manual 4.2.2.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Línea de comandos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>CMD</b>Comandos heredados de {{0}}</div>
+   <div class="sch-box alt"><b>PowerShell</b>Scripting basado en {{1}}</div>
+   <div class="sch-box"><b>Comandos de PowerShell</b>{{2}}</div>
+   <div class="sch-box alt"><b>Interfaz que los reúne</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["MS-DOS","Unix",".NET","Linux"],why:"Tradicional."},{o:[".NET","MS-DOS","Java","Python"],why:"Avanzado."},{o:["Cmdlets","Applets","Macros","Servicios"],why:"Verbo-Sustantivo."},{o:["Windows Terminal","Panel de control","Explorador","Ejecutar"],why:"Manual 4.2.1."}]},
+ {id:"e14",title:"Herramientas de Windows",intro:"Manual 8.2.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Herramientas de Windows</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Comprueba la RAM</b>{{0}}</div>
+   <div class="sch-box alt"><b>Elimina temporales</b>{{1}}</div>
+   <div class="sch-box"><b>Automatiza en un momento concreto</b>{{2}}</div>
+   <div class="sch-box alt"><b>Consola con discos, eventos y servicios</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Diagnóstico de memoria de Windows","Monitor de recursos","Información del sistema","Liberador de espacio"],why:"Detecta errores."},{o:["Liberador de espacio en disco","Desfragmentar y optimizar","Editor del Registro","Recuperación"],why:"Libera espacio."},{o:["Programador de tareas","Administrador de tareas","Servicios","Monitor de rendimiento"],why:"Por momento o condición."},{o:["Administración de equipos","Configuración del sistema","Administración de impresión","Panel de control"],why:"Punto único."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("in3c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("in3c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
