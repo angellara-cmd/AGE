@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque Informática · Tema 8 · La red Internet · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">IN8</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Informática básica y ofimática</small>
+      <b>La red Internet</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .of{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+    .of div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem}
+    .of div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .tr{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .tr div{padding:10px 14px;border-radius:12px;border-left:5px solid var(--a1);background:var(--card2);font-size:.92rem}
+    .tr div.l2{margin-left:18px;border-left-color:#0aa37f}
+    .tr div.l3{margin-left:36px;border-left-color:#f59e0b}
+    .tr div.no{opacity:.55;border-left-color:var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque de Informática · Tema 8 · Internet</span>
+    <h1>La red Internet <span>Origen, evolución y estado actual; protocolos (TCP/IP, IP, DNS, DHCP, HTTP/HTTPS, FTP, Telnet) y servicios; modelo cliente/servidor; navegadores web y buscadores; programación web, inteligencia artificial y redes sociales</span></h1>
+    <p>Resumen de alto rendimiento del manual, actualizado a <strong>noviembre de 2026</strong>: IPv6 supera el 50 % del tráfico hacia Google, los navegadores ya no abren ftp://, Google retiró los operadores cache:, related: y link:, Internet Explorer está retirado y el Reglamento europeo de IA se aplica por fases. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un analizador de direcciones IP (IPv4 e IPv6): tipo, pública o privada, binario y clase.</li>
+      <li>Un analizador de URL: protocolo, subdominio, dominio, extensión, puerto, ruta y documento.</li>
+      <li>Un simulador de TCP/IP que trocea un mensaje en paquetes, los envía por rutas distintas y los recompone.</li>
+      <li>Un simulador de resolución DNS paso a paso.</li>
+      <li>Un intérprete de búsquedas avanzadas (comillas, OR, -, site:, filetype:…) que avisa de los operadores retirados.</li>
+      <li>Entrenadores de servicios y puertos, comandos de red y tipos de comercio electrónico.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">18</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">157</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('ip').scrollIntoView({behavior:'smooth'})">Direcciones IP ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('tc').scrollIntoView({behavior:'smooth'})">TCP/IP ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('bs').scrollIntoView({behavior:'smooth'})">Búsquedas ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Fuentes y actualización</strong>: el manual «Tema 8. La red Internet: origen, evolución y estado actual», puesto al día a noviembre de 2026.
+    <ul>
+      <li><span class="upd">2026</span> <strong>IPv6</strong>: el acceso a Google por IPv6 superó por primera vez el 50 % el 28-3-2026. Las direcciones IPv4 libres de la IANA están agotadas desde hace años; se estira su uso con NAT.</li>
+      <li><span class="upd">2026</span> <strong>FTP en los navegadores</strong>: Chrome lo retiró en la versión 88 (enero de 2021) y Firefox en la 90 (julio de 2021). Los ejemplos <code>ftp://</code> del manual ya no se abren en un navegador: hace falta un cliente FTP (FileZilla) o, mejor, SFTP o FTPS, que cifran.</li>
+      <li><span class="upd">2026</span> <strong>Búsqueda en Google</strong>: los operadores <code>link:</code> (2017), <code>related:</code> (2023) y <code>cache:</code> (2024) ya no funcionan. Siguen vigentes las comillas, OR, el signo menos, <code>site:</code>, <code>filetype:</code>, <code>intitle:</code>, <code>before:</code> y <code>after:</code>.</li>
+      <li><span class="upd">2026</span> <strong>Navegadores</strong>: Internet Explorer se retiró el 15-6-2022; Edge (basado en Chromium) es el navegador de Windows 10 y Windows 11. HTTPS usa hoy <strong>TLS</strong> 1.2 o 1.3 (SSL está obsoleto), y HTTP/3 funciona sobre QUIC.</li>
+      <li><span class="upd">2026</span> <strong>Inteligencia artificial</strong>: el Reglamento (UE) 2024/1689 está en vigor desde el 1-8-2024 y se aplica por fases (prohibiciones y alfabetización desde febrero de 2025, modelos de uso general desde agosto de 2025, transparencia desde agosto de 2026). El Reglamento (UE) 2026/1744 («Ómnibus digital») aplazó las obligaciones de los sistemas de alto riesgo. En España supervisa la AESIA, con sede en A Coruña.</li>
+      <li><strong>Erratas y precisiones del manual</strong>:
+        <ul>
+          <li>Los exponentes se han perdido: «232 direcciones» es <strong>2<sup>32</sup></strong> (4.294.967.296) y «2128» es <strong>2<sup>128</sup></strong>.</li>
+          <li>En el ejemplo de transmisión, «Sevilla» quiere enviar el mensaje a «Madrid», pero luego es Madrid quien fragmenta y envía a Sevilla: los papeles están invertidos.</li>
+          <li>En la tabla de servicios, <strong>RSS</strong> no son «listas de distribución» (eso son las listas de correo), sino <strong>sindicación de contenidos</strong>, como dice la fila siguiente.</li>
+          <li><strong>.gov</strong>, <strong>.edu</strong> y <strong>.mil</strong> son de Estados Unidos; en España se usan <strong>.gob.es</strong> y <strong>.edu.es</strong>. Además, .uk es el <strong>Reino Unido</strong> y .nl los <strong>Países Bajos</strong>.</li>
+          <li>Los números de puerto los registra la <strong>IANA</strong> (función que opera una filial de la ICANN), no los «propone» la ICANN.</li>
+          <li><strong>Chromium</strong> es el proyecto de código abierto en el que se basan Chrome, Edge, Opera, Brave y Vivaldi, no «el navegador de código abierto de Google Chrome».</li>
+          <li>Telnet transmite las contraseñas <strong>sin cifrar</strong>: hoy se usa <strong>SSH</strong> (puerto 22). «CuteFPT» es CuteFTP.</li>
+          <li>En las búsquedas, el signo para excluir es el guion (<code>-rural</code>), sin espacio, no la raya «–»; y AND es innecesario en Google, que ya combina todas las palabras.</li>
+          <li>El ejemplo IPv6 2001:0db8:… pertenece a un bloque <strong>reservado para documentación</strong>: no existe en Internet.</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="ip">
+    <div><span class="kicker">IPv4 · IPv6</span><h2>Analizador de direcciones IP</h2></div>
+    <p>Escribe una dirección y mira su versión, su tipo y su representación.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Ejemplo<select id="ip-p"><option>192.168.1.20</option><option>192.203.3.1</option><option>10.0.0.5</option><option>172.20.4.1</option><option>127.0.0.1</option><option>169.254.10.3</option><option>256.10.1.1</option><option>2001:0db8:85a3:08d3:1319:8a2e:0370:7334</option><option>fe80::1</option><option>::1</option></select></label>
+      <label>Dirección IP<input type="text" id="ip-x" value="192.168.1.20" autocomplete="off"></label>
+    </div>
+    <div class="rsv" id="ip-k"></div>
+    <div class="verdict" id="ip-v"></div>
+  </div>
+
+  <div class="section-title" id="ur">
+    <div><span class="kicker">Uniform Resource Locator</span><h2>Analizador de URL</h2></div>
+    <p>Protocolo, servidor (subdominio, dominio, extensión), puerto, ruta y documento.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Ejemplo<select id="ur-p"><option>https://www.aragoneria.com/documentos/miscelanea/encomix.php</option><option>https://sede.administracion.gob.es/carpeta/clave.htm?lang=es#ayuda</option><option>http://www.adams.es</option><option>ftp://ftp.mundo-r.com</option><option>https://www.boe.es:443/buscar/</option><option>telnet://usuario@host.ejemplo.es:23</option></select></label>
+      <label>URL<input type="text" id="ur-x" value="https://www.aragoneria.com/documentos/miscelanea/encomix.php" autocomplete="off"></label>
+    </div>
+    <div class="rsv" id="ur-k"></div>
+    <div class="verdict" id="ur-v"></div>
+  </div>
+
+  <div class="section-title" id="tc">
+    <div><span class="kicker">TCP trocea y ordena · IP encamina</span><h2>Simulador de transmisión con TCP/IP</h2></div>
+    <p>El ordenador «Madrid» envía un mensaje a «Sevilla». Cambia el tamaño de los paquetes o provoca que uno se pierda.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Mensaje<input type="text" id="tc-x" value="¡Hola Pepe!, ¿cómo te va?" autocomplete="off"></label>
+      <label>Caracteres por paquete<select id="tc-n"><option>4</option><option selected>6</option><option>10</option></select></label>
+      <label>Red<select id="tc-l"><option value="0">Sin pérdidas</option><option value="1">Se pierde un paquete</option></select></label>
+    </div>
+    <div class="tr" id="tc-out"></div>
+    <div class="verdict" id="tc-v"></div>
+  </div>
+
+  <div class="section-title" id="dn">
+    <div><span class="kicker">Domain Name System</span><h2>Simulador de resolución DNS</h2></div>
+    <p>Cómo se traduce un nombre de dominio a una dirección IP (con direcciones de ejemplo).</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Nombre de dominio<input type="text" id="dn-x" value="www.adams.es" autocomplete="off"></label>
+      <label>¿Está en la caché del equipo?<select id="dn-c"><option value="0">No (primera visita)</option><option value="1">Sí (visitado hace poco)</option></select></label>
+    </div>
+    <div class="tr" id="dn-out"></div>
+    <div class="verdict" id="dn-v"></div>
+  </div>
+
+  <div class="section-title" id="bs">
+    <div><span class="kicker">Búsqueda avanzada</span><h2>Intérprete de búsquedas</h2></div>
+    <p>Escribe una búsqueda con operadores y la página explica qué hace cada parte y avisa de lo que ya no funciona.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Ejemplo<select id="bs-p"><option>"Turismo rural en Cuenca"</option><option>Turismo rural Cuenca</option><option>Turismo OR rural OR Cuenca</option><option>Turismo -rural -Cuenca</option><option>Turismo –rural</option><option>Becas site:www.udc.es</option><option>Pesca río filetype:ppt</option><option>related:www.as.com</option><option>link:www.periodicoclm.es</option><option>cache:www.boe.es</option><option>define:oled</option><option>oposiciones intitle:convocatoria after:2026-01-01</option></select></label>
+      <label>Búsqueda<input type="text" id="bs-x" value="&quot;Turismo rural en Cuenca&quot;" autocomplete="off"></label>
+    </div>
+    <div class="tr" id="bs-out"></div>
+    <div class="verdict" id="bs-v"></div>
+  </div>
+
+  <div class="section-title" id="pt">
+    <div><span class="kicker">Servicios de Internet</span><h2>¿Qué servicio o protocolo es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="pt-case"></div>
+    <div class="choice" id="pt-opts"></div>
+    <div class="verdict" id="pt-out" style="display:none"></div>
+    <div class="score"><span id="pt-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="pt-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="cm">
+    <div><span class="kicker">Diagnóstico de red</span><h2>¿Qué comando usarías?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="cm-case"></div>
+    <div class="choice" id="cm-opts"></div>
+    <div class="verdict" id="cm-out" style="display:none"></div>
+    <div class="score"><span id="cm-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="cm-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="ce">
+    <div><span class="kicker">Comercio electrónico</span><h2>¿Qué tipo de transacción es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="ce-case"></div>
+    <div class="choice" id="ce-opts"></div>
+    <div class="verdict" id="ce-out" style="display:none"></div>
+    <div class="score"><span id="ce-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="ce-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Puertos, organismos, dominios y tecnologías</span><h2>Mapa de consulta rápida</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>1969</b><span>ARPAnet (DARPA), con 4 ordenadores; 50 universidades en 1972</span></div>
+    <div class="num"><b>32 bits</b><span>IPv4: 4 números de 0 a 255; 2<sup>32</sup> = 4.294.967.296 direcciones</span></div>
+    <div class="num"><b>128 bits</b><span>IPv6: 8 grupos de 4 dígitos hexadecimales; 2<sup>128</sup> ≈ 340 sextillones</span></div>
+    <div class="num"><b>255 · 63</b><span>Caracteres de un nombre de dominio · de cada etiqueta</span></div>
+    <div class="num"><b>80 · 443</b><span>Puertos de HTTP y HTTPS</span></div>
+    <div class="num"><b>20/21 · 22 · 23</b><span>FTP · SSH · Telnet</span></div>
+    <div class="num"><b>25 · 53 · 67/68</b><span>SMTP · DNS · DHCP</span></div>
+    <div class="num"><b>10 · 172.16 · 192.168</b><span>Rangos IPv4 privados (10/8, 172.16/12, 192.168/16)</span></div>
+    <div class="num"><b>127.0.0.1 · ::1</b><span>Bucle local (localhost) en IPv4 e IPv6</span></div>
+    <div class="num"><b>1994</b><span>Fundación del W3C en el MIT</span></div>
+    <div class="num"><b>50 %</b><span>Acceso a Google por IPv6 (superado el 28-3-2026)</span></div>
+    <div class="num"><b>2021</b><span>Chrome 88 y Firefox 90 retiran FTP</span></div>
+    <div class="num"><b>2022</b><span>Retirada de Internet Explorer (15 de junio)</span></div>
+    <div class="num"><b>2024/1689</b><span>Reglamento europeo de IA, en vigor desde el 1-8-2024</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Origen y evolución</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Qué es Internet</h3><small>Manual 1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Internet</strong>: la red de ordenadores más grande del mundo; un <strong>conjunto de redes interconectadas</strong> a escala mundial. Quien se conecta la <strong>amplía</strong>.</li>
+          <li>Se basa en la idea de <strong>autopista de la información</strong> (concepto más amplio que agrupa el acceso a varias redes).</li>
+          <li><strong>Qué ofrece</strong>: publicaciones, correo, software, comercio electrónico, conversación en tiempo real, catálogos de bibliotecas y museos, turismo, ciencia, administración electrónica e inteligencia artificial.</li>
+          <li><strong>Internet y la Web no son lo mismo</strong>: la World Wide Web es uno de los servicios de Internet (páginas enlazadas con hipervínculos y servidas con HTTP).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Características generales y servicios</h3><small>Manual 1.3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Red <strong>mundial</strong> o <strong>GAN</strong> (Global Area Network).</li>
+          <li>Red de ámbito <strong>público</strong>: admite cualquier tipo de usuario.</li>
+          <li>Conexión por línea conmutada, banda ancha fija (coaxial, fibra, cobre), satélite y redes móviles 2G a 5G.</li>
+          <li>Usa el protocolo <strong>TCP/IP</strong>.</li>
+          <li><strong>Servicios</strong>:
+            <ul>
+              <li><strong>SMTP/POP3</strong> (e IMAP): correo electrónico;</li>
+              <li><strong>HTTP/HTTPS</strong>: web y web segura;</li>
+              <li><strong>FTP</strong>: transferencia de ficheros;</li>
+              <li><strong>Telnet</strong>: acceso remoto en modo texto (hoy, SSH);</li>
+              <li><strong>DNS</strong>: servidores de nombres;</li>
+              <li><strong>RSS, Atom, XML</strong>: sindicación de contenidos;</li>
+              <li><strong>P2P</strong>: intercambio de archivos entre iguales;</li>
+              <li><strong>SNMP</strong>: gestión y recopilación de datos de la red;</li>
+              <li><strong>DHCP</strong>: asignación dinámica de direcciones;</li>
+              <li><strong>Escritorio remoto</strong>: control de otro equipo en modo gráfico.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Historia de Internet</h3><small>Manual 2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>1969</strong>: <strong>ARPAnet</strong>, de la agencia <strong>DARPA</strong> (Departamento de Defensa de EE. UU.), para que las comunicaciones resistieran un ataque. Empezó con <strong>4 ordenadores</strong>.</li>
+          <li>Clave del diseño: <strong>rutas alternativas</strong>; la información viaja por cualquier camino disponible, no por uno fijo.</li>
+          <li><strong>1972</strong>: 50 universidades conectadas. Después se separa <strong>MILnet</strong>, solo para uso militar.</li>
+          <li><strong>Años ochenta</strong>: la National Science Foundation crea <strong>NSFnet</strong> (enlaza superordenadores) y sustituye a ARPAnet como soporte de Internet.</li>
+          <li>Internet nace de la combinación de ARPAnet, MILnet, NASA Science Internet (NSI) y NSFnet.</li>
+          <li><strong>1989-1991</strong>: Tim Berners-Lee crea la <strong>World Wide Web</strong> en el CERN (HTML, HTTP y URL).</li>
+          <li><strong>Hoy</strong>: ninguna organización controla Internet en su conjunto; es un conglomerado de redes públicas y privadas, cada una con su responsable.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Organismos de gestión y estandarización</h3><small>Manual 2 y 10</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>IANA</strong> (Internet Assigned Numbers Authority): coordina la <strong>raíz del DNS</strong>, las <strong>direcciones IP</strong> y los números de protocolo y de <strong>puerto</strong>.</li>
+          <li><strong>ICANN</strong>: corporación sin ánimo de lucro que coordina el sistema de <strong>nombres y números</strong> únicos (dominios de primer nivel, registradores) y supervisa las funciones de la IANA.</li>
+          <li><strong>IETF</strong> (Internet Engineering Task Force): comunidad abierta que elabora los <strong>estándares técnicos</strong> (los RFC: TCP/IP, HTTP, SMTP…).</li>
+          <li><strong>W3C</strong> (World Wide Web Consortium): estándares de la <strong>Web</strong> (HTML, CSS, XML, accesibilidad); fundado en <strong>1994</strong> en el <strong>MIT</strong>.</li>
+          <li><strong>ISOC</strong> (Internet Society): sin ánimo de lucro; promueve el uso y desarrollo de Internet y acoge al IETF.</li>
+          <li>En España, <strong>Red.es</strong> gestiona el dominio <strong>.es</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Cómo funciona</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>El protocolo TCP/IP</h3><small>Manual 3.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>TCP/IP permite comunicar ordenadores de <strong>cualquier tipo y sistema operativo</strong>: todos «hablan el mismo idioma».</li>
+          <li>Son <strong>dos protocolos</strong>:
+            <ul>
+              <li><strong>TCP</strong> (Transmission Control Protocol): controla el <strong>transporte</strong>; trocea, numera, ordena, confirma y reenvía lo perdido. Es <strong>orientado a conexión y fiable</strong>;</li>
+              <li><strong>UDP</strong>: también de transporte, pero sin conexión ni confirmación; más rápido (streaming, DNS, voz);</li>
+              <li><strong>IP</strong> (Internet Protocol): <strong>direccionamiento y encaminamiento</strong>; busca el camino de cada paquete.</li>
+            </ul>
+          </li>
+          <li><strong>Capas del modelo TCP/IP</strong>:
+            <ol>
+              <li>acceso a la red (Ethernet, wifi);</li>
+              <li>Internet (IP, ICMP);</li>
+              <li>transporte (TCP, UDP);</li>
+              <li>aplicación (HTTP, SMTP, DNS, FTP…).</li>
+            </ol>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Cómo se transmite la información</h3><small>Manual 3.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ol>
+          <li>Los dos equipos están conectados a Internet; hay muchos caminos posibles.</li>
+          <li>El emisor pregunta al receptor si está preparado y este responde (establecimiento de la conexión).</li>
+          <li><strong>TCP del emisor</strong> divide el mensaje en <strong>paquetes</strong> y añade información de control para recomponerlo.</li>
+          <li><strong>IP del emisor</strong> mete cada paquete en un «sobre» con las direcciones de destino y origen; cada uno puede ir por un <strong>camino distinto</strong>.</li>
+          <li><strong>IP del receptor</strong> comprueba que son para él y abre los sobres.</li>
+          <li><strong>TCP del receptor</strong> ordena los paquetes y recompone el mensaje.</li>
+          <li>TCP del receptor confirma que todo ha llegado bien; si falta algo, se pide de nuevo.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Comandos de red</h3><small>Manual 3.1 e ideas clave</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>ipconfig</strong> (Windows; en Linux, ip o ifconfig): muestra la configuración de red (IP, máscara, puerta de enlace). <code>ipconfig /all</code> da el detalle; <code>/release</code> y <code>/renew</code> renuevan la IP de DHCP; <code>/flushdns</code> vacía la caché DNS.</li>
+          <li><strong>ping</strong>: comprueba la <strong>conectividad</strong> con otro equipo enviando paquetes <strong>ICMP</strong> (eco); admite IP o nombre.</li>
+          <li><strong>tracert</strong> (Windows) o <strong>traceroute</strong> (Unix/Linux): muestra la <strong>ruta</strong> y los routers por los que pasa un paquete.</li>
+          <li><strong>netstat</strong>: conexiones activas, <strong>puertos</strong> abiertos, tablas de enrutamiento y estadísticas.</li>
+          <li><strong>nslookup</strong>: consulta al <strong>DNS</strong> la IP de un nombre (o el nombre de una IP).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Direcciones IP</h3><small>Manual 3.3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Cada dispositivo tiene una <strong>dirección IP única</strong> en su red. Conviven <strong>IPv4</strong> e <strong>IPv6</strong>.</li>
+          <li><strong>IPv4</strong>: <strong>32 bits</strong>; cuatro números decimales de <strong>0 a 255</strong> separados por puntos (192.203.3.1); 2<sup>32</sup> = 4.294.967.296 direcciones.</li>
+          <li><strong>IPv6</strong>: <strong>128 bits</strong>; ocho grupos de cuatro dígitos <strong>hexadecimales</strong> separados por dos puntos; 2<sup>128</sup> ≈ 340 sextillones. Se pueden omitir ceros a la izquierda y abreviar una serie de grupos a cero con <code>::</code>.</li>
+          <li><strong>Privadas y públicas</strong>:
+            <ul>
+              <li><strong>privada</strong>: dentro de la red local (10.x.x.x, 172.16-31.x.x, 192.168.x.x);</li>
+              <li><strong>pública</strong>: visible en Internet;</li>
+              <li>el <strong>router</strong> traduce entre ambas con <strong>NAT</strong> (Network Address Translation).</li>
+            </ul>
+          </li>
+          <li><strong>Estática</strong> (fija, configurada a mano) o <strong>dinámica</strong> (temporal, asignada por <strong>DHCP</strong>).</li>
+          <li><span class="upd">2026</span> Más del 50 % de los accesos a Google ya son por IPv6.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Nombres de dominio y DNS</h3><small>Manual 3.4 y 5.5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Nombre de dominio</strong>: forma fácil de recordar para identificar un equipo (sun1.multimedia.anaya.es en lugar de 194.143.192.1). Se lee de derecha a izquierda: <strong>extensión</strong> (dominio de primer nivel) → dominio → subdominios → equipo.</li>
+          <li><strong>Reglas</strong>: al menos <strong>dos bloques</strong> separados por punto (adams.es); hasta <strong>255</strong> caracteres en total y <strong>63</strong> por bloque.</li>
+          <li><strong>Dominios de primer nivel</strong>:
+            <ul>
+              <li><strong>geográficos</strong> (ccTLD, de dos letras): es España, fr Francia, de Alemania, uk Reino Unido, nl Países Bajos, ch Suiza, at Austria, dk Dinamarca, se Suecia, jp Japón, tv Tuvalu…;</li>
+              <li><strong>genéricos</strong>: .com comercial, .net redes, .org organizaciones, .info información, .biz empresas, .int organismos internacionales, .edu educación (EE. UU.), .gov gobierno de EE. UU., .mil ejército de EE. UU., .aero, .coop, .jobs, .mobi, .asia.</li>
+            </ul>
+          </li>
+          <li><strong>DNS</strong> (Domain Name System): traduce <strong>nombres en direcciones IP</strong> (y al revés). Es un sistema <strong>distribuido y jerárquico</strong>: ningún servidor lo sabe todo; si el nuestro no conoce el nombre, pregunta a otros (raíz → extensión → dominio).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Formas de conexión y proveedores</h3><small>Manual 3.5 y 3.6</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Cable</strong> (cable módem): red coaxial de la televisión por cable.</li>
+          <li><strong>DSL</strong> (ADSL, VDSL): línea telefónica de cobre; la velocidad baja con la distancia a la central.</li>
+          <li><strong>Fibra óptica</strong> (FTTH): la más rápida; en expansión.</li>
+          <li><strong>Satélite</strong>: zonas rurales o remotas; latencia más alta (menor con las constelaciones de órbita baja).</li>
+          <li><strong>Redes móviles</strong> 4G y 5G: para usuarios en movimiento.</li>
+          <li><strong>ISP o PSI</strong> (proveedor de servicios de Internet): la empresa que da el acceso, como Movistar, Vodafone, Orange o Jazztel.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Modelo cliente/servidor</h3><small>Manual 4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Cliente</strong>: programa que ejecuta el usuario en su equipo; contacta con el remoto, <strong>solicita</strong> el servicio y recibe los datos (por ejemplo, el navegador).</li>
+          <li><strong>Servidor</strong>: se ejecuta en el equipo remoto y <strong>proporciona</strong> la información pedida, sin atender directamente al usuario (por ejemplo, un servidor web).</li>
+          <li>Todas las aplicaciones de Internet usan este modelo. Su principal <strong>ventaja</strong>: un servidor atiende a <strong>muchos clientes a la vez</strong>.</li>
+          <li>Alternativa: las redes <strong>P2P</strong>, donde cada equipo es a la vez cliente y servidor.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Servicios de Internet</h3>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Servicio web: HTTP y HTTPS</h3><small>Manual 5.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>HTTP</strong>: servicio web <strong>sin cifrar</strong> (puerto 80). <strong>HTTPS</strong>: <strong>cifrado</strong> con <strong>SSL o TLS</strong> (puerto 443); el navegador muestra un <strong>candado</strong>.</li>
+          <li>Su ventaja: cualquier usuario, incluso novato, navega de forma intuitiva.</li>
+          <li><strong>Funcionamiento</strong>: el navegador (cliente) recoge la petición del usuario y la envía; el servidor la procesa y devuelve la respuesta (normalmente <strong>HTML</strong>, más CSS y JavaScript que el navegador interpreta).</li>
+          <li><strong>Términos</strong>:
+            <ul>
+              <li><strong>hipertexto e hipervínculos</strong>; <strong>hipermedia</strong> = hipertexto + multimedia;</li>
+              <li><strong>banner</strong> (publicidad), <strong>frame</strong> (subventana), <strong>pop-up</strong> (ventana emergente);</li>
+              <li><strong>descarga</strong> (download) y <strong>cookies</strong> (pequeños archivos de texto en el equipo del usuario con datos de navegación; las no técnicas necesitan su consentimiento).</li>
+            </ul>
+          </li>
+          <li><strong>W3C</strong>: estándares HTML, XML (almacenar e intercambiar datos), CSS (estilos).</li>
+          <li><strong>SEO</strong> (Search Engine Optimization): mejorar la posición de una web en los buscadores. <strong>Diseño responsive</strong>: una sola web que se adapta a cualquier pantalla.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>La URL</h3><small>Manual 5.1.4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>URL</strong> (Uniform Resource Locator): dirección única de un recurso en Internet.</li>
+          <li><strong>Partes</strong>:
+            <ol>
+              <li><strong>protocolo</strong> (https://, ftp://);</li>
+              <li><strong>servidor</strong>: nombre de dominio o dirección IP (y, opcionalmente, <strong>:puerto</strong>);</li>
+              <li><strong>ruta</strong> o camino hasta el documento (/documentos/miscelanea/);</li>
+              <li><strong>nombre del documento</strong> (encomix.php);</li>
+              <li>opcionales: <strong>consulta</strong> (?clave=valor) y <strong>fragmento</strong> (#sección).</li>
+            </ol>
+          </li>
+          <li>Ejemplos: <code>https://www.aragoneria.com/documentos/miscelanea/encomix.php</code>, <code>https://www.abanca.com/es/</code>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Telnet, FTP, DHCP y DNS</h3><small>Manual 5.2-5.5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Telnet</strong>: acceso <strong>remoto</strong> a otro ordenador para ejecutar programas, en modo <strong>texto</strong> (CLI).
+            <ul>
+              <li>se usa cuando el programa necesita otro sistema operativo, un equipo más potente o datos que están en el remoto;</li>
+              <li>no cifra: hoy se usa <strong>SSH</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>FTP</strong> (File Transfer Protocol): <strong>transferencia de ficheros</strong> de cualquier tipo, en ambos sentidos (descargar y subir).
+            <ul>
+              <li>comando <code>ftp nombre_o_IP</code>;</li>
+              <li>clientes gráficos: CuteFTP, WS_FTP y FileZilla;</li>
+              <li>versiones seguras: <strong>SFTP</strong> y <strong>FTPS</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>DHCP</strong>: <strong>asigna automáticamente</strong> la IP (y máscara, puerta de enlace y DNS) a los equipos. En casa está en el <strong>router</strong>; en las organizaciones, en un servidor.</li>
+          <li><strong>DNS</strong>: traduce nombres a IP; distribuido (bloque 9).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Comercio electrónico</h3><small>Manual 5.6</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Los tipos se distinguen por <strong>quién compra y quién vende</strong>:
+            <ul>
+              <li><strong>B2B</strong>: entre empresas;</li>
+              <li><strong>B2C</strong>: empresa → consumidor (tiendas en línea);</li>
+              <li><strong>C2C</strong>: entre consumidores (compraventa de segunda mano);</li>
+              <li><strong>C2B</strong>: el consumidor ofrece productos o servicios a una empresa (por ejemplo, un fotógrafo a un banco de imágenes);</li>
+              <li><strong>B2A</strong>: empresas → Administración (contratación pública electrónica); <strong>A2B</strong> a la inversa, trámites de la Administración con empresas;</li>
+              <li><strong>C2A</strong>: ciudadanos ↔ Administración (pagar tasas o impuestos en línea).</li>
+            </ul>
+          </li>
+          <li><strong>CAPTCHA</strong>: prueba para distinguir a un humano de un robot y frenar el spam y el descifrado de contraseñas.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Navegadores, buscadores y estado actual</h3>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Navegadores y sus funciones</h3><small>Manual 5.1.1 y 6</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Navegadores</strong> (exploradores o browsers):
+            <ul>
+              <li><strong>Edge</strong> (Microsoft; el de Windows 10 y 11, sucesor de Internet Explorer);</li>
+              <li><strong>Chrome</strong> (Google; propietario y el más usado);</li>
+              <li><strong>Firefox</strong> (Mozilla; libre y de código abierto);</li>
+              <li><strong>Safari</strong> (Apple; cerrado);</li>
+              <li><strong>Opera</strong> (noruego), <strong>Brave</strong> y <strong>Vivaldi</strong>;</li>
+              <li><strong>Chromium</strong>: proyecto de código abierto en el que se basan Chrome, Edge, Opera, Brave y Vivaldi.</li>
+            </ul>
+          </li>
+          <li><strong>Funciones básicas</strong>:
+            <ul>
+              <li>navegar (URL y enlaces) y mostrar páginas (HTML, CSS, JavaScript);</li>
+              <li><strong>pestañas</strong>, <strong>marcadores o favoritos</strong> e <strong>historial</strong>;</li>
+              <li>barra de búsqueda y <strong>gestión de descargas</strong>;</li>
+              <li><strong>autorrelleno</strong> de formularios y contraseñas;</li>
+              <li>privacidad y seguridad: bloqueo de ventanas emergentes, detección de sitios maliciosos y gestión de <strong>cookies</strong>;</li>
+              <li><strong>zoom</strong>;</li>
+              <li><strong>navegación privada</strong> (InPrivate, incógnito): no guarda historial ni cookies al cerrar, pero <strong>no oculta</strong> la actividad al proveedor ni a la red de la empresa;</li>
+              <li><strong>extensiones</strong> y complementos.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">17</span><span class="bt"><h3>Buscadores y búsqueda avanzada</h3><small>Manual 6.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Buscador</strong> (motor de búsqueda): sitio web que devuelve páginas que contienen las <strong>palabras clave</strong> (keywords). Google, Bing, Yahoo, DuckDuckGo.</li>
+          <li><strong>Criterios</strong>:
+            <ul>
+              <li><code>"frase exacta"</code>;</li>
+              <li>varias palabras: todas, en cualquier orden (equivale a AND);</li>
+              <li><code>OR</code>: cualquiera de ellas;</li>
+              <li><code>-palabra</code>: excluir;</li>
+              <li><code>site:</code> dentro de un sitio; <code>filetype:</code> por tipo de archivo; <code>define:</code> definición; también cálculos, conversiones y traducciones.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> <strong>Operadores retirados por Google</strong>: <code>link:</code> (2017), <code>related:</code> (2023) y <code>cache:</code> (2024). Útiles hoy: <code>intitle:</code>, <code>inurl:</code>, <code>before:</code>, <code>after:</code>.</li>
+          <li><strong>Búsqueda avanzada</strong> de Google: formulario que evita memorizar los operadores.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">18</span><span class="bt"><h3>Programación web, alojamiento, IA y redes sociales</h3><small>Manual 7-9</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Requisitos de la Web</strong>: distribuida (páginas pequeñas enlazadas), hipertexto, compatible con cualquier ordenador y sistema, y dinámica (fácil de actualizar).</li>
+          <li><strong>Lenguajes</strong>:
+            <ul>
+              <li><strong>HTML</strong> (HyperText Markup Language): lenguaje de <strong>marcas</strong> que da la estructura; basta un editor de texto como el Bloc de notas;</li>
+              <li><strong>CSS</strong>: el aspecto (colores, fuentes, márgenes);</li>
+              <li><strong>JavaScript</strong>: interactividad en el navegador.</li>
+            </ul>
+          </li>
+          <li><strong>Hosting</strong> (alojamiento web): espacio en un servidor para la web, el correo y las bases de datos. Servidores web: <strong>Apache</strong>, <strong>Nginx</strong> e <strong>IIS</strong> (Microsoft).</li>
+          <li><strong>Inteligencia artificial</strong>: capacidades para que las máquinas simulen (o superen) la inteligencia humana aprendiendo patrones.
+            <ul>
+              <li>a diferencia de un buscador, que localiza palabras en páginas indexadas, la IA <strong>interpreta</strong> el contenido;</li>
+              <li>ejemplos: ChatGPT (OpenAI), Gemini (Google), Copilot (Microsoft), DeepSeek (China) y otros como Claude o Le Chat;</li>
+              <li><span class="upd">2026</span> regulada en la UE por el <strong>Reglamento 2024/1689</strong>; supervisión en España por la <strong>AESIA</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Redes sociales</strong>:
+            <ul>
+              <li><strong>horizontales</strong> (generalistas): Facebook, Instagram, TikTok, YouTube, X (antes Twitter);</li>
+              <li><strong>verticales</strong> (temáticas): LinkedIn (empleo), Tripadvisor (viajes), Tinder (citas).</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>TCP e IP</b>TCP trocea, ordena y confirma (transporte); IP direcciona y encamina.</div>
+    <div class="trap"><b>IPv4 e IPv6</b>32 bits en decimal con puntos frente a 128 bits en hexadecimal con dos puntos.</div>
+    <div class="trap"><b>256 no existe</b>Cada número de una IPv4 va de 0 a 255.</div>
+    <div class="trap"><b>DNS y DHCP</b>DNS traduce nombres a IP; DHCP asigna IP automáticamente.</div>
+    <div class="trap"><b>Pública y privada</b>192.168.x.x, 10.x.x.x y 172.16-31.x.x son privadas; el router usa NAT.</div>
+    <div class="trap"><b>HTTP y HTTPS</b>80 sin cifrar; 443 cifrado con TLS (candado).</div>
+    <div class="trap"><b>Internet y la Web</b>La Web (WWW) es solo uno de los servicios de Internet.</div>
+    <div class="trap"><b>ARPAnet</b>1969, DARPA, 4 ordenadores, rutas alternativas. MILnet se separa para lo militar.</div>
+    <div class="trap"><b>W3C e IETF</b>W3C: estándares web (HTML, CSS). IETF: protocolos de Internet (RFC).</div>
+    <div class="trap"><b>Dominios</b>Máximo 255 caracteres y 63 por bloque; mínimo dos bloques.</div>
+    <div class="trap"><b>B2A y C2A</b>Con la Administración: empresas (B2A) y ciudadanos (C2A).</div>
+    <div class="trap"><b>Navegación privada</b>No guarda el historial en el equipo, pero no te hace anónimo.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: tema 8 «La red Internet: origen, evolución y estado actual» del manual aportado por el usuario, reorganizado y completado; actualizada a noviembre de 2026 (IPv6, retirada de FTP en los navegadores y de operadores de Google, Internet Explorer, TLS y Reglamento europeo de IA).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Informática · Tema 8 · Internet · Herramientas ===== */
+const PT=[
+ ["Abrir una página web de forma cifrada, con el candado en la barra de direcciones.","https","HTTPS (puerto 443), cifrado con TLS."],
+ ["Traducir www.boe.es a su dirección IP.","dns","DNS (puerto 53)."],
+ ["Que el portátil reciba automáticamente su IP al conectarse a la wifi de la oficina.","dhcp","DHCP (puertos 67/68), normalmente en el router."],
+ ["Subir los archivos de una web al servidor de alojamiento.","ftp","FTP (puertos 20/21); hoy, mejor SFTP o FTPS."],
+ ["Administrar un servidor Linux remoto desde la línea de comandos de forma segura.","ssh","SSH (puerto 22), sustituto cifrado de Telnet."],
+ ["Ejecutar comandos en un equipo remoto en modo texto con un protocolo que no cifra.","telnet","Telnet (puerto 23)."],
+ ["Enviar un correo electrónico.","smtp","SMTP (puerto 25 entre servidores; 587 o 465 para enviar)."],
+ ["Leer el correo dejando los mensajes en el servidor.","imap","IMAP (puertos 143/993)."],
+ ["Recibir automáticamente los titulares nuevos de un periódico digital.","rss","RSS o Atom (sindicación de contenidos)."],
+ ["Compartir archivos directamente entre los equipos de los usuarios, sin servidor central.","p2p","P2P (peer to peer)."],
+ ["Que un programa de monitorización recoja datos de los routers y switches de la red.","snmp","SNMP (protocolo de gestión de red)."],
+ ["Abrir una página web sin cifrar.","http","HTTP (puerto 80)."]
+];
+const PTO={http:"HTTP",https:"HTTPS",dns:"DNS",dhcp:"DHCP",ftp:"FTP",ssh:"SSH",telnet:"Telnet",smtp:"SMTP",imap:"IMAP",rss:"RSS",p2p:"P2P",snmp:"SNMP"};
+const CM=[
+ ["Quieres saber qué IP, máscara y puerta de enlace tiene tu ordenador con Windows.","ipconfig","ipconfig (ipconfig /all para el detalle)."],
+ ["Quieres comprobar si el servidor 10.0.0.5 responde.","ping","ping 10.0.0.5 (paquetes ICMP de eco)."],
+ ["La web de la sede tarda mucho y quieres ver por qué routers pasan los paquetes.","tracert","tracert (traceroute en Linux)."],
+ ["Quieres ver qué conexiones activas y puertos abiertos tiene tu equipo.","netstat","netstat."],
+ ["Quieres saber qué IP devuelve el DNS para www.boe.es.","nslookup","nslookup www.boe.es."],
+ ["Tu equipo tiene una IP 169.254.x.x y quieres pedir una nueva al servidor DHCP.","ipconfig","ipconfig /release y /renew."],
+ ["Quieres comprobar si hay conexión con www.google.es usando su nombre.","ping","ping admite IP o nombre de host."],
+ ["Has cambiado el DNS de una web y tu equipo sigue llevándote a la IP antigua.","ipconfig","ipconfig /flushdns vacía la caché DNS."]
+];
+const CMO={ping:"ping",ipconfig:"ipconfig",tracert:"tracert",netstat:"netstat",nslookup:"nslookup"};
+const CE=[
+ ["Un fabricante vende piezas a un taller por una plataforma en línea.","b2b","B2B: entre empresas."],
+ ["Compras unas zapatillas en la tienda en línea de una marca.","b2c","B2C: empresa a consumidor."],
+ ["Vendes tu bicicleta usada a otro particular por una aplicación.","c2c","C2C: entre consumidores."],
+ ["Un fotógrafo aficionado vende sus fotos a un banco de imágenes de una empresa.","c2b","C2B: el consumidor ofrece a la empresa."],
+ ["Una empresa presenta su oferta a una licitación en la Plataforma de Contratación del Sector Público.","b2a","B2A: empresa con la Administración."],
+ ["Pagas una tasa de examen de oposición en la sede electrónica.","c2a","C2A: ciudadano con la Administración."],
+ ["Una papelería vende material de oficina a una agencia de viajes por su web de empresas.","b2b","B2B."],
+ ["Presentas la declaración de la renta por Internet.","c2a","C2A."]
+];
+const CEO={b2b:"B2B",b2c:"B2C",c2c:"C2C",c2b:"C2B",b2a:"B2A",c2a:"C2A"};
+const INS=[
+ {g:"Protocolos",n:"Puertos habituales",norm:"Asignados por la IANA",def:"Servicio y número de puerto.",f:{"Web":"HTTP 80 · HTTPS 443.","Ficheros y acceso remoto":"FTP 20/21 · SSH/SFTP 22 · Telnet 23 · Escritorio remoto 3389.","Correo":"SMTP 25 (587, 465) · POP3 110/995 · IMAP 143/993.","Red":"DNS 53 · DHCP 67/68 · SNMP 161."}},
+ {g:"Protocolos",n:"Capas TCP/IP",norm:"Modelo de 4 capas",def:"De abajo arriba.",f:{"Acceso a la red":"Ethernet, wifi.","Internet":"IP (IPv4, IPv6), ICMP (ping).","Transporte":"TCP (fiable, con conexión) y UDP (sin conexión, rápido).","Aplicación":"HTTP, HTTPS, SMTP, POP3, IMAP, FTP, DNS, DHCP, SSH, Telnet."}},
+ {g:"Organismos",n:"Gobierno de Internet",norm:"Nadie la controla entera",def:"Quién hace qué.",f:{"IANA":"Raíz del DNS, direcciones IP, números de protocolo y puertos.","ICANN":"Sistema de nombres y números; dominios de primer nivel y registradores.","IETF":"Estándares técnicos (RFC); comunidad abierta.","W3C · ISOC":"Estándares web (HTML, CSS), fundado en 1994 en el MIT · promoción de Internet."}},
+ {g:"Dominios",n:"Primer nivel",norm:"TLD",def:"Geográficos y genéricos.",f:{"Geográficos":".es España, .fr Francia, .de Alemania, .uk Reino Unido, .nl Países Bajos, .ch Suiza, .tv Tuvalu.","Genéricos":".com, .net, .org, .info, .biz, .int, .aero, .coop, .jobs, .mobi, .asia.","De EE. UU.":".gov gobierno, .edu educación, .mil ejército. En España: .gob.es, .edu.es.","Límites":"255 caracteres en total, 63 por bloque, mínimo dos bloques."}},
+ {g:"Conexión",n:"Acceso a Internet",norm:"Tecnologías",def:"Cómo llega Internet.",f:{"Cable":"Red coaxial de televisión por cable.","DSL":"Línea telefónica; la velocidad cae con la distancia.","Fibra":"La más rápida (FTTH).","Satélite y móvil":"Zonas remotas (latencia mayor) · 4G y 5G."}},
+ {g:"Web",n:"Navegadores",norm:"Clientes web",def:"Los del manual y más.",f:{"Edge":"Microsoft; Windows 10 y 11; sucesor de Internet Explorer (retirado en 2022).","Chrome · Chromium":"Google, el más usado · proyecto abierto base de Chrome, Edge, Opera, Brave y Vivaldi.","Firefox":"Mozilla, libre y de código abierto.","Safari · Opera":"Apple · empresa noruega."}},
+ {g:"Web",n:"Lenguajes y servidores",norm:"Programación web",def:"Qué hace cada uno.",f:{"HTML":"Estructura (lenguaje de marcas).","CSS":"Aspecto y diseño.","JavaScript":"Interactividad en el navegador.","Servidores web":"Apache, Nginx, IIS. Alojamiento = hosting."}},
+ {g:"Actualidad",n:"IA y redes sociales",norm:"Estado actual",def:"Lo más reciente del tema.",f:{"IA":"ChatGPT, Gemini, Copilot, DeepSeek… Interpretan el contenido, no solo buscan palabras.","Regulación":"Reglamento (UE) 2024/1689, aplicación por fases; AESIA en España.","Redes horizontales":"Facebook, Instagram, TikTok, YouTube, X.","Redes verticales":"LinkedIn (empleo), Tripadvisor (viajes), Tinder (citas)."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const $=id=>document.getElementById(id);
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const V=(id,ok,big,txt)=>{const o=$(id);o.className="verdict "+(ok?"ok":"ko");o.innerHTML=`<b class="big">${big}</b>${txt}`};
+  const K=(id,rows)=>{$(id).innerHTML=rows.map(r=>`<div${r[2]?' style="grid-column:1/-1"':""}><b>${e(r[0])}</b><span${r[3]?' style="font-family:ui-monospace,Consolas,monospace;word-break:break-all"':""}>${e(r[1])}</span></div>`).join("")};
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${e(OPTS[k])}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+e(OPTS[c[1]])}</b>${e(c[2])}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("pt",PT,PTO,"Caso");
+  trainer("cm",CM,CMO,"Caso");
+  trainer("ce",CE,CEO,"Caso");
+  /* IP */
+  const v6exp=s=>{s=s.trim().toLowerCase();if(!/^[0-9a-f:]+$/.test(s)||s.split("::").length>2)return null;let [a,b]=s.includes("::")?s.split("::"):[s,null];const A=a?a.split(":"):[],Bp=b!==null?(b?b.split(":"):[]):[];if(b===null&&A.length!==8)return null;const miss=8-A.length-Bp.length;if(b!==null&&miss<1)return null;const g=[...A,...(b!==null?Array(miss).fill("0"):[]),...Bp];if(g.length!==8||g.some(x=>!/^[0-9a-f]{1,4}$/.test(x)))return null;return g.map(x=>parseInt(x,16))};
+  const v6comp=g=>{let best=[-1,0],cur=[-1,0];g.forEach((x,i)=>{if(x===0){if(cur[0]<0)cur=[i,1];else cur[1]++;if(cur[1]>best[1])best=[...cur]}else cur=[-1,0]});const h=g.map(x=>x.toString(16));if(best[1]<2)return h.join(":");const L=h.slice(0,best[0]).join(":"),R=h.slice(best[0]+best[1]).join(":");return L+"::"+R};
+  (function(){if(!$("ip-x"))return;$("ip-p").addEventListener("change",()=>{$("ip-x").value=$("ip-p").value;run()});
+    function run(){const x=$("ip-x").value.trim();
+      if(/^\d+(\.\d+){3}$/.test(x)){const o=x.split(".").map(Number);const bad=o.findIndex(n=>n>255);if(bad>=0){K("ip-k",[["Versión","IPv4 (32 bits)"],["Error",`El ${bad+1}.º número vale ${o[bad]}`]]);V("ip-v",false,"Dirección no válida","Cada uno de los cuatro números de una IPv4 va de 0 a 255 (8 bits).");return}
+        const [a,b,c]=o;let t="Pública: visible en Internet",ok=true;
+        if(a===10||(a===172&&b>=16&&b<=31)||(a===192&&b===168))t="Privada: solo dentro de la red local; el router la traduce con NAT";
+        else if(a===127)t="Bucle local (loopback): el propio equipo (localhost)";else if(a===169&&b===254)t="Enlace local automática (APIPA): el equipo no ha recibido IP del DHCP";
+        else if(a===100&&b>=64&&b<=127)t="Compartida (CGNAT): la usa el proveedor para ahorrar IPv4";else if(a===0)t="Dirección no especificada / «esta red»";else if(x==="255.255.255.255")t="Difusión (broadcast) a toda la red local";
+        else if(a>=224&&a<=239)t="Multidifusión (multicast)";else if(a>=240)t="Reservada";else if((a===192&&b===0&&c===2)||(a===198&&b===51&&c===100)||(a===203&&b===0&&c===113))t="Reservada para documentación y ejemplos";
+        const cls=a===0||a===127?"—":a<128?"A":a<192?"B":a<224?"C":a<240?"D (multicast)":"E (experimental)";
+        K("ip-k",[["Versión","IPv4 · 32 bits · 4 octetos"],["Tipo",t,1],["Clase histórica",cls],["Notación","Decimal con puntos"],["En binario",o.map(n=>n.toString(2).padStart(8,"0")).join("."),1,1]]);
+        V("ip-v",ok,"Dirección IPv4 válida",`Hay 2<sup>32</sup> = 4.294.967.296 direcciones IPv4. Las privadas (10.x, 172.16-31.x, 192.168.x) se repiten en millones de redes domésticas; para salir a Internet el router las traduce a su IP pública con NAT.`);return}
+      const g=v6exp(x);
+      if(g){const hex=g.map(n=>n.toString(16).padStart(4,"0"));let t="Unidifusión global: pública, visible en Internet";
+        if(g.every(n=>n===0))t="Dirección no especificada (::)";else if(g.slice(0,7).every(n=>n===0)&&g[7]===1)t="Bucle local (::1), equivalente a 127.0.0.1";
+        else if((g[0]&0xffc0)===0xfe80)t="Enlace local (fe80::/10): solo en el segmento de red";else if((g[0]&0xfe00)===0xfc00)t="Local única (fc00::/7): equivalente a una privada";
+        else if((g[0]&0xff00)===0xff00)t="Multidifusión (ff00::/8)";else if(g[0]===0x2001&&g[1]===0x0db8)t="Reservada para documentación (2001:db8::/32): el ejemplo del manual no existe en Internet";
+        else if((g[0]&0xe000)!==0x2000)t="Otro bloque reservado";
+        K("ip-k",[["Versión","IPv6 · 128 bits · 8 grupos"],["Tipo",t,1],["Forma completa",hex.join(":"),1,1],["Forma abreviada",v6comp(g),1,1]]);
+        V("ip-v",true,"Dirección IPv6 válida","Grupos de 4 dígitos hexadecimales separados por «:». Se pueden quitar los ceros a la izquierda y sustituir una sola serie de grupos a cero por «::». Hay 2<sup>128</sup> ≈ 3,4 × 10<sup>38</sup> direcciones.");return}
+      K("ip-k",[["Entrada",x||"(vacía)"]]);V("ip-v",false,"No es una dirección IP válida",/:/.test(x)?"Una IPv6 tiene 8 grupos hexadecimales (0-9, a-f) y como mucho un «::».":"Una IPv4 son cuatro números de 0 a 255 separados por puntos.")}
+    ev(["ip-x"],run);run()})();
+  /* URL */
+  const TLD={es:"España",fr:"Francia",de:"Alemania",uk:"Reino Unido",it:"Italia",pt:"Portugal",nl:"Países Bajos",eu:"Unión Europea",com:"comercial",org:"organizaciones",net:"redes y proveedores",info:"información",edu:"educación (EE. UU.)",gov:"gobierno de EE. UU.",int:"organismos internacionales",mil:"ejército de EE. UU.",tv:"Tuvalu",biz:"empresas",cat:"lengua y cultura catalanas",gal:"lengua y cultura gallegas",eus:"lengua y cultura vascas"};
+  (function(){if(!$("ur-x"))return;$("ur-p").addEventListener("change",()=>{$("ur-x").value=$("ur-p").value;run()});
+    function run(){const x=$("ur-x").value.trim();const m=/^([a-z][a-z0-9+.-]*):\/\/(?:([^@\/?#]+)@)?([^:\/?#]+)(?::(\d+))?(\/[^?#]*)?(\?[^#]*)?(#.*)?$/i.exec(x);
+      if(!m){K("ur-k",[["Entrada",x||"(vacía)",1]]);V("ur-v",false,"URL no válida","Una URL completa empieza por el protocolo y «://», seguidos del servidor: https://www.ejemplo.es/ruta/documento.html");return}
+      const [,sch,user,host,port,path,q,frag]=m;const S=sch.toLowerCase();const DEF={http:80,https:443,ftp:21,telnet:23,ssh:22};
+      let rows=[["Protocolo",S+"://"]];
+      if(/^\d+(\.\d+){3}$/.test(host))rows.push(["Servidor (dirección IP)",host]);
+      else{const L=host.toLowerCase().split(".");const sld=L.length>2&&["gob","edu","com","org","co","nom"].includes(L[L.length-2]);const nd=sld?3:2;const dom=L.slice(-nd).join("."),sub=L.slice(0,-nd).join(".");const tld=L[L.length-1];
+        rows.push(["Servidor (nombre de dominio)",host,0,1]);if(sub)rows.push(["Subdominio / equipo",sub]);rows.push(["Dominio",dom]);rows.push(["Extensión (primer nivel)","."+tld+(TLD[tld]?` · ${TLD[tld]}`:"")+(sld?` · ${L[L.length-2]}.${tld} (segundo nivel)`:"")])}
+      if(user)rows.push(["Usuario",user]);
+      rows.push(["Puerto",port?port+(DEF[S]&&+port===DEF[S]?" (el predeterminado, se puede omitir)":""):(DEF[S]?DEF[S]+" (predeterminado, implícito)":"—")]);
+      const p=path||"/";const segs=p.split("/").filter(Boolean);const last=segs[segs.length-1]||"";const isDoc=/\.[a-z0-9]{1,5}$/i.test(last)&&!p.endsWith("/");
+      rows.push(["Ruta",isDoc?"/"+segs.slice(0,-1).join("/")+(segs.length>1?"/":""):p,0,1]);rows.push(["Documento",isDoc?last:(/^https?$/.test(S)?"(no se indica: el servidor da el documento por defecto, como index.html)":"—")]);
+      if(q)rows.push(["Consulta (parámetros)",q,1,1]);if(frag)rows.push(["Fragmento (sección)",frag]);
+      K("ur-k",rows);
+      const msg={https:[true,"HTTPS: conexión cifrada","Los datos viajan cifrados con TLS (antes SSL) y el navegador muestra el candado."],http:[false,"HTTP: conexión sin cifrar","El navegador la marca como «No seguro»: no introduzcas contraseñas ni datos personales."],ftp:[false,"FTP: los navegadores ya no lo abren","Chrome (versión 88) y Firefox (versión 90) retiraron FTP en 2021. Hace falta un cliente FTP como FileZilla, y mejor SFTP o FTPS."],telnet:[false,"Telnet: acceso remoto sin cifrar","Usuario y contraseña viajan en claro. Hoy se usa SSH (puerto 22)."]}[S]||[true,"Protocolo "+S,"Protocolo de aplicación indicado al principio de la URL."];
+      V("ur-v",msg[0],msg[1],msg[2])}
+    ev(["ur-x"],run);run()})();
+  /* TCP/IP */
+  (function(){if(!$("tc-x"))return;const R=[["Madrid","Zaragoza","Sevilla"],["Madrid","Valencia","Málaga","Sevilla"],["Madrid","Toledo","Córdoba","Sevilla"],["Madrid","Badajoz","Sevilla"]];
+    function run(){const msg=[...($("tc-x").value||"¡Hola!")],n=+$("tc-n").value,loss=$("tc-l").value==="1";const P=[];for(let i=0;i<msg.length;i+=n)P.push(msg.slice(i,i+n).join(""));const N=P.length;
+      const pk=P.map((t,i)=>{const r=R[(i*7+3)%4];return{i,t,r,at:r.length*10+((i*13)%7)}});const lostI=loss&&N>1?Math.floor(N/2):-1;
+      const arr=pk.filter(p=>p.i!==lostI).sort((a,b)=>a.at-b.at||a.i-b.i);
+      let L=[];L.push(`<div><b>1. Establecer la conexión</b> (TCP)</div><div class="l2">Madrid → Sevilla: «¿Estás preparado?» · Sevilla → Madrid: «Preparado» · Madrid: «Empiezo» (saludo en tres pasos)</div>`);
+      L.push(`<div><b>2. TCP de Madrid trocea</b> el mensaje en ${N} paquete${N>1?"s":""} numerados</div>`+pk.map(p=>`<div class="l2">Paquete ${p.i+1}/${N}: «${e(p.t)}»</div>`).join(""));
+      L.push(`<div><b>3. IP de Madrid</b> mete cada paquete en un «sobre»: origen 203.0.113.10 (Madrid), destino 198.51.100.20 (Sevilla)</div>`+pk.map(p=>`<div class="l2">Paquete ${p.i+1} → ruta ${e(p.r.join(" → "))}${p.i===lostI?" ✗ se pierde por el camino":""}</div>`).join(""));
+      L.push(`<div><b>4. IP de Sevilla</b> recibe los sobres (en otro orden) y comprueba que son para él</div><div class="l2">Orden de llegada: ${arr.map(p=>p.i+1).join(", ")}</div>`);
+      if(lostI>=0)L.push(`<div><b>5. TCP de Sevilla</b> detecta que falta el paquete ${lostI+1} y no lo confirma</div><div class="l2">Madrid no recibe la confirmación a tiempo y lo reenvía → llega por ${e(R[0].join(" → "))}</div>`);
+      L.push(`<div><b>${lostI>=0?6:5}. TCP de Sevilla</b> ordena los paquetes y recompone el mensaje</div><div class="l2">«${e(P.join(""))}»</div><div><b>${lostI>=0?7:6}. Confirmación</b>: Sevilla avisa a Madrid de que todo ha llegado bien</div>`);
+      $("tc-out").innerHTML=L.join("");
+      const desord=arr.some((p,k)=>k&&p.i<arr[k-1].i);
+      V("tc-v",true,"Mensaje entregado íntegro",`${N} paquete${N>1?"s":""}${desord?", que llegan desordenados por ir por rutas distintas":""}. IP solo encamina cada paquete; TCP numera, ordena, confirma${lostI>=0?" y reenvía el perdido":""}. Por eso TCP es un protocolo fiable.`)}
+    ev(["tc-x","tc-n","tc-l"],run);run()})();
+  /* DNS */
+  (function(){if(!$("dn-x"))return;
+    function run(){const x=$("dn-x").value.trim().toLowerCase().replace(/\.$/,""),c=$("dn-c").value==="1";const L=x.split(".");
+      const bad=!x?"Escribe un nombre de dominio.":L.length<2?"Un nombre de dominio necesita al menos dos bloques (adams.es).":x.length>255?"Supera los 255 caracteres.":L.some(l=>l.length>63)?"Algún bloque supera los 63 caracteres.":L.some(l=>!/^[a-z0-9áéíóúñü]([a-z0-9áéíóúñü-]*[a-z0-9áéíóúñü])?$/.test(l))?"Hay bloques vacíos o caracteres no válidos.":"";
+      if(bad){$("dn-out").innerHTML="";V("dn-v",false,"Nombre no válido",e(bad));return}
+      let h=0;for(const ch of x)h=(h*31+ch.charCodeAt(0))%250;const ip="203.0.113."+(h+2);const tld=L[L.length-1],dom=L.slice(-2).join(".");
+      const S=c?[["Caché del equipo",`Ya tiene ${x} → ${ip} de una consulta reciente: no pregunta a nadie.`]]:[
+        ["Caché del equipo",`No tiene ${x}: pregunta a su servidor DNS (el de la organización o del proveedor, que recibió por DHCP).`],
+        ["Servidor DNS recursivo",`Tampoco lo sabe y empieza a preguntar por la jerarquía.`],
+        ["Servidor raíz ( . )",`«No sé ${x}, pero los servidores de .${tld} sí: pregúntales a ellos».`],
+        [`Servidor de .${tld}`,`${tld==="es"?"(gestionado por Red.es) ":""}«Pregunta a los servidores autoritativos de ${dom}».`],
+        [`Servidor autoritativo de ${dom}`,`«${x} es ${ip}».`],
+        ["Respuesta",`El servidor recursivo guarda la respuesta en caché y se la da al equipo.`]];
+      $("dn-out").innerHTML=S.map((s,i)=>`<div class="l2"><b>${i+1}. ${e(s[0])}</b>: ${e(s[1])}</div>`).join("")+`<div>El navegador ya puede conectarse a ${ip} (puerto 443 si es HTTPS). Dirección de ejemplo, del bloque reservado para documentación.</div>`;
+      V("dn-v",true,`${x} → ${ip}`,c?"La caché evita repetir consultas. Si la IP cambia y tu equipo sigue usando la antigua, ipconfig /flushdns vacía la caché.":"El DNS es distribuido y jerárquico: ningún servidor lo conoce todo. La consulta se puede hacer a mano con nslookup.")}
+    ev(["dn-x","dn-c"],run);run()})();
+  /* Búsquedas */
+  (function(){if(!$("bs-x"))return;$("bs-p").addEventListener("change",()=>{$("bs-x").value=$("bs-p").value;run()});
+    const RET={related:["2023","Mostraba sitios parecidos; Google lo retiró en 2023."],link:["2017","Mostraba páginas que enlazaban a un sitio; Google lo retiró en 2017."],cache:["2024","Mostraba la copia guardada de una página; Google lo retiró en 2024 (hoy se usa el Wayback Machine)."],info:["2017","Información de una URL; retirado en 2017."]};
+    const OP={site:"limita los resultados a ese sitio o dominio",filetype:"solo archivos de ese tipo",ext:"solo archivos con esa extensión",intitle:"la palabra debe estar en el título de la página",inurl:"la palabra debe estar en la dirección",before:"publicadas antes de esa fecha",after:"publicadas después de esa fecha",define:"muestra una definición del término"};
+    function run(){const q=$("bs-x").value;const T=q.match(/"[^"]*"?|\S+/g)||[];const out=[],must=[],any=[],not=[];let bad=[],ors=0;
+      T.forEach((t,i)=>{
+        if(t[0]==='"'){if(!t.endsWith('"')||t.length<2){bad.push("Faltan comillas de cierre.");out.push([t,"comillas sin cerrar"]);return}out.push([t,"frase exacta: esas palabras, juntas y en ese orden"+(t.includes("*")?" (el * sustituye a una o varias palabras)":"")]);must.push(t);return}
+        if(t==="OR"||t==="|"){ors++;out.push([t,"alternativa: basta con una de las palabras que une"]);return}
+        if(t==="AND"){out.push([t,"innecesario: Google ya exige todas las palabras"]);return}
+        if(/^[–—]/.test(t)){bad.push(`«${t}» empieza por una raya (–), no por el guion (-): Google la toma como texto.`);out.push([t,"raya en lugar de guion: no excluye"]);return}
+        if(/^-\S/.test(t)){out.push([t,`excluye las páginas que contengan «${t.slice(1)}»`]);not.push(t.slice(1));return}
+        if(/^\+\S/.test(t)){bad.push("El operador + se retiró en 2011: usa comillas.");out.push([t,"operador + retirado"]);return}
+        if(/^~\S/.test(t)){bad.push("El operador ~ (sinónimos) se retiró en 2013.");out.push([t,"operador ~ retirado"]);return}
+        const m=/^([a-z]+):(.*)$/i.exec(t);
+        if(m){const k=m[1].toLowerCase();if(RET[k]){bad.push(`${k}: ${RET[k][1]}`);out.push([t,`operador retirado (${RET[k][0]})`]);return}if(OP[k]){out.push([t,`${k}: ${OP[k]}${m[2]?` (${m[2]})`:""}`]);return}}
+        if(/^\d+\.\.\d+$/.test(t)){out.push([t,"intervalo de números"]);return}
+        const alt=T[i+1]==="OR"||T[i-1]==="OR"||T[i+1]==="|"||T[i-1]==="|";out.push([t,alt?"palabra unida por OR: basta con esta o con la otra":"palabra: debe aparecer (en cualquier orden)"]);(alt?any:must).push(t)});
+      $("bs-out").innerHTML=out.map(o=>`<div class="l2"><b>${e(o[0])}</b> → ${e(o[1])}</div>`).join("")||"<div>Escribe una búsqueda.</div>";
+      if(bad.length)V("bs-v",false,"Esta búsqueda no hará lo que esperas",e(bad.join(" ")));
+      else V("bs-v",true,"Búsqueda correcta",e(`Google buscará páginas ${ors?"con alguna de las palabras unidas por OR":"con todos los términos"}${not.length?` y sin ${not.join(", ")}`:""}. También puedes usar el formulario de Búsqueda avanzada, sin memorizar operadores.`))}
+    ev(["bs-x"],run);run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Internet.",r:"La red de ordenadores más grande del mundo: un conjunto de redes interconectadas a escala mundial."},
+ {p:"Qué pasa al conectarse a Internet.",r:"El equipo se añade a la red y la amplía."},
+ {p:"Autopista de la información.",r:"Concepto en el que se basa Internet, más amplio, que agrupa el acceso a varias redes."},
+ {p:"Internet y la World Wide Web.",r:"La Web es uno de los servicios de Internet: páginas enlazadas con hipervínculos y servidas por HTTP."},
+ {p:"Tipo de red que es Internet por su alcance.",r:"GAN (Global Area Network): red mundial."},
+ {p:"Ámbito de Internet.",r:"Público: admite cualquier tipo de usuario."},
+ {p:"Protocolo de Internet.",r:"TCP/IP."},
+ {p:"Servicio SMTP/POP3.",r:"Correo electrónico."},
+ {p:"Servicio FTP.",r:"Transferencia de ficheros entre ordenadores."},
+ {p:"Servicio Telnet.",r:"Acceso remoto a otro ordenador en modo texto."},
+ {p:"Servicio RSS/Atom.",r:"Sindicación de contenidos (no listas de distribución, como dice una fila del manual)."},
+ {p:"Servicio P2P.",r:"Intercambio de archivos entre iguales, sin servidor central."},
+ {p:"Servicio SNMP.",r:"Gestión y recopilación de datos de los dispositivos de la red."},
+ {p:"Servicio DHCP.",r:"Asignación dinámica de direcciones IP."},
+ {p:"Escritorio remoto.",r:"Conexión a otro ordenador en entorno gráfico."},
+ {p:"Embrión de Internet.",r:"ARPAnet, creada en 1969 por la DARPA (Departamento de Defensa de EE. UU.)."},
+ {p:"Objetivo de ARPAnet.",r:"Un sistema de comunicaciones que funcionase aunque hubiera un ataque."},
+ {p:"Ordenadores de la primera ARPAnet.",r:"Cuatro."},
+ {p:"Clave del diseño de ARPAnet.",r:"Rutas alternativas: la información viaja por cualquier camino disponible."},
+ {p:"Universidades conectadas en 1972.",r:"Cincuenta."},
+ {p:"MILnet.",r:"Red separada de ARPAnet para uso exclusivamente militar."},
+ {p:"NSFnet.",r:"Red de la National Science Foundation (años ochenta) que enlazaba superordenadores y sustituyó a ARPAnet como soporte."},
+ {p:"Redes que formaron Internet según el manual.",r:"ARPAnet, MILnet, NASA Science Internet y NSFnet."},
+ {p:"Creador de la World Wide Web.",r:"Tim Berners-Lee, en el CERN (1989-1991)."},
+ {p:"¿Quién controla Internet?",r:"Nadie en su conjunto: es un conglomerado de redes públicas y privadas con responsables propios."},
+ {p:"IANA.",r:"Coordina la raíz del DNS, las direcciones IP y los números de protocolo y puerto."},
+ {p:"ICANN.",r:"Coordina el sistema de nombres y números únicos de Internet (dominios, registradores)."},
+ {p:"IETF.",r:"Comunidad abierta que elabora los estándares técnicos de Internet (RFC)."},
+ {p:"W3C.",r:"Consorcio que desarrolla los estándares de la Web (HTML, CSS, XML)."},
+ {p:"Fundación del W3C.",r:"1994, en el MIT (Cambridge, Massachusetts)."},
+ {p:"ISOC.",r:"Internet Society: organización sin ánimo de lucro que promueve el uso y desarrollo de Internet."},
+ {p:"Quién gestiona el dominio .es.",r:"Red.es."},
+ {p:"Por qué se entienden ordenadores distintos en Internet.",r:"Porque todos usan el mismo protocolo: TCP/IP."},
+ {p:"TCP.",r:"Transmission Control Protocol: controla el transporte; trocea, ordena, confirma y reenvía."},
+ {p:"IP.",r:"Internet Protocol: direcciona y busca el camino de cada paquete."},
+ {p:"UDP.",r:"Protocolo de transporte sin conexión ni confirmación; más rápido y menos fiable que TCP."},
+ {p:"Capas del modelo TCP/IP.",r:"Acceso a la red, Internet, transporte y aplicación."},
+ {p:"Qué hace TCP del emisor.",r:"Divide el mensaje en paquetes con información de control para recomponerlo."},
+ {p:"Qué hace IP del emisor.",r:"Mete cada paquete en un «sobre» con las direcciones de destino y origen."},
+ {p:"¿Viajan todos los paquetes por el mismo camino?",r:"No: cada uno puede ir por una ruta distinta y llegar desordenado."},
+ {p:"Qué hace TCP del receptor.",r:"Ordena los paquetes, recompone el mensaje y confirma la recepción."},
+ {p:"ipconfig.",r:"Muestra la configuración de red de un equipo Windows (IP, máscara, puerta de enlace)."},
+ {p:"ping.",r:"Comprueba la conectividad con otro equipo mediante paquetes ICMP."},
+ {p:"tracert / traceroute.",r:"Muestra la ruta (los routers) que sigue un paquete hasta su destino."},
+ {p:"netstat.",r:"Muestra conexiones activas, puertos abiertos y estadísticas de red."},
+ {p:"nslookup.",r:"Consulta al DNS la IP de un nombre (o el nombre de una IP)."},
+ {p:"ipconfig /flushdns.",r:"Vacía la caché DNS del equipo."},
+ {p:"ipconfig /release y /renew.",r:"Liberan y piden de nuevo la IP al servidor DHCP."},
+ {p:"Dirección IP.",r:"Etiqueta numérica única que identifica a cada dispositivo en una red."},
+ {p:"Tamaño de una dirección IPv4.",r:"32 bits."},
+ {p:"Formato de una IPv4.",r:"Cuatro números decimales de 0 a 255 separados por puntos (192.203.3.1)."},
+ {p:"Número de direcciones IPv4.",r:"2³² = 4.294.967.296."},
+ {p:"Tamaño de una dirección IPv6.",r:"128 bits."},
+ {p:"Formato de una IPv6.",r:"Ocho grupos de cuatro dígitos hexadecimales separados por dos puntos."},
+ {p:"Número de direcciones IPv6.",r:"2¹²⁸ ≈ 340 sextillones."},
+ {p:"Abreviar una IPv6.",r:"Quitar los ceros a la izquierda y sustituir una serie de grupos a cero por «::» (una sola vez)."},
+ {p:"IP privada.",r:"Válida solo dentro de la red local: 10.x.x.x, 172.16-31.x.x, 192.168.x.x."},
+ {p:"IP pública.",r:"Visible en Internet."},
+ {p:"NAT.",r:"Network Address Translation: el router traduce entre las IP privadas y la pública."},
+ {p:"IP estática.",r:"Permanente; no cambia."},
+ {p:"IP dinámica.",r:"Asignada temporalmente, normalmente por DHCP; puede cambiar."},
+ {p:"127.0.0.1.",r:"Bucle local (localhost): el propio equipo. En IPv6, ::1."},
+ {p:"169.254.x.x.",r:"Dirección automática (APIPA): el equipo no ha recibido IP del DHCP."},
+ {p:"Clases históricas de IPv4.",r:"A (1-126), B (128-191), C (192-223), D multicast (224-239), E experimental (240-255)."},
+ {p:"Adopción de IPv6 en 2026.",r:"El acceso a Google por IPv6 superó el 50 % el 28-3-2026."},
+ {p:"Nombre de dominio.",r:"Forma fácil de recordar para identificar un equipo, en lugar de su IP."},
+ {p:"Cómo se lee un nombre de dominio.",r:"De derecha a izquierda: extensión, dominio, subdominios, equipo."},
+ {p:"Longitud máxima de un nombre de dominio.",r:"255 caracteres en total y 63 por bloque."},
+ {p:"Mínimo de bloques de un nombre de dominio.",r:"Dos, separados por un punto (adams.es)."},
+ {p:"Dominio .es.",r:"España."},
+ {p:"Dominio .uk.",r:"Reino Unido."},
+ {p:"Dominio .nl.",r:"Países Bajos."},
+ {p:"Dominio .ch.",r:"Suiza."},
+ {p:"Dominio .de.",r:"Alemania."},
+ {p:"Dominio .tv.",r:"Tuvalu."},
+ {p:"Dominio .com.",r:"Uso comercial."},
+ {p:"Dominio .net.",r:"Redes y proveedores de Internet."},
+ {p:"Dominio .org.",r:"Organizaciones y asociaciones."},
+ {p:"Dominio .int.",r:"Organismos internacionales."},
+ {p:"Dominios .gov, .edu y .mil.",r:"Gobierno, educación y ejército de EE. UU. En España, .gob.es y .edu.es."},
+ {p:"Dominios .aero, .coop, .jobs, .mobi.",r:"Transporte aéreo, cooperativas, empleo y dispositivos móviles."},
+ {p:"DNS.",r:"Domain Name System: traduce nombres de dominio en direcciones IP (y al revés)."},
+ {p:"Por qué el DNS es distribuido.",r:"Ningún servidor conoce toda la información: cada uno conoce una parte y se preguntan entre sí."},
+ {p:"Orden de una resolución DNS.",r:"Caché → servidor DNS recursivo → raíz → servidor de la extensión → servidor autoritativo."},
+ {p:"Conexión por cable.",r:"Usa la red coaxial de la televisión por cable."},
+ {p:"DSL.",r:"Usa la línea telefónica; la velocidad depende de la distancia a la central."},
+ {p:"Fibra óptica.",r:"La conexión más rápida; en expansión."},
+ {p:"Internet por satélite.",r:"Para zonas rurales o remotas; latencia más alta."},
+ {p:"Redes móviles.",r:"4G y 5G, para usuarios en movimiento."},
+ {p:"ISP o PSI.",r:"Proveedor de servicios de Internet: Movistar, Vodafone, Orange, Jazztel…"},
+ {p:"Programa cliente.",r:"Lo ejecuta el usuario; solicita el servicio al servidor y recibe los datos."},
+ {p:"Programa servidor.",r:"Se ejecuta en el equipo remoto y proporciona la información solicitada."},
+ {p:"Ventaja del modelo cliente/servidor.",r:"Un servidor atiende a varios clientes a la vez."},
+ {p:"HTTP.",r:"Protocolo de las páginas web, sin cifrar (puerto 80)."},
+ {p:"HTTPS.",r:"HTTP cifrado con SSL/TLS (puerto 443); muestra un candado."},
+ {p:"SSL y TLS.",r:"Protocolos de cifrado de HTTPS; hoy se usa TLS (SSL está obsoleto)."},
+ {p:"Ventaja del servicio web.",r:"Cualquier usuario, incluso novato, navega de forma intuitiva."},
+ {p:"Navegador.",r:"Programa cliente para acceder a los servidores web (explorador o browser)."},
+ {p:"Microsoft Edge.",r:"Navegador de Microsoft, el de Windows 10 y 11; sucesor de Internet Explorer."},
+ {p:"Retirada de Internet Explorer.",r:"15 de junio de 2022."},
+ {p:"Google Chrome.",r:"Navegador propietario de Google; el más utilizado."},
+ {p:"Mozilla Firefox.",r:"Navegador libre y de código abierto."},
+ {p:"Safari.",r:"Navegador de código cerrado de Apple."},
+ {p:"Opera.",r:"Navegador de la empresa noruega Opera Software."},
+ {p:"Chromium.",r:"Proyecto de código abierto en el que se basan Chrome, Edge, Opera, Brave y Vivaldi."},
+ {p:"Hipertexto.",r:"Texto con enlaces a otros documentos."},
+ {p:"Hipermedia.",r:"Hipertexto combinado con multimedia."},
+ {p:"Banner.",r:"Publicidad incluida en una página web."},
+ {p:"Frame.",r:"Subventana dentro de una página web."},
+ {p:"Pop-up.",r:"Ventana emergente que se abre sola; los navegadores la bloquean."},
+ {p:"Cookies.",r:"Pequeños archivos de texto en el equipo del usuario con datos de navegación."},
+ {p:"XML.",r:"Lenguaje de marcado extensible para almacenar e intercambiar datos."},
+ {p:"CSS.",r:"Hojas de estilo que definen el aspecto de las páginas (colores, fuentes, márgenes)."},
+ {p:"SEO.",r:"Search Engine Optimization: acciones para mejorar la posición de una web en los buscadores."},
+ {p:"Diseño responsive.",r:"Una sola web que se adapta a pantallas de cualquier tamaño."},
+ {p:"JavaScript.",r:"Lenguaje que da interactividad y dinamismo a las páginas en el navegador."},
+ {p:"URL.",r:"Uniform Resource Locator: dirección única de un recurso en Internet."},
+ {p:"Partes de una URL.",r:"Protocolo, servidor (dominio o IP), ruta y nombre del documento (más puerto, consulta y fragmento opcionales)."},
+ {p:"Puerto predeterminado de HTTPS.",r:"443 (HTTP, 80)."},
+ {p:"Telnet.",r:"Acceso remoto en modo texto para ejecutar programas en otro equipo; no cifra."},
+ {p:"Sustituto seguro de Telnet.",r:"SSH (puerto 22)."},
+ {p:"Cuándo usar Telnet según el manual.",r:"Si el programa necesita otro sistema operativo, un equipo más potente o datos del remoto."},
+ {p:"FTP.",r:"File Transfer Protocol: transferir ficheros de cualquier tipo en ambos sentidos."},
+ {p:"Comando para conectar por FTP.",r:"ftp nombre_ordenador o ftp número_IP."},
+ {p:"Clientes FTP gráficos.",r:"CuteFTP, WS_FTP y FileZilla."},
+ {p:"FTP en los navegadores.",r:"Retirado en Chrome 88 y Firefox 90 (2021)."},
+ {p:"Versiones seguras de FTP.",r:"SFTP y FTPS."},
+ {p:"Dónde está el DHCP en una red doméstica.",r:"En el router; en las organizaciones, en un servidor."},
+ {p:"B2B.",r:"Comercio entre empresas."},
+ {p:"B2C.",r:"Comercio de empresa a consumidor."},
+ {p:"C2C.",r:"Comercio entre consumidores."},
+ {p:"C2B.",r:"El consumidor ofrece productos o servicios a una empresa."},
+ {p:"B2A.",r:"Empresas con la Administración (contratación pública electrónica)."},
+ {p:"C2A.",r:"Ciudadanos con la Administración (pago de tasas, declaraciones)."},
+ {p:"CAPTCHA.",r:"Prueba para distinguir a un humano de un robot."},
+ {p:"Funciones básicas de un navegador.",r:"Navegar, mostrar páginas, pestañas, favoritos, historial, búsqueda, descargas, autorrelleno, seguridad, zoom, navegación privada y extensiones."},
+ {p:"Navegación privada.",r:"No guarda historial ni cookies al cerrar, pero no oculta la actividad al proveedor ni a la empresa."},
+ {p:"Buscador.",r:"Sitio web que devuelve páginas con las palabras clave (keywords) indicadas."},
+ {p:"Buscadores conocidos.",r:"Google, Bing, Yahoo y DuckDuckGo."},
+ {p:"Comillas en una búsqueda.",r:"Buscan la frase exacta."},
+ {p:"OR en una búsqueda.",r:"Páginas con alguna de las palabras."},
+ {p:"Signo menos en una búsqueda.",r:"Excluye la palabra: Turismo -rural."},
+ {p:"site:",r:"Limita la búsqueda a un sitio: Becas site:www.udc.es."},
+ {p:"filetype:",r:"Busca archivos de un tipo: Pesca río filetype:ppt."},
+ {p:"Operadores retirados por Google.",r:"link: (2017), related: (2023) y cache: (2024)."},
+ {p:"Requisitos de diseño de la Web.",r:"Distribuida, hipertexto, compatible con todo tipo de equipos y sistemas, y dinámica."},
+ {p:"HTML.",r:"HyperText Markup Language: lenguaje de marcas que estructura las páginas."},
+ {p:"Programa necesario para crear una página HTML.",r:"Basta un editor de texto, como el Bloc de notas."},
+ {p:"Hosting.",r:"Alojamiento web: espacio en un servidor para la web, el correo y las bases de datos."},
+ {p:"Servidores web más conocidos.",r:"Apache, Nginx e IIS (Microsoft)."},
+ {p:"Inteligencia artificial.",r:"Capacidades para que las máquinas simulen la inteligencia humana aprendiendo patrones."},
+ {p:"Diferencia entre IA y buscador.",r:"El buscador localiza palabras en páginas indexadas; la IA interpreta el contenido."},
+ {p:"IA citadas en el manual.",r:"Gemini (Google), Copilot (Microsoft), ChatGPT (OpenAI) y DeepSeek (China)."},
+ {p:"Reglamento europeo de IA.",r:"Reglamento (UE) 2024/1689, en vigor desde el 1-8-2024 y aplicable por fases."},
+ {p:"AESIA.",r:"Agencia Española de Supervisión de la Inteligencia Artificial, con sede en A Coruña."},
+ {p:"Redes sociales horizontales.",r:"Generalistas: Facebook, Instagram, TikTok, YouTube, X."},
+ {p:"Redes sociales verticales.",r:"Temáticas: LinkedIn (empleo), Tripadvisor (viajes), Tinder (citas)."}
+]};
+
+const T1=[
+ {q:"Internet es:",o:["Un conjunto de redes interconectadas a escala mundial.","Un único servidor central.","Un programa de Microsoft.","La World Wide Web."],c:0,e:"La Web es solo un servicio."},
+ {q:"Por su alcance, Internet es una red:",o:["GAN.","LAN.","PAN.","MAN."],c:0,e:"Global Area Network."},
+ {q:"El origen de Internet es:",o:["ARPAnet.","NSFnet.","MILnet.","Ethernet."],c:0,e:"1969, DARPA."},
+ {q:"ARPAnet se creó en:",o:["1969.","1972.","1983.","1991."],c:0,e:"Con 4 ordenadores."},
+ {q:"ARPAnet la creó:",o:["La DARPA, del Departamento de Defensa de EE. UU.","El CERN.","Microsoft.","La NSF."],c:0,e:"Para resistir ataques."},
+ {q:"La primera ARPAnet tenía:",o:["Cuatro ordenadores.","Cincuenta ordenadores.","Dos ordenadores.","Mil ordenadores."],c:0,e:"En 1972, 50 universidades."},
+ {q:"La clave de la fiabilidad de ARPAnet era:",o:["Usar rutas alternativas.","Una ruta fija.","Un servidor central.","El cifrado."],c:0,e:"Cualquier camino disponible."},
+ {q:"La red separada de ARPAnet para uso militar fue:",o:["MILnet.","NSFnet.","NSI.","Usenet."],c:0,e:"Exclusivamente militar."},
+ {q:"NSFnet:",o:["Enlazaba superordenadores y sustituyó a ARPAnet como soporte.","Era la red militar.","Era una red europea.","Es la red del CERN."],c:0,e:"Años ochenta."},
+ {q:"La World Wide Web la creó:",o:["Tim Berners-Lee en el CERN.","Vinton Cerf en la DARPA.","Bill Gates.","La NSF."],c:0,e:"1989-1991."},
+ {q:"¿Quién controla Internet en su conjunto?",o:["Ninguna organización.","El Gobierno de EE. UU.","La ICANN.","La ONU."],c:0,e:"Conglomerado de redes."},
+ {q:"La IANA se encarga de:",o:["La raíz del DNS, las direcciones IP y los números de puerto.","Los estándares HTML.","Promover Internet.","Vender dominios."],c:0,e:"Recursos técnicos."},
+ {q:"Los estándares técnicos de Internet (RFC) los elabora:",o:["El IETF.","El W3C.","La ISOC.","La IANA."],c:0,e:"Comunidad abierta."},
+ {q:"Los estándares de la Web, como HTML y CSS, los desarrolla:",o:["El W3C.","El IETF.","La IANA.","La ICANN."],c:0,e:"World Wide Web Consortium."},
+ {q:"El W3C se fundó en:",o:["1994, en el MIT.","1969, en la DARPA.","1989, en el CERN.","2001, en Ginebra."],c:0,e:"Cambridge, Massachusetts."},
+ {q:"La organización sin ánimo de lucro que promueve el uso y desarrollo de Internet es:",o:["ISOC.","IANA.","W3C.","IETF."],c:0,e:"Internet Society."},
+ {q:"La ICANN:",o:["Coordina el sistema de nombres y números únicos de Internet.","Escribe el HTML.","Fabrica routers.","Es un proveedor de Internet."],c:0,e:"Dominios y registradores."},
+ {q:"El dominio .es lo gestiona:",o:["Red.es.","La ICANN directamente.","Telefónica.","El W3C."],c:0,e:"Entidad pública empresarial."},
+ {q:"Internet es una red de ámbito:",o:["Público.","Privado.","Militar.","Universitario."],c:0,e:"Cualquier usuario."},
+ {q:"Al conectarse a Internet, un ordenador:",o:["Se añade a la red y la amplía.","Se convierte en servidor raíz.","Sustituye a otro.","Se aísla."],c:0,e:"Según el manual."}
+];
+const T2=[
+ {q:"El protocolo común de Internet es:",o:["TCP/IP.","NetBEUI.","IPX/SPX.","AppleTalk."],c:0,e:"Permite que se entiendan sistemas distintos."},
+ {q:"TCP se encarga de:",o:["Controlar el transporte: trocear, ordenar y confirmar.","Encaminar los paquetes.","Traducir nombres.","Asignar IP."],c:0,e:"IP encamina."},
+ {q:"IP se encarga de:",o:["Direccionar y buscar el camino de los paquetes.","Confirmar la recepción.","Ordenar los paquetes.","Cifrar."],c:0,e:"Internet Protocol."},
+ {q:"El protocolo de transporte sin conexión y sin confirmación es:",o:["UDP.","TCP.","IP.","ICMP."],c:0,e:"Rápido, menos fiable."},
+ {q:"¿Cuál NO es una capa del modelo TCP/IP?",o:["Presentación.","Transporte.","Internet.","Aplicación."],c:0,e:"Presentación es del modelo OSI."},
+ {q:"En la transmisión, quien divide el mensaje en paquetes es:",o:["TCP del emisor.","IP del emisor.","El DNS.","El router."],c:0,e:"Con información de control."},
+ {q:"Quien pone a cada paquete las direcciones de origen y destino es:",o:["IP.","TCP.","HTTP.","DHCP."],c:0,e:"El «sobre»."},
+ {q:"Los paquetes de un mismo mensaje:",o:["Pueden viajar por caminos distintos y llegar desordenados.","Siempre van juntos.","Viajan por un circuito fijo.","Se envían de uno en uno esperando respuesta."],c:0,e:"TCP los ordena al llegar."},
+ {q:"Quien recompone el mensaje en el destino es:",o:["TCP del receptor.","IP del receptor.","El DNS.","El servidor web."],c:0,e:"Y confirma."},
+ {q:"El comando que muestra la configuración de red en Windows es:",o:["ipconfig.","ping.","netstat.","tracert."],c:0,e:"IP, máscara, puerta de enlace."},
+ {q:"ping comprueba la conectividad usando el protocolo:",o:["ICMP.","TCP.","HTTP.","FTP."],c:0,e:"Paquetes de eco."},
+ {q:"Para ver por qué routers pasa un paquete se usa:",o:["tracert.","ipconfig.","netstat.","ping."],c:0,e:"traceroute en Linux."},
+ {q:"Para ver los puertos abiertos y las conexiones activas se usa:",o:["netstat.","ipconfig.","tracert.","nslookup."],c:0,e:"Estadísticas de red."},
+ {q:"Para consultar al DNS la IP de un nombre se usa:",o:["nslookup.","netstat.","ipconfig /all.","tracert."],c:0,e:"Name server lookup."},
+ {q:"Para vaciar la caché DNS de Windows se usa:",o:["ipconfig /flushdns.","ping -t.","netstat -a.","tracert -d."],c:0,e:"Útil si cambia la IP de una web."},
+ {q:"El modelo en el que un programa solicita y otro proporciona el servicio es:",o:["Cliente/servidor.","Peer to peer.","Mainframe.","Token ring."],c:0,e:"Todas las aplicaciones de Internet."},
+ {q:"La principal ventaja del modelo cliente/servidor es:",o:["Un servidor atiende a varios clientes a la vez.","No necesita red.","El cliente hace todo el trabajo.","No requiere protocolos."],c:0,e:"Según el manual."},
+ {q:"Un navegador es un programa:",o:["Cliente.","Servidor.","De red P2P.","DHCP."],c:0,e:"Cliente web."},
+ {q:"Apache, Nginx e IIS son:",o:["Servidores web.","Navegadores.","Buscadores.","Protocolos."],c:0,e:"Alojan páginas."},
+ {q:"En una red P2P:",o:["Cada equipo es a la vez cliente y servidor.","Hay un único servidor central.","No hay intercambio de archivos.","Solo hay clientes."],c:0,e:"Entre iguales."}
+];
+const T3=[
+ {q:"Una dirección IPv4 tiene:",o:["32 bits.","64 bits.","128 bits.","16 bits."],c:0,e:"Cuatro octetos."},
+ {q:"Cada número de una IPv4 puede valer:",o:["De 0 a 255.","De 0 a 999.","De 1 a 256.","De 0 a 127."],c:0,e:"8 bits."},
+ {q:"¿Cuál es una IPv4 válida?",o:["192.203.3.1","256.10.1.1","192.168.1","10.0.0.300"],c:0,e:"Todos ≤ 255 y cuatro números."},
+ {q:"El número de direcciones IPv4 es:",o:["2³², unos 4.295 millones.","2¹²⁸.","2⁶⁴.","Ilimitado."],c:0,e:"4.294.967.296."},
+ {q:"Una dirección IPv6 tiene:",o:["128 bits.","32 bits.","64 bits.","256 bits."],c:0,e:"Ocho grupos hexadecimales."},
+ {q:"Las IPv6 se escriben en:",o:["Hexadecimal, en ocho grupos separados por dos puntos.","Decimal con puntos.","Binario.","Octal."],c:0,e:"2001:db8::1."},
+ {q:"En IPv6, «::» sirve para:",o:["Abreviar una serie de grupos a cero.","Separar el puerto.","Indicar una IP privada.","Marcar el final."],c:0,e:"Solo una vez por dirección."},
+ {q:"¿Cuál es una dirección IPv4 privada?",o:["192.168.1.20","8.8.8.8","192.203.3.1","200.10.10.10"],c:0,e:"192.168.x.x."},
+ {q:"El mecanismo del router que traduce IP privadas a la pública es:",o:["NAT.","DNS.","DHCP.","FTP."],c:0,e:"Network Address Translation."},
+ {q:"Una IP que se asigna temporalmente y puede cambiar es:",o:["Dinámica.","Estática.","Pública fija.","De bucle."],c:0,e:"Normalmente por DHCP."},
+ {q:"127.0.0.1 es:",o:["La dirección de bucle local (el propio equipo).","La IP del router.","Una IP pública.","La IP del DNS de Google."],c:0,e:"localhost; ::1 en IPv6."},
+ {q:"Un equipo con IP 169.254.x.x indica que:",o:["No ha recibido IP del servidor DHCP.","Está en Internet.","Usa IPv6.","Es un servidor web."],c:0,e:"APIPA."},
+ {q:"El protocolo que asigna automáticamente las IP es:",o:["DHCP.","DNS.","SNMP.","SMTP."],c:0,e:"En casa, el router."},
+ {q:"El servicio que traduce nombres de dominio a direcciones IP es:",o:["DNS.","DHCP.","NAT.","ARP."],c:0,e:"Domain Name System."},
+ {q:"El DNS es un sistema:",o:["Distribuido y jerárquico.","Centralizado en un servidor.","Exclusivo de cada ordenador.","Que solo funciona en redes locales."],c:0,e:"Ningún servidor lo sabe todo."},
+ {q:"Un nombre de dominio puede tener como máximo:",o:["255 caracteres, con 63 por bloque.","63 caracteres en total.","1.024 caracteres.","32 caracteres por bloque."],c:0,e:"Y al menos dos bloques."},
+ {q:"El dominio .uk corresponde a:",o:["Reino Unido.","Ucrania.","Uruguay.","Uganda."],c:0,e:"El manual dice «Gran Bretaña»."},
+ {q:"El dominio .int corresponde a:",o:["Organismos internacionales.","Internet.","Información.","Interior."],c:0,e:"Por ejemplo, la OTAN."},
+ {q:"El dominio .gov corresponde a:",o:["El gobierno de Estados Unidos.","Cualquier gobierno.","El gobierno de España.","La Unión Europea."],c:0,e:"En España, .gob.es."},
+ {q:"En 2026 el acceso a Google por IPv6:",o:["Ha superado el 50 %.","Es inferior al 5 %.","Es del 100 %.","No existe."],c:0,e:"28-3-2026."}
+];
+const T4=[
+ {q:"La conexión que usa la línea telefónica de cobre es:",o:["DSL.","Cable.","Fibra.","Satélite."],c:0,e:"La velocidad baja con la distancia."},
+ {q:"La conexión más rápida de las citadas es:",o:["Fibra óptica.","DSL.","Satélite.","Línea conmutada."],c:0,e:"FTTH."},
+ {q:"La conexión adecuada para zonas remotas sin infraestructura terrestre es:",o:["Satélite.","Fibra.","Cable coaxial.","DSL."],c:0,e:"Con más latencia."},
+ {q:"La conexión por cable usa:",o:["La red coaxial de la televisión por cable.","La línea telefónica.","Satélites.","La red eléctrica."],c:0,e:"Cable módem."},
+ {q:"Un ISP o PSI es:",o:["Un proveedor de servicios de Internet.","Un protocolo de seguridad.","Un tipo de dirección IP.","Un buscador."],c:0,e:"Movistar, Vodafone…"},
+ {q:"HTTP usa por defecto el puerto:",o:["80.","443.","21.","25."],c:0,e:"HTTPS, 443."},
+ {q:"HTTPS usa por defecto el puerto:",o:["443.","80.","8080.","22."],c:0,e:"Cifrado."},
+ {q:"HTTPS cifra los datos con:",o:["SSL o TLS.","FTP.","DNS.","DHCP."],c:0,e:"Hoy, TLS."},
+ {q:"El navegador indica una conexión HTTPS con:",o:["Un candado.","Una estrella.","Un globo.","Una bandera."],c:0,e:"Conexión segura."},
+ {q:"Telnet permite:",o:["Acceder a un ordenador remoto en modo texto.","Transferir ficheros.","Navegar por la web.","Asignar IP."],c:0,e:"No cifra."},
+ {q:"El sustituto seguro de Telnet es:",o:["SSH.","FTP.","HTTP.","SNMP."],c:0,e:"Puerto 22."},
+ {q:"FTP sirve para:",o:["Transferir ficheros entre ordenadores en ambos sentidos.","Enviar correo.","Navegar.","Traducir nombres."],c:0,e:"File Transfer Protocol."},
+ {q:"Un cliente FTP gráfico es:",o:["FileZilla.","Chrome.","Outlook.","Apache."],c:0,e:"Y CuteFTP, WS_FTP."},
+ {q:"Chrome y Firefox retiraron el soporte de FTP en:",o:["2021.","2010.","2025.","Nunca."],c:0,e:"Chrome 88, Firefox 90."},
+ {q:"En una red doméstica, el servicio DHCP suele estar en:",o:["El router.","El navegador.","El servidor DNS raíz.","El ISP remoto."],c:0,e:"En empresas, un servidor."},
+ {q:"El servicio de sindicación de contenidos es:",o:["RSS.","SNMP.","P2P.","DHCP."],c:0,e:"También Atom."},
+ {q:"SNMP sirve para:",o:["Gestionar y recoger datos de los dispositivos de la red.","Enviar correo.","Transferir ficheros.","Navegar de forma segura."],c:0,e:"Monitorización."},
+ {q:"El intercambio de archivos entre iguales se llama:",o:["P2P.","FTP.","HTTP.","RSS."],c:0,e:"Peer to peer."},
+ {q:"Conectarse a otro ordenador en entorno gráfico es:",o:["Escritorio remoto.","Telnet.","FTP.","Ping."],c:0,e:"Puerto 3389 en Windows."},
+ {q:"El correo electrónico usa los protocolos:",o:["SMTP y POP3 (o IMAP).","HTTP y FTP.","DNS y DHCP.","Telnet y SSH."],c:0,e:"SMTP envía."}
+];
+const T5=[
+ {q:"La URL es:",o:["La dirección única de un recurso en Internet.","Un protocolo de cifrado.","Un tipo de dominio.","Un navegador."],c:0,e:"Uniform Resource Locator."},
+ {q:"¿Cuál es el orden correcto de las partes de una URL?",o:["Protocolo, servidor, ruta, documento.","Servidor, protocolo, documento, ruta.","Documento, ruta, servidor, protocolo.","Ruta, protocolo, servidor, documento."],c:0,e:"https://servidor/ruta/doc."},
+ {q:"En https://www.aragoneria.com/documentos/miscelanea/encomix.php, el documento es:",o:["encomix.php","documentos","www.aragoneria.com","https"],c:0,e:"La ruta es /documentos/miscelanea/."},
+ {q:"En la misma URL, «/documentos/miscelanea/» es:",o:["La ruta.","El dominio.","El protocolo.","El puerto."],c:0,e:"Camino al documento."},
+ {q:"Hipermedia es:",o:["La combinación de hipertexto y multimedia.","Un navegador.","Un tipo de banner.","Una red social."],c:0,e:"Según el manual."},
+ {q:"Un banner es:",o:["Publicidad incluida en una página web.","Una subventana.","Una ventana emergente.","Un tipo de cookie."],c:0,e:"Frame: subventana."},
+ {q:"Un frame es:",o:["Una subventana dentro de una página web.","Publicidad.","Un virus.","Un servidor."],c:0,e:"Marco."},
+ {q:"Un pop-up es:",o:["Una ventana emergente que se abre sola.","Un enlace.","Un archivo de texto.","Un protocolo."],c:0,e:"Los navegadores la bloquean."},
+ {q:"Las cookies son:",o:["Pequeños archivos de texto en el equipo del usuario con datos de navegación.","Programas maliciosos.","Páginas web.","Servidores."],c:0,e:"Las no técnicas requieren consentimiento."},
+ {q:"El lenguaje que da estructura a una página web es:",o:["HTML.","CSS.","JavaScript.","SQL."],c:0,e:"Lenguaje de marcas."},
+ {q:"El aspecto (colores, fuentes) de una web se define con:",o:["CSS.","HTML.","XML.","HTTP."],c:0,e:"Hojas de estilo."},
+ {q:"La interactividad en el navegador la aporta:",o:["JavaScript.","CSS.","HTML.","FTP."],c:0,e:"Lenguaje de programación."},
+ {q:"Para crear una página HTML basta con:",o:["Un editor de texto como el Bloc de notas.","Un compilador.","Un servidor de correo.","Un programa de Microsoft obligatorio."],c:0,e:"Según el manual."},
+ {q:"XML sirve para:",o:["Almacenar e intercambiar datos.","Dar estilo.","Cifrar páginas.","Asignar IP."],c:0,e:"Lenguaje de marcado extensible."},
+ {q:"SEO es:",o:["Optimizar la posición de una web en los buscadores.","Un protocolo de seguridad.","Un servidor web.","Un tipo de banner."],c:0,e:"Search Engine Optimization."},
+ {q:"Un diseño responsive:",o:["Adapta una misma web a pantallas de cualquier tamaño.","Responde al correo.","Es una web solo para móviles.","Carga más rápido siempre."],c:0,e:"Detecta el ancho de pantalla."},
+ {q:"El hosting es:",o:["El alojamiento de una web en un servidor.","Un navegador.","Un lenguaje.","Un buscador."],c:0,e:"Web, correo y bases de datos."},
+ {q:"Un servidor web de Microsoft es:",o:["IIS.","Apache.","Nginx.","Chromium."],c:0,e:"Internet Information Services."},
+ {q:"La Web debía ser, según sus diseñadores:",o:["Distribuida, hipertexto, compatible y dinámica.","Centralizada y estática.","Solo para Windows.","De pago."],c:0,e:"Requisitos de diseño."},
+ {q:"Las siglas HTML significan:",o:["HyperText Markup Language.","High Transfer Mail Language.","HyperText Mail Link.","Home Tool Markup Language."],c:0,e:"Lenguaje de marcas de hipertexto."}
+];
+const T6=[
+ {q:"El navegador de Windows 10 y 11 es:",o:["Microsoft Edge.","Internet Explorer.","Safari.","Opera."],c:0,e:"IE se retiró en 2022."},
+ {q:"Internet Explorer se retiró en:",o:["2022.","2015.","2010.","2026."],c:0,e:"15 de junio."},
+ {q:"El navegador libre y de código abierto de Mozilla es:",o:["Firefox.","Chrome.","Edge.","Safari."],c:0,e:"Libre."},
+ {q:"Safari es el navegador de:",o:["Apple.","Google.","Microsoft.","Mozilla."],c:0,e:"Código cerrado."},
+ {q:"Opera lo creó una empresa:",o:["Noruega.","Estadounidense.","China.","Española."],c:0,e:"Opera Software."},
+ {q:"Chromium es:",o:["El proyecto de código abierto en el que se basan Chrome y Edge.","Un buscador.","Un servidor web.","Un antivirus."],c:0,e:"También Opera, Brave, Vivaldi."},
+ {q:"El navegador más utilizado es:",o:["Chrome.","Opera.","Safari.","Firefox."],c:0,e:"Según el manual."},
+ {q:"La navegación privada:",o:["No guarda historial ni cookies al cerrar, pero no te hace anónimo.","Oculta tu actividad al proveedor.","Cifra todo el equipo.","Impide los virus."],c:0,e:"Trampa clásica."},
+ {q:"Los marcadores o favoritos sirven para:",o:["Guardar direcciones web para volver rápido.","Bloquear anuncios.","Borrar cookies.","Aumentar la velocidad."],c:0,e:"Función básica."},
+ {q:"El historial de navegación:",o:["Registra las páginas visitadas.","Guarda las contraseñas.","Bloquea los pop-up.","Descarga archivos."],c:0,e:"Se borra en navegación privada."},
+ {q:"Las extensiones de un navegador:",o:["Añaden funciones adicionales.","Son páginas web.","Son virus siempre.","Son protocolos."],c:0,e:"Complementos."},
+ {q:"Un buscador devuelve páginas a partir de:",o:["Palabras clave (keywords).","Direcciones IP.","Cookies.","Puertos."],c:0,e:"Google, Bing…"},
+ {q:"La búsqueda \"Turismo rural en Cuenca\" con comillas encuentra:",o:["La frase exacta.","Alguna de las palabras.","Páginas sin esas palabras.","Solo imágenes."],c:0,e:"Frase exacta."},
+ {q:"Turismo OR rural OR Cuenca encuentra páginas:",o:["Con alguna de las palabras.","Con todas.","Sin ninguna.","Con la frase exacta."],c:0,e:"Alternativas."},
+ {q:"Turismo -rural encuentra:",o:["Páginas de turismo sin la palabra rural.","Páginas con rural.","Páginas de turismo rural.","Nada."],c:0,e:"El guion excluye."},
+ {q:"Becas site:www.udc.es busca:",o:["La palabra becas dentro del sitio www.udc.es.","Sitios parecidos a udc.es.","Enlaces a udc.es.","Becas en PDF."],c:0,e:"Limita al sitio."},
+ {q:"Pesca río filetype:ppt busca:",o:["Presentaciones de PowerPoint sobre pesca en ríos.","Vídeos.","Webs de pesca.","Imágenes."],c:0,e:"Por tipo de archivo."},
+ {q:"El operador cache: de Google:",o:["Se retiró en 2024.","Funciona y muestra la copia guardada.","Busca imágenes.","Busca definiciones."],c:0,e:"Hoy, Wayback Machine."},
+ {q:"El operador related: de Google:",o:["Se retiró en 2023.","Busca la frase exacta.","Excluye palabras.","Limita a un sitio."],c:0,e:"Mostraba sitios similares."},
+ {q:"Un CAPTCHA sirve para:",o:["Distinguir a un humano de un robot.","Cifrar la conexión.","Asignar IP.","Acelerar la web."],c:0,e:"Contra spam y ataques."}
+];
+const T7=[
+ {q:"B2B es el comercio electrónico:",o:["Entre empresas.","De empresa a consumidor.","Entre consumidores.","Con la Administración."],c:0,e:"Business to Business."},
+ {q:"Comprar en la tienda en línea de una marca es:",o:["B2C.","B2B.","C2C.","C2A."],c:0,e:"Empresa a consumidor."},
+ {q:"Vender un objeto usado a otro particular por una aplicación es:",o:["C2C.","B2C.","C2B.","B2A."],c:0,e:"Entre consumidores."},
+ {q:"Un consumidor que ofrece sus servicios a una empresa es:",o:["C2B.","B2C.","B2B.","A2B."],c:0,e:"Consumer to Business."},
+ {q:"Una empresa que se presenta a una licitación pública electrónica es:",o:["B2A.","C2A.","B2C.","C2C."],c:0,e:"Business to Administration."},
+ {q:"Pagar una tasa en la sede electrónica es:",o:["C2A.","B2A.","C2C.","B2C."],c:0,e:"Ciudadano-Administración."},
+ {q:"La inteligencia artificial se diferencia de un buscador en que:",o:["Interpreta el contenido, no solo localiza palabras.","Solo funciona sin Internet.","No usa datos.","Es un navegador."],c:0,e:"Según el manual."},
+ {q:"¿Cuál de estas NO es una IA citada en el manual?",o:["Firefox.","Gemini.","Copilot.","ChatGPT."],c:0,e:"Firefox es un navegador."},
+ {q:"Gemini es la IA de:",o:["Google.","Microsoft.","OpenAI.","Apple."],c:0,e:"Copilot, de Microsoft."},
+ {q:"ChatGPT lo desarrolla:",o:["OpenAI.","Google.","Microsoft.","Meta."],c:0,e:"Según el manual."},
+ {q:"El Reglamento europeo de inteligencia artificial es el:",o:["Reglamento (UE) 2024/1689.","Reglamento (UE) 2016/679.","Real Decreto 203/2021.","Ley 39/2015."],c:0,e:"El 2016/679 es el RGPD."},
+ {q:"El Reglamento de IA entró en vigor el:",o:["1 de agosto de 2024.","25 de mayo de 2018.","1 de enero de 2026.","2 de octubre de 2016."],c:0,e:"Aplicación por fases."},
+ {q:"La agencia española que supervisa la IA es la:",o:["AESIA, con sede en A Coruña.","AEPD.","CNMC.","INCIBE."],c:0,e:"Real Decreto 729/2023."},
+ {q:"Una red social horizontal es:",o:["Generalista, como Facebook.","Temática, como LinkedIn.","Una red local.","Un foro privado."],c:0,e:"Para todo tipo de usuarios."},
+ {q:"LinkedIn es una red social:",o:["Vertical, de empleo.","Horizontal.","De citas.","De viajes."],c:0,e:"Profesional."},
+ {q:"Tripadvisor es una red social vertical de:",o:["Viajes.","Empleo.","Citas.","Vídeos."],c:0,e:"Calificación de sitios."},
+ {q:"X es el nombre actual de:",o:["Twitter.","Facebook.","TikTok.","LinkedIn."],c:0,e:"Red horizontal."},
+ {q:"Una red social que es horizontal según el manual es:",o:["YouTube.","LinkedIn.","Tinder.","Tripadvisor."],c:0,e:"Generalista."},
+ {q:"DeepSeek es una IA de origen:",o:["Chino.","Estadounidense.","Europeo.","Japonés."],c:0,e:"Según el manual."},
+ {q:"Tinder es una red social vertical de:",o:["Citas.","Empleo.","Viajes.","Noticias."],c:0,e:"Según el manual."}
+];
+const T8=[
+ {q:"Un compañero no puede navegar y su IP es 169.254.12.7. Lo más probable es que:",o:["No haya recibido IP del servidor DHCP.","Tenga una IP pública.","El DNS funcione bien.","Use IPv6."],c:0,e:"Prueba ipconfig /renew."},
+ {q:"Quieres comprobar si el servidor de la unidad (10.1.1.5) responde:",o:["ping 10.1.1.5","ipconfig 10.1.1.5","netstat 10.1.1.5","ftp 10.1.1.5"],c:0,e:"Paquetes ICMP."},
+ {q:"La web del ministerio va lenta y quieres ver en qué router se retrasa:",o:["tracert","ipconfig","nslookup","ping -a"],c:0,e:"Ruta de los paquetes."},
+ {q:"Puedes abrir la web por su IP pero no por su nombre. El problema está en:",o:["El DNS.","El DHCP.","El cable.","El navegador."],c:0,e:"Traduce nombres."},
+ {q:"Tienes que subir los archivos de la web de tu unidad al servidor de alojamiento:",o:["Un cliente FTP o, mejor, SFTP.","El navegador con ftp://.","Telnet.","El correo."],c:0,e:"Los navegadores ya no soportan FTP."},
+ {q:"Vas a introducir tus credenciales en una web y la barra muestra «No seguro»:",o:["No las introduces: la conexión es HTTP sin cifrar.","Las introduces sin problema.","Activas la navegación privada y sigues.","Recargas con F5."],c:0,e:"Hace falta HTTPS."},
+ {q:"Buscas el BOE de tu convocatoria solo en www.boe.es:",o:["convocatoria site:www.boe.es","convocatoria related:boe.es","convocatoria link:boe.es","convocatoria cache:boe.es"],c:0,e:"site: limita al sitio."},
+ {q:"Buscas presentaciones sobre administración electrónica:",o:["administración electrónica filetype:pptx","administración electrónica site:pptx","\"pptx\" administración","administración -electrónica"],c:0,e:"filetype:"},
+ {q:"Buscas «procedimiento administrativo» pero sin resultados de Wikipedia:",o:["\"procedimiento administrativo\" -site:wikipedia.org","procedimiento administrativo OR wikipedia","procedimiento administrativo related:wikipedia.org","procedimiento –wikipedia"],c:0,e:"El guion excluye (no la raya)."},
+ {q:"Un ciudadano paga una tasa por la sede electrónica. Es comercio electrónico:",o:["C2A.","B2B.","C2C.","B2C."],c:0,e:"Ciudadano-Administración."},
+ {q:"Navegas en modo privado en el ordenador del trabajo. El departamento de sistemas:",o:["Puede seguir viendo el tráfico de red.","No ve nada.","No puede bloquear webs.","Pierde el acceso a la red."],c:0,e:"Solo no se guarda en el equipo."},
+ {q:"Configuras a mano la red de una impresora para que siempre tenga la misma IP. Le das una IP:",o:["Estática.","Dinámica.","Pública.","De bucle."],c:0,e:"No cambia."},
+ {q:"En la oficina hay 50 equipos con IP 192.168.x.x y una sola IP pública. Lo permite:",o:["NAT en el router.","El DNS.","FTP.","SNMP."],c:0,e:"Traducción de direcciones."},
+ {q:"Necesitas administrar un servidor remoto en modo texto de forma segura:",o:["SSH.","Telnet.","FTP.","HTTP."],c:0,e:"Telnet no cifra."},
+ {q:"Una web desaparecida ya no se puede ver con cache: en Google. Puedes usar:",o:["El Wayback Machine (Internet Archive).","related:","link:","ipconfig."],c:0,e:"cache: se retiró en 2024."},
+ {q:"Quieres que la web de tu organismo se vea bien en móviles, tabletas y ordenadores:",o:["Un diseño responsive.","Una web distinta para cada aparato obligatoriamente.","Más banners.","Frames."],c:0,e:"Se adapta al ancho."},
+ {q:"Un usuario escribe la dirección 300.12.4.1 y no funciona porque:",o:["300 supera el máximo de 255.","Falta el protocolo.","Es una IPv6.","Es privada."],c:0,e:"Cada octeto, de 0 a 255."},
+ {q:"Has cambiado la IP del servidor web y tu equipo sigue yendo a la antigua:",o:["ipconfig /flushdns.","ping -t.","netstat -a.","tracert."],c:0,e:"Vacía la caché DNS."},
+ {q:"Un proveedor ofrece Internet en una masía aislada sin cobertura de fibra ni móvil:",o:["Satélite.","Fibra óptica.","DSL a 10 km de la central sin degradación.","Cable coaxial."],c:0,e:"Zonas remotas."},
+ {q:"Una aplicación de IA va a usarse para seleccionar personal en la Administración. La norma europea aplicable es:",o:["El Reglamento (UE) 2024/1689.","La Ley de Propiedad Intelectual.","El Reglamento eIDAS solamente.","Ninguna."],c:0,e:"Sistemas de alto riesgo."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"🕰️",name:"Historia y organismos",desc:"Qué es Internet, ARPAnet y organismos.",qs:T1},
+ {id:"t2",ic:"📦",name:"TCP/IP y cliente/servidor",desc:"Protocolos, transmisión, comandos y modelo.",qs:T2},
+ {id:"t3",ic:"🔢",name:"Direcciones IP y DNS",desc:"IPv4, IPv6, privadas, DHCP, dominios y DNS.",qs:T3},
+ {id:"t4",ic:"🔌",name:"Conexión y servicios",desc:"Tecnologías de acceso, HTTP, Telnet, FTP y otros.",qs:T4},
+ {id:"t5",ic:"🌐",name:"La Web y la programación",desc:"URL, términos web, HTML, CSS, SEO y hosting.",qs:T5},
+ {id:"t6",ic:"🧭",name:"Navegadores y buscadores",desc:"Navegadores, funciones y búsqueda avanzada.",qs:T6},
+ {id:"t7",ic:"🤖",name:"Comercio, IA y redes sociales",desc:"Tipos de comercio, IA y redes sociales.",qs:T7},
+ {id:"t8",ic:"🧠",name:"Casos prácticos",desc:"Situaciones reales en la oficina.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));const POOL=TESTS.flatMap(t=>t.qs);
+
+const B=(root,boxes)=>`<div class="sch"><div class="sch-root">${root}</div><div class="sch-cols">${boxes.map((b,i)=>`<div class="sch-box${i%2?" alt":""}"><b>${b}</b>{{${i}}}</div>`).join("")}</div></div>`;
+const ESQ=[
+ {id:"e1",title:"Ordena la historia de Internet",intro:"De más antiguo a más reciente.",type:"order",
+  items:[{t:"ARPAnet (DARPA), 4 ordenadores",why:"1969."},{t:"50 universidades conectadas",why:"1972."},{t:"Separación de MILnet",why:"Uso militar."},{t:"NSFnet sustituye a ARPAnet",why:"Años ochenta."},{t:"Nace la World Wide Web en el CERN",why:"1989-1991."},{t:"Se funda el W3C en el MIT",why:"1994."}]},
+ {id:"e2",title:"Ordena la transmisión de un mensaje",intro:"Con TCP/IP.",type:"order",
+  items:[{t:"El emisor pregunta si el receptor está preparado",why:"Establecer la conexión."},{t:"TCP del emisor divide el mensaje en paquetes",why:"Con información de control."},{t:"IP del emisor pone el sobre con origen y destino",why:"Cada uno por su camino."},{t:"IP del receptor comprueba y abre los sobres",why:"Son para él."},{t:"TCP del receptor ordena y recompone",why:"Mensaje completo."},{t:"TCP del receptor confirma la recepción",why:"Todo llegó bien."}]},
+ {id:"e3",title:"Ordena una resolución DNS",intro:"Primera visita a un sitio.",type:"order",
+  items:[{t:"Caché del equipo",why:"No lo tiene."},{t:"Servidor DNS recursivo (del ISP o la organización)",why:"Empieza a preguntar."},{t:"Servidor raíz",why:"Remite a la extensión."},{t:"Servidor de la extensión (.es)",why:"Remite al dominio."},{t:"Servidor autoritativo del dominio",why:"Da la IP."}]},
+ {id:"e4",title:"Ordena las partes de una URL",intro:"De izquierda a derecha.",type:"order",
+  items:[{t:"Protocolo (https://)",why:"Primero."},{t:"Servidor (www.aragoneria.com)",why:"Dominio o IP."},{t:"Ruta (/documentos/miscelanea/)",why:"Camino."},{t:"Documento (encomix.php)",why:"Archivo."}]},
+ {id:"e5",title:"Ordena las capas del modelo TCP/IP",intro:"De abajo arriba.",type:"order",
+  items:[{t:"Acceso a la red",why:"Ethernet, wifi."},{t:"Internet",why:"IP, ICMP."},{t:"Transporte",why:"TCP, UDP."},{t:"Aplicación",why:"HTTP, SMTP, DNS."}]},
+ {id:"e6",title:"Organismos",intro:"¿Quién hace qué?",type:"blanks",html:B("Gobierno de Internet",["Raíz del DNS, IP y puertos","Estándares técnicos (RFC)","Estándares web (HTML, CSS)","Promueve el uso de Internet"]),
+  blanks:[{o:["IANA","IETF","W3C","ISOC"],why:"Internet Assigned Numbers Authority."},{o:["IETF","W3C","IANA","ICANN"],why:"Comunidad abierta."},{o:["W3C","IETF","ISOC","IANA"],why:"Fundado en 1994."},{o:["ISOC","ICANN","W3C","IETF"],why:"Internet Society."}]},
+ {id:"e7",title:"TCP e IP",intro:"Reparto de tareas.",type:"blanks",html:B("TCP/IP",["Trocea y ordena","Encamina y direcciona","Transporte sin confirmación","Mensajes de control (ping)"]),
+  blanks:[{o:["TCP","IP","UDP","ICMP"],why:"Fiable."},{o:["IP","TCP","DNS","DHCP"],why:"El sobre."},{o:["UDP","TCP","IP","HTTP"],why:"Rápido."},{o:["ICMP","UDP","SMTP","SNMP"],why:"Eco."}]},
+ {id:"e8",title:"IPv4 e IPv6",intro:"Direcciones IP.",type:"blanks",html:B("Direcciones IP",["Bits de IPv4","Bits de IPv6","Rango de cada número IPv4","Notación de IPv6"]),
+  blanks:[{o:["32","64","128","16"],why:"Cuatro octetos."},{o:["128","64","32","256"],why:"Ocho grupos."},{o:["0 a 255","0 a 999","1 a 256","0 a 127"],why:"8 bits."},{o:["Hexadecimal con dos puntos","Decimal con puntos","Binario","Octal con guiones"],why:"2001:db8::1."}]},
+ {id:"e9",title:"Tipos de dirección",intro:"Direcciones especiales.",type:"blanks",html:B("Tipos de IP",["192.168.1.20","127.0.0.1","Traducción privada-pública","Asignación automática"]),
+  blanks:[{o:["Privada","Pública","Multicast","Bucle local"],why:"Red local."},{o:["Bucle local","Privada","Pública","Broadcast"],why:"localhost."},{o:["NAT","DNS","DHCP","ICMP"],why:"En el router."},{o:["DHCP","DNS","NAT","FTP"],why:"IP dinámica."}]},
+ {id:"e10",title:"Puertos",intro:"Servicio y puerto.",type:"blanks",html:B("Puertos",["HTTP","HTTPS","SSH","DNS"]),
+  blanks:[{o:["80","443","22","53"],why:"Sin cifrar."},{o:["443","80","21","25"],why:"Cifrado."},{o:["22","23","21","25"],why:"Telnet, 23."},{o:["53","67","80","110"],why:"DHCP, 67/68."}]},
+ {id:"e11",title:"Dominios",intro:"Primer nivel.",type:"blanks",html:B("Dominios",[".uk",".nl",".int",".gov"]),
+  blanks:[{o:["Reino Unido","Ucrania","Uruguay","Uganda"],why:"El manual dice «Gran Bretaña»."},{o:["Países Bajos","Noruega","Nepal","Nicaragua"],why:"Holanda es solo una región."},{o:["Organismos internacionales","Internet","Interior","Información"],why:".info es información."},{o:["Gobierno de EE. UU.","Cualquier gobierno","Gobierno de España","UE"],why:"España, .gob.es."}]},
+ {id:"e12",title:"Comandos de red",intro:"Diagnóstico.",type:"blanks",html:B("Comandos",["Configuración de red de Windows","Conectividad con ICMP","Ruta de los paquetes","Conexiones y puertos abiertos"]),
+  blanks:[{o:["ipconfig","ping","netstat","tracert"],why:"IP, máscara, puerta de enlace."},{o:["ping","tracert","nslookup","ipconfig"],why:"Eco."},{o:["tracert","ping","netstat","ipconfig"],why:"traceroute en Linux."},{o:["netstat","ipconfig","nslookup","tracert"],why:"Estadísticas."}]},
+ {id:"e13",title:"Búsqueda avanzada",intro:"Operadores.",type:"blanks",html:B("Búsqueda",["Frase exacta","Excluir una palabra","Limitar a un sitio","Retirado en 2024"]),
+  blanks:[{o:["Comillas","OR","-","site:"],why:"\"…\"."},{o:["- (guion)","– (raya)","OR","AND"],why:"Sin espacio."},{o:["site:","filetype:","related:","link:"],why:"Becas site:www.udc.es."},{o:["cache:","site:","filetype:","intitle:"],why:"related: en 2023, link: en 2017."}]},
+ {id:"e14",title:"Comercio electrónico",intro:"Quién compra y quién vende.",type:"blanks",html:B("Comercio electrónico",["Entre empresas","Empresa a consumidor","Entre particulares","Ciudadano con la Administración"]),
+  blanks:[{o:["B2B","B2C","C2C","C2A"],why:"Business to Business."},{o:["B2C","B2B","C2B","B2A"],why:"Tiendas en línea."},{o:["C2C","C2B","B2C","A2B"],why:"Segunda mano."},{o:["C2A","B2A","C2C","A2B"],why:"Tasas, impuestos."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("in8c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("in8c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
