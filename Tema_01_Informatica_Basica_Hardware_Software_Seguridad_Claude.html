@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque Informática · Tema 1 · Informática básica · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">IN1</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Informática básica y ofimática</small>
+      <b>Informática básica</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .of{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+    .of div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem}
+    .of div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .tr{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .tr div{padding:10px 14px;border-radius:12px;border-left:5px solid var(--a1);background:var(--card2);font-size:.92rem}
+    .tr div.l2{margin-left:18px;border-left-color:#0aa37f}
+    .tr div.l3{margin-left:36px;border-left-color:#f59e0b}
+    .tr div.no{opacity:.55;border-left-color:var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque de Informática · Tema 1 · Informática básica y ofimática</span>
+    <h1>Informática básica <span>Hardware, software, almacenamiento, sistemas operativos y seguridad</span></h1>
+    <p>Resumen de alto rendimiento del manual, actualizado a <strong>noviembre de 2026</strong>: Windows 11 26H2, macOS 27 Golden Gate, iOS 27, Android 17, prefijos ronna y quetta del SI y estándares actuales de conexión y memoria. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un conversor de unidades de almacenamiento (decimal frente a binario).</li>
+      <li>Un conversor de bases numéricas y de código ASCII.</li>
+      <li>Un simulador de copias de seguridad completa, diferencial e incremental.</li>
+      <li>Un comparador de memorias.</li>
+      <li>Entrenadores de periféricos, malware y dimensiones de la seguridad.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">16</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">154</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('un').scrollIntoView({behavior:'smooth'})">Unidades ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('bs').scrollIntoView({behavior:'smooth'})">Binario y ASCII ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('bk').scrollIntoView({behavior:'smooth'})">Copias de seguridad ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado respecto al manual</strong> (editado en abril de 2025):
+    <ul>
+      <li><span class="upd">2026</span> <strong>Sistemas operativos</strong>:
+        <ul>
+          <li><strong>Windows 11 versión 26H2</strong>, publicada el 29-9-2026. Windows 10 perdió el soporte estándar en octubre de 2025; el programa de actualizaciones extendidas (ESU) para particulares llega hasta el 12-10-2027.</li>
+          <li><strong>macOS 27 Golden Gate</strong> e <strong>iOS 27</strong>, del 14-9-2026; antes, macOS 26 Tahoe e iOS 26.</li>
+          <li><strong>Android 17</strong>, estable desde junio de 2026.</li>
+        </ul>
+        El manual cita Sequoia, iOS 18.3 y Android 15.</li>
+      <li><strong>Prefijos del SI</strong>: en 2022 la CGPM aprobó <strong>ronna (10<sup>27</sup>)</strong> y <strong>quetta (10<sup>30</sup>)</strong>. «Brontobyte», «geopbyte», «saganbyte» y «jotabyte» no son unidades oficiales.</li>
+      <li><strong>Estándares actuales</strong> que el manual no recoge: memorias DDR4 y DDR5, discos SSD NVMe por PCIe, USB4, Thunderbolt 5 y Wi-Fi 7. En las placas modernas, el northbridge está integrado en la CPU y el southbridge es el <strong>PCH</strong> (Platform Controller Hub). El puerto AGP y la impresora por LPT están obsoletos.</li>
+      <li><strong>Normativa de ciberseguridad</strong>: el <strong>Esquema Nacional de Seguridad</strong> (RD 311/2022) añade a las dimensiones del manual la <strong>trazabilidad</strong>. El anteproyecto de Ley de Coordinación y Gobernanza de la Ciberseguridad (que transpondría NIS2) no llegó a tramitarse en las Cortes.</li>
+      <li><strong>Erratas y precisiones</strong>:
+        <ul>
+          <li>El <strong>ASCII estándar usa 7 bits (128 caracteres)</strong>; los 8 bits y 256 caracteres corresponden al ASCII extendido. Hoy predomina Unicode (UTF-8).</li>
+          <li>Con prefijos del SI, 1 kB son 1.000 bytes; los 1.024 bytes son 1 <strong>KiB</strong> (prefijos binarios de la IEC). El manual mezcla ambos sistemas.</li>
+          <li>El <strong>pentesting</strong> (prueba de penetración) no es un IDS/IPS: es una auditoría que simula ataques.</li>
+          <li>El <strong>phishing</strong> y el <strong>scam</strong> son ingeniería social y fraude, no malware en sentido estricto.</li>
+          <li>Las ideas clave citan los <strong>rootkits</strong> sin definirlos: son malware que se oculta con privilegios elevados.</li>
+          <li>Erratas de imprenta: «Phillippe» Dreyfus (es Philippe) y «unidereccionales» (es unidireccionales).</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="un">
+    <div><span class="kicker">Bit, byte y múltiplos</span><h2>Conversor de unidades de almacenamiento</h2></div>
+    <p>Compara el sistema decimal (SI, el que usan los fabricantes) con el binario (IEC, el que suele mostrar el sistema operativo).</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Cantidad<input type="number" id="un-v" value="1" min="0" step="any"></label>
+      <label>Unidad<select id="un-u"></select></label>
+    </div>
+    <div class="tr" id="un-out"></div>
+    <div class="verdict" id="un-v2"></div>
+  </div>
+
+  <div class="section-title" id="bs">
+    <div><span class="kicker">Sistemas de numeración · ASCII</span><h2>Conversor binario, octal, decimal, hexadecimal y ASCII</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Valor<input type="text" id="bs-v" value="65"></label>
+      <label>Base de entrada<select id="bs-b"><option value="10">Decimal</option><option value="2">Binario</option><option value="8">Octal</option><option value="16">Hexadecimal</option><option value="c">Carácter</option></select></label>
+    </div>
+    <div class="rsv" id="bs-k"></div>
+    <div class="verdict" id="bs-out"></div>
+  </div>
+
+  <div class="section-title" id="bk">
+    <div><span class="kicker">Respaldos</span><h2>Simulador de copias de seguridad</h2></div>
+    <p>Copia completa el domingo; el resto de días, la estrategia que elijas. Indica cuántos MB cambian cada día y qué día falla el disco.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Estrategia de lunes a sábado<select id="bk-s"><option value="inc">Incremental</option><option value="dif">Diferencial</option><option value="com">Completa diaria</option></select></label>
+      <label>Tamaño total de los datos (MB)<input type="number" id="bk-t" value="10000" min="1"></label>
+      <label>MB que cambian cada día<input type="number" id="bk-c" value="500" min="0"></label>
+      <label>Día del fallo (tras la copia de ese día)<select id="bk-d"><option value="1">Lunes</option><option value="2">Martes</option><option value="3">Miércoles</option><option value="4">Jueves</option><option value="5" selected>Viernes</option><option value="6">Sábado</option></select></label>
+    </div>
+    <div class="tr" id="bk-out"></div>
+    <div class="verdict" id="bk-v"></div>
+  </div>
+
+  <div class="section-title" id="mm">
+    <div><span class="kicker">Jerarquía de memoria</span><h2>Comparador de memorias y almacenamiento</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid"><label>Memoria<select id="mm-a"></select></label><label>Comparar con<select id="mm-b"></select></label></div>
+    <div class="of" id="mm-oa"></div>
+    <div class="of" id="mm-ob"></div>
+  </div>
+
+  <div class="section-title" id="pf">
+    <div><span class="kicker">Periféricos</span><h2>¿Entrada, salida o entrada/salida?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="pf-case"></div>
+    <div class="choice" id="pf-opts"></div>
+    <div class="verdict" id="pf-out" style="display:none"></div>
+    <div class="score"><span id="pf-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="pf-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="mw">
+    <div><span class="kicker">Amenazas</span><h2>¿Qué ataque o malware es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="mw-case"></div>
+    <div class="choice" id="mw-opts"></div>
+    <div class="verdict" id="mw-out" style="display:none"></div>
+    <div class="score"><span id="mw-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="mw-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="dm">
+    <div><span class="kicker">Confidencialidad · Integridad · Disponibilidad · Autenticidad</span><h2>¿Qué dimensión de la seguridad se ve afectada?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="dm-case"></div>
+    <div class="choice" id="dm-opts"></div>
+    <div class="verdict" id="dm-out" style="display:none"></div>
+    <div class="score"><span id="dm-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="dm-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Puertos, sistemas operativos y mecanismos</span><h2>Mapa de consulta rápida</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>1962</b><span>Philippe Dreyfus acuña «informática» (información + automática)</span></div>
+    <div class="num"><b>1 bit</b><span>Unidad mínima de información (0 o 1)</span></div>
+    <div class="num"><b>8 bits = 1 byte</b><span>Unidad mínima para almacenar un carácter (octeto)</span></div>
+    <div class="num"><b>2<sup>10</sup> = 1.024</b><span>Factor binario (KiB, MiB…); el SI usa 1.000 (kB, MB…)</span></div>
+    <div class="num"><b>7 bits · 128</b><span>ASCII estándar; el extendido usa 8 bits y 256 caracteres</span></div>
+    <div class="num"><b>32 · 64 bits</b><span>Longitudes de palabra habituales (4 y 8 bytes)</span></div>
+    <div class="num"><b>3 buses</b><span>Datos (bidireccional), direcciones (unidireccional) y control</span></div>
+    <div class="num"><b>L1 · L2 · L3</b><span>Niveles de caché (SRAM): L1, el más rápido y pequeño</span></div>
+    <div class="num"><b>3 tipos de software</b><span>De sistema, de aplicación y de programación</span></div>
+    <div class="num"><b>CIA + A</b><span>Confidencialidad, integridad, disponibilidad y autenticidad (el ENS añade trazabilidad)</span></div>
+    <div class="num"><b>4 tipos de respaldo</b><span>Completo, diferencial, incremental y espejo</span></div>
+    <div class="num"><b>10<sup>27</sup> · 10<sup>30</sup> <span class="upd">2026</span></b><span>Ronna y quetta, prefijos del SI desde 2022</span></div>
+    <div class="num"><b>26H2 <span class="upd">2026</span></b><span>Versión vigente de Windows 11 (29-9-2026)</span></div>
+    <div class="num"><b>80 × 12</b><span>Tarjeta perforada clásica: columnas por filas (el manual dice «80 filas por 12 columnas»)</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El ordenador y la información</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>El tratamiento de la información</h3><small>Manual 1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Informática</strong>: término de <strong>Philippe Dreyfus (1962)</strong>, de «información» + «automática». Es el tratamiento automático de la información mediante el computador.</li>
+          <li><strong>Información y dato</strong>: la información representa ideas y hechos; un <strong>dato</strong> es una información concreta y breve.</li>
+          <li><strong>El ordenador trabaja con</strong>:
+            <ul>
+              <li><strong>datos</strong>;</li>
+              <li><strong>programas</strong>: instrucciones que dicen qué hacer con los datos.</li>
+            </ul>
+          </li>
+          <li><strong>Antes de programar</strong>:
+            <ul>
+              <li>el <strong>algoritmo</strong> describe en texto los pasos para resolver el problema;</li>
+              <li>el <strong>ordinograma</strong> (diagrama de flujo) representa esos pasos de forma gráfica.</li>
+            </ul>
+          </li>
+          <li><strong>Tres bloques del ordenador</strong>:
+            <ol>
+              <li><strong>Entrada</strong>: periféricos de entrada; aquí se produce la <strong>codificación</strong> al binario.</li>
+              <li><strong>Proceso</strong>: la CPU y la memoria principal.</li>
+              <li><strong>Salida</strong>: periféricos de salida; aquí se produce la <strong>decodificación</strong>.</li>
+            </ol>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Hardware, software y firmware</h3><small>Manual 2.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Hardware</strong>: la parte física y tangible (circuitos, teclado, pantalla…).</li>
+          <li><strong>Software</strong> (o <em>logical</em>): los programas, la parte inmaterial. Tipos especiales:
+            <ul>
+              <li><strong>freeware</strong>: gratuito;</li>
+              <li><strong>shareware</strong>: de evaluación;</li>
+              <li><strong>groupware</strong>: para el trabajo en grupo.</li>
+            </ul>
+          </li>
+          <li><strong>Firmware</strong>: el software grabado de fábrica en ROM o EEPROM, como la <strong>BIOS</strong> (Basic Input/Output System). La BIOS se encarga de:
+            <ul>
+              <li>inicializar y detectar el hardware;</li>
+              <li>guardar la configuración (fecha y hora);</li>
+              <li>cargar el sistema operativo desde el dispositivo de arranque.</li>
+            </ul>
+            En los equipos modernos la sustituye la <strong>UEFI</strong> (Interfaz de Firmware Extensible Unificada).</li>
+          <li><strong>Componentes de un sistema informático</strong>: físico, lógico y <strong>humano</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Representación de la información</h3><small>Manual 2.2 y 3.3.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Sistema binario</strong>: el ordenador es digital y representa la información en base 2.
+            <ul>
+              <li><strong>1</strong>: presencia de tensión (verdadero);</li>
+              <li><strong>0</strong>: ausencia de tensión (falso).</li>
+            </ul>
+          </li>
+          <li><strong>Bit</strong> (<em>binary digit</em>): la unidad mínima de información.</li>
+          <li><strong>Byte u octeto</strong>: 8 bits; la unidad mínima para almacenar un carácter.</li>
+          <li><strong>Códigos de caracteres</strong>:
+            <ul>
+              <li><strong>ASCII</strong>: estándar de 7 bits (128 caracteres) y extendido de 8 bits (256), que es como lo presenta el manual;</li>
+              <li><strong>Unicode</strong> (UTF-8, UTF-16): el estándar actual.</li>
+            </ul>
+          </li>
+          <li><strong>Palabra</strong>: el número de bits que el procesador maneja en una operación (32 o 64 bits).</li>
+          <li><strong>Múltiplos del byte</strong>:
+            <ul>
+              <li>kB, MB, GB, TB, PB, EB, ZB, YB y, <span class="upd">2026</span> desde 2022, RB (ronna) y QB (quetta);</li>
+              <li>con prefijo binario, cada uno es 2<sup>10</sup> veces el anterior (1 KiB = 1.024 B);</li>
+              <li>con prefijo SI, es 1.000 veces el anterior (1 kB = 1.000 B).</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Clasificación de los ordenadores</h3><small>Manual 2.3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Por tamaño</strong>:
+            <ul>
+              <li><strong>supercomputadoras</strong>: cálculo masivo, procesadores en paralelo, multiusuario;</li>
+              <li><strong>mainframes</strong>: servidores centrales con muchos usuarios simultáneos;</li>
+              <li><strong>miniordenadores</strong>: la versión a escala reducida de los mainframes;</li>
+              <li><strong>ordenadores personales</strong>, monousuario: sobremesa, portátiles, tabletas y smartphones, y <strong>wearables</strong>;</li>
+              <li><strong>nanoordenadores</strong>: microscópicos, usados sobre todo en medicina.</li>
+            </ul>
+          </li>
+          <li><strong>Por procesamiento</strong>:
+            <ul>
+              <li><strong>analógicos</strong>: trabajan con magnitudes físicas;</li>
+              <li><strong>digitales</strong>: trabajan con 0 y 1;</li>
+              <li><strong>híbridos</strong>;</li>
+              <li><strong>cuánticos</strong>: su unidad es el <strong>qubit</strong>, que permite superposición de estados.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Componentes</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>La placa base</h3><small>Manual 3.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Placa base</strong> (<em>motherboard</em> o placa madre): el circuito principal que conecta todos los componentes. Su factor de forma más común es <strong>ATX</strong>.</li>
+          <li><strong>Buses</strong>:
+            <ul>
+              <li>de <strong>datos</strong>: bidireccional;</li>
+              <li>de <strong>direcciones</strong>: unidireccional;</li>
+              <li>de <strong>control</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Ranuras de expansión</strong>: PCI, AGP (obsoleta) y <strong>PCI Express</strong>, la actual.</li>
+          <li><strong>Chipset</strong>:
+            <ul>
+              <li><strong>northbridge</strong>: comunica la CPU, la RAM y la gráfica;</li>
+              <li><strong>southbridge</strong>: gestiona la entrada/salida y los dispositivos lentos;</li>
+              <li><span class="upd">2026</span> hoy el northbridge va integrado en la CPU y el southbridge se llama <strong>PCH</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Otros elementos</strong>:
+            <ul>
+              <li>las memorias RAM y ROM;</li>
+              <li>el zócalo (socket) del microprocesador;</li>
+              <li>el disipador y el ventilador;</li>
+              <li>el <strong>VRM</strong>, que regula el voltaje;</li>
+              <li>los puertos <strong>SATA</strong>, para el almacenamiento;</li>
+              <li>el conector de alimentación;</li>
+              <li>la pila, que conserva la configuración y la hora.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>La CPU</h3><small>Manual 3.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Qué es</strong>: el «cerebro» del ordenador. Coordina el sistema y procesa las instrucciones; está integrada en un chip, el <strong>microprocesador</strong>.</li>
+          <li><strong>Partes</strong>:
+            <ul>
+              <li><strong>registros</strong>;</li>
+              <li><strong>memoria caché</strong>;</li>
+              <li><strong>unidad de control</strong>;</li>
+              <li><strong>unidad aritmético-lógica (ALU)</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Características</strong>:
+            <ul>
+              <li><strong>velocidad de reloj</strong> (MHz o GHz);</li>
+              <li><strong>núcleos</strong> e <strong>hilos</strong>;</li>
+              <li><strong>arquitectura</strong>: x86, <strong>ARM</strong> (móviles y Apple Silicon) y <strong>RISC-V</strong> (abierta);</li>
+              <li>tamaño de 32 o 64 bits;</li>
+              <li>caché L1, L2 y L3;</li>
+              <li>socket;</li>
+              <li>fabricante: Intel (el primero, con el 4004 de 1971), AMD, ARM, Qualcomm, NVIDIA…</li>
+            </ul>
+          </li>
+          <li><strong>Unidad de control</strong>: analiza las instrucciones y decide qué hacer. Sus elementos son el registro de instrucción, el contador de programa, el decodificador, el secuenciador y el reloj.</li>
+          <li><strong>ALU</strong>:
+            <ul>
+              <li>hace operaciones aritméticas y lógicas (comparaciones, desplazamientos);</li>
+              <li>sus registros son los de operandos, el acumulador y el registro de estado.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Memoria RAM</h3><small>Manual 3.3.2.A</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>RAM</strong> (Random Access Memory):
+            <ul>
+              <li>es <strong>volátil</strong> y de lectura y escritura;</li>
+              <li>guarda los programas y datos en uso;</li>
+              <li>a más RAM, mejor multitarea.</li>
+            </ul>
+          </li>
+          <li><strong>Tipos</strong>:
+            <ul>
+              <li><strong>DRAM</strong>: barata, necesita refresco;</li>
+              <li><strong>SRAM</strong>: más rápida y cara, sin refresco; se usa en las cachés;</li>
+              <li><strong>VRAM</strong>: la de las tarjetas gráficas;</li>
+              <li><strong>SDRAM</strong>: sincronizada con el reloj;</li>
+              <li><strong>SDR SDRAM</strong>: una lectura y una escritura por ciclo;</li>
+              <li><strong>DDR SDRAM</strong> (desde 2000): doble tasa de datos.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> <strong>Generaciones</strong>: DDR2, DDR3, <strong>DDR4</strong> y <strong>DDR5</strong> (la actual); en móviles y portátiles finos, LPDDR5/5X.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Memoria ROM y jerarquía de memoria</h3><small>Manual 3.3.2.B</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>ROM</strong> (Read-Only Memory):
+            <ul>
+              <li>es <strong>no volátil</strong> y de solo lectura;</li>
+              <li>guarda la BIOS/UEFI y el firmware;</li>
+              <li>tiene capacidad limitada.</li>
+            </ul>
+          </li>
+          <li><strong>Tipos de ROM</strong>:
+            <ul>
+              <li><strong>PROM</strong>: se programa una sola vez;</li>
+              <li><strong>EPROM</strong>: se borra con <strong>luz ultravioleta</strong>;</li>
+              <li><strong>EEPROM</strong>: se borra eléctricamente;</li>
+              <li><strong>Flash</strong>: una EEPROM por bloques; es la de los USB, los SSD, las tarjetas SD y la BIOS.</li>
+            </ul>
+          </li>
+          <li><strong>Jerarquía</strong> (de más rápida a más lenta):
+            <ol>
+              <li>registros;</li>
+              <li>caché (L1, L2 y L3);</li>
+              <li>RAM y ROM;</li>
+              <li>memoria virtual (en disco);</li>
+              <li>SSD;</li>
+              <li>HDD;</li>
+              <li>ópticas;</li>
+              <li>nube.</li>
+            </ol>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Periféricos y puertos</h3><small>Manual 3.4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Periférico</strong>: intercambia información entre la CPU y un soporte.
+            <ul>
+              <li>Necesita <strong>drivers</strong> (controladores).</li>
+              <li>El <strong>Plug and Play</strong> los configura automáticamente.</li>
+            </ul>
+          </li>
+          <li><strong>Clasificación</strong>:
+            <ul>
+              <li>según el sentido: de entrada, de salida y de entrada/salida;</li>
+              <li>según la distancia: locales y remotos.</li>
+            </ul>
+          </li>
+          <li><strong>Puertos de datos y conexión</strong>:
+            <ul>
+              <li><strong>USB</strong> (y USB-C);</li>
+              <li><strong>Ethernet RJ-45</strong>;</li>
+              <li><strong>Thunderbolt</strong>;</li>
+              <li>SD;</li>
+              <li>PCIe;</li>
+              <li>los antiguos PS/2 y FireWire (IEEE 1394).</li>
+            </ul>
+          </li>
+          <li><strong>Puertos de vídeo y audio</strong>:
+            <ul>
+              <li><strong>HDMI</strong>: vídeo y audio;</li>
+              <li><strong>VGA</strong>: analógico y antiguo;</li>
+              <li><strong>DisplayPort</strong>: más orientado al ordenador y a varias pantallas;</li>
+              <li>audio por minijack.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> <strong>Estándares actuales</strong>: USB4 (hasta 80 Gbps en su versión 2.0) y Thunderbolt 5 (80 Gbps, con modos de hasta 120 Gbps), ambos sobre conector USB-C.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Periféricos de entrada, salida y E/S</h3><small>Manual 3.4.1-3.4.3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>De entrada</strong>:
+            <ul>
+              <li>lectora de tarjetas o cinta perforadas;</li>
+              <li>teclado, ratón, trackball, touchpad y joystick;</li>
+              <li><strong>escáner</strong> (con OCR y el estándar TWAIN);</li>
+              <li>tableta digitalizadora, webcam y micrófono.</li>
+            </ul>
+          </li>
+          <li><strong>De salida: pantalla</strong>:
+            <ul>
+              <li>tecnologías <strong>CRT</strong> (obsoleta), <strong>LCD</strong> (TFT, IPS, TN, LED) y <strong>OLED</strong> (cada píxel emite su propia luz);</li>
+              <li>características: pulgadas, resolución (píxeles), <em>dot pitch</em> y tasa de refresco (Hz).</li>
+            </ul>
+          </li>
+          <li><strong>De salida: impresora</strong>:
+            <ul>
+              <li>de <strong>impacto</strong>, cuya velocidad se mide en <strong>CPS</strong>;</li>
+              <li>de <strong>no impacto</strong>, que se mide en <strong>PPM</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Otros de salida</strong>: plóter (gran formato), altavoces y proyector.</li>
+          <li><strong>De entrada/salida</strong>:
+            <ul>
+              <li>consola, <strong>pantalla táctil</strong>, módem y tarjeta de red;</li>
+              <li>las <strong>memorias secundarias</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Tarjeta gráfica</strong>: controla la resolución, la paleta de colores y el refresco. Estándares históricos: MDA, CGA, EGA, Hercules, VGA, SVGA y XGA.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Memorias secundarias y almacenamiento</h3><small>Manual 3.5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Acceso de la CPU</strong>: no accede directamente a ellas; los datos pasan antes a la RAM.</li>
+          <li><strong>Tipos de soporte</strong>:
+            <ul>
+              <li><strong>magnéticos</strong>: el disco duro (HDD), el disquete y el Zip (obsoletos) y la <strong>cinta</strong>, que se graba con un <strong>streamer</strong>;</li>
+              <li><strong>ópticos</strong>: CD, DVD y Blu-ray, que funcionan con láser;</li>
+              <li><strong>electrónicos (flash)</strong>: SSD sin partes móviles, memorias USB y tarjetas SD.</li>
+            </ul>
+          </li>
+          <li><span class="upd">2026</span> <strong>SSD</strong>: los actuales usan <strong>NVMe</strong> sobre PCIe (formato M.2), mucho más rápidos que los SSD SATA.</li>
+          <li><strong>Arquitecturas de almacenamiento</strong>:
+            <ul>
+              <li><strong>DAS</strong>: conectado directamente al equipo;</li>
+              <li><strong>NAS</strong>: un dispositivo en la red local que comparte ficheros;</li>
+              <li><strong>SAN</strong>: una red dedicada de almacenamiento de alta velocidad;</li>
+              <li><strong>nube</strong>: Google Drive, Dropbox, OneDrive…</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Software y sistemas operativos</h3>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>El software</h3><small>Manual 4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Software</strong>: programas, instrucciones y datos que controlan el hardware. Hace de intermediario entre el usuario y la máquina.</li>
+          <li><strong>Categorías</strong>:
+            <ul>
+              <li><strong>de sistema (base)</strong>: el sistema operativo y los drivers; gestiona los recursos y ofrece una interfaz;</li>
+              <li><strong>de aplicación</strong>: procesadores de texto, hojas de cálculo, navegadores, juegos…;</li>
+              <li><strong>de programación</strong>: editores, compiladores, intérpretes, depuradores y entornos de desarrollo (IDE).</li>
+            </ul>
+          </li>
+          <li><strong>Desarrollo</strong>: el software se crea programando en lenguajes de programación.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Sistemas operativos actuales</h3><small>Manual 4 · actualizado</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Escritorio</strong>:
+            <ul>
+              <li><span class="upd">2026</span> <strong>Windows 11</strong>, versión <strong>26H2</strong> (29-9-2026). La anterior fue <strong>Windows 10</strong>, sin soporte estándar desde el 14-10-2025 y con ESU para particulares hasta el 12-10-2027. Antes hubo 8, 7 y Vista.</li>
+              <li><span class="upd">2026</span> <strong>macOS 27 «Golden Gate»</strong> (14-9-2026), precedido de macOS 26 Tahoe y 15 Sequoia. Funciona en Mac con Apple Silicon y es la última versión con Rosetta completo.</li>
+              <li><strong>Linux</strong>, de código abierto: distribuciones Ubuntu, Debian, Linux Mint, Fedora…</li>
+              <li><strong>ChromeOS</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Móviles</strong>:
+            <ul>
+              <li><span class="upd">2026</span> <strong>Android 17</strong> (estable desde el 16-6-2026);</li>
+              <li><span class="upd">2026</span> <strong>iOS 27</strong> (14-9-2026).</li>
+            </ul>
+          </li>
+          <li><strong>Sistemas discontinuados</strong> (el manual los presenta como vigentes): Windows Phone/10 Mobile, Symbian y BlackBerry OS.</li>
+          <li><strong>Funciones de un sistema operativo</strong> (complemento): gestionar los procesos, la memoria, los ficheros y la entrada/salida, ofrecer la interfaz de usuario y aplicar la seguridad.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Seguridad informática</h3>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Dimensiones y conceptos de la seguridad</h3><small>Manual 5 y 5.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Dimensiones de la seguridad</strong>:
+            <ul>
+              <li><strong>confidencialidad</strong>: solo acceden los autorizados (contraseñas, cifrado);</li>
+              <li><strong>integridad</strong>: no hay cambios no autorizados;</li>
+              <li><strong>disponibilidad</strong>: acceso cuando se necesita;</li>
+              <li><strong>autenticidad</strong>: el autor es quien dice ser;</li>
+              <li><span class="upd">2026</span> el <strong>ENS</strong> (RD 311/2022) añade la <strong>trazabilidad</strong>: saber quién hizo qué y cuándo.</li>
+            </ul>
+          </li>
+          <li><strong>Conceptos</strong>:
+            <ul>
+              <li><strong>vulnerabilidad</strong>: una debilidad o fallo;</li>
+              <li><strong>amenaza</strong>: la causa potencial de un incidente;</li>
+              <li><strong>ataque</strong>: el acto real de explotar la vulnerabilidad.</li>
+            </ul>
+          </li>
+          <li><strong>Gestión de la seguridad</strong>: identificar amenazas, mitigar vulnerabilidades y prevenir y responder a los ataques.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Malware y ataques</h3><small>Manual 5.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Virus</strong>: se adjunta a un archivo legítimo y se replica al ejecutarlo.</li>
+          <li><strong>Gusano</strong>: se propaga solo, sin intervención humana.</li>
+          <li><strong>Troyano</strong>: se disfraza de software legítimo y abre puertas traseras.</li>
+          <li><strong>Ransomware</strong>: cifra los datos y pide un rescate.</li>
+          <li><strong>Spyware</strong> (espía), <strong>adware</strong> (publicidad) y <strong>keylogger</strong> (registra las pulsaciones).</li>
+          <li><strong>Botnet</strong>: una red de equipos infectados («zombis») controlados por el atacante.</li>
+          <li><strong>Exploit</strong>: un programa que aprovecha una vulnerabilidad concreta.</li>
+          <li><strong>Rootkit</strong>: se oculta con privilegios de administrador.</li>
+          <li><strong>Ingeniería social y fraude</strong>:
+            <ul>
+              <li><strong>phishing</strong>: suplanta a alguien de confianza; por SMS es <em>smishing</em> y por voz, <em>vishing</em>;</li>
+              <li><strong>scam</strong>: estafa en línea.</li>
+            </ul>
+          </li>
+          <li><strong>DoS y DDoS</strong>: inutilizan un servicio; el DDoS lo hace de forma distribuida, a menudo con una botnet.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Mecanismos de seguridad y copias</h3><small>Manual 5.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Firewall</strong>: filtra el tráfico según reglas.</li>
+          <li><strong>Proxy</strong>: hace de intermediario entre el usuario y otros servidores.</li>
+          <li><strong>Antivirus y antimalware</strong>.</li>
+          <li><strong>Control de acceso</strong>: autenticación, autorización y contraseñas (mejor con <strong>doble factor</strong>).</li>
+          <li><strong>Cifrado</strong>:
+            <ul>
+              <li><strong>simétrico</strong>: una única clave compartida;</li>
+              <li><strong>asimétrico</strong>: clave pública para cifrar y clave privada para descifrar.</li>
+            </ul>
+          </li>
+          <li><strong>Actualizaciones y parches</strong>: corrigen vulnerabilidades conocidas.</li>
+          <li><strong>IDS/IPS</strong>: detectan y bloquean intrusiones (el pentesting es otra cosa: una auditoría que simula ataques).</li>
+          <li><strong>VPN</strong>: un túnel cifrado a través de Internet que oculta la IP.</li>
+          <li><strong>Copias de seguridad</strong>:
+            <ul>
+              <li><strong>completa</strong>: todo;</li>
+              <li><strong>diferencial</strong>: los cambios desde la última <strong>completa</strong>;</li>
+              <li><strong>incremental</strong>: los cambios desde la última copia de <strong>cualquier tipo</strong>;</li>
+              <li><strong>espejo</strong>: una réplica exacta «en vivo».</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>Bit y byte</b>El bit es la unidad mínima de información; el byte (8 bits), la mínima para almacenar un carácter.</div>
+    <div class="trap"><b>Kilobyte</b>1 kB son 1.000 bytes en el SI; 1.024 bytes son 1 KiB. El manual usa 1 kB = 1.024.</div>
+    <div class="trap"><b>Buses</b>El de datos es bidireccional y el de direcciones, unidireccional.</div>
+    <div class="trap"><b>Caché</b>Es SRAM, volátil y de lectura y escritura; L1 es la más rápida y pequeña.</div>
+    <div class="trap"><b>EPROM y EEPROM</b>La EPROM se borra con luz ultravioleta; la EEPROM y la Flash, eléctricamente.</div>
+    <div class="trap"><b>Memoria virtual</b>No es memoria física: es espacio en disco que usa el sistema operativo.</div>
+    <div class="trap"><b>Pantalla táctil</b>Es un periférico de entrada/salida; el escáner es de entrada y el plóter, de salida.</div>
+    <div class="trap"><b>Impresoras</b>CPS en las de impacto; PPM en las de no impacto.</div>
+    <div class="trap"><b>Gusano y virus</b>El gusano se propaga solo; el virus necesita que se ejecute el archivo infectado.</div>
+    <div class="trap"><b>Diferencial e incremental</b>La diferencial copia desde la última completa; la incremental, desde la última de cualquier tipo.</div>
+    <div class="trap"><b>Cifrado asimétrico</b>Para confidencialidad, se cifra con la pública del receptor y se descifra con su privada.</div>
+    <div class="trap"><b>Firmware</b>Es software grabado en ROM o Flash (BIOS/UEFI); no es hardware.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 1. Informática básica: conceptos fundamentales sobre el hardware y el software. Sistemas de almacenamiento de datos. Sistemas operativos. Nociones básicas de seguridad informática» (Informática básica y ofimática, CEA, abril de 2025), actualizado a noviembre de 2026: Windows 11 26H2, ESU de Windows 10, macOS 27, iOS 27, Android 17, prefijos ronna y quetta y ENS (RD 311/2022).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Informática · Tema 1 · Herramientas ===== */
+const UNI=[["bit","b",-1],["byte","B",0],["kilobyte","kB",1],["megabyte","MB",2],["gigabyte","GB",3],["terabyte","TB",4],["petabyte","PB",5],["exabyte","EB",6],["zettabyte","ZB",7],["yottabyte","YB",8],["ronnabyte","RB",9],["quettabyte","QB",10]];
+const BIN=["KiB","MiB","GiB","TiB","PiB","EiB","ZiB","YiB","RiB","QiB"];
+const MEM={
+ reg:{n:"Registros",u:"Dentro de la CPU",v:"No",rw:"Lectura y escritura",ve:"La más rápida",ca:"Bytes",us:"Datos e instrucciones en curso"},
+ cache:{n:"Caché (L1/L2/L3)",u:"En la CPU o junto a ella",v:"Sí",rw:"Lectura y escritura",ve:"Muy alta (SRAM)",ca:"KB a decenas de MB",us:"Datos que la CPU necesitará de inmediato"},
+ ram:{n:"RAM (DRAM/DDR5)",u:"Placa base (memoria principal)",v:"Sí",rw:"Lectura y escritura",ve:"Alta",ca:"GB",us:"Programas y datos en ejecución"},
+ rom:{n:"ROM / Flash de la BIOS-UEFI",u:"Placa base (memoria principal)",v:"No",rw:"Solo lectura (la EEPROM y la Flash son reprogramables)",ve:"Media",ca:"MB",us:"Firmware de arranque"},
+ virt:{n:"Memoria virtual",u:"Disco (gestionada por el sistema operativo)",v:"Depende del disco",rw:"Lectura y escritura",ve:"Baja respecto a la RAM",ca:"Variable",us:"Ampliar la RAM con espacio de disco"},
+ ssd:{n:"SSD (NVMe/SATA)",u:"Memoria secundaria",v:"No",rw:"Lectura y escritura",ve:"Alta, sin partes móviles",ca:"Cientos de GB a TB",us:"Sistema operativo y aplicaciones"},
+ hdd:{n:"Disco duro (HDD)",u:"Memoria secundaria",v:"No",rw:"Lectura y escritura",ve:"Media-baja (mecánico)",ca:"TB",us:"Almacenamiento masivo a largo plazo"},
+ opt:{n:"Óptica (CD/DVD/Blu-ray)",u:"Memoria secundaria",v:"No",rw:"Según el formato (ROM, R, RW)",ve:"Baja (láser)",ca:"700 MB a 100 GB",us:"Distribución y archivo"},
+ cin:{n:"Cinta magnética",u:"Memoria secundaria (streamer)",v:"No",rw:"Lectura y escritura (acceso secuencial)",ve:"Muy baja",ca:"Decenas de TB",us:"Copias de seguridad y archivo"},
+ nube:{n:"Almacenamiento en la nube",u:"Servidores remotos",v:"No",rw:"Lectura y escritura",ve:"Depende de la conexión",ca:"Escalable",us:"Compartir y respaldar datos"}
+};
+const MEMK=["Ubicación","¿Volátil?","Acceso","Velocidad","Capacidad típica","Uso"];
+const PF=[
+ ["Teclado","e","Entrada."],["Ratón","e","Entrada."],["Escáner","e","Entrada (con OCR y TWAIN)."],["Micrófono","e","Entrada (necesita tarjeta de sonido)."],["Webcam","e","Entrada."],["Tableta digitalizadora","e","Entrada."],["Joystick","e","Entrada."],
+ ["Monitor","s","Salida."],["Impresora","s","Salida."],["Plóter","s","Salida (gran formato)."],["Altavoces","s","Salida."],["Proyector","s","Salida."],
+ ["Pantalla táctil","es","Entrada/salida."],["Módem","es","Entrada/salida."],["Tarjeta de red","es","Entrada/salida."],["Disco duro externo","es","Entrada/salida (memoria secundaria)."],["Memoria USB","es","Entrada/salida (memoria secundaria)."],["Consola (teclado y pantalla)","es","Entrada/salida."]
+];
+const PFO={e:"Entrada",s:"Salida",es:"Entrada/salida"};
+const MW=[
+ ["Se adjunta a un documento de Word y se replica cuando alguien lo abre.","virus","Virus."],
+ ["Se propaga solo por la red aprovechando una vulnerabilidad, sin que nadie haga nada.","gusano","Gusano."],
+ ["Una aparente utilidad gratuita abre en segundo plano una puerta trasera.","troyano","Troyano."],
+ ["Los ficheros del servidor aparecen cifrados con una nota que pide bitcoins.","ransom","Ransomware."],
+ ["Un programa registra todo lo que tecleas, incluidas las contraseñas.","keylog","Keylogger."],
+ ["Un correo que imita a tu banco te pide que «verifiques» tus credenciales.","phishing","Phishing (ingeniería social)."],
+ ["Miles de equipos infectados lanzan peticiones a la vez contra una web hasta tumbarla.","ddos","DDoS, normalmente mediante una botnet."],
+ ["El navegador se llena de ventanas emergentes con anuncios.","adware","Adware."],
+ ["Un software recopila en secreto tus hábitos de navegación.","spyware","Spyware."],
+ ["Un programa aprovecha un fallo concreto de una versión de un sistema operativo.","exploit","Exploit."]
+];
+const MWO={virus:"Virus",gusano:"Gusano",troyano:"Troyano",ransom:"Ransomware",keylog:"Keylogger",phishing:"Phishing",ddos:"DoS/DDoS",adware:"Adware",spyware:"Spyware",exploit:"Exploit"};
+const DM=[
+ ["Un empleado no autorizado lee expedientes de personal.","c","Confidencialidad."],
+ ["Alguien modifica el importe de una factura en la base de datos.","i","Integridad."],
+ ["La sede electrónica cae por un ataque DDoS.","d","Disponibilidad."],
+ ["Un correo aparenta venir del director, pero lo envió un tercero.","a","Autenticidad."],
+ ["Un ransomware cifra los ficheros e impide usarlos.","d","Disponibilidad (y posible pérdida de integridad)."],
+ ["Se filtra en Internet una base de datos con los DNI de los usuarios.","c","Confidencialidad."],
+ ["No se puede saber qué usuario borró un registro.","t","Trazabilidad (dimensión del ENS)."],
+ ["Un error de transmisión altera el contenido de un fichero.","i","Integridad."],
+ ["Firma electrónica que garantiza quién es el autor del documento.","a","Autenticidad."]
+];
+const DMO={c:"Confidencialidad",i:"Integridad",d:"Disponibilidad",a:"Autenticidad",t:"Trazabilidad (ENS)"};
+const INS=[
+ {g:"Puertos",n:"USB / USB-C",norm:"Universal Serial Bus",def:"El puerto más común para conectar periféricos.",f:{"USB-C":"Conector reversible para datos, carga y vídeo.","USB4":"Hasta 40 Gbps (80 Gbps en su versión 2.0).","Plug and Play":"Configuración automática.","Ejemplos":"Teclado, ratón, memorias, discos."}},
+ {g:"Puertos",n:"HDMI y DisplayPort",norm:"Vídeo digital",def:"Conexión de pantallas.",f:{"HDMI":"Vídeo y audio; televisores y proyectores.","DisplayPort":"Más orientado al PC y a varias pantallas.","VGA":"Analógico y antiguo.","DVI":"Digital, anterior a HDMI."}},
+ {g:"Puertos",n:"Ethernet RJ-45",norm:"Red cableada",def:"Conexión a una LAN o a Internet por cable.",f:{"Ventaja":"Fiable y rápido.","Alternativa":"Wi-Fi (hoy, Wi-Fi 6/6E y 7).","Otros":"Thunderbolt, SATA (interno), SD.","Obsoletos":"PS/2, FireWire (IEEE 1394), LPT."}},
+ {g:"Sistemas operativos",n:"Windows",norm:"Microsoft",def:"El sistema de escritorio más extendido.",f:{"Versión vigente":"Windows 11 26H2 (29-9-2026).","Windows 10":"Sin soporte estándar desde octubre de 2025; ESU para particulares hasta el 12-10-2027.","Modelo":"Una actualización anual («H2»).","Antecesores":"8, 7, Vista."}},
+ {g:"Sistemas operativos",n:"macOS e iOS",norm:"Apple",def:"Sistemas de Apple.",f:{"macOS":"27 Golden Gate (14-9-2026); antes 26 Tahoe.","iOS":"iOS 27 (14-9-2026).","Arquitectura":"Apple Silicon (ARM).","Nota":"macOS 27 es la última versión con Rosetta completo."}},
+ {g:"Sistemas operativos",n:"Android y Linux",norm:"Código abierto",def:"Android usa núcleo Linux.",f:{"Android":"Android 17, estable desde junio de 2026.","Linux":"Ubuntu, Debian, Mint, Fedora.","ChromeOS":"Basado en Linux.","Discontinuados":"Windows Phone, Symbian, BlackBerry OS."}},
+ {g:"Seguridad",n:"Firewall, proxy e IDS/IPS",norm:"Defensa perimetral",def:"Controlan el tráfico de red.",f:{"Firewall":"Permite o bloquea según reglas.","Proxy":"Intermediario entre el cliente y el servidor.","IDS/IPS":"Detectan o previenen intrusiones.","Pentesting":"Auditoría que simula ataques."}},
+ {g:"Seguridad",n:"Cifrado y VPN",norm:"Confidencialidad",def:"Protegen la información en tránsito y en reposo.",f:{"Simétrico":"Una sola clave (por ejemplo, AES).","Asimétrico":"Pública y privada (por ejemplo, RSA).","VPN":"Túnel cifrado por Internet.","Doble factor":"Algo que sabes y algo que tienes o eres."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${OPTS[k]}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+OPTS[c[1]]}</b>${c[2]}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("pf",PF,PFO,"Periférico");
+  trainer("mw",MW,MWO,"Caso");
+  trainer("dm",DM,DMO,"Caso");
+  const fmt=x=>{if(x===0)return"0";const a=Math.abs(x);if(a>=1e15||a<1e-3)return x.toExponential(4).replace(".",",");return Number(x.toPrecision(10)).toLocaleString("es-ES",{maximumFractionDigits:6})};
+  /* Unidades */
+  (function(){const u=$("un-u");if(!u)return;u.innerHTML=UNI.map((x,i)=>`<option value="${i}">${x[0]} (${x[1]})</option>`).join("")+BIN.map((b,i)=>`<option value="b${i+1}">${b} (binario)</option>`).join("");u.value="5";
+    function run(){const v=num("un-v"),s=u.value;let bytes;
+      if(s.startsWith("b")){bytes=v*Math.pow(1024,+s.slice(1))}else{const x=UNI[+s];bytes=x[2]<0?v/8:v*Math.pow(1000,x[2])}
+      let h=`<div><b>Bits</b>: ${fmt(bytes*8)} b · <b>Bytes</b>: ${fmt(bytes)} B</div>`;
+      for(let k=1;k<=10;k++){const d=bytes/Math.pow(1000,k),bb=bytes/Math.pow(1024,k);if(d>=0.001||k<=4)h+=`<div class="l2"><b>${UNI[k+1][1]}</b> (SI): ${fmt(d)} · <b>${BIN[k-1]}</b> (binario): ${fmt(bb)}</div>`}
+      $("un-out").innerHTML=h;
+      const o=$("un-v2");o.className="verdict ok";const gib=bytes/Math.pow(1024,3);
+      o.innerHTML=`<b class="big">¿Por qué un disco de «1 TB» aparece como 931 GB?</b>El fabricante usa el SI (1 TB = 10<sup>12</sup> bytes) y muchos sistemas operativos muestran unidades binarias (1 GiB = 2<sup>30</sup> bytes). Tu cantidad equivale a <strong>${fmt(gib)} GiB</strong>. Desde 2022 existen además los prefijos <strong>ronna (R, 10<sup>27</sup>)</strong> y <strong>quetta (Q, 10<sup>30</sup>)</strong>.`}
+    ev(["un-v","un-u"],run);run()})();
+  /* Bases */
+  (function(){if(!$("bs-v"))return;
+    function run(){const raw=$("bs-v").value.trim(),b=$("bs-b").value,o=$("bs-out");let n;
+      if(b==="c"){n=raw.length?raw.codePointAt(0):NaN}else{const re={2:/^[01]+$/,8:/^[0-7]+$/,10:/^\d+$/,16:/^[0-9a-f]+$/i}[b];n=re.test(raw)?parseInt(raw,+b):NaN}
+      if(isNaN(n)){$("bs-k").innerHTML="";o.className="verdict ko";o.innerHTML="<b class='big'>Valor no válido para esa base</b>Binario: solo 0 y 1; octal: 0-7; hexadecimal: 0-9 y A-F.";return}
+      const bits=n===0?1:Math.floor(Math.log2(n))+1,bytes=Math.ceil(bits/8);
+      $("bs-k").innerHTML=`<div><b>Decimal</b><span>${n}</span></div><div><b>Binario</b><span style="word-break:break-all">${n.toString(2)}</span></div><div><b>Octal</b><span>${n.toString(8)}</span></div><div><b>Hexadecimal</b><span>${n.toString(16).toUpperCase()}</span></div><div><b>Carácter</b><span>${n>=32&&n<1114112?e(String.fromCodePoint(n)):"(control)"}</span></div><div><b>Bits necesarios</b><span>${bits} (${bytes} byte${bytes>1?"s":""})</span></div>`;
+      o.className="verdict "+(n<128?"ok":n<256?"mid":"ko");o.innerHTML=n<128?`<b class="big">Cabe en ASCII estándar (7 bits)</b>Los códigos 0 a 127 son el ASCII original; el 65 es «A», el 97 es «a» y el 48 es «0».`:n<256?`<b class="big">ASCII extendido (8 bits)</b>Los códigos 128 a 255 dependen de la página de códigos (por ejemplo, ISO-8859-1 para «ñ», que es el 241).`:`<b class="big">Fuera de ASCII: Unicode</b>Este carácter necesita Unicode (UTF-8 lo codifica en ${n<2048?2:n<65536?3:4} bytes).`}
+    ev(["bs-v","bs-b"],run);run()})();
+  /* Backups */
+  (function(){if(!$("bk-s"))return;const D=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+    function run(){const s=$("bk-s").value,T=num("bk-t"),C=num("bk-c"),d=+$("bk-d").value;let h=`<div><b>Domingo</b>: copia completa · ${fmt(T)} MB</div>`,tot=T;
+      for(let i=1;i<=d;i++){const sz=s==="inc"?C:s==="dif"?C*i:T;tot+=sz;h+=`<div class="l2"><b>${D[i]}</b>: ${s==="inc"?"incremental (cambios desde ayer)":s==="dif"?"diferencial (cambios desde el domingo)":"completa"} · ${fmt(sz)} MB</div>`}
+      $("bk-out").innerHTML=h;const need=s==="inc"?["Completa del domingo"].concat(D.slice(1,d+1).map(x=>"incremental del "+x.toLowerCase())):s==="dif"?["Completa del domingo","diferencial del "+D[d].toLowerCase()]:["Completa del "+D[d].toLowerCase()];
+      const o=$("bk-v");o.className="verdict ok";o.innerHTML=`<b class="big">Para restaurar tras el fallo del ${D[d].toLowerCase()} necesitas ${need.length} copia${need.length>1?"s":""}</b>${need.join(" + ")}. Espacio total ocupado en la semana: <strong>${fmt(tot)} MB</strong>. ${s==="inc"?"La incremental es la que menos ocupa y la más rápida de hacer, pero la más lenta de restaurar.":s==="dif"?"La diferencial crece cada día, pero restaura con solo dos copias.":"La completa diaria es la más sencilla de restaurar y la que más espacio ocupa."}`}
+    ev(["bk-s","bk-t","bk-c","bk-d"],run);run()})();
+  /* Memorias */
+  (function(){const a=$("mm-a"),b=$("mm-b");if(!a)return;const ks=Object.keys(MEM);a.innerHTML=ks.map(k=>`<option value="${k}">${MEM[k].n}</option>`).join("");b.innerHTML=`<option value="">(ninguna)</option>`+a.innerHTML;a.value="ram";b.value="rom";
+    const card=o=>{const v=[o.u,o.v,o.rw,o.ve,o.ca,o.us];return `<div style="grid-column:1/-1;background:var(--a1);color:#fff;border-color:var(--a1)"><b style="color:#fff;opacity:.8">Memoria</b><span style="font-weight:800;font-size:1.05rem">${e(o.n)}</span></div>`+MEMK.map((k,i)=>`<div><b>${k}</b>${e(v[i])}</div>`).join("")};
+    function run(){$("mm-oa").innerHTML=card(MEM[a.value]);$("mm-ob").innerHTML=b.value?card(MEM[b.value]):""}
+    ev(["mm-a","mm-b"],run);run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Origen del término «informática».",r:"Philippe Dreyfus, 1962: información + automática."},
+ {p:"Informática.",r:"Ciencia del tratamiento automático de la información mediante ordenador."},
+ {p:"Dato.",r:"Información concreta y breve; materia prima que procesa el ordenador."},
+ {p:"Programa.",r:"Conjunto de instrucciones que indican qué hacer con los datos."},
+ {p:"Algoritmo.",r:"Secuencia ordenada y finita de pasos para resolver un problema, descrita en texto."},
+ {p:"Ordinograma.",r:"Diagrama de flujo: representación gráfica de un algoritmo."},
+ {p:"Tres fases del tratamiento de la información.",r:"Entrada (codificación), proceso (CPU y memoria) y salida (decodificación)."},
+ {p:"Codificación.",r:"Traducción de la información al binario en la entrada."},
+ {p:"Hardware.",r:"Parte física y tangible del ordenador."},
+ {p:"Software.",r:"Parte lógica e intangible: los programas («logical»)."},
+ {p:"Freeware.",r:"Software gratuito."},
+ {p:"Shareware.",r:"Software de evaluación, con limitaciones de tiempo o funciones."},
+ {p:"Groupware.",r:"Software para el trabajo colaborativo."},
+ {p:"Firmware.",r:"Software grabado de fábrica en ROM o Flash que controla el hardware."},
+ {p:"BIOS.",r:"Basic Input/Output System: inicializa el hardware y carga el sistema operativo."},
+ {p:"UEFI.",r:"Interfaz de Firmware Extensible Unificada: sustituye a la BIOS en los equipos modernos."},
+ {p:"Componentes de un sistema informático.",r:"Físico (hardware), lógico (software) y humano."},
+ {p:"Sistema binario.",r:"Base 2: 1 (hay tensión) y 0 (no hay tensión)."},
+ {p:"Bit.",r:"Binary digit: la unidad mínima de información."},
+ {p:"Byte.",r:"8 bits (octeto): la unidad mínima para almacenar un carácter."},
+ {p:"ASCII.",r:"American Standard Code for Information Interchange: 7 bits (128 caracteres); el extendido usa 8 (256)."},
+ {p:"Unicode.",r:"Estándar universal de caracteres (UTF-8, UTF-16); sustituye en la práctica a ASCII."},
+ {p:"Palabra.",r:"Bits que la CPU procesa en una operación (32 o 64)."},
+ {p:"Kilobyte en el SI.",r:"1.000 bytes (kB)."},
+ {p:"Kibibyte.",r:"1.024 bytes (KiB), prefijo binario de la IEC."},
+ {p:"Escala de unidades.",r:"kB, MB, GB, TB, PB, EB, ZB, YB, RB y QB."},
+ {p:"Ronna y quetta.",r:"10^27 (R) y 10^30 (Q); prefijos del SI aprobados en 2022."},
+ {p:"Supercomputadora.",r:"Máxima potencia de cálculo; miles de procesadores en paralelo."},
+ {p:"Mainframe.",r:"Ordenador central que atiende a muchos usuarios a la vez."},
+ {p:"Miniordenador.",r:"Versión reducida del mainframe."},
+ {p:"Ordenador personal.",r:"Monousuario: sobremesa, portátil, tableta, smartphone, wearable."},
+ {p:"Wearable.",r:"Dispositivo que se lleva puesto (reloj inteligente, pulsera)."},
+ {p:"Nanoordenador.",r:"Ordenador microscópico; uso médico experimental."},
+ {p:"Ordenador analógico.",r:"Trabaja con magnitudes físicas continuas."},
+ {p:"Ordenador digital.",r:"Trabaja con valores discretos (0 y 1)."},
+ {p:"Ordenador cuántico.",r:"Usa qubits, que admiten superposición de estados."},
+ {p:"Placa base.",r:"Circuito principal que conecta los componentes; factor de forma ATX."},
+ {p:"Bus.",r:"Conjunto de líneas que transportan información entre componentes."},
+ {p:"Bus de datos.",r:"Bidireccional: transporta los datos."},
+ {p:"Bus de direcciones.",r:"Unidireccional: indica la posición de memoria."},
+ {p:"Bus de control.",r:"Transporta las señales de control y sincronización."},
+ {p:"PCI Express.",r:"Ranura de expansión actual (gráficas, SSD NVMe)."},
+ {p:"AGP.",r:"Antigua ranura dedicada a la tarjeta gráfica."},
+ {p:"Chipset.",r:"Controla la comunicación entre la CPU y el resto: northbridge y southbridge."},
+ {p:"Northbridge.",r:"Une la CPU con la RAM y la gráfica; hoy integrado en la CPU."},
+ {p:"Southbridge.",r:"Gestiona la entrada/salida y los dispositivos lentos; hoy, el PCH."},
+ {p:"VRM.",r:"Módulo regulador de voltaje de la CPU."},
+ {p:"SATA.",r:"Interfaz serie para discos duros, SSD y unidades ópticas."},
+ {p:"Pila de la placa base.",r:"Mantiene la configuración y el reloj con el equipo apagado."},
+ {p:"Socket.",r:"Zócalo de la placa donde se inserta el microprocesador."},
+ {p:"CPU.",r:"Unidad central de proceso: el «cerebro» que ejecuta las instrucciones."},
+ {p:"Microprocesador.",r:"Chip que integra la CPU (el primero, el Intel 4004, de 1971)."},
+ {p:"Velocidad de reloj.",r:"Ciclos por segundo de la CPU (GHz)."},
+ {p:"Núcleo.",r:"Unidad de procesamiento independiente dentro de la CPU."},
+ {p:"Hilo.",r:"Secuencia de instrucciones; un núcleo puede ejecutar dos (hyperthreading/SMT)."},
+ {p:"Arquitectura x86.",r:"Intel y AMD; ordenadores de sobremesa y servidores."},
+ {p:"Arquitectura ARM.",r:"Bajo consumo: móviles y Apple Silicon."},
+ {p:"RISC-V.",r:"Arquitectura abierta y libre de licencias."},
+ {p:"Unidad de control.",r:"Interpreta las instrucciones y coordina el resto de unidades."},
+ {p:"Contador de programa.",r:"Registro con la dirección de la siguiente instrucción."},
+ {p:"Registro de instrucción.",r:"Guarda la instrucción que se está ejecutando."},
+ {p:"Decodificador.",r:"Interpreta el código de operación de la instrucción."},
+ {p:"Secuenciador.",r:"Genera las microórdenes en el orden adecuado."},
+ {p:"Reloj de la CPU.",r:"Marca los impulsos que sincronizan las operaciones."},
+ {p:"ALU.",r:"Unidad aritmético-lógica: hace las operaciones aritméticas y lógicas."},
+ {p:"Acumulador.",r:"Registro de la ALU que guarda el resultado."},
+ {p:"Registro de estado.",r:"Indicadores (flags) del resultado: cero, signo, desbordamiento…"},
+ {p:"Registros de la CPU.",r:"La memoria más rápida y pequeña, dentro del procesador."},
+ {p:"Memoria caché.",r:"SRAM muy rápida entre la CPU y la RAM; niveles L1, L2 y L3."},
+ {p:"RAM.",r:"Memoria principal volátil, de lectura y escritura y de acceso aleatorio."},
+ {p:"DRAM.",r:"RAM dinámica: barata, necesita refresco."},
+ {p:"SRAM.",r:"RAM estática: rápida, cara, sin refresco; se usa en la caché."},
+ {p:"VRAM.",r:"Memoria de vídeo de la tarjeta gráfica."},
+ {p:"SDRAM.",r:"DRAM sincronizada con el reloj del sistema."},
+ {p:"DDR SDRAM.",r:"Doble tasa de datos: dos transferencias por ciclo; la actual es DDR5."},
+ {p:"ROM.",r:"Memoria no volátil de solo lectura; contiene el firmware."},
+ {p:"PROM.",r:"ROM programable una sola vez."},
+ {p:"EPROM.",r:"ROM borrable con luz ultravioleta."},
+ {p:"EEPROM.",r:"ROM borrable eléctricamente."},
+ {p:"Memoria Flash.",r:"EEPROM borrable por bloques: USB, SSD, SD y BIOS."},
+ {p:"Memoria virtual.",r:"Espacio en disco que el sistema operativo usa como extensión de la RAM."},
+ {p:"Jerarquía de memoria.",r:"Registros → caché → RAM → memoria virtual → SSD → HDD → óptica → nube."},
+ {p:"Periférico.",r:"Dispositivo que intercambia información con la CPU."},
+ {p:"Driver.",r:"Controlador: software que permite al sistema operativo manejar un periférico."},
+ {p:"Plug and Play.",r:"Detección y configuración automática de periféricos."},
+ {p:"Periférico remoto.",r:"El que se comunica con la CPU a distancia (por red)."},
+ {p:"USB.",r:"Universal Serial Bus: puerto universal de periféricos; hoy USB-C y USB4."},
+ {p:"HDMI.",r:"Interfaz digital de vídeo y audio."},
+ {p:"DisplayPort.",r:"Interfaz digital de vídeo orientada al PC; admite varias pantallas."},
+ {p:"VGA.",r:"Conector de vídeo analógico antiguo (y estándar gráfico de IBM)."},
+ {p:"RJ-45.",r:"Conector de red Ethernet."},
+ {p:"Thunderbolt.",r:"Intel/Apple: datos, vídeo y carga; hoy TB5 sobre USB-C."},
+ {p:"FireWire.",r:"IEEE 1394: puerto serie de Apple, obsoleto."},
+ {p:"Escáner.",r:"Periférico de entrada que digitaliza imágenes; con OCR reconoce texto."},
+ {p:"OCR.",r:"Reconocimiento óptico de caracteres."},
+ {p:"TWAIN.",r:"Estándar de comunicación entre escáneres y aplicaciones."},
+ {p:"Píxel.",r:"Punto mínimo de una imagen en pantalla."},
+ {p:"Resolución.",r:"Número de píxeles horizontales por verticales."},
+ {p:"OLED.",r:"Pantalla cuyos píxeles emiten luz propia: negro puro."},
+ {p:"CPS y PPM.",r:"Caracteres por segundo (impresoras de impacto) y páginas por minuto (de no impacto)."},
+ {p:"Plóter.",r:"Periférico de salida para gran formato (planos)."},
+ {p:"Pantalla táctil.",r:"Periférico de entrada/salida."},
+ {p:"Módem.",r:"Modula y demodula señales; entrada/salida."},
+ {p:"Memoria secundaria.",r:"Almacenamiento masivo no volátil; la CPU no accede directamente."},
+ {p:"Disco duro (HDD).",r:"Soporte magnético con platos y cabezales."},
+ {p:"Streamer.",r:"Unidad de cinta para copias de seguridad."},
+ {p:"Soportes ópticos.",r:"CD, DVD y Blu-ray: lectura y grabación por láser."},
+ {p:"SSD.",r:"Unidad de estado sólido (Flash), sin partes móviles."},
+ {p:"NVMe.",r:"Protocolo de SSD sobre PCIe, mucho más rápido que SATA."},
+ {p:"DAS.",r:"Almacenamiento conectado directamente a un equipo."},
+ {p:"NAS.",r:"Almacenamiento conectado a la red que comparte ficheros."},
+ {p:"SAN.",r:"Red de área de almacenamiento dedicada, de alta velocidad."},
+ {p:"Software de sistema.",r:"Sistema operativo y controladores: gestionan los recursos."},
+ {p:"Software de aplicación.",r:"Programas para tareas del usuario (ofimática, navegadores…)."},
+ {p:"Software de programación.",r:"Editores, compiladores, intérpretes, depuradores e IDE."},
+ {p:"Compilador.",r:"Traduce todo el código fuente a código máquina antes de ejecutarlo."},
+ {p:"Intérprete.",r:"Traduce y ejecuta el código instrucción a instrucción."},
+ {p:"Sistema operativo.",r:"Software base que gestiona el hardware y ofrece una interfaz al usuario."},
+ {p:"Windows 11, versión vigente.",r:"26H2 (29-9-2026)."},
+ {p:"Fin de Windows 10.",r:"Soporte estándar hasta el 14-10-2025; ESU para particulares hasta el 12-10-2027."},
+ {p:"macOS vigente.",r:"macOS 27 «Golden Gate» (14-9-2026)."},
+ {p:"Android vigente.",r:"Android 17 (estable desde el 16-6-2026)."},
+ {p:"Linux.",r:"Núcleo libre; distribuciones Ubuntu, Debian, Mint, Fedora."},
+ {p:"Confidencialidad.",r:"Solo acceden a la información las personas autorizadas."},
+ {p:"Integridad.",r:"La información no se altera sin autorización."},
+ {p:"Disponibilidad.",r:"Acceso a la información y a los servicios cuando se necesitan."},
+ {p:"Autenticidad.",r:"La entidad o el autor es quien dice ser."},
+ {p:"Trazabilidad.",r:"Dimensión del ENS: poder imputar cada acción a quien la hizo."},
+ {p:"ENS.",r:"Esquema Nacional de Seguridad: RD 311/2022."},
+ {p:"Vulnerabilidad.",r:"Debilidad de un sistema que puede explotarse."},
+ {p:"Amenaza.",r:"Causa potencial de un incidente."},
+ {p:"Ataque.",r:"Acción que explota una vulnerabilidad."},
+ {p:"Virus.",r:"Malware que se adjunta a un archivo y se replica al ejecutarlo."},
+ {p:"Gusano.",r:"Malware que se propaga solo por la red."},
+ {p:"Troyano.",r:"Malware disfrazado de software legítimo."},
+ {p:"Ransomware.",r:"Cifra los datos y exige un rescate."},
+ {p:"Spyware.",r:"Recopila información del usuario sin su consentimiento."},
+ {p:"Adware.",r:"Muestra publicidad no deseada."},
+ {p:"Keylogger.",r:"Registra las pulsaciones del teclado."},
+ {p:"Botnet.",r:"Red de equipos infectados (zombis) controlados remotamente."},
+ {p:"Rootkit.",r:"Se oculta en el sistema con privilegios de administrador."},
+ {p:"Exploit.",r:"Código que aprovecha una vulnerabilidad concreta."},
+ {p:"Phishing.",r:"Suplantación para robar credenciales (smishing por SMS, vishing por voz)."},
+ {p:"DoS y DDoS.",r:"Denegación de servicio; distribuida si participan muchos equipos."},
+ {p:"Firewall.",r:"Cortafuegos: filtra el tráfico de red según reglas."},
+ {p:"Proxy.",r:"Servidor intermediario entre el cliente e Internet."},
+ {p:"IDS e IPS.",r:"Sistemas que detectan (IDS) o previenen (IPS) intrusiones."},
+ {p:"Cifrado simétrico.",r:"Una misma clave para cifrar y descifrar (AES)."},
+ {p:"Cifrado asimétrico.",r:"Clave pública y privada (RSA): la pública cifra y la privada descifra."},
+ {p:"VPN.",r:"Red privada virtual: túnel cifrado a través de Internet."},
+ {p:"Copia completa.",r:"Copia todos los datos."},
+ {p:"Copia diferencial.",r:"Cambios desde la última copia completa."},
+ {p:"Copia incremental.",r:"Cambios desde la última copia de cualquier tipo."},
+ {p:"Copia espejo.",r:"Réplica exacta y actualizada de los datos, sin versiones."}
+]};
+
+const T1=[
+ {q:"El término «informática» fue acuñado por:",o:["Philippe Dreyfus en 1962.","Alan Turing en 1936.","John von Neumann en 1945.","Charles Babbage en 1834."],c:0,e:"Información + automática."},
+ {q:"Un algoritmo representado gráficamente se denomina:",o:["Ordinograma.","Pseudocódigo.","Compilador.","Programa fuente."],c:0,e:"Diagrama de flujo."},
+ {q:"La codificación de la información al binario se produce en la fase de:",o:["Entrada.","Proceso.","Salida.","Almacenamiento."],c:0,e:"La decodificación, en la salida."},
+ {q:"La parte física y tangible de un ordenador es el:",o:["Hardware.","Software.","Firmware.","Groupware."],c:0,e:"Componente físico."},
+ {q:"El software de evaluación que se distribuye con limitaciones es el:",o:["Shareware.","Freeware.","Groupware.","Firmware."],c:0,e:"El freeware es gratuito sin más."},
+ {q:"El software grabado de fábrica en una memoria no volátil que controla el hardware es el:",o:["Firmware.","Shareware.","Middleware.","Adware."],c:0,e:"Por ejemplo, la BIOS."},
+ {q:"La UEFI es:",o:["El firmware que sustituye a la BIOS en los equipos modernos.","Un tipo de memoria RAM.","Un puerto de vídeo.","Un sistema operativo de servidor."],c:0,e:"Unified Extensible Firmware Interface."},
+ {q:"No es función de la BIOS:",o:["Gestionar los ficheros del usuario.","Inicializar el hardware.","Cargar el sistema operativo.","Guardar la fecha y la hora."],c:0,e:"Eso lo hace el sistema operativo."},
+ {q:"El elemento humano de un sistema informático se denomina a veces:",o:["Componente humano (o peopleware).","Firmware.","Hardware.","Middleware."],c:0,e:"Físico, lógico y humano."},
+ {q:"La unidad mínima de información es el:",o:["Bit.","Byte.","Nibble.","Carácter."],c:0,e:"Un 0 o un 1."},
+ {q:"Un byte equivale a:",o:["8 bits.","4 bits.","16 bits.","1.024 bits."],c:0,e:"Un octeto."},
+ {q:"El código ASCII estándar utiliza:",o:["7 bits (128 caracteres).","8 bits (256 caracteres).","16 bits.","4 bits."],c:0,e:"El extendido usa 8."},
+ {q:"La longitud de palabra de un procesador es:",o:["El número de bits que procesa en una operación.","La velocidad de reloj.","El número de núcleos.","El tamaño de la caché."],c:0,e:"Hoy, 64 bits."},
+ {q:"Según el SI, 1 kB equivale a:",o:["1.000 bytes.","1.024 bytes.","1.000 bits.","1.024 bits."],c:0,e:"1.024 bytes es 1 KiB."},
+ {q:"El prefijo «quetta» equivale a:",o:["10^30.","10^27.","10^24.","10^21."],c:0,e:"Ronna es 10^27; yotta, 10^24."},
+ {q:"Un ordenador que atiende simultáneamente a muchos usuarios como servidor central es un:",o:["Mainframe.","Wearable.","Nanoordenador.","Ordenador personal."],c:0,e:"Gran sistema."},
+ {q:"Un reloj inteligente es un:",o:["Wearable.","Mainframe.","Miniordenador.","Supercomputador."],c:0,e:"Se lleva puesto."},
+ {q:"El ordenador que trabaja con magnitudes físicas continuas es el:",o:["Analógico.","Digital.","Cuántico.","Híbrido."],c:0,e:"El digital, con valores discretos."},
+ {q:"La unidad de información de un ordenador cuántico es el:",o:["Qubit.","Bit.","Byte.","Nibble."],c:0,e:"Admite superposición."},
+ {q:"El sistema de numeración que usa internamente el ordenador es el:",o:["Binario.","Decimal.","Octal.","Hexadecimal."],c:0,e:"Octal y hexadecimal abrevian el binario."}
+];
+const T2=[
+ {q:"El circuito principal que interconecta los componentes del ordenador es la:",o:["Placa base.","CPU.","Tarjeta gráfica.","Fuente de alimentación."],c:0,e:"Motherboard."},
+ {q:"El bus de direcciones es:",o:["Unidireccional.","Bidireccional.","Inalámbrico.","Óptico."],c:0,e:"El de datos es bidireccional."},
+ {q:"El bus que transporta en ambos sentidos la información entre CPU y memoria es el de:",o:["Datos.","Direcciones.","Control.","Expansión."],c:0,e:"Bidireccional."},
+ {q:"La ranura de expansión actual para gráficas y SSD es:",o:["PCI Express.","AGP.","ISA.","PS/2."],c:0,e:"AGP e ISA, obsoletas."},
+ {q:"En el chipset clásico, el northbridge comunica:",o:["La CPU con la RAM y la gráfica.","Los puertos USB y el audio.","La pila y la BIOS.","El disco duro con la red."],c:0,e:"El southbridge, la E/S lenta."},
+ {q:"En las placas actuales el southbridge se denomina:",o:["PCH.","VRM.","ATX.","SATA."],c:0,e:"Platform Controller Hub."},
+ {q:"El componente que regula el voltaje que llega a la CPU es el:",o:["VRM.","PCH.","Socket.","Chipset."],c:0,e:"Voltage Regulator Module."},
+ {q:"La interfaz habitual para conectar discos duros internos es:",o:["SATA.","HDMI.","RJ-45.","VGA."],c:0,e:"Serial ATA."},
+ {q:"La pila de la placa base sirve para:",o:["Mantener la configuración y la hora con el equipo apagado.","Alimentar la CPU.","Cargar el portátil.","Refrescar la DRAM."],c:0,e:"Pila CMOS."},
+ {q:"El factor de forma más común de las placas base es:",o:["ATX.","PCIe.","DDR.","NVMe."],c:0,e:"Y sus variantes micro-ATX o mini-ITX."},
+ {q:"La unidad de la CPU que interpreta las instrucciones y coordina el resto es la:",o:["Unidad de control.","ALU.","Caché.","Memoria RAM."],c:0,e:"UC."},
+ {q:"El registro que contiene la dirección de la siguiente instrucción es el:",o:["Contador de programa.","Acumulador.","Registro de estado.","Registro de instrucción."],c:0,e:"PC."},
+ {q:"La ALU realiza:",o:["Operaciones aritméticas y lógicas.","El control de periféricos.","La gestión de ficheros.","El arranque del sistema."],c:0,e:"Unidad aritmético-lógica."},
+ {q:"El registro de la ALU que almacena el resultado de las operaciones es el:",o:["Acumulador.","Contador de programa.","Decodificador.","Secuenciador."],c:0,e:"El de estado guarda los flags."},
+ {q:"La velocidad de reloj de un procesador actual se mide en:",o:["GHz.","MB.","PPM.","dpi."],c:0,e:"Gigahercios."},
+ {q:"La arquitectura de procesador de bajo consumo que usan móviles y Apple Silicon es:",o:["ARM.","x86.","PowerPC.","SPARC."],c:0,e:"RISC."},
+ {q:"RISC-V es:",o:["Una arquitectura de procesador abierta.","Un virus.","Un tipo de RAM.","Un puerto de vídeo."],c:0,e:"Sin licencias."},
+ {q:"El primer microprocesador comercial fue el:",o:["Intel 4004 (1971).","Intel 8086 (1978).","Pentium (1993).","Motorola 68000 (1979)."],c:0,e:"Intel."},
+ {q:"La memoria caché de nivel más rápido y pequeño es la:",o:["L1.","L2.","L3.","L4."],c:0,e:"Más cerca del núcleo."},
+ {q:"El zócalo de la placa base donde se inserta el microprocesador es el:",o:["Socket.","Slot PCIe.","Puerto SATA.","Banco DIMM."],c:0,e:"Debe ser compatible con la CPU."}
+];
+const T3=[
+ {q:"La RAM es una memoria:",o:["Volátil y de lectura y escritura.","No volátil y de solo lectura.","Volátil y de solo lectura.","No volátil y secuencial."],c:0,e:"Se borra al apagar."},
+ {q:"La memoria RAM que necesita refresco periódico es la:",o:["DRAM.","SRAM.","PROM.","EEPROM."],c:0,e:"Dinámica."},
+ {q:"La memoria caché se fabrica con:",o:["SRAM.","DRAM.","EPROM.","Flash."],c:0,e:"Más rápida."},
+ {q:"La memoria propia de la tarjeta gráfica es la:",o:["VRAM.","SRAM.","PROM.","ROM."],c:0,e:"Video RAM."},
+ {q:"La DDR SDRAM se caracteriza por:",o:["Transferir datos dos veces por ciclo de reloj.","No necesitar refresco.","Ser no volátil.","Borrarse con luz ultravioleta."],c:0,e:"Double Data Rate."},
+ {q:"La generación de memoria DDR actual en equipos nuevos es la:",o:["DDR5.","DDR2.","DDR3.","SDR."],c:0,e:"DDR4 aún convive."},
+ {q:"La ROM es:",o:["No volátil y de solo lectura.","Volátil y de lectura y escritura.","La memoria de la gráfica.","Una memoria secundaria magnética."],c:0,e:"Firmware."},
+ {q:"La EPROM se borra mediante:",o:["Luz ultravioleta.","Impulsos eléctricos.","Un campo magnético.","No se puede borrar."],c:0,e:"La EEPROM, eléctricamente."},
+ {q:"La memoria que solo puede programarse una vez es la:",o:["PROM.","EPROM.","EEPROM.","Flash."],c:0,e:"Programmable ROM."},
+ {q:"Las memorias USB y los SSD utilizan memoria:",o:["Flash.","DRAM.","SRAM.","PROM."],c:0,e:"Una EEPROM por bloques."},
+ {q:"La memoria virtual es:",o:["Espacio de disco que el sistema operativo usa como extensión de la RAM.","Una RAM de la gráfica.","La caché L3.","Almacenamiento en la nube."],c:0,e:"Archivo de paginación o swap."},
+ {q:"En la jerarquía de memoria, el nivel más rápido es el de:",o:["Los registros.","La caché L1.","La RAM.","El SSD."],c:0,e:"Dentro de la CPU."},
+ {q:"Ordenadas de más rápida a más lenta:",o:["Caché, RAM, SSD, HDD.","RAM, caché, HDD, SSD.","SSD, RAM, caché, HDD.","HDD, SSD, RAM, caché."],c:0,e:"Jerarquía."},
+ {q:"La memoria principal la forman:",o:["La RAM y la ROM.","El disco duro y el SSD.","La caché y el disco.","La nube y el NAS."],c:0,e:"Accesibles directamente por la CPU."},
+ {q:"La CPU accede a los datos de la memoria secundaria:",o:["Tras cargarlos en la memoria principal.","Directamente.","A través del VRM.","Solo mediante la BIOS."],c:0,e:"No accede directamente."},
+ {q:"El disco duro tradicional es un soporte:",o:["Magnético.","Óptico.","Electrónico.","Cuántico."],c:0,e:"Platos y cabezales."},
+ {q:"El Blu-ray es un soporte:",o:["Óptico.","Magnético.","Flash.","Magnetoóptico."],c:0,e:"Láser azul."},
+ {q:"La unidad de cinta para copias de seguridad se denomina:",o:["Streamer.","Plóter.","Módem.","Router."],c:0,e:"Acceso secuencial."},
+ {q:"El protocolo que permite a los SSD aprovechar el bus PCIe es:",o:["NVMe.","SATA.","IDE.","SCSI."],c:0,e:"Formato M.2."},
+ {q:"El almacenamiento conectado a la red local que comparte ficheros es el:",o:["NAS.","DAS.","SAN.","RAID."],c:0,e:"La SAN es una red dedicada."}
+];
+const T4=[
+ {q:"El software que permite al sistema operativo comunicarse con un periférico es el:",o:["Driver o controlador.","Firmware de la BIOS.","Antivirus.","Compilador."],c:0,e:"Controlador."},
+ {q:"La tecnología que detecta y configura automáticamente los periféricos es:",o:["Plug and Play.","Hot spot.","Bluetooth.","TWAIN."],c:0,e:"PnP."},
+ {q:"El escáner es un periférico de:",o:["Entrada.","Salida.","Entrada/salida.","Almacenamiento."],c:0,e:"Digitaliza."},
+ {q:"El plóter es un periférico de:",o:["Salida.","Entrada.","Entrada/salida.","Proceso."],c:0,e:"Gran formato."},
+ {q:"La pantalla táctil es un periférico de:",o:["Entrada/salida.","Entrada.","Salida.","Proceso."],c:0,e:"Muestra y recibe."},
+ {q:"El módem es un periférico de:",o:["Entrada/salida.","Entrada.","Salida.","Almacenamiento interno."],c:0,e:"Comunicaciones."},
+ {q:"El OCR permite:",o:["Reconocer texto en una imagen escaneada.","Comprimir vídeo.","Cifrar datos.","Imprimir en gran formato."],c:0,e:"Optical Character Recognition."},
+ {q:"El estándar de comunicación entre el escáner y las aplicaciones es:",o:["TWAIN.","HDMI.","SATA.","ATX."],c:0,e:"Manual."},
+ {q:"La velocidad de las impresoras de impacto se mide en:",o:["CPS.","PPM.","dpi.","Hz."],c:0,e:"Las de no impacto, en PPM."},
+ {q:"La velocidad de una impresora láser se mide en:",o:["PPM.","CPS.","GHz.","Mbps."],c:0,e:"Páginas por minuto."},
+ {q:"La tecnología de pantalla en la que cada píxel emite su propia luz es:",o:["OLED.","LCD TN.","CRT.","LCD IPS."],c:0,e:"El LCD necesita retroiluminación."},
+ {q:"La tasa de refresco de una pantalla se mide en:",o:["Hercios (Hz).","Píxeles.","Pulgadas.","Bits."],c:0,e:"Imágenes por segundo."},
+ {q:"La resolución de una pantalla se expresa en:",o:["Píxeles horizontales por verticales.","Pulgadas.","Hz.","Colores."],c:0,e:"Por ejemplo, 1920 × 1080."},
+ {q:"El conector que transmite vídeo y audio digital a televisores es:",o:["HDMI.","VGA.","RJ-45.","PS/2."],c:0,e:"VGA es analógico."},
+ {q:"El conector VGA transmite señal:",o:["Analógica de vídeo.","Digital de vídeo y audio.","De red.","De alimentación."],c:0,e:"Antiguo."},
+ {q:"El conector de red Ethernet es el:",o:["RJ-45.","RJ-11.","HDMI.","USB-C."],c:0,e:"RJ-11 es telefónico."},
+ {q:"FireWire corresponde al estándar:",o:["IEEE 1394.","IEEE 802.11.","USB 3.0.","PCIe."],c:0,e:"Obsoleto."},
+ {q:"El conector reversible para datos, carga y vídeo es el:",o:["USB-C.","USB-A.","PS/2.","VGA."],c:0,e:"Base de USB4 y Thunderbolt."},
+ {q:"Los periféricos que se comunican con la CPU a través de la red son:",o:["Remotos.","Locales.","Internos.","Virtuales."],c:0,e:"Clasificación por distancia."},
+ {q:"VGA, SVGA y XGA son:",o:["Estándares gráficos.","Tipos de RAM.","Tipos de virus.","Sistemas operativos."],c:0,e:"Tarjetas gráficas."}
+];
+const T5=[
+ {q:"El sistema operativo pertenece al software:",o:["De sistema (base).","De aplicación.","De programación.","Ofimático."],c:0,e:"Gestiona los recursos."},
+ {q:"Un procesador de textos es software:",o:["De aplicación.","De sistema.","De programación.","Firmware."],c:0,e:"Tarea del usuario."},
+ {q:"Un compilador es software:",o:["De programación.","De aplicación.","De sistema.","Malware."],c:0,e:"Herramienta de desarrollo."},
+ {q:"El compilador, frente al intérprete:",o:["Traduce todo el programa antes de ejecutarlo.","Traduce instrucción a instrucción.","No genera código máquina.","Solo funciona en Linux."],c:0,e:"El intérprete va línea a línea."},
+ {q:"Un IDE es:",o:["Un entorno de desarrollo integrado.","Un sistema de detección de intrusos.","Un tipo de disco.","Un protocolo de red."],c:0,e:"Integrated Development Environment."},
+ {q:"No es función del sistema operativo:",o:["Redactar documentos.","Gestionar la memoria.","Gestionar los procesos.","Gestionar los ficheros."],c:0,e:"Eso es una aplicación."},
+ {q:"La versión de Windows 11 publicada en septiembre de 2026 es la:",o:["26H2.","25H2.","24H2.","23H2."],c:0,e:"29-9-2026."},
+ {q:"Las actualizaciones de seguridad extendidas (ESU) de Windows 10 para particulares llegan hasta:",o:["El 12 de octubre de 2027.","El 14 de octubre de 2025.","El 31 de diciembre de 2026.","El 13 de octubre de 2026."],c:0,e:"El soporte estándar acabó en 2025."},
+ {q:"El soporte estándar de Windows 10 terminó el:",o:["14 de octubre de 2025.","12 de octubre de 2027.","10 de enero de 2023.","1 de julio de 2024."],c:0,e:"ESU hasta 2027."},
+ {q:"La versión de macOS publicada en septiembre de 2026 es:",o:["macOS 27.","macOS 26 Tahoe.","macOS 15 Sequoia.","macOS 14 Sonoma."],c:0,e:"Golden Gate."},
+ {q:"La versión estable de Android publicada en junio de 2026 es:",o:["Android 17.","Android 16.","Android 15.","Android 14."],c:0,e:"16-6-2026."},
+ {q:"Es un sistema operativo móvil discontinuado:",o:["Windows Phone.","iOS.","Android.","HarmonyOS."],c:0,e:"Como Symbian y BlackBerry OS."},
+ {q:"Ubuntu, Debian y Fedora son:",o:["Distribuciones de Linux.","Versiones de Windows.","Navegadores.","Antivirus."],c:0,e:"Libres."},
+ {q:"Android se basa en el núcleo:",o:["Linux.","Windows NT.","Darwin.","Symbian."],c:0,e:"Open source."},
+ {q:"El freeware se caracteriza por ser:",o:["Gratuito.","De pago tras un periodo de prueba.","Para el trabajo en grupo.","Grabado en ROM."],c:0,e:"El shareware es de prueba."},
+ {q:"El software que hace de intermediario entre el usuario y el hardware es, sobre todo, el:",o:["Sistema operativo.","Procesador de textos.","Navegador.","Firmware de la impresora."],c:0,e:"Interfaz."},
+ {q:"ChromeOS es un sistema operativo:",o:["De escritorio basado en Linux.","Móvil de Apple.","De servidor de Microsoft.","Para mainframes."],c:0,e:"Google."},
+ {q:"Los Mac actuales usan procesadores de arquitectura:",o:["ARM (Apple Silicon).","x86 de Intel.","PowerPC.","RISC-V."],c:0,e:"Rosetta traduce x86."},
+ {q:"El software que se usa para buscar y corregir errores en un programa es el:",o:["Depurador.","Compilador.","Editor de textos.","Antivirus."],c:0,e:"Debugger."},
+ {q:"Un controlador (driver) es software:",o:["De sistema.","De aplicación.","Ofimático.","Malicioso."],c:0,e:"Junto al sistema operativo."}
+];
+const T6=[
+ {q:"La dimensión que garantiza que solo acceden los autorizados es la:",o:["Confidencialidad.","Integridad.","Disponibilidad.","Trazabilidad."],c:0,e:"Cifrado y control de acceso."},
+ {q:"La dimensión que garantiza que la información no se altera sin autorización es la:",o:["Integridad.","Confidencialidad.","Disponibilidad.","Autenticidad."],c:0,e:"Hashes, firmas."},
+ {q:"Un ataque DDoS afecta sobre todo a la:",o:["Disponibilidad.","Confidencialidad.","Integridad.","Autenticidad."],c:0,e:"Inutiliza el servicio."},
+ {q:"La dimensión que asegura que el autor es quien dice ser es la:",o:["Autenticidad.","Disponibilidad.","Integridad.","Confidencialidad."],c:0,e:"Firma electrónica."},
+ {q:"La dimensión que añade el ENS para saber quién hizo qué es la:",o:["Trazabilidad.","Usabilidad.","Portabilidad.","Escalabilidad."],c:0,e:"RD 311/2022."},
+ {q:"El Esquema Nacional de Seguridad está regulado por el:",o:["RD 311/2022.","RD 3/2010.","RD 4/2010.","RD 203/2021."],c:0,e:"Derogó el RD 3/2010."},
+ {q:"Una debilidad de un sistema que puede ser explotada es una:",o:["Vulnerabilidad.","Amenaza.","Contramedida.","Salvaguarda."],c:0,e:"La amenaza es la causa potencial."},
+ {q:"La causa potencial de un incidente es una:",o:["Amenaza.","Vulnerabilidad.","Salvaguarda.","Auditoría."],c:0,e:"Definición."},
+ {q:"El malware que se propaga solo, sin intervención del usuario, es el:",o:["Gusano.","Virus.","Troyano.","Adware."],c:0,e:"El virus necesita que se ejecute."},
+ {q:"El malware que se disfraza de programa legítimo es el:",o:["Troyano.","Gusano.","Ransomware.","Keylogger."],c:0,e:"Caballo de Troya."},
+ {q:"El malware que cifra los datos y exige un rescate es el:",o:["Ransomware.","Spyware.","Adware.","Rootkit."],c:0,e:"Secuestro."},
+ {q:"El programa que registra las pulsaciones del teclado es un:",o:["Keylogger.","Adware.","Proxy.","Firewall."],c:0,e:"Roba contraseñas."},
+ {q:"Una red de equipos infectados controlados por un atacante es una:",o:["Botnet.","VPN.","SAN.","Intranet."],c:0,e:"Zombis."},
+ {q:"El malware que se oculta con privilegios de administrador es el:",o:["Rootkit.","Adware.","Gusano.","Phishing."],c:0,e:"Root."},
+ {q:"El phishing por SMS se denomina:",o:["Smishing.","Vishing.","Pharming.","Spoofing."],c:0,e:"Vishing es por voz."},
+ {q:"El phishing es principalmente una técnica de:",o:["Ingeniería social.","Cifrado.","Copia de seguridad.","Compresión."],c:0,e:"Engaño, no malware en sí."},
+ {q:"El código que aprovecha una vulnerabilidad concreta es un:",o:["Exploit.","Parche.","Driver.","Firewall."],c:0,e:"Ataque."},
+ {q:"El software que muestra publicidad no deseada es el:",o:["Adware.","Spyware.","Ransomware.","Firmware."],c:0,e:"Advertising."},
+ {q:"El virus informático necesita para propagarse:",o:["Que se ejecute el archivo infectado.","Solo una conexión a la red.","Privilegios de administrador.","Un cifrado asimétrico."],c:0,e:"Frente al gusano."},
+ {q:"La tríada clásica de la seguridad (CIA) la forman:",o:["Confidencialidad, integridad y disponibilidad.","Control, inspección y auditoría.","Cifrado, identificación y acceso.","Copia, integridad y autenticidad."],c:0,e:"Más autenticidad y trazabilidad."}
+];
+const T7=[
+ {q:"El cortafuegos:",o:["Filtra el tráfico de red según reglas.","Elimina virus de los ficheros.","Cifra el disco duro.","Hace copias de seguridad."],c:0,e:"Firewall."},
+ {q:"El servidor intermediario entre el cliente e Internet es el:",o:["Proxy.","DNS.","NAS.","IDS."],c:0,e:"Puede filtrar y cachear."},
+ {q:"El sistema que detecta intrusiones es el:",o:["IDS.","IPS.","VPN.","UPS."],c:0,e:"El IPS además las bloquea."},
+ {q:"El pentesting es:",o:["Una auditoría que simula ataques para encontrar vulnerabilidades.","Un sistema de detección de intrusos.","Un tipo de malware.","Un tipo de copia de seguridad."],c:0,e:"No es IDS."},
+ {q:"El cifrado que usa la misma clave para cifrar y descifrar es el:",o:["Simétrico.","Asimétrico.","Híbrido.","Hash."],c:0,e:"AES."},
+ {q:"En el cifrado asimétrico, para enviar un mensaje confidencial se cifra con:",o:["La clave pública del destinatario.","La clave privada del destinatario.","La clave privada del emisor.","Una clave compartida."],c:0,e:"Solo él lo descifra con su privada."},
+ {q:"RSA es un algoritmo de cifrado:",o:["Asimétrico.","Simétrico.","De hash.","De compresión."],c:0,e:"Pública y privada."},
+ {q:"La VPN:",o:["Crea un túnel cifrado a través de Internet.","Detecta virus.","Copia datos en cinta.","Filtra correo basura."],c:0,e:"Red privada virtual."},
+ {q:"La autenticación de doble factor combina:",o:["Dos elementos de categorías distintas (saber, tener, ser).","Dos contraseñas.","Dos usuarios.","Dos antivirus."],c:0,e:"Más robusta."},
+ {q:"Los parches de seguridad sirven para:",o:["Corregir vulnerabilidades conocidas.","Aumentar la RAM.","Cifrar el tráfico.","Duplicar el disco."],c:0,e:"Actualizaciones."},
+ {q:"La copia que guarda los cambios desde la última copia completa es la:",o:["Diferencial.","Incremental.","Espejo.","Completa."],c:0,e:"Crece cada día."},
+ {q:"La copia que guarda los cambios desde la última copia de cualquier tipo es la:",o:["Incremental.","Diferencial.","Completa.","Espejo."],c:0,e:"La más pequeña."},
+ {q:"La copia que mantiene una réplica exacta y actualizada es la:",o:["Espejo.","Incremental.","Diferencial.","Completa semanal."],c:0,e:"Sin historial de versiones."},
+ {q:"La copia más rápida de restaurar es la:",o:["Completa.","Incremental.","Diferencial.","Ninguna."],c:0,e:"Un solo conjunto."},
+ {q:"La copia que menos espacio ocupa cada día es la:",o:["Incremental.","Diferencial.","Completa.","Espejo."],c:0,e:"Solo los cambios del día."},
+ {q:"Con copia completa el domingo y diferenciales a diario, para restaurar el jueves se necesitan:",o:["La completa y la diferencial del jueves.","La completa y todas las diferenciales.","Solo la diferencial del jueves.","Solo la completa."],c:0,e:"Dos conjuntos."},
+ {q:"Con copia completa el domingo e incrementales a diario, para restaurar el miércoles se necesitan:",o:["La completa y las incrementales de lunes, martes y miércoles.","La completa y la incremental del miércoles.","Solo la incremental del miércoles.","Solo la completa."],c:0,e:"Toda la cadena."},
+ {q:"El antivirus es un mecanismo de seguridad:",o:["Que detecta y elimina malware.","Que filtra el tráfico por puertos.","Que cifra conexiones.","Que regula el voltaje."],c:0,e:"Antimalware."},
+ {q:"El control de acceso comprende:",o:["La identificación, la autenticación y la autorización.","Solo el cifrado.","Solo el firewall.","Las copias de seguridad."],c:0,e:"Quién eres y qué puedes hacer."},
+ {q:"El cifrado protege sobre todo la:",o:["Confidencialidad.","Disponibilidad.","Velocidad.","Capacidad."],c:0,e:"Y, con firmas, integridad y autenticidad."}
+];
+const T8=[
+ {q:"Un usuario compra un disco de «2 TB» y Windows le muestra unos 1,81 TB. La explicación es que:",o:["El fabricante usa el SI (10^12) y el sistema muestra unidades binarias (2^40).","El disco está defectuoso.","El sistema reserva la mitad para la BIOS.","Falta formatear en FAT32."],c:0,e:"2·10^12 / 2^40 ≈ 1,82 TiB."},
+ {q:"Un fichero de texto contiene 2.000 caracteres ASCII extendido. Ocupa aproximadamente:",o:["2.000 bytes.","2.000 bits.","250 bytes.","16.000 bytes."],c:0,e:"1 byte por carácter."},
+ {q:"El número decimal 13 en binario es:",o:["1101.","1011.","1110.","1001."],c:0,e:"8 + 4 + 1."},
+ {q:"El número binario 1010 es en decimal:",o:["10.","12.","5.","9."],c:0,e:"8 + 2."},
+ {q:"El número hexadecimal FF equivale en decimal a:",o:["255.","256.","15.","16."],c:0,e:"15·16 + 15."},
+ {q:"Un equipo va lento al abrir muchas aplicaciones y el disco trabaja sin parar. Lo más probable es:",o:["Falta RAM y el sistema recurre a la memoria virtual.","La CPU tiene demasiados núcleos.","La tarjeta gráfica tiene VRAM de sobra.","La BIOS está desactualizada."],c:0,e:"Paginación."},
+ {q:"Una unidad administrativa quiere compartir ficheros entre diez puestos con un dispositivo en la red local. Lo adecuado es un:",o:["NAS.","DAS.","Plóter.","Streamer."],c:0,e:"Network Attached Storage."},
+ {q:"Un funcionario recibe un correo con aspecto de la AEAT que le pide su clave por un enlace. Se trata de:",o:["Phishing.","Gusano.","Rootkit.","DDoS."],c:0,e:"Ingeniería social."},
+ {q:"Los ficheros de un ayuntamiento aparecen cifrados y se exige un pago en criptomonedas. La medida que permite recuperarse sin pagar es:",o:["Tener copias de seguridad actualizadas y aisladas.","Instalar un proxy.","Ampliar la RAM.","Cambiar la pantalla."],c:0,e:"Ransomware."},
+ {q:"La sede electrónica deja de responder porque miles de equipos lanzan peticiones a la vez. La dimensión afectada es:",o:["La disponibilidad.","La confidencialidad.","La autenticidad.","La trazabilidad."],c:0,e:"DDoS."},
+ {q:"Un empleado modifica sin permiso importes en la base de datos de contratos. La dimensión vulnerada es la:",o:["Integridad.","Disponibilidad.","Confidencialidad.","Usabilidad."],c:0,e:"Alteración."},
+ {q:"Para teletrabajar accediendo con seguridad a la red del ministerio se usa:",o:["Una VPN.","Un plóter.","Un keylogger.","Un DAS."],c:0,e:"Túnel cifrado."},
+ {q:"Copia completa el domingo, 50 GB; incrementales de 2 GB de lunes a viernes. El viernes se han copiado en total:",o:["60 GB.","50 GB.","80 GB.","52 GB."],c:0,e:"50 + 5·2."},
+ {q:"Copia completa el domingo, 50 GB; diferenciales con 2 GB de cambios diarios. La diferencial del viernes ocupa:",o:["10 GB.","2 GB.","50 GB.","60 GB."],c:0,e:"5 días de cambios."},
+ {q:"Para conectar un monitor moderno y un televisor con sonido conviene usar:",o:["HDMI.","VGA.","RJ-45.","PS/2."],c:0,e:"Vídeo y audio."},
+ {q:"Un usuario quiere digitalizar un documento en papel y editar su texto. Necesita:",o:["Un escáner con OCR.","Un plóter.","Un proyector.","Un módem."],c:0,e:"Reconocimiento de caracteres."},
+ {q:"Un equipo de la oficina sigue con Windows 10 en noviembre de 2026. Lo recomendable es:",o:["Migrar a Windows 11 o, si no es posible, acogerse a las ESU.","Mantenerlo sin cambios: tiene soporte estándar.","Instalar Windows 8.","Desactivar el firewall."],c:0,e:"Soporte estándar terminado."},
+ {q:"Un programa gratuito descargado abre una puerta trasera en el equipo. Es un:",o:["Troyano.","Gusano.","Adware.","Firewall."],c:0,e:"Aparenta ser legítimo."},
+ {q:"Para enviar un documento cifrado que solo pueda leer su destinatario, con cifrado asimétrico, se usa:",o:["La clave pública del destinatario.","La clave privada del emisor.","La clave privada del destinatario.","Ninguna clave."],c:0,e:"Él descifra con su privada."},
+ {q:"No se puede saber qué usuario borró un expediente porque no hay registros de actividad. Falla la:",o:["Trazabilidad.","Disponibilidad.","Integridad del hardware.","Velocidad del disco."],c:0,e:"Dimensión del ENS."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"💡",name:"Conceptos y representación",desc:"Información, binario, unidades y clasificación.",qs:T1},
+ {id:"t2",ic:"🧩",name:"Placa base y CPU",desc:"Buses, chipset, UC y ALU.",qs:T2},
+ {id:"t3",ic:"💾",name:"Memorias y almacenamiento",desc:"RAM, ROM, jerarquía y soportes.",qs:T3},
+ {id:"t4",ic:"🖨️",name:"Periféricos y puertos",desc:"Entrada, salida, E/S y conectores.",qs:T4},
+ {id:"t5",ic:"🪟",name:"Software y sistemas operativos",desc:"Tipos y versiones actuales.",qs:T5},
+ {id:"t6",ic:"🦠",name:"Seguridad y malware",desc:"Dimensiones, amenazas y ataques.",qs:T6},
+ {id:"t7",ic:"🛡️",name:"Mecanismos y copias",desc:"Firewall, cifrado, VPN y respaldos.",qs:T7},
+ {id:"t8",ic:"🧠",name:"Casos prácticos",desc:"Cálculos y situaciones reales.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));const POOL=TESTS.flatMap(t=>t.qs);
+
+const ESQ=[
+ {id:"e1",title:"Ordena la jerarquía de memoria",intro:"De la más rápida a la más lenta.",type:"order",
+  items:[{t:"Registros",why:"Dentro de la CPU."},{t:"Caché (L1, L2, L3)",why:"SRAM."},{t:"Memoria principal (RAM/ROM)",why:"DDR."},{t:"Memoria virtual",why:"En disco."},{t:"SSD",why:"Flash."},{t:"HDD",why:"Magnético."},{t:"Ópticos",why:"Láser."},{t:"Nube",why:"Depende de la red."}]},
+ {id:"e2",title:"Ordena las unidades",intro:"De menor a mayor.",type:"order",
+  items:[{t:"Bit",why:"Mínima."},{t:"Byte",why:"8 bits."},{t:"Kilobyte",why:"10^3."},{t:"Megabyte",why:"10^6."},{t:"Gigabyte",why:"10^9."},{t:"Terabyte",why:"10^12."},{t:"Petabyte",why:"10^15."},{t:"Exabyte",why:"10^18."},{t:"Zettabyte",why:"10^21."},{t:"Yottabyte",why:"10^24."},{t:"Ronnabyte",why:"10^27."},{t:"Quettabyte",why:"10^30."}]},
+ {id:"e3",title:"Tratamiento de la información",intro:"Tres fases.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ordenador</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Entrada</b>{{0}} al binario</div>
+   <div class="sch-box alt"><b>Proceso</b>{{1}} y memoria principal</div>
+   <div class="sch-box"><b>Salida</b>{{2}}</div>
+  </div></div>`,
+  blanks:[{o:["Codificación","Decodificación","Compilación","Compresión"],why:"Entrada."},{o:["CPU","Escáner","Disco duro","Monitor"],why:"Proceso."},{o:["Decodificación","Codificación","Cifrado","Almacenamiento"],why:"Salida."}]},
+ {id:"e4",title:"Componentes del sistema",intro:"Hardware, software y firmware.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Sistema informático</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Físico</b>{{0}}</div>
+   <div class="sch-box alt"><b>Lógico</b>{{1}}</div>
+   <div class="sch-box"><b>En ROM o Flash</b>{{2}}, como la BIOS</div>
+   <div class="sch-box alt"><b>Sustituto de la BIOS</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Hardware","Software","Firmware","Groupware"],why:"Tangible."},{o:["Software","Hardware","Plóter","Chipset"],why:"Intangible."},{o:["Firmware","Shareware","Adware","Freeware"],why:"Grabado de fábrica."},{o:["UEFI","PCH","VRM","ATX"],why:"Firmware moderno."}]},
+ {id:"e5",title:"Los buses",intro:"Placa base.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Buses del sistema</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Datos</b>{{0}}</div>
+   <div class="sch-box alt"><b>Direcciones</b>{{1}}</div>
+   <div class="sch-box"><b>Control</b>Señales de {{2}}</div>
+  </div></div>`,
+  blanks:[{o:["Bidireccional","Unidireccional","Inalámbrico","Analógico"],why:"En ambos sentidos."},{o:["Unidireccional","Bidireccional","Paralelo óptico","Externo"],why:"De la CPU a la memoria."},{o:["control y sincronización","vídeo","red","alimentación"],why:"Coordinación."}]},
+ {id:"e6",title:"El chipset",intro:"Clásico y actual.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Chipset</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>{{0}}</b>CPU, RAM y gráfica</div>
+   <div class="sch-box alt"><b>{{1}}</b>E/S y dispositivos lentos</div>
+   <div class="sch-box"><b>Hoy</b>El southbridge se llama {{2}}</div>
+  </div></div>`,
+  blanks:[{o:["Northbridge","Southbridge","VRM","Socket"],why:"Puente norte."},{o:["Southbridge","Northbridge","BIOS","Caché"],why:"Puente sur."},{o:["PCH","ALU","SATA","DDR"],why:"Platform Controller Hub."}]},
+ {id:"e7",title:"La CPU",intro:"Unidades.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">CPU</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Unidad de control</b>Contador de {{0}}, decodificador, secuenciador y reloj</div>
+   <div class="sch-box alt"><b>{{1}}</b>Operaciones aritméticas y lógicas</div>
+   <div class="sch-box"><b>Resultado</b>Registro {{2}}</div>
+   <div class="sch-box alt"><b>Memoria interna rápida</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["programa","datos","bus","caché"],why:"Siguiente instrucción."},{o:["ALU","UC","VRM","PCH"],why:"Aritmético-lógica."},{o:["acumulador","de estado","de instrucción","base"],why:"Guarda el resultado."},{o:["Caché L1-L3","DRAM","EPROM","HDD"],why:"SRAM."}]},
+ {id:"e8",title:"Tipos de RAM",intro:"Volátil.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">RAM</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Con refresco</b>{{0}}</div>
+   <div class="sch-box alt"><b>Sin refresco, en la caché</b>{{1}}</div>
+   <div class="sch-box"><b>Tarjeta gráfica</b>{{2}}</div>
+   <div class="sch-box alt"><b>Generación actual</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["DRAM","SRAM","PROM","VRAM"],why:"Dinámica."},{o:["SRAM","DRAM","EEPROM","SDR"],why:"Estática."},{o:["VRAM","SRAM","ROM","Flash"],why:"Vídeo."},{o:["DDR5","DDR2","SDR","EDO"],why:"2026."}]},
+ {id:"e9",title:"Tipos de ROM",intro:"No volátil.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">ROM</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Una sola programación</b>{{0}}</div>
+   <div class="sch-box alt"><b>Borrado por luz ultravioleta</b>{{1}}</div>
+   <div class="sch-box"><b>Borrado eléctrico</b>{{2}}</div>
+   <div class="sch-box alt"><b>Borrado por bloques</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["PROM","EPROM","EEPROM","Flash"],why:"Programable."},{o:["EPROM","PROM","Flash","DRAM"],why:"Erasable."},{o:["EEPROM","EPROM","PROM","SRAM"],why:"Electrically."},{o:["Flash","PROM","VRAM","SDRAM"],why:"USB, SSD."}]},
+ {id:"e10",title:"Periféricos",intro:"Por sentido.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Periféricos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Entrada</b>{{0}}</div>
+   <div class="sch-box alt"><b>Salida</b>{{1}}</div>
+   <div class="sch-box"><b>Entrada/salida</b>{{2}}</div>
+   <div class="sch-box alt"><b>Impresoras de impacto</b>Velocidad en {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Escáner","Plóter","Proyector","Altavoz"],why:"Digitaliza."},{o:["Plóter","Teclado","Micrófono","Webcam"],why:"Gran formato."},{o:["Pantalla táctil","Ratón","Monitor","Escáner"],why:"Doble sentido."},{o:["CPS","PPM","Hz","dpi"],why:"Caracteres por segundo."}]},
+ {id:"e11",title:"Almacenamiento",intro:"Soportes y arquitecturas.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Memoria secundaria</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Magnético</b>{{0}}</div>
+   <div class="sch-box alt"><b>Óptico</b>{{1}}</div>
+   <div class="sch-box"><b>Electrónico</b>{{2}}</div>
+   <div class="sch-box alt"><b>En la red local</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Disco duro","SSD","Blu-ray","Memoria USB"],why:"Platos."},{o:["Blu-ray","HDD","SSD","Cinta"],why:"Láser."},{o:["SSD","HDD","DVD","Cinta"],why:"Flash."},{o:["NAS","DAS","DDR","ATX"],why:"Comparte ficheros."}]},
+ {id:"e12",title:"Tipos de software",intro:"Tres categorías.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Software</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>De sistema</b>{{0}} y controladores</div>
+   <div class="sch-box alt"><b>De aplicación</b>{{1}}</div>
+   <div class="sch-box"><b>De programación</b>{{2}}</div>
+   <div class="sch-box alt"><b>Windows vigente</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Sistema operativo","Hoja de cálculo","Compilador","Navegador"],why:"Base."},{o:["Procesador de textos","Driver","Compilador","BIOS"],why:"Usuario."},{o:["Compilador","Navegador","Antivirus","Sistema operativo"],why:"Desarrollo."},{o:["Windows 11 26H2","Windows 10 22H2","Windows 11 23H2","Windows 8.1"],why:"29-9-2026."}]},
+ {id:"e13",title:"Dimensiones de la seguridad",intro:"CIA, autenticidad y ENS.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Seguridad de la información</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Solo autorizados</b>{{0}}</div>
+   <div class="sch-box alt"><b>Sin alteraciones</b>{{1}}</div>
+   <div class="sch-box"><b>Acceso cuando se necesita</b>{{2}}</div>
+   <div class="sch-box alt"><b>Quién hizo qué (ENS)</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Confidencialidad","Integridad","Disponibilidad","Trazabilidad"],why:"Acceso restringido."},{o:["Integridad","Confidencialidad","Autenticidad","Disponibilidad"],why:"Exactitud."},{o:["Disponibilidad","Integridad","Confidencialidad","Autenticidad"],why:"Servicio."},{o:["Trazabilidad","Disponibilidad","Usabilidad","Integridad"],why:"RD 311/2022."}]},
+ {id:"e14",title:"Copias de seguridad",intro:"Tipos.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Respaldo</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Todo</b>{{0}}</div>
+   <div class="sch-box alt"><b>Desde la última completa</b>{{1}}</div>
+   <div class="sch-box"><b>Desde la última de cualquier tipo</b>{{2}}</div>
+   <div class="sch-box alt"><b>Réplica exacta</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Completa","Diferencial","Incremental","Espejo"],why:"Total."},{o:["Diferencial","Incremental","Completa","Espejo"],why:"Crece."},{o:["Incremental","Diferencial","Espejo","Completa"],why:"Mínima."},{o:["Espejo","Completa","Incremental","Diferencial"],why:"Sin versiones."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("in1c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("in1c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
