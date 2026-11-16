@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque 2 · Tema 4 · La protección de datos personales · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">OP4</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Organización de oficinas públicas</small>
+      <b>Protección de datos</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .steps-out{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .steps-out div{padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .steps-out div b{color:var(--a1)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque 2 · Tema 4 · Organización de oficinas públicas</span>
+    <h1>Protección de datos personales <span>y derechos digitales</span></h1>
+    <p>Resumen de alto rendimiento del manual sobre el RGPD y la LOPDGDD (LO 3/2018), actualizado a <strong>noviembre de 2026</strong>: quién preside hoy la AEPD, la reforma europea «Ómnibus Digital» todavía en negociación y, sobre todo, que la <strong>edad de consentimiento sigue en 14 años</strong>, porque la ley de menores en entornos digitales decayó. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un entrenador de las bases de licitud del art. 6 RGPD.</li>
+      <li>Un entrenador para identificar qué derecho se ejerce (ARSOPL y derechos digitales).</li>
+      <li>Una calculadora de plazos: derechos, brechas de seguridad, reclamaciones al DPD y videovigilancia.</li>
+      <li>Un comprobador de si una entidad debe designar delegado de protección de datos.</li>
+      <li>Una calculadora de sanciones, con su prescripción y el régimen de las Administraciones.</li>
+      <li>Un comprobador del consentimiento de menores y de las categorías especiales de datos.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">16</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">88</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('bl').scrollIntoView({behavior:'smooth'})">Bases de licitud ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('pz').scrollIntoView({behavior:'smooth'})">Plazos ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('sa').scrollIntoView({behavior:'smooth'})">Sanciones ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Lo que he actualizado respecto al manual:</strong>
+    <ul>
+      <li><strong>Edad de consentimiento: sigue en 14 años</strong> (art. 7 LOPDGDD). El Proyecto de Ley Orgánica para la protección de las personas menores de edad en los entornos digitales quería subirla a 16, pero <strong>decayó</strong> con la disolución de las Cortes (RD 806/2026, octubre de 2026). Si te lo preguntan en 2026, la respuesta sigue siendo 14.</li>
+      <li><strong>AEPD</strong>: la preside <strong>Lorenzo Cotino Hueso</strong>, nombrado por el RD 142/2025, con <strong>Francisco Pérez Bes</strong> como adjunto. Su Estatuto es el RD 389/2021.</li>
+      <li><strong>Reforma del RGPD («Ómnibus Digital»)</strong>: la Comisión la propuso el 19-11-2025. Entre otras cosas, ampliaría de 72 a 96 horas el plazo para notificar brechas. El Consejo de la UE fijó su posición en octubre de 2026, pero <strong>no está aprobada</strong>: siguen valiendo las <strong>72 horas</strong>. La parte relativa a la IA sí se aprobó como Reglamento (UE) 2026/1744.</li>
+      <li><strong>Erratas</strong>:
+        <ul>
+          <li>El título exacto de la LO 3/2018 es «de Protección de Datos Personales y garantía de los derechos digitales», no «de carácter personal».</li>
+          <li>En las ideas clave, la limitación del tratamiento se describe como que los datos «se dejan de tratar». En realidad solo se <strong>conservan</strong> y no se tratan salvo excepciones (art. 18 RGPD).</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="bl">
+    <div><span class="kicker">Art. 6 RGPD · arts. 6-8 LOPDGDD</span><h2>¿Cuál es la base de licitud?</h2></div>
+    <p>Cada tratamiento necesita una base jurídica. Elige la que corresponde a cada caso.</p>
+  </div>
+  <div class="card tool">
+    <div class="case" id="bl-case"></div>
+    <div class="choice" id="bl-opts"></div>
+    <div class="verdict" id="bl-out" style="display:none"></div>
+    <div class="score"><span id="bl-score">0 de 0</span><button class="btn btn-g btn-sm" id="bl-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="dr">
+    <div><span class="kicker">Arts. 15-22 RGPD · Título X LOPDGDD</span><h2>¿Qué derecho está ejerciendo?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="dr-case"></div>
+    <div class="choice" id="dr-opts"></div>
+    <div class="verdict" id="dr-out" style="display:none"></div>
+    <div class="score"><span id="dr-score">0 de 0</span><button class="btn btn-g btn-sm" id="dr-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="pz">
+    <div><span class="kicker">Art. 12 y 33 RGPD · arts. 22 y 37 LOPDGDD</span><h2>Calculadora de plazos</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tabs-mini" id="pz-tabs"><button class="on" data-p="d">Derechos</button><button data-p="b">Brecha</button><button data-p="r">Reclamación</button><button data-p="v">Videovigilancia</button></div>
+    <div class="pane on" id="pz-d">
+      <div class="tool-grid">
+        <label>Recepción de la solicitud<input type="date" id="pd-f" value="2026-11-16"></label>
+        <label>¿Solicitud compleja o numerosa?<select id="pd-p"><option value="no">No</option><option value="si">Sí: se prorroga</option></select></label>
+        <label>¿Manifiestamente infundada o excesiva?<select id="pd-x"><option value="no">No</option><option value="si">Sí (repetitiva)</option></select></label>
+      </div>
+      <div class="verdict" id="pd-out"></div>
+    </div>
+    <div class="pane" id="pz-b">
+      <div class="tool-grid">
+        <label>Momento en que se tiene constancia<input type="datetime-local" id="pb-f" value="2026-11-13T18:00"></label>
+        <label>Riesgo para los derechos<select id="pb-r"><option value="no">Improbable</option><option value="si" selected>Probable</option><option value="al">Alto riesgo</option></select></label>
+      </div>
+      <div class="verdict" id="pb-out"></div>
+    </div>
+    <div class="pane" id="pz-r">
+      <div class="tool-grid">
+        <label>¿Ante quién reclama?<select id="pr-a"><option value="dpd">Ante el DPD de la entidad (potestativo)</option><option value="aepd">Ante la AEPD, que lo remite al DPD</option></select></label>
+        <label>Fecha de la reclamación<input type="date" id="pr-f" value="2026-11-16"></label>
+      </div>
+      <div class="verdict" id="pr-out"></div>
+    </div>
+    <div class="pane" id="pz-v">
+      <div class="tool-grid">
+        <label>Fecha de grabación<input type="date" id="pv-f" value="2026-11-02"></label>
+        <label>¿Graban un delito o agresión?<select id="pv-d"><option value="no">No</option><option value="si">Sí</option></select></label>
+        <label>Momento en que se conoce la grabación<input type="datetime-local" id="pv-c" value="2026-11-03T09:00"></label>
+      </div>
+      <div class="verdict" id="pv-out"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="dp">
+    <div><span class="kicker">Art. 37 RGPD · art. 34 LOPDGDD</span><h2>¿Debe designar delegado de protección de datos?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Tipo de entidad<select id="dp-t">
+        <option value="aapp">Administración u organismo público</option>
+        <option value="trib">Tribunal en el ejercicio de su función judicial</option>
+        <option value="col">Colegio profesional</option>
+        <option value="edu">Centro docente o universidad</option>
+        <option value="banco">Entidad de crédito o aseguradora</option>
+        <option value="energ">Comercializadora de electricidad o gas</option>
+        <option value="sanit">Centro sanitario obligado a llevar historias clínicas</option>
+        <option value="medico">Médico que ejerce a título individual</option>
+        <option value="seg">Empresa de seguridad privada</option>
+        <option value="juego">Operador de juego en línea</option>
+        <option value="fed">Federación deportiva que trata datos de menores</option>
+        <option value="tienda">Pequeño comercio (sin tratamientos a gran escala)</option>
+        <option value="gran">Empresa privada que observa a gran escala o trata categorías especiales a gran escala</option>
+      </select></label>
+    </div>
+    <div class="verdict" id="dp-out"></div>
+  </div>
+
+  <div class="section-title" id="sa">
+    <div><span class="kicker">Art. 83 RGPD · arts. 72-78 LOPDGDD</span><h2>Calculadora de sanciones y prescripción</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Tipo de infractor<select id="sa-t"><option value="priv">Empresa privada</option><option value="aapp">Administración pública (art. 77)</option></select></label>
+      <label>Gravedad (LOPDGDD)<select id="sa-g"><option value="m">Muy grave (arts. 72 y 83.5 RGPD)</option><option value="g">Grave (arts. 73 y 83.4 RGPD)</option><option value="l">Leve (art. 74)</option></select></label>
+      <label>Volumen de negocio anual mundial (€)<input type="number" id="sa-v" min="0" step="1000000" value="800000000"></label>
+      <label>Multa impuesta (€)<input type="number" id="sa-m" min="0" step="1000" value="1500000"></label>
+    </div>
+    <div class="rsv" id="sa-k"></div>
+    <div class="verdict" id="sa-out"></div>
+  </div>
+
+  <div class="section-title" id="mn">
+    <div><span class="kicker">Arts. 7 y 9 LOPDGDD · arts. 8-9 RGPD</span><h2>Consentimiento: menores y categorías especiales</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Edad del interesado<input type="number" id="mn-e" min="0" max="110" value="15"></label>
+      <label>Datos que se quieren tratar con su consentimiento<select id="mn-d">
+        <option value="ord">Datos ordinarios (alta en una red social)</option>
+        <option value="ide">Datos cuya finalidad principal es identificar su ideología, religión, orientación sexual u origen étnico</option>
+        <option value="sal">Datos de salud para una app de entrenamiento</option>
+      </select></label>
+    </div>
+    <div class="verdict" id="mn-out"></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Autoridades y figuras</span><h2>Mapa de la protección de datos</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras y fechas clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>Art. 18.4 CE</b><span>La ley limitará el uso de la informática. STC 292/2000: derecho fundamental autónomo</span></div>
+    <div class="num"><b>25-5-2016 · 25-5-2018</b><span>Entrada en vigor · aplicación del RGPD</span></div>
+    <div class="num"><b>7-12-2018</b><span>Entrada en vigor de la LO 3/2018</span></div>
+    <div class="num"><b>97 · 10 · 23 · 6 · 1 · 16</b><span>Artículos · títulos · DA · DT · DD · DF de la LOPDGDD</span></div>
+    <div class="num"><b>14 años</b><span>Edad para consentir por sí mismo (art. 7 LOPDGDD) <span class="upd">2026</span></span></div>
+    <div class="num"><b>1 mes (+2)</b><span>Para responder al ejercicio de derechos, prorrogable 2 meses más</span></div>
+    <div class="num"><b>72 horas</b><span>Para notificar una brecha a la autoridad de control</span></div>
+    <div class="num"><b>2 meses · 1 mes</b><span>El DPD resuelve la reclamación previa · respuesta del DPD cuando la AEPD se la remite</span></div>
+    <div class="num"><b>10 días</b><span>Para comunicar a la AEPD el nombramiento o cese del DPD</span></div>
+    <div class="num"><b>50 € · 5 años</b><span>Deuda mínima y permanencia máxima en ficheros de morosos</span></div>
+    <div class="num"><b>1 mes · 72 h</b><span>Videovigilancia: supresión de imágenes · entrega a la autoridad si graban un delito</span></div>
+    <div class="num"><b>250</b><span>Trabajadores: por debajo, en general no hay que llevar registro de actividades</span></div>
+    <div class="num"><b>10 M€ / 2 % · 20 M€ / 4 %</b><span>Multas máximas del RGPD (la cifra mayor)</span></div>
+    <div class="num"><b>3 · 2 · 1 años</b><span>Prescripción de las infracciones muy graves · graves · leves</span></div>
+    <div class="num"><b>40.000 · 300.000 €</b><span>Umbrales de prescripción de las sanciones: 1 · 2 · 3 años</span></div>
+    <div class="num"><b>> 1 M€</b><span>Sanción de la AEPD a una persona jurídica: se publica en el BOE</span></div>
+    <div class="num"><b>5 años</b><span>Mandato de la Presidencia y del Adjunto de la AEPD, renovable</span></div>
+    <div class="num"><b>3/5</b><span>Mayoría de la Comisión de Justicia del Congreso para ratificar a la Presidencia de la AEPD (luego, absoluta)</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · Marco y conceptos</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Régimen jurídico</h3><small>Art. 18.4 CE · RGPD · LOPDGDD · RD 1720/2007</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Art. 18.4 CE</strong>: «la ley limitará el uso de la informática para garantizar el honor y la intimidad personal y familiar de los ciudadanos y el pleno ejercicio de sus derechos».</li>
+          <li><strong>STC 292/2000</strong>: la protección de datos es un <strong>derecho fundamental autónomo</strong>, distinto de la intimidad (art. 18.1). Protege <strong>cualquier</strong> dato personal, íntimo o no.</li>
+          <li><strong>RGPD (Reglamento (UE) 2016/679)</strong>: deroga la Directiva 95/46/CE. En vigor el <strong>25-5-2016</strong>; aplicable desde el <strong>25-5-2018</strong>.</li>
+          <li><strong>LO 3/2018</strong> (LOPDGDD): en vigor el <strong>7-12-2018</strong>; sustituye a la LO 15/1999; adapta y completa el RGPD y regula los <strong>derechos digitales</strong>.</li>
+          <li><strong>RD 1720/2007</strong>: sigue vigente en lo que no se oponga al RGPD ni a la LOPDGDD.</li>
+          <li><span class="upd">2026</span> El «Ómnibus Digital», que modificaría el RGPD, sigue en negociación; no está en vigor.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Ámbito de aplicación</h3><small>Arts. 2-3 RGPD · arts. 2-3 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Material</strong>: tratamiento total o parcialmente <strong>automatizado</strong>, y el no automatizado de datos contenidos o destinados a un <strong>fichero</strong>.</li>
+          <li><strong>Excluidos</strong>:
+            <ul>
+              <li>actividades fuera del Derecho de la UE;</li>
+              <li>la política exterior y de seguridad común;</li>
+              <li>las actividades <strong>exclusivamente personales o domésticas</strong>;</li>
+              <li>los tratamientos de las autoridades con fines penales (Directiva 2016/680);</li>
+              <li>y, según la LOPDGDD, los datos de <strong>fallecidos</strong> y las <strong>materias clasificadas</strong>.</li>
+            </ul>
+          </li>
+          <li>Se rigen por su legislación específica y, supletoriamente, por el RGPD y la LOPDGDD: el régimen electoral, las instituciones penitenciarias y el Registro Civil, de la Propiedad y Mercantil.</li>
+          <li><strong>Territorial</strong>: responsables y encargados establecidos en la UE y, fuera de ella, cuando ofrezcan bienes o servicios a personas en la UE o controlen su comportamiento.</li>
+          <li><strong>Fallecidos</strong> (art. 3 LOPDGDD): los familiares, personas vinculadas y herederos pueden pedir el acceso, la rectificación o la supresión, salvo que el fallecido lo prohibiera (esa prohibición no afecta a los datos patrimoniales de los herederos). Si el fallecido era menor, también sus representantes o el <strong>Ministerio Fiscal</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Definiciones clave</h3><small>Art. 4 RGPD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Dato personal</strong>: información sobre una persona física identificada o identificable.</li>
+          <li><strong>Tratamiento</strong>: cualquier operación sobre datos (recogida, registro, conservación, consulta, comunicación, supresión…).</li>
+          <li><strong>Elaboración de perfiles</strong>: tratamiento automatizado para evaluar aspectos personales (rendimiento, salud, preferencias, ubicación…).</li>
+          <li><strong>Seudonimización</strong>: los datos ya no pueden atribuirse a un interesado sin información adicional guardada por separado. Siguen siendo datos personales.</li>
+          <li><strong>Responsable</strong>: determina los <strong>fines y medios</strong>. <strong>Encargado</strong>: trata los datos <strong>por cuenta</strong> del responsable. <strong>Corresponsables</strong>: determinan conjuntamente fines y medios.</li>
+          <li><strong>Consentimiento</strong>: manifestación de voluntad <strong>libre, específica, informada e inequívoca</strong>, mediante una declaración o una <strong>clara acción afirmativa</strong>.</li>
+          <li><strong>Violación de seguridad</strong>: destrucción, pérdida, alteración, comunicación o acceso no autorizados, accidentales o ilícitos.</li>
+          <li><strong>Datos genéticos, biométricos y de salud</strong>: son categorías especiales.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Principios del tratamiento</h3><small>Art. 5 RGPD · arts. 4-5 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ol type="a">
+          <li><strong>Licitud, lealtad y transparencia</strong>.</li>
+          <li><strong>Limitación de la finalidad</strong>: fines determinados, explícitos y legítimos. El archivo, la investigación y la estadística no se consideran incompatibles.</li>
+          <li><strong>Minimización</strong>: datos adecuados, pertinentes y limitados a lo necesario.</li>
+          <li><strong>Exactitud</strong>: exactos y actualizados. La LOPDGDD (art. 4) no imputa la inexactitud al responsable si se obtuvieron del afectado, de un mediador o de un registro público.</li>
+          <li><strong>Limitación del plazo de conservación</strong>.</li>
+          <li><strong>Integridad y confidencialidad</strong>. El <strong>deber de confidencialidad</strong> (art. 5 LOPDGDD) alcanza a todos los que intervienen y se mantiene aunque haya terminado la relación.</li>
+        </ol>
+        <ul><li><strong>Responsabilidad proactiva</strong> (art. 5.2 RGPD): el responsable cumple los principios y debe poder <strong>demostrarlo</strong>.</li></ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Licitud y consentimiento</h3><small>Arts. 6-8 RGPD · arts. 6-8 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Bases de licitud</strong> (art. 6.1 RGPD): <strong>a)</strong> consentimiento; <strong>b)</strong> ejecución de un contrato o medidas precontractuales; <strong>c)</strong> obligación legal; <strong>d)</strong> intereses vitales; <strong>e)</strong> misión de interés público o ejercicio de poderes públicos; <strong>f)</strong> interés legítimo, que <strong>no</strong> pueden usar las autoridades públicas en el ejercicio de sus funciones.</li>
+          <li><strong>LOPDGDD</strong>:
+            <ul>
+              <li>Si el consentimiento es para varias finalidades, debe constar para todas. No puede supeditarse un contrato a consentir finalidades ajenas a él (art. 6).</li>
+              <li><strong>Menores</strong> (art. 7): consienten por sí solos a partir de los <strong>14 años</strong>; por debajo, consienten los titulares de la patria potestad o tutela. <span class="upd">2026</span> La subida a 16 años decayó con la disolución de las Cortes.</li>
+              <li>La <strong>obligación legal</strong> y la <strong>misión de interés público</strong> deben basarse en una norma de la UE o en una norma con <strong>rango de ley</strong> (art. 8).</li>
+            </ul>
+          </li>
+          <li>El responsable debe poder <strong>demostrar</strong> el consentimiento, que puede retirarse en cualquier momento, tan fácilmente como se dio.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Categorías especiales y datos penales</h3><small>Arts. 9-11 RGPD · arts. 9-10 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Categorías especiales</strong> (art. 9 RGPD): origen étnico o racial, opiniones políticas, convicciones religiosas o filosóficas, afiliación sindical, datos genéticos, biométricos, de salud, vida y orientación sexual. Está <strong>prohibido</strong> tratarlas, salvo las excepciones del art. 9.2 (consentimiento explícito, obligaciones laborales, intereses vitales, datos hechos públicos, reclamaciones, interés público esencial, medicina, salud pública, archivo e investigación).</li>
+          <li><strong>LOPDGDD, art. 9</strong>: el <strong>solo consentimiento no basta</strong> cuando la finalidad principal es identificar la ideología, la afiliación sindical, la religión, la orientación sexual, las creencias o el origen racial o étnico. Los supuestos g), h) e i) requieren una norma con <strong>rango de ley</strong>.</li>
+          <li><strong>Datos penales</strong> (art. 10 LOPDGDD): para fines distintos de los penales, solo con amparo en el Derecho de la UE, en la LOPDGDD o en otra ley. Fuera de esos casos, solo los <strong>abogados y procuradores</strong> con la información de sus clientes.</li>
+          <li><strong>Tratamiento que no requiere identificación</strong> (art. 11 RGPD): no hay que obtener información adicional solo para cumplir el RGPD.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · Derechos</h3>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Ejercicio de derechos e información</h3><small>Arts. 12-14 RGPD · arts. 11-12 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Plazo</strong>: responder sin dilación y como máximo en <strong>1 mes</strong>, prorrogable <strong>2 meses</strong> más por complejidad o número de solicitudes, avisando de la prórroga dentro del primer mes. Si no se atiende, se informa en 1 mes de los motivos y de la posibilidad de reclamar.</li>
+          <li><strong>Gratuidad</strong>: salvo solicitudes <strong>manifiestamente infundadas o excesivas</strong> (repetitivas): entonces cabe un canon razonable o la negativa, y la carga de la prueba es del responsable.</li>
+          <li>Si se solicita por medios electrónicos, se responde por medios electrónicos cuando sea posible.</li>
+          <li><strong>Información por capas</strong> (art. 11 LOPDGDD): una información básica (identidad del responsable, finalidad y posibilidad de ejercer los derechos) y una dirección electrónica u otro medio para el resto.</li>
+          <li>Si los datos no se obtienen del interesado, se le informa en un plazo razonable, como máximo en <strong>1 mes</strong>, o en la primera comunicación.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Los derechos ARSOPL y las decisiones automatizadas</h3><small>Arts. 15-22 RGPD · arts. 13-18 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Acceso</strong>: confirmar si se tratan los datos, obtener copia e información. Se entiende otorgado si el responsable facilita un <strong>acceso remoto, directo y seguro</strong>. Las solicitudes en menos de <strong>6 meses</strong> pueden considerarse repetitivas, salvo causa legítima.</li>
+          <li><strong>Rectificación</strong>: de datos inexactos o incompletos, indicando a qué datos se refiere y aportando la justificación.</li>
+          <li><strong>Supresión («derecho al olvido»)</strong>: cuando ya no son necesarios, se retira el consentimiento, hay oposición, tratamiento ilícito, obligación legal o datos de menores en la sociedad de la información. Si deriva de la oposición a la mercadotecnia, se pueden conservar los datos identificativos para no volver a enviarla.</li>
+          <li><strong>Limitación</strong>: los datos se <strong>conservan</strong> pero no se tratan (mientras se comprueba la exactitud o se decide la oposición; tratamiento ilícito si el interesado no quiere la supresión; para reclamaciones).</li>
+          <li><strong>Portabilidad</strong>: recibir los datos facilitados en un formato estructurado, de uso común y lectura mecánica, y transmitirlos a otro responsable. Solo si el tratamiento se basa en el consentimiento o en un contrato y es automatizado.</li>
+          <li><strong>Oposición</strong>: frente al tratamiento basado en el interés público o en el interés legítimo (incluidos los perfiles), por la situación particular del interesado. Frente a la <strong>mercadotecnia directa</strong>, siempre.</li>
+          <li><strong>Decisiones individuales automatizadas</strong>: derecho a no ser objeto de una decisión basada <strong>únicamente</strong> en un tratamiento automatizado con efectos jurídicos, salvo que sea necesaria para un contrato, esté autorizada por ley o haya consentimiento explícito. En esos casos, derecho a intervención humana, a expresar su punto de vista y a impugnar.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Tratamientos concretos</h3><small>Arts. 19-27 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Ficheros de morosos</strong> (art. 20): deuda de <strong>más de 50 €</strong>; permanencia máxima de <strong>5 años</strong> desde el vencimiento (antes, 6). Se consultan si hay relación contractual con pago o si se pide financiación. Si se deniega el contrato, hay que informar al afectado.</li>
+          <li><strong>Videovigilancia</strong> (art. 22):
+            <ul>
+              <li>La vía pública solo en lo imprescindible (más, si se trata de infraestructuras estratégicas o de transporte), nunca el interior de un domicilio.</li>
+              <li>Las imágenes se suprimen en <strong>1 mes</strong>, salvo que acrediten actos contra personas o bienes: entonces se entregan a la autoridad en <strong>72 horas</strong>. No hay obligación de bloqueo.</li>
+              <li>La información se da con un <strong>cartel</strong> visible: existencia del tratamiento, responsable y derechos.</li>
+              <li>Las cámaras domésticas que solo graban el interior de la propia casa están <strong>excluidas</strong> (salvo si las gestiona una empresa de seguridad).</li>
+            </ul>
+          </li>
+          <li><strong>Exclusión publicitaria</strong> (art. 23, «Lista Robinson»): quien haga mercadotecnia directa debe consultarla antes, salvo que el afectado haya consentido.</li>
+          <li><strong>Estadística pública</strong> (art. 25): las categorías especiales solo con consentimiento expreso; pueden denegarse los derechos amparados por el secreto estadístico.</li>
+          <li><strong>Archivo en interés público</strong> (art. 26): lícito para las Administraciones, con las especialidades de la LPHE y del RD 1708/2011.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Obligaciones</h3>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Responsable y encargado del tratamiento</h3><small>Arts. 24-30 RGPD · arts. 28-33 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Responsable</strong>: aplica medidas técnicas y organizativas adecuadas y puede demostrarlo; <strong>protección de datos desde el diseño y por defecto</strong>.</li>
+          <li><strong>Factores de mayor riesgo</strong> (art. 28 LOPDGDD): discriminación, usurpación de identidad o fraude; privar de derechos; categorías especiales; perfiles; colectivos vulnerables (menores, discapacidad); tratamientos masivos; transferencias a países sin nivel adecuado.</li>
+          <li><strong>Corresponsables</strong>: se reparten las responsabilidades según la actividad efectiva de cada uno (art. 29). El <strong>representante</strong> de responsables de fuera de la UE responde solidariamente (art. 30).</li>
+          <li><strong>Encargado</strong>:
+            <ul>
+              <li>Trata por cuenta del responsable mediante contrato o acto jurídico (art. 28.3 RGPD). Su acceso <strong>no es una comunicación</strong> de datos.</li>
+              <li>Pasa a ser <strong>responsable</strong> si actúa en nombre propio o usa los datos para sus fines.</li>
+              <li>Al terminar, el responsable decide si los datos se destruyen, se devuelven o pasan a otro encargado.</li>
+              <li>En el sector público, puede atribuirse la condición de encargado a un órgano por norma.</li>
+            </ul>
+          </li>
+          <li><strong>Registro de actividades de tratamiento</strong> (art. 30 RGPD; art. 31 LOPDGDD): por escrito, también electrónico. En general no lo lleva quien tiene menos de 250 trabajadores, salvo riesgo, tratamiento no ocasional o categorías especiales. Los <strong>sujetos públicos</strong> deben hacerlo <strong>público</strong> por medios electrónicos, con su base jurídica.</li>
+          <li><strong>Bloqueo</strong> (art. 32 LOPDGDD): al rectificar o suprimir, los datos se bloquean. Solo pueden ponerse a disposición de jueces, del Ministerio Fiscal y de las Administraciones competentes durante el plazo de prescripción de las responsabilidades; después, se destruyen.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Seguridad, brechas y evaluación de impacto</h3><small>Arts. 32-36 RGPD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Seguridad</strong>: medidas apropiadas al riesgo (seudonimización, cifrado, confidencialidad, integridad, disponibilidad, resiliencia, restauración y verificación periódica).</li>
+          <li><strong>Brecha de seguridad</strong>:
+            <ul>
+              <li>Se notifica a la autoridad de control sin dilación y, si es posible, en <strong>72 horas</strong> desde que se tiene constancia, salvo que sea improbable que suponga un riesgo. Si se hace más tarde, hay que explicar el motivo.</li>
+              <li>El encargado avisa al responsable sin dilación.</li>
+              <li>Se comunica a los <strong>interesados</strong> si entraña un <strong>alto riesgo</strong>.</li>
+              <li>Todas se documentan.</li>
+            </ul>
+          </li>
+          <li><strong>Evaluación de impacto</strong> (art. 35): antes del tratamiento si es probable un alto riesgo, y en particular en tres casos: perfiles con efectos jurídicos; categorías especiales o datos penales <strong>a gran escala</strong>; observación sistemática <strong>a gran escala</strong> de una zona de acceso público. Si sigue habiendo alto riesgo, <strong>consulta previa</strong> a la autoridad (art. 36).</li>
+          <li><strong>Códigos de conducta</strong> (art. 38 LOPDGDD): vinculantes para quienes se adhieren; pueden incluir resolución extrajudicial de conflictos. <strong>Certificación</strong>: entidades acreditadas por ENAC.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Delegado de Protección de Datos (DPD)</h3><small>Arts. 37-39 RGPD · arts. 34-37 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Obligatorio (RGPD)</strong>: para autoridades y organismos públicos (salvo los tribunales en su función judicial); para quien observa a gran escala de forma habitual y sistemática; y para quien trata categorías especiales o datos penales a gran escala. Las Administraciones pueden compartir un DPD.</li>
+          <li><strong>Además (art. 34 LOPDGDD)</strong>: colegios profesionales; centros docentes y universidades; operadores de telecomunicaciones y prestadores de servicios de la información (a gran escala o con perfiles); entidades de crédito, financieras y aseguradoras; empresas de inversión; distribuidoras y comercializadoras de electricidad y gas; ficheros de solvencia y fraude; publicidad con perfiles; <strong>centros sanitarios</strong> (no el profesional individual); informes comerciales; juego en línea; <strong>seguridad privada</strong>; <strong>federaciones deportivas</strong> con datos de menores.</li>
+          <li>Se comunica a la AEPD o a la autoridad autonómica en <strong>10 días</strong>. Puede ser interno o externo, a tiempo completo o parcial. Se elige por sus cualidades profesionales y sus conocimientos de Derecho y práctica en protección de datos.</li>
+          <li><strong>Posición</strong>: no recibe instrucciones; rinde cuentas al más alto nivel; no puede ser removido ni sancionado por desempeñar sus funciones, salvo dolo o negligencia grave; tiene acceso a todos los datos aunque haya deber de secreto.</li>
+          <li><strong>Funciones</strong>: informar y asesorar; supervisar el cumplimiento; asesorar sobre la evaluación de impacto; cooperar con la autoridad y ser su punto de contacto.</li>
+          <li><strong>Reclamación previa</strong> (art. 37): el afectado puede dirigirse antes al DPD, que responde en <strong>2 meses</strong>. Si reclama ante la AEPD, esta puede remitirla al DPD para que responda en <strong>1 mes</strong>.</li>
+          <li>El DPD <strong>no</strong> está sujeto al régimen sancionador.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Sanciones, autoridades y derechos digitales</h3>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Régimen sancionador</h3><small>Art. 83 RGPD · arts. 70-78 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Sujetos</strong>: responsables, encargados, representantes de no establecidos en la UE, entidades de certificación y entidades de supervisión de códigos. <strong>No</strong> el DPD.</li>
+          <li><strong>Multas del RGPD</strong>:
+            <ul>
+              <li>art. 83.4: hasta <strong>10 M€ o el 2 %</strong> del volumen de negocio anual mundial;</li>
+              <li>art. 83.5 y 83.6: hasta <strong>20 M€ o el 4 %</strong>;</li>
+              <li>en ambos casos, la cifra <strong>mayor</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Prescripción de las infracciones</strong> (LOPDGDD): muy graves (art. 72) <strong>3 años</strong>; graves (art. 73) <strong>2 años</strong>; leves (art. 74) <strong>1 año</strong>. Se interrumpe al iniciarse el procedimiento con conocimiento del interesado, y se reanuda si está paralizado más de 6 meses.</li>
+          <li><strong>Criterios adicionales de graduación</strong> (art. 76): infracción continuada, beneficios obtenidos, afectación a menores, tener un DPD sin estar obligado, someterse a mecanismos alternativos de resolución, etc.</li>
+          <li><strong>Publicación en el BOE</strong>: si sanciona la AEPD, la multa supera <strong>1 M€</strong> y el infractor es una persona jurídica.</li>
+          <li><strong>Administraciones y entes públicos (art. 77)</strong>: no se les multa. Se dicta una resolución que declara la infracción y ordena las medidas; se puede proponer la vía disciplinaria. Si se desatendieron informes técnicos, se impone una <strong>amonestación</strong> con el cargo responsable, publicada en el boletín oficial. Se comunica al Defensor del Pueblo.</li>
+          <li><strong>Prescripción de las sanciones</strong> (art. 78): hasta <strong>40.000 €</strong>, 1 año; de 40.001 a <strong>300.000 €</strong>, 2 años; más de 300.000 €, 3 años.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>La Agencia Española de Protección de Datos</h3><small>Arts. 44-50 LOPDGDD · RD 389/2021</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Naturaleza</strong>: <strong>autoridad administrativa independiente</strong> de ámbito estatal, con personalidad jurídica propia. Se relaciona con el Gobierno a través del <strong>Ministerio de Justicia</strong>. Su contratación se rige por el Derecho privado. Representa a las autoridades españolas en el <strong>Comité Europeo de Protección de Datos</strong>. Estatuto: <strong>RD 389/2021</strong>.</li>
+          <li><strong>Presidencia y Adjunto</strong>:
+            <ul>
+              <li>Los nombra el Gobierno, a propuesta de Justicia, tras una <strong>convocatoria pública</strong>.</li>
+              <li>Los ratifica la Comisión de Justicia del Congreso por <strong>3/5</strong> en primera votación o por mayoría absoluta en segunda (con votos de al menos dos grupos).</li>
+              <li>Mandato de <strong>5 años</strong>, renovable una vez. Cese por petición propia o por separación (incumplimiento grave, incapacidad, incompatibilidad o condena firme por delito doloso).</li>
+              <li>Sus actos ponen fin a la vía administrativa; se recurren ante la <strong>Audiencia Nacional</strong>.</li>
+              <li><span class="upd">2026</span> Presidente: <strong>Lorenzo Cotino Hueso</strong> (RD 142/2025); adjunto: Francisco Pérez Bes.</li>
+            </ul>
+          </li>
+          <li><strong>Consejo Consultivo</strong>: asesora a la Presidencia. Sus miembros proceden del Congreso, el Senado, el CGPJ, la AGE, las CCAA con autoridad propia, la FEMP, los consumidores, empresarios, sindicatos, universidades, el Consejo de Transparencia y otros. Se reúne al menos <strong>una vez al semestre</strong> y sus decisiones <strong>no son vinculantes</strong>.</li>
+          <li><strong>Investigación</strong>: la hacen funcionarios de la AEPD o habilitados, que son <strong>agentes de la autoridad</strong>. Las Administraciones y los particulares tienen deber de colaboración.</li>
+          <li><strong>Autoridades autonómicas</strong>: en Cataluña, el País Vasco y Andalucía, para los tratamientos de su ámbito público. Se coordinan con la AEPD ante el Comité Europeo.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Derechos digitales (I): generales</h3><small>Título X LOPDGDD · arts. 79-86, 93-97</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>El Título X regula por primera vez los <strong>derechos digitales</strong>: 17 en total, generales y laborales.</li>
+          <li><strong>Neutralidad de internet</strong> (art. 80) y <strong>acceso universal</strong> (art. 81): asequible y no discriminatorio, superando las brechas de género, generacional y rural.</li>
+          <li><strong>Educación digital</strong> (art. 83): las Administraciones incluirán la protección de datos en los temarios de las pruebas de acceso a los cuerpos superiores y a aquellos que traten datos.</li>
+          <li><strong>Menores en internet</strong> (art. 84): la difusión de imágenes de menores que suponga una intromisión ilegítima provoca la intervención del <strong>Ministerio Fiscal</strong>.</li>
+          <li><strong>Rectificación en internet</strong> (art. 85) y <strong>actualización</strong> de noticias en medios digitales (art. 86).</li>
+          <li><strong>Olvido en buscadores</strong> (art. 93): retirar de los resultados de búsqueda por el nombre los enlaces inadecuados, inexactos, no pertinentes, no actualizados o excesivos, aunque la publicación original sea lícita.</li>
+          <li><strong>Olvido en redes sociales</strong> (art. 94): supresión, a simple solicitud, de lo publicado por uno mismo; si lo publicó durante su minoría de edad, sin más requisitos.</li>
+          <li><strong>Testamento digital</strong> (art. 96): familiares, herederos, albacea o persona designada pueden acceder a los contenidos del fallecido y decidir sobre sus perfiles, salvo prohibición expresa.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>Derechos digitales (II): en el trabajo</h3><small>Arts. 87-91 LOPDGDD</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Intimidad en el uso de dispositivos digitales</strong> (art. 87): el empleador accede solo para controlar el cumplimiento de las obligaciones y la integridad de los dispositivos. Fija criterios de uso con participación de los representantes. Si se permite el uso privado, debe especificar los usos autorizados.</li>
+          <li><strong>Desconexión digital</strong> (art. 88): fuera del tiempo de trabajo, respeto al descanso, los permisos y las vacaciones. El empleador elabora una <strong>política interna</strong>, previa audiencia de los representantes, con formación sobre la «fatiga informática». También en el teletrabajo.</li>
+          <li><strong>Videovigilancia y grabación de sonidos</strong> (art. 89): para el control laboral, con <strong>información previa, expresa, clara y concisa</strong>. Si se capta un ilícito flagrante, basta el cartel. <strong>Nunca</strong> en vestuarios, aseos, comedores o zonas de descanso. El sonido, solo ante riesgos relevantes y con proporcionalidad.</li>
+          <li><strong>Geolocalización</strong> (art. 90): informando previamente de su existencia y características.</li>
+          <li>La <strong>negociación colectiva</strong> puede establecer garantías adicionales (art. 91).</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>14 años</b>Sigue siendo la edad de consentimiento: la subida a 16 decayó.</div>
+    <div class="trap"><b>RGPD</b>En vigor en 2016; aplicable desde el 25-5-2018.</div>
+    <div class="trap"><b>Interés legítimo</b>No lo pueden usar las autoridades públicas en el ejercicio de sus funciones.</div>
+    <div class="trap"><b>Consentimiento insuficiente</b>No basta para tratar datos cuyo fin principal es identificar la ideología, religión, orientación sexual, afiliación u origen.</div>
+    <div class="trap"><b>1 mes + 2</b>Para responder a los derechos. No 30 días hábiles.</div>
+    <div class="trap"><b>72 horas</b>Para notificar la brecha a la autoridad; a los interesados, solo si hay alto riesgo.</div>
+    <div class="trap"><b>Limitación</b>Los datos se conservan, pero no se tratan.</div>
+    <div class="trap"><b>Portabilidad</b>Solo con consentimiento o contrato, y tratamiento automatizado.</div>
+    <div class="trap"><b>Morosos</b>Más de 50 € y hasta 5 años (no 6).</div>
+    <div class="trap"><b>Videovigilancia</b>Supresión en 1 mes; entrega a la autoridad en 72 horas; sin bloqueo.</div>
+    <div class="trap"><b>DPD</b>Comunicación en 10 días; no es sancionable; el médico individual no lo necesita.</div>
+    <div class="trap"><b>Administraciones</b>No se les imponen multas: declaración de infracción, medidas y, en su caso, amonestación.</div>
+    <div class="trap"><b>Prescripción</b>Infracciones 3-2-1 años; sanciones con umbrales de 40.000 y 300.000 €.</div>
+    <div class="trap"><b>AEPD</b>Se relaciona a través de Justicia; mandato de 5 años; recursos ante la Audiencia Nacional.</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: manual «Tema 4. La protección de datos personales» (Organización de oficinas públicas), actualizado a noviembre de 2026: RGPD y LO 3/2018 vigentes (edad de consentimiento en 14 años tras decaer el proyecto de menores en entornos digitales), Presidencia de la AEPD (RD 142/2025), propuesta «Ómnibus Digital» COM(2025) 837 en tramitación y Reglamento (UE) 2026/1744.<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Bloque 2 · Tema 4 · Herramientas ===== */
+const BL=[
+ ["Un ayuntamiento trata los datos del padrón municipal.","c","Obligación legal (art. 6.1.c): la Ley de Bases de Régimen Local obliga a llevar el padrón. Debe basarse en una norma con rango de ley (art. 8 LOPDGDD)."],
+ ["Una tienda online trata la dirección del cliente para enviarle el pedido.","b","Ejecución de un contrato (art. 6.1.b)."],
+ ["Un hospital consulta el historial de un paciente inconsciente que llega a urgencias.","d","Intereses vitales del interesado (art. 6.1.d)."],
+ ["Un gimnasio quiere enviar a sus socios un boletín con ofertas de terceras empresas.","a","Consentimiento (art. 6.1.a): libre, específico, informado e inequívoco, y no puede condicionar el contrato de socio."],
+ ["La AEAT trata los datos de un contribuyente para comprobar su declaración de IRPF.","e","Misión de interés público o ejercicio de poderes públicos (art. 6.1.e), derivada de una competencia atribuida por ley (art. 8.2 LOPDGDD)."],
+ ["Una empresa instala videovigilancia en la entrada de sus oficinas para proteger sus instalaciones.","f","Interés legítimo del responsable (art. 6.1.f), con los límites del art. 22 LOPDGDD."],
+ ["Una empresa comunica a la Seguridad Social el alta de un trabajador.","c","Obligación legal (art. 6.1.c)."],
+ ["Un Ministerio quiere tratar datos de los ciudadanos invocando su «interés legítimo» para hacer campañas.","x","Las autoridades públicas no pueden usar el interés legítimo en el ejercicio de sus funciones (art. 6.1 último párrafo RGPD). Necesitan otra base."],
+ ["Un banco consulta un fichero de solvencia cuando un cliente solicita un préstamo.","f","Interés legítimo, presumido por el art. 20 LOPDGDD para los sistemas de información crediticia."],
+ ["Una universidad trata los datos de matrícula de sus alumnos para gestionar el expediente académico.","e","Misión de interés público (servicio público de educación superior) atribuida por ley."]
+];
+const BLO={a:"Consentimiento",b:"Contrato",c:"Obligación legal",d:"Intereses vitales",e:"Interés público / poderes públicos",f:"Interés legítimo",x:"Ninguna: no puede usarla"};
+const DR=[
+ ["Pide saber qué datos suyos tiene una empresa y obtener una copia.","acc","Derecho de acceso (art. 15 RGPD; art. 13 LOPDGDD)."],
+ ["Pide que corrijan su dirección, que está mal.","rec","Derecho de rectificación (art. 16 RGPD)."],
+ ["Retira su consentimiento y pide que borren todos sus datos de la base de datos.","sup","Derecho de supresión (art. 17 RGPD)."],
+ ["Impugna la exactitud de sus datos y pide que, mientras se comprueba, no se usen.","lim","Derecho a la limitación del tratamiento (art. 18 RGPD): se conservan, pero no se tratan."],
+ ["Quiere llevarse su historial de compras en un formato reutilizable a otra plataforma.","por","Derecho a la portabilidad (art. 20 RGPD)."],
+ ["No quiere recibir más publicidad dirigida de su compañía telefónica.","opo","Derecho de oposición a la mercadotecnia directa (art. 21 RGPD): se atiende siempre."],
+ ["Un banco le deniega un crédito con un algoritmo, sin intervención humana, y pide que lo revise una persona.","aut","Derecho a no ser objeto de decisiones automatizadas (art. 22 RGPD): intervención humana, expresar su punto de vista, impugnar."],
+ ["Pide a un buscador que no muestre, al buscar su nombre, una noticia de hace 15 años sobre una deuda ya pagada.","olv","Derecho al olvido en búsquedas de internet (art. 93 LOPDGDD)."],
+ ["Un trabajador se niega a responder correos de su jefe un domingo.","des","Derecho a la desconexión digital (art. 88 LOPDGDD)."],
+ ["Pide a una red social que borre las fotos que él mismo subió cuando tenía 15 años.","red","Derecho al olvido en redes sociales (art. 94 LOPDGDD): si los facilitó siendo menor, se suprimen a simple solicitud."]
+];
+const DRO={acc:"Acceso",rec:"Rectificación",sup:"Supresión",lim:"Limitación",por:"Portabilidad",opo:"Oposición",aut:"Decisiones automatizadas",olv:"Olvido en buscadores",des:"Desconexión digital",red:"Olvido en redes sociales"};
+const DPDT={
+ aapp:["si","Autoridad u organismo público: obligatorio (art. 37.1.a RGPD). Varias Administraciones pueden designar un DPD común."],
+ trib:["no","Los tribunales en el ejercicio de su función judicial están excluidos (art. 37.1.a RGPD)."],
+ col:["si","Colegios profesionales y sus consejos generales (art. 34.1.a LOPDGDD)."],
+ edu:["si","Centros docentes de cualquier nivel y universidades públicas y privadas (art. 34.1.b LOPDGDD)."],
+ banco:["si","Entidades de crédito, establecimientos financieros de crédito y aseguradoras y reaseguradoras (art. 34.1.e-g LOPDGDD)."],
+ energ:["si","Distribuidores y comercializadores de energía eléctrica y gas natural (art. 34.1.i LOPDGDD)."],
+ sanit:["si","Centros sanitarios legalmente obligados a mantener historias clínicas (art. 34.1.l LOPDGDD)."],
+ medico:["no","Se exceptúan los profesionales de la salud que ejercen a título individual, aunque lleven historias clínicas (art. 34.1.l). Puede designarlo voluntariamente."],
+ seg:["si","Empresas de seguridad privada (art. 34.1.o LOPDGDD)."],
+ juego:["si","Operadores de juego por canales electrónicos (art. 34.1.n LOPDGDD)."],
+ fed:["si","Federaciones deportivas cuando traten datos de menores (art. 34.1.p LOPDGDD)."],
+ tienda:["no","No está en ningún supuesto obligatorio. Puede designarlo voluntariamente, lo que además atenúa una posible sanción (art. 76.2.g)."],
+ gran:["si","Actividad principal de observación habitual y sistemática a gran escala, o tratamiento a gran escala de categorías especiales o datos penales (art. 37.1.b-c RGPD)."]
+};
+const INS=[
+ {g:"Autoridades",n:"Agencia Española de Protección de Datos",norm:"Arts. 44-50 LOPDGDD · RD 389/2021",def:"Autoridad administrativa independiente de ámbito estatal.",f:{"Presidente 2026":"Lorenzo Cotino Hueso (RD 142/2025); adjunto, Francisco Pérez Bes.","Relación":"Con el Gobierno, a través del Ministerio de Justicia.","Mandato":"5 años, renovable una vez.","Recursos":"Ante la Sala de lo Contencioso de la Audiencia Nacional."}},
+ {g:"Autoridades",n:"Consejo Consultivo de la AEPD",norm:"Art. 49 LOPDGDD",def:"Órgano que asesora a la Presidencia de la AEPD.",f:{"Composición":"Congreso, Senado, CGPJ, AGE, CCAA, FEMP, consumidores, empresarios, sindicatos, universidades, Consejo de Transparencia y profesionales.","Nombramiento":"Orden del Ministro de Justicia publicada en el BOE.","Reuniones":"Al menos una vez al semestre.","Decisiones":"No vinculantes."}},
+ {g:"Autoridades",n:"Autoridades autonómicas",norm:"Arts. 57-62 LOPDGDD",def:"Autoridades de protección de datos de algunas CCAA para su sector público.",f:{"Existentes":"Cataluña (APDCAT), País Vasco (AVPD) y Andalucía (Consejo de Transparencia y Protección de Datos).","Ámbito":"Tratamientos de su Administración, entes locales y universidades de su territorio.","Coordinación":"Con la AEPD, que las representa ante el Comité Europeo.","Consejo Consultivo":"Un representante de cada una."}},
+ {g:"Unión Europea",n:"Comité Europeo de Protección de Datos (CEPD)",norm:"Arts. 68-76 RGPD",def:"Organismo de la UE que garantiza la aplicación coherente del RGPD.",f:{"Composición":"Las autoridades de control de los Estados y el SEPD.","España":"Representada por la AEPD.","Funciones":"Directrices, dictámenes y decisiones vinculantes en conflictos.","2026":"Dictamen conjunto con el SEPD sobre el Ómnibus Digital (febrero)."}},
+ {g:"Unión Europea",n:"Supervisor Europeo de Protección de Datos (SEPD)",norm:"Reglamento (UE) 2018/1725",def:"Autoridad que supervisa los tratamientos de las instituciones de la UE.",f:{"Web":"edps.europa.eu.","Ámbito":"Instituciones, órganos y organismos de la UE.","Relación":"Miembro del CEPD.","Función":"Supervisar y asesorar."}},
+ {g:"Figuras",n:"Delegado de Protección de Datos",norm:"Arts. 37-39 RGPD · arts. 34-37 LOPDGDD",def:"Figura que informa, asesora y supervisa el cumplimiento dentro de la organización.",f:{"Comunicación":"A la AEPD en 10 días.","Independencia":"No recibe instrucciones; no puede ser removido por ejercer sus funciones.","Reclamaciones":"Resuelve en 2 meses la reclamación previa; 1 mes si se la remite la AEPD.","Sanciones":"No está sujeto al régimen sancionador."}},
+ {g:"Figuras",n:"Responsable y encargado",norm:"Arts. 24-28 RGPD · arts. 28-33 LOPDGDD",def:"Quien decide los fines y medios, y quien trata los datos por su cuenta.",f:{"Responsable":"Responsabilidad proactiva; protección de datos desde el diseño y por defecto.","Encargado":"Contrato o acto jurídico; su acceso no es una comunicación de datos.","Conversión":"El encargado que usa los datos para sus fines pasa a ser responsable.","Representante":"De responsables de fuera de la UE: responde solidariamente."}},
+ {g:"Figuras",n:"Sistemas de exclusión publicitaria",norm:"Art. 23 LOPDGDD",def:"Lista Robinson: evita recibir publicidad no deseada.",f:{"Canales":"Postal, telefónico y electrónico.","Obligación":"Consultarla antes de hacer mercadotecnia directa.","Excepción":"Si el afectado ha consentido recibir la comunicación.","Preferencias":"Puede limitar la publicidad a determinadas empresas."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const $=id=>document.getElementById(id);
+  const num=id=>{const v=parseFloat(($(id)||{}).value);return isNaN(v)?0:v};
+  const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+  const fd=d=>d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const fdt=d=>d.toLocaleString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  const addM=(d,m)=>{const t=new Date(d.getFullYear(),d.getMonth()+m,1);const last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();return new Date(t.getFullYear(),t.getMonth(),Math.min(d.getDate(),last))};
+  const eur0=x=>Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")+" €";
+  const tabs=(tid,pre)=>{const t=$(tid);if(!t)return;t.addEventListener("click",ev=>{const b=ev.target.closest("button[data-p]");if(!b)return;t.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll('[id^="'+pre+'"].pane').forEach(p=>p.classList.toggle("on",p.id===pre+b.dataset.p))})};
+  tabs("pz-tabs","pz-");
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    const opts=c=>{const all=Object.keys(OPTS);if(all.length<=7)return all;const ks=all.filter(k=>k!==c[1]).sort(()=>Math.random()-.5).slice(0,5);ks.push(c[1]);return ks.sort(()=>Math.random()-.5)};
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=opts(c).map(k=>`<button data-k="${k}">${OPTS[k]}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+OPTS[c[1]]}</b>${c[2]}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("bl",BL,BLO,"Caso");
+  trainer("dr",DR,DRO,"Caso");
+  /* Derechos */
+  (function(){if(!$("pd-f"))return;
+    function run(){const f=$("pd-f").value,p=$("pd-p").value,x=$("pd-x").value,o=$("pd-out");if(!f){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha</b>";return}
+      const d=pd(f),m1=addM(d,1),m3=addM(d,3);
+      if(x==="si"){o.className="verdict mid";o.innerHTML=`<b class="big">Puede cobrar un canon razonable o negarse</b>Solicitud manifiestamente infundada o excesiva (art. 12.5 RGPD). La <strong>carga de la prueba</strong> es del responsable. Si se niega, debe informar en 1 mes (hasta el ${fd(m1)}) de los motivos y de la posibilidad de reclamar ante la AEPD. En el derecho de acceso, pedirlo más de una vez en 6 meses puede considerarse repetitivo, salvo causa legítima (art. 13.3 LOPDGDD).`;return}
+      let st=`<div><b>Plazo general</b>: sin dilación y como máximo en 1 mes, hasta el ${fd(m1)} (art. 12.3 RGPD).</div>`;
+      if(p==="si")st+=`<div><b>Prórroga</b>: 2 meses más, hasta el ${fd(m3)}, avisando de la prórroga y sus motivos dentro del primer mes.</div>`;
+      st+=`<div><b>Gratuidad</b>: la respuesta es gratuita. Si se pidió por medios electrónicos, se responde por esos medios cuando sea posible.</div><div><b>Si no responde</b>: el interesado puede reclamar ante la AEPD (o antes, ante el DPD).</div>`;
+      o.className="verdict ok";o.innerHTML=`<b class="big">Responder como máximo el ${(p==="si"?m3:m1).toLocaleDateString("es-ES")}</b><div class="steps-out">${st}</div>`}
+    ["pd-f","pd-p","pd-x"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Brecha */
+  (function(){if(!$("pb-f"))return;
+    function run(){const f=$("pb-f").value,r=$("pb-r").value,o=$("pb-out");if(!f){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha y hora</b>";return}
+      const d=new Date(f),l=new Date(d.getTime()+72*3600e3);
+      if(r==="no"){o.className="verdict ok";o.innerHTML=`<b class="big">No hay que notificarla</b>Si es improbable que la violación suponga un riesgo para los derechos y libertades, no se notifica a la autoridad (art. 33.1 RGPD). Pero <strong>hay que documentarla</strong> siempre (art. 33.5).`;return}
+      let st=`<div><b>Autoridad de control</b>: sin dilación indebida y, si es posible, antes del ${fdt(l)} (72 horas desde que se tuvo constancia, también en fin de semana). Si se notifica más tarde, hay que justificar el retraso.</div><div><b>Contenido</b>: naturaleza de la brecha, DPD o punto de contacto, consecuencias probables y medidas adoptadas. Puede facilitarse por fases.</div>`;
+      st+=r==="al"?`<div><b>Interesados</b>: hay que comunicárselo sin dilación, en lenguaje claro, porque entraña un <strong>alto riesgo</strong> (art. 34). No es necesario si los datos estaban cifrados, si se han tomado medidas que eliminan el riesgo o si supondría un esfuerzo desproporcionado (entonces, comunicación pública).</div>`:`<div><b>Interesados</b>: no es obligatorio comunicárselo, porque el riesgo no es alto.</div>`;
+      st+=`<div><b>Registro</b>: se documenta siempre. El encargado debe avisar al responsable sin dilación.</div>`;
+      o.className="verdict "+(r==="al"?"ko":"mid");o.innerHTML=`<b class="big">Notificar antes del ${l.toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}</b><div class="steps-out">${st}</div><div class="tool-note">El «Ómnibus Digital» propone ampliar el plazo a 96 horas, pero a noviembre de 2026 no está aprobado.</div>`}
+    ["pb-f","pb-r"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Reclamación */
+  (function(){if(!$("pr-a"))return;
+    function run(){const a=$("pr-a").value,f=$("pr-f").value,o=$("pr-out");if(!f){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha</b>";return}
+      const d=pd(f);
+      if(a==="dpd"){const l=addM(d,2);o.className="verdict ok";o.innerHTML=`<b class="big">El DPD responde como máximo el ${l.toLocaleDateString("es-ES")}</b>Reclamación potestativa previa ante el DPD (art. 37.1 LOPDGDD): debe comunicar su decisión en <strong>2 meses</strong>, hasta el ${fd(l)}. Después, o si no está conforme, el afectado puede reclamar ante la AEPD.`}
+      else{const l=addM(d,1);o.className="verdict ok";o.innerHTML=`<b class="big">El DPD tiene 1 mes: hasta el ${l.toLocaleDateString("es-ES")}</b>La AEPD puede remitir la reclamación al DPD para que responda en <strong>1 mes</strong> (art. 37.2 LOPDGDD). Si no contesta, la AEPD sigue con el procedimiento del Título VIII. (Aquí he contado el mes desde la fecha de la reclamación como orientación; el plazo se computa desde la remisión.)`}}
+    ["pr-a","pr-f"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Videovigilancia */
+  (function(){if(!$("pv-f"))return;
+    function run(){const f=$("pv-f").value,dl=$("pv-d").value,c=$("pv-c").value,o=$("pv-out");$("pv-c").closest("label").style.opacity=dl==="si"?1:.45;
+      if(!f){o.className="verdict mid";o.innerHTML="<b class='big'>Introduce la fecha</b>";return}
+      const d=pd(f),s=addM(d,1);
+      if(dl==="no"){o.className="verdict ok";o.innerHTML=`<b class="big">Suprimir antes del ${s.toLocaleDateString("es-ES")}</b>Las imágenes se suprimen en el plazo máximo de <strong>1 mes</strong> desde su captación, hasta el ${fd(s)} (art. 22.3 LOPDGDD). No hay obligación de bloqueo.`;return}
+      if(!c){o.className="verdict mid";o.innerHTML="<b class='big'>Indica cuándo se conoce la grabación</b>";return}
+      const k=new Date(c),l=new Date(k.getTime()+72*3600e3);
+      o.className="verdict mid";o.innerHTML=`<b class="big">Entregar a la autoridad antes del ${l.toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}</b>Si las imágenes acreditan actos contra la integridad de personas, bienes o instalaciones, se conservan y se ponen a disposición de la autoridad en <strong>72 horas</strong> desde que se conoce la grabación (art. 22.3 LOPDGDD). El resto se suprime al mes.`}
+    ["pv-f","pv-d","pv-c"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* DPD */
+  (function(){if(!$("dp-t"))return;
+    function run(){const r=DPDT[$("dp-t").value],o=$("dp-out");
+      o.className="verdict "+(r[0]==="si"?"ok":"mid");o.innerHTML=`<b class="big">${r[0]==="si"?"Sí, debe designar DPD":"No está obligado"}</b>${r[1]}${r[0]==="si"?`<div class="tool-note">Debe comunicar la designación, el nombramiento o el cese a la AEPD (o a la autoridad autonómica) en <strong>10 días</strong> (art. 34.3 LOPDGDD). Puede ser personal propio o externo, a tiempo completo o parcial.</div>`:""}`}
+    $("dp-t").addEventListener("change",run);run()})();
+  /* Sanciones */
+  (function(){if(!$("sa-t"))return;
+    function run(){const t=$("sa-t").value,g=$("sa-g").value,v=num("sa-v"),m=num("sa-m"),o=$("sa-out");
+      const pi={m:3,g:2,l:1}[g];const ps=m<=40000?1:m<=300000?2:3;
+      if(t==="aapp"){$("sa-k").innerHTML=`<div><b>Prescripción de la infracción</b><span>${pi} año${pi>1?"s":""}</span></div><div class="n"><b>Multa</b><span>No procede</span></div>`;
+        o.className="verdict mid";o.innerHTML=`<b class="big">Sin multa: resolución declarativa</b>A las Administraciones y entes del art. 77 LOPDGDD no se les imponen multas. La autoridad dicta una resolución que declara la infracción y ordena las medidas para corregirla, se notifica al órgano superior y puede proponer actuaciones disciplinarias. Si se desatendieron informes técnicos, se incluye una <strong>amonestación</strong> con el cargo responsable, publicada en el boletín oficial. Se comunica al Defensor del Pueblo y la AEPD la publica en su web.`;return}
+      const alto=g==="m";const fijo=alto?20e6:10e6,pct=alto?0.04:0.02;const max=Math.max(fijo,v*pct);
+      const fuera=m>max;const boe=m>1e6;
+      $("sa-k").innerHTML=`<div><b>Máximo aplicable</b><span>${eur0(max)}</span></div><div><b>Regla</b><span>${alto?"20 M€ o 4 %":"10 M€ o 2 %"}</span></div><div><b>Prescribe la infracción</b><span>${pi} año${pi>1?"s":""}</span></div><div><b>Prescribe la sanción</b><span>${ps} año${ps>1?"s":""}</span></div>`;
+      o.className="verdict "+(fuera?"ko":"ok");o.innerHTML=`<b class="big">${fuera?"La multa supera el máximo":"Multa dentro del límite"}</b>${g==="l"?"Las infracciones leves se sancionan con los importes del art. 83.4 RGPD. ":""}El máximo es la cifra mayor entre ${eur0(fijo)} y el ${pct*100} % del volumen de negocio (${eur0(v*pct)}). <div class="steps-out"><div><b>Prescripción de la sanción</b> (art. 78 LOPDGDD): ${m<=40000?"hasta 40.000 €, 1 año":m<=300000?"de 40.001 a 300.000 €, 2 años":"más de 300.000 €, 3 años"}.</div>${boe?`<div><b>Publicidad</b>: si la impone la AEPD a una persona jurídica, al superar 1 M€ se publica en el BOE con la identidad del infractor (art. 76.4).</div>`:""}<div><b>Graduación</b>: art. 83.2 RGPD y art. 76.2 LOPDGDD (infracción continuada, beneficios obtenidos, afectación a menores, DPD voluntario…).</div></div>`}
+    ["sa-t","sa-g","sa-v","sa-m"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Menores */
+  (function(){if(!$("mn-e"))return;
+    function run(){const a=Math.floor(num("mn-e")),d=$("mn-d").value,o=$("mn-out");
+      if(d==="ide"){o.className="verdict ko";o.innerHTML=`<b class="big">El consentimiento no basta</b>Cuando la finalidad principal es identificar la ideología, la afiliación sindical, la religión, la orientación sexual, las creencias o el origen racial o étnico, el solo consentimiento no levanta la prohibición (art. 9.1 LOPDGDD), tenga ${a} años o 40. Solo cabe con otra excepción del art. 9.2 RGPD.`;return}
+      const ok=a>=14;let t=ok?`Con ${a} años puede consentir <strong>por sí mismo</strong> (art. 7.1 LOPDGDD), salvo que la ley exija la asistencia de los padres para el acto o negocio.`:`Con ${a} años no puede consentir por sí solo: hace falta el consentimiento del <strong>titular de la patria potestad o tutela</strong> (art. 7.2 LOPDGDD).`;
+      if(d==="sal")t+=` Además, los datos de salud son una categoría especial: el consentimiento debe ser <strong>explícito</strong> (art. 9.2.a RGPD).`;
+      o.className="verdict "+(ok?"ok":"mid");o.innerHTML=`<b class="big">${ok?"Puede consentir":"Necesita a sus padres o tutores"}</b>${t}<div class="tool-note">El proyecto que subía la edad a 16 años decayó con la disolución de las Cortes en octubre de 2026: la edad sigue en 14.</div>`}
+    ["mn-e","mn-d"].forEach(id=>{$(id).addEventListener("input",run);$(id).addEventListener("change",run)});run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Art. 18.4 CE.",r:"La ley limitará el uso de la informática para garantizar el honor y la intimidad personal y familiar y el pleno ejercicio de los derechos."},
+ {p:"STC 292/2000.",r:"Configura la protección de datos como derecho fundamental autónomo, distinto de la intimidad, que protege cualquier dato personal."},
+ {p:"RGPD.",r:"Reglamento (UE) 2016/679, de 27 de abril. Deroga la Directiva 95/46/CE."},
+ {p:"Entrada en vigor y aplicación del RGPD.",r:"En vigor el 25-5-2016; aplicable desde el 25-5-2018."},
+ {p:"LOPDGDD.",r:"LO 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales. En vigor el 7-12-2018."},
+ {p:"Estructura de la LOPDGDD.",r:"97 artículos en 10 títulos, 23 DA, 6 DT, 1 DD y 16 DF."},
+ {p:"Ley derogada por la LOPDGDD.",r:"La LO 15/1999, de Protección de Datos de Carácter Personal."},
+ {p:"RD 1720/2007.",r:"Reglamento de desarrollo de la LO 15/1999; sigue vigente en lo que no se oponga al RGPD ni a la LOPDGDD."},
+ {p:"Ámbito material del RGPD.",r:"Tratamiento total o parcialmente automatizado, y no automatizado de datos contenidos o destinados a un fichero."},
+ {p:"Actividades excluidas del RGPD.",r:"Las ajenas al Derecho de la UE, la PESC, las exclusivamente personales o domésticas y las de las autoridades con fines penales."},
+ {p:"Exclusiones propias de la LOPDGDD (art. 2.2).",r:"Datos de personas fallecidas y materias clasificadas, además de las del RGPD."},
+ {p:"Fallecidos (art. 3 LOPDGDD).",r:"Familiares, personas vinculadas y herederos pueden pedir acceso, rectificación o supresión, salvo prohibición expresa del fallecido o ley."},
+ {p:"Fallecido menor de edad.",r:"También pueden actuar sus representantes legales o el Ministerio Fiscal, de oficio o a instancia de interesado."},
+ {p:"Dato personal.",r:"Toda información sobre una persona física identificada o identificable."},
+ {p:"Seudonimización.",r:"Los datos no pueden atribuirse a un interesado sin información adicional que se guarda por separado. Siguen siendo datos personales."},
+ {p:"Responsable del tratamiento.",r:"Quien determina los fines y medios del tratamiento."},
+ {p:"Encargado del tratamiento.",r:"Quien trata datos personales por cuenta del responsable."},
+ {p:"Consentimiento (art. 4.11 RGPD).",r:"Manifestación de voluntad libre, específica, informada e inequívoca, mediante declaración o clara acción afirmativa."},
+ {p:"Violación de la seguridad.",r:"Destrucción, pérdida, alteración, comunicación o acceso no autorizados, accidentales o ilícitos, a datos personales."},
+ {p:"Principios del art. 5 RGPD.",r:"Licitud, lealtad y transparencia; limitación de la finalidad; minimización; exactitud; limitación del plazo de conservación; integridad y confidencialidad."},
+ {p:"Responsabilidad proactiva.",r:"El responsable cumple los principios y debe ser capaz de demostrarlo (art. 5.2 RGPD)."},
+ {p:"Exactitud en la LOPDGDD (art. 4).",r:"No se imputa la inexactitud al responsable si obtuvo los datos del afectado, de un mediador, de otro responsable por portabilidad o de un registro público."},
+ {p:"Deber de confidencialidad (art. 5 LOPDGDD).",r:"Alcanza a responsables, encargados y a todos los que intervienen; complementa el secreto profesional y se mantiene al terminar la relación."},
+ {p:"Bases de licitud (art. 6.1 RGPD).",r:"Consentimiento, contrato, obligación legal, intereses vitales, interés público o poderes públicos e interés legítimo."},
+ {p:"Interés legítimo y autoridades públicas.",r:"No es aplicable a los tratamientos de las autoridades públicas en el ejercicio de sus funciones."},
+ {p:"Obligación legal e interés público (art. 8 LOPDGDD).",r:"Solo si derivan de una norma de Derecho de la UE o de una norma con rango de ley."},
+ {p:"Consentimiento para varias finalidades (art. 6 LOPDGDD).",r:"Debe constar específica e inequívocamente para todas ellas."},
+ {p:"Contrato y consentimiento (art. 6.3 LOPDGDD).",r:"No puede supeditarse la ejecución del contrato a que se consientan finalidades sin relación con él."},
+ {p:"Edad de consentimiento (art. 7 LOPDGDD).",r:"14 años. Por debajo, consiente el titular de la patria potestad o tutela. A noviembre de 2026 sigue igual: el proyecto que la subía a 16 decayó."},
+ {p:"Retirada del consentimiento.",r:"En cualquier momento, tan fácil como darlo, sin efectos retroactivos sobre la licitud previa."},
+ {p:"Categorías especiales (art. 9 RGPD).",r:"Origen étnico o racial, opiniones políticas, convicciones religiosas o filosóficas, afiliación sindical, genéticos, biométricos, salud, vida y orientación sexual."},
+ {p:"Consentimiento y categorías especiales (art. 9 LOPDGDD).",r:"El solo consentimiento no basta cuando la finalidad principal es identificar ideología, afiliación sindical, religión, orientación sexual, creencias u origen racial o étnico."},
+ {p:"Datos penales (art. 10 LOPDGDD).",r:"Para fines distintos de los penales, solo con amparo en la UE, la LOPDGDD u otra ley; también los abogados y procuradores con los de sus clientes."},
+ {p:"Plazo para responder a los derechos.",r:"1 mes desde la solicitud, prorrogable 2 meses más por complejidad o número de solicitudes."},
+ {p:"Aviso de la prórroga.",r:"Dentro del primer mes, indicando los motivos."},
+ {p:"Solicitudes manifiestamente infundadas o excesivas.",r:"Cabe cobrar un canon razonable o negarse; la carga de la prueba corresponde al responsable."},
+ {p:"Información por capas (art. 11 LOPDGDD).",r:"Información básica (responsable, finalidad, derechos) más una dirección electrónica u otro medio para el resto."},
+ {p:"Datos no obtenidos del interesado.",r:"Se le informa en un plazo razonable, máximo 1 mes, o en la primera comunicación."},
+ {p:"Derecho de acceso remoto (art. 13 LOPDGDD).",r:"Se entiende atendido si se facilita un acceso remoto, directo y seguro a los datos."},
+ {p:"Acceso repetitivo.",r:"Ejercerlo más de una vez en 6 meses puede considerarse repetitivo, salvo causa legítima."},
+ {p:"Derecho de rectificación.",r:"De datos inexactos o incompletos, indicando los datos y aportando justificación."},
+ {p:"Derecho de supresión.",r:"«Derecho al olvido»: cuando ya no son necesarios, se retira el consentimiento, hay oposición, tratamiento ilícito, obligación legal o datos de menores en la sociedad de la información."},
+ {p:"Derecho a la limitación.",r:"Los datos se conservan pero no se tratan, salvo consentimiento, reclamaciones, protección de terceros o interés público importante."},
+ {p:"Derecho a la portabilidad.",r:"Recibir los datos en formato estructurado, de uso común y lectura mecánica, y transmitirlos a otro responsable, si el tratamiento se basa en consentimiento o contrato y es automatizado."},
+ {p:"Derecho de oposición.",r:"Frente a tratamientos basados en interés público o legítimo por la situación particular; frente a la mercadotecnia directa, siempre."},
+ {p:"Decisiones automatizadas (art. 22 RGPD).",r:"Derecho a no ser objeto de una decisión basada únicamente en un tratamiento automatizado con efectos jurídicos, salvo contrato, ley o consentimiento explícito."},
+ {p:"Ficheros de morosos (art. 20 LOPDGDD).",r:"Deudas de más de 50 €, ciertas, vencidas y exigibles; permanencia máxima de 5 años desde el vencimiento."},
+ {p:"Videovigilancia: supresión.",r:"En el plazo máximo de 1 mes desde la captación (art. 22.3 LOPDGDD)."},
+ {p:"Videovigilancia: delito grabado.",r:"Las imágenes se ponen a disposición de la autoridad en 72 horas desde que se conoce la grabación."},
+ {p:"Videovigilancia: información.",r:"Mediante un dispositivo informativo (cartel) en lugar visible, con la existencia del tratamiento, el responsable y los derechos."},
+ {p:"Videovigilancia y bloqueo.",r:"No se aplica la obligación de bloqueo del art. 32."},
+ {p:"Lista Robinson (art. 23 LOPDGDD).",r:"Sistema de exclusión publicitaria que deben consultar quienes hagan mercadotecnia directa, salvo consentimiento del afectado."},
+ {p:"Factores de mayor riesgo (art. 28 LOPDGDD).",r:"Discriminación o fraude, privación de derechos, categorías especiales, perfiles, colectivos vulnerables, tratamientos masivos y transferencias internacionales."},
+ {p:"Acceso del encargado.",r:"No se considera comunicación de datos si se ajusta al contrato o acto jurídico (art. 33 LOPDGDD)."},
+ {p:"Encargado que se convierte en responsable.",r:"El que establezca relaciones en nombre propio sin constar que actúa por cuenta de otro, o use los datos para sus fines."},
+ {p:"Registro de actividades de tratamiento.",r:"Por escrito, incluso electrónico. En general no obligatorio con menos de 250 trabajadores, salvo riesgo, tratamiento no ocasional o categorías especiales."},
+ {p:"Registro de actividades en el sector público (art. 31 LOPDGDD).",r:"Debe hacerse público, por medios electrónicos, con la base jurídica."},
+ {p:"Bloqueo (art. 32 LOPDGDD).",r:"Al rectificar o suprimir se bloquean los datos; solo a disposición de jueces, Ministerio Fiscal y Administraciones competentes durante la prescripción; después, se destruyen."},
+ {p:"Notificación de una brecha.",r:"A la autoridad de control sin dilación y, si es posible, en 72 horas desde que se tiene constancia (art. 33 RGPD)."},
+ {p:"Comunicación de la brecha al interesado.",r:"Cuando entrañe un alto riesgo para sus derechos (art. 34 RGPD)."},
+ {p:"Ómnibus Digital (2026).",r:"Propuesta COM(2025) 837 que ampliaría a 96 horas la notificación de brechas. No está aprobada: siguen las 72 horas."},
+ {p:"Evaluación de impacto (art. 35 RGPD).",r:"Previa al tratamiento si es probable un alto riesgo: perfiles con efectos jurídicos, categorías especiales a gran escala, observación sistemática a gran escala de zonas públicas."},
+ {p:"Consulta previa (art. 36 RGPD).",r:"A la autoridad de control cuando la evaluación de impacto muestre alto riesgo que el responsable no mitiga."},
+ {p:"DPD obligatorio según el RGPD.",r:"Autoridades y organismos públicos (salvo tribunales en función judicial), observación a gran escala y categorías especiales o penales a gran escala."},
+ {p:"DPD: comunicación.",r:"Designación, nombramiento y cese se comunican a la autoridad en 10 días (art. 34.3 LOPDGDD)."},
+ {p:"Médico a título individual.",r:"No está obligado a designar DPD, aunque lleve historias clínicas."},
+ {p:"Posición del DPD.",r:"No recibe instrucciones, rinde cuentas al más alto nivel y no puede ser removido ni sancionado por desempeñar sus funciones, salvo dolo o negligencia grave."},
+ {p:"Reclamación ante el DPD (art. 37 LOPDGDD).",r:"Potestativa y previa; el DPD resuelve en 2 meses. Si la AEPD la remite al DPD, este tiene 1 mes."},
+ {p:"DPD y régimen sancionador.",r:"No está sujeto a él (art. 70.2 LOPDGDD)."},
+ {p:"Multas del art. 83.4 RGPD.",r:"Hasta 10 M€ o el 2 % del volumen de negocio anual mundial, la mayor."},
+ {p:"Multas del art. 83.5 RGPD.",r:"Hasta 20 M€ o el 4 % del volumen de negocio anual mundial, la mayor."},
+ {p:"Prescripción de las infracciones.",r:"Muy graves 3 años, graves 2 años, leves 1 año (arts. 72-74 LOPDGDD)."},
+ {p:"Prescripción de las sanciones (art. 78 LOPDGDD).",r:"Hasta 40.000 €, 1 año; de 40.001 a 300.000 €, 2 años; más de 300.000 €, 3 años."},
+ {p:"Publicación en el BOE.",r:"Sanciones de la AEPD de más de 1 M€ a personas jurídicas (art. 76.4 LOPDGDD)."},
+ {p:"Administraciones infractoras (art. 77).",r:"No se les multa: resolución declarativa con medidas, posibles actuaciones disciplinarias y amonestación si se desatendieron informes técnicos."},
+ {p:"Naturaleza de la AEPD.",r:"Autoridad administrativa independiente de ámbito estatal, con personalidad jurídica propia; se relaciona con el Gobierno a través del Ministerio de Justicia."},
+ {p:"Estatuto de la AEPD.",r:"RD 389/2021, de 1 de junio."},
+ {p:"Presidencia de la AEPD en 2026.",r:"Lorenzo Cotino Hueso (RD 142/2025); adjunto, Francisco Pérez Bes."},
+ {p:"Nombramiento de la Presidencia de la AEPD.",r:"Por el Gobierno a propuesta de Justicia, tras convocatoria pública; ratificación por 3/5 de la Comisión de Justicia del Congreso (o mayoría absoluta en segunda votación)."},
+ {p:"Mandato de la Presidencia de la AEPD.",r:"5 años, renovable una vez."},
+ {p:"Recursos contra la Presidencia de la AEPD.",r:"Sus resoluciones ponen fin a la vía administrativa; recurso contencioso ante la Audiencia Nacional."},
+ {p:"Consejo Consultivo de la AEPD.",r:"Asesora a la Presidencia; se reúne al menos una vez al semestre; sus decisiones no son vinculantes."},
+ {p:"Autoridades autonómicas.",r:"Cataluña, País Vasco y Andalucía, para su sector público."},
+ {p:"Derechos digitales.",r:"Título X LOPDGDD (arts. 79-97)."},
+ {p:"Desconexión digital (art. 88).",r:"Derecho a no responder fuera del tiempo de trabajo; el empleador elabora una política interna previa audiencia de los representantes."},
+ {p:"Videovigilancia laboral (art. 89).",r:"Información previa, expresa, clara y concisa; nunca en vestuarios, aseos, comedores o zonas de descanso."},
+ {p:"Olvido en buscadores (art. 93).",r:"Retirar de los resultados por el nombre enlaces inadecuados, inexactos, no pertinentes, no actualizados o excesivos."},
+ {p:"Testamento digital (art. 96).",r:"Familiares, herederos, albacea o persona designada pueden acceder a los contenidos del fallecido, salvo prohibición expresa."}
+]};
+const T1=[
+ {q:"El art. 18.4 de la Constitución dispone que la ley limitará el uso de:",o:["La informática.","Los medios de comunicación.","Las bases de datos públicas.","Internet."],c:0,e:"Para garantizar el honor y la intimidad y el pleno ejercicio de los derechos."},
+ {q:"La STC 292/2000 configuró la protección de datos como:",o:["Un derecho fundamental autónomo.","Una manifestación del derecho a la intimidad.","Un principio rector de la política social.","Un derecho de configuración legal sin rango fundamental."],c:0,e:"Distinto de la intimidad del art. 18.1 CE."},
+ {q:"El RGPD es el Reglamento (UE):",o:["2016/679.","2018/1725.","2016/680.","95/46."],c:0,e:"La Directiva 2016/680 es la de fines penales; 95/46/CE la Directiva derogada."},
+ {q:"El RGPD es aplicable desde el:",o:["25 de mayo de 2018.","25 de mayo de 2016.","7 de diciembre de 2018.","27 de abril de 2016."],c:0,e:"Entró en vigor el 25-5-2016, con dos años de aplicación diferida."},
+ {q:"La LO 3/2018 entró en vigor el:",o:["7 de diciembre de 2018.","25 de mayo de 2018.","6 de diciembre de 2018.","1 de enero de 2019."],c:0,e:"Al día siguiente de su publicación en el BOE."},
+ {q:"El título correcto de la LO 3/2018 es:",o:["De Protección de Datos Personales y garantía de los derechos digitales.","De Protección de Datos de Carácter Personal.","De Protección de Datos y Sociedad de la Información.","De Derechos Digitales y Protección de Datos de Carácter Personal."],c:0,e:"«De carácter personal» era la LO 15/1999."},
+ {q:"La LOPDGDD consta de:",o:["97 artículos.","114 artículos.","49 artículos.","99 artículos."],c:0,e:"En 10 títulos, 23 DA, 6 DT, 1 DD y 16 DF."},
+ {q:"La LOPDGDD deroga la:",o:["LO 15/1999.","LO 5/1992.","LO 1/1982.","Ley 34/2002."],c:0,e:"La LORTAD (LO 5/1992) ya había sido derogada por la LO 15/1999."},
+ {q:"El RD 1720/2007:",o:["Sigue vigente en lo que no contradiga el RGPD y la LOPDGDD.","Está derogado expresamente.","Es el Estatuto de la AEPD.","Regula los derechos digitales."],c:0,e:"Desarrollaba la LO 15/1999."},
+ {q:"El RGPD no se aplica a los tratamientos efectuados por una persona física en el ejercicio de actividades:",o:["Exclusivamente personales o domésticas.","Profesionales.","Comerciales a pequeña escala.","Asociativas."],c:0,e:"Art. 2.2.c RGPD."},
+ {q:"Según la LOPDGDD, quedan excluidos de su ámbito:",o:["Los datos de las personas fallecidas.","Los datos de menores de 14 años.","Los datos de extranjeros.","Los datos en papel."],c:0,e:"Sin perjuicio del art. 3."},
+ {q:"Los tratamientos de las autoridades con fines de prevención o enjuiciamiento de infracciones penales se rigen por:",o:["La Directiva (UE) 2016/680 y su norma de transposición.","El RGPD.","La LOPDGDD exclusivamente.","El Código Penal."],c:0,e:"En España, la LO 7/2021."},
+ {q:"Según el art. 3 LOPDGDD, pueden dirigirse al responsable para acceder a los datos de un fallecido:",o:["Sus familiares, personas vinculadas por hecho y herederos.","Solo el cónyuge.","Solo el Ministerio Fiscal.","Cualquier persona con interés."],c:0,e:"Salvo prohibición expresa del fallecido o ley."},
+ {q:"Si el fallecido era menor de edad, además pueden actuar:",o:["Sus representantes legales o el Ministerio Fiscal.","Solo el Defensor del Pueblo.","Solo la AEPD.","Sus profesores."],c:0,e:"Art. 3.3 LOPDGDD."},
+ {q:"La prohibición del fallecido de acceder a sus datos:",o:["No afecta al derecho de los herederos a los datos patrimoniales.","Afecta a todos los datos sin excepción.","Debe constar en escritura pública.","Solo vale si se inscribe en el Registro Civil."],c:0,e:"Art. 3.1 párrafo segundo."},
+ {q:"Según el art. 4 RGPD, «responsable del tratamiento» es quien:",o:["Determina los fines y medios del tratamiento.","Trata datos por cuenta de otro.","Recibe la comunicación de datos.","Supervisa el cumplimiento normativo."],c:0,e:"El encargado trata por cuenta del responsable."},
+ {q:"Los datos seudonimizados:",o:["Siguen siendo datos personales.","Son datos anónimos.","Quedan fuera del RGPD.","Son categorías especiales."],c:0,e:"Porque pueden reidentificarse con información adicional."},
+ {q:"El consentimiento del RGPD debe ser:",o:["Libre, específico, informado e inequívoco.","Expreso y por escrito siempre.","Tácito o presunto.","Ante notario."],c:0,e:"Mediante declaración o clara acción afirmativa."},
+ {q:"Los datos de salud son:",o:["Categoría especial de datos.","Datos penales.","Datos ordinarios.","Datos excluidos del RGPD."],c:0,e:"Art. 9.1 RGPD."},
+ {q:"Una pérdida accidental de un USB con datos personales es:",o:["Una violación de la seguridad de los datos.","Un tratamiento ilícito doloso.","Una comunicación de datos.","Una actividad excluida."],c:0,e:"Art. 4.12 RGPD."}
+];
+const T2=[
+ {q:"El principio de minimización exige que los datos sean:",o:["Adecuados, pertinentes y limitados a lo necesario.","Exactos y actualizados.","Conservados el menor tiempo posible.","Cifrados."],c:0,e:"Art. 5.1.c RGPD."},
+ {q:"Según el RGPD, el tratamiento ulterior con fines de archivo en interés público, investigación o estadística:",o:["No se considera incompatible con los fines iniciales.","Está prohibido.","Requiere nuevo consentimiento siempre.","Requiere autorización de la AEPD."],c:0,e:"Art. 5.1.b RGPD."},
+ {q:"El principio de responsabilidad proactiva obliga al responsable a:",o:["Cumplir los principios y poder demostrarlo.","Designar siempre un DPD.","Notificar todos los tratamientos a la AEPD.","Inscribir sus ficheros."],c:0,e:"Art. 5.2 RGPD."},
+ {q:"Según el art. 4 LOPDGDD, no se imputa la inexactitud al responsable cuando los datos:",o:["Se obtuvieron directamente del afectado.","Se publicaron en internet.","Se obtuvieron por error.","Son de un menor."],c:0,e:"También si vienen de un mediador, de otro responsable por portabilidad o de un registro público."},
+ {q:"El deber de confidencialidad del art. 5 LOPDGDD:",o:["Se mantiene aunque haya finalizado la relación con el responsable.","Solo afecta al DPD.","Sustituye al secreto profesional.","Dura 5 años."],c:0,e:"Complementa el secreto profesional."},
+ {q:"¿Cuál NO es una base de licitud del art. 6.1 RGPD?",o:["La autorización de la AEPD.","El consentimiento.","La obligación legal.","El interés legítimo."],c:0,e:"Las seis bases: consentimiento, contrato, obligación legal, intereses vitales, interés público, interés legítimo."},
+ {q:"El interés legítimo como base de licitud:",o:["No pueden usarlo las autoridades públicas en el ejercicio de sus funciones.","Solo pueden usarlo las Administraciones.","Requiere consentimiento expreso.","Solo vale para categorías especiales."],c:0,e:"Art. 6.1 último párrafo RGPD."},
+ {q:"Según el art. 8 LOPDGDD, la obligación legal como base de licitud debe derivar de:",o:["Una norma de la UE o una norma con rango de ley.","Una orden ministerial.","Un convenio colectivo.","Una instrucción de la AEPD."],c:0,e:"También el interés público y los poderes públicos."},
+ {q:"Si se pide consentimiento para varias finalidades, según el art. 6 LOPDGDD:",o:["Debe constar específicamente para todas ellas.","Basta un consentimiento genérico.","Basta para la principal.","Se presume para las accesorias."],c:0,e:"Art. 6.2 LOPDGDD."},
+ {q:"No puede supeditarse la ejecución del contrato a que el afectado consienta:",o:["El tratamiento para finalidades sin relación con el contrato.","El tratamiento necesario para el contrato.","La facturación.","El envío del producto."],c:0,e:"Art. 6.3 LOPDGDD."},
+ {q:"A noviembre de 2026, el menor puede consentir por sí solo el tratamiento de sus datos a partir de los:",o:["14 años.","16 años.","13 años.","18 años."],c:0,e:"Art. 7 LOPDGDD; la subida a 16 decayó con la disolución de las Cortes."},
+ {q:"El tratamiento de datos de un menor de 14 años basado en consentimiento requiere:",o:["El consentimiento del titular de la patria potestad o tutela.","El del Ministerio Fiscal.","La autorización judicial.","Solo informar a los padres."],c:0,e:"Art. 7.2 LOPDGDD."},
+ {q:"El RGPD permite a los Estados fijar la edad de consentimiento en servicios de la sociedad de la información entre:",o:["13 y 16 años.","12 y 18 años.","14 y 16 años.","16 y 18 años."],c:0,e:"Art. 8 RGPD; España eligió 14."},
+ {q:"La retirada del consentimiento:",o:["Puede hacerse en cualquier momento y será tan fácil como darlo.","Requiere justificar el motivo.","Tiene efectos retroactivos.","Solo cabe una vez al año."],c:0,e:"Art. 7.3 RGPD."},
+ {q:"¿Quién debe poder demostrar que el interesado consintió?",o:["El responsable.","El interesado.","El DPD.","La AEPD."],c:0,e:"Art. 7.1 RGPD."},
+ {q:"Tratar los datos para proteger la vida de una persona inconsciente se basa en:",o:["Intereses vitales.","Interés legítimo.","Obligación legal.","Consentimiento presunto."],c:0,e:"Art. 6.1.d RGPD."},
+ {q:"El principio de limitación del plazo de conservación exige mantener los datos:",o:["No más tiempo del necesario para los fines.","Durante 5 años siempre.","Indefinidamente si están cifrados.","Hasta que lo pida el interesado."],c:0,e:"Salvo archivo, investigación o estadística con garantías."},
+ {q:"El principio de integridad y confidencialidad exige:",o:["Seguridad adecuada frente a tratamientos no autorizados, pérdida o daño.","Que los datos sean exactos.","Que se informe al interesado.","Que se recojan los mínimos datos."],c:0,e:"Art. 5.1.f RGPD."},
+ {q:"El consentimiento obtenido mediante casillas premarcadas:",o:["No es válido: exige una clara acción afirmativa.","Es válido si se informa.","Es válido en menores de 14.","Es válido solo para publicidad."],c:0,e:"Considerando 32 RGPD."},
+ {q:"Un banco que consulta un fichero de solvencia cuando se le pide un préstamo se ampara en:",o:["El interés legítimo presumido por el art. 20 LOPDGDD.","El consentimiento expreso.","Una obligación legal.","Intereses vitales."],c:0,e:"Sistemas de información crediticia."}
+];
+const T3=[
+ {q:"¿Cuál de estos datos NO es categoría especial según el art. 9 RGPD?",o:["Los antecedentes penales.","La afiliación sindical.","Los datos biométricos.","La orientación sexual."],c:0,e:"Los datos penales tienen régimen propio (art. 10 RGPD)."},
+ {q:"El tratamiento de categorías especiales está, como regla general:",o:["Prohibido, salvo las excepciones del art. 9.2.","Permitido con consentimiento tácito.","Permitido libremente.","Sujeto a autorización previa de la AEPD."],c:0,e:"Art. 9.1 RGPD."},
+ {q:"Según el art. 9 LOPDGDD, el solo consentimiento no basta para tratar datos cuya finalidad principal sea identificar:",o:["La ideología, afiliación sindical, religión, orientación sexual, creencias u origen racial o étnico.","El estado de salud.","Los datos genéticos.","La situación económica."],c:0,e:"Para evitar ficheros con esa finalidad."},
+ {q:"Los tratamientos de categorías especiales amparados en las letras g), h) e i) del art. 9.2 RGPD requieren, según la LOPDGDD:",o:["Una norma con rango de ley.","El consentimiento escrito.","Autorización judicial.","Informe del DPD."],c:0,e:"Art. 9.2 LOPDGDD."},
+ {q:"El consentimiento para tratar categorías especiales debe ser:",o:["Explícito.","Tácito.","Presunto.","Verbal."],c:0,e:"Art. 9.2.a RGPD."},
+ {q:"Los datos relativos a condenas e infracciones penales, para fines distintos de los penales, pueden tratarse:",o:["Si lo ampara el Derecho de la UE, la LOPDGDD u otra ley.","Libremente por cualquier empresa.","Solo con consentimiento.","Nunca."],c:0,e:"Art. 10 LOPDGDD."},
+ {q:"Fuera de los supuestos legales, pueden tratar datos penales:",o:["Los abogados y procuradores con la información de sus clientes.","Las empresas de selección de personal.","Los bancos.","Los medios de comunicación."],c:0,e:"Art. 10.2 LOPDGDD."},
+ {q:"El plazo para responder al ejercicio de los derechos es de:",o:["1 mes, prorrogable 2 meses más.","10 días hábiles.","30 días hábiles.","3 meses, prorrogable 1 mes."],c:0,e:"Art. 12.3 RGPD."},
+ {q:"La prórroga del plazo para responder a los derechos debe comunicarse:",o:["Dentro del primer mes, con los motivos.","Al final del tercer mes.","Solo si lo pide el interesado.","A la AEPD."],c:0,e:"Art. 12.3 RGPD."},
+ {q:"Ante solicitudes manifiestamente infundadas o excesivas, el responsable:",o:["Puede cobrar un canon razonable o negarse.","Debe atenderlas gratis siempre.","Debe pedir autorización a la AEPD.","Puede sancionar al interesado."],c:0,e:"La carga de la prueba es suya."},
+ {q:"La información básica de la primera capa (art. 11 LOPDGDD) incluye:",o:["Identidad del responsable, finalidad y posibilidad de ejercer los derechos.","El código fuente del sistema.","La lista de encargados.","El plazo de prescripción."],c:0,e:"Más una dirección para el resto."},
+ {q:"Si los datos no se obtienen del interesado, debe informársele como máximo en:",o:["1 mes.","10 días.","72 horas.","3 meses."],c:0,e:"O en la primera comunicación."},
+ {q:"El derecho de acceso se entiende otorgado si el responsable facilita:",o:["Un sistema de acceso remoto, directo y seguro a los datos.","Una copia en papel por correo certificado.","Un resumen verbal.","Una dirección postal."],c:0,e:"Art. 13.2 LOPDGDD."},
+ {q:"Ejercer el derecho de acceso más de una vez en un plazo inferior a ___ puede considerarse repetitivo:",o:["6 meses.","1 año.","3 meses.","1 mes."],c:0,e:"Salvo causa legítima (art. 13.3 LOPDGDD)."},
+ {q:"El derecho a la limitación implica que los datos:",o:["Se conservan, pero no se tratan salvo excepciones.","Se suprimen.","Se ceden a otro responsable.","Se seudonimizan."],c:0,e:"Art. 18 RGPD."},
+ {q:"El derecho a la portabilidad solo procede si el tratamiento:",o:["Se basa en el consentimiento o en un contrato y se efectúa por medios automatizados.","Lo realiza una Administración.","Se basa en una obligación legal.","Es en papel."],c:0,e:"Art. 20 RGPD."},
+ {q:"Ante la oposición a la mercadotecnia directa, el responsable:",o:["Debe dejar de tratar los datos para ese fin siempre.","Puede seguir si acredita interés legítimo.","Puede seguir 1 mes más.","Necesita autorización de la AEPD."],c:0,e:"Art. 21.3 RGPD."},
+ {q:"Si la supresión deriva de la oposición a la mercadotecnia, el responsable puede:",o:["Conservar los datos identificativos necesarios para no volver a enviarla.","Conservar todos los datos.","Ceder los datos a otra empresa.","Seguir enviando publicidad de terceros."],c:0,e:"Art. 15.2 LOPDGDD."},
+ {q:"Frente a decisiones basadas únicamente en tratamientos automatizados, el interesado tiene derecho a:",o:["Obtener intervención humana, expresar su punto de vista e impugnar la decisión.","Una indemnización automática.","Que se anule el contrato.","Una auditoría pública."],c:0,e:"Art. 22.3 RGPD."},
+ {q:"El ejercicio de los derechos es, con carácter general:",o:["Gratuito.","Sujeto a una tasa.","De pago si es electrónico.","Gratuito solo una vez al año."],c:0,e:"Art. 12.5 RGPD."}
+];
+const T4=[
+ {q:"Para incluir una deuda en un fichero de morosos, debe ser superior a:",o:["50 €.","100 €.","30 €.","300 €."],c:0,e:"Art. 20.1.d LOPDGDD."},
+ {q:"Los datos de un fichero de morosos pueden mantenerse como máximo:",o:["5 años desde el vencimiento.","6 años.","3 años.","10 años."],c:0,e:"La LO 15/1999 permitía 6."},
+ {q:"Las imágenes de videovigilancia deben suprimirse en el plazo máximo de:",o:["1 mes desde su captación.","72 horas.","15 días.","3 meses."],c:0,e:"Art. 22.3 LOPDGDD."},
+ {q:"Si las imágenes acreditan un delito, se ponen a disposición de la autoridad en:",o:["72 horas desde que se conoce la grabación.","1 mes.","24 horas.","10 días."],c:0,e:"Art. 22.3 LOPDGDD."},
+ {q:"A las imágenes de videovigilancia:",o:["No les es aplicable la obligación de bloqueo.","Se les aplica el bloqueo durante 3 años.","Se les aplica el bloqueo durante 5 años.","Solo se bloquean las de la vía pública."],c:0,e:"Art. 22.3 LOPDGDD."},
+ {q:"La videovigilancia de la vía pública por particulares:",o:["Solo en la medida imprescindible para su finalidad.","Está permitida sin límites.","Está totalmente prohibida.","Requiere autorización de la AEPD."],c:0,e:"Art. 22.2 LOPDGDD."},
+ {q:"El deber de información en videovigilancia se cumple con:",o:["Un dispositivo informativo en lugar visible.","Una carta a cada vecino.","Un anuncio en el BOE.","Un aviso en la web de la AEPD."],c:0,e:"Art. 22.4 LOPDGDD."},
+ {q:"Las cámaras de una persona física que solo graban el interior de su domicilio:",o:["Están excluidas del art. 22 LOPDGDD.","Requieren cartel.","Requieren DPD.","Deben comunicarse a la AEPD."],c:0,e:"Salvo si las gestiona una empresa de seguridad privada."},
+ {q:"La «Lista Robinson» es un sistema de:",o:["Exclusión publicitaria.","Información crediticia.","Denuncias internas.","Videovigilancia."],c:0,e:"Art. 23 LOPDGDD."},
+ {q:"Quien pretenda hacer mercadotecnia directa debe consultar previamente los sistemas de exclusión, salvo que:",o:["El afectado haya consentido recibir la comunicación.","Sea una empresa pequeña.","Envíe la publicidad por correo postal.","Lo autorice la AEPD."],c:0,e:"Art. 23.4 LOPDGDD."},
+ {q:"La LOPDGDD regula los sistemas de información de denuncias internas en su art.:",o:["24.","22.","20.","26."],c:0,e:"Hoy completados por la Ley 2/2023."},
+ {q:"En el tratamiento con fines de estadística pública, los datos de categorías especiales requieren:",o:["Consentimiento expreso del afectado.","Solo una ley.","Autorización judicial.","Nada especial."],c:0,e:"Art. 25 LOPDGDD."},
+ {q:"El tratamiento con fines de archivo en interés público por las Administraciones:",o:["Es lícito, con las especialidades de la normativa de patrimonio histórico.","Está prohibido.","Requiere consentimiento.","Solo cabe con datos anonimizados."],c:0,e:"Art. 26 LOPDGDD."},
+ {q:"Los ficheros de morosos pueden consultarse:",o:["Cuando haya una relación contractual que implique pago aplazado o se solicite financiación.","Por cualquier empresa sin motivo.","Solo por la AEPD.","Solo por jueces."],c:0,e:"Art. 20.1.e LOPDGDD."},
+ {q:"Si se deniega un contrato tras consultar un fichero de morosos:",o:["Hay que informar al afectado del resultado.","No hay que informar.","Debe comunicarse a la AEPD.","Debe publicarse."],c:0,e:"Art. 20.1.e LOPDGDD."},
+ {q:"Los sistemas de información crediticia se presumen lícitos sobre la base de:",o:["El interés legítimo.","El consentimiento.","Una obligación legal.","Intereses vitales."],c:0,e:"Art. 20 LOPDGDD."},
+ {q:"El acreedor debe informar al deudor, al reclamar el pago, de que puede incluirse en un fichero de morosos:",o:["En el contrato o al requerir el pago.","Solo después de incluirlo.","Nunca.","A través del BOE."],c:0,e:"Art. 20.1.c LOPDGDD."},
+ {q:"La captación de imágenes de la vía pública puede ser más amplia cuando sea necesaria para:",o:["Garantizar la seguridad de bienes o instalaciones estratégicas o de transporte.","Fines publicitarios.","Controlar a los vecinos.","Estadística."],c:0,e:"Art. 22.2 LOPDGDD."},
+ {q:"La videovigilancia del interior de un domicilio ajeno:",o:["No es posible.","Es posible con cartel.","Es posible con 72 horas de conservación.","Es posible si lo autoriza el DPD."],c:0,e:"Art. 22.2 LOPDGDD."},
+ {q:"En la estadística pública, pueden denegarse los derechos de acceso, rectificación, supresión y limitación cuando:",o:["Estén amparados por el secreto estadístico.","Lo decida el estadístico.","Se pida por escrito.","El interesado sea menor."],c:0,e:"Art. 25.3 LOPDGDD."}
+];
+const T5=[
+ {q:"La protección de datos desde el diseño y por defecto es una obligación del:",o:["Responsable.","Interesado.","DPD.","Ministerio de Justicia."],c:0,e:"Art. 25 RGPD."},
+ {q:"El art. 28 LOPDGDD considera factor de mayor riesgo:",o:["El tratamiento de datos de menores o personas con discapacidad.","Tratar datos en papel.","Tener menos de 50 trabajadores.","Tener DPD."],c:0,e:"Colectivos vulnerables."},
+ {q:"Los corresponsables del tratamiento determinan sus responsabilidades:",o:["Según las actividades que efectivamente desarrollen.","Siempre a partes iguales.","Por sorteo.","Según la AEPD."],c:0,e:"Art. 29 LOPDGDD."},
+ {q:"El representante de un responsable no establecido en la UE:",o:["Responde solidariamente con él.","No responde nunca.","Solo responde de los daños morales.","Es siempre el DPD."],c:0,e:"Art. 30 LOPDGDD."},
+ {q:"El acceso del encargado a los datos para prestar el servicio:",o:["No se considera comunicación de datos.","Es una cesión que requiere consentimiento.","Requiere autorización de la AEPD.","Es una transferencia internacional."],c:0,e:"Art. 33.1 LOPDGDD."},
+ {q:"El encargado que use los datos para sus propias finalidades:",o:["Pasa a ser considerado responsable.","Sigue siendo encargado.","Queda exento.","Se convierte en DPD."],c:0,e:"Art. 33.2 LOPDGDD."},
+ {q:"La relación entre responsable y encargado se regula mediante:",o:["Un contrato u otro acto jurídico.","Un acuerdo verbal.","Una resolución de la AEPD.","Un convenio colectivo."],c:0,e:"Art. 28.3 RGPD."},
+ {q:"Al terminar el encargo, el destino de los datos lo decide:",o:["El responsable.","El encargado.","El interesado.","El DPD."],c:0,e:"Destrucción, devolución o entrega a otro encargado."},
+ {q:"En general, no están obligadas a llevar registro de actividades las organizaciones con menos de:",o:["250 trabajadores.","50 trabajadores.","500 trabajadores.","100 trabajadores."],c:0,e:"Salvo riesgo, tratamiento no ocasional o categorías especiales."},
+ {q:"Los sujetos del sector público deben hacer su inventario de actividades de tratamiento:",o:["Accesible al público por medios electrónicos.","Secreto.","Accesible solo para la AEPD.","Accesible solo en papel."],c:0,e:"Art. 31.2 LOPDGDD."},
+ {q:"El bloqueo de los datos (art. 32 LOPDGDD) se produce cuando:",o:["Se procede a la rectificación o supresión.","Se recogen los datos.","Se designa un DPD.","Se notifica una brecha."],c:0,e:"Se identifican y reservan los datos."},
+ {q:"Los datos bloqueados solo pueden ponerse a disposición de:",o:["Jueces y tribunales, el Ministerio Fiscal y las Administraciones competentes.","Cualquier empresa.","Los medios de comunicación.","Los familiares del afectado."],c:0,e:"Durante la prescripción de las responsabilidades."},
+ {q:"Una brecha de seguridad debe notificarse a la autoridad de control, si es posible, en:",o:["72 horas.","24 horas.","1 mes.","10 días."],c:0,e:"Art. 33 RGPD; la ampliación a 96 h del Ómnibus Digital no está aprobada."},
+ {q:"La brecha debe comunicarse a los interesados cuando:",o:["Entrañe un alto riesgo para sus derechos.","Siempre.","Nunca.","Solo si lo pide la AEPD."],c:0,e:"Art. 34 RGPD."},
+ {q:"No es necesario comunicar la brecha a los interesados si los datos:",o:["Estaban cifrados y eran ininteligibles.","Eran de salud.","Eran de menores.","Estaban en papel."],c:0,e:"Art. 34.3 RGPD."},
+ {q:"Las brechas de seguridad deben documentarse:",o:["Siempre.","Solo las notificadas.","Solo las de alto riesgo.","Nunca."],c:0,e:"Art. 33.5 RGPD."},
+ {q:"La evaluación de impacto es obligatoria, entre otros casos, para:",o:["La observación sistemática a gran escala de una zona de acceso público.","Cualquier tratamiento con consentimiento.","El envío de facturas.","Los tratamientos en papel."],c:0,e:"Art. 35.3.c RGPD."},
+ {q:"Si la evaluación de impacto muestra un alto riesgo no mitigado, el responsable debe:",o:["Consultar previamente a la autoridad de control.","Designar un DPD.","Pedir consentimiento.","Publicar el tratamiento."],c:0,e:"Art. 36 RGPD."},
+ {q:"Los códigos de conducta del art. 38 LOPDGDD:",o:["Son vinculantes para quienes se adhieren a ellos.","Son siempre voluntarios y no vinculantes.","Los aprueba el Gobierno.","Sustituyen al RGPD."],c:0,e:"Pueden incluir resolución extrajudicial de conflictos."},
+ {q:"La acreditación de las entidades de certificación corresponde a:",o:["ENAC.","La AEPD exclusivamente.","El Ministerio de Hacienda.","AENOR."],c:0,e:"Art. 39 LOPDGDD."}
+];
+const T6=[
+ {q:"El DPD es obligatorio, según el RGPD, para:",o:["Las autoridades y organismos públicos, salvo los tribunales en su función judicial.","Todas las empresas.","Las empresas de más de 250 trabajadores.","Ninguna entidad."],c:0,e:"Art. 37.1.a RGPD."},
+ {q:"Según el art. 34 LOPDGDD, ¿cuál de estos NO está obligado a designar DPD?",o:["Un profesional sanitario que ejerce a título individual.","Un colegio profesional.","Una universidad.","Una empresa de seguridad privada."],c:0,e:"Art. 34.1.l LOPDGDD."},
+ {q:"Las federaciones deportivas deben designar DPD cuando:",o:["Traten datos de menores de edad.","Tengan más de 1.000 socios.","Organicen competiciones internacionales.","Siempre."],c:0,e:"Art. 34.1.p LOPDGDD."},
+ {q:"La designación del DPD se comunica a la autoridad de control en:",o:["10 días.","1 mes.","72 horas.","15 días hábiles."],c:0,e:"Art. 34.3 LOPDGDD."},
+ {q:"El DPD:",o:["Puede ser personal propio o externo, a tiempo completo o parcial.","Debe ser funcionario.","Debe ser abogado colegiado.","Debe tener dedicación exclusiva."],c:0,e:"Art. 35-36 LOPDGDD."},
+ {q:"El DPD no puede ser removido ni sancionado por desempeñar sus funciones, salvo:",o:["Dolo o negligencia grave.","Decisión del responsable.","Reestructuración.","Informe de la AEPD."],c:0,e:"Art. 36.2 LOPDGDD."},
+ {q:"El DPD rinde cuentas:",o:["Directamente al más alto nivel jerárquico.","Al jefe de informática.","A la AEPD.","A los representantes de los trabajadores."],c:0,e:"Art. 38.3 RGPD."},
+ {q:"¿Cuál NO es función del DPD?",o:["Imponer sanciones.","Informar y asesorar.","Supervisar el cumplimiento.","Cooperar con la autoridad de control."],c:0,e:"Art. 39 RGPD."},
+ {q:"La reclamación previa ante el DPD es:",o:["Potestativa.","Obligatoria.","Requisito para acudir a los tribunales.","Gratuita solo para menores."],c:0,e:"Art. 37.1 LOPDGDD."},
+ {q:"El DPD debe resolver la reclamación previa en:",o:["2 meses.","1 mes.","3 meses.","10 días."],c:0,e:"Art. 37.1 LOPDGDD."},
+ {q:"Si la AEPD remite la reclamación al DPD, este debe responder en:",o:["1 mes.","2 meses.","10 días.","3 meses."],c:0,e:"Art. 37.2 LOPDGDD."},
+ {q:"El DPD está sujeto al régimen sancionador:",o:["No.","Sí, como el responsable.","Solo en infracciones muy graves.","Solo si es externo."],c:0,e:"Art. 70.2 LOPDGDD."},
+ {q:"Las multas del art. 83.4 RGPD pueden llegar a:",o:["10 M€ o el 2 % del volumen de negocio anual mundial, la mayor.","20 M€ o el 4 %.","1 M€.","5 M€ o el 1 %."],c:0,e:"Por ejemplo, incumplir obligaciones de responsable y encargado."},
+ {q:"Las multas del art. 83.5 RGPD pueden llegar a:",o:["20 M€ o el 4 % del volumen de negocio anual mundial, la mayor.","10 M€ o el 2 %.","300.000 €.","40 M€ o el 8 %."],c:0,e:"Principios, derechos, transferencias."},
+ {q:"Las infracciones muy graves prescriben a los:",o:["3 años.","2 años.","1 año.","5 años."],c:0,e:"Art. 72 LOPDGDD."},
+ {q:"Las infracciones leves prescriben al:",o:["1 año.","6 meses.","2 años.","3 años."],c:0,e:"Art. 74 LOPDGDD."},
+ {q:"Una sanción de 250.000 € prescribe a los:",o:["2 años.","1 año.","3 años.","4 años."],c:0,e:"De 40.001 a 300.000 € (art. 78 LOPDGDD)."},
+ {q:"Se publican en el BOE las sanciones impuestas por la AEPD cuando:",o:["Superan 1 M€ y el infractor es una persona jurídica.","Superan 300.000 €.","Afectan a menores.","Son a Administraciones."],c:0,e:"Art. 76.4 LOPDGDD."},
+ {q:"A una Administración pública infractora (art. 77 LOPDGDD) se le impone:",o:["Una resolución declarativa con medidas, sin multa.","Una multa reducida al 50 %.","La misma multa que a una empresa.","La disolución del órgano."],c:0,e:"Con posible amonestación y actuaciones disciplinarias."},
+ {q:"Tener un DPD sin estar obligado a ello es, en la graduación de la sanción:",o:["Un criterio que puede atenuarla.","Una agravante.","Irrelevante.","Una infracción."],c:0,e:"Art. 76.2.g LOPDGDD."}
+];
+const T7=[
+ {q:"La AEPD es:",o:["Una autoridad administrativa independiente de ámbito estatal.","Un organismo autónomo del Ministerio del Interior.","Una dirección general del Ministerio de Justicia.","Un órgano del CGPJ."],c:0,e:"Art. 44 LOPDGDD."},
+ {q:"La AEPD se relaciona con el Gobierno a través del Ministerio de:",o:["Justicia.","Interior.","Hacienda.","Presidencia."],c:0,e:"Art. 44.1 LOPDGDD."},
+ {q:"El Estatuto de la AEPD se aprobó por:",o:["RD 389/2021.","RD 428/1993.","RD 1720/2007.","RD 203/2021."],c:0,e:"De 1 de junio."},
+ {q:"A noviembre de 2026, preside la AEPD:",o:["Lorenzo Cotino Hueso.","Mar España Martí.","José Luis Rodríguez Álvarez.","Francisco Pérez Bes."],c:0,e:"RD 142/2025; Pérez Bes es el adjunto."},
+ {q:"La Presidencia de la AEPD la ratifica:",o:["La Comisión de Justicia del Congreso, por 3/5 o, en segunda votación, mayoría absoluta.","El Pleno del Senado.","El Consejo de Estado.","El CGPJ."],c:0,e:"Art. 48.3 LOPDGDD."},
+ {q:"El mandato de la Presidencia de la AEPD es de:",o:["5 años, renovable una vez.","4 años, no renovable.","6 años, no renovable.","5 años, no renovable."],c:0,e:"Art. 48.3 LOPDGDD."},
+ {q:"Las resoluciones de la Presidencia de la AEPD se recurren ante:",o:["La Sala de lo Contencioso-administrativo de la Audiencia Nacional.","El Tribunal Supremo.","El Ministerio de Justicia en alzada.","El Tribunal Constitucional."],c:0,e:"Ponen fin a la vía administrativa."},
+ {q:"El Consejo Consultivo de la AEPD se reúne al menos:",o:["Una vez al semestre.","Una vez al mes.","Una vez al año.","Una vez al trimestre."],c:0,e:"Art. 49 LOPDGDD."},
+ {q:"Las decisiones del Consejo Consultivo:",o:["No son vinculantes.","Son vinculantes.","Vinculan solo al adjunto.","Requieren aprobación del Congreso."],c:0,e:"Art. 49.4 LOPDGDD."},
+ {q:"Los miembros del Consejo Consultivo se nombran por:",o:["Orden del Ministro de Justicia publicada en el BOE.","Real decreto.","El Congreso.","La Presidencia de la AEPD."],c:0,e:"Art. 49.2 LOPDGDD."},
+ {q:"El personal de la AEPD que realiza actividades de investigación tiene la consideración de:",o:["Agentes de la autoridad.","Policía judicial.","Personal laboral.","Peritos."],c:0,e:"Art. 52 LOPDGDD."},
+ {q:"¿Qué Comunidad Autónoma NO tiene autoridad propia de protección de datos?",o:["Madrid.","Cataluña.","País Vasco.","Andalucía."],c:0,e:"La Agencia madrileña se suprimió en 2012."},
+ {q:"Ante el Comité Europeo de Protección de Datos, las autoridades españolas están representadas por:",o:["La AEPD.","La APDCAT.","El Ministerio de Justicia.","Cada autoridad por turno."],c:0,e:"Representante común (art. 44.2 LOPDGDD)."},
+ {q:"La contratación de la AEPD se rige por:",o:["El Derecho privado, según su normativa.","El Derecho público exclusivamente.","El Derecho de la UE exclusivamente.","El Estatuto de los Trabajadores."],c:0,e:"Según dice el manual."},
+ {q:"El cese de la Presidencia de la AEPD puede producirse por:",o:["Incumplimiento grave, incapacidad, incompatibilidad o condena firme por delito doloso.","Cambio de Gobierno.","Decisión del Ministro.","Mayoría simple del Congreso."],c:0,e:"Art. 48.4 LOPDGDD."},
+ {q:"El Supervisor Europeo de Protección de Datos supervisa:",o:["Los tratamientos de las instituciones de la UE.","A las empresas españolas.","A la AEPD.","A los tribunales nacionales."],c:0,e:"Reglamento (UE) 2018/1725."},
+ {q:"El procedimiento por posible infracción ante la AEPD tiene una duración máxima de:",o:["12 meses.","6 meses.","3 meses.","18 meses."],c:0,e:"Art. 64.2 LOPDGDD."},
+ {q:"La AEPD puede adoptar medidas provisionales como:",o:["Ordenar el bloqueo cautelar de los datos.","Detener al responsable.","Imponer multas coercitivas penales.","Cerrar la empresa."],c:0,e:"Art. 69 LOPDGDD."},
+ {q:"El adjunto a la Presidencia de la AEPD:",o:["Se nombra por el mismo procedimiento y sustituye al presidente.","Lo nombra el presidente libremente.","Lo elige el Consejo Consultivo.","No existe."],c:0,e:"Art. 48 LOPDGDD."},
+ {q:"La AEPD publica las resoluciones de sus procedimientos:",o:["En su web, con carácter general.","Solo en el BOE.","Nunca.","Solo si lo pide el sancionado."],c:0,e:"Art. 50 LOPDGDD."}
+];
+const T8=[
+ {q:"Un ciudadano solicita el acceso a sus datos el 16-11-2026 y la solicitud no es compleja. El plazo máximo para responder termina el:",o:["16-12-2026.","14-12-2026.","16-1-2027.","30-11-2026."],c:0,e:"1 mes, de fecha a fecha."},
+ {q:"Si la solicitud anterior se prorroga, el plazo total termina el:",o:["16-2-2027.","16-1-2027.","16-3-2027.","16-12-2026."],c:0,e:"1 mes + 2 meses."},
+ {q:"Una empresa detecta una brecha probablemente con riesgo el viernes 13-11-2026 a las 18:00. Debe notificarla, si es posible, antes del:",o:["Lunes 16-11-2026 a las 18:00.","Martes 17-11-2026 a las 18:00.","Miércoles 18-11-2026 a las 18:00.","Sábado 14-11-2026 a las 18:00."],c:0,e:"72 horas naturales, también en fin de semana."},
+ {q:"Una tienda graba un robo el 2-11-2026 y lo conoce el 3-11 a las 9:00. Debe entregar las imágenes antes del:",o:["6-11-2026 a las 9:00.","2-12-2026.","4-11-2026 a las 9:00.","3-12-2026."],c:0,e:"72 horas desde que se conoce."},
+ {q:"Las imágenes grabadas el 2-11-2026 que no muestran ningún incidente deben suprimirse como máximo el:",o:["2-12-2026.","5-11-2026.","2-11-2027.","2-2-2027."],c:0,e:"1 mes desde la captación."},
+ {q:"Una red social quiere dar de alta a un usuario de 15 años, a noviembre de 2026. ¿Quién consiente?",o:["El propio menor.","Sus padres.","El menor y sus padres conjuntamente.","Nadie: está prohibido."],c:0,e:"La edad sigue en 14 (art. 7 LOPDGDD)."},
+ {q:"Una app pide a un usuario de 13 años que acepte el tratamiento de sus datos. Debe consentir:",o:["El titular de la patria potestad o tutela.","El propio menor.","El Ministerio Fiscal.","El centro escolar."],c:0,e:"Menor de 14 años."},
+ {q:"Un partido político quiere crear una base de datos para identificar la ideología de los ciudadanos con su consentimiento. Es:",o:["Ilícito: el solo consentimiento no basta.","Lícito con consentimiento explícito.","Lícito con autorización de la AEPD.","Lícito si se seudonimizan."],c:0,e:"Art. 9.1 LOPDGDD."},
+ {q:"Un médico de familia con consulta privada individual:",o:["No está obligado a designar DPD.","Debe designar DPD en 10 días.","Debe compartir DPD con el colegio.","Debe designar DPD si tiene más de 100 pacientes."],c:0,e:"Art. 34.1.l LOPDGDD."},
+ {q:"Una empresa con un volumen de negocio de 800 M€ comete una infracción del art. 83.5 RGPD. La multa máxima es de:",o:["32 M€.","20 M€.","16 M€.","10 M€."],c:0,e:"El 4 % de 800 M€ es 32 M€, mayor que 20 M€."},
+ {q:"Una empresa con un volumen de negocio de 100 M€ comete una infracción del art. 83.4 RGPD. La multa máxima es de:",o:["10 M€.","2 M€.","20 M€.","4 M€."],c:0,e:"El 2 % (2 M€) es menor que 10 M€."},
+ {q:"La AEPD impone 1,5 M€ a una sociedad anónima. Además:",o:["Se publica en el BOE y la sanción prescribe a los 3 años.","No se publica y prescribe al año.","Se publica en el BOE y prescribe a los 2 años.","Se comunica al Defensor del Pueblo."],c:0,e:"Más de 1 M€ a persona jurídica; más de 300.000 €."},
+ {q:"Un Ayuntamiento cede datos del padrón sin base legal. La AEPD:",o:["Dicta una resolución que declara la infracción, sin multa.","Le impone una multa de hasta 20 M€.","Le impone una multa de hasta 10 M€.","Archiva siempre el procedimiento."],c:0,e:"Art. 77 LOPDGDD."},
+ {q:"Un ciudadano reclama ante el DPD de un hospital el 16-11-2026. El DPD debe responder como máximo el:",o:["16-1-2027.","16-12-2026.","16-2-2027.","26-11-2026."],c:0,e:"2 meses (art. 37.1 LOPDGDD)."},
+ {q:"Un ciudadano quiere que un buscador deje de mostrar, al buscar su nombre, una noticia antigua sobre él. Ejerce:",o:["El derecho al olvido en búsquedas de internet.","El derecho de rectificación en internet.","El derecho de portabilidad.","El derecho de acceso."],c:0,e:"Art. 93 LOPDGDD."},
+ {q:"Un trabajador recibe mensajes de su jefe en vacaciones. Su derecho a no responder es el de:",o:["Desconexión digital.","Intimidad en dispositivos.","Oposición.","Limitación."],c:0,e:"Art. 88 LOPDGDD."},
+ {q:"Una empresa quiere instalar cámaras en los vestuarios para evitar robos. Es:",o:["Ilícito en todo caso.","Lícito con cartel.","Lícito con información previa a los trabajadores.","Lícito con acuerdo de los representantes."],c:0,e:"Art. 89.2 LOPDGDD."},
+ {q:"Un acreedor quiere incluir en un fichero de morosos una deuda de 45 €. Puede:",o:["No, porque no supera 50 €.","Sí, durante 5 años.","Sí, durante 6 años.","Sí, con consentimiento del deudor."],c:0,e:"Art. 20.1.d LOPDGDD."},
+ {q:"Una infracción grave cometida el 1-12-2024, sin actuaciones, prescribe el:",o:["1-12-2026.","1-12-2027.","1-12-2025.","1-12-2029."],c:0,e:"2 años (art. 73 LOPDGDD)."},
+ {q:"Una empresa informa al cliente de su política de privacidad en una primera pantalla breve con enlace al resto. Usa:",o:["La información por capas del art. 11 LOPDGDD.","Una evaluación de impacto.","Un código de conducta.","Una consulta previa."],c:0,e:"Primera capa básica."}
+];
+const TESTS=[
+ {id:"t1",ic:"⚖️",name:"Marco, ámbito y definiciones",desc:"Art. 18.4 CE, RGPD, LOPDGDD, fallecidos.",qs:T1},
+ {id:"t2",ic:"🧭",name:"Principios y licitud",desc:"Arts. 5-8 RGPD y 4-8 LOPDGDD; menores.",qs:T2},
+ {id:"t3",ic:"🔐",name:"Categorías especiales y derechos",desc:"Arts. 9-22 RGPD y 9-18 LOPDGDD.",qs:T3},
+ {id:"t4",ic:"📹",name:"Tratamientos concretos",desc:"Morosos, videovigilancia, Lista Robinson, estadística.",qs:T4},
+ {id:"t5",ic:"🛡️",name:"Responsable, encargado y seguridad",desc:"Registro, bloqueo, brechas, evaluación de impacto.",qs:T5},
+ {id:"t6",ic:"👤",name:"DPD y régimen sancionador",desc:"Arts. 34-37 y 70-78 LOPDGDD; art. 83 RGPD.",qs:T6},
+ {id:"t7",ic:"🏛️",name:"AEPD y autoridades",desc:"Arts. 44-62 LOPDGDD; RD 389/2021.",qs:T7},
+ {id:"t8",ic:"🧩",name:"Casos prácticos",desc:"Plazos, multas, menores, DPD y derechos.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));
+const POOL=TESTS.flatMap(t=>t.qs);
+const ESQ=[
+ {id:"e1",title:"Marco normativo",intro:"Fechas y normas clave.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Protección de datos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Constitución</b>Art. {{0}} CE</div>
+   <div class="sch-box alt"><b>RGPD</b>Aplicable desde el 25-5-{{1}}</div>
+   <div class="sch-box"><b>LOPDGDD</b>LO {{2}}</div>
+   <div class="sch-box alt"><b>Derecho fundamental autónomo</b>STC {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["18.4","18.1","20.1","105.b"],why:"Limitación del uso de la informática."},{o:["2018","2016","2019","2017"],why:"En vigor en 2016."},{o:["3/2018","15/1999","5/1992","7/2021"],why:"En vigor el 7-12-2018."},{o:["292/2000","254/1993","290/2000","76/2019"],why:"Distinto de la intimidad."}]},
+ {id:"e2",title:"Ordena: principios del art. 5.1 RGPD",intro:"Letras a) a f).",type:"order",
+  items:[{t:"Licitud, lealtad y transparencia",why:"a)."},{t:"Limitación de la finalidad",why:"b)."},{t:"Minimización de datos",why:"c)."},{t:"Exactitud",why:"d)."},{t:"Limitación del plazo de conservación",why:"e)."},{t:"Integridad y confidencialidad",why:"f)."}]},
+ {id:"e3",title:"Ordena: bases de licitud del art. 6.1 RGPD",intro:"Letras a) a f).",type:"order",
+  items:[{t:"Consentimiento",why:"a)."},{t:"Ejecución de un contrato",why:"b)."},{t:"Obligación legal",why:"c)."},{t:"Intereses vitales",why:"d)."},{t:"Interés público o poderes públicos",why:"e)."},{t:"Interés legítimo",why:"f)."}]},
+ {id:"e4",title:"Consentimiento",intro:"Arts. 4.11 RGPD y 7 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Consentimiento</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Requisitos</b>Libre, específico, informado e {{0}}</div>
+   <div class="sch-box alt"><b>Forma</b>Declaración o clara acción {{1}}</div>
+   <div class="sch-box"><b>Menores</b>Consienten por sí desde los {{2}} años</div>
+   <div class="sch-box alt"><b>Categorías especiales</b>Consentimiento {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["inequívoco","expreso","escrito","tácito"],why:"Art. 4.11 RGPD."},{o:["afirmativa","presunta","escrita","notarial"],why:"No valen casillas premarcadas."},{o:["14","16","13","18"],why:"La subida a 16 decayó."},{o:["explícito","tácito","verbal","presunto"],why:"Art. 9.2.a RGPD."}]},
+ {id:"e5",title:"Plazos de los derechos",intro:"Art. 12 RGPD y art. 13 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Ejercicio de derechos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Plazo general</b>{{0}}</div>
+   <div class="sch-box alt"><b>Prórroga</b>{{1}} más</div>
+   <div class="sch-box"><b>Acceso repetitivo</b>Menos de {{2}}</div>
+   <div class="sch-box alt"><b>Coste</b>{{3}}, salvo solicitudes excesivas</div>
+  </div></div>`,
+  blanks:[{o:["1 mes","10 días","30 días hábiles","3 meses"],why:"Art. 12.3 RGPD."},{o:["2 meses","1 mes","3 meses","15 días"],why:"Por complejidad o número."},{o:["6 meses","1 año","3 meses","1 mes"],why:"Art. 13.3 LOPDGDD."},{o:["Gratuito","Tasa","Canon fijo","Precio público"],why:"Art. 12.5 RGPD."}]},
+ {id:"e6",title:"Ordena: derechos de los arts. 15-22 RGPD",intro:"En el orden del Reglamento.",type:"order",
+  items:[{t:"Acceso",why:"Art. 15."},{t:"Rectificación",why:"Art. 16."},{t:"Supresión",why:"Art. 17."},{t:"Limitación del tratamiento",why:"Art. 18."},{t:"Portabilidad",why:"Art. 20."},{t:"Oposición",why:"Art. 21."},{t:"Decisiones individuales automatizadas",why:"Art. 22."}]},
+ {id:"e7",title:"Morosos y videovigilancia",intro:"Arts. 20 y 22 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Tratamientos concretos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Morosos: deuda</b>Más de {{0}}</div>
+   <div class="sch-box alt"><b>Morosos: permanencia</b>Máximo {{1}}</div>
+   <div class="sch-box"><b>Imágenes: supresión</b>{{2}}</div>
+   <div class="sch-box alt"><b>Imágenes de un delito</b>A la autoridad en {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["50 €","100 €","30 €","300 €"],why:"Art. 20.1.d."},{o:["5 años","6 años","3 años","10 años"],why:"Desde el vencimiento."},{o:["1 mes","15 días","3 meses","72 horas"],why:"Art. 22.3."},{o:["72 horas","24 horas","1 mes","10 días"],why:"Desde que se conoce."}]},
+ {id:"e8",title:"Brechas de seguridad",intro:"Arts. 33-34 RGPD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Violación de seguridad</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>A la autoridad</b>En {{0}}</div>
+   <div class="sch-box alt"><b>A los interesados</b>Si hay {{1}} riesgo</div>
+   <div class="sch-box"><b>Documentación</b>{{2}}</div>
+   <div class="sch-box alt"><b>Ómnibus Digital (propuesta)</b>Ampliaría a {{3}} horas</div>
+  </div></div>`,
+  blanks:[{o:["72 horas","24 horas","1 mes","96 horas"],why:"Art. 33.1 RGPD; vigente."},{o:["alto","cualquier","bajo","nulo"],why:"Art. 34.1 RGPD."},{o:["Siempre","Solo si se notifica","Nunca","Solo si hay alto riesgo"],why:"Art. 33.5 RGPD."},{o:["96","48","120","144"],why:"No aprobado a noviembre de 2026."}]},
+ {id:"e9",title:"Responsable, encargado y registro",intro:"Arts. 28-33 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Obligaciones</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Acceso del encargado</b>No es {{0}} de datos</div>
+   <div class="sch-box alt"><b>Registro de actividades</b>Exento en general con menos de {{1}} trabajadores</div>
+   <div class="sch-box"><b>Sector público</b>Inventario {{2}}</div>
+   <div class="sch-box alt"><b>Rectificación o supresión</b>Los datos se {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["comunicación","tratamiento","transferencia","responsabilidad"],why:"Art. 33.1."},{o:["250","50","500","100"],why:"Art. 30.5 RGPD."},{o:["público","secreto","reservado","confidencial"],why:"Art. 31.2."},{o:["bloquean","ceden","publican","seudonimizan"],why:"Art. 32."}]},
+ {id:"e10",title:"Delegado de Protección de Datos",intro:"Arts. 34-37 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">DPD</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Comunicación</b>En {{0}}</div>
+   <div class="sch-box alt"><b>Reclamación previa</b>Resuelve en {{1}}</div>
+   <div class="sch-box"><b>Remitida por la AEPD</b>Responde en {{2}}</div>
+   <div class="sch-box alt"><b>Remoción</b>Solo por dolo o negligencia {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["10 días","1 mes","72 horas","15 días"],why:"Art. 34.3."},{o:["2 meses","1 mes","3 meses","10 días"],why:"Art. 37.1."},{o:["1 mes","2 meses","10 días","3 meses"],why:"Art. 37.2."},{o:["grave","leve","simple","cualquiera"],why:"Art. 36.2."}]},
+ {id:"e11",title:"Multas del RGPD",intro:"Art. 83: la cifra mayor.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Art. 83 RGPD</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>83.4: fijo</b>{{0}}</div>
+   <div class="sch-box alt"><b>83.4: porcentaje</b>{{1}}</div>
+   <div class="sch-box"><b>83.5: fijo</b>{{2}}</div>
+   <div class="sch-box alt"><b>83.5: porcentaje</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["10 M€","20 M€","1 M€","5 M€"],why:"Obligaciones de responsable y encargado."},{o:["2 %","4 %","1 %","3 %"],why:"Del volumen de negocio anual mundial."},{o:["20 M€","10 M€","40 M€","30 M€"],why:"Principios y derechos."},{o:["4 %","2 %","6 %","8 %"],why:"Del volumen de negocio anual mundial."}]},
+ {id:"e12",title:"Prescripción",intro:"Arts. 72-74 y 78 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Prescripción</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Infracción muy grave</b>{{0}}</div>
+   <div class="sch-box alt"><b>Infracción leve</b>{{1}}</div>
+   <div class="sch-box"><b>Sanción hasta 40.000 €</b>{{2}}</div>
+   <div class="sch-box alt"><b>Sanción de más de 300.000 €</b>{{3}}</div>
+  </div></div>`,
+  blanks:[{o:["3 años","5 años","2 años","4 años"],why:"Art. 72."},{o:["1 año","6 meses","2 años","3 meses"],why:"Art. 74."},{o:["1 año","6 meses","2 años","3 años"],why:"Art. 78.1.a."},{o:["3 años","5 años","4 años","2 años"],why:"Art. 78.1.c."}]},
+ {id:"e13",title:"La AEPD",intro:"Arts. 44-49 LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Agencia Española de Protección de Datos</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Relación con el Gobierno</b>Ministerio de {{0}}</div>
+   <div class="sch-box alt"><b>Mandato</b>{{1}} años, renovable</div>
+   <div class="sch-box"><b>Recursos</b>Audiencia {{2}}</div>
+   <div class="sch-box alt"><b>Presidente en 2026</b>Lorenzo {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["Justicia","Interior","Hacienda","Presidencia"],why:"Art. 44.1."},{o:["5","4","6","3"],why:"Art. 48.3."},{o:["Nacional","Provincial","Territorial","Europea"],why:"Ponen fin a la vía administrativa."},{o:["Cotino Hueso","Pérez Bes","España Martí","Rodríguez Álvarez"],why:"RD 142/2025."}]},
+ {id:"e14",title:"Derechos digitales",intro:"Título X LOPDGDD.",type:"blanks",
+  html:`<div class="sch"><div class="sch-root">Derechos digitales</div>
+  <div class="sch-cols">
+   <div class="sch-box"><b>Art. 88</b>Desconexión {{0}}</div>
+   <div class="sch-box alt"><b>Art. 93</b>Olvido en {{1}}</div>
+   <div class="sch-box"><b>Art. 89</b>Nunca cámaras en {{2}}</div>
+   <div class="sch-box alt"><b>Art. 96</b>Testamento {{3}}</div>
+  </div></div>`,
+  blanks:[{o:["digital","laboral","horaria","sindical"],why:"Fuera del tiempo de trabajo."},{o:["búsquedas de internet","redes sociales","medios de comunicación","registros públicos"],why:"Buscadores."},{o:["vestuarios y aseos","la entrada","el almacén","el aparcamiento"],why:"Ni comedores o zonas de descanso."},{o:["digital","ológrafo","abierto","notarial"],why:"Acceso a contenidos del fallecido."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("op4c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("op4c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
