@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Oposiciones AGE: Access 365 - Esquemas y Tests Interactivos</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        access: {
+                            red: '#a4373a',
+                            darkRed: '#77191c',
+                            lightRed: '#fdf2f2',
+                            accent: '#e11d48'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(8px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* Ocultar scrollbar en la barra de pestañas manteniendo scroll táctil */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Scrollbar general estilizada */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(225, 29, 72, 0.6);
+        }
+
+        /* Fondo mesh sutil */
+        .bg-mesh {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.07) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(164, 55, 58, 0.06) 0px, transparent 50%);
+        }
+        .dark .bg-mesh {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.14) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+        }
+
+        /* Transiciones de tarjetas y opciones */
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .option-card:active {
+            transform: scale(0.99);
+        }
+
+        /* Ondas de audio animadas */
+        @keyframes soundWave {
+            0%, 100% { height: 5px; }
+            50% { height: 18px; }
+        }
+        .voice-wave span {
+            display: inline-block;
+            width: 3px;
+            background: linear-gradient(to top, #e11d48, #fb7185);
+            border-radius: 999px;
+            animation: soundWave 1.1s ease-in-out infinite;
+        }
+        .voice-wave span:nth-child(2) { animation-delay: 0.2s; }
+        .voice-wave span:nth-child(3) { animation-delay: 0.4s; }
+        .voice-wave span:nth-child(4) { animation-delay: 0.15s; }
+
+        /* Etiquetas de teclado */
+        kbd {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+            border: 1px solid #cbd5e1;
+            border-bottom-width: 2px;
+            border-radius: 0.4rem;
+            padding: 0.1rem 0.45rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #334155;
+        }
+        .dark kbd {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-color: #475569;
+            color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 bg-mesh text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-rose-500 selection:text-white transition-colors duration-300">
+
+    <!-- TOP HEADER GLASSMORPHISM -->
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800/80 transition-all">
+        <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20 gap-2">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+                    <div class="relative group flex-shrink-0">
+                        <div class="absolute -inset-0.5 bg-gradient-to-tr from-rose-600 to-amber-500 rounded-2xl blur opacity-35 group-hover:opacity-60 transition duration-300"></div>
+                        <div class="relative w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-access-red via-rose-600 to-rose-500 flex items-center justify-center text-white shadow-inner">
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                            <span class="px-2 py-0.5 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-md border border-rose-500/20">
+                                AGE · C1
+                            </span>
+                            <span id="global-stats-badge" class="inline-flex items-center px-2 py-0.5 text-[11px] font-semibold bg-slate-100 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 rounded-md border border-slate-200/70 dark:border-slate-700/70">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                                <span id="completed-count-text">0/10 tests</span>
+                            </span>
+                        </div>
+                        <h1 class="text-base sm:text-xl md:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white truncate flex items-center gap-2 mt-0.5">
+                            <span>Access 365</span>
+                            <span class="text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md font-mono hidden lg:inline border border-rose-200/60 dark:border-rose-800/50">Tema 06</span>
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Right Actions: Enlace directo + Docs Dropdown + Dark Mode -->
+                <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
+                    
+                    <!-- Enlace directo solicitado en cabecera -->
+                    <a href="Tema_06_Access_365_Bases_Datos_claude.html" 
+                       title="Ir a Tema 06: Access 365 Bases de Datos"
+                       class="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-rose-600/10 to-amber-500/10 hover:from-rose-600 hover:to-rose-500 text-rose-700 dark:text-rose-300 hover:text-white border border-rose-500/25 hover:border-rose-500 shadow-sm transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-rose-600 dark:text-rose-400 group-hover:text-white transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                        <span class="hidden md:inline max-w-[210px] truncate">Tema_06_Access_365_Bases_Datos_claude.html</span>
+                        <span class="md:hidden">Apuntes T6</span>
+                    </a>
+
+                    <!-- Reference Documentation Button -->
+                    <div class="relative inline-block text-left">
+                        <button id="doc-menu-btn" onclick="toggleDocMenu()" class="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700/70 transition-all">
+                            <svg class="w-4 h-4 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span class="hidden sm:inline">Material</span>
+                            <svg class="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="doc-menu-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700/80 py-2 z-50 animate-fade-in">
+                            <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
+                                Recursos y Documentación
+                            </div>
+                            <a href="Tema_06_Access_365_Bases_Datos_claude.html" class="flex items-center gap-2.5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors">
+                                🌐 <span class="truncate">Tema_06_Access_365_Bases_Datos_claude.html</span>
+                            </a>
+                            <a href="tema06.pdf" target="_blank" class="flex items-center gap-2.5 px-4 py-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-colors">
+                                📄 <span class="truncate">tema06.pdf</span>
+                            </a>
+                            <a href="tema6_esquema_Access365.pdf" target="_blank" class="flex items-center gap-2.5 px-4 py-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-colors">
+                                📑 <span class="truncate">tema6_esquema_Access365.pdf</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Dark Mode Toggle Button -->
+                    <button onclick="toggleDarkMode()" class="p-2 sm:p-2.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-700/70 transition-all active:scale-95" title="Cambiar Tema (Oscuro/Claro)" aria-label="Cambiar tema">
+                        <svg id="sun-icon" class="w-4 h-4 sm:w-5 sm:h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <svg id="moon-icon" class="w-4 h-4 sm:w-5 sm:h-5 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABS SCROLLABLE NAVIGATION BAR (Optimizado para swipe táctil en móvil) -->
+            <div class="relative py-2.5 overflow-x-auto no-scrollbar flex items-center border-t border-slate-200/60 dark:border-slate-800/80" id="tabs-scroll-container">
+                <div class="flex items-center space-x-1.5 sm:space-x-2 pr-4" id="tabs-nav">
+                    <!-- Dynamic tabs injected by JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8" id="main-content">
+        <!-- Tab Content dynamically injected by JS -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-slate-200/70 dark:border-slate-800/80 py-6 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md text-xs text-slate-500 dark:text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <p class="font-medium">Oposiciones AGE Subgrupo C1 · <span class="text-slate-700 dark:text-slate-300 font-semibold">Tema 6: Access 365</span></p>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <span class="hidden md:inline-flex items-center gap-1.5">Atajos: <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd></span>
+                <span class="text-slate-300 dark:text-slate-700 hidden md:inline">•</span>
+                <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Mobile & Desktop Ready
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT DATA & APP LOGIC -->
+    <script>
+        // --- DATA STRUCTURES (Textos limpios y estructurados) ---
+        const esquemaPreguntas = [
+            { pregunta: "¿Cuál es el límite de tamaño de una base de datos en Access?", respuesta_detallada: "El tamaño máximo de un archivo de base de datos de Access es 2 gigabytes." },
+            { pregunta: "¿Cuáles son las características y límites del nombre de un campo?", respuesta_detallada: "Pueden tener hasta 64 caracteres. Pueden incluir combinaciones de letras, números, espacios y caracteres especiales, excepto puntos (.), signos de exclamación (!), acentos graves (`) y corchetes ([]). No pueden comenzar por espacios ni incluir caracteres de control." },
+            { pregunta: "¿Qué extensión por defecto tienen las bases de datos creadas en Access 365?", respuesta_detallada: "Utilizan por defecto el formato de MSO Access 2007, cuya extensión es .accdb." },
+            { pregunta: "¿Qué tamaño tiene el tipo de dato Texto corto?", respuesta_detallada: "Admite hasta 255 caracteres." },
+            { pregunta: "¿Qué tamaño de almacenamiento tiene el tipo de dato Texto largo?", respuesta_detallada: "Hasta 1 gigabyte de caracteres o 2 gigabytes de almacenamiento, de los que se pueden mostrar 64.000 caracteres en un control." },
+            { pregunta: "¿Qué tamaños de almacenamiento admite el tipo de dato Número?", respuesta_detallada: "1, 2, 4 o 8 o 16 bytes cuando se usa en un id. de replicación (Byte, Entero, Entero largo, Simple, Doble, Id. de réplica, Decimal)." },
+            { pregunta: "¿Qué es un campo con tipo de dato Autonumeración?", respuesta_detallada: "Es un valor número único que Access inserta automáticamente cuando se agrega un registro. Su tamaño es de 4 o 16 bytes." },
+            { pregunta: "¿Qué tamaño ocupa el tipo de dato Sí/No?", respuesta_detallada: "Ocupa 1 byte (8 bits = 1 byte) y representa valores booleanos." },
+            { pregunta: "¿Cuál es la función del tipo de dato Objeto OLE y cuál es su límite?", respuesta_detallada: "Se utiliza para almacenar objetos OLE u otros datos binarios. Admite hasta 2 gigabytes." },
+            { pregunta: "¿Qué indica el carácter '0' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario debe escribir un dígito (0 a 9) de forma obligatoria." },
+            { pregunta: "¿Qué indica el carácter '9' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario puede escribir un dígito (0 a 9) de forma opcional." },
+            { pregunta: "¿Qué indica el carácter 'L' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario debe escribir una letra de forma obligatoria." },
+            { pregunta: "¿Qué indica el carácter '?' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario puede escribir una letra de forma opcional." },
+            { pregunta: "¿Qué indica el carácter 'A' en una máscara de entrada?", respuesta_detallada: "Indica que el usuario debe escribir una letra o un dígito obligatoriamente." },
+            { pregunta: "¿Qué hace el comodín '*' en las consultas de Access?", respuesta_detallada: "Equivale a cero o más caracteres. Puede utilizarse como primer o último carácter de la cadena." },
+            { pregunta: "¿Qué hace el comodín '?' en las consultas?", respuesta_detallada: "Equivale a un carácter alfabético." },
+            { pregunta: "¿Cuáles son los tipos de relaciones entre tablas?", respuesta_detallada: "Uno a uno (1 a 1), Uno a muchos (1 a ∞), y Muchos a muchos (∞ a ∞) que utiliza una tabla intermedia." },
+            { pregunta: "¿Qué significa exigir integridad referencial?", respuesta_detallada: "Es una norma obligatoria para mantener coherencia; implica que un hijo no puede existir sin su padre, y las modificaciones o borrados en cascada afectarán a las tablas relacionadas." },
+            { pregunta: "¿Qué es una combinación externa izquierda en consultas?", respuesta_detallada: "Incluye todos los registros de la tabla de la izquierda y solo aquellos de la tabla derecha donde los campos combinados sean iguales." },
+            { pregunta: "¿Qué es una consulta de creación de tabla?", respuesta_detallada: "Permite crear una tabla en base a la consulta de los datos de otra tabla extrayendo campos y datos específicos." },
+            { pregunta: "¿Se pueden añadir nuevos registros con una consulta de actualización?", respuesta_detallada: "No. Las consultas de actualización no se pueden usar para agregar nuevos registros, ni para eliminar registros, solo modifican datos existentes." },
+            { pregunta: "¿Qué hace la función DifFecha?", respuesta_detallada: "Devuelve un valor que especifica el número de intervalos de tiempo entre dos fechas especificadas. Sus parámetros son intervalo, fecha1, fecha2." },
+            { pregunta: "¿Qué hace la función Silnm?", respuesta_detallada: "Evalúa una condición y devuelve un valor si la condición es verdadera y otro valor si es falsa. Sintaxis: Silnm(Expr; parteVerdadera; parteFalsa)." },
+            { pregunta: "¿Para qué sirve el operador ! (exclamación) en los identificadores?", respuesta_detallada: "Indica que el elemento siguiente ha sido definido por el usuario, como una tabla, formulario, informe o campo." },
+            { pregunta: "¿Para qué sirve el operador . (punto) en los identificadores?", respuesta_detallada: "Indica que el elemento siguiente ha sido definido por Microsoft Access, como por ejemplo las propiedades de un campo." },
+            { pregunta: "¿Cuáles son las vistas disponibles para un Informe?", respuesta_detallada: "Vista Informes (Vista informes), Vista preliminar (Vista previa de impresión), Vista presentación, y Vista diseño." },
+            { pregunta: "¿Cuáles son las vistas disponibles para un Formulario?", respuesta_detallada: "Vista Formulario, Vista Presentación y Vista Diseño." },
+            { pregunta: "¿Qué atajo de teclado muestra u oculta el panel de navegación?", respuesta_detallada: "F11" },
+            { pregunta: "¿Qué atajo de teclado muestra u oculta una hoja de propiedades?", respuesta_detallada: "F4" },
+            { pregunta: "¿Qué atajo cambia entre el modo de edición y el modo de navegación en vista Hoja de datos?", respuesta_detallada: "F2" },
+            { pregunta: "¿Qué hace el atajo F5 en Access?", respuesta_detallada: "Cambia a la vista Formulario desde el formulario en la vista Diseño." },
+            { pregunta: "¿Cuál es la arquitectura principal de Access?", respuesta_detallada: "Access funciona como interfaz de usuario (UI de Access) que maneja el motor de Microsoft Access (motor ACE) para bases de datos .accdb." },
+            { pregunta: "¿Qué es una clave foránea (externa o ajena)?", respuesta_detallada: "Una clave que se usa en una tabla secundaria y coincide con la clave primaria en una tabla primaria relacionada. Permiten exigir integridad referencial." },
+            { pregunta: "¿Qué significa el modo 'Combinación interna' en las consultas?", respuesta_detallada: "Solo incluye las filas en la que los campos combinados de ambas tablas sean iguales." },
+            { pregunta: "¿Qué hace una consulta General (de referencias cruzadas)?", respuesta_detallada: "Permite crear una tabla resumen de información, agrupando la información por filas y columnas." },
+            { pregunta: "¿Qué función calcula la media aritmética en SQL de Access?", respuesta_detallada: "Promedio(Expresión)" },
+            { pregunta: "¿Qué hace la función Conmutador?", respuesta_detallada: "Evalúa una lista de expresiones y devuelve un valor o expresión asociada a la primera expresión de la lista que sea Verdadero." },
+            { pregunta: "¿Cómo se escriben los criterios de fecha en las consultas de Access?", respuesta_detallada: "La fecha se encierra entre almohadillas, ejemplo: #dd/mm/aaaa#" },
+            { pregunta: "¿En qué lenguaje se escriben los módulos de Access?", respuesta_detallada: "En Visual Basic para Aplicaciones (VBA)." },
+            { pregunta: "¿Cuáles son las 4 partes principales de las que consta un informe?", respuesta_detallada: "Encabezado de informe, encabezado de página, detalle y pie de página." }
+        ];
+
+        const baseTestQuestions = [
+            {
+                pregunta: "¿Cuál de los siguientes caracteres NO está permitido en el nombre de un campo de Access?",
+                opciones: ["Espacio", "Punto (.)", "Guion bajo (_)", "Letras acentuadas"],
+                respuesta_correcta: 1,
+                explicacion: "Los nombres de campos no pueden incluir puntos (.), signos de exclamación (!), acentos graves (`) y corchetes ([])."
+            },
+            {
+                pregunta: "¿Qué tamaño máximo admite una base de datos en Access (.accdb)?",
+                opciones: ["1 Gigabyte", "2 Gigabytes", "4 Gigabytes", "Sin límite (depende del disco)"],
+                respuesta_correcta: 1,
+                explicacion: "El tamaño máximo de un archivo de base de datos de Access es 2 gigabytes."
+            },
+            {
+                pregunta: "Si en una máscara de entrada se especifica el carácter 'L', ¿qué significa?",
+                opciones: ["El usuario debe escribir un dígito", "El usuario puede escribir una letra (opcional)", "El usuario debe escribir una letra", "Convierte a mayúsculas"],
+                respuesta_correcta: 2,
+                explicacion: "El carácter 'L' indica que el usuario debe escribir una letra de forma obligatoria."
+            },
+            {
+                pregunta: "Respecto a las consultas de actualización, señala la opción correcta:",
+                opciones: ["Añaden nuevos registros y modifican los existentes", "Eliminan y añaden registros", "No se pueden usar para agregar nuevos registros ni para eliminarlos", "Todas son correctas"],
+                respuesta_correcta: 2,
+                explicacion: "Las consultas de actualización no se pueden usar para agregar nuevos registros a una base de datos, ni para eliminar registros, solo modifican."
+            },
+            {
+                pregunta: "¿Qué tipo de datos ocupa 1 byte de tamaño en Access?",
+                opciones: ["Entero", "Sí/No", "Fecha/Hora", "Autonumeración"],
+                respuesta_correcta: 1,
+                explicacion: "El tipo de datos Sí/No ocupa 1 byte (8 bits = 1 byte)."
+            },
+            {
+                pregunta: "¿Qué atajo de teclado se utiliza para mostrar u ocultar el panel de navegación?",
+                opciones: ["F2", "F4", "F5", "F11"],
+                respuesta_correcta: 3,
+                explicacion: "La tecla F11 sirve para mostrar u ocultar el panel de navegación."
+            },
+            {
+                pregunta: "El operador ! (signo de exclamación) en un identificador indica:",
+                opciones: ["Un elemento definido por Microsoft Access", "Un elemento definido por el usuario (tabla, formulario, etc.)", "Una función agregada de SQL", "Un comentario de código"],
+                respuesta_correcta: 1,
+                explicacion: "El operador ! indica que el elemento siguiente ha sido definido por el usuario, como una tabla, un formulario, un informe, un control o un campo."
+            },
+            {
+                pregunta: "¿Cuál es el comodín utilizado en consultas de Access para sustituir un solo carácter alfabético?",
+                opciones: ["*", "?", "#", "!"],
+                respuesta_correcta: 1,
+                explicacion: "El símbolo '?' equivale a un carácter alfabético."
+            },
+            {
+                pregunta: "¿Cuál de estas afirmaciones sobre el tipo 'Texto corto' es cierta?",
+                opciones: ["Admite hasta 64 caracteres", "Admite hasta 255 caracteres", "Admite formato enriquecido", "Su tamaño de almacenamiento es de 1 GB"],
+                respuesta_correcta: 1,
+                explicacion: "El tipo de datos Texto corto admite hasta 255 caracteres alfanuméricos."
+            },
+            {
+                pregunta: "La función DifFecha recibe como argumentos obligatorios:",
+                opciones: ["intervalo, fecha1, fecha2", "fecha1, fecha2", "intervalo, fecha", "días, fecha1, fecha2"],
+                respuesta_correcta: 0,
+                explicacion: "La sintaxis es DifFecha(intervalo; fecha1; fecha2; [primer día...])."
+            },
+            {
+                pregunta: "¿En qué lenguaje se programan los módulos de Access?",
+                opciones: ["C++", "Python", "SQL Server", "Visual Basic para Aplicaciones (VBA)"],
+                respuesta_correcta: 3,
+                explicacion: "Los módulos se escriben en el lenguaje de programación Visual Basic para Aplicaciones (VBA)."
+            },
+            {
+                pregunta: "¿Qué significa exigir la integridad referencial?",
+                opciones: ["Un registro hijo no puede existir sin su padre", "Permite que existan huérfanos", "Solo aplica a relaciones muchos a muchos", "A y C son correctas"],
+                respuesta_correcta: 0,
+                explicacion: "Existe una integridad referencial en virtud de la siguiente regla: un hijo no puede existir sin su padre."
+            },
+            {
+                pregunta: "Las partes fundamentales de un informe son:",
+                opciones: ["Encabezado, cuerpo y pie", "Encabezado de informe, encabezado de página, detalle y pie de página", "Vista diseño y Vista presentación", "Módulo, detalle y formulario"],
+                respuesta_correcta: 1,
+                explicacion: "Un informe consta de cuatro partes: encabezado de informe, encabezado de página, detalle y pie de página."
+            },
+            {
+                pregunta: "¿Qué es una consulta de referencias cruzadas o General?",
+                opciones: ["Añade registros de una tabla a otra", "Borra registros coincidentes", "Crea una tabla resumen agrupando la información por filas y columnas", "Crea tablas nuevas sin datos"],
+                respuesta_correcta: 2,
+                explicacion: "Permite crear una tabla resumen de información que hay almacenada en la base de datos, agrupando por filas y columnas."
+            },
+            {
+                pregunta: "¿Qué atajo de teclado alterna entre la Vista Diseño y Vista Formulario?",
+                opciones: ["F2", "F4", "F5", "F11"],
+                respuesta_correcta: 2,
+                explicacion: "La tecla F5 cambia a la vista Formulario desde el formulario en la vista Diseño."
+            },
+            {
+                pregunta: "En una consulta, para encerrar un criterio de fecha se utiliza:",
+                opciones: ["Comillas dobles (\"\")", "Corchetes ([])", "Almohadillas (##)", "Paréntesis (())"],
+                respuesta_correcta: 2,
+                explicacion: "La fecha se encierra entre almohadillas, ejemplo: #dd/mm/aaaa#"
+            },
+            {
+                pregunta: "La función Silnm():",
+                opciones: ["Elimina registros nulos", "Evalúa una condición devolviendo un valor si es verdadera y otro si es falsa", "Agrupa nulos por filas", "Concatena cadenas de texto"],
+                respuesta_correcta: 1,
+                explicacion: "La función Silnm evalúa una condición y devuelve un valor si la condición es verdadera y otro valor si la condición es falsa."
+            },
+            {
+                pregunta: "¿Cuál es el motor actual utilizado por Access para manejar archivos .accdb?",
+                opciones: ["Jet", "ACE", "SQL", "ODBC"],
+                respuesta_correcta: 1,
+                explicacion: "En la actualidad se usa un motor llamado ACE que accede a esos archivos."
+            },
+            {
+                pregunta: "Si en Tamaño del campo de un tipo Número escogemos 'Entero largo', ¿cuál es su tamaño?",
+                opciones: ["1 byte", "2 bytes", "4 bytes", "8 bytes"],
+                respuesta_correcta: 2,
+                explicacion: "Entero largo: El requisito de almacenamiento es 4 bytes."
+            },
+            {
+                pregunta: "¿Qué hace la función Conmutador?",
+                opciones: ["Evalúa una lista de expresiones y devuelve un valor asociado a la primera que sea Verdadero", "Convierte texto a mayúsculas", "Combina tablas", "Extrae el mes de una fecha"],
+                respuesta_correcta: 0,
+                explicacion: "Evalúa una lista de expresiones y devuelve un valor o expresión asociada a la primera expresión de la lista que sea Verdadero."
+            }
+        ];
+
+        // Generar los 10 tests con variedad determinista
+        const allTests = [];
+        for (let i = 0; i < 10; i++) {
+            let test = [...baseTestQuestions];
+            const shift = (i * 3) % test.length;
+            const shifted = test.slice(shift).concat(test.slice(0, shift));
+            const mapped = shifted.map((q) => ({
+                q: q.pregunta,
+                o: [...q.opciones],
+                c: q.respuesta_correcta,
+                e: q.explicacion
+            }));
+            allTests.push(mapped);
+        }
+
+        // --- ESTADO GLOBAL Y ALMACENAMIENTO ---
+        let currentTabIndex = 0;
+        let ttsSpeed = 1.0;
+        let activeReadingIndex = -1;
+        let speechUtterance = null;
+        let searchQuery = '';
+        let selectedCategoryFilter = 'Todos';
+
+        function getSavedScores() {
+            try {
+                return JSON.parse(localStorage.getItem('access365_scores') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveTestScore(testNum, score, aciertos, total) {
+            const scores = getSavedScores();
+            scores[testNum] = { score, aciertos, total, date: new Date().toLocaleDateString() };
+            localStorage.setItem('access365_scores', JSON.stringify(scores));
+            updateGlobalStats();
+            renderTabs();
+        }
+
+        function updateGlobalStats() {
+            const scores = getSavedScores();
+            const completed = Object.keys(scores).length;
+            const badgeText = document.getElementById('completed-count-text');
+            if (badgeText) {
+                badgeText.textContent = `${completed}/10 tests`;
+            }
+        }
+
+        // Tema Claro / Oscuro
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        function toggleDocMenu() {
+            const menu = document.getElementById('doc-menu-dropdown');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const btn = document.getElementById('doc-menu-btn');
+            const menu = document.getElementById('doc-menu-dropdown');
+            if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            updateGlobalStats();
+            renderTabs();
+            switchTab(0);
+
+            // Atajos de teclado (A, B, C, D o 1, 2, 3, 4)
+            document.addEventListener('keydown', (e) => {
+                if (currentTabIndex === 0) return;
+                if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+
+                const key = e.key.toUpperCase();
+                let optionIndex = -1;
+                if (['A', '1'].includes(key)) optionIndex = 0;
+                else if (['B', '2'].includes(key)) optionIndex = 1;
+                else if (['C', '3'].includes(key)) optionIndex = 2;
+                else if (['D', '4'].includes(key)) optionIndex = 3;
+
+                if (optionIndex !== -1) {
+                    const unansweredCards = document.querySelectorAll('.question-card:not(.answered)');
+                    if (unansweredCards.length > 0) {
+                        const targetCard = unansweredCards[0];
+                        const radio = targetCard.querySelectorAll('input[type="radio"]')[optionIndex];
+                        if (radio && !radio.disabled) {
+                            radio.checked = true;
+                            radio.dispatchEvent(new Event('change'));
+                            updateQuestionProgress(currentTabIndex);
+                            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                }
+            });
+        });
+
+        // --- NAVEGACIÓN POR PESTAÑAS ---
+        function renderTabs() {
+            const tabsNav = document.getElementById('tabs-nav');
+            const scores = getSavedScores();
+
+            let tabsHtml = `
+                <button onclick="switchTab(0)" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 whitespace-nowrap transition-all duration-200" id="tab-btn-0">
+                    <span>⚡ Esquema Clave</span>
+                    <span class="px-2 py-0.5 text-[10px] rounded-full bg-black/10 dark:bg-white/10 font-mono">40</span>
+                </button>
+            `;
+
+            for (let i = 1; i <= 10; i++) {
+                const saved = scores[i];
+                let scoreBadge = '';
+                if (saved) {
+                    const isPassed = (saved.aciertos / saved.total) >= 0.5;
+                    const badgeBg = isPassed 
+                        ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30' 
+                        : 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30';
+                    scoreBadge = `<span class="ml-1 px-1.5 py-0.5 text-[10px] font-mono font-bold rounded-md border ${badgeBg}">${(saved.aciertos/saved.total*10).toFixed(1)}</span>`;
+                }
+
+                tabsHtml += `
+                    <button onclick="switchTab(${i})" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1 whitespace-nowrap transition-all duration-200" id="tab-btn-${i}">
+                        <span>Test ${i}</span>
+                        ${scoreBadge}
+                    </button>
+                `;
+            }
+            tabsNav.innerHTML = tabsHtml;
+            highlightActiveTab(currentTabIndex);
+        }
+
+        function highlightActiveTab(tabIndex) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === tabIndex) {
+                    btn.className = "tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-lg shadow-rose-500/25 scale-[1.02] transition-all duration-200";
+                } else {
+                    btn.className = "tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white transition-all duration-200";
+                }
+            });
+        }
+
+        function switchTab(tabIndex) {
+            stopTTS();
+            currentTabIndex = tabIndex;
+            highlightActiveTab(tabIndex);
+
+            const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+            if (activeBtn) {
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            renderTabContent(tabIndex);
+        }
+
+        function renderTabContent(tabIndex) {
+            const main = document.getElementById('main-content');
+            if (tabIndex === 0) {
+                renderEsquemaView(main);
+            } else {
+                renderTestView(main, tabIndex);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- VISTA ESQUEMA ---
+        function renderEsquemaView(container) {
+            let filteredData = esquemaPreguntas.filter(item => {
+                const qText = item.pregunta || '';
+                const aText = item.respuesta_detallada || '';
+                const matchesSearch = qText.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      aText.toLowerCase().includes(searchQuery.toLowerCase());
+                if (selectedCategoryFilter === 'Atajos') return matchesSearch && (qText.includes('atajo') || qText.includes('F11') || qText.includes('F4') || qText.includes('F2') || qText.includes('F5'));
+                if (selectedCategoryFilter === 'Campos y Tipos') return matchesSearch && (qText.includes('campo') || qText.includes('Texto') || qText.includes('Número') || qText.includes('Autonumeración') || qText.includes('Sí/No') || qText.includes('OLE'));
+                if (selectedCategoryFilter === 'Consultas') return matchesSearch && (qText.includes('consulta') || qText.includes('comodín') || qText.includes('integridad') || qText.includes('SQL') || qText.includes('función'));
+                if (selectedCategoryFilter === 'Vistas') return matchesSearch && (qText.includes('vista') || qText.includes('Informe') || qText.includes('Formulario'));
+                if (selectedCategoryFilter === 'Límites') return matchesSearch && (qText.includes('límite') || qText.includes('tamaño') || qText.includes('caracteres') || qText.includes('gigabyte') || qText.includes('byte'));
+                return matchesSearch;
+            });
+
+            container.innerHTML = `
+                <div class="animate-fade-in">
+                    <!-- Hero Banner Moderno -->
+                    <div class="mb-6 p-5 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-rose-950 to-slate-900 text-white shadow-2xl border border-slate-800 relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 w-56 h-56 bg-rose-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -left-12 -bottom-12 w-56 h-56 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        
+                        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                            <div>
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-rose-300 text-xs font-bold mb-3 border border-white/10">
+                                    <span>🎯 Resumen Teórico de Alto Rendimiento</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+                                    Esquema Clave de Examen
+                                </h2>
+                                <p class="text-slate-300 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
+                                    Domina los 40 conceptos críticos de <strong class="text-white">Microsoft Access 365</strong> para las oposiciones AGE Subgrupo C1. Filtra por bloques o escúchalo en modo audio.
+                                </p>
+                            </div>
+                            
+                            <!-- Controles de Audio TTS -->
+                            <div class="flex flex-wrap items-center gap-2 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10 self-start lg:self-center">
+                                <button onclick="playTTS()" id="btn-play-tts" class="bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:scale-95 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-rose-600/30 flex items-center gap-2 text-xs sm:text-sm transition-all">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Modo Podcast</span>
+                                </button>
+                                <button onclick="stopTTS()" id="btn-stop-tts" class="hidden bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-3.5 rounded-xl text-xs sm:text-sm border border-slate-700 transition-all">
+                                    ⏹️ Detener
+                                </button>
+                                <select onchange="changeTTSSpeed(this.value)" aria-label="Velocidad de lectura" class="bg-slate-900/90 text-slate-200 text-xs font-mono font-bold rounded-xl px-3 py-2.5 border border-slate-700/80 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                                    <option value="0.8">0.8x</option>
+                                    <option value="1.0" selected>1.0x</option>
+                                    <option value="1.2">1.2x</option>
+                                    <option value="1.5">1.5x</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Banner de reproducción activa -->
+                        <div id="tts-reading-banner" class="hidden mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-rose-300">
+                            <div class="flex items-center gap-2.5">
+                                <div class="voice-wave flex items-center gap-1 h-4">
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                                <span id="tts-reading-text" class="font-medium">Reproduciendo esquema completo en voz alta...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Búsqueda y Filtros Táctiles -->
+                    <div class="mb-6 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                        <div class="relative w-full md:w-80 lg:w-96">
+                            <input type="text" value="${searchQuery}" oninput="handleSearch(this.value)" placeholder="Buscar conceptos, límites, funciones..." class="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-sm transition-all">
+                            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            ${searchQuery ? `<button onclick="handleSearch('')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold p-0.5">✕</button>` : ''}
+                        </div>
+
+                        <!-- Chips de Categoría con scroll horizontal en móvil -->
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0">
+                            ${['Todos', 'Atajos', 'Campos y Tipos', 'Consultas', 'Vistas', 'Límites'].map(cat => `
+                                <button onclick="setCategoryFilter('${cat}')" class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${selectedCategoryFilter === cat ? 'bg-slate-900 dark:bg-rose-600 text-white shadow-md' : 'bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}">
+                                    ${cat}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Contador de resultados -->
+                    <div class="mb-4 text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                        <span>Mostrando <strong class="text-slate-800 dark:text-slate-200">${filteredData.length}</strong> de ${esquemaPreguntas.length} tarjetas</span>
+                    </div>
+
+                    <!-- Grid de Tarjetas del Esquema -->
+                    ${filteredData.length === 0 ? `
+                        <div class="text-center py-14 bg-white dark:bg-slate-900/60 rounded-3xl border border-slate-200/70 dark:border-slate-800">
+                            <p class="text-base font-bold text-slate-700 dark:text-slate-300">No se encontraron resultados para "${searchQuery}"</p>
+                            <button onclick="searchQuery=''; selectedCategoryFilter='Todos'; renderTabContent(0);" class="mt-3 px-4 py-2 rounded-xl bg-rose-600 text-white text-xs font-bold">Limpiar filtros</button>
+                        </div>
+                    ` : `
+                        <div class="grid gap-3.5 sm:gap-4 md:grid-cols-2">
+                            ${filteredData.map((item) => {
+                                const originalIdx = esquemaPreguntas.indexOf(item);
+                                const isReading = activeReadingIndex === originalIdx;
+                                const answerText = item.respuesta_detallada || '';
+                                const formattedAns = formatHighlights(answerText);
+                                return `
+                                    <div id="esquema-card-${originalIdx}" class="group bg-white/95 dark:bg-slate-900/90 backdrop-blur-sm rounded-2xl p-4 sm:p-5 border ${isReading ? 'border-rose-500 ring-2 ring-rose-500/30 bg-rose-50/40 dark:bg-rose-950/30' : 'border-slate-200/80 dark:border-slate-800/90 hover:border-rose-300 dark:hover:border-rose-800/70'} shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-start justify-between gap-3 mb-2.5">
+                                                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug flex items-start gap-2.5">
+                                                    <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-gradient-to-br from-rose-500/15 to-rose-600/20 text-rose-700 dark:text-rose-300 font-mono text-xs font-extrabold flex items-center justify-center border border-rose-500/20 mt-0.5">
+                                                        ${originalIdx + 1}
+                                                    </span>
+                                                    <span>${item.pregunta}</span>
+                                                </h3>
+                                                <button onclick="readSingleQuestion(${originalIdx})" class="p-2 rounded-xl text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800 transition-colors flex-shrink-0" title="Escuchar tarjeta">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed pl-8.5 sm:pl-9">
+                                                ${formattedAns}
+                                            </p>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        function formatHighlights(text) {
+            let t = text;
+            t = t.replace(/(F11|F4|F2|F5|Ctrl \+ [A-Za-z0-9+]+|MAYÚS\+[A-Za-z0-9+]+)/g, '<kbd>$1</kbd>');
+            t = t.replace(/(\.accdb|2 gigabytes|255 caracteres|64\.000 caracteres|64 caracteres|1 gigabyte|1, 2, 4 o 8 o 16 bytes|4 o 16 bytes|1 byte|#dd\/mm\/aaaa#)/g, '<span class="px-1.5 py-0.5 rounded-md bg-rose-500/10 text-rose-700 dark:text-rose-300 font-mono text-xs font-bold border border-rose-500/20">$1</span>');
+            return t;
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderEsquemaView(document.getElementById('main-content'));
+        }
+
+        function setCategoryFilter(cat) {
+            selectedCategoryFilter = cat;
+            renderEsquemaView(document.getElementById('main-content'));
+        }
+
+        // --- VISTA TEST INTERACTIVO ---
+        function renderTestView(container, testIndex) {
+            const testData = allTests[testIndex - 1];
+
+            let html = `
+                <div class="animate-fade-in">
+                    <!-- Cabecera del Test -->
+                    <div class="mb-6 p-5 sm:p-6 rounded-3xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-extrabold border border-rose-500/20">
+                                    Simulacro ${testIndex} / 10
+                                </span>
+                                <span class="text-xs text-slate-400 font-mono">20 Preguntas · Tipo Examen</span>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                                Test Autoevaluable ${testIndex}
+                            </h2>
+                        </div>
+
+                        <!-- Barra de Progreso en Tiempo Real -->
+                        <div class="w-full md:w-72 bg-slate-50 dark:bg-slate-800/80 p-3.5 rounded-2xl border border-slate-200/70 dark:border-slate-700/70">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                <span>Respondidas: <span id="progress-text-t${testIndex}" class="font-mono text-rose-600 dark:text-rose-400">0/20</span></span>
+                                <span id="progress-pct-t${testIndex}" class="font-mono">0%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div id="progress-bar-t${testIndex}" class="h-full bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de Preguntas -->
+                    <form id="form-test-${testIndex}" onsubmit="evaluarTest(event, ${testIndex})" class="space-y-5 sm:space-y-6">
+                        <div class="grid gap-4 sm:gap-5">
+            `;
+
+            testData.forEach((q, qIndex) => {
+                html += `
+                    <div class="question-card bg-white/95 dark:bg-slate-900/90 rounded-3xl p-4 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all" id="card-t${testIndex}q${qIndex}">
+                        <div class="flex items-start gap-3 sm:gap-3.5 mb-4">
+                            <span class="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono font-extrabold text-xs sm:text-sm flex items-center justify-center border border-slate-200/80 dark:border-slate-700">
+                                ${qIndex + 1}
+                            </span>
+                            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug pt-0.5">
+                                ${q.q}
+                            </h3>
+                        </div>
+
+                        <!-- Opciones Táctiles -->
+                        <div class="grid gap-2.5 pl-0 sm:pl-11">
+                `;
+
+                q.o.forEach((opt, oIndex) => {
+                    const letter = String.fromCharCode(65 + oIndex);
+                    html += `
+                        <label id="label-t${testIndex}q${qIndex}o${oIndex}" class="option-card flex items-center gap-3 sm:gap-3.5 p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-rose-50/60 dark:hover:bg-slate-800/90 hover:border-rose-300 dark:hover:border-slate-600 cursor-pointer group">
+                            <input type="radio" name="t${testIndex}q${qIndex}" value="${oIndex}" onchange="updateQuestionProgress(${testIndex})" class="sr-only peer">
+                            
+                            <span id="badge-t${testIndex}q${qIndex}o${oIndex}" class="flex-shrink-0 w-7 h-7 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-xs font-mono font-extrabold text-slate-600 dark:text-slate-300 flex items-center justify-center peer-checked:bg-rose-600 peer-checked:text-white peer-checked:border-rose-600 group-hover:border-rose-500 transition-all">
+                                ${letter}
+                            </span>
+                            
+                            <span class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 flex-1 leading-snug">
+                                ${opt}
+                            </span>
+                        </label>
+                    `;
+                });
+
+                html += `
+                        </div>
+
+                        <!-- Explicación Motivada -->
+                        <div id="exp-t${testIndex}q${qIndex}" class="hidden mt-4 ml-0 sm:ml-11 p-4 bg-amber-50/90 dark:bg-amber-950/25 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 animate-fade-in">
+                            <div class="flex items-center gap-2 font-extrabold text-amber-800 dark:text-amber-400 mb-1">
+                                <span>💡 Justificación oficial:</span>
+                            </div>
+                            <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                                ${q.e}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+
+                        <!-- Panel de Resultados (Oculto hasta evaluar) -->
+                        <div id="summary-t${testIndex}" class="hidden p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-rose-950 to-slate-900 text-white shadow-2xl text-center border border-slate-800 transition-all">
+                        </div>
+
+                        <!-- Barra de Acción Flotante Inferior (Ergonómica en móvil y escritorio) -->
+                        <div class="sticky bottom-3 sm:bottom-5 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-3 sm:p-4 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-3">
+                            <div class="text-xs text-slate-500 dark:text-slate-400 hidden md:flex items-center gap-1.5">
+                                <span>Respuesta rápida:</span> <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd>
+                            </div>
+
+                            <div class="flex items-center gap-2.5 w-full md:w-auto">
+                                <button type="submit" id="btn-submit-t${testIndex}" class="flex-1 md:flex-initial bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:scale-95 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-rose-600/25 text-xs sm:text-sm transition-all">
+                                    ✅ Corregir Test
+                                </button>
+                                <button type="button" onclick="reiniciarTest(${testIndex})" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 text-slate-700 dark:text-slate-200 font-bold py-3 px-4 sm:px-5 rounded-xl text-xs sm:text-sm border border-slate-200/80 dark:border-slate-700 transition-all">
+                                    🔄 Reiniciar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // --- LÓGICA DE PROGRESO Y EVALUACIÓN ---
+        function updateQuestionProgress(tabIndex) {
+            const testData = allTests[tabIndex - 1];
+            let count = 0;
+            testData.forEach((_, qIndex) => {
+                const selected = document.querySelector(`input[name="t${tabIndex}q${qIndex}"]:checked`);
+                const card = document.getElementById(`card-t${tabIndex}q${qIndex}`);
+                
+                // Resaltar visualmente la opción seleccionada antes de corregir
+                for (let o = 0; o < 4; o++) {
+                    const lbl = document.getElementById(`label-t${tabIndex}q${qIndex}o${o}`);
+                    if (lbl) {
+                        lbl.classList.remove('border-rose-500', 'bg-rose-50/70', 'dark:bg-rose-950/30', 'ring-1', 'ring-rose-500/40');
+                    }
+                }
+
+                if (selected) {
+                    count++;
+                    card.classList.add('answered');
+                    const selLbl = document.getElementById(`label-t${tabIndex}q${qIndex}o${selected.value}`);
+                    if (selLbl) {
+                        selLbl.classList.add('border-rose-500', 'bg-rose-50/70', 'dark:bg-rose-950/30', 'ring-1', 'ring-rose-500/40');
+                    }
+                }
+            });
+
+            const pct = Math.round((count / testData.length) * 100);
+            const textEl = document.getElementById(`progress-text-t${tabIndex}`);
+            const pctEl = document.getElementById(`progress-pct-t${tabIndex}`);
+            const barEl = document.getElementById(`progress-bar-t${tabIndex}`);
+
+            if (textEl) textEl.textContent = `${count}/${testData.length}`;
+            if (pctEl) pctEl.textContent = `${pct}%`;
+            if (barEl) barEl.style.width = `${pct}%`;
+        }
+
+        function evaluarTest(event, tabIndex) {
+            event.preventDefault();
+            const testData = allTests[tabIndex - 1];
+            let aciertos = 0;
+            let errores = 0;
+
+            testData.forEach((q, qIndex) => {
+                const radios = document.querySelectorAll(`input[name="t${tabIndex}q${qIndex}"]`);
+                const selected = document.querySelector(`input[name="t${tabIndex}q${qIndex}"]:checked`);
+                const expBox = document.getElementById(`exp-t${tabIndex}q${qIndex}`);
+
+                radios.forEach(r => r.disabled = true);
+
+                // Limpiar estilos previos de selección
+                for (let o = 0; o < 4; o++) {
+                    const lbl = document.getElementById(`label-t${tabIndex}q${qIndex}o${o}`);
+                    lbl.classList.remove('border-rose-500', 'bg-rose-50/70', 'dark:bg-rose-950/30', 'ring-1', 'ring-rose-500/40');
+                }
+
+                const correctLabel = document.getElementById(`label-t${tabIndex}q${qIndex}o${q.c}`);
+                const correctBadge = document.getElementById(`badge-t${tabIndex}q${qIndex}o${q.c}`);
+
+                if (selected) {
+                    const ansVal = parseInt(selected.value);
+                    const selectedLabel = document.getElementById(`label-t${tabIndex}q${qIndex}o${ansVal}`);
+                    const selectedBadge = document.getElementById(`badge-t${tabIndex}q${qIndex}o${ansVal}`);
+
+                    if (ansVal === q.c) {
+                        aciertos++;
+                        selectedLabel.classList.add('bg-emerald-50/90', 'dark:bg-emerald-950/40', 'border-emerald-500', 'text-emerald-950', 'dark:text-emerald-200');
+                        selectedBadge.className = 'flex-shrink-0 w-7 h-7 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-sm';
+                        selectedBadge.innerText = '✓';
+                    } else {
+                        errores++;
+                        selectedLabel.classList.add('bg-rose-50/90', 'dark:bg-rose-950/40', 'border-rose-500', 'text-rose-950', 'dark:text-rose-200');
+                        selectedBadge.className = 'flex-shrink-0 w-7 h-7 rounded-xl bg-rose-600 text-white font-bold text-xs flex items-center justify-center shadow-sm';
+                        selectedBadge.innerText = '✗';
+
+                        correctLabel.classList.add('bg-emerald-50/80', 'dark:bg-emerald-950/30', 'border-emerald-500');
+                        correctBadge.className = 'flex-shrink-0 w-7 h-7 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-sm';
+                        correctBadge.innerText = '✓';
+                    }
+                } else {
+                    errores++;
+                    correctLabel.classList.add('bg-emerald-50/80', 'dark:bg-emerald-950/30', 'border-emerald-500');
+                    correctBadge.className = 'flex-shrink-0 w-7 h-7 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-sm';
+                    correctBadge.innerText = '✓';
+                }
+
+                expBox.classList.remove('hidden');
+            });
+
+            const score10 = (aciertos / testData.length) * 10;
+            saveTestScore(tabIndex, score10, aciertos, testData.length);
+
+            if (score10 >= 7.0 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 110,
+                    spread: 75,
+                    origin: { y: 0.65 }
+                });
+            }
+
+            let badgeTitle = score10 >= 9 ? 'Sobresaliente 🏆' : (score10 >= 7 ? 'Notable 🔥' : (score10 >= 5 ? 'Aprobado ✅' : 'Sigue Practicando 💪'));
+            let badgeColor = score10 >= 5 ? 'text-emerald-400' : 'text-amber-400';
+
+            const summary = document.getElementById(`summary-t${tabIndex}`);
+            summary.innerHTML = `
+                <div class="text-[11px] font-extrabold uppercase tracking-widest text-rose-300 mb-1">Resultado Oficial del Simulacro</div>
+                <div class="text-2xl sm:text-3xl font-black ${badgeColor} mb-2">${badgeTitle}</div>
+                <div class="text-4xl sm:text-5xl font-extrabold font-mono text-white my-3">
+                    ${score10.toFixed(2)} <span class="text-lg sm:text-xl text-slate-400 font-normal">/ 10</span>
+                </div>
+                <div class="flex justify-center items-center gap-6 text-xs sm:text-sm font-bold mt-4 pt-4 border-t border-white/10">
+                    <span class="text-emerald-400">✓ Aciertos: ${aciertos}</span>
+                    <span class="text-rose-400">✗ Fallos/Blancos: ${errores}</span>
+                </div>
+            `;
+            summary.classList.remove('hidden');
+            summary.classList.add('animate-fade-in');
+            summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const submitBtn = document.getElementById(`btn-submit-t${tabIndex}`);
+            submitBtn.disabled = true;
+            submitBtn.className = "flex-1 md:flex-initial bg-slate-200 dark:bg-slate-800 text-slate-400 font-bold py-3 px-6 rounded-xl text-xs sm:text-sm cursor-not-allowed";
+            submitBtn.innerText = "✓ Corregido";
+        }
+
+        function reiniciarTest(tabIndex) {
+            renderTabContent(tabIndex);
+        }
+
+        // --- MOTOR DE VOZ (TEXT-TO-SPEECH) ---
+        function playTTS() {
+            if (!('speechSynthesis' in window)) {
+                alert("Tu navegador no soporta sintetizador de voz.");
+                return;
+            }
+
+            stopTTS();
+
+            let fullText = "Esquema Clave de Access 365. Oposiciones AGE Subgrupo C1. \n\n";
+            esquemaPreguntas.forEach((item, index) => {
+                const ans = item.respuesta_detallada || '';
+                fullText += `Pregunta ${index + 1}. ${item.pregunta} . Respuesta: ${ans} . \n\n`;
+            });
+
+            speechUtterance = new SpeechSynthesisUtterance(fullText);
+            speechUtterance.lang = 'es-ES';
+            speechUtterance.rate = ttsSpeed;
+
+            const readingBanner = document.getElementById('tts-reading-banner');
+            const playBtn = document.getElementById('btn-play-tts');
+            const stopBtn = document.getElementById('btn-stop-tts');
+
+            speechUtterance.onstart = () => {
+                if (readingBanner) readingBanner.classList.remove('hidden');
+                if (playBtn) playBtn.classList.add('hidden');
+                if (stopBtn) stopBtn.classList.remove('hidden');
+            };
+
+            speechUtterance.onend = () => {
+                stopTTS();
+            };
+
+            speechSynthesis.speak(speechUtterance);
+        }
+
+        function readSingleQuestion(idx) {
+            if (!('speechSynthesis' in window)) return;
+            stopTTS();
+
+            const item = esquemaPreguntas[idx];
+            activeReadingIndex = idx;
+            renderEsquemaView(document.getElementById('main-content'));
+
+            const ans = item.respuesta_detallada || '';
+            const text = `Pregunta ${idx + 1}. ${item.pregunta} . Respuesta: ${ans}`;
+            speechUtterance = new SpeechSynthesisUtterance(text);
+            speechUtterance.lang = 'es-ES';
+            speechUtterance.rate = ttsSpeed;
+
+            speechUtterance.onend = () => {
+                activeReadingIndex = -1;
+                renderEsquemaView(document.getElementById('main-content'));
+            };
+
+            speechSynthesis.speak(speechUtterance);
+        }
+
+        function changeTTSSpeed(speed) {
+            ttsSpeed = parseFloat(speed);
+            if (speechSynthesis.speaking) {
+                playTTS();
+            }
+        }
+
+        function stopTTS() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                activeReadingIndex = -1;
+                const readingBanner = document.getElementById('tts-reading-banner');
+                const playBtn = document.getElementById('btn-play-tts');
+                const stopBtn = document.getElementById('btn-stop-tts');
+                if (readingBanner) readingBanner.classList.add('hidden');
+                if (playBtn) playBtn.classList.remove('hidden');
+                if (stopBtn) stopBtn.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
