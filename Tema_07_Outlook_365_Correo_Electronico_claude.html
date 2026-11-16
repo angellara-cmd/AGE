@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b14">
+<title>Bloque Informática · Tema 7 · Outlook 365 · C1 AGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f5fb; --bg2:#ececf6; --card:#ffffff; --card2:#f8f8fd; --line:rgba(20,20,60,.09);
+  --text:#14142b; --muted:#5d5d7a; --soft:#8a8aa5;
+  --a1:#7c5cff; --a2:#00c2ff; --a3:#ff4fa3;
+  --grad:linear-gradient(120deg,var(--a1),var(--a2));
+  --grad2:linear-gradient(120deg,var(--a3),var(--a1));
+  --ok:#12b76a; --ok-bg:rgba(18,183,106,.12); --ko:#f04438; --ko-bg:rgba(240,68,56,.11);
+  --info-bg:rgba(124,92,255,.09); --warn:#f79009; --warn-bg:rgba(247,144,9,.12);
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(20,20,60,.04),0 8px 30px -12px rgba(20,20,60,.18);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --navh:64px;
+}
+[data-theme="dark"]{
+  --bg:#0b0b14; --bg2:#12121f; --card:#151526; --card2:#1b1b30; --line:rgba(255,255,255,.08);
+  --text:#ececff; --muted:#a3a3c2; --soft:#77779a;
+  --info-bg:rgba(124,92,255,.16); --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 40px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vmax 40vmax at 10% 0%,rgba(124,92,255,.18),transparent 60%),radial-gradient(35vmax 35vmax at 100% 20%,rgba(0,194,255,.14),transparent 60%),radial-gradient(30vmax 30vmax at 50% 110%,rgba(255,79,163,.10),transparent 60%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3vmax,-2vmax,0) rotate(6deg)}}
+h1,h2,h3,h4{font-family:Sora,Inter,sans-serif;line-height:1.2;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- Header + Nav ---------- */
+header.top{padding:18px 0 10px}
+.top .wrap{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font:800 1.05rem Sora,system-ui,sans-serif;box-shadow:0 8px 24px -8px var(--a1);flex-shrink:0}
+.brand{flex:1;min-width:0}
+.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.brand b{display:block;font:700 1.02rem/1.25 Sora,system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.icon-btn:hover{transform:translateY(-2px)}
+.icon-btn svg{width:20px;height:20px}
+
+nav.tabs{position:sticky;top:0;z-index:50;padding:10px 0;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:8px}
+.tab{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.95rem;color:var(--muted);transition:all .25s var(--ease);position:relative}
+.tab svg{width:19px;height:19px}
+.tab:hover{color:var(--text);background:var(--card)}
+.tab.active{color:#fff;background:var(--grad);box-shadow:0 8px 22px -10px var(--a1)}
+
+main{padding:28px 0 60px}
+.view{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- Generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:24px}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:40px 0 16px;flex-wrap:wrap}
+.section-title h2{font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.section-title p{color:var(--muted);font-size:.95rem}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--a1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s var(--ease),box-shadow .2s,background .2s;white-space:nowrap}
+.btn svg{width:18px;height:18px}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px var(--a1)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--a1)}
+.btn-g{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:8px 14px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--info-bg);color:var(--a1);font-size:.78rem;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:clamp(26px,5vw,48px);background:linear-gradient(135deg,#1b1240 0%,#2a1a6e 45%,#0a4b75 100%);color:#fff;box-shadow:0 30px 60px -30px rgba(60,30,160,.6)}
+.hero::after{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(0,194,255,.55),transparent 65%);filter:blur(10px)}
+.hero::before{content:"";position:absolute;width:300px;height:300px;left:-100px;bottom:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,163,.45),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+.hero .kicker{color:#a9f0ff}
+.hero h1{font-size:clamp(1.7rem,4.6vw,3rem);margin:12px 0 14px;max-width:820px}
+.hero h1 span{background:linear-gradient(90deg,#a9f0ff,#ffb3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:rgba(255,255,255,.8);max-width:720px;font-size:1.02rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.hs b{display:block;font:800 1.6rem Sora,system-ui,sans-serif}
+.hs span{font-size:.82rem;color:rgba(255,255,255,.75)}
+.hero .row{margin-top:24px}
+.hero .btn-g{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- Key numbers ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.num{padding:18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .25s var(--ease)}
+.num:hover{transform:translateY(-4px) rotate(-.4deg)}
+.num::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--grad)}
+.num:nth-child(3n+2)::before{background:var(--grad2)}
+.num:nth-child(3n)::before{background:linear-gradient(90deg,var(--a2),#3ee6a8)}
+.num b{display:block;font:700 1.45rem "JetBrains Mono",monospace;letter-spacing:-.03em}
+.num span{display:block;font-size:.85rem;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* ---------- Accordion summary ---------- */
+.acc{display:grid;gap:12px}
+details.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+details.blk summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+details.blk summary::-webkit-details-marker{display:none}
+.bn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:800 .95rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);flex-shrink:0}
+details.blk:nth-child(even) .bn{background:var(--grad2)}
+.bt{flex:1;min-width:0}
+.bt h3{font-size:1.05rem}
+.bt small{color:var(--muted);font-size:.85rem}
+.chev{width:22px;height:22px;transition:transform .3s var(--ease);color:var(--muted);flex-shrink:0}
+details[open] .chev{transform:rotate(180deg)}
+.bb{padding:0 20px 22px 72px;color:var(--text)}
+.bb p{margin:10px 0}
+.bb ul{margin:8px 0 8px 18px}
+.bb li{margin:5px 0}
+.bb li::marker{color:var(--a1)}
+.bb strong{color:var(--text)}
+.hl{background:linear-gradient(transparent 58%,rgba(124,92,255,.25) 58%);font-weight:600}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:.92rem;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--card2);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);font-size:.92rem;margin:12px 0}
+.note b{color:var(--warn)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.flow span{padding:6px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:.88rem}
+.flow i{color:var(--a1);font-style:normal;font-weight:800}
+
+.traps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.trap{padding:16px 18px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);border-left:4px solid var(--a3);box-shadow:var(--shadow);font-size:.93rem}
+.trap b{display:block;font-family:Sora,system-ui,sans-serif;margin-bottom:4px}
+
+/* ---------- Esquemas ---------- */
+.scroller{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.scroller::-webkit-scrollbar{display:none}
+.esq-pill{scroll-snap-align:start;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.9rem;transition:all .25s var(--ease)}
+.esq-pill .n{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font:800 .85rem Sora,system-ui,sans-serif}
+.esq-pill.active{border-color:transparent;background:var(--grad);color:#fff;box-shadow:0 10px 24px -12px var(--a1)}
+.esq-pill.active .n{background:rgba(255,255,255,.2)}
+.esq-pill .sc{font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700}
+.esq-pill.active .sc{background:rgba(255,255,255,.22);color:#fff}
+
+.esq-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.esq-head h3{font-size:1.3rem}
+.esq-head p{color:var(--muted);font-size:.93rem;margin-top:4px;max-width:640px}
+.prog{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:6px 0 18px}
+.prog i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s var(--ease)}
+
+.sch{display:grid;gap:12px}
+.sch-root{justify-self:center;text-align:center;padding:12px 22px;border-radius:14px;background:var(--grad);color:#fff;font:700 1rem Sora,system-ui,sans-serif;box-shadow:0 10px 26px -12px var(--a1);position:relative}
+.sch-root::after{content:"";position:absolute;left:50%;bottom:-13px;width:2px;height:13px;background:var(--a1);opacity:.5}
+.sch-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.sch-box{padding:16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.95rem;line-height:2.1}
+.sch-box>b:first-child{display:block;font-family:Sora,system-ui,sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--a1);line-height:1.4;margin-bottom:4px}
+.sch-box.alt>b:first-child{color:var(--a3)}
+.sch select{appearance:none;-webkit-appearance:none;font:600 .9rem Inter,sans-serif;color:var(--text);background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%237c5cff' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 10px center;border:2px dashed rgba(124,92,255,.5);border-radius:10px;padding:5px 30px 5px 10px;max-width:100%;cursor:pointer;transition:all .2s;line-height:1.4;vertical-align:middle}
+.sch select:focus{outline:none;border-style:solid;border-color:var(--a1);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.sch select.filled{border-style:solid}
+.sch select.ok{border:2px solid var(--ok);background-color:var(--ok-bg)}
+.sch select.ko{border:2px solid var(--ko);background-color:var(--ko-bg)}
+.sch select:disabled{opacity:1;cursor:default}
+.bad{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.7rem;font-weight:800;color:#fff;margin-left:3px;vertical-align:middle}
+.bad.ok{background:var(--ok)}.bad.ko{background:var(--ko)}
+
+.order-pool,.order-seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.order-pool{background:var(--card2);border:1px dashed var(--line)}
+.order-seq{background:var(--info-bg);border:2px dashed rgba(124,92,255,.35);flex-direction:column}
+.ord-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:.92rem;text-align:left;box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.ord-item:hover{transform:translateY(-2px)}
+.ord-item .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 .8rem Sora,system-ui,sans-serif;flex-shrink:0}
+.ord-item.ok{border-color:var(--ok);background:var(--ok-bg)}
+.ord-item.ko{border-color:var(--ko);background:var(--ko-bg)}
+.lbl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+
+.feedback{margin-top:20px;display:grid;gap:10px}
+.fb{display:flex;gap:12px;padding:14px 16px;border-radius:14px;font-size:.92rem;animation:rise .4s var(--ease) both}
+.fb.ok{background:var(--ok-bg)}.fb.ko{background:var(--ko-bg)}
+.fb .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem;flex-shrink:0}
+.fb.ok .ic{background:var(--ok)}.fb.ko .ic{background:var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.fb em{font-style:normal;color:var(--muted)}
+.esq-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;margin-top:20px;background:var(--grad);color:#fff;animation:rise .4s var(--ease) both}
+.result-banner b{font:800 1.6rem Sora,system-ui,sans-serif}
+
+/* ---------- Fichas ---------- */
+.fichas-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;color:var(--muted)}
+.seg button.on{background:var(--grad);color:#fff}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.flip{perspective:1200px;min-height:230px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;min-height:230px;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;padding:22px;border-radius:var(--r);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow);overflow:auto}
+.front{background:var(--card)}
+.front .q{font:600 1.04rem/1.45 Sora,system-ui,sans-serif;margin-top:10px;flex:1}
+.front .hint{font-size:.8rem;color:var(--soft);display:flex;align-items:center;gap:6px}
+.back{background:linear-gradient(150deg,#22175a,#0e3c62);color:#eef;transform:rotateY(180deg);font-size:.93rem}
+.back p{flex:1}
+.back .acts{display:flex;gap:8px;margin-top:12px}
+.back .acts button{flex:1;padding:9px;border-radius:12px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.12)}
+.back .acts .yes{background:rgba(18,183,106,.85)}
+.flip.known .front{border-color:var(--ok)}
+.known-tag{font-size:.72rem;font-weight:800;color:var(--ok);background:var(--ok-bg);padding:3px 8px;border-radius:999px}
+
+/* ---------- Tests ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tcard{padding:20px;text-align:left;border-radius:var(--r);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .25s var(--ease),border-color .25s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.4)}
+.tcard .top{display:flex;justify-content:space-between;align-items:center}
+.tcard h3{font-size:1.05rem}
+.tcard p{color:var(--muted);font-size:.88rem;flex:1}
+.tcard .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}
+.tcard.special{background:linear-gradient(135deg,#22175a,#0e3c62);color:#fff;border:0}
+.tcard.special p,.tcard.special .meta{color:rgba(255,255,255,.75)}
+.tcard .ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--info-bg);font-size:1.2rem}
+.tcard.special .ti{background:rgba(255,255,255,.14)}
+.best{font-weight:800;color:var(--ok)}
+.tcard.special .best{color:#7ef0b8}
+
+.qbar{position:sticky;top:64px;z-index:20;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.qbar .ttl{font:700 1rem Sora,system-ui,sans-serif;flex:1;min-width:160px}
+.qbar .prog{flex-basis:100%;margin:0}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:99px;background:var(--bg2);position:relative;transition:background .2s;cursor:pointer;border:1px solid var(--line)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.switch input:checked{background:var(--a1)}
+.switch input:checked::after{transform:translateX(17px)}
+
+.qb{padding:22px;margin-bottom:14px;scroll-margin-top:150px}
+.qb .qn{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.qb .qn .n{font:800 .85rem Sora,system-ui,sans-serif;color:#fff;background:var(--grad);padding:3px 10px;border-radius:8px}
+.qb .qn .src{font-size:.75rem;color:var(--soft);font-weight:600}
+.qb .qt{font-weight:600;font-size:1.03rem;margin-bottom:14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:14px;background:var(--card2);border:2px solid transparent;font-size:.95rem;transition:all .2s var(--ease)}
+.opt:hover:not(:disabled){border-color:rgba(124,92,255,.35);transform:translateX(3px)}
+.opt .l{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:800 .82rem Sora,system-ui,sans-serif;background:var(--card);border:1px solid var(--line);flex-shrink:0;transition:all .2s}
+.opt.sel{border-color:var(--a1);background:var(--info-bg)}
+.opt.sel .l{background:var(--grad);color:#fff;border-color:transparent}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ok .l{background:var(--ok);color:#fff;border-color:transparent}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt.ko .l{background:var(--ko);color:#fff;border-color:transparent}
+.opt:disabled{cursor:default}
+.expl{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--info-bg);border-left:4px solid var(--a1);font-size:.92rem;animation:rise .35s var(--ease) both}
+.expl b{color:var(--a1)}
+.qb.res-ok{border-color:rgba(18,183,106,.45)}
+.qb.res-ko{border-color:rgba(240,68,56,.45)}
+.qb.res-bl{border-color:rgba(247,144,9,.5)}
+
+.score{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:24px;margin-bottom:18px;animation:rise .5s var(--ease) both}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 1.7rem Sora,system-ui,sans-serif;line-height:1}
+.ring .v small{display:block;font:600 .7rem Inter;color:var(--muted);margin-top:4px}
+.score h3{font-size:1.25rem;margin-bottom:8px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.stat{padding:6px 12px;border-radius:10px;font-weight:700;font-size:.88rem}
+.stat.ok{background:var(--ok-bg);color:var(--ok)}.stat.ko{background:var(--ko-bg);color:var(--ko)}.stat.bl{background:var(--warn-bg);color:var(--warn)}
+.score p{color:var(--muted);font-size:.88rem}
+.qactions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;font:700 1.2rem Sora,system-ui,sans-serif;color:var(--text);margin-bottom:6px}
+
+footer{padding:30px 0 40px;color:var(--soft);font-size:.85rem;text-align:center}
+footer a{color:var(--a1);font-weight:600;text-decoration:none}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,40px);opacity:0;padding:12px 18px;border-radius:14px;background:#1b1b30;color:#fff;font-weight:600;font-size:.9rem;z-index:200;transition:all .35s var(--ease);box-shadow:0 14px 40px -10px rgba(0,0,0,.5);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .bb{padding:0 18px 20px 18px}
+}
+@media (max-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 14px}
+  header.top{padding:14px 0 4px}
+  nav.tabs{position:fixed;top:auto;bottom:0;left:0;right:0;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:color-mix(in srgb,var(--card) 86%,transparent)}
+  .tabs .wrap{justify-content:space-around;gap:2px;padding:0 6px}
+  .tab{flex:1;flex-direction:column;gap:3px;padding:7px 4px;font-size:.7rem;border-radius:14px;justify-content:center}
+  .tab svg{width:22px;height:22px}
+  .tab.active{box-shadow:none}
+  main{padding:16px 0 calc(var(--navh) + 40px)}
+  .qbar{top:8px}
+  .pad,.qb{padding:18px}
+  .hero{border-radius:22px}
+  .hs b{font-size:1.3rem}
+  .score{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .score .stats{justify-content:center}
+  .fgrid{grid-template-columns:1fr}
+  .btn{padding:12px 18px}
+  .qactions .btn,.esq-actions .btn{flex:1}
+  .toast{bottom:calc(var(--navh) + 20px)}
+  .sch-box{line-height:2.2}
+  .sch select{font-size:16px} /* evita zoom en iOS */
+  .tbl{border:0;border-radius:0;overflow:visible}
+  .tbl tr:first-child{display:none}
+  .tbl tr{display:block;margin:0 0 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .tbl td{display:block;border-bottom:1px solid var(--line);padding:9px 12px}
+  .tbl td:first-child{background:var(--card2);font-weight:700}
+  .tbl td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font:700 .7rem Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--a1);margin-bottom:2px}
+  .tbl td.mono{font-family:Inter,system-ui,sans-serif;font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  body::before,nav.tabs,.icon-btn,.toast,.esq-actions,.qactions,.fichas-bar,.hero .row,.scroller{display:none!important}
+  body{background:#fff;color:#000}
+  .view.hidden{display:none!important}
+  details.blk{break-inside:avoid}
+  details.blk:not([open]) .bb{display:block}
+  .card,.num,details.blk{box-shadow:none}
+  .hero{background:#2a1a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">IN7</div>
+    <div class="brand">
+      <small>Oposición C1 · AGE · Informática básica y ofimática</small>
+      <b>Outlook 365</b>
+    </div>
+    <button class="icon-btn" id="btn-print" title="Imprimir / guardar como PDF" aria-label="Imprimir o guardar como PDF">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-theme" title="Modo claro / oscuro" aria-label="Cambiar tema">
+      <svg id="ico-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <button class="tab active" data-view="resumen">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10"/></svg><span>Resumen</span></button>
+    <button class="tab" data-view="esquemas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1.5"/><rect x="2" y="17" width="6" height="5" rx="1.5"/><rect x="16" y="17" width="6" height="5" rx="1.5"/><path stroke-linecap="round" d="M12 7v5M5 17v-5h14v5"/></svg><span>Esquemas</span></button>
+    <button class="tab" data-view="fichas">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2.5"/><path stroke-linecap="round" d="M7 3h11a3 3 0 013 3v11"/></svg><span>Fichas</span></button>
+    <button class="tab" data-view="test">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg><span>Test</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- =============================== RESUMEN =============================== -->
+<section id="v-resumen" class="view">
+<style>
+    .sit-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .sit-pill{padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;background:var(--card);border:1px solid var(--line);transition:all .2s var(--ease)}
+    .sit-pill:hover{border-color:rgba(124,92,255,.45)}
+    .sit-pill.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 20px -10px var(--a1)}
+    .sit-pill.warn::after{content:"⚠";margin-left:6px;font-size:.8em}
+    .sit-group{width:100%;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:6px 2px 0}
+    .sit-card{padding:22px;animation:rise .35s var(--ease) both}
+    .sit-card h3{font-size:1.25rem;margin-bottom:4px}
+    .sit-card .norm{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+    .sit-card .def{padding:12px 14px;border-radius:12px;background:var(--info-bg);font-size:.94rem;margin-bottom:14px}
+    .sit-facets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .facet{padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-size:.92rem}
+    .facet b{display:flex;align-items:center;gap:8px;font:800 .74rem Sora,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--a1);margin-bottom:6px}
+    .facet:nth-child(2) b{color:var(--a3)}.facet:nth-child(3) b{color:#0aa37f}.facet:nth-child(4) b{color:var(--warn)}
+    .sit-warn{margin-top:12px}
+    .tool{padding:22px}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0;align-items:end}
+    .tool label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.86rem}
+    .tool select,.tool input[type=number],.tool input[type=text],.tool input[type=date],.tool input[type=datetime-local]{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:inherit;font:inherit;font-size:16px}
+    .tool .chk{flex-direction:row !important;align-items:center;gap:10px;font-weight:600}
+    .tool .chk input{width:20px;height:20px;accent-color:var(--a1);flex:none}
+    .verdict{margin-top:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);font-size:.95rem}
+    .verdict.ok{border-color:rgba(10,163,127,.45);background:rgba(10,163,127,.08)}
+    .verdict.ko{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07)}
+    .verdict.mid{border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08)}
+    .verdict b.big{display:block;font:800 1.15rem Sora,system-ui,sans-serif;margin-bottom:4px}
+    .tool-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+    .tabs-mini{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .tabs-mini button{padding:8px 14px;border-radius:999px;font-weight:700;font-size:.85rem;border:1px solid var(--line);background:var(--card)}
+    .tabs-mini button.on{background:var(--grad);color:#fff;border-color:transparent}
+    .pane{display:none}.pane.on{display:block}
+    .nm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    .nm-kpi{padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+    .nm-kpi span{display:block;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .nm-kpi b{font:800 1.3rem Sora,system-ui,sans-serif}
+    .nm-kpi.g b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tbl.money td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tbl tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+  </style>
+  <style>
+    .rsv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}
+    .rsv div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.86rem}
+    .rsv div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .rsv div span{font-weight:700;font-size:.95rem}
+    .rsv .y{border-color:rgba(10,163,127,.5);background:rgba(10,163,127,.09)}
+    .rsv .n{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.06)}
+    .upd{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,.15);color:#b45309;margin-left:4px;vertical-align:middle}
+    .case{font-size:1.02rem;line-height:1.5;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:12px}
+    .case small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+    .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .choice button{padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-weight:600;cursor:pointer;text-align:left;color:inherit;transition:.15s}
+    .choice button:hover{border-color:var(--a1)}
+    .choice button.ok{border-color:#0aa37f;background:rgba(10,163,127,.12)}
+    .choice button.ko{border-color:#ef4444;background:rgba(239,68,68,.08)}
+    .score{font-size:.85rem;color:var(--muted);margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .of{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px}
+    .of div{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);font-size:.9rem}
+    .of div b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+    .tr{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .tr div{padding:10px 14px;border-radius:12px;border-left:5px solid var(--a1);background:var(--card2);font-size:.92rem}
+    .tr div.l2{margin-left:18px;border-left-color:#0aa37f}
+    .tr div.l3{margin-left:36px;border-left-color:#f59e0b}
+    .tr div.no{opacity:.55;border-left-color:var(--line)}
+  </style>
+  <div class="hero">
+    <span class="kicker">Bloque de Informática · Tema 7 · Ofimática</span>
+    <h1>Outlook 365 <span>Correo electrónico: conceptos y funcionamiento, protocolos, entorno de trabajo, crear, enviar, recibir, responder y reenviar mensajes, búsquedas, reglas, libreta de direcciones y seguridad</span></h1>
+    <p>Resumen de alto rendimiento del manual y del esquema del tema, actualizado a <strong>noviembre de 2026</strong>: el nuevo Outlook para Windows y el calendario del Outlook clásico, la retirada de la autenticación básica en SMTP, los requisitos SPF, DKIM y DMARC, los límites de los adjuntos y las erratas del manual. Lo actualizado lleva la etiqueta <span class="upd">2026</span>. Incluye:</p>
+    <ul>
+      <li>Un analizador de direcciones de correo: usuario, @, dominio, extensión y límites de longitud.</li>
+      <li>Un simulador de protocolos (SMTP, POP3, IMAP) con puertos y dónde quedan los mensajes.</li>
+      <li>Un simulador de Para, CC y CCO: qué ve cada destinatario y a quién llega «Responder a todos».</li>
+      <li>Un recorrido por las carpetas (Borradores, Bandeja de salida, Elementos enviados, Eliminados).</li>
+      <li>Un buscador con la sintaxis de Outlook (Y, O, NO, comillas, de:, asunto:, tiene datos adjuntos…) sobre un buzón de ejemplo.</li>
+      <li>Entrenadores de herramientas, atajos de teclado y amenazas del correo.</li>
+    </ul>
+    <div class="hero-stats">
+      <div class="hs"><b id="hs-blk">18</b><span>bloques de resumen</span></div>
+      <div class="hs"><b id="hs-esq">14</b><span>esquemas autocorregibles</span></div>
+      <div class="hs"><b id="hs-fich">157</b><span>fichas de repaso</span></div>
+      <div class="hs"><b id="hs-q">160</b><span>preguntas tipo test</span></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-p" onclick="document.getElementById('pr').scrollIntoView({behavior:'smooth'})">Protocolos ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('cc').scrollIntoView({behavior:'smooth'})">Para, CC y CCO ↓</button>
+      <button class="btn btn-g" onclick="document.getElementById('bq').scrollIntoView({behavior:'smooth'})">Búsquedas ↓</button>
+      <button class="btn btn-g" id="btn-tts">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>
+        <span>Escuchar resumen</span></button>
+    </div>
+  </div>
+
+  <div class="note"><span>📌</span><span><strong>Fuentes y actualización</strong>: el manual «Tema 7. Correo electrónico: Outlook 365» y el esquema del tema (ADAMS Formación), puestos al día a noviembre de 2026.
+    <ul>
+      <li><span class="upd">2026</span> <strong>Dos Outlook para Windows</strong>: el <strong>nuevo Outlook</strong> (disponible para empresas desde el 1-8-2024, basado en Outlook en la web) y el <strong>Outlook clásico</strong>, que es el que describe el manual. Microsoft retrasó a <strong>marzo de 2027</strong> la fase en la que el nuevo Outlook pasa a ser el predeterminado, y mantiene el soporte del clásico <strong>al menos hasta 2029</strong>. Algunas funciones del manual (archivos PST, Autoarchivar, pestaña Enviar y recibir, Trabajar sin conexión) son del Outlook clásico.</li>
+      <li><span class="upd">2026</span> <strong>Autenticación moderna</strong>: Exchange Online desactivará por defecto la autenticación básica (usuario y contraseña) en el envío por SMTP a finales de diciembre de 2026, y anunciará la fecha de retirada definitiva en 2027. Para POP, IMAP y SMTP se usa <strong>OAuth</strong>.</li>
+      <li><span class="upd">2026</span> <strong>SPF, DKIM y DMARC</strong>: desde el 5-5-2025, los dominios que envían más de 5.000 correos al día a Outlook.com, Hotmail.com o Live.com deben superar estas tres comprobaciones; si no, sus mensajes van a Correo no deseado o se rechazan con el error 550 5.7.515.</li>
+      <li><span class="upd">2026</span> <strong>Adjuntos</strong>: el límite predeterminado de Outlook para cuentas de Internet (POP, IMAP) es de <strong>20 MB</strong> en total; en Exchange Online llega a <strong>150 MB</strong> en Outlook y 112 MB en Outlook en la web. Para archivos mayores se comparte un enlace de OneDrive.</li>
+      <li><strong>Erratas y precisiones del manual</strong>:
+        <ul>
+          <li>Longitud de una dirección: el manual da 320 caracteres (64 + @ + 255), pero el límite real que admite SMTP es de <strong>254</strong> (corregido en una errata del RFC 3696).</li>
+          <li>Las direcciones de correo no tienen un «formato semejante a las direcciones IP»: son <strong>usuario@dominio</strong>, y el dominio se traduce a servidores mediante el DNS (registros MX).</li>
+          <li>Entre los ejemplos de Web Mail cita <strong>Thunderbird</strong>, que es un <strong>programa cliente</strong>, no un correo web.</li>
+          <li>«El Web Mail utiliza IMAP»: el navegador se comunica con el servidor por <strong>HTTPS</strong>; los mensajes quedan en el servidor, como con IMAP, pero el protocolo no es IMAP.</li>
+          <li>«Todos los mensajes tienen la extensión .eml»: Outlook guarda los mensajes como <strong>.msg</strong>; .eml es el formato estándar MIME que usan otros programas (Outlook también los abre).</li>
+          <li>En la tabla de búsquedas, «Tamaño del mensaje: &gt;5 MB» encuentra los mensajes <strong>mayores</strong> de 5 MB, no «menores».</li>
+          <li>La <strong>barra de Tareas pendientes</strong> aparece a la <strong>derecha</strong> de la ventana, no en la parte inferior.</li>
+          <li>Las reglas también se crean desde <strong>Inicio &gt; Mover &gt; Reglas</strong> (el manual habla de «dos comandos» y solo cita Archivo &gt; Información).</li>
+          <li>Programas y servicios antiguos: Eudora dejó de desarrollarse hace años, Lotus Notes es hoy HCL Notes, y Archie o Gopher ya no se usan.</li>
+          <li>El esquema da <strong>Ctrl + E</strong> para enviar; el manual da <strong>Ctrl + Intro</strong>, que es el atajo que recoge la ayuda de Microsoft. El esquema cita también «Teamviewer» en Inicio: es un complemento instalado, no parte de Outlook.</li>
+        </ul>
+      </li>
+    </ul></span></div>
+
+  <div class="section-title" id="ad">
+    <div><span class="kicker">usuario@dominio.extensión</span><h2>Analizador de direcciones de correo</h2></div>
+    <p>Escribe una dirección y mira sus partes y si respeta los límites.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Ejemplo<select id="ad-p"><option>ana.garcia@correo.gob.es</option><option>usuario@gmail.com</option><option>ana garcia@correo.es</option><option>ana@@correo.es</option><option>.ana@correo.es</option><option>ana..lopez@correo.es</option><option>ana@correo</option></select></label>
+      <label>Dirección<input type="text" id="ad-x" value="ana.garcia@correo.gob.es" autocomplete="off"></label>
+    </div>
+    <div class="rsv" id="ad-k"></div>
+    <div class="verdict" id="ad-v"></div>
+  </div>
+
+  <div class="section-title" id="pr">
+    <div><span class="kicker">SMTP · POP3 · IMAP</span><h2>Simulador de protocolos</h2></div>
+    <p>Elige el protocolo y si la conexión va cifrada: verás para qué sirve, el puerto y dónde quedan los mensajes.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Protocolo<select id="pr-p"><option value="smtp">SMTP (envío)</option><option value="pop">POP3 (recepción)</option><option value="imap" selected>IMAP (recepción)</option><option value="web">Web Mail (navegador)</option></select></label>
+      <label>Conexión<select id="pr-s"><option value="tls">Cifrada (SSL/TLS)</option><option value="plain">Sin cifrar</option></select></label>
+      <label>Dispositivos del usuario<select id="pr-d"><option value="1">Un solo ordenador</option><option value="3">Ordenador, portátil y móvil</option></select></label>
+    </div>
+    <div class="rsv" id="pr-k"></div>
+    <div class="tr" id="pr-out"></div>
+    <div class="verdict" id="pr-v"></div>
+  </div>
+
+  <div class="section-title" id="cc">
+    <div><span class="kicker">Campos de la cabecera</span><h2>Simulador de Para, CC y CCO</h2></div>
+    <p>Separa varias direcciones con punto y coma. Mira qué ve cada destinatario y a quién llega su «Responder a todos».</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Para<input type="text" id="cc-to" value="jefa@age.es" autocomplete="off"></label>
+      <label>CC<input type="text" id="cc-cc" value="luis@age.es; marta@age.es" autocomplete="off"></label>
+      <label>CCO<input type="text" id="cc-bcc" value="archivo@age.es" autocomplete="off"></label>
+    </div>
+    <div class="tr" id="cc-out"></div>
+    <div class="verdict" id="cc-v"></div>
+  </div>
+
+  <div class="section-title" id="fl">
+    <div><span class="kicker">Carpetas del buzón</span><h2>¿En qué carpeta está el mensaje?</h2></div>
+    <p>Pulsa las acciones en orden y sigue el viaje del mensaje por las carpetas.</p>
+  </div>
+  <div class="card tool">
+    <div class="choice" id="fl-btns"></div>
+    <div class="rsv" id="fl-state"></div>
+    <div class="tr" id="fl-log"></div>
+    <div class="verdict" id="fl-v"></div>
+  </div>
+
+  <div class="section-title" id="bq">
+    <div><span class="kicker">Búsqueda instantánea</span><h2>Buscador con la sintaxis de Outlook</h2></div>
+    <p>Sobre un buzón de 10 mensajes. Los operadores Y, O, NO se escriben en mayúsculas; las comillas buscan la palabra exacta.</p>
+  </div>
+  <div class="card tool">
+    <div class="tool-grid">
+      <label>Ejemplo<select id="bq-p"><option>proyect</option><option>"proyecto"</option><option>miguel Y informe</option><option>miguel NO informe</option><option>miguel O rosa</option><option>miguel y informe</option><option>de:"miguel tórrez"</option><option>asunto:nómina</option><option>tiene datos adjuntos: sí</option><option>lectura: no</option><option>tamaño del mensaje: enorme</option><option>de:rosa tiene datos adjuntos: sí</option></select></label>
+      <label>Búsqueda<input type="text" id="bq-x" value="proyect" autocomplete="off"></label>
+    </div>
+    <div class="tr" id="bq-out"></div>
+    <div class="verdict" id="bq-v"></div>
+  </div>
+
+  <div class="section-title" id="rg">
+    <div><span class="kicker">Organizar el correo</span><h2>¿Qué herramienta de Outlook usarías?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="rg-case"></div>
+    <div class="choice" id="rg-opts"></div>
+    <div class="verdict" id="rg-out" style="display:none"></div>
+    <div class="score"><span id="rg-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="rg-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="sc">
+    <div><span class="kicker">Métodos abreviados</span><h2>¿Qué atajo de teclado es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="sc-case"></div>
+    <div class="choice" id="sc-opts"></div>
+    <div class="verdict" id="sc-out" style="display:none"></div>
+    <div class="score"><span id="sc-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="sc-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title" id="sg">
+    <div><span class="kicker">Problemas del correo</span><h2>¿Qué amenaza es?</h2></div>
+  </div>
+  <div class="card tool">
+    <div class="case" id="sg-case"></div>
+    <div class="choice" id="sg-opts"></div>
+    <div class="verdict" id="sg-out" style="display:none"></div>
+    <div class="score"><span id="sg-score">0 de 0 aciertos</span><button class="btn btn-g btn-sm" id="sg-next">Siguiente →</button></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Cinta, mensaje nuevo, opciones y atajos</span><h2>Mapa de consulta rápida</h2></div>
+  </div>
+  <div class="sit-pills" id="in-pills"></div>
+  <div class="card sit-card" id="in-card"></div>
+
+  <div class="section-title">
+    <div><span class="kicker">Memorízalas</span><h2>Cifras clave</h2></div>
+  </div>
+  <div class="nums">
+    <div class="num"><b>64 · 255</b><span>Caracteres máximos de la parte local (antes de @) y del dominio</span></div>
+    <div class="num"><b>254</b><span>Longitud máxima real de una dirección (el manual dice 320)</span></div>
+    <div class="num"><b>25 · 587 · 465</b><span>Puertos SMTP: entre servidores, envío con STARTTLS y envío con SSL</span></div>
+    <div class="num"><b>110 · 995</b><span>Puertos POP3 sin cifrar y con SSL/TLS</span></div>
+    <div class="num"><b>143 · 993</b><span>Puertos IMAP sin cifrar y con SSL/TLS</span></div>
+    <div class="num"><b>3 niveles</b><span>De importancia: normal (por defecto), alta (! roja) y baja (flecha azul)</span></div>
+    <div class="num"><b>RE: · RV:</b><span>Prefijos del asunto al responder y al reenviar</span></div>
+    <div class="num"><b>20 MB</b><span>Límite predeterminado de adjuntos en Outlook para cuentas de Internet</span></div>
+    <div class="num"><b>150 MB</b><span>Máximo de un mensaje en Exchange Online con Outlook (112 MB en la web)</span></div>
+    <div class="num"><b>&lt; 10 KB</b><span>«Tamaño del mensaje: muy pequeño»; «enorme», más de 5 MB</span></div>
+    <div class="num"><b>3 vistas</b><span>Vista actual: Compacta, Única y Vista previa</span></div>
+    <div class="num"><b>3 formatos</b><span>HTML, Texto enriquecido y Texto sin formato</span></div>
+    <div class="num"><b>Ctrl + 1 … 5</b><span>Correo, Calendario, Contactos, Tareas y Lista de tareas pendientes</span></div>
+    <div class="num"><b>2029</b><span>Soporte del Outlook clásico, como mínimo</span></div>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">Temario condensado · índice del manual</span><h2>Resumen por bloques</h2></div>
+    <div class="row"><button class="btn btn-g btn-sm" id="btn-open-all">Abrir todo</button></div>
+  </div>
+
+  <div class="acc" id="resumen-text">
+    <h3 class="kicker" style="margin:6px 0 2px">Parte 1 · El correo electrónico</h3>
+
+    <details class="blk" open>
+      <summary><span class="bn">1</span><span class="bt"><h3>Concepto, ventajas e inconvenientes</h3><small>Manual 1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Correo electrónico</strong> (e-mail): servicio de Internet para enviar y recibir mensajes privados a través de redes de ordenadores. Como en el correo postal, hay un <strong>remitente</strong> y un <strong>destinatario</strong>, cada uno con su dirección; el mensaje pasa por varios ordenadores intermedios.</li>
+          <li><strong>Ventajas</strong>:
+            <ul>
+              <li><strong>rapidez</strong>: llega en segundos a cualquier lugar;</li>
+              <li><strong>coste</strong>: no hay cargos directos por el envío;</li>
+              <li><strong>adaptación</strong>: admite adjuntos (imágenes, sonido, vídeo, hojas de cálculo);</li>
+              <li><strong>fiabilidad</strong>: si no llega, se devuelve al remitente con un aviso;</li>
+              <li><strong>comodidad</strong>: se guarda, reutiliza y envía a varios a la vez; se recuperan mensajes borrados.</li>
+            </ul>
+          </li>
+          <li><strong>Inconvenientes</strong>:
+            <ul>
+              <li><strong>inseguridad</strong>: puede interceptarse en su recorrido;</li>
+              <li><strong>errores</strong>: enviar a un destinatario equivocado;</li>
+              <li><strong>publicidad</strong>: correo basura, virus y enlaces peligrosos.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">2</span><span class="bt"><h3>Característica asíncrona y dirección de correo</h3><small>Manual 1.1 y 1.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Rasgo diferencial</strong>: el ordenador que envía y el que recibe <strong>no tienen que estar conectados a la vez</strong> (servicio asíncrono). Si el receptor está fuera de servicio, el mensaje espera y llega cuando vuelve a funcionar en un plazo razonable.</li>
+          <li><strong>Dirección de correo</strong>: identifica al usuario de forma <strong>única e inequívoca</strong>; es obligatoria para enviar.
+            <ul>
+              <li><strong>nombre de usuario</strong> (parte local): «usuario» en usuario@gmail.com;</li>
+              <li><strong>@</strong> (arroba): separa usuario y dominio;</li>
+              <li><strong>dominio</strong>: el servidor que gestiona la dirección («gmail.com»);</li>
+              <li><strong>extensión</strong> (dominio de primer nivel): tipo de organización o país («.com», «.es»).</li>
+            </ul>
+          </li>
+          <li><strong>Longitud</strong>: parte local de 1 a 64 caracteres; dominio hasta 255. El manual suma 320, pero el máximo útil es <strong>254</strong>.</li>
+          <li>No admite espacios; no puede empezar ni terminar en punto ni tener dos puntos seguidos en la parte local; una sola @.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">3</span><span class="bt"><h3>Protocolos y funcionamiento</h3><small>Manual 1.3, 1.4 y esquema</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Protocolo</strong>: conjunto de reglas para intercambiar información correctamente por Internet. Los <strong>servidores de correo</strong> (e-mail servers) usan:
+            <ul>
+              <li><strong>SMTP</strong> (Simple Mail Transfer Protocol): correo <strong>saliente</strong>, del cliente al servidor y entre servidores;</li>
+              <li><strong>POP3</strong> (Post Office Protocol): correo <strong>entrante</strong>; <strong>descarga</strong> el mensaje al equipo;</li>
+              <li><strong>IMAP</strong> (Internet Message Access Protocol): correo <strong>entrante</strong>; el mensaje <strong>se queda en el servidor</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Recorrido de un mensaje</strong>:
+            <ol>
+              <li>el cliente entrega el mensaje a su servidor SMTP;</li>
+              <li>el servidor examina la dirección del destinatario y elige la ruta;</li>
+              <li>el mensaje salta entre servidores SMTP hasta el buzón del destinatario (servidor POP/IMAP);</li>
+              <li>el destinatario lo recoge con POP3 o IMAP. Si un servidor está caído, el anterior guarda el mensaje y lo reintenta.</li>
+            </ol>
+          </li>
+          <li><strong>MIME</strong> (Multipurpose Internet Mail Extensions): estándar que permite enviar adjuntos de cualquier tipo, además del texto.</li>
+          <li><span class="upd">2026</span> <strong>Autenticación del remitente</strong>: <strong>SPF</strong> (qué servidores pueden enviar en nombre del dominio), <strong>DKIM</strong> (firma digital del mensaje) y <strong>DMARC</strong> (política si fallan). Y <strong>OAuth</strong> en lugar de usuario y contraseña en POP, IMAP y SMTP.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">4</span><span class="bt"><h3>Web Mail y programas cliente</h3><small>Manual 1.5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Web Mail</strong>: acceso con un <strong>navegador</strong> a la página del proveedor.
+            <ul>
+              <li>solo hace falta usuario y contraseña; no se configura nada;</li>
+              <li>se consulta desde cualquier ordenador;</li>
+              <li>permite enviar, reenviar, borrar, responder y organizar en carpetas;</li>
+              <li>ejemplos: Gmail, Yahoo! Mail, Outlook.com u Outlook en la web (Thunderbird no: es un cliente).</li>
+            </ul>
+          </li>
+          <li><strong>Programas cliente</strong>: se instalan y se configura la cuenta (usuario, contraseña, servidores y protocolo POP3 o IMAP).
+            <ul>
+              <li>varias cuentas a la vez, mejor organización, <strong>copias de seguridad</strong> y lectura <strong>sin conexión</strong>;</li>
+              <li>ejemplos: <strong>Microsoft Outlook</strong>, <strong>Thunderbird</strong>, Mailbird, Lotus/IBM (hoy HCL) Notes y el antiguo Eudora.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 2 · El entorno de Outlook 365</h3>
+
+    <details class="blk">
+      <summary><span class="bn">5</span><span class="bt"><h3>Outlook 365 y la pestaña Archivo</h3><small>Manual 1.5.2 A</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Outlook 365</strong>: correo y organización personal de Microsoft 365 (suscripción), integrado con OneDrive, Teams, SharePoint, OneNote y Planner. Lo primero es <strong>configurar la cuenta</strong>. Usa cinta de opciones, como Word o Excel.</li>
+          <li><span class="upd">2026</span> Conviven el <strong>Outlook clásico</strong> (el del manual) y el <strong>nuevo Outlook</strong> para Windows.</li>
+          <li><strong>Pestaña Archivo</strong>:
+            <ul>
+              <li><strong>Información</strong>: agregar cuenta, configuración de cuentas, tamaño del buzón, reglas y alertas;</li>
+              <li><strong>Abrir y exportar</strong>: abrir calendarios (<strong>.ics</strong> o .vcs) y archivos de datos (<strong>.pst</strong>), importar y exportar (copias de seguridad), abrir carpetas de otros usuarios;</li>
+              <li><strong>Guardar como</strong> y <strong>Guardar datos adjuntos</strong>;</li>
+              <li><strong>Imprimir</strong>: mensajes, contactos, calendarios, reuniones y tareas;</li>
+              <li><strong>Cuenta de Office</strong>, <strong>Comentarios</strong> y <strong>Opciones</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Archivo PST</strong> (Personal Storage Table): archivo de datos con correos, contactos y calendarios; sirve para copias de seguridad y archivado.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">6</span><span class="bt"><h3>Cuentas, respuestas automáticas y herramientas</h3><small>Manual 1.5.2 A (Información)</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Configuración de la cuenta</strong>:
+            <ul>
+              <li>añadir y modificar cuentas (puede haber <strong>varias activas</strong>);</li>
+              <li>sincronización y nombre de cuenta;</li>
+              <li><strong>Delegar acceso</strong>: los delegados envían en tu nombre y gestionan convocatorias de reunión;</li>
+              <li><strong>Descargar libreta de direcciones</strong>;</li>
+              <li><strong>Cambiar perfil</strong> y <strong>Administrar perfiles</strong>.</li>
+            </ul>
+          </li>
+          <li><strong>Respuestas automáticas</strong>: avisos de «fuera de la oficina» o vacaciones.</li>
+          <li><strong>Herramientas</strong>:
+            <ul>
+              <li><strong>Limpieza de buzón</strong>: controla su tamaño eliminando o moviendo elementos;</li>
+              <li><strong>Vaciar carpeta Elementos eliminados</strong>: borrado definitivo;</li>
+              <li><strong>Limpiar elementos antiguos</strong>: los mueve a un archivo de datos de Outlook.</li>
+            </ul>
+          </li>
+          <li><strong>Administrar reglas y alertas</strong> y <strong>Administrar complementos</strong>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">7</span><span class="bt"><h3>Pestaña Inicio</h3><small>Manual 1.5.2 A</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Nuevo</strong>: correo y otros elementos (citas, reuniones, contactos, tareas).</li>
+          <li><strong>Eliminar</strong>:
+            <ul>
+              <li><strong>Omitir</strong> conversación: envía los mensajes actuales y <strong>futuros</strong> de la conversación a Elementos eliminados;</li>
+              <li><strong>Limpiar</strong>: quita los mensajes redundantes de una conversación;</li>
+              <li><strong>Correo no deseado</strong>: marcar o bloquear remitentes y dominios;</li>
+              <li><strong>Eliminar</strong> y <strong>Archivo</strong> (mueve a la carpeta Archivo).</li>
+            </ul>
+          </li>
+          <li><strong>Informe</strong>: denunciar suplantación de identidad (phishing) y correo no deseado.</li>
+          <li><strong>Responder</strong>: responder, responder a todos, reenviar, responder con una reunión…</li>
+          <li><strong>Pasos rápidos</strong>: varias acciones con un solo clic.</li>
+          <li><strong>Mover</strong>: mover a carpetas, <strong>Reglas</strong> y <strong>Enviar a OneNote</strong>.</li>
+          <li><strong>Etiquetas</strong>: <strong>categorías</strong> de color, leído o no leído y seguimiento.</li>
+          <li><strong>Buscar</strong>, <strong>Leer en voz alta</strong> y <strong>Todas las aplicaciones</strong> (complementos).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">8</span><span class="bt"><h3>Pestañas Enviar y recibir, Carpeta y Vista</h3><small>Manual 1.5.2 A</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Enviar y recibir</strong>: actualizar todas las carpetas (<strong>F9</strong>) o una; estado de las descargas; descargar solo encabezados; <strong>trabajar sin conexión</strong>; grupos de envío y recepción (cuentas, RSS, calendarios).</li>
+          <li><strong>Carpeta</strong>:
+            <ul>
+              <li><strong>Nuevo</strong>: nueva carpeta y <strong>carpeta de búsqueda</strong> (muestra automáticamente los mensajes que cumplen unos criterios, sin moverlos);</li>
+              <li><strong>Acciones</strong>: cambiar nombre, copiar, mover o eliminar la carpeta;</li>
+              <li><strong>Limpiar</strong>: marcar todo como leído, ejecutar reglas, ordenar, limpiar, eliminar todo, <strong>recuperar elementos eliminados</strong>;</li>
+              <li><strong>Favoritos</strong>;</li>
+              <li><strong>Propiedades</strong>: directiva de retención, propiedades, <strong>permisos</strong> y <strong>Autoarchivar</strong> (archivos PST).</li>
+            </ul>
+          </li>
+          <li><strong>Vista</strong>:
+            <ul>
+              <li><strong>Vista actual</strong>: <strong>Compacta, Única y Vista previa</strong>;</li>
+              <li><strong>Mensajes</strong>: <strong>mostrar como conversaciones</strong> (agrupa los mensajes con el mismo asunto);</li>
+              <li><strong>Bandeja de entrada Prioritarios</strong> (Prioritarios y Otros);</li>
+              <li><strong>Diseño</strong>: panel de carpetas, <strong>panel de lectura</strong> (derecha, abajo o desactivado) y <strong>barra de tareas pendientes</strong> (calendario, tareas, personas);</li>
+              <li><strong>Lector inmersivo</strong>: tamaño de texto, espaciado y lectura en voz alta.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">9</span><span class="bt"><h3>Carpetas comunes del correo</h3><small>Manual 1.6 y esquema</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Bandeja de entrada</strong>: los mensajes que llegan del servidor.</li>
+          <li><strong>Bandeja de salida</strong>: mensajes enviados que <strong>todavía no han salido</strong> del ordenador; aún se pueden abrir y modificar.</li>
+          <li><strong>Elementos enviados</strong>: los que ya han salido.</li>
+          <li><strong>Elementos eliminados</strong>: lo borrado con <strong>Supr</strong> (o Ctrl + Supr). Con <strong>Mayús + Supr</strong> se elimina de forma <strong>permanente</strong>, sin pasar por esta carpeta.</li>
+          <li><strong>Borradores</strong>: mensajes guardados o sin terminar, pendientes de enviar.</li>
+          <li><strong>Correo no deseado</strong>: remitentes o dominios bloqueados y lo que el filtro detecta como publicidad.</li>
+          <li><strong>Selección</strong>: <strong>Ctrl + clic</strong> para mensajes sueltos; <strong>Mayús + clic</strong> para un bloque seguido.</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 3 · Mensajes</h3>
+
+    <details class="blk">
+      <summary><span class="bn">10</span><span class="bt"><h3>Crear y enviar: la cabecera</h3><small>Manual 2.1</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Partes</strong> del mensaje: <strong>cabecera</strong>, <strong>cuerpo</strong> y <strong>adjuntos</strong>.</li>
+          <li><strong>Campos de la cabecera</strong>:
+            <ul>
+              <li><strong>De</strong>: remitente; aparece si hay varias cuentas (Opciones &gt; Mostrar campos);</li>
+              <li><strong>Para</strong>: destinatarios principales; varias direcciones separadas por <strong>; o ,</strong>;</li>
+              <li><strong>CC</strong> (con copia): todos ven a quién se ha enviado copia;</li>
+              <li><strong>CCO</strong> (con copia oculta): nadie ve a los destinatarios en CCO (se activa en Opciones &gt; Mostrar campos);</li>
+              <li><strong>Asunto</strong>: no es obligatorio (Outlook avisa si está vacío);</li>
+              <li><strong>Adjuntar</strong>: el tamaño total está limitado y <strong>no se pueden adjuntar carpetas</strong>.</li>
+            </ul>
+          </li>
+          <li>Para enviar basta con <strong>una dirección correcta en Para, CC o CCO</strong>.</li>
+          <li>Al pulsar <strong>Enviar</strong> (Ctrl + Intro), el mensaje va a la <strong>Bandeja de salida</strong> y, cuando sale, a <strong>Elementos enviados</strong>.</li>
+          <li><strong>Pestañas del mensaje nuevo</strong>: Mensaje, Insertar, Opciones, Formato de texto y Revisar.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">11</span><span class="bt"><h3>Pestaña Mensaje: libreta, firma, seguimiento e importancia</h3><small>Manual 2.2</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Libreta de direcciones</strong> (Ctrl + Mayús + B): direcciones de correo, teléfonos, fax, identificadores digitales, mensajería instantánea, cumpleaños y aniversarios.
+            <ul>
+              <li><strong>Grupos</strong> (antes listas de distribución) para escribir a varios contactos a la vez;</li>
+              <li>se gestionan desde <strong>Personas</strong> en la barra de la izquierda.</li>
+            </ul>
+          </li>
+          <li><strong>Comprobar nombres</strong>: completa la dirección a partir de parte del nombre.</li>
+          <li><strong>Adjuntar archivo</strong> (recientes o explorar) y <strong>Adjuntar elemento</strong> (tarjeta de presentación o un mensaje).</li>
+          <li><strong>Firma</strong>: texto que se añade automáticamente al final (no es una firma digital).</li>
+          <li><strong>Seguimiento</strong>: marca para recordar que hay que volver al mensaje.</li>
+          <li><strong>Importancia</strong>: normal (por defecto), <strong>alta</strong> (signo de exclamación rojo) y <strong>baja</strong> (flecha azul hacia abajo).</li>
+          <li><strong>Propiedades</strong> (flecha del grupo Etiquetas):
+            <ul>
+              <li><strong>Configuración de seguridad</strong>: <strong>firma digital</strong> y cifrado;</li>
+              <li><strong>botones de voto</strong> y seguimiento: <strong>confirmación de entrega</strong> y <strong>de lectura</strong>;</li>
+              <li><strong>opciones de entrega</strong>: no entregar antes de una fecha (envío programado) y caducidad.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">12</span><span class="bt"><h3>Adjuntos, compresión y formatos</h3><small>Manual 2.2 e ideas clave</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Los adjuntos <strong>ralentizan</strong> el envío y llenan el buzón. Solución: <strong>comprimir</strong> (WinZip, WinRAR, o el ZIP de Windows) o compartir un enlace de OneDrive.</li>
+          <li><span class="upd">2026</span> Límite predeterminado de Outlook: <strong>20 MB</strong> para cuentas de Internet; en Exchange Online, hasta <strong>150 MB</strong>.</li>
+          <li><strong>MIME</strong>: estándar para adjuntar cualquier tipo de archivo.</li>
+          <li><strong>Archivos de mensaje</strong>: <strong>.msg</strong> (formato de Outlook) y <strong>.eml</strong> (estándar). Otros: <strong>.pst</strong> (datos), <strong>.ost</strong> (copia sin conexión de Exchange o IMAP), <strong>.ics</strong> (calendario), <strong>.vcf</strong> (tarjeta de contacto).</li>
+          <li><strong>Formatos del cuerpo</strong>:
+            <ul>
+              <li><strong>HTML</strong>: el predeterminado; admite formato e imágenes;</li>
+              <li><strong>Texto enriquecido</strong> (RTF): propio de Outlook y Exchange;</li>
+              <li><strong>Texto sin formato</strong>: compatible con cualquier programa.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">13</span><span class="bt"><h3>Recibir, responder y reenviar; opciones y módulos</h3><small>Manual 2.3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Mensajes no leídos</strong>: en negrita; la Bandeja de entrada muestra su número. Comprobar mensajes nuevos: <strong>Enviar y recibir todas las carpetas (F9)</strong>.</li>
+          <li><strong>Iconos</strong>: clip = adjuntos; exclamación = importancia alta.</li>
+          <li><strong>Responder</strong> (<strong>Ctrl + R</strong>): solo al remitente; asunto con <strong>RE:</strong>; no incluye los adjuntos.</li>
+          <li><strong>Responder a todos</strong> (<strong>Ctrl + Mayús + R</strong>): al remitente y a todos los de Para y CC (nunca a los de CCO).</li>
+          <li><strong>Reenviar</strong> (<strong>Ctrl + F</strong>): a otras personas; asunto con <strong>RV:</strong>; <strong>sí incluye los adjuntos</strong>.</li>
+          <li><strong>Archivo &gt; Opciones</strong>: General, <strong>Correo</strong> (editor, ortografía, <strong>firmas</strong>, formato, respuestas), <strong>Calendario</strong> (jornada laboral), Personas, Tareas, <strong>Búsqueda</strong> (indización) y <strong>Avanzado</strong> (archivado, exportar, RSS, envío y recepción).</li>
+          <li><strong>Barra de la izquierda</strong>: Correo, <strong>Calendario</strong>, <strong>Personas</strong>, <strong>Tareas / To Do</strong> y otras aplicaciones de Microsoft 365.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">14</span><span class="bt"><h3>Criterios de búsqueda</h3><small>Manual 2.4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li>Cuadro de búsqueda encima de la lista de mensajes (<strong>F3</strong>).</li>
+          <li><strong>Concordancia de prefijos</strong>: «ray» encuentra ray, Ray, rayo y rayas, pero no Saray ni pararrayos. Busca en remitente, asunto, cuerpo y muchos adjuntos.</li>
+          <li><strong>No distingue mayúsculas y minúsculas</strong>.</li>
+          <li><strong>Operadores</strong> <strong>Y, O, NO</strong>, siempre en <strong>MAYÚSCULAS</strong>; también &lt;, &gt;, =.</li>
+          <li><strong>Comillas</strong>: palabra o frase exacta ("miguel" no encuentra miguelito).</li>
+          <li><strong>Palabras clave</strong>:
+            <ul>
+              <li><code>De:</code>, <code>Para:</code>, <code>Cc:</code>, <code>Cco:</code>, <code>Asunto:</code>, <code>Categoría:</code>;</li>
+              <li><code>Recibido: ayer</code> (hoy, esta semana, mes pasado, días y meses), <code>Enviado:</code>, <code>Pendiente:</code>;</li>
+              <li><code>Tiene datos adjuntos: sí</code>, <code>Archivos adjuntos: nombre</code>, <code>Lectura: no</code>, <code>Tiene indicador: true</code>;</li>
+              <li><code>Tamaño del mensaje:</code> muy pequeño (&lt;10 KB), pequeño (10-25 KB), medio (25-100 KB), grande (100-500 KB), muy grande (500 KB-1 MB), enorme (&gt;5 MB);</li>
+              <li>paréntesis para agrupar: <code>De: miguel (recibido:7/1/17 O recibido:8/1/17)</code>.</li>
+            </ul>
+          </li>
+          <li><strong>En Contactos</strong>: Nombre:, Apellido:, Alias:, Puesto:, Teléfono trabajo:, Ciudad trabajo:, Cumpleaños:…</li>
+        </ul>
+      </div>
+    </details>
+
+    <h3 class="kicker" style="margin:14px 0 2px">Parte 4 · Reglas, protocolos de recepción y seguridad</h3>
+
+    <details class="blk">
+      <summary><span class="bn">15</span><span class="bt"><h3>Reglas de mensajes</h3><small>Manual 3</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Reglas</strong>: organizan automáticamente el correo entrante (moverlo a carpetas) o hacen otras acciones (reenviar, responder, marcar, eliminar).</li>
+          <li><strong>Dónde</strong>: Archivo &gt; Información &gt; <strong>Administrar reglas y alertas</strong>, o Inicio &gt; Mover &gt; <strong>Reglas</strong>. Botón <strong>Nueva regla</strong> (asistente).</li>
+          <li><strong>Estructura</strong>:
+            <ol>
+              <li>plantilla o regla en blanco;</li>
+              <li><strong>condiciones</strong>: remitente, Para, CC, asunto, cuerpo, palabras, importancia…;</li>
+              <li><strong>acciones</strong>: mover a carpeta, reenviar, categorizar, marcar…;</li>
+              <li><strong>excepciones</strong>;</li>
+              <li>nombre, activar y opción de ejecutarla ya sobre la Bandeja de entrada.</li>
+            </ol>
+          </li>
+          <li>Las reglas también sirven contra el <strong>spam</strong> (filtros).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">16</span><span class="bt"><h3>POP3 frente a IMAP</h3><small>Manual 4</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>POP3</strong>:
+            <ul>
+              <li>mensajes y carpetas se guardan <strong>en el ordenador</strong>;</li>
+              <li>permite leer <strong>sin conexión</strong> y <strong>libera espacio</strong> en el buzón del servidor;</li>
+              <li>ideal para conectarse <strong>siempre desde el mismo ordenador</strong>; requiere un programa cliente configurado.</li>
+            </ul>
+          </li>
+          <li><strong>IMAP</strong>:
+            <ul>
+              <li>mensajes y carpetas se quedan <strong>en el servidor</strong> (HOST);</li>
+              <li>útil en <strong>ordenadores compartidos</strong> (nada queda en el PC) y con <strong>varios dispositivos</strong>, que ven siempre lo mismo;</li>
+              <li>el webmail funciona de forma parecida (mensajes en el servidor), aunque el navegador use HTTPS.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">17</span><span class="bt"><h3>Problemas, recomendaciones y soluciones</h3><small>Manual 5</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Spam</strong> (correo basura): no solicitado, masivo y casi siempre con remitente <strong>falso</strong>; contestarlo no sirve. La firma con criptografía de clave pública ayuda a acreditar al remitente.</li>
+          <li><strong>Otras amenazas</strong>:
+            <ul>
+              <li><strong>virus</strong>: se propagan con los adjuntos;</li>
+              <li><strong>phishing</strong>: correos fraudulentos que suplantan a una entidad para robar datos (bancarios, contraseñas);</li>
+              <li><strong>hoax</strong> (bulos): noticias falsas difundidas en masa;</li>
+              <li><strong>cadenas</strong>: reenvíos masivos que difunden listas de direcciones.</li>
+            </ul>
+          </li>
+          <li><strong>Recomendaciones</strong>:
+            <ul>
+              <li>comprobar la veracidad antes de reenviar;</li>
+              <li>al reenviar a muchos, poner las direcciones en <strong>CCO</strong> (y la propia en Para) y borrar los encabezados anteriores;</li>
+              <li>abrir adjuntos solo si se conoce su procedencia;</li>
+              <li><strong>no responder ni pulsar «darse de baja»</strong> en mensajes sospechosos (confirma que la cuenta existe); usar «Correo no deseado» o «Es spam».</li>
+            </ul>
+          </li>
+          <li><strong>Soluciones</strong>: <strong>filtros</strong> y reglas antispam, programas específicos y los módulos antispam de los antivirus. Ninguna es eficaz al 100 %.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="blk">
+      <summary><span class="bn">18</span><span class="bt"><h3>Atajos de teclado y novedades</h3><small>Manual 5 (tabla de atajos) y esquema</small></span>
+        <svg class="chev" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="bb">
+        <ul>
+          <li><strong>Módulos</strong>: <strong>Ctrl + 1</strong> Correo, <strong>Ctrl + 2</strong> Calendario, <strong>Ctrl + 3</strong> Contactos, <strong>Ctrl + 4</strong> Tareas, Ctrl + 5 Lista de tareas pendientes, Ctrl + 6 lista de carpetas.</li>
+          <li><strong>Mensajes</strong>:
+            <ul>
+              <li><strong>Ctrl + U</strong> nuevo mensaje (o cita en Calendario); <strong>Ctrl + Mayús + M</strong> nuevo mensaje desde cualquier vista;</li>
+              <li><strong>Ctrl + R</strong> responder; <strong>Ctrl + Mayús + R</strong> responder a todos; <strong>Ctrl + Alt + R</strong> responder con reunión; <strong>Ctrl + F</strong> reenviar;</li>
+              <li><strong>Ctrl + Intro</strong> enviar; <strong>Ctrl + P</strong> imprimir;</li>
+              <li><strong>Ctrl + Q</strong> marcar como leído; Ctrl + O como no leído (según el manual); <strong>Insertar</strong> marca rápida; <strong>Ctrl + Mayús + G</strong> marcar para seguimiento.</li>
+            </ul>
+          </li>
+          <li><strong>Navegación</strong>: <strong>F9</strong> enviar y recibir; <strong>F3</strong> buscar; <strong>Ctrl + Y</strong> ir a otra carpeta; <strong>Ctrl + Mayús + I</strong> Bandeja de entrada; <strong>Ctrl + Mayús + O</strong> Bandeja de salida; <strong>Ctrl + Mayús + B</strong> libreta de direcciones; <strong>Ctrl + Mayús + V</strong> mover a carpeta; Ctrl + . / Ctrl + , mensaje siguiente / anterior; Alt + Intro propiedades.</li>
+          <li><span class="upd">2026</span> <strong>Novedades</strong>: nuevo Outlook para Windows, Copilot (resumir conversaciones, redactar y responder), respuestas sugeridas, envío programado y <strong>deshacer envío</strong> en el nuevo Outlook.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="section-title">
+    <div><span class="kicker">No caigas</span><h2>Trampas típicas de examen</h2></div>
+  </div>
+  <div class="traps">
+    <div class="trap"><b>SMTP envía, POP3 e IMAP reciben</b>POP3 descarga al equipo; IMAP deja los mensajes en el servidor.</div>
+    <div class="trap"><b>CC y CCO</b>Los de CC se ven entre todos; los de CCO no los ve nadie y no reciben «Responder a todos».</div>
+    <div class="trap"><b>RE: y RV:</b>RE: al responder; RV: al reenviar. Solo el reenvío conserva los adjuntos.</div>
+    <div class="trap"><b>Bandeja de salida</b>Mensaje enviado pero que aún no ha salido; todavía se puede modificar.</div>
+    <div class="trap"><b>Supr y Mayús + Supr</b>Supr manda a Elementos eliminados; Mayús + Supr borra de forma permanente.</div>
+    <div class="trap"><b>Asunto</b>No es obligatorio; sí lo es una dirección correcta en Para, CC o CCO.</div>
+    <div class="trap"><b>Operadores de búsqueda</b>Y, O, NO en mayúsculas; en minúsculas son palabras normales.</div>
+    <div class="trap"><b>Búsqueda por prefijo</b>«ray» encuentra rayo, pero no Saray; con comillas, solo la palabra exacta.</div>
+    <div class="trap"><b>Firma y firma digital</b>La firma es texto al final; la firma digital acredita al remitente (Configuración de seguridad).</div>
+    <div class="trap"><b>Omitir y Limpiar</b>Omitir manda la conversación (y lo que llegue después) a Eliminados; Limpiar quita los mensajes redundantes.</div>
+    <div class="trap"><b>Darse de baja del spam</b>No hay que responder ni pulsar el enlace: confirma que la cuenta está activa.</div>
+    <div class="trap"><b>Ctrl + 2</b>En Outlook abre el Calendario (Ctrl + 1 Correo, Ctrl + 3 Contactos, Ctrl + 4 Tareas).</div>
+  </div>
+</section>
+
+
+<!-- =============================== ESQUEMAS =============================== -->
+<section id="v-esquemas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Rellena · comprueba · entiende</span><h2>Esquemas autocorregibles</h2></div>
+    <p>Completa los huecos o el orden y pulsa <strong>Comprobar</strong>: cada respuesta trae su explicación motivada.</p>
+  </div>
+  <div class="scroller" id="esq-list"></div>
+  <div class="card pad" id="esq-card"></div>
+</section>
+
+<!-- =============================== FICHAS =============================== -->
+<section id="v-fichas" class="view hidden">
+  <div class="section-title" style="margin-top:0">
+    <div><span class="kicker">Repetición activa</span><h2>Fichas de repaso</h2></div>
+    <p>Intenta responder antes de girar la ficha. Marca las que ya dominas.</p>
+  </div>
+  <div class="fichas-bar">
+    <div class="seg" id="f-filter">
+      <button class="on" data-f="all">Todas</button>
+      <button data-f="pend">Pendientes</button>
+      <button data-f="known">Sabidas</button>
+    </div>
+    <div class="row">
+      <span class="chip" id="f-count">0/40 sabidas</span>
+      <button class="btn btn-g btn-sm" id="f-shuffle">🔀 Barajar</button>
+      <button class="btn btn-g btn-sm" id="f-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+  <div class="fgrid" id="f-grid"></div>
+</section>
+
+<!-- =============================== TEST =============================== -->
+<section id="v-test" class="view hidden">
+  <div id="t-home">
+    <div class="section-title" style="margin-top:0">
+      <div><span class="kicker">Entrena como en el examen</span><h2>Baterías de test</h2></div>
+      <p>Nota calculada con la penalización habitual del C1: <strong>cada error resta 1/3 de acierto</strong> (revisa tu convocatoria).</p>
+    </div>
+    <div class="tgrid" id="t-grid"></div>
+  </div>
+  <div id="t-run" class="hidden">
+    <div class="card qbar">
+      <button class="icon-btn" id="t-back" aria-label="Volver" style="width:38px;height:38px">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="ttl" id="t-title">Test</div>
+      <label class="switch"><input type="checkbox" id="t-instant"> Corrección inmediata</label>
+      <span class="chip" id="t-count">0/20</span>
+      <div class="prog"><i id="t-prog"></i></div>
+    </div>
+    <div id="t-score"></div>
+    <div id="t-qs"></div>
+    <div class="qactions">
+      <button class="btn btn-p" id="t-check">✅ Corregir test</button>
+      <button class="btn btn-g hidden" id="t-retry">🔄 Repetir</button>
+      <button class="btn btn-g hidden" id="t-other">← Otros test</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  Fuente: tema 7 «Correo electrónico: Outlook 365» del manual aportado por el usuario y esquema «Outlook 365» de ADAMS Formación, reorganizados y completados con el funcionamiento de Outlook para Microsoft 365 en español; actualizada a noviembre de 2026 (nuevo Outlook y Outlook clásico, autenticación moderna, requisitos SPF, DKIM y DMARC y límites de adjuntos).<br>
+  Tu progreso se guarda en este navegador. Material de estudio: contrasta siempre con la normativa vigente y tu convocatoria.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+/* ===== Informática · Tema 7 · Outlook 365 · Herramientas ===== */
+const MBX=[
+ {de:"Miguel Tórrez",para:"yo",asunto:"Informe de estado del proyecto",cuerpo:"Adjunto el informe del proyecto de digitalización.",adj:"informe.pdf",leido:false,kb:340},
+ {de:"Rosa Martín",para:"yo",asunto:"Nómina de octubre",cuerpo:"Ya está disponible la nómina.",adj:"nomina.pdf",leido:true,kb:80},
+ {de:"Miguelito Sanz",para:"yo",asunto:"Reunión del lunes",cuerpo:"Confirmo asistencia; traeré el proyector nuevo.",adj:"",leido:true,kb:8},
+ {de:"Ana López",para:"yo",asunto:"Proyectos 2027",cuerpo:"Propuesta de proyectos para el próximo año.",adj:"presentacion.pptx",leido:false,kb:6200},
+ {de:"Rayo Servicios",para:"yo",asunto:"Factura",cuerpo:"Factura de mantenimiento del mes.",adj:"factura.pdf",leido:true,kb:120},
+ {de:"Saray Gómez",para:"yo",asunto:"Vacaciones",cuerpo:"Solicito vacaciones en diciembre.",adj:"",leido:false,kb:6},
+ {de:"Miguel Tórrez",para:"yo",asunto:"Cambio de horario",cuerpo:"Desde el lunes cambia el horario de atención.",adj:"",leido:true,kb:12},
+ {de:"Rosa Martín",para:"yo",asunto:"Proyecto de formación",cuerpo:"El informe final está en Teams.",adj:"",leido:false,kb:30},
+ {de:"Boletín Ofertas",para:"yo",asunto:"¡Gana un premio!",cuerpo:"Pulsa aquí para darte de baja.",adj:"",leido:true,kb:9},
+ {de:"Luis Pérez",para:"yo",asunto:"Fotos del congreso",cuerpo:"Te envío las fotos del congreso.",adj:"fotos.zip",leido:true,kb:700}
+];
+const RG=[
+ ["Quieres que los mensajes de la Intervención se muevan solos a la carpeta «Intervención» al llegar.","regla","Una regla (Inicio > Mover > Reglas o Archivo > Administrar reglas y alertas)."],
+ ["Te vas de vacaciones y quieres que quien te escriba reciba un aviso.","auto","Respuestas automáticas (Archivo > Información)."],
+ ["Una conversación de 40 mensajes no te afecta y no quieres ver los que lleguen después.","omit","Omitir: envía a Eliminados la conversación y los mensajes futuros."],
+ ["Quieres ver juntos todos los mensajes sin leer de cualquier carpeta, sin moverlos.","cbus","Carpeta de búsqueda (Carpeta > Nueva carpeta de búsqueda)."],
+ ["Con un clic quieres mover un mensaje a «Expedientes» y marcarlo como leído.","paso","Pasos rápidos (Inicio)."],
+ ["Quieres que tu nombre, puesto y teléfono aparezcan al final de cada correo.","firma","Firma (Mensaje > Firma u Opciones > Correo > Firmas)."],
+ ["Quieres saber si el destinatario ha abierto tu mensaje.","acuse","Opciones > Solicitar confirmación de lectura."],
+ ["Quieres que tu correo salga el lunes a las 9:00 aunque lo escribas hoy.","entr","Opciones de entrega: No entregar antes de (envío programado)."],
+ ["Un compañero debe poder enviar convocatorias de reunión en tu nombre.","deleg","Delegar acceso (Configuración de la cuenta)."],
+ ["Quieres asignar el color verde a todo lo relacionado con un proyecto.","cat","Categorías (grupo Etiquetas)."],
+ ["Quieres acreditar que eres tú quien envía el mensaje y que no se ha alterado.","fdig","Firma digital (Propiedades > Configuración de seguridad)."],
+ ["El buzón está casi lleno y quieres ver qué ocupa más espacio.","limp","Limpieza de buzón (Archivo > Herramientas)."]
+];
+const RGO={regla:"Regla",auto:"Respuestas automáticas",omit:"Omitir",cbus:"Carpeta de búsqueda",paso:"Pasos rápidos",firma:"Firma",acuse:"Confirmación de lectura",entr:"Opciones de entrega",deleg:"Delegar acceso",cat:"Categorías",fdig:"Firma digital",limp:"Limpieza de buzón"};
+const SC=[
+ ["Ir al Calendario.","c2","Ctrl + 2 (Ctrl + 1 Correo, Ctrl + 3 Contactos, Ctrl + 4 Tareas)."],
+ ["Responder a todos.","cmr","Ctrl + Mayús + R."],
+ ["Reenviar el mensaje.","cf","Ctrl + F."],
+ ["Responder solo al remitente.","cr","Ctrl + R."],
+ ["Enviar y recibir todas las carpetas.","f9","F9."],
+ ["Ir al cuadro de búsqueda.","f3","F3."],
+ ["Abrir la libreta de direcciones.","cmb","Ctrl + Mayús + B."],
+ ["Enviar el mensaje que estás escribiendo.","ci","Ctrl + Intro."],
+ ["Marcar como leído.","cq","Ctrl + Q."],
+ ["Crear un mensaje nuevo desde el Correo.","cu","Ctrl + U."],
+ ["Ir a la Bandeja de entrada.","cmi","Ctrl + Mayús + I."],
+ ["Eliminar un mensaje sin que pase por Elementos eliminados.","msu","Mayús + Supr."]
+];
+const SCO={c2:"Ctrl + 2",cmr:"Ctrl + Mayús + R",cf:"Ctrl + F",cr:"Ctrl + R",f9:"F9",f3:"F3",cmb:"Ctrl + Mayús + B",ci:"Ctrl + Intro",cq:"Ctrl + Q",cu:"Ctrl + U",cmi:"Ctrl + Mayús + I",msu:"Mayús + Supr"};
+const SG=[
+ ["Un correo con el logotipo de tu banco te pide que confirmes tu clave en un enlace «por seguridad».","phi","Phishing: suplanta a una entidad para robar datos. No pulses el enlace; denúncialo con Informe."],
+ ["Un mensaje asegura que una empresa regalará un móvil a quien lo reenvíe a 10 personas.","hoax","Bulo (hoax) que funciona como cadena: no lo reenvíes."],
+ ["Recibes de un desconocido «factura.pdf.exe».","vir","Posible virus en el adjunto: no lo abras."],
+ ["Te llegan cientos de anuncios de relojes y medicamentos de remitentes que cambian.","spam","Spam (correo basura): márcalo como no deseado."],
+ ["Un compañero te reenvía una petición de ayuda con 200 direcciones visibles en Para.","cad","Cadena: difunde direcciones; si hay que reenviar, usa CCO y borra encabezados."],
+ ["Una «alerta» dice que un virus borrará tu disco el viernes y que lo avises a todos.","hoax","Bulo (hoax): noticia falsa. Comprueba antes en fuentes fiables."],
+ ["Un mensaje de publicidad incluye un enlace «para darte de baja» y no conoces al remitente.","spam","Spam: no respondas ni pulses «darse de baja», confirmarías que la cuenta está activa."],
+ ["Recibes un correo de tu «director» pidiéndote con urgencia unas tarjetas regalo desde una dirección externa.","phi","Phishing (suplantación del directivo): verifica por otro canal y denúncialo."]
+];
+const SGO={spam:"Spam",phi:"Phishing",hoax:"Hoax (bulo)",vir:"Virus",cad:"Cadena"};
+const INS=[
+ {g:"Cinta",n:"Archivo",norm:"Backstage",def:"Cuenta y configuración.",f:{"Información":"Agregar cuenta, configuración de la cuenta (delegar acceso, perfiles), respuestas automáticas, herramientas de limpieza, reglas y alertas, complementos.","Abrir y exportar":"Calendarios .ics/.vcs, archivos .pst, importar y exportar, carpetas de otros usuarios.","Otras":"Guardar como, guardar adjuntos, imprimir, cuenta de Office, comentarios, opciones."}},
+ {g:"Cinta",n:"Inicio",norm:"Uso diario",def:"Tratamiento de los correos.",f:{"Nuevo / Eliminar":"Nuevo correo y elementos; omitir, limpiar, correo no deseado, eliminar, archivo.","Informe / Responder":"Denunciar phishing y spam; responder, responder a todos, reenviar.","Pasos rápidos / Mover":"Acciones de un clic; mover, reglas, enviar a OneNote.","Etiquetas / Buscar":"Categorías, leído/no leído, seguimiento; buscar personas, leer en voz alta."}},
+ {g:"Cinta",n:"Enviar y recibir, Carpeta y Vista",norm:"Organización",def:"Sincronización, carpetas y aspecto.",f:{"Enviar y recibir":"Enviar y recibir todas las carpetas (F9), descargar encabezados, trabajar sin conexión, grupos de envío y recepción.","Carpeta":"Nueva carpeta y carpeta de búsqueda, cambiar nombre, limpiar, recuperar eliminados, favoritos, permisos, Autoarchivar.","Vista":"Vista actual (Compacta, Única, Vista previa), conversaciones, Prioritarios, panel de lectura, barra de tareas pendientes, lector inmersivo."}},
+ {g:"Mensaje nuevo",n:"Pestañas del mensaje",norm:"Al redactar",def:"Mensaje, Insertar, Opciones, Formato de texto, Revisar.",f:{"Mensaje":"Libreta de direcciones, comprobar nombres, adjuntar archivo o elemento, firma, seguimiento, importancia alta y baja.","Opciones":"Mostrar campos (De, CCO), permisos, votación, confirmación de entrega y de lectura, retrasar entrega.","Formato de texto":"HTML, Texto sin formato, Texto enriquecido.","Propiedades":"Configuración de seguridad: firma digital y cifrado."}},
+ {g:"Opciones",n:"Archivo > Opciones",norm:"Configuración",def:"Categorías del cuadro.",f:{"General":"Interfaz y programa predeterminado.","Correo":"Editor, ortografía, firmas, fondos, alertas, respuestas y reenvíos, guardado y formato.","Calendario / Personas / Tareas":"Jornada laboral y avisos; cómo se muestran los contactos; seguimiento de tareas.","Búsqueda / Avanzado":"Indización y resultados; paneles, archivado, exportar, RSS, envío y recepción."}},
+ {g:"Protocolos",n:"Puertos y funciones",norm:"Configurar una cuenta",def:"Servidor de entrada y de salida.",f:{"SMTP (salida)":"25 entre servidores; 587 con STARTTLS; 465 con SSL.","POP3 (entrada)":"110 sin cifrar; 995 con SSL/TLS. Descarga los mensajes.","IMAP (entrada)":"143 sin cifrar; 993 con SSL/TLS. Los mensajes se quedan en el servidor.","Webmail":"HTTPS (443) desde el navegador."}},
+ {g:"Atajos",n:"Módulos y navegación",norm:"Manual",def:"Moverse por Outlook.",f:{"Ctrl + 1 … 6":"Correo, Calendario, Contactos, Tareas, Lista de tareas pendientes, lista de carpetas.","F9 / F3 / Ctrl + Y":"Enviar y recibir / buscar / ir a otra carpeta.","Ctrl + Mayús + I / O":"Bandeja de entrada / Bandeja de salida.","Ctrl + Mayús + B":"Libreta de direcciones."}},
+ {g:"Atajos",n:"Mensajes",norm:"Manual y esquema",def:"Crear, responder y marcar.",f:{"Ctrl + U / Ctrl + Mayús + M":"Nuevo mensaje (o cita en Calendario) / nuevo mensaje desde cualquier vista.","Ctrl + R / Ctrl + Mayús + R / Ctrl + F":"Responder / responder a todos / reenviar.","Ctrl + Intro / Ctrl + P":"Enviar / imprimir.","Ctrl + Q / Insertar / Ctrl + Mayús + G":"Marcar como leído / marca rápida / marcar para seguimiento."}}
+];
+
+(function(){
+  const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const $=id=>document.getElementById(id);
+  const ev=(ids,fn)=>ids.forEach(id=>{const x=$(id);if(x){x.addEventListener("input",fn);x.addEventListener("change",fn)}});
+  const V=(id,ok,big,txt)=>{const o=$(id);o.className="verdict "+(ok?"ok":"ko");o.innerHTML=`<b class="big">${big}</b>${txt}`};
+  const th=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,".");
+  const trainer=(pre,DATA,OPTS,label)=>{if(!$(pre+"-case"))return;let ord=DATA.map((_,i)=>i).sort(()=>Math.random()-.5),pos=0,ok=0,tot=0,done=false;
+    function show(){const c=DATA[ord[pos%ord.length]];done=false;$(pre+"-case").innerHTML=`<small>${label} ${pos%ord.length+1} de ${ord.length}</small>${e(c[0])}`;
+      $(pre+"-opts").innerHTML=Object.keys(OPTS).map(k=>`<button data-k="${k}">${e(OPTS[k])}</button>`).join("");$(pre+"-out").style.display="none"}
+    $(pre+"-opts").addEventListener("click",ev=>{const b=ev.target.closest("button[data-k]");if(!b||done)return;done=true;const c=DATA[ord[pos%ord.length]];tot++;const r=b.dataset.k===c[1];if(r)ok++;
+      $(pre+"-opts").querySelectorAll("button").forEach(x=>{if(x.dataset.k===c[1])x.classList.add("ok");else if(x===b)x.classList.add("ko")});
+      const o=$(pre+"-out");o.style.display="";o.className="verdict "+(r?"ok":"ko");o.innerHTML=`<b class="big">${r?"¡Correcto!":"No: "+e(OPTS[c[1]])}</b>${e(c[2])}`;$(pre+"-score").textContent=`${ok} de ${tot} aciertos`});
+    $(pre+"-next").addEventListener("click",()=>{pos++;show()});show()};
+  trainer("rg",RG,RGO,"Caso");
+  trainer("sc",SC,SCO,"Acción");
+  trainer("sg",SG,SGO,"Mensaje");
+  /* Direcciones */
+  const chk=a=>{const errs=[];a=a.trim();if(!a)return{ok:false,errs:["Está vacía."]};if(/\s/.test(a))errs.push("Contiene espacios.");const n=(a.match(/@/g)||[]).length;if(n!==1)errs.push(n?"Tiene más de una @.":"Le falta la @.");
+    const i=a.lastIndexOf("@"),loc=a.slice(0,i),dom=a.slice(i+1);
+    if(n>=1){if(!loc.length)errs.push("La parte local (antes de @) está vacía.");if(loc.length>64)errs.push(`La parte local tiene ${loc.length} caracteres (máximo 64).`);if(/^\.|\.$/.test(loc))errs.push("La parte local no puede empezar ni terminar en punto.");if(/\.\./.test(loc))errs.push("La parte local no puede tener dos puntos seguidos.");
+      if(dom.length>255)errs.push("El dominio supera 255 caracteres.");if(!/\./.test(dom))errs.push("El dominio no tiene extensión (.es, .com…).");else{const labs=dom.split(".");if(labs.some(l=>!/^[a-z0-9áéíóúñü]([a-z0-9áéíóúñü-]*[a-z0-9áéíóúñü])?$/i.test(l)))errs.push("El dominio tiene partes vacías o caracteres no válidos.");if(!/^[a-z]{2,}$/i.test(labs[labs.length-1]))errs.push("La extensión debe tener al menos 2 letras.")}}
+    if(a.length>254)errs.push(`La dirección tiene ${a.length} caracteres (máximo real 254).`);return{ok:!errs.length,errs,loc,dom}};
+  (function(){if(!$("ad-x"))return;$("ad-p").addEventListener("change",()=>{$("ad-x").value=$("ad-p").value;run()});
+    function run(){const a=$("ad-x").value.trim(),r=chk(a);const dom=r.dom||"",labs=dom.split("."),ext=labs.length>1?labs[labs.length-1]:"—";
+      $("ad-k").innerHTML=`<div><b>Nombre de usuario</b><span>${e(r.loc||"—")} (${(r.loc||"").length} car.)</span></div><div><b>Símbolo</b><span>@</span></div><div><b>Dominio</b><span>${e(dom||"—")} (${dom.length} car.)</span></div><div><b>Extensión</b><span>.${e(ext)}${{es:" (España)",com:" (comercial)",org:" (organización)",gob:"",eu:" (Unión Europea)",net:" (redes)"}[ext.toLowerCase()]||""}</span></div><div><b>Longitud total</b><span>${a.length} de 254</span></div>`;
+      V("ad-v",r.ok,r.ok?"Dirección válida":"Dirección no válida",r.ok?(labs.length>2?`El dominio tiene subdominios (${e(labs.slice(0,-2).join("."))}). El servidor de destino se averigua con los registros MX del DNS de ${e(labs.slice(-2).join("."))}.`:"El servidor de destino se averigua con los registros MX del DNS del dominio."):e(r.errs.join(" ")))}
+    ev(["ad-x"],run);run()})();
+  /* Protocolos */
+  (function(){if(!$("pr-p"))return;
+    function run(){const p=$("pr-p").value,tls=$("pr-s").value==="tls",d=+$("pr-d").value;
+      const D={smtp:{f:"Envío (correo saliente): del programa al servidor y entre servidores.",port:tls?"587 (STARTTLS) o 465 (SSL)":"25 (entre servidores)",where:"Viaja al servidor del destinatario; queda copia en tus Elementos enviados.",steps:["Tu programa entrega el mensaje a tu servidor SMTP.","El servidor consulta el DNS (registro MX) del dominio del destinatario.","El mensaje salta de servidor SMTP en servidor SMTP; si uno está caído, se guarda y se reintenta.","Llega al buzón del destinatario, que lo recogerá con POP3 o IMAP."]},
+        pop:{f:"Recepción (correo entrante): descarga los mensajes al equipo.",port:tls?"995 (SSL/TLS)":"110",where:"En tu ordenador; por defecto se borran del servidor (salvo «dejar copia en el servidor»).",steps:["Tu programa se conecta al servidor POP3 con usuario y contraseña (u OAuth).","Descarga los mensajes nuevos a tu equipo.","Los mensajes se leen sin conexión y se libera espacio en el servidor."]},
+        imap:{f:"Recepción (correo entrante): trabaja sobre el buzón del servidor.",port:tls?"993 (SSL/TLS)":"143",where:"En el servidor; cada dispositivo ve lo mismo (carpetas, leídos, borrados).",steps:["Tu programa se conecta al servidor IMAP.","Muestra los mensajes y carpetas que están en el servidor (guarda una copia local para trabajar sin conexión).","Lo que haces en un dispositivo (leer, mover, borrar) se refleja en todos."]},
+        web:{f:"Acceso desde un navegador a la página del proveedor.",port:tls?"443 (HTTPS)":"80 (HTTP, inseguro)",where:"En el servidor; no se instala ni se configura nada.",steps:["Abres el navegador y la web del proveedor (por ejemplo, Outlook en la web).","Inicias sesión con tu dirección y contraseña.","Lees y gestionas el correo directamente en el servidor."]}}[p];
+      $("pr-k").innerHTML=`<div><b>Función</b><span>${e(D.f)}</span></div><div><b>Puerto</b><span style="font-weight:800">${e(D.port)}</span></div><div style="grid-column:1/-1"><b>Dónde quedan los mensajes</b><span>${e(D.where)}</span></div>`;
+      $("pr-out").innerHTML=D.steps.map((s,i)=>`<div class="l2"><b>${i+1}</b>. ${e(s)}</div>`).join("");
+      let ok=true,big="",txt="";
+      if(!tls){ok=false;big="Conexión sin cifrar";txt=p==="smtp"?"El puerto 25 se usa entre servidores; para que un programa envíe correo se usa 587 o 465 con cifrado y autenticación.":"La contraseña y los mensajes viajarían en claro. Hoy los proveedores exigen SSL/TLS y, cada vez más, OAuth."}
+      else if(p==="pop"&&d>1){ok=false;big="POP3 no es lo ideal con varios dispositivos";txt="Cada dispositivo descargaría (y borraría) mensajes distintos. El manual lo recomienda para conectarse siempre desde el mismo ordenador: aquí conviene IMAP."}
+      else if(p==="imap"&&d>1){big="IMAP: la mejor opción con varios dispositivos";txt="Todos ven el mismo buzón. También es útil en ordenadores compartidos, porque los mensajes no se quedan en el PC."}
+      else if(p==="pop"){big="POP3 encaja con un solo ordenador";txt="Puedes leer sin conexión y liberas espacio en el servidor. Haz copias de seguridad: los mensajes solo están en tu equipo."}
+      else if(p==="smtp"){big="SMTP solo envía";txt="Para recibir hace falta POP3 o IMAP. Al configurar una cuenta se indican el servidor de entrada (POP3/IMAP) y el de salida (SMTP)."}
+      else{big=p==="web"?"Web Mail":"IMAP";txt=p==="web"?"Basta con usuario y contraseña desde cualquier ordenador. El navegador usa HTTPS; los mensajes quedan en el servidor.":"Los mensajes se quedan en el servidor; útil si cambias de equipo."}
+      V("pr-v",ok,big,txt)}
+    ev(["pr-p","pr-s","pr-d"],run);run()})();
+  /* Para, CC, CCO */
+  (function(){if(!$("cc-to"))return;const ME="yo@age.es";
+    const L=id=>$(id).value.split(/[;,]/).map(s=>s.trim()).filter(Boolean);
+    function run(){const to=L("cc-to"),cc=L("cc-cc"),bcc=L("cc-bcc"),all=[...to.map(a=>[a,"Para"]),...cc.map(a=>[a,"CC"]),...bcc.map(a=>[a,"CCO"])];
+      const bad=all.filter(x=>!chk(x[0]).ok);const good=all.filter(x=>chk(x[0]).ok);
+      const vis=`Para: ${to.join("; ")||"—"} · CC: ${cc.join("; ")||"—"}`;
+      const rows=all.map(([a,f])=>{const ra=[ME,...to,...cc].filter(x=>x!==a);return `<div class="l2"><b>${e(a)}</b> (${f})${chk(a).ok?"":" ⚠️ dirección no válida"}<br>Ve → De: ${ME} · ${e(vis)}${f==="CCO"?" · no aparece en ninguna línea":""}<br>Su «Responder a todos» llega a → ${e(ra.join("; "))}</div>`});
+      $("cc-out").innerHTML=(rows.join("")||"<div>Escribe alguna dirección.</div>")+(bcc.length?`<div>Nadie ve las direcciones de CCO (${e(bcc.join("; "))}). Si alguien de CCO pulsa «Responder a todos», su respuesta llega a los de Para y CC, que descubren que recibió copia.</div>`:"");
+      if(!good.length)V("cc-v",false,"No se puede enviar","Hace falta al menos una dirección correcta en Para, CC o CCO.");
+      else V("cc-v",!bad.length,bad.length?`Se enviará a ${good.length}; ${bad.length} dirección${bad.length>1?"es":""} no válida${bad.length>1?"s":""}`:`Se enviará a ${good.length} destinatario${good.length>1?"s":""}`,(bad.length?"Outlook avisará de las direcciones incorrectas («Comprobar nombres»). ":"")+"CC: los destinatarios principales saben quién recibe copia. CCO: copia oculta, útil al escribir a muchas personas que no se conocen.")}
+    ev(["cc-to","cc-cc","cc-bcc"],run);run()})();
+  /* Carpetas */
+  (function(){if(!$("fl-btns"))return;let st="none",prev="",online=true,log=[];
+    const A=[["new","Nuevo mensaje (Ctrl + U)"],["save","Guardar"],["send","Enviar (Ctrl + Intro)"],["off","Trabajar sin conexión"],["f9","Enviar y recibir (F9)"],["del","Supr"],["rest","Mover de nuevo a su carpeta"],["sdel","Mayús + Supr"],["empty","Vaciar Elementos eliminados"]];
+    $("fl-btns").innerHTML=A.map(a=>`<button data-a="${a[0]}">${e(a[1])}</button>`).join("");
+    const NAME={none:"(ningún mensaje)",draft:"Ventana de redacción (sin guardar)",bor:"Borradores",sal:"Bandeja de salida",env:"Elementos enviados",eli:"Elementos eliminados",gone:"Eliminado de forma permanente"};
+    function show(msg,ok=true){$("fl-state").innerHTML=`<div><b>El mensaje está en</b><span style="font-weight:800">${e(NAME[st])}</span></div><div><b>Conexión</b><span>${online?"En línea":"Sin conexión"}</span></div>`;
+      $("fl-log").innerHTML=log.slice(-8).map((l,i)=>`<div class="l2">${e(l)}</div>`).join("")||"<div>Empieza con «Nuevo mensaje».</div>";V("fl-v",ok,ok?"Hecho":"No se puede",e(msg))}
+    $("fl-btns").addEventListener("click",ev=>{const b=ev.target.closest("button[data-a]");if(!b)return;const a=b.dataset.a;let msg="",ok=true;
+      if(a==="new"){st="draft";log=["Nuevo mensaje abierto."];msg="Escribe destinatarios, asunto y cuerpo. Outlook guarda un borrador automáticamente cada pocos minutos."}
+      else if(a==="save"){if(st==="draft"||st==="bor"){st="bor";log.push("Guardado → Borradores.");msg="Los mensajes guardados y no enviados esperan en Borradores."}else{ok=false;msg="Solo se guarda un mensaje que estás redactando."}}
+      else if(a==="send"){if(st==="draft"||st==="bor"){if(online){st="env";log.push("Enviar → Bandeja de salida → (sale) → Elementos enviados.");msg="Pasa por la Bandeja de salida y, al salir del equipo, queda en Elementos enviados."}else{st="sal";log.push("Enviar sin conexión → se queda en la Bandeja de salida.");msg="Sin conexión el mensaje espera en la Bandeja de salida; todavía puedes abrirlo y modificarlo."}}else{ok=false;msg="No hay ningún mensaje abierto para enviar."}}
+      else if(a==="off"){online=!online;log.push(online?"Vuelves a estar en línea.":"Trabajar sin conexión activado.");msg=online?"Conectado: pulsa F9 para enviar lo pendiente.":"Pestaña Enviar y recibir > Trabajar sin conexión."}
+      else if(a==="f9"){if(st==="sal"&&online){st="env";log.push("F9 → sale de la Bandeja de salida → Elementos enviados.");msg="Enviar y recibir todas las carpetas: el mensaje pendiente sale."}else if(st==="sal"){ok=false;msg="Sigues sin conexión: el mensaje continúa en la Bandeja de salida."}else{log.push("F9 → se comprueban los mensajes nuevos.");msg="Enviar y recibir actualiza todas las carpetas."}}
+      else if(a==="del"){if(["bor","sal","env"].includes(st)){prev=st;st="eli";log.push("Supr → Elementos eliminados.");msg="Con Supr va a Elementos eliminados; todavía se puede recuperar."}else if(st==="eli"){st="gone";log.push("Supr dentro de Elementos eliminados → borrado definitivo (Outlook pide confirmación).");msg="Borrar desde Elementos eliminados lo elimina de forma permanente."}else{ok=false;msg="No hay un mensaje guardado que eliminar."}}
+      else if(a==="rest"){if(st==="eli"){st=prev||"env";log.push(`Movido de nuevo a ${NAME[st]}.`);msg="Mientras está en Elementos eliminados se puede arrastrar a cualquier carpeta."}else{ok=false;msg="Solo se restaura desde Elementos eliminados."}}
+      else if(a==="sdel"){if(["bor","sal","env","eli"].includes(st)){st="gone";log.push("Mayús + Supr → eliminado de forma permanente (con confirmación).");msg="Mayús + Supr no pasa por Elementos eliminados. En cuentas Exchange, Carpeta > Recuperar elementos eliminados lo puede rescatar durante un tiempo."}else{ok=false;msg="No hay un mensaje guardado que eliminar."}}
+      else if(a==="empty"){if(st==="eli"){st="gone";log.push("Vaciar Elementos eliminados → borrado definitivo.");msg="Archivo > Herramientas > Vaciar carpeta Elementos eliminados."}else{log.push("Elementos eliminados vaciada.");msg="El mensaje no estaba en Elementos eliminados: no le afecta."}}
+      show(msg,ok)});
+    show("Pulsa «Nuevo mensaje» para empezar.")})();
+  /* Búsqueda */
+  (function(){if(!$("bq-x"))return;
+    const N=s=>String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+    const words=s=>N(s).split(/[^a-z0-9ñ]+/).filter(Boolean);
+    const pre=(txt,t)=>{const ts=words(t);if(!ts.length)return true;const ws=words(txt);if(ts.length===1)return ws.some(w=>w.startsWith(ts[0]));for(let i=0;i+ts.length<=ws.length;i++)if(ts.every((x,j)=>j===ts.length-1?ws[i+j].startsWith(x):ws[i+j]===x))return true;return false};
+    const exact=(txt,t)=>{const ts=words(t),ws=words(txt);for(let i=0;i+ts.length<=ws.length;i++)if(ts.every((x,j)=>ws[i+j]===x))return true;return false};
+    const ALL=m=>[m.de,m.asunto,m.cuerpo,m.adj].join(" ");
+    const SZ={"muy pequeño":[0,10],"pequeño":[10,25],"medio":[25,100],"grande":[100,500],"muy grande":[500,1024],"enorme":[5120,1e9]};
+    $("bq-p").addEventListener("change",()=>{$("bq-x").value=$("bq-p").value;run()});
+    function parse(q){const F=[];const used=[];let s=q;if((q.match(/"/g)||[]).length%2)throw"Falta cerrar las comillas";
+      s=s.replace(/tiene datos adjuntos:\s*(sí|si|no|true|false)/gi,(m,v)=>{const y=/^(sí|si|true)$/i.test(v);F.push(x=>!!x.adj===y);used.push("tiene datos adjuntos");return ` §${F.length-1} `});
+      s=s.replace(/lectura:\s*(sí|si|no|true|false)/gi,(m,v)=>{const y=/^(sí|si|true)$/i.test(v);F.push(x=>x.leido===y);used.push("lectura");return ` §${F.length-1} `});
+      s=s.replace(/tamaño del mensaje:\s*(muy pequeño|muy grande|pequeño|medio|grande|enorme)/gi,(m,v)=>{const r=SZ[v.toLowerCase()];F.push(x=>x.kb>=r[0]&&x.kb<r[1]);used.push("tamaño");return ` §${F.length-1} `});
+      s=s.replace(/(?<![\p{L}\d])(de|para|asunto|cc|cco):\s*("([^"]*)"|(\S+))/giu,(m,k,v,qv,w)=>{const key=k.toLowerCase();const fld={de:"de",para:"para",asunto:"asunto",cc:"cc",cco:"cco"}[key];const val=qv!==undefined?qv:w;const isq=qv!==undefined;F.push(x=>{const t=x[fld]||"";return isq?exact(t,val):pre(t,val)});used.push(key+":");return ` §${F.length-1} `});
+      const toks=[];const re=/\s*(\(|\)|"[^"]*"|§\d+|[^\s()"]+)/gy;let mm;while((mm=re.exec(s))!==null){if(!mm[1])break;toks.push(mm[1])}
+      let p=0;const pk=()=>toks[p];
+      function prim(){const t=toks[p++];if(t===undefined)throw"Búsqueda incompleta";if(t==="("){const r=orE();if(toks[p++]!==")")throw"Falta cerrar el paréntesis";return r}
+        if(t[0]==="§"){const f=F[+t.slice(1)];return f}
+        if(t[0]==='"'){const v=t.slice(1,-1);used.push("comillas");return x=>exact(ALL(x),v)}
+        return x=>pre(ALL(x),t)}
+      function un(){if(pk()==="NO"){p++;used.push("NO");const a=un();return x=>!a(x)}return prim()}
+      function andE(){let l=un();while(p<toks.length&&pk()!=="O"&&pk()!==")"){if(pk()==="Y"){p++;used.push("Y")}const r=un(),L=l;l=x=>L(x)&&r(x)}return l}
+      function orE(){let l=andE();while(pk()==="O"){p++;used.push("O");const r=andE(),L=l;l=x=>L(x)||r(x)}return l}
+      if(!toks.length)return{f:()=>true,used,toks};const f=orE();if(p<toks.length)throw"Sobra algo al final";return{f,used,toks}}
+    function run(){const q=$("bq-x").value;try{const {f,used,toks}=parse(q);const hits=MBX.map(f);
+      $("bq-out").innerHTML=MBX.map((m,i)=>`<div class="l2">${hits[i]?"✅":"▫️"} <b>${e(m.de)}</b> · ${e(m.asunto)}${m.adj?" · 📎 "+e(m.adj):""} · ${th(m.kb)} KB${m.leido?"":" · sin leer"}</div>`).join("");
+      const n=hits.filter(Boolean).length;let tip=[];
+      if(toks.some(t=>["y","o","no"].includes(t)))tip.push("Los operadores en minúsculas se tratan como palabras normales: escríbelos en MAYÚSCULAS.");
+      if(used.includes("comillas"))tip.push("Con comillas solo cuenta la palabra o frase exacta.");else if(!used.length)tip.push("Concordancia de prefijos: encuentra las palabras que empiezan por lo escrito, sin distinguir mayúsculas.");
+      if(used.includes("NO"))tip.push("NO excluye los elementos que contienen el término siguiente.");if(used.includes("O"))tip.push("O devuelve los que contienen cualquiera de los términos.");if(used.includes("Y"))tip.push("Y exige los dos términos.");
+      if(used.includes("tamaño"))tip.push("Tamaños: muy pequeño < 10 KB, pequeño 10-25 KB, medio 25-100 KB, grande 100-500 KB, muy grande 500 KB-1 MB, enorme > 5 MB.");
+      if(used.some(u=>/:$/.test(u)))tip.push("Las palabras clave (de:, asunto:…) limitan la búsqueda a un campo.");
+      V("bq-v",true,`${n} resultado${n===1?"":"s"} de ${MBX.length}`,e(tip.join(" ")||"Busca en remitente, asunto, cuerpo y nombre de los adjuntos."))}
+      catch(err){$("bq-out").innerHTML="";V("bq-v",false,"Búsqueda no válida",e(err))}}
+    ev(["bq-x"],run);run()})();
+  /* Mapa */
+  (function(){const p=$("in-pills"),c=$("in-card");if(!p)return;let h="",last="";INS.forEach((s,i)=>{if(s.g!==last){h+=`<div class="sit-group">${e(s.g)}</div>`;last=s.g}h+=`<button class="sit-pill${i?"":" on"}" data-i="${i}">${e(s.n)}</button>`});p.innerHTML=h;
+    const show=i=>{const s=INS[i];c.innerHTML=`<span class="kicker">${e(s.g)}</span><h3>${e(s.n)}</h3><div class="norm">${e(s.norm)}</div><div class="def">${e(s.def)}</div><div class="sit-facets">${Object.entries(s.f).map(([k,v])=>`<div class="facet"><b>${e(k)}</b>${e(v)}</div>`).join("")}</div>`;c.style.animation="none";c.offsetHeight;c.style.animation=""};
+    p.addEventListener("click",ev=>{const b=ev.target.closest(".sit-pill");if(!b)return;p.querySelectorAll(".sit-pill").forEach(x=>x.classList.toggle("on",x===b));show(+b.dataset.i);if(innerWidth<720)c.scrollIntoView({behavior:"smooth",block:"start"})});show(0)})();
+})();
+const DATA={fichas:[
+ {p:"Correo electrónico.",r:"Servicio de Internet para enviar y recibir mensajes privados a través de redes de ordenadores."},
+ {p:"Ventajas del correo electrónico.",r:"Rapidez, coste, adaptación (adjuntos), fiabilidad y comodidad."},
+ {p:"Inconvenientes del correo electrónico.",r:"Inseguridad (interceptación), errores (destinatario equivocado) y publicidad (spam, virus)."},
+ {p:"Fiabilidad del correo.",r:"Si un mensaje no llega, se devuelve al remitente con un aviso del error."},
+ {p:"Característica que distingue al correo de otros servicios.",r:"Emisor y receptor no tienen que estar conectados al mismo tiempo."},
+ {p:"Qué pasa si el servidor del destinatario está caído.",r:"El mensaje espera y se entrega cuando vuelve a funcionar en un plazo razonable."},
+ {p:"Dirección de correo electrónico.",r:"Identifica al usuario de forma única e inequívoca; es obligatoria para enviar."},
+ {p:"Partes de una dirección.",r:"Nombre de usuario, @, dominio y extensión: usuario@gmail.com."},
+ {p:"Función de la @.",r:"Separa el nombre de usuario del dominio."},
+ {p:"Dominio de una dirección.",r:"El servidor que gestiona la dirección, como gmail.com."},
+ {p:"Extensión.",r:"Parte final que indica el tipo de organización o el país: .com, .es."},
+ {p:"Longitud de la parte local.",r:"De 1 a 64 caracteres."},
+ {p:"Longitud del dominio.",r:"Hasta 255 caracteres."},
+ {p:"Longitud máxima de una dirección.",r:"El manual dice 320; el límite real de SMTP es 254."},
+ {p:"Protocolo.",r:"Conjunto de reglas para intercambiar información correctamente por Internet."},
+ {p:"SMTP.",r:"Simple Mail Transfer Protocol: envío del correo (saliente)."},
+ {p:"POP3.",r:"Post Office Protocol: recepción; descarga los mensajes al equipo."},
+ {p:"IMAP.",r:"Internet Message Access Protocol: recepción; los mensajes se quedan en el servidor."},
+ {p:"Recorrido de un mensaje.",r:"Cliente → servidor SMTP → otros servidores SMTP → buzón del destinatario → POP3 o IMAP."},
+ {p:"Puertos de SMTP.",r:"25 entre servidores; 587 con STARTTLS y 465 con SSL para enviar desde un programa."},
+ {p:"Puertos de POP3.",r:"110 sin cifrar y 995 con SSL/TLS."},
+ {p:"Puertos de IMAP.",r:"143 sin cifrar y 993 con SSL/TLS."},
+ {p:"MIME.",r:"Multipurpose Internet Mail Extensions: estándar para adjuntar cualquier tipo de archivo."},
+ {p:"SPF, DKIM y DMARC.",r:"Autenticación del remitente: servidores autorizados, firma del mensaje y política si fallan."},
+ {p:"OAuth.",r:"Autenticación moderna que sustituye a usuario y contraseña en POP, IMAP y SMTP."},
+ {p:"Formas de acceder al correo.",r:"Web Mail (navegador) y programas cliente."},
+ {p:"Web Mail.",r:"Acceso con el navegador a la web del proveedor; solo hace falta usuario y contraseña."},
+ {p:"Ejemplos de Web Mail.",r:"Gmail, Yahoo! Mail, Outlook.com u Outlook en la web."},
+ {p:"Ventajas de un programa cliente.",r:"Varias cuentas, mejor organización, copias de seguridad y lectura sin conexión."},
+ {p:"Ejemplos de programas cliente.",r:"Outlook, Thunderbird, Mailbird, Lotus/HCL Notes y el antiguo Eudora."},
+ {p:"Outlook 365.",r:"Correo y organización personal de Microsoft 365, integrado con OneDrive, Teams, SharePoint, OneNote y Planner."},
+ {p:"Primer paso al usar Outlook.",r:"Configurar la cuenta de correo."},
+ {p:"Nuevo Outlook y Outlook clásico.",r:"Conviven en Windows; el clásico tiene soporte al menos hasta 2029."},
+ {p:"Archivo > Información.",r:"Agregar cuenta, configuración de cuentas, tamaño del buzón, reglas y alertas."},
+ {p:"Archivo > Abrir y exportar.",r:"Abrir calendarios (.ics, .vcs) y archivos .pst, importar y exportar, abrir carpetas de otros."},
+ {p:"Archivo PST.",r:"Personal Storage Table: archivo de datos con correos, contactos y calendarios; para copias y archivado."},
+ {p:"Archivo OST.",r:"Copia local sin conexión de un buzón de Exchange o IMAP."},
+ {p:"Delegar acceso.",r:"Permite que otra persona envíe en tu nombre y gestione tus convocatorias."},
+ {p:"Respuestas automáticas.",r:"Aviso de «fuera de la oficina» o de vacaciones."},
+ {p:"Limpieza de buzón.",r:"Herramienta para controlar el tamaño del buzón eliminando o moviendo elementos."},
+ {p:"Limpiar elementos antiguos.",r:"Mueve elementos antiguos a un archivo de datos de Outlook."},
+ {p:"Perfiles de Outlook.",r:"Configuraciones distintas con su propia información; se cambian y administran en Configuración de la cuenta."},
+ {p:"Omitir conversación.",r:"Envía la conversación y los mensajes futuros a Elementos eliminados."},
+ {p:"Limpiar conversación.",r:"Elimina los mensajes redundantes de una conversación."},
+ {p:"Grupo Informe.",r:"Denunciar suplantación de identidad (phishing) y correo no deseado."},
+ {p:"Pasos rápidos.",r:"Varias acciones con un solo clic."},
+ {p:"Enviar a OneNote.",r:"Coloca el correo en un bloc de notas de OneNote."},
+ {p:"Categorías.",r:"Etiquetas de color para organizar correos y otros elementos."},
+ {p:"Pestaña Enviar y recibir.",r:"Actualizar carpetas, descargar encabezados, trabajar sin conexión y grupos de envío y recepción."},
+ {p:"Carpeta de búsqueda.",r:"Muestra automáticamente los mensajes que cumplen unos criterios, sin moverlos."},
+ {p:"Recuperar elementos eliminados.",r:"Opción del grupo Limpiar de la pestaña Carpeta."},
+ {p:"Autoarchivar.",r:"Mueve automáticamente elementos antiguos a archivos PST (Propiedades de la carpeta)."},
+ {p:"Directiva de retención.",r:"Cuánto tiempo se conservan los elementos de una carpeta."},
+ {p:"Tipos de Vista actual.",r:"Compacta, Única y Vista previa."},
+ {p:"Mostrar como conversaciones.",r:"Agrupa los mensajes con el mismo asunto en una conversación."},
+ {p:"Bandeja de entrada Prioritarios.",r:"Separa los mensajes importantes (Prioritarios) del resto (Otros)."},
+ {p:"Panel de lectura.",r:"Muestra el mensaje a la derecha o abajo, o se desactiva."},
+ {p:"Barra de tareas pendientes.",r:"Muestra calendario, tareas y personas, a la derecha de la ventana."},
+ {p:"Lector inmersivo.",r:"Ajusta tamaño de texto y espaciado y lee en voz alta."},
+ {p:"Bandeja de entrada.",r:"Los mensajes que llegan del servidor."},
+ {p:"Bandeja de salida.",r:"Mensajes enviados que todavía no han salido del equipo."},
+ {p:"Elementos enviados.",r:"Mensajes que ya han salido."},
+ {p:"Elementos eliminados.",r:"Lo borrado con Supr; se puede recuperar."},
+ {p:"Borradores.",r:"Mensajes guardados o sin terminar, pendientes de enviar."},
+ {p:"Correo no deseado.",r:"Remitentes o dominios bloqueados y lo que el filtro detecta como publicidad."},
+ {p:"Mayús + Supr.",r:"Elimina de forma permanente, sin pasar por Elementos eliminados."},
+ {p:"Seleccionar mensajes sueltos.",r:"Ctrl + clic en cada uno."},
+ {p:"Seleccionar un bloque de mensajes.",r:"Clic en el primero y Mayús + clic en el último."},
+ {p:"Partes de un mensaje.",r:"Cabecera, cuerpo y adjuntos."},
+ {p:"Campo De.",r:"El remitente; aparece si hay varias cuentas y se muestra en Opciones > Mostrar campos."},
+ {p:"Campo Para.",r:"Destinatarios principales; varias direcciones separadas por ; o ,."},
+ {p:"Campo CC.",r:"Con copia: todos los destinatarios ven a quién se envió copia."},
+ {p:"Campo CCO.",r:"Con copia oculta: nadie ve a los destinatarios de CCO."},
+ {p:"Cómo se activa el campo CCO.",r:"Pestaña Opciones > Mostrar campos > CCO."},
+ {p:"Requisito mínimo para enviar.",r:"Una dirección correcta en Para, CC o CCO."},
+ {p:"¿Es obligatorio el asunto?",r:"No; Outlook avisa si está vacío."},
+ {p:"¿Se pueden adjuntar carpetas?",r:"No; hay que comprimirlas o compartir un enlace."},
+ {p:"Recorrido al pulsar Enviar.",r:"Bandeja de salida y, al salir, Elementos enviados."},
+ {p:"Pestañas de un mensaje nuevo.",r:"Mensaje, Insertar, Opciones, Formato de texto y Revisar."},
+ {p:"Libreta de direcciones.",r:"Guarda direcciones, teléfonos, identificadores digitales, cumpleaños… Ctrl + Mayús + B."},
+ {p:"Grupos de contactos.",r:"Permiten escribir a varios contactos a la vez (antes, listas de distribución)."},
+ {p:"Comprobar nombres.",r:"Completa una dirección a partir de parte del nombre."},
+ {p:"Adjuntar elemento.",r:"Adjunta una tarjeta de presentación o un mensaje de Outlook."},
+ {p:"Firma (en un correo).",r:"Texto que se añade automáticamente al final; no es una firma digital."},
+ {p:"Firma digital.",r:"Acredita al remitente y la integridad; Propiedades > Configuración de seguridad."},
+ {p:"Seguimiento.",r:"Marca para recordar que hay que volver al mensaje."},
+ {p:"Niveles de importancia.",r:"Normal (por defecto), alta y baja."},
+ {p:"Icono de importancia alta.",r:"Signo de exclamación rojo."},
+ {p:"Icono de importancia baja.",r:"Flecha azul hacia abajo."},
+ {p:"Confirmación de entrega y de lectura.",r:"Opciones de votación y seguimiento: avisan cuando el mensaje se entrega o se lee."},
+ {p:"Opciones de entrega.",r:"Fecha a partir de la cual se entrega (envío programado) y caducidad."},
+ {p:"Botones de voto.",r:"Permiten que los destinatarios respondan eligiendo una opción (Sí/No…)."},
+ {p:"Compresores citados en el manual.",r:"WinZip y WinRAR."},
+ {p:"Límite de adjuntos en cuentas de Internet.",r:"20 MB por defecto en Outlook."},
+ {p:"Límite en Exchange Online.",r:"Hasta 150 MB por mensaje en Outlook (112 MB en Outlook en la web)."},
+ {p:"Extensión de un mensaje guardado por Outlook.",r:".msg (.eml es el formato estándar MIME)."},
+ {p:"Formatos del cuerpo del mensaje.",r:"HTML, Texto enriquecido y Texto sin formato."},
+ {p:"Formato predeterminado del mensaje.",r:"HTML."},
+ {p:"Mensajes no leídos.",r:"Aparecen en negrita; la Bandeja de entrada muestra cuántos hay."},
+ {p:"Comprobar si hay mensajes nuevos.",r:"Enviar y recibir todas las carpetas (F9)."},
+ {p:"Icono del clip.",r:"El mensaje tiene archivos adjuntos."},
+ {p:"Prefijo RE:",r:"El mensaje es una respuesta."},
+ {p:"Prefijo RV:",r:"El mensaje es un reenvío."},
+ {p:"Responder.",r:"Solo al remitente (Ctrl + R); no incluye los adjuntos."},
+ {p:"Responder a todos.",r:"Al remitente y a todos los de Para y CC (Ctrl + Mayús + R); nunca a los de CCO."},
+ {p:"Reenviar.",r:"A otras personas (Ctrl + F); incluye los adjuntos."},
+ {p:"Categorías de Archivo > Opciones.",r:"General, Correo, Calendario, Personas, Tareas, Búsqueda, Idioma, Avanzado…"},
+ {p:"Dónde se definen las firmas.",r:"Archivo > Opciones > Correo > Firmas (o Mensaje > Firma)."},
+ {p:"Opciones de Calendario.",r:"Jornada laboral, avisos y previsualización."},
+ {p:"Módulos de la barra izquierda.",r:"Correo, Calendario, Personas, Tareas/To Do y otras aplicaciones de Microsoft 365."},
+ {p:"Concordancia de prefijos.",r:"«ray» encuentra ray, rayo y rayas, pero no Saray ni pararrayos."},
+ {p:"Mayúsculas en la búsqueda.",r:"No las distingue."},
+ {p:"Operadores de búsqueda.",r:"Y, O, NO, siempre en mayúsculas; también <, >, =."},
+ {p:"Comillas en la búsqueda.",r:"Buscan la palabra o la frase exacta."},
+ {p:"De:\"miguel tórrez\".",r:"Elementos enviados por Miguel Tórrez."},
+ {p:"Recibido: ayer.",r:"Elementos que llegaron ayer; admite hoy, esta semana, mes pasado, días y meses."},
+ {p:"Tiene datos adjuntos: sí.",r:"Elementos con adjuntos (también tiene archivos adjuntos:true)."},
+ {p:"Lectura: no.",r:"Elementos sin leer."},
+ {p:"Tamaño del mensaje: muy pequeño.",r:"Menos de 10 KB."},
+ {p:"Tamaño del mensaje: enorme.",r:"Más de 5 MB."},
+ {p:"Tamaño del mensaje: grande.",r:"Entre 100 y 500 KB."},
+ {p:"Tiene indicador: true.",r:"Elementos marcados para seguimiento."},
+ {p:"Paréntesis en la búsqueda.",r:"Agrupan condiciones: De: miguel (recibido:7/1/17 O recibido:8/1/17)."},
+ {p:"Búsquedas en Contactos.",r:"Nombre:, Apellido:, Alias:, Puesto:, Teléfono trabajo:, Ciudad trabajo:, Cumpleaños:."},
+ {p:"Reglas de mensajes.",r:"Organizan automáticamente el correo entrante o hacen acciones como reenviar o responder."},
+ {p:"Dónde se crean las reglas.",r:"Archivo > Información > Administrar reglas y alertas, o Inicio > Mover > Reglas."},
+ {p:"Partes de una regla.",r:"Condiciones, acciones y excepciones."},
+ {p:"Ventajas de POP3.",r:"Lectura sin conexión y libera espacio del servidor; ideal desde un solo ordenador."},
+ {p:"Ventajas de IMAP.",r:"Todo queda en el servidor: varios dispositivos y ordenadores compartidos."},
+ {p:"Spam.",r:"Correo no solicitado, masivo y con remitente normalmente falso."},
+ {p:"Phishing.",r:"Correo fraudulento que suplanta a una entidad para robar datos."},
+ {p:"Hoax.",r:"Bulo: noticia falsa difundida masivamente."},
+ {p:"Cadenas de correo.",r:"Reenvíos masivos que difunden listas de direcciones y favorecen el spam."},
+ {p:"Virus en el correo.",r:"Se propagan con los adjuntos e infectan a quien los abre."},
+ {p:"Cómo reenviar a muchos sin exponer direcciones.",r:"Destinatarios en CCO (la propia en Para) y borrar encabezados previos."},
+ {p:"Qué hacer ante un «darse de baja» sospechoso.",r:"No responder ni pulsar: confirmaría que la cuenta está activa."},
+ {p:"Soluciones contra el spam.",r:"Filtros y reglas, programas antispam y módulos de los antivirus; ninguna es 100 % eficaz."},
+ {p:"Ctrl + 1, 2, 3, 4.",r:"Correo, Calendario, Contactos y Tareas."},
+ {p:"Ctrl + U en Outlook.",r:"Nuevo mensaje desde el Correo (o cita desde el Calendario)."},
+ {p:"Ctrl + Mayús + M.",r:"Nuevo mensaje desde cualquier vista."},
+ {p:"Ctrl + R.",r:"Responder."},
+ {p:"Ctrl + Mayús + R.",r:"Responder a todos."},
+ {p:"Ctrl + Alt + R.",r:"Responder con una convocatoria de reunión."},
+ {p:"Ctrl + F en Outlook.",r:"Reenviar."},
+ {p:"Ctrl + Intro.",r:"Enviar."},
+ {p:"F9.",r:"Enviar y recibir todas las carpetas."},
+ {p:"F3.",r:"Ir al cuadro de búsqueda."},
+ {p:"Ctrl + Y.",r:"Ir a otra carpeta."},
+ {p:"Ctrl + Mayús + I y Ctrl + Mayús + O.",r:"Bandeja de entrada y Bandeja de salida."},
+ {p:"Ctrl + Mayús + B.",r:"Abrir la libreta de direcciones."},
+ {p:"Ctrl + Q.",r:"Marcar como leído."},
+ {p:"Ctrl + Mayús + G.",r:"Marcar el mensaje para seguimiento."},
+ {p:"Tecla Insertar en la lista de mensajes.",r:"Agrega una marca rápida."},
+ {p:"Ctrl + Mayús + V.",r:"Mover a una carpeta."},
+ {p:"Ctrl + . y Ctrl + ,",r:"Mensaje siguiente y anterior (con un mensaje abierto)."},
+ {p:"Alt + Intro.",r:"Propiedades del elemento seleccionado."},
+ {p:"Ctrl + Mayús + T.",r:"Crear una tarea."}
+]};
+
+const T1=[
+ {q:"La característica que diferencia al correo electrónico del resto de servicios de Internet es que:",o:["Emisor y receptor no tienen que estar conectados a la vez.","Es gratuito.","Admite adjuntos.","Usa el protocolo HTTP."],c:0,e:"Es asíncrono."},
+ {q:"Si el servidor del destinatario está fuera de servicio:",o:["El mensaje espera y se entrega cuando vuelve a funcionar en un plazo razonable.","El mensaje se pierde.","Se devuelve inmediatamente siempre.","Se entrega a otro destinatario."],c:0,e:"Los servidores lo guardan y reintentan."},
+ {q:"¿Cuál NO es una ventaja del correo electrónico según el manual?",o:["Inseguridad.","Rapidez.","Coste.","Comodidad."],c:0,e:"La inseguridad es un inconveniente."},
+ {q:"Cuando un mensaje no llega por un error en la dirección:",o:["Se devuelve al remitente con un aviso.","Se pierde sin aviso.","Llega a otra persona.","Se queda en Borradores."],c:0,e:"Fiabilidad."},
+ {q:"En usuario@gmail.com, «gmail.com» es:",o:["El dominio.","El nombre de usuario.","La extensión.","El protocolo."],c:0,e:"El servidor que gestiona la dirección."},
+ {q:"En usuario@gmail.com, «.com» es:",o:["La extensión.","El dominio completo.","El usuario.","El puerto."],c:0,e:"Tipo de organización o país."},
+ {q:"La parte local de una dirección (antes de @) admite como máximo:",o:["64 caracteres.","255 caracteres.","32 caracteres.","128 caracteres."],c:0,e:"El dominio, 255."},
+ {q:"El protocolo para enviar correo es:",o:["SMTP.","POP3.","IMAP.","HTTP."],c:0,e:"Correo saliente."},
+ {q:"El protocolo de recepción que descarga los mensajes al equipo es:",o:["POP3.","IMAP.","SMTP.","FTP."],c:0,e:"IMAP los deja en el servidor."},
+ {q:"Con IMAP, los mensajes:",o:["Se quedan en el servidor.","Se borran del servidor al leerlos.","Solo se pueden leer sin conexión.","Se envían por SMTP."],c:0,e:"Útil con varios dispositivos."},
+ {q:"El estándar que permite adjuntar cualquier tipo de archivo es:",o:["MIME.","SMTP.","POP.","HTML."],c:0,e:"Multipurpose Internet Mail Extensions."},
+ {q:"Para acceder al Web Mail se necesita:",o:["Un navegador, el usuario y la contraseña.","Configurar POP3.","Instalar Outlook.","Un archivo PST."],c:0,e:"No se configura nada."},
+ {q:"¿Cuál de estos es un programa cliente y no un Web Mail?",o:["Thunderbird.","Gmail en el navegador.","Yahoo! Mail en el navegador.","Outlook en la web."],c:0,e:"El manual lo cita como webmail por error."},
+ {q:"Una ventaja de los programas cliente es:",o:["Leer mensajes sin conexión y gestionar varias cuentas.","No requerir configuración.","Funcionar solo en el navegador.","No ocupar espacio."],c:0,e:"Y copias de seguridad."},
+ {q:"Lo primero que hay que hacer al usar Outlook es:",o:["Configurar la cuenta de correo.","Crear una regla.","Importar un PST.","Crear una firma."],c:0,e:"Luego enviar y recibir."},
+ {q:"El puerto habitual de IMAP con SSL/TLS es:",o:["993","995","587","143"],c:0,e:"143 sin cifrar."},
+ {q:"El puerto habitual de POP3 con SSL/TLS es:",o:["995","993","110","25"],c:0,e:"110 sin cifrar."},
+ {q:"Para enviar desde un programa con cifrado STARTTLS se usa el puerto:",o:["587","25","110","993"],c:0,e:"25 entre servidores; 465 con SSL."},
+ {q:"SPF, DKIM y DMARC sirven para:",o:["Autenticar al remitente y combatir la suplantación.","Comprimir adjuntos.","Cifrar el buzón.","Ordenar la Bandeja de entrada."],c:0,e:"Exigidos a los grandes remitentes."},
+ {q:"Para recibir correo un cliente necesita:",o:["POP3 o IMAP.","Solo SMTP.","HTTP.","FTP."],c:0,e:"SMTP solo envía."}
+];
+const T2=[
+ {q:"¿Dónde se agrega una cuenta de correo nueva en Outlook?",o:["Archivo > Información.","Inicio > Nuevo.","Vista > Diseño.","Carpeta > Nuevo."],c:0,e:"Agregar cuenta."},
+ {q:"Para abrir un calendario .ics se usa:",o:["Archivo > Abrir y exportar.","Inicio > Responder.","Carpeta > Propiedades.","Vista > Vista actual."],c:0,e:"También .vcs y .pst."},
+ {q:"Un archivo .pst contiene:",o:["Correos, contactos, calendarios y otros elementos de Outlook.","Solo la firma.","Una plantilla de mensaje.","Un complemento."],c:0,e:"Para copias y archivado."},
+ {q:"Para que otra persona envíe convocatorias en tu nombre usas:",o:["Delegar acceso.","Reglas.","Respuestas automáticas.","Pasos rápidos."],c:0,e:"Configuración de la cuenta."},
+ {q:"El mensaje de «fuera de la oficina» se configura en:",o:["Respuestas automáticas.","Reglas.","Firma.","Seguimiento."],c:0,e:"Archivo > Información."},
+ {q:"La herramienta para controlar el tamaño del buzón es:",o:["Limpieza de buzón.","Omitir.","Pasos rápidos.","Comprobar nombres."],c:0,e:"Elimina o mueve elementos."},
+ {q:"Omitir una conversación:",o:["Envía a Eliminados la conversación y los mensajes futuros.","Borra solo los mensajes redundantes.","Marca la conversación como leída.","La mueve a Archivo."],c:0,e:"Limpiar quita redundantes."},
+ {q:"Para denunciar un mensaje de suplantación de identidad se usa el grupo:",o:["Informe.","Etiquetas.","Mover.","Buscar."],c:0,e:"Pestaña Inicio."},
+ {q:"Para hacer varias acciones con un solo clic se usan:",o:["Pasos rápidos.","Categorías.","Reglas.","Carpetas de búsqueda."],c:0,e:"Grupo de Inicio."},
+ {q:"Las categorías de color están en el grupo:",o:["Etiquetas.","Mover.","Responder.","Eliminar."],c:0,e:"También leído/no leído."},
+ {q:"La opción Trabajar sin conexión está en la pestaña:",o:["Enviar y recibir.","Inicio.","Vista.","Carpeta."],c:0,e:"Outlook clásico."},
+ {q:"Una carpeta que muestra automáticamente los mensajes que cumplen unos criterios, sin moverlos, es una:",o:["Carpeta de búsqueda.","Regla.","Bandeja Prioritarios.","Categoría."],c:0,e:"Carpeta > Nuevo."},
+ {q:"Recuperar elementos eliminados está en la pestaña:",o:["Carpeta.","Vista.","Inicio.","Enviar y recibir."],c:0,e:"Grupo Limpiar."},
+ {q:"Los tipos de Vista actual son:",o:["Compacta, Única y Vista previa.","Normal, Diseño y Esquema.","Día, Semana y Mes.","Lectura, Borrador y Web."],c:0,e:"Pestaña Vista."},
+ {q:"Mostrar como conversaciones:",o:["Agrupa los mensajes con el mismo asunto.","Abre un chat.","Ordena por tamaño.","Activa Teams."],c:0,e:"Facilita el seguimiento."},
+ {q:"El panel de lectura puede colocarse:",o:["A la derecha, abajo o desactivado.","Solo arriba.","Solo a la izquierda.","En una ventana aparte siempre."],c:0,e:"Vista > Diseño."},
+ {q:"La barra de tareas pendientes puede mostrar:",o:["Calendario, tareas y personas.","Solo la Bandeja de salida.","Reglas.","La libreta de direcciones."],c:0,e:"A la derecha de la ventana."},
+ {q:"La herramienta que ajusta el tamaño del texto y lee en voz alta es:",o:["Lector inmersivo.","Pasos rápidos.","Comprobar nombres.","Limpieza de buzón."],c:0,e:"Pestaña Vista."},
+ {q:"La opción Autoarchivar está en:",o:["Propiedades de la carpeta.","Inicio > Responder.","Mensaje > Firma.","Vista > Mensajes."],c:0,e:"Archivos PST."},
+ {q:"La Bandeja de entrada Prioritarios:",o:["Separa los mensajes importantes del resto.","Borra el spam.","Ordena por fecha.","Muestra solo adjuntos."],c:0,e:"Prioritarios y Otros."}
+];
+const T3=[
+ {q:"La carpeta donde está un mensaje enviado que aún no ha salido del equipo es:",o:["Bandeja de salida.","Elementos enviados.","Borradores.","Bandeja de entrada."],c:0,e:"Todavía se puede modificar."},
+ {q:"Un mensaje guardado y sin enviar está en:",o:["Borradores.","Bandeja de salida.","Elementos enviados.","Correo no deseado."],c:0,e:"Pendiente de enviar."},
+ {q:"Al pulsar Supr sobre un mensaje, este va a:",o:["Elementos eliminados.","Se borra para siempre.","Borradores.","Archivo."],c:0,e:"Se puede recuperar."},
+ {q:"Para eliminar un mensaje de forma permanente sin pasar por Eliminados se pulsa:",o:["Mayús + Supr.","Ctrl + Supr.","Alt + Supr.","Supr dos veces."],c:0,e:"Outlook pide confirmación."},
+ {q:"Para seleccionar mensajes sueltos se usa:",o:["Ctrl + clic.","Mayús + clic.","Alt + clic.","Doble clic."],c:0,e:"Mayús + clic, un bloque seguido."},
+ {q:"Los mensajes de remitentes bloqueados van a:",o:["Correo no deseado.","Elementos eliminados.","Bandeja de salida.","Borradores."],c:0,e:"Filtro de correo no deseado."},
+ {q:"Después de enviarse, un mensaje queda en:",o:["Elementos enviados.","Bandeja de salida.","Borradores.","Bandeja de entrada."],c:0,e:"Pasa antes por la Bandeja de salida."},
+ {q:"¿Qué campo NO es obligatorio para enviar un mensaje?",o:["Asunto.","Una dirección correcta en Para, CC o CCO.","El servidor SMTP configurado.","Una cuenta configurada."],c:0,e:"Outlook solo avisa."},
+ {q:"Los destinatarios en CC:",o:["Son visibles para todos los destinatarios.","Son invisibles.","No reciben el mensaje.","Solo reciben el asunto."],c:0,e:"Con copia."},
+ {q:"Los destinatarios en CCO:",o:["No los ve ningún otro destinatario.","Los ven todos.","Solo los ve el de Para.","No reciben adjuntos."],c:0,e:"Con copia oculta."},
+ {q:"Para separar varias direcciones en el campo Para se usa:",o:["; o ,","/","&","+"],c:0,e:"Punto y coma o coma."},
+ {q:"El campo CCO se activa en:",o:["Opciones > Mostrar campos.","Insertar > Tabla.","Revisar > Ortografía.","Archivo > Imprimir."],c:0,e:"También el campo De."},
+ {q:"El campo De aparece por defecto cuando:",o:["Hay más de una cuenta configurada.","El mensaje tiene adjuntos.","El mensaje es urgente.","Se responde a todos."],c:0,e:"Permite elegir la cuenta."},
+ {q:"¿Se pueden adjuntar carpetas a un mensaje?",o:["No; hay que comprimirlas o compartir un enlace.","Sí, siempre.","Solo con IMAP.","Solo en HTML."],c:0,e:"Limitación de los adjuntos."},
+ {q:"Las partes de un mensaje son:",o:["Cabecera, cuerpo y adjuntos.","Título, pie y firma.","Para, CC y CCO.","Asunto y firma."],c:0,e:"Idea clave 8."},
+ {q:"¿Cuál NO es una pestaña de un mensaje nuevo?",o:["Datos externos.","Mensaje.","Insertar.","Opciones."],c:0,e:"Más Formato de texto y Revisar."},
+ {q:"Si escribes un mensaje sin conexión y pulsas Enviar, el mensaje:",o:["Se queda en la Bandeja de salida.","Se pierde.","Va a Borradores.","Va a Elementos enviados."],c:0,e:"Sale al reconectar y pulsar F9."},
+ {q:"Para enviar un mensaje con el teclado se pulsa:",o:["Ctrl + Intro.","Ctrl + E.","Alt + F4.","Ctrl + G."],c:0,e:"Según el manual."},
+ {q:"En el selector de carpetas, «Elementos eliminados» se vacía de forma definitiva con:",o:["Vaciar carpeta Elementos eliminados.","Omitir.","Limpiar conversación.","Archivar."],c:0,e:"Archivo > Herramientas."},
+ {q:"Correo no deseado es la carpeta de:",o:["Mensajes de remitentes bloqueados o detectados como publicidad.","Mensajes sin leer.","Mensajes sin asunto.","Mensajes con adjuntos."],c:0,e:"Filtro."}
+];
+const T4=[
+ {q:"La libreta de direcciones se abre con:",o:["Ctrl + Mayús + B.","Ctrl + B.","Ctrl + L.","F7."],c:0,e:"También desde Mensaje."},
+ {q:"Para escribir a todo un departamento de una vez conviene crear:",o:["Un grupo de contactos.","Una regla.","Una categoría.","Una firma."],c:0,e:"Antes, lista de distribución."},
+ {q:"Comprobar nombres sirve para:",o:["Completar la dirección a partir de parte del nombre.","Corregir la ortografía.","Validar la firma digital.","Detectar spam."],c:0,e:"Pestaña Mensaje."},
+ {q:"Adjuntar elemento permite adjuntar:",o:["Una tarjeta de presentación o un mensaje de Outlook.","Una carpeta.","Una regla.","Un perfil."],c:0,e:"Adjuntar archivo, para archivos."},
+ {q:"Una firma de correo es:",o:["Texto que se añade automáticamente al final del mensaje.","Un certificado digital.","Una contraseña.","Un adjunto obligatorio."],c:0,e:"No confundir con la firma digital."},
+ {q:"La firma digital se configura en:",o:["Propiedades > Configuración de seguridad.","Mensaje > Firma.","Inicio > Etiquetas.","Vista > Diseño."],c:0,e:"Acredita al remitente."},
+ {q:"Seguimiento sirve para:",o:["Recordar que hay que volver a trabajar con el mensaje.","Rastrear la IP del remitente.","Reenviar automáticamente.","Cifrar el mensaje."],c:0,e:"Marca de seguimiento."},
+ {q:"¿Cuántos niveles de importancia hay?",o:["Tres: normal, alta y baja.","Dos.","Cuatro.","Cinco."],c:0,e:"Normal por defecto."},
+ {q:"Un mensaje de importancia alta se muestra con:",o:["Un signo de exclamación rojo.","Una flecha azul.","Un clip.","Una bandera verde."],c:0,e:"Baja: flecha azul."},
+ {q:"Para saber si el destinatario ha leído el mensaje se solicita:",o:["Confirmación de lectura.","Firma digital.","Importancia alta.","Seguimiento."],c:0,e:"Opciones de votación y seguimiento."},
+ {q:"Para que un mensaje no se entregue antes de una fecha se usan:",o:["Las opciones de entrega.","Las reglas.","Las categorías.","Las respuestas automáticas."],c:0,e:"También la caducidad."},
+ {q:"Los botones de voto permiten:",o:["Que los destinatarios respondan eligiendo una opción.","Votar al mejor correo.","Ordenar la Bandeja de entrada.","Bloquear remitentes."],c:0,e:"Opciones de votación."},
+ {q:"Los compresores que cita el manual son:",o:["WinZip y WinRAR.","Word y Excel.","Edge y Chrome.","Teams y OneNote."],c:0,e:"Reducen el tamaño de los adjuntos."},
+ {q:"El límite predeterminado de adjuntos de Outlook para cuentas POP o IMAP es:",o:["20 MB.","2 MB.","150 MB.","1 GB."],c:0,e:"En Exchange Online, hasta 150 MB."},
+ {q:"Outlook guarda los mensajes, por defecto, con la extensión:",o:[".msg",".eml",".pst",".docx"],c:0,e:".eml es el estándar MIME."},
+ {q:"El formato de mensaje predeterminado en Outlook es:",o:["HTML.","Texto sin formato.","Texto enriquecido.","PDF."],c:0,e:"Admite formato e imágenes."},
+ {q:"El formato de mensaje compatible con cualquier programa de correo es:",o:["Texto sin formato.","Texto enriquecido.","HTML con imágenes.","RTF."],c:0,e:"No admite formato."},
+ {q:"Las firmas se definen en:",o:["Archivo > Opciones > Correo.","Archivo > Opciones > Calendario.","Vista > Diseño.","Carpeta > Propiedades."],c:0,e:"O Mensaje > Firma."},
+ {q:"La jornada laboral se define en Archivo > Opciones >:",o:["Calendario.","Correo.","Personas.","Búsqueda."],c:0,e:"Y los avisos."},
+ {q:"Las opciones de indización están en Archivo > Opciones >:",o:["Búsqueda.","Avanzado.","Correo.","General."],c:0,e:"Configuración de resultados."}
+];
+const T5=[
+ {q:"Los mensajes sin leer se muestran:",o:["En negrita.","En cursiva.","Tachados.","En rojo."],c:0,e:"La bandeja indica cuántos hay."},
+ {q:"Para comprobar si hay mensajes nuevos se pulsa:",o:["F9.","F5.","F3.","F7."],c:0,e:"Enviar y recibir todas las carpetas."},
+ {q:"El icono del clip indica que el mensaje:",o:["Tiene archivos adjuntos.","Es urgente.","Está marcado.","Es una respuesta."],c:0,e:"Exclamación: importancia alta."},
+ {q:"El prefijo RE: en el asunto indica:",o:["Una respuesta.","Un reenvío.","Un mensaje urgente.","Un mensaje rechazado."],c:0,e:"RV: reenvío."},
+ {q:"El prefijo RV: en el asunto indica:",o:["Un reenvío.","Una respuesta.","Un mensaje revisado.","Un recordatorio."],c:0,e:"Reenviado."},
+ {q:"Responder (Ctrl + R) envía la respuesta:",o:["Solo al remitente.","A todos los de Para y CC.","A todos, incluidos los de CCO.","A la libreta de direcciones."],c:0,e:"Sin adjuntos."},
+ {q:"Responder a todos envía la respuesta:",o:["Al remitente y a los de Para y CC.","También a los de CCO.","Solo a los de CC.","Solo al remitente."],c:0,e:"Los de CCO no se conocen."},
+ {q:"¿Qué acción conserva los adjuntos del mensaje original?",o:["Reenviar.","Responder.","Responder a todos.","Responder con reunión."],c:0,e:"Al responder no van los adjuntos."},
+ {q:"Reenviar se hace con:",o:["Ctrl + F.","Ctrl + R.","Ctrl + Mayús + R.","Ctrl + E."],c:0,e:"En el manual y el esquema."},
+ {q:"Responder con una convocatoria de reunión se hace con:",o:["Ctrl + Alt + R.","Ctrl + Mayús + R.","Ctrl + R.","Alt + R."],c:0,e:"Desde el mensaje."},
+ {q:"La búsqueda de Outlook usa concordancia de prefijos: «ray» encuentra:",o:["rayo, pero no Saray.","Saray y pararrayos.","Solo «ray» exacto.","Nada."],c:0,e:"Empiezan por lo escrito."},
+ {q:"La búsqueda instantánea:",o:["No distingue mayúsculas y minúsculas.","Distingue mayúsculas.","Solo busca en el asunto.","Solo busca en adjuntos."],c:0,e:"miguel = MIGUEL."},
+ {q:"Los operadores Y, O, NO deben escribirse:",o:["En mayúsculas.","En minúsculas.","Entre comillas.","Entre paréntesis."],c:0,e:"En minúsculas son palabras."},
+ {q:"\"miguel\" entre comillas encuentra:",o:["Solo la palabra exacta miguel.","miguelito y miguelín.","Nada.","Solo remitentes."],c:0,e:"Frase exacta."},
+ {q:"miguel NO tórrez encuentra:",o:["Elementos con miguel que no contienen tórrez.","Elementos con ambos.","Elementos con cualquiera.","Elementos sin ninguno."],c:0,e:"NO excluye."},
+ {q:"Para buscar los mensajes enviados por Miguel Tórrez se escribe:",o:["De:\"miguel tórrez\"","Para:\"miguel tórrez\"","Asunto:miguel","Cco:miguel"],c:0,e:"Palabra clave De:."},
+ {q:"Para ver los mensajes sin leer se escribe:",o:["Lectura: no","Leído: sí","Tiene indicador: true","Recibido: hoy"],c:0,e:"O lectura:false."},
+ {q:"Tamaño del mensaje: enorme encuentra mensajes de:",o:["Más de 5 MB.","Menos de 10 KB.","Entre 100 y 500 KB.","Entre 25 y 100 KB."],c:0,e:"Muy pequeño: menos de 10 KB."},
+ {q:"Tamaño del mensaje: >5 MB encuentra los mensajes:",o:["Mayores de 5 MB.","Menores de 5 MB.","De exactamente 5 MB.","Sin adjuntos."],c:0,e:"El manual dice «menor», es errata."},
+ {q:"Las búsquedas Nombre:, Apellido: o Puesto: funcionan desde:",o:["Una carpeta de Contactos.","La Bandeja de entrada.","El Calendario.","Elementos enviados."],c:0,e:"Búsquedas en contactos."}
+];
+const T6=[
+ {q:"Las reglas de mensajes sirven para:",o:["Organizar automáticamente el correo entrante y hacer acciones como reenviar.","Corregir la ortografía.","Cifrar mensajes.","Crear firmas."],c:0,e:"Por ejemplo, mover a carpetas."},
+ {q:"Las reglas se administran desde:",o:["Archivo > Información > Administrar reglas y alertas.","Vista > Diseño.","Insertar > Tabla.","Revisar > Idioma."],c:0,e:"O Inicio > Mover > Reglas."},
+ {q:"Una regla se compone de:",o:["Condiciones, acciones y excepciones.","Para, CC y CCO.","Cabecera, cuerpo y adjuntos.","Archivo, Inicio y Vista."],c:0,e:"Asistente para reglas."},
+ {q:"Una condición típica de una regla es:",o:["Que el remitente sea una persona concreta.","Que el ordenador esté encendido.","Que el mensaje esté en HTML.","Que la firma sea digital."],c:0,e:"También palabras en el asunto."},
+ {q:"POP3 es ideal para:",o:["Conectarse siempre desde el mismo ordenador.","Usar varios dispositivos.","Ordenadores compartidos.","El webmail."],c:0,e:"Descarga al equipo."},
+ {q:"Una ventaja de POP3 es:",o:["Libera espacio en el buzón del servidor.","Sincroniza todos los dispositivos.","No necesita cliente.","Guarda todo en el servidor."],c:0,e:"Y lectura sin conexión."},
+ {q:"IMAP es especialmente útil:",o:["En ordenadores compartidos y con varios dispositivos.","Solo sin conexión.","Para liberar espacio del servidor.","Para enviar correo."],c:0,e:"Los mensajes quedan en el servidor."},
+ {q:"Con IMAP, si lees un mensaje en el móvil, en el ordenador aparecerá:",o:["Como leído.","Como no leído.","Duplicado.","Eliminado."],c:0,e:"Se sincroniza."},
+ {q:"El principal problema actual del correo según el manual es:",o:["El spam.","La lentitud.","El coste.","El tamaño de las direcciones."],c:0,e:"Correo basura."},
+ {q:"El correo que suplanta a un banco para robar datos se llama:",o:["Phishing.","Hoax.","Spam.","Cadena."],c:0,e:"Suplantación de identidad."},
+ {q:"Un hoax es:",o:["Un bulo o noticia falsa difundida masivamente.","Un virus.","Un adjunto comprimido.","Un tipo de firma."],c:0,e:"Engaño."},
+ {q:"Los virus se propagan sobre todo mediante:",o:["Los ficheros adjuntos.","El asunto.","La firma.","La importancia alta."],c:0,e:"Al abrirlos."},
+ {q:"Al reenviar un mensaje a muchas personas conviene poner sus direcciones en:",o:["CCO.","CC.","Para.","Asunto."],c:0,e:"Y borrar encabezados previos."},
+ {q:"Ante un enlace de «darse de baja» en un spam:",o:["No hay que pulsarlo ni responder.","Hay que pulsarlo siempre.","Hay que responder con «baja».","Hay que reenviarlo."],c:0,e:"Confirmaría que la cuenta existe."},
+ {q:"Contestar a un mensaje de spam:",o:["No sirve: el remitente suele ser falso.","Lo elimina de la lista.","Es obligatorio.","Bloquea al remitente."],c:0,e:"Lo explica el manual."},
+ {q:"Las soluciones contra el spam se basan sobre todo en:",o:["Filtros.","Responder a los remitentes.","Cambiar de contraseña.","Usar POP3."],c:0,e:"Ninguna es 100 % eficaz."},
+ {q:"Una tecnología que permite acreditar al remitente es:",o:["La firma con criptografía de clave pública.","El formato HTML.","La importancia alta.","El campo CCO."],c:0,e:"Firma digital."},
+ {q:"Las cadenas de correo son perjudiciales porque:",o:["Difunden listas de direcciones y favorecen el spam.","Ocupan poco.","Siempre contienen virus.","Están prohibidas por SMTP."],c:0,e:"Y propagan virus y bulos."},
+ {q:"Desde mayo de 2025, Outlook.com exige a quien envía más de 5.000 correos al día:",o:["SPF, DKIM y DMARC.","Usar POP3.","Adjuntos de menos de 1 MB.","Un archivo PST."],c:0,e:"Si no, van a no deseado o se rechazan."},
+ {q:"En Exchange Online, la autenticación básica en el envío SMTP se desactiva por defecto:",o:["A finales de diciembre de 2026.","En 2020.","Nunca.","En enero de 2025."],c:0,e:"Retirada definitiva anunciada en 2027."}
+];
+const T7=[
+ {q:"Ctrl + 2 en Outlook abre:",o:["El Calendario.","El Correo.","Los Contactos.","Las Tareas."],c:0,e:"Ctrl + 1 Correo."},
+ {q:"Ctrl + 3 en Outlook abre:",o:["Contactos.","Calendario.","Tareas.","Notas."],c:0,e:"Ctrl + 4 Tareas."},
+ {q:"Ctrl + 4 en Outlook abre:",o:["Tareas.","Contactos.","Calendario.","Correo."],c:0,e:"Ctrl + 5 Lista de tareas pendientes."},
+ {q:"Responder a todos se hace con:",o:["Ctrl + Mayús + R.","Ctrl + R.","Ctrl + Alt + R.","Ctrl + F."],c:0,e:"Ctrl + R solo al remitente."},
+ {q:"F3 en Outlook:",o:["Lleva al cuadro de búsqueda.","Envía y recibe.","Abre el calendario.","Responde."],c:0,e:"F9, enviar y recibir."},
+ {q:"Ctrl + Y en Outlook:",o:["Va a otra carpeta.","Rehace.","Responde.","Marca como leído."],c:0,e:"Según el manual."},
+ {q:"Ctrl + Mayús + I lleva a:",o:["La Bandeja de entrada.","La Bandeja de salida.","Elementos enviados.","Borradores."],c:0,e:"Ctrl + Mayús + O, salida."},
+ {q:"Ctrl + Q en Outlook:",o:["Marca como leído.","Cierra Outlook.","Busca.","Reenvía."],c:0,e:"Según el manual."},
+ {q:"Ctrl + U en el módulo Correo:",o:["Crea un mensaje nuevo.","Subraya.","Marca como no leído.","Abre la libreta."],c:0,e:"En Calendario, una cita."},
+ {q:"Para crear un mensaje desde cualquier vista se pulsa:",o:["Ctrl + Mayús + M.","Ctrl + M.","Ctrl + N.","Alt + M."],c:0,e:"Según el manual."},
+ {q:"Ctrl + Mayús + G:",o:["Marca el mensaje para seguimiento.","Guarda.","Agrupa.","Abre un grupo."],c:0,e:"Cuadro Marcar para seguimiento."},
+ {q:"La tecla Insertar sobre un mensaje sin abrir:",o:["Agrega una marca rápida.","Inserta un adjunto.","Crea una regla.","Lo elimina."],c:0,e:"Marca de seguimiento."},
+ {q:"Ctrl + Supr en la lista de mensajes:",o:["Mueve el mensaje a Elementos eliminados.","Lo borra de forma permanente.","Lo archiva.","Lo marca como spam."],c:0,e:"Mayús + Supr, permanente."},
+ {q:"Ctrl + Mayús + V:",o:["Mueve a una carpeta.","Pega sin formato.","Abre la vista.","Valida nombres."],c:0,e:"Enviar a una carpeta."},
+ {q:"Con un mensaje abierto, Ctrl + . (punto):",o:["Pasa al mensaje siguiente.","Pasa al anterior.","Lo cierra.","Lo imprime."],c:0,e:"Ctrl + , al anterior."},
+ {q:"Alt + Intro en Outlook:",o:["Muestra las propiedades del elemento.","Envía.","Abre en ventana nueva.","Responde."],c:0,e:"Según el manual."},
+ {q:"Ctrl + Mayús + T:",o:["Crea una tarea.","Abre Teams.","Traduce.","Cambia de tema."],c:0,e:"Según el manual."},
+ {q:"Ctrl + P en Outlook:",o:["Imprime.","Abre Personas.","Pega.","Programa el envío."],c:0,e:"Como en el resto de Office."},
+ {q:"Ctrl + 6:",o:["Lleva a la lista de carpetas del panel de navegación.","Abre las notas.","Abre la libreta.","Cambia de cuenta."],c:0,e:"Ctrl + 5, tareas pendientes."},
+ {q:"Para ir a la Bandeja de salida se pulsa:",o:["Ctrl + Mayús + O.","Ctrl + Mayús + I.","Ctrl + O.","Ctrl + S."],c:0,e:"Según el manual."}
+];
+const T8=[
+ {q:"Vas a escribir a 300 ciudadanos que no deben conocer las direcciones de los demás. Pones sus direcciones en:",o:["CCO, con tu dirección en Para.","CC.","Para.","El asunto."],c:0,e:"Protege los datos personales."},
+ {q:"Consultas el correo desde el ordenador de la oficina, el portátil y el móvil y quieres ver lo mismo en todos. Configuras:",o:["IMAP.","POP3 sin copia en el servidor.","Solo SMTP.","Un archivo PST en cada equipo."],c:0,e:"Todo queda en el servidor."},
+ {q:"Usas siempre el mismo PC y quieres leer el correo sin conexión y liberar espacio del servidor:",o:["POP3.","IMAP.","Web Mail.","SMTP."],c:0,e:"Descarga al equipo."},
+ {q:"Te vas de vacaciones dos semanas:",o:["Activas las Respuestas automáticas.","Creas una firma.","Marcas todo como leído.","Vacías Elementos eliminados."],c:0,e:"Fuera de la oficina."},
+ {q:"Quieres que los correos de la Intervención General vayan solos a una carpeta:",o:["Creas una regla.","Usas Omitir.","Usas una categoría.","Activas el Lector inmersivo."],c:0,e:"Condición: remitente; acción: mover."},
+ {q:"Recibes un correo de tu «banco» que pide la clave en un enlace:",o:["No pulsas el enlace y lo denuncias como phishing.","Respondes con la clave.","Lo reenvías a todos tus contactos.","Pulsas «darse de baja»."],c:0,e:"Suplantación de identidad."},
+ {q:"Necesitas enviar a un compañero un mensaje recibido con su adjunto:",o:["Reenviar.","Responder.","Responder a todos.","Copiar el asunto."],c:0,e:"Reenviar conserva los adjuntos."},
+ {q:"Tu jefa te escribe con tres compañeros en CC y todos deben conocer tu respuesta:",o:["Responder a todos.","Responder.","Reenviar.","Nuevo mensaje."],c:0,e:"Ctrl + Mayús + R."},
+ {q:"Has escrito el informe sin conexión y el mensaje sigue en la Bandeja de salida. Al recuperar la red:",o:["Pulsas F9 (Enviar y recibir).","Lo borras y lo reescribes.","Lo mueves a Borradores.","No hace falta hacer nada nunca."],c:0,e:"Sale y pasa a Elementos enviados."},
+ {q:"Has borrado por error un mensaje con Supr:",o:["Lo recuperas desde Elementos eliminados.","Se ha perdido para siempre.","Está en Borradores.","Está en la Bandeja de salida."],c:0,e:"Supr no borra de forma permanente."},
+ {q:"Buscas todos los mensajes con adjuntos de Rosa:",o:["de:rosa tiene datos adjuntos: sí","rosa O adjunto","asunto:rosa","\"rosa\" NO adjuntos"],c:0,e:"Dos palabras clave."},
+ {q:"Buscas los mensajes que contienen «proyecto» pero no «informe»:",o:["proyecto NO informe","proyecto no informe","proyecto O informe","\"proyecto informe\""],c:0,e:"Operador en mayúsculas."},
+ {q:"Tienes que enviar un vídeo de 400 MB:",o:["Lo subes a OneDrive y envías un enlace.","Lo adjuntas tal cual.","Lo divides en carpetas adjuntas.","Lo pegas en el cuerpo."],c:0,e:"Supera los límites de adjuntos."},
+ {q:"Quieres que el destinatario confirme que ha leído una notificación:",o:["Solicitas confirmación de lectura.","Marcas importancia baja.","Añades una firma.","Pones el mensaje en CCO."],c:0,e:"Opciones de seguimiento."},
+ {q:"Quieres acreditar la autoría de un mensaje oficial y que no se ha alterado:",o:["Lo firmas digitalmente.","Añades tu firma de texto.","Lo marcas como importante.","Lo envías en Texto sin formato."],c:0,e:"Configuración de seguridad."},
+ {q:"Escribes un mensaje el viernes y debe salir el lunes a las 9:00:",o:["Opciones de entrega: No entregar antes de.","Una regla.","Respuestas automáticas.","Un paso rápido."],c:0,e:"Envío programado."},
+ {q:"Una conversación con 50 respuestas no te concierne y siguen llegando mensajes:",o:["Omitir.","Limpiar.","Marcar como leído.","Categorizar."],c:0,e:"También los futuros."},
+ {q:"El buzón está casi lleno y no recibes correo:",o:["Limpieza de buzón y vaciar Elementos eliminados.","Crear más reglas.","Cambiar a HTML.","Activar la vista Compacta."],c:0,e:"Archivo > Herramientas."},
+ {q:"Un compañero reenvía un bulo con 80 direcciones visibles:",o:["Le explicas que use CCO y borre los encabezados, y no lo reenvías.","Lo reenvías a todos.","Respondes a todos.","Pulsas «darse de baja»."],c:0,e:"Recomendaciones del manual."},
+ {q:"Tu suplente debe enviar correos y convocatorias en tu nombre durante tu baja:",o:["Delegar acceso.","Compartir la contraseña.","Respuestas automáticas.","Una regla de reenvío."],c:0,e:"Configuración de la cuenta."}
+];
+
+const TESTS=[
+ {id:"t1",ic:"📧",name:"Conceptos, direcciones y protocolos",desc:"Características, direcciones, SMTP, POP3, IMAP y acceso.",qs:T1},
+ {id:"t2",ic:"🪟",name:"Entorno de Outlook",desc:"Archivo, Inicio, Enviar y recibir, Carpeta y Vista.",qs:T2},
+ {id:"t3",ic:"📂",name:"Carpetas y cabecera",desc:"Carpetas comunes, Para, CC, CCO y envío.",qs:T3},
+ {id:"t4",ic:"✍️",name:"Opciones del mensaje",desc:"Libreta, firma, importancia, acuses, adjuntos y formatos.",qs:T4},
+ {id:"t5",ic:"🔎",name:"Recibir, responder y buscar",desc:"Responder, reenviar y criterios de búsqueda.",qs:T5},
+ {id:"t6",ic:"🛡️",name:"Reglas, POP3/IMAP y seguridad",desc:"Reglas, protocolos de recepción, spam y phishing.",qs:T6},
+ {id:"t7",ic:"⌨️",name:"Atajos de teclado",desc:"Métodos abreviados de Outlook.",qs:T7},
+ {id:"t8",ic:"🧠",name:"Casos prácticos",desc:"Situaciones reales en la oficina.",qs:T8}
+];
+TESTS.forEach((t,ti)=>t.qs.forEach((q,i)=>{const r=(i*3+ti)%q.o.length;if(r){const ans=q.o[q.c];q.o=q.o.slice(r).concat(q.o.slice(0,r));q.c=q.o.indexOf(ans)}}));
+TESTS.forEach(t=>t.qs.forEach((q,i)=>{q.id=t.id+"-"+i;q.src=t.name}));const POOL=TESTS.flatMap(t=>t.qs);
+
+const B=(root,boxes)=>`<div class="sch"><div class="sch-root">${root}</div><div class="sch-cols">${boxes.map((b,i)=>`<div class="sch-box${i%2?" alt":""}"><b>${b}</b>{{${i}}}</div>`).join("")}</div></div>`;
+const ESQ=[
+ {id:"e1",title:"Ordena el recorrido de un mensaje",intro:"Del remitente al destinatario.",type:"order",
+  items:[{t:"El cliente redacta y pulsa Enviar",why:"Bandeja de salida."},{t:"El cliente entrega el mensaje al servidor SMTP",why:"Correo saliente."},{t:"El servidor busca el destino (DNS) y elige la ruta",why:"Registros MX."},{t:"El mensaje salta entre servidores SMTP",why:"Si uno cae, se reintenta."},{t:"Llega al buzón del destinatario",why:"Servidor POP/IMAP."},{t:"El destinatario lo recoge con POP3 o IMAP",why:"Correo entrante."}]},
+ {id:"e2",title:"Ordena el viaje de un mensaje por las carpetas",intro:"Desde que lo empiezas hasta que lo borras.",type:"order",
+  items:[{t:"Borradores",why:"Guardado sin enviar."},{t:"Bandeja de salida",why:"Enviado, pero sin salir."},{t:"Elementos enviados",why:"Ya ha salido."},{t:"Elementos eliminados",why:"Tras pulsar Supr."}]},
+ {id:"e3",title:"Ordena las pestañas de la ventana principal",intro:"Outlook clásico, de izquierda a derecha.",type:"order",
+  items:[{t:"Archivo",why:"Configuración y herramientas."},{t:"Inicio",why:"Tratamiento de correos."},{t:"Enviar y recibir",why:"Sincronización."},{t:"Carpeta",why:"Organización."},{t:"Vista",why:"Entorno de trabajo."}]},
+ {id:"e4",title:"Ordena los pasos para crear una regla",intro:"Asistente para reglas.",type:"order",
+  items:[{t:"Administrar reglas y alertas > Nueva regla",why:"Abrir el asistente."},{t:"Elegir plantilla o regla en blanco",why:"Punto de partida."},{t:"Seleccionar las condiciones",why:"Remitente, asunto…"},{t:"Seleccionar las acciones",why:"Mover, reenviar…"},{t:"Añadir excepciones",why:"Opcional."},{t:"Poner nombre y activar",why:"Y ejecutarla si se desea."}]},
+ {id:"e5",title:"Ordena los tamaños de búsqueda",intro:"De menor a mayor.",type:"order",
+  items:[{t:"Muy pequeño (< 10 KB)",why:"El más pequeño."},{t:"Pequeño (10-25 KB)",why:"Tabla de búsquedas."},{t:"Medio (25-100 KB)",why:"Tabla de búsquedas."},{t:"Grande (100-500 KB)",why:"Tabla de búsquedas."},{t:"Muy grande (500 KB-1 MB)",why:"Tabla de búsquedas."},{t:"Enorme (> 5 MB)",why:"El mayor."}]},
+ {id:"e6",title:"Protocolos",intro:"Servidores de correo.",type:"blanks",html:B("Protocolos",["Envío del correo","Recepción descargando al equipo","Recepción dejando los mensajes en el servidor","Adjuntar cualquier tipo de archivo"]),
+  blanks:[{o:["SMTP","POP3","IMAP","MIME"],why:"Simple Mail Transfer Protocol."},{o:["POP3","IMAP","SMTP","HTTP"],why:"Post Office Protocol."},{o:["IMAP","POP3","SMTP","FTP"],why:"Internet Message Access Protocol."},{o:["MIME","SMTP","HTML","PST"],why:"Multipurpose Internet Mail Extensions."}]},
+ {id:"e7",title:"Partes de una dirección",intro:"usuario@gmail.com.",type:"blanks",html:B("usuario@gmail.com",["usuario","@","gmail.com","Máximo de la parte local"]),
+  blanks:[{o:["Nombre de usuario","Dominio","Extensión","Servidor"],why:"Identifica al usuario."},{o:["Separador entre usuario y dominio","Operador Y","Comodín","Extensión"],why:"Arroba."},{o:["Dominio","Usuario","Protocolo","Puerto"],why:"Servidor que gestiona la dirección."},{o:["64 caracteres","255 caracteres","320 caracteres","32 caracteres"],why:"El dominio, 255."}]},
+ {id:"e8",title:"Carpetas",intro:"¿Dónde está el mensaje?",type:"blanks",html:B("Carpetas",["Enviado pero aún sin salir","Guardado sin enviar","Borrado con Supr","Remitentes bloqueados"]),
+  blanks:[{o:["Bandeja de salida","Elementos enviados","Borradores","Bandeja de entrada"],why:"Todavía se puede modificar."},{o:["Borradores","Bandeja de salida","Elementos eliminados","Archivo"],why:"Pendiente."},{o:["Elementos eliminados","Borrado permanente","Borradores","Archivo"],why:"Se puede recuperar."},{o:["Correo no deseado","Elementos eliminados","Bandeja de salida","Prioritarios"],why:"Filtro."}]},
+ {id:"e9",title:"Campos de la cabecera",intro:"Mensaje nuevo.",type:"blanks",html:B("Cabecera",["Destinatarios principales","Copia visible para todos","Copia oculta","No es obligatorio"]),
+  blanks:[{o:["Para","CC","CCO","De"],why:"Varias separadas por ;."},{o:["CC","CCO","Para","De"],why:"Con copia."},{o:["CCO","CC","Para","Asunto"],why:"Con copia oculta."},{o:["Asunto","Para","De","Dirección del destinatario"],why:"Outlook solo avisa."}]},
+ {id:"e10",title:"Responder y reenviar",intro:"Mensajes recibidos.",type:"blanks",html:B("Mensaje recibido",["Solo al remitente","Al remitente y a Para y CC","A otra persona, con adjuntos","Prefijo de un reenvío"]),
+  blanks:[{o:["Responder (Ctrl + R)","Responder a todos","Reenviar","Responder con reunión"],why:"RE:."},{o:["Responder a todos (Ctrl + Mayús + R)","Responder","Reenviar","Reenviar como adjunto"],why:"Nunca a los de CCO."},{o:["Reenviar (Ctrl + F)","Responder","Responder a todos","Omitir"],why:"Conserva adjuntos."},{o:["RV:","RE:","FW:","CC:"],why:"Reenviado."}]},
+ {id:"e11",title:"Opciones del mensaje",intro:"Pestañas Mensaje y Opciones.",type:"blanks",html:B("Opciones",["Texto automático al final","Acredita al remitente","Avisa cuando se lee","Entrega a partir de una fecha"]),
+  blanks:[{o:["Firma","Firma digital","Seguimiento","Categoría"],why:"No es firma digital."},{o:["Firma digital","Firma","Importancia alta","CCO"],why:"Configuración de seguridad."},{o:["Confirmación de lectura","Confirmación de entrega","Seguimiento","Botones de voto"],why:"Opciones de seguimiento."},{o:["Opciones de entrega","Respuestas automáticas","Regla","Pasos rápidos"],why:"No entregar antes de."}]},
+ {id:"e12",title:"Búsqueda",intro:"Sintaxis de Outlook.",type:"blanks",html:B("Búsqueda",["Operadores lógicos","Palabra exacta","Mensajes sin leer","Más de 5 MB"]),
+  blanks:[{o:["Y, O, NO en mayúsculas","y, o, no en minúsculas","AND, OR en minúsculas","+ y -"],why:"En minúsculas son palabras."},{o:["Entre comillas","Entre corchetes","Con asterisco","Con almohadilla"],why:"Sin variaciones."},{o:["Lectura: no","Leído: sí","Tiene indicador: true","Recibido: hoy"],why:"O lectura:false."},{o:["Tamaño del mensaje: enorme","Tamaño del mensaje: grande","Tamaño del mensaje: muy grande","Tamaño del mensaje: medio"],why:"Muy grande: 500 KB-1 MB."}]},
+ {id:"e13",title:"Amenazas",intro:"Problemas del correo.",type:"blanks",html:B("Amenazas",["Correo basura masivo","Suplanta a una entidad para robar datos","Noticia falsa difundida en masa","Se propaga con adjuntos"]),
+  blanks:[{o:["Spam","Phishing","Hoax","Cadena"],why:"Remitente falso."},{o:["Phishing","Spam","Hoax","Virus"],why:"Suplantación."},{o:["Hoax","Phishing","Spam","Virus"],why:"Bulo."},{o:["Virus","Hoax","Spam","Cadena"],why:"No abrir adjuntos dudosos."}]},
+ {id:"e14",title:"Atajos",intro:"Outlook.",type:"blanks",html:B("Atajos",["Calendario","Enviar y recibir","Responder a todos","Libreta de direcciones"]),
+  blanks:[{o:["Ctrl + 2","Ctrl + 1","Ctrl + 3","Ctrl + 4"],why:"Ctrl + 1 Correo."},{o:["F9","F5","F3","F7"],why:"Todas las carpetas."},{o:["Ctrl + Mayús + R","Ctrl + R","Ctrl + F","Ctrl + Alt + R"],why:"Ctrl + R solo al remitente."},{o:["Ctrl + Mayús + B","Ctrl + B","Ctrl + L","Ctrl + Mayús + A"],why:"Address Book."}]}
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem("in7c1_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("in7c1_"+k,JSON.stringify(v))}catch(e){}}
+};
+let P=store.get("progress",{known:{},best:{},fails:{},esq:{}});
+const save=()=>store.set("progress",P);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* ---- Tema ---- */
+const sun='<circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+const moon='<path stroke-linecap="round" stroke-linejoin="round" d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>';
+function setTheme(t){document.documentElement.dataset.theme=t;$("#ico-theme").innerHTML=t==="dark"?sun:moon;store.set("theme",t)}
+setTheme(store.get("theme",matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#btn-theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#btn-print").onclick=()=>window.print();
+
+/* ---- Navegación ---- */
+function go(v){
+  $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+  $$(".view").forEach(s=>{const on=s.id==="v-"+v;s.classList.toggle("hidden",!on);if(on){s.style.animation="none";s.offsetHeight;s.style.animation=""}});
+  if(v==="test")showTestHome();
+  stopTTS();
+  window.scrollTo({top:0,behavior:"smooth"});
+  history.replaceState(null,"","#"+v);
+}
+$$(".tab").forEach(b=>b.onclick=()=>go(b.dataset.view));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+
+/* ---- Resumen ---- */
+$("#btn-open-all").onclick=function(){const all=$$("details.blk"),open=all.every(d=>d.open);all.forEach(d=>d.open=!open);this.textContent=open?"Abrir todo":"Cerrar todo"};
+let speaking=false;
+function stopTTS(){if("speechSynthesis" in window)speechSynthesis.cancel();speaking=false;const s=$("#btn-tts span");if(s)s.textContent="Escuchar resumen"}
+$("#btn-tts").onclick=()=>{
+  if(!("speechSynthesis" in window)){toast("Tu navegador no permite lectura en voz alta");return}
+  if(speaking){stopTTS();return}
+  const txt=$$("details.blk").map(d=>d.querySelector("h3").textContent+". "+d.querySelector(".bb").innerText).join(". ");
+  const u=new SpeechSynthesisUtterance(txt);u.lang="es-ES";u.onend=stopTTS;
+  speechSynthesis.speak(u);speaking=true;$("#btn-tts span").textContent="Detener lectura";
+};
+
+/* ============================================================
+   ESQUEMAS
+   ============================================================ */
+let curEsq=0;
+function renderEsqList(){
+  $("#esq-list").innerHTML=ESQ.map((e,i)=>{
+    const s=P.esq[e.id];
+    return `<button class="esq-pill ${i===curEsq?"active":""}" data-i="${i}"><span class="n">${i+1}</span>${esc(e.title)}${s!=null?`<span class="sc">${s}%</span>`:""}</button>`}).join("");
+  $$("#esq-list .esq-pill").forEach(b=>b.onclick=()=>{curEsq=+b.dataset.i;renderEsqList();renderEsq();
+    if(innerWidth<720)$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})});
+  const a=$("#esq-list .active");if(a)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+}
+function renderEsq(){
+  const e=ESQ[curEsq],c=$("#esq-card");
+  const head=`<div class="esq-head"><div><span class="kicker">Esquema ${curEsq+1} de ${ESQ.length} · ${e.type==="order"?"ordenar":"completar huecos"}</span><h3>${esc(e.title)}</h3><p>${esc(e.intro)}</p></div>
+    <span class="chip" id="esq-st"></span></div><div class="prog"><i id="esq-prog"></i></div>`;
+  if(e.type==="blanks"){
+    let html=e.html.replace(/\{\{(\d+)\}\}/g,(m,n)=>{
+      const b=e.blanks[+n];
+      return `<select data-b="${n}" aria-label="Hueco ${+n+1}"><option value="">— elige —</option>${shuffle(b.o).map(o=>`<option>${esc(o)}</option>`).join("")}</select>`});
+    c.innerHTML=head+html+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    $$("#esq-card select").forEach(s=>s.onchange=()=>{s.classList.toggle("filled",!!s.value);esqProgress()});
+  }else{
+    c.innerHTML=head+`<div class="lbl">Elementos disponibles (toca para añadir)</div><div class="order-pool" id="o-pool"></div>
+      <div class="lbl">Tu orden (toca un paso para devolverlo)</div><div class="order-seq" id="o-seq"></div>`+actions()+`<div class="feedback" id="esq-fb"></div>`;
+    e._seq=[];e._pool=shuffle(e.items.map((_,i)=>i));drawOrder();
+  }
+  $("#esq-check").onclick=checkEsq;
+  $("#esq-sol").onclick=()=>checkEsq(true);
+  $("#esq-reset").onclick=renderEsq;
+  $("#esq-next").onclick=()=>{curEsq=(curEsq+1)%ESQ.length;renderEsqList();renderEsq();$("#esq-card").scrollIntoView({behavior:"smooth",block:"start"})};
+  esqProgress();
+}
+const actions=()=>`<div class="esq-actions"><button class="btn btn-p" id="esq-check">✔ Comprobar</button><button class="btn btn-g" id="esq-sol">👁 Ver solución</button><button class="btn btn-g" id="esq-reset">↺ Reintentar</button><button class="btn btn-g" id="esq-next">Siguiente →</button></div>`;
+function drawOrder(locked){
+  const e=ESQ[curEsq];
+  $("#o-pool").innerHTML=e._pool.length?e._pool.map(i=>`<button class="ord-item" data-i="${i}">${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">¡Todo colocado! Pulsa Comprobar.</span>`;
+  $("#o-seq").innerHTML=e._seq.length?e._seq.map((i,k)=>`<button class="ord-item" data-i="${i}"><span class="k">${k+1}</span>${esc(e.items[i].t)}</button>`).join(""):`<span style="color:var(--soft);font-size:.9rem;padding:6px">Aún vacío…</span>`;
+  if(locked)return;
+  $$("#o-pool .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._pool=e._pool.filter(x=>x!==i);e._seq.push(i);drawOrder();esqProgress()});
+  $$("#o-seq .ord-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;e._seq=e._seq.filter(x=>x!==i);e._pool.push(i);drawOrder();esqProgress()});
+}
+function esqProgress(){
+  const e=ESQ[curEsq];let done,total;
+  if(e.type==="blanks"){const s=$$("#esq-card select");total=s.length;done=s.filter(x=>x.value).length}
+  else{total=e.items.length;done=e._seq.length}
+  $("#esq-prog").style.width=(done/total*100)+"%";
+  $("#esq-st").textContent=`${done}/${total} completados`;
+}
+function checkEsq(reveal){
+  reveal=reveal===true;
+  const e=ESQ[curEsq],fb=$("#esq-fb");let ok=0,total,out=[];
+  if(e.type==="blanks"){
+    const sels=$$("#esq-card select");total=sels.length;
+    if(!reveal&&sels.some(s=>!s.value)&&!confirm("Hay huecos sin rellenar. ¿Corregir igualmente?"))return;
+    sels.forEach(s=>{
+      const b=e.blanks[+s.dataset.b],right=b.o[0];
+      const was=s.value,good=was===right;
+      if(reveal)s.value=right;
+      s.classList.remove("ok","ko");s.classList.add(reveal||good?"ok":"ko");s.disabled=true;
+      const old=s.nextElementSibling;if(old&&old.classList.contains("bad"))old.remove();
+      s.insertAdjacentHTML("afterend",`<span class="bad ${reveal||good?"ok":"ko"}">${reveal||good?"✓":"✗"}</span>`);
+      if(good)ok++;
+      out.push({good:reveal?null:good,n:+s.dataset.b+1,ans:right,was,why:b.why});
+    });
+    out.sort((a,b)=>a.n-b.n);
+  }else{
+    total=e.items.length;
+    if(reveal){e._seq=e.items.map((_,i)=>i);e._pool=[]}
+    else if(e._pool.length&&!confirm("Faltan pasos por colocar. ¿Corregir igualmente?"))return;
+    drawOrder(true);
+    $$("#o-seq .ord-item").forEach((b,k)=>{const g=+b.dataset.i===k;b.classList.add(reveal||g?"ok":"ko");if(g)ok++});
+    e.items.forEach((it,k)=>{const pos=e._seq.indexOf(k);out.push({good:reveal?null:pos===k,n:k+1,ans:it.t,was:pos<0?"":"posición "+(pos+1),why:it.why})});
+  }
+  const pct=Math.round(ok/total*100);
+  fb.innerHTML=(reveal?`<div class="result-banner"><span>👁</span><div>Solución mostrada. Lee la motivación de cada respuesta y pulsa <b style="font:inherit">Reintentar</b> para practicar.</div></div>`
+    :`<div class="result-banner"><b>${pct}%</b><div>${ok} de ${total} correctas. ${pct===100?"¡Esquema dominado! 🎉":pct>=70?"Muy bien: repasa las marcadas en rojo.":"Revisa las explicaciones y vuelve a intentarlo."}</div></div>`)
+   +out.map(o=>`<div class="fb ${o.good===false?"ko":"ok"}"><span class="ic">${o.good===false?"✗":o.good?"✓":o.n}</span><div>
+     <b>${e.type==="order"?"Paso "+o.n:"Hueco "+o.n}: ${esc(o.ans)}</b>${o.good===false&&o.was?`<em>Tu respuesta: ${esc(o.was)}. </em>`:""}${o.good===false&&!o.was?`<em>Sin responder. </em>`:""}${esc(o.why)}</div></div>`).join("");
+  $("#esq-check").disabled=true;$("#esq-check").style.opacity=.5;
+  if(!reveal){P.esq[e.id]=Math.max(pct,P.esq[e.id]||0);save();renderEsqList()}
+  fb.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ============================================================
+   FICHAS
+   ============================================================ */
+let fOrder=DATA.fichas.map((_,i)=>i),fFilter="all";
+function renderFichas(){
+  const g=$("#f-grid");
+  const list=fOrder.filter(i=>fFilter==="all"||(fFilter==="known")===!!P.known[i]);
+  $("#f-count").textContent=`${Object.keys(P.known).length}/${DATA.fichas.length} sabidas`;
+  if(!list.length){g.innerHTML=`<div class="empty card" style="grid-column:1/-1"><b>${fFilter==="pend"?"¡No te queda ninguna pendiente! 🎉":"Aún no has marcado ninguna"}</b>Cambia el filtro para ver el resto.</div>`;return}
+  g.innerHTML=list.map(i=>{const f=DATA.fichas[i],k=!!P.known[i];return `<div class="flip ${k?"known":""}" data-i="${i}" tabindex="0" role="button" aria-label="Girar ficha">
+   <div class="flip-in"><div class="face front"><div class="row" style="justify-content:space-between"><span class="chip">Ficha ${i+1}</span>${k?'<span class="known-tag">✓ Sabida</span>':""}</div>
+   <div class="q">${esc(f.p)}</div><div class="hint">↻ Toca para ver la respuesta</div></div>
+   <div class="face back"><p>${esc(f.r)}</p><div class="acts"><button class="no">↺ Repasar</button><button class="yes">✓ La sé</button></div></div></div></div>`}).join("");
+  $$(".flip").forEach(c=>{
+    c.onclick=e=>{if(e.target.closest(".acts"))return;c.classList.toggle("on")};
+    c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();c.classList.toggle("on")}};
+    c.querySelector(".yes").onclick=()=>{P.known[c.dataset.i]=1;save();toast("Ficha marcada como sabida");renderFichas()};
+    c.querySelector(".no").onclick=()=>{delete P.known[c.dataset.i];save();toast("La repasarás más tarde");renderFichas()};
+  });
+}
+$$("#f-filter button").forEach(b=>b.onclick=()=>{$$("#f-filter button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fFilter=b.dataset.f;renderFichas()});
+$("#f-shuffle").onclick=()=>{fOrder=shuffle(fOrder);renderFichas();toast("Fichas barajadas")};
+$("#f-reset").onclick=()=>{if(confirm("¿Desmarcar todas las fichas sabidas?")){P.known={};save();renderFichas()}};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let run=null;
+function showTestHome(){
+  $("#t-home").classList.remove("hidden");$("#t-run").classList.add("hidden");
+  const nf=Object.keys(P.fails).length;
+  const card=(id,ic,name,desc,n,special)=>{const b=P.best[id];return `<button class="tcard ${special?"special":""}" data-t="${id}">
+    <div class="top"><span class="ti">${ic}</span>${b!=null?`<span class="best">Mejor: ${b.toFixed(1)}</span>`:""}</div>
+    <h3>${name}</h3><p>${desc}</p><div class="meta"><span>${n} preguntas</span><span>Empezar →</span></div></button>`};
+  $("#t-grid").innerHTML=card("sim","🎯","Simulacro aleatorio","30 preguntas al azar de todas las baterías, con orden y opciones mezclados.",30,true)
+    +card("fails","🩹","Repasar mis fallos",nf?"Solo las preguntas que has fallado. Al acertarlas desaparecen de la lista.":"Aún no tienes fallos guardados. ¡Haz algún test!",nf,true)
+    +TESTS.map((t,i)=>card(t.id,t.ic,`Test ${i+1} · ${t.name}`,t.desc,t.qs.length)).join("");
+  $$("#t-grid .tcard").forEach(b=>b.onclick=()=>startTest(b.dataset.t));
+}
+function startTest(id){
+  let qs,title;
+  if(id==="sim"){qs=shuffle(POOL).slice(0,30);title="Simulacro aleatorio"}
+  else if(id==="fails"){qs=POOL.filter(q=>P.fails[q.id]);title="Repaso de fallos";if(!qs.length){toast("No tienes fallos guardados 👏");return}}
+  else{const t=TESTS.find(t=>t.id===id);qs=t.qs;title=t.name}
+  const fixed=/\b[A-D] y [A-D]\b|todas|ninguna|anteriores/i;
+  qs=qs.map(q=>{if(q.o.some(o=>fixed.test(o)))return q;
+    const idx=shuffle(q.o.map((_,k)=>k));return {...q,o:idx.map(k=>q.o[k]),c:idx.indexOf(q.c)}});
+  run={id,title,qs,ans:{},locked:{},done:false};
+  $("#t-home").classList.add("hidden");$("#t-run").classList.remove("hidden");
+  $("#t-title").textContent=title;$("#t-score").innerHTML="";
+  $("#t-check").classList.remove("hidden");$("#t-retry").classList.add("hidden");$("#t-other").classList.add("hidden");
+  $("#t-qs").innerHTML=qs.map((q,i)=>`<div class="card qb" id="q${i}" data-i="${i}">
+    <div class="qn"><span class="n">${i+1}</span>${id==="sim"||id==="fails"?`<span class="src">${esc(q.src)}</span>`:""}</div>
+    <div class="qt">${esc(q.q)}</div>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div class="ex-slot"></div></div>`).join("");
+  $$("#t-qs .qb").forEach(b=>{const i=+b.dataset.i;b.querySelectorAll(".opt").forEach(o=>o.onclick=()=>pick(i,+o.dataset.k))});
+  tProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,k){
+  if(run.done||run.locked[i])return;
+  const b=$("#q"+i);
+  if(run.ans[i]===k){delete run.ans[i]} else run.ans[i]=k; // tocar de nuevo deja en blanco
+  b.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",+o.dataset.k===run.ans[i]));
+  if($("#t-instant").checked&&run.ans[i]!=null){markQ(i);run.locked[i]=1}
+  tProgress();
+}
+function markQ(i){
+  const q=run.qs[i],b=$("#q"+i),a=run.ans[i];
+  b.querySelectorAll(".opt").forEach(o=>{const k=+o.dataset.k;o.disabled=true;o.classList.remove("sel");
+    if(k===q.c)o.classList.add("ok");else if(k===a)o.classList.add("ko")});
+  b.classList.add(a==null?"res-bl":a===q.c?"res-ok":"res-ko");
+  const verdict=a==null?"En blanco.":a===q.c?"¡Correcta!":`Incorrecta: la respuesta buena es la ${"ABCD"[q.c]}.`;
+  b.querySelector(".ex-slot").innerHTML=`<div class="expl"><b>${verdict}</b> ${esc(q.e)}</div>`;
+  if(a!=null){if(a===q.c)delete P.fails[q.id];else P.fails[q.id]=1;save()}
+}
+function tProgress(){const n=Object.keys(run.ans).length,t=run.qs.length;$("#t-count").textContent=`${n}/${t}`;$("#t-prog").style.width=(n/t*100)+"%"}
+$("#t-check").onclick=()=>{
+  const n=run.qs.length,blank=n-Object.keys(run.ans).length;
+  if(blank&&!confirm(`Tienes ${blank} pregunta(s) sin contestar. ¿Corregir igualmente?`))return;
+  run.done=true;let A=0,E=0,B=0;
+  run.qs.forEach((q,i)=>{if(!run.locked[i])markQ(i);const a=run.ans[i];if(a==null)B++;else if(a===q.c)A++;else E++});
+  const nota=Math.max(0,(A-E/3)/n*10),pct=nota/10;
+  const C=2*Math.PI*52;
+  const col=nota>=7?"var(--ok)":nota>=5?"var(--warn)":"var(--ko)";
+  $("#t-score").innerHTML=`<div class="card score"><div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bg2)" stroke-width="12"/>
+    <circle cx="60" cy="60" r="52" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" id="ring-a" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="v"><div>${nota.toFixed(2)}<small>sobre 10</small></div></div></div>
+    <div><h3>${nota>=7?"¡Gran resultado! 🚀":nota>=5?"Aprobado, pero afina 💪":"A repasar 📚"}</h3>
+    <div class="stats"><span class="stat ok">✓ ${A} aciertos</span><span class="stat ko">✗ ${E} errores</span><span class="stat bl">○ ${B} en blanco</span></div>
+    <p>Nota = (aciertos − errores/3) ÷ ${n} × 10. Las explicaciones de cada pregunta están abajo; los fallos se guardan en «Repasar mis fallos».</p></div></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#ring-a").style.strokeDashoffset=C*(1-pct)}));
+  if(run.id!=="fails"){P.best[run.id]=Math.max(nota,P.best[run.id]||0);save()}
+  $("#t-check").classList.add("hidden");$("#t-retry").classList.remove("hidden");$("#t-other").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("#t-retry").onclick=()=>startTest(run.id);
+$("#t-other").onclick=showTestHome;
+$("#t-back").onclick=()=>{if(!run.done&&Object.keys(run.ans).length&&!confirm("¿Salir del test? Perderás las respuestas."))return;showTestHome();window.scrollTo({top:0})};
+$("#t-instant").checked=store.get("instant",false);
+$("#t-instant").onchange=e=>store.set("instant",e.target.checked);
+
+/* ---- Tablas apilables en móvil ---- */
+$$(".tbl").forEach(tb=>{const h=[...tb.rows[0].cells].map(c=>c.textContent.trim());[...tb.rows].slice(1).forEach(r=>[...r.cells].forEach((c,i)=>{if(h[i])c.dataset.l=h[i]}))});
+
+/* ---- Arranque ---- */
+$("#hs-blk").textContent=$$("details.blk").length;$("#hs-esq").textContent=ESQ.length;$("#hs-fich").textContent=DATA.fichas.length;$("#hs-q").textContent=POOL.length;
+renderEsqList();renderEsq();renderFichas();
+const h=location.hash.slice(1);if(["resumen","esquemas","fichas","test"].includes(h))go(h);
+</script>
+</body>
+</html>
