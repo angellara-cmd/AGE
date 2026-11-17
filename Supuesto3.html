@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supuesto nº 03 · Organización de oficinas públicas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ef; --card:#fff; --ink:#1d1f24; --muted:#5f6470; --line:#e3dfd6;
+  --accent:#1f4e79; --accent-soft:#e7eef6;
+  --ok:#1e7a46; --ok-soft:#e5f3ea; --ko:#b3261e; --ko-soft:#fbe9e7;
+  --warn:#9a6700; --warn-soft:#fff4d6; --blank:#6b7280; --blank-soft:#eef0f3;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#15171b; --card:#1d2026; --ink:#e9e9ec; --muted:#a3a7b1; --line:#2e323a;
+    --accent:#8fb8e3; --accent-soft:#1f2b39; --ok:#6fd39a; --ok-soft:#183025; --ko:#ff8a80; --ko-soft:#3a1d1b;
+    --warn:#f2c14e; --warn-soft:#3a3018; --blank:#a3a7b1; --blank-soft:#262a31; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 120px}
+header h1{font:600 26px/1.2 "Source Serif 4",Georgia,serif;margin:0 0 4px}
+header p{margin:0;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.toolbar label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+select,button{font:inherit}
+select{padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.btn{padding:9px 16px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme: dark){.btn.primary{color:#0f1720}}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.timer{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600}
+.context{font-family:"Source Serif 4",Georgia,serif;font-size:16px;background:var(--accent-soft);border-left:4px solid var(--accent);padding:14px 16px;border-radius:0 10px 10px 0;margin:26px 0 14px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.q.correct{border-color:var(--ok)} .q.wrong{border-color:var(--ko)} .q.blank{border-color:var(--blank)} .q.void{border-style:dashed}
+.qhead{display:flex;gap:10px;align-items:flex-start}
+.num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:14px}
+.qtext{font-weight:500}
+.opts{list-style:none;padding:0;margin:12px 0 0 40px;display:grid;gap:7px}
+.opt{display:flex;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;cursor:pointer;align-items:flex-start}
+.opt:hover{background:var(--accent-soft)}
+.opt input{margin-top:4px;accent-color:var(--accent)}
+.opt b{min-width:16px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.locked .opt{cursor:default}
+.locked .opt:hover{background:transparent}
+.opt.is-key{border-color:var(--ok);background:var(--ok-soft)}
+.opt.is-wrong{border-color:var(--ko);background:var(--ko-soft)}
+.clear{margin:8px 0 0 40px;font-size:12px;color:var(--muted);background:none;border:0;cursor:pointer;padding:0;text-decoration:underline}
+.fb{margin:14px 0 0 40px;padding:12px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line);display:none}
+.done .fb{display:block}
+.done .clear{display:none}
+.fb h4{margin:0 0 6px;font-size:14px}
+.fb p{margin:6px 0}
+.law{font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-right:6px}
+.t-ok{background:var(--ok-soft);color:var(--ok)} .t-ko{background:var(--ko-soft);color:var(--ko)} .t-blank{background:var(--blank-soft);color:var(--blank)}
+.t-warn{background:var(--warn-soft);color:var(--warn)} .t-err{background:var(--ko-soft);color:var(--ko)} .t-chk{background:var(--accent-soft);color:var(--accent)}
+.check{margin-top:10px;padding:10px 12px;border-radius:8px;font-size:13.5px}
+.check.ok{background:var(--ok-soft)} .check.warn{background:var(--warn-soft)} .check.err{background:var(--ko-soft)}
+.result{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:24px 0;display:none}
+.done .result{display:block}
+.grade{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 16px}
+.stat{flex:1 1 120px;background:var(--bg);border-radius:10px;padding:12px;text-align:center}
+.stat .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.big .v{font-size:34px;color:var(--accent)}
+.bar{height:10px;border-radius:99px;background:var(--blank-soft);overflow:hidden;display:flex;margin:6px 0 14px}
+.bar span{height:100%}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:12px 0}
+.cell{border-radius:8px;padding:6px 0;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--line)}
+.cell.c{background:var(--ok-soft);color:var(--ok)} .cell.w{background:var(--ko-soft);color:var(--ko)} .cell.b{background:var(--blank-soft);color:var(--blank)} .cell.v{background:var(--warn-soft);color:var(--warn)}
+.cell small{display:block;font-weight:500;font-size:11px}
+.hist{font-size:13px;color:var(--muted)}
+.hist table{border-collapse:collapse;width:100%;margin-top:6px}
+.hist td,.hist th{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left}
+.notes{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:24px}
+.notes h3{margin:0 0 8px;font:600 18px "Source Serif 4",Georgia,serif}
+.notes li{margin:6px 0}
+.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:10px;justify-content:center;align-items:center;z-index:5}
+.sticky .prog{font-size:13px;color:var(--muted)}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:10}
+.modal .box{background:var(--card);border-radius:14px;padding:20px;max-width:420px;margin:16px}
+.modal .row{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+@media (max-width:560px){.opts,.fb,.clear{margin-left:0}.grid{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header>
+    <h1>Supuesto práctico nº 3</h1>
+    <p>Organización de oficinas públicas · 20 preguntas · Administrativo AGE (C1)</p>
+  </header>
+
+  <div class="toolbar">
+    <label>Penalización por error
+      <select id="pen">
+        <option value="0.3333333">−1/3 (por defecto)</option>
+        <option value="0.25">−1/4</option>
+        <option value="0">Sin penalización</option>
+      </select>
+    </label>
+    <label>Plantilla
+      <select id="key">
+        <option value="oficial">Solucionario oficial</option>
+        <option value="revisada">Revisada (anula la 6)</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="onlyFailed"> Repetir solo las falladas</label>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+
+  <div id="questions"></div>
+
+  <section class="result" id="result">
+    <h2 style="margin:0;font:600 22px 'Source Serif 4',Georgia,serif">Resultado</h2>
+    <div class="grade" id="stats"></div>
+    <div class="bar" id="bar"></div>
+    <div class="grid" id="grid"></div>
+    <p class="law">Pulsa una casilla para ir a la pregunta. Nota = (aciertos − errores × penalización) ÷ preguntas puntuables × 10. Las preguntas en blanco no restan.</p>
+    <div id="errors"></div>
+    <div class="hist" id="hist"></div>
+  </section>
+
+  <section class="notes">
+    <h3>Contraste con el solucionario</h3>
+    <p>He comprobado las 20 respuestas contra la normativa vigente (Ley 39/2015, Ley 40/2015 y Real Decreto 203/2021). Coinciden 19 de 20 sin reservas. Incidencias:</p>
+    <ul>
+      <li><span class="tag t-err">Discrepancia</span><b>Pregunta 6.</b> El solucionario da «b) Oficinas de asistencia al interesado» como el canal que <i>no</i> está previsto. Pero el art. 4 del RD 203/2021 incluye expresamente el canal presencial a través de oficinas de asistencia. Solo se distingue por el nombre exacto («oficinas de asistencia que se determinen»), así que en rigor las cuatro opciones son canales y la pregunta es impugnable. En la plantilla «Revisada» se anula y no puntúa.</li>
+      <li><span class="tag t-warn">Matiz</span><b>Pregunta 17.</b> La opción c) recorta el art. 14.2.c): la ley incluye en ese colectivo a los notarios <i>y a los registradores de la propiedad y mercantiles</i>. No cambia la respuesta, pero conviene saberlo (sirve para la pregunta 13).</li>
+      <li><span class="tag t-warn">Matiz</span><b>Pregunta 12.</b> El art. 14 de la Ley 39/2015 no menciona a las Administraciones de forma expresa. Su obligación de relacionarse electrónicamente entre sí está en el art. 3.2 de la Ley 40/2015, y además son personas jurídicas (art. 14.2.a). La respuesta es la misma.</li>
+    </ul>
+  </section>
+</div>
+
+<div class="sticky" id="sticky">
+  <span class="prog" id="prog">0 / 20 respondidas</span>
+  <button class="btn primary" id="btnCheck">Corregir supuesto</button>
+  <button class="btn hidden" id="btnRetry">Volver a hacerlo</button>
+</div>
+
+<div class="modal hidden" id="modal"><div class="box">
+  <p id="modalText"></p>
+  <div class="row"><button class="btn" id="mCancel">Seguir respondiendo</button><button class="btn primary" id="mOk">Corregir</button></div>
+</div></div>
+
+<script>
+const DATA = {
+  id: "aoop-03",
+  blocks: [
+    {context: "El funcionario del cuerpo administrativo Diego Toledano Sánchez trabaja en el Servicio de Gestión del Dominio Público de la Demarcación de Costas en Cataluña, dependiente del Ministerio de Transición Ecológica y Reto Demográfico.<br><br>En unos días se procederá a la incoación del expediente de deslinde del dominio público marítimo-terrestre del término municipal de Malgrat de Mar. Dicha incoación supone, entre otras tareas: notificar la incoación, preparar la información pública, el trámite de vista y audiencia de la propuesta de deslinde y su comunicación a las diversas Administraciones Públicas y a todos los colindantes afectados por el deslinde.<br><br>En el caso de los colindantes tenemos de todo tipo, desde personas físicas propietarias de una vivienda en la zona limítrofe al nuevo deslinde, hasta empresas. En todos los casos, tanto las Administraciones Públicas como las personas físicas y jurídicas, pueden presentar alegaciones a la propuesta de deslinde.<br><br>El Jefe de la Demarcación es el responsable de incoar el expediente de deslinde y el que a su vez firmará toda la documentación relacionada con el mismo.<br><br>Lo primero que se plantea Diego es no vulnerar ninguno de los principios de la administración electrónica recogidos de forma reciente en el Real Decreto 203/2021, de 30 de marzo, por el que se aprueba el Reglamento de actuación y funcionamiento del sector público por medios electrónicos, y que hoy en día sirven de referencia para el uso de las tecnologías.<br><br>Lo que más le preocupa es que con tantos navegadores y software diferentes, la información sobre el deslinde no llegue a todo el mundo de manera correcta. A estos efectos, la Demarcación utilizará estándares abiertos, así como, en su caso y de forma complementaria, estándares que sean de uso generalizado por los ciudadanos. Por ejemplo, los planos que se presentarán a información pública para su consulta, estarán en formato PDF en lugar de en formato CAD.", from: 1},
+    {context: "Comenzada la incoación del expediente de deslinde, el Jefe de la Demarcación hace pública dicha incoación.", from: 5}
+  ],
+  q: [
+  {n:1, t:"Este principio recibe el nombre de:", o:["Neutralidad tecnológica.","Interoperabilidad.","Multicanalidad.","Proporcionalidad."], k:0,
+   why:"Usar estándares abiertos y, de forma complementaria, estándares de uso generalizado (PDF en lugar de CAD) es lo que define el principio de <b>neutralidad tecnológica</b> y de adaptabilidad al progreso de las tecnologías. Garantiza que nadie quede excluido por el software o el navegador que usa.",
+   law:"Art. 2.a) RD 203/2021.", chk:"ok"},
+  {n:2, t:"El conjunto de principios y técnicas que debe respetar Diego al diseñar, construir, mantener y actualizar los servicios electrónicos para garantizar la igualdad y la no discriminación en el acceso de las personas usuarias, en particular de las personas con discapacidad y de las personas mayores, responde al principio de:", o:["Accesibilidad.","Interoperabilidad.","Multicanalidad.","Proporcionalidad."], k:0,
+   why:"Es la definición del principio de <b>accesibilidad</b>: diseñar los servicios electrónicos para que cualquier persona pueda usarlos en igualdad de condiciones, con especial atención a las personas con discapacidad y a las personas mayores.",
+   law:"Art. 2.b) RD 203/2021 · RD 1112/2018 (accesibilidad de sitios web).", chk:"ok"},
+  {n:3, t:"Diego tampoco quiere excederse en las condiciones de acceso de los ciudadanos a la información pública, de manera que solo se exigirán las garantías y medidas de seguridad adecuadas a la naturaleza y circunstancias de los distintos trámites y actuaciones. Este principio recibe el nombre de:", o:["Interoperabilidad.","Multicanalidad.","Proporcionalidad.","Neutralidad tecnológica."], k:2,
+   why:"Exigir solo las garantías y medidas de seguridad adecuadas a cada trámite, ni más ni menos, es el principio de <b>proporcionalidad</b>. Por ejemplo, consultar un plano no requiere la misma identificación que presentar alegaciones.",
+   law:"Art. 2 RD 203/2021 (principio de proporcionalidad).", chk:"ok"},
+  {n:4, t:"La capacidad de los sistemas de información que usa Diego y, por ende, de los procedimientos a los que estos dan soporte, de compartir datos y posibilitar el intercambio de información entre ellos, responde al principio de:", o:["Interoperabilidad.","Multicanalidad.","Proporcionalidad.","Neutralidad tecnológica."], k:0,
+   why:"La capacidad de los sistemas para compartir datos e intercambiar información es la <b>interoperabilidad</b>, que desarrolla el Esquema Nacional de Interoperabilidad. «Multicanalidad» no es uno de los principios del art. 2 y funciona como distractor.",
+   law:"Art. 2.d) RD 203/2021 · art. 156 Ley 40/2015 · RD 4/2010 (ENI).", chk:"ok"},
+  {n:5, t:"La voluntad de relacionarse electrónicamente con el servicio de Diego o, en su caso, de dejar de hacerlo cuando ya se había optado anteriormente por ello, podrá realizarse en una fase posterior del procedimiento, si bien deberá comunicarse a dicho órgano de forma que quede constancia de la misma. En ambos casos, los efectos de la comunicación se producirán a partir del:", o:["Décimo día hábil siguiente a aquel en que el órgano competente para tramitar el procedimiento haya tenido constancia de la misma.","Décimo día hábil siguiente a aquel en que el órgano competente para resolver el procedimiento haya tenido constancia de la misma.","Quinto día hábil siguiente a aquel en que el órgano competente para resolver el procedimiento haya tenido constancia de la misma.","Quinto día hábil siguiente a aquel en que el órgano competente para tramitar el procedimiento haya tenido constancia de la misma."], k:3,
+   why:"Hay que acertar dos datos: el plazo es el <b>quinto</b> día hábil, y se cuenta desde que tiene constancia el órgano competente para <b>tramitar</b> (no para resolver).",
+   law:"Art. 3.2 RD 203/2021.", chk:"ok"},
+  {n:6, t:"La Administración Pública para la que trabaja Diego prestará la asistencia necesaria para facilitar el acceso de las personas interesadas a los servicios electrónicos proporcionados en su ámbito competencial a través de ciertos canales, no estando entre ellos el siguiente:", o:["Redes sociales.","Oficinas de asistencia al interesado.","Correo electrónico.","Portales de internet."], k:1, kRev:null,
+   why:"El art. 4 del RD 203/2021 enumera estos canales de asistencia: presencial a través de las oficinas de asistencia que se determinen, portales de internet y sedes electrónicas, redes sociales, teléfono, correo electrónico y cualquier otro canal que se establezca. Redes sociales, correo electrónico y portales aparecen literalmente. La respuesta esperada es b) porque «oficinas de asistencia al interesado» no es la denominación exacta.",
+   law:"Art. 4 RD 203/2021 · art. 12 Ley 39/2015.", chk:"err",
+   note:"<b>Pregunta defectuosa.</b> El canal presencial a través de oficinas de asistencia <i>sí</i> está previsto en el art. 4, así que en rigor las cuatro opciones son canales de asistencia. La b) solo se distingue por el nombre exacto. En un examen oficial sería impugnable. Con la plantilla «Revisada» se anula y no puntúa. Para el examen, quédate con que los canales son: presencial, portales y sedes, redes sociales, teléfono, correo electrónico y cualquier otro."},
+  {n:7, t:"Diego recibe instrucciones de su Administración Pública para que, partiendo del conocimiento adquirido del usuario final del servicio, proporcione servicios precumplimentados y se anticipe a las posibles necesidades de los mismos. Diego debe hacerlo para cumplir los principios de:", o:["Personalización y proactividad.","Personalización y facilidad de uso.","Accesibilidad y proactividad.","Neutralidad tecnológica y facilidad de uso."], k:0,
+   why:"Partir del conocimiento del usuario, ofrecer servicios precumplimentados y anticiparse a sus necesidades es la definición literal del principio de <b>personalización y proactividad</b>.",
+   law:"Art. 2.f) RD 203/2021.", chk:"ok"},
+  {n:8, t:"¿Cuál de estos instrumentos facilitará el acceso a los servicios, trámites e información de los órganos, organismos públicos y entidades vinculados o dependientes de la Administración Pública a la que pertenece Diego?:", o:["El Portal de la Administración Electrónica PAE.","El Punto de Acceso General electrónico (PAGe),","NOTIFIC@.","Cl@ve."], k:1,
+   why:"Cada Administración tiene un <b>Punto de Acceso General electrónico</b>, que facilita el acceso a los servicios, trámites e información de sus órganos y entidades. En la AGE es administracion.gob.es. El PAE es un portal informativo sobre administración electrónica, Notific@ sirve para notificaciones y Cl@ve para identificarse.",
+   law:"Art. 7 RD 203/2021.", chk:"ok"},
+  {n:9, t:"Los interesados también pueden acceder a toda la información sobre la incoación del expediente de deslinde de Malgrat de Mar a través de la sede electrónica del Ministerio de Transición Ecológica y Reto Demográfico. ¿Cuál de los siguientes elementos han de aparecer como mínimo en la sede electrónica?:", o:["La identificación de la sede electrónica o sede electrónica asociada, así como del órgano u organismo titular de la misma y los órganos competentes para la gestión de la información, servicios, procedimientos y trámites puestos a disposición en ella.","La identificación del acto o disposición de creación y el acceso al mismo, directamente o mediante enlace a su publicación en el Boletín Oficial","La relación de sistemas de identificación y firma electrónica que sean admitidos o utilizados en la misma.","Todas son correctas."], k:3,
+   why:"Las tres primeras opciones forman parte del contenido mínimo que debe tener toda sede electrónica o sede asociada.",
+   law:"Art. 11.1 RD 203/2021.", chk:"ok"},
+  {n:10, t:"Si los ciudadanos necesitan identificarse electrónicamente, pueden acceder al sistema de identificación propio de la Administración General del Estado:", o:["Cl@ve.","AEVAL.","FNMT.","NOTIFIC@."], k:0,
+   why:"<b>Cl@ve</b> es la plataforma común de la AGE para identificarse y firmar electrónicamente (Cl@ve PIN, Cl@ve permanente, certificado). AEVAL era una agencia de evaluación, ya extinguida. La FNMT es un prestador de servicios de confianza que emite certificados, no el sistema de identificación de la AGE. Notific@ sirve para notificaciones.",
+   law:"Arts. 9 y 10 Ley 39/2015 · RD 203/2021 · Orden PRE/1838/2014 (Cl@ve).", chk:"ok"},
+  {n:11, t:"A Diego se le ha encargado que prepare y envíe los diversos anuncios oficiales y las notificaciones de incoación a las diferentes administraciones, personas físicas y jurídicas. La primera idea era hacerlo exclusivamente por medios electrónicos, pero Diego se quiere asegurar que respeta lo dispuesto por la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas en su apartado de Derecho y obligación de relacionarse electrónicamente con las Administraciones Públicas, que concretamente se encuentra en el artículo:", o:["10.","12.","14.","16."], k:2,
+   why:"El art. 14 lleva por título «Derecho y obligación de relacionarse electrónicamente con las Administraciones Públicas». Para no confundirlos: el art. 10 regula la firma, el 12 la asistencia en el uso de medios electrónicos y el 16 los registros.",
+   law:"Art. 14 Ley 39/2015.", chk:"ok"},
+  {n:12, t:"En base a ese artículo de la Ley 39/2015, ¿puede la Demarcación de Costas obligar a las otras Administraciones a relacionarse exclusivamente de manera electrónica con ella en este expediente de deslinde?:", o:["Sí, es obligatorio.","No, tanto el ciudadano como otras administraciones pueden escoger la forma de relacionarse con la Demarcación.","Solo si hay una norma con rango de ley que así lo establezca.","Ninguna es correcta."], k:0,
+   why:"Las Administraciones son personas jurídicas, y las personas jurídicas están obligadas a relacionarse electrónicamente (art. 14.2.a). Además, la Ley 40/2015 obliga a las Administraciones a relacionarse entre sí por medios electrónicos. No hace falta ninguna norma adicional.",
+   law:"Art. 14.2.a) Ley 39/2015 · art. 3.2 Ley 40/2015.", chk:"warn",
+   note:"El art. 14 de la Ley 39/2015 no nombra a las Administraciones de forma expresa. La base más directa es el art. 3.2 de la Ley 40/2015. La respuesta es la misma."},
+  {n:13, t:"La Demarcación ha enviado el listado de colindantes al Registrador de la Propiedad de Malgrat, ¿puede la Demarcación de Costas obligar al Registrador a relacionarse exclusivamente de manera electrónica con ella en este expediente de deslinde?:", o:["Sí, es obligatorio.","No, tanto el ciudadano como otras administraciones, y aquí se incluye el Registrador, pueden escoger la forma de relacionarse con la Demarcación.","Solo si hay una norma con rango de ley que así lo establezca.","Ninguna es correcta."], k:0,
+   why:"El art. 14.2.c) obliga a quienes ejercen una actividad profesional con colegiación obligatoria y dice que, en todo caso, se incluyen en ese colectivo los notarios y los <b>registradores de la propiedad y mercantiles</b>.",
+   law:"Art. 14.2.c) Ley 39/2015.", chk:"ok"},
+  {n:14, t:"¿Puede la Demarcación de Costas obligar a los ciudadanos a relacionarse exclusivamente de manera electrónica con ella en este expediente de deslinde?:", o:["Sí, siempre es obligatorio.","No, tanto el ciudadano como otras administraciones pueden escoger la forma de relacionarse con la Demarcación.","Solo si hay una norma con rango de ley que así lo establezca.","En principio no, pero reglamentariamente, las Administraciones podrán establecer la obligación de relacionarse con ellas a través de medios electrónicos para determinados procedimientos y para ciertos colectivos de personas físicas que por razón de su capacidad económica, técnica, dedicación profesional u otros motivos quede acreditado que tienen acceso y disponibilidad de los medios electrónicos necesarios."], k:3,
+   why:"Las personas físicas pueden elegir (art. 14.1), pero la Administración puede imponer el medio electrónico <b>por vía reglamentaria</b> a ciertos colectivos que tengan acceso acreditado a esos medios (art. 14.3). La c) falla porque no se exige una norma con rango de ley. En la AGE, el art. 3.3 del RD 203/2021 permite hacerlo por real decreto o por orden ministerial.",
+   law:"Art. 14.1 y 14.3 Ley 39/2015 · art. 3.3 RD 203/2021.", chk:"ok"},
+  {n:15, t:"En todo caso, pueda o no obligar, ¿cuál de las siguientes afirmaciones es correcta?:", o:["Si alguno de estos interesados no dispone de los medios electrónicos necesarios, su identificación o firma electrónica en el procedimiento administrativo podrá ser válidamente realizada por un funcionario público mediante el uso del sistema de firma electrónica del que esté dotado para ello.","En este caso, será necesario que el interesado que carezca de los medios electrónicos necesarios se identifique ante el funcionario y preste su consentimiento expreso para esta actuación, de lo que deberá quedar constancia para los casos de discrepancia o litigio.","La Administración General del Estado, las Comunidades Autónomas y las Entidades Locales mantendrán actualizado un registro, u otro sistema equivalente, donde constarán los funcionarios habilitados para esta forma de identificación o firma.","Todas son correctas."], k:3,
+   why:"Las opciones a) y b) reproducen el art. 12.2 (firma por funcionario habilitado, con identificación y consentimiento expreso del interesado). La c) reproduce el art. 12.3 (registro de funcionarios habilitados). Las tres son correctas.",
+   law:"Art. 12.2 y 12.3 Ley 39/2015 · art. 31 RD 203/2021.", chk:"ok"},
+  {n:16, t:"Una persona física ha decidido relacionarse por medios electrónicos, pero en un momento determinado quiere cambiar y continuar presentando alegaciones de manera presencial, ¿lo puede hacer?:", o:["No, el camino escogido al iniciar el procedimiento vincula durante el resto del procedimiento.","Sí, las personas físicas podrán elegir en todo momento si se comunican con las Administraciones Públicas para el ejercicio de sus derechos y obligaciones a través de medios electrónicos o no, salvo que estén obligadas a relacionarse a través de medios electrónicos con las Administraciones Públicas. El medio elegido por la persona para comunicarse con las Administraciones Públicas podrá ser modificado por aquella en cualquier momento.","No, porque el paso ha sido de electrónico a presencial, si hubiera sido de presencial a electrónico sí se le hubiera permitido, la Ley lo contempla por simplificación de medios.","Sí, porque el paso ha sido de electrónico a presencial, si hubiera sido de presencial a electrónico no se le hubiera permitido."], k:1,
+   why:"La persona física no obligada puede cambiar de medio en cualquier momento y en cualquier dirección. Enlaza con la pregunta 5: el cambio surte efecto a partir del quinto día hábil desde que lo conoce el órgano que tramita.",
+   law:"Art. 14.1 Ley 39/2015 · art. 3.2 RD 203/2021.", chk:"ok"},
+  {n:17, t:"Una persona física ha decidido relacionarse por medios presenciales, pero en un momento determinado ha contratado a un representante legal con colegiación obligatoria ¿puede su representante continuar relacionándose con la administración por medios presenciales?", o:["Sí, el camino escogido al iniciar el procedimiento vincula durante el resto del procedimiento.","Sí, las personas físicas podrán elegir en todo momento si se comunican con las Administraciones Públicas para el ejercicio de sus derechos y obligaciones a través de medios electrónicos o no, salvo que estén obligadas a relacionarse a través de medios electrónicos con las Administraciones Públicas.","No, porque estarán obligados a relacionarse a través de medios electrónicos con las Administraciones Públicas para la realización de cualquier trámite de un procedimiento administrativo, al menos quienes ejerzan una actividad profesional para la que se requiera colegiación obligatoria, para los trámites y actuaciones que realicen con las Administraciones Públicas en ejercicio de dicha actividad profesional. En todo caso, dentro de este colectivo se entenderán incluidos los notarios.","Ninguna es correcta."], k:2,
+   why:"El representante actúa en el ejercicio de su actividad profesional colegiada, así que está obligado al medio electrónico aunque su cliente, como persona física, no lo esté.",
+   law:"Art. 14.2.c) Ley 39/2015.", chk:"warn",
+   note:"La opción c) recorta el texto legal: el art. 14.2.c) incluye a los notarios <i>y a los registradores de la propiedad y mercantiles</i>. No cambia la respuesta."},
+  {n:18, t:"¿Asistirá en el uso de medios electrónicos la Demarcación al representante de la pregunta anterior si este decide presentar alegaciones al deslinde?:", o:["Sí, siempre es una obligación de la administración asistir por medios electrónicos a todos los interesados.","No, es a criterio discrecional de la Demarcación la asistencia en medios electrónicos.","No, la Demarcación asistirá en el uso de medios electrónicos a los interesados que no estén obligados a relacionarse a través de medios electrónicos.","Sí, la Demarcación asistirá en el uso de medios electrónicos a los interesados que estén obligados a relacionarse a través de medios electrónicos, a los que no estén obligados que escojan el medio presencial."], k:2,
+   why:"El deber de asistencia del art. 12.2 se refiere a los interesados <b>no incluidos</b> en los apartados 2 y 3 del art. 14, es decir, a los no obligados que lo soliciten. El profesional colegiado está obligado, así que no tiene derecho a esa asistencia.",
+   law:"Art. 12.2 Ley 39/2015.", chk:"ok"},
+  {n:19, t:"¿Asistirá en el uso de medios electrónicos la Demarcación a un ciudadano que no tiene la obligación de presentar electrónicamente alegaciones al deslinde?:", o:["Sí, la Demarcación asistirá en el uso de medios electrónicos a los interesados que no estén obligados a relacionarse a través de medios electrónicos.","Sí, siempre es una obligación de la administración asistir por medios electrónicos a todos los interesados.","No, es a criterio de la Demarcación la asistencia en medios electrónicos.","No, la Demarcación asistirá en el uso de medios electrónicos a los interesados que estén obligados a relacionarse a través de medios electrónicos, a los que no estén obligados que escojan el medio presencial."], k:0,
+   why:"Es el caso contrario al de la pregunta 18: el ciudadano no obligado sí tiene derecho a que le asistan en el uso de medios electrónicos, especialmente en la identificación y firma, la presentación en el registro y la obtención de copias auténticas. Matiz: la ley dice «que así lo soliciten».",
+   law:"Art. 12.2 Ley 39/2015 · art. 4 RD 203/2021.", chk:"ok"},
+  {n:20, t:"A Diego no le ha quedado claro el tema de asistencia en medios electrónicos, por lo que debería acudir a la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, a lo dispuesto en su artículo:", o:["10.","12.","14.","16."], k:1,
+   why:"El art. 12 de la Ley 39/2015 se titula «Asistencia en el uso de medios electrónicos a los interesados». Para distinguirlos: el 14 es derecho y obligación de relacionarse electrónicamente, el 10 los sistemas de firma y el 16 los registros.",
+   law:"Art. 12 Ley 39/2015.", chk:"ok"}
+  ]
+};
+
+const L = ["a","b","c","d"];
+const $ = s => document.querySelector(s);
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let answers = {}, done = false, t0 = Date.now(), tick, lastFailed = store.get(DATA.id+":failed", []);
+
+function keyOf(q){ return $("#key").value === "revisada" && "kRev" in q ? q.kRev : q.k; }
+function visibleQs(){
+  if ($("#onlyFailed").checked && lastFailed.length) return DATA.q.filter(q => lastFailed.includes(q.n));
+  return DATA.q;
+}
+function chkTag(c){ return c==="ok" ? '<span class="tag t-chk">Verificada</span>' : c==="warn" ? '<span class="tag t-warn">Matiz</span>' : '<span class="tag t-err">Discrepancia</span>'; }
+
+function render(){
+  const box = $("#questions"); box.innerHTML = "";
+  const qs = visibleQs(); const ns = qs.map(q => q.n);
+  DATA.blocks.forEach((b,i) => {
+    const end = (DATA.blocks[i+1]||{from:99}).from;
+    const inBlock = qs.filter(q => q.n >= b.from && q.n < end);
+    if (!inBlock.length) return;
+    const c = document.createElement("div"); c.className = "context"; c.innerHTML = b.context; box.appendChild(c);
+    inBlock.forEach(q => box.appendChild(qEl(q)));
+  });
+  updateProg();
+}
+
+function qEl(q){
+  const d = document.createElement("article"); d.className = "q"; d.id = "q"+q.n;
+  d.innerHTML = `<div class="qhead"><span class="num">${q.n}</span><div class="qtext">${q.t}</div></div>
+   <ul class="opts">${q.o.map((o,i)=>`<li><label class="opt" data-i="${i}"><input type="radio" name="r${q.n}" value="${i}"><b>${L[i]})</b><span>${o}</span></label></li>`).join("")}</ul>
+   <button class="clear" type="button">Dejar en blanco</button>
+   <div class="fb"></div>`;
+  d.querySelectorAll("input").forEach(inp => inp.addEventListener("change", () => {
+    if (done) return; answers[q.n] = +inp.value; markSel(d, q.n); updateProg();
+  }));
+  d.querySelector(".clear").addEventListener("click", () => {
+    if (done) return; delete answers[q.n]; d.querySelectorAll("input").forEach(i=>i.checked=false); markSel(d,q.n); updateProg();
+  });
+  return d;
+}
+function markSel(d,n){ d.querySelectorAll(".opt").forEach(o => o.classList.toggle("sel", answers[n] === +o.dataset.i)); }
+function updateProg(){
+  const qs = visibleQs(); const a = qs.filter(q => q.n in answers).length;
+  $("#prog").textContent = `${a} / ${qs.length} respondidas`;
+}
+function fmt(s){ const m = Math.floor(s/60), r = s%60; return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0"); }
+function startTimer(){ clearInterval(tick); t0 = Date.now(); tick = setInterval(()=>{ $("#timer").textContent = fmt(Math.floor((Date.now()-t0)/1000)); }, 1000); }
+
+function askCorrect(){
+  const qs = visibleQs(); const blanks = qs.filter(q => !(q.n in answers)).length;
+  if (blanks) { $("#modalText").textContent = `Tienes ${blanks} pregunta${blanks>1?"s":""} en blanco. Las preguntas en blanco no restan. ¿Corregir ya?`; $("#modal").classList.remove("hidden"); }
+  else correct();
+}
+
+function correct(record=true){
+  $("#modal").classList.add("hidden");
+  done = true; clearInterval(tick);
+  const secs = Math.floor((Date.now()-t0)/1000);
+  const pen = +$("#pen").value; const qs = visibleQs();
+  let ok=0, ko=0, bl=0, voided=0; const failed=[]; const cells=[]; const errs=[];
+  qs.forEach(q => {
+    const d = $("#q"+q.n); const k = keyOf(q); const a = answers[q.n];
+    d.classList.add("done"); d.querySelector(".opts").parentElement.classList.add("locked");
+    d.querySelectorAll("input").forEach(i => i.disabled = true);
+    let state;
+    if (k === null){ state="v"; voided++; }
+    else if (a === undefined){ state="b"; bl++; }
+    else if (a === k){ state="c"; ok++; }
+    else { state="w"; ko++; }
+    if (state==="w"||state==="b") failed.push(q.n);
+    d.classList.add(state==="c"?"correct":state==="w"?"wrong":state==="b"?"blank":"void");
+    d.querySelectorAll(".opt").forEach(o => { const i=+o.dataset.i; if (i===(k===null?q.k:k)) o.classList.add("is-key"); if (state==="w" && i===a) o.classList.add("is-wrong"); });
+    const status = state==="c" ? '<span class="tag t-ok">Correcta</span>' : state==="w" ? `<span class="tag t-ko">Incorrecta</span>Marcaste ${L[a]}). ` : state==="b" ? '<span class="tag t-blank">En blanco</span>' : '<span class="tag t-warn">Anulada</span>No puntúa con la plantilla revisada. ';
+    const keyTxt = k===null ? `El solucionario da como correcta la ${L[q.k]}).` : `Respuesta correcta: <b>${L[k]})</b>.`;
+    d.querySelector(".fb").innerHTML = `<h4>${status} ${keyTxt}</h4><p>${q.why}</p><p class="law">📖 ${q.law}</p>
+      <div class="check ${q.chk}">${chkTag(q.chk)}${q.chk==="ok" ? "Coincide con el solucionario y con la norma vigente." : q.note}</div>`;
+    cells.push(`<div class="cell ${state}" data-n="${q.n}">${q.n}<small>${state==="v"?"anul.":a===undefined?"—":L[a]}</small></div>`);
+    if (state==="w") errs.push(q);
+  });
+  const scored = qs.length - voided;
+  const net = ok - ko*pen;
+  const nota = scored ? Math.max(0, net/scored*10) : 0;
+  $("#stats").innerHTML = `
+    <div class="stat big"><div class="v">${nota.toFixed(2)}</div><div class="l">Nota / 10</div></div>
+    <div class="stat"><div class="v" style="color:var(--ok)">${ok}</div><div class="l">Aciertos</div></div>
+    <div class="stat"><div class="v" style="color:var(--ko)">${ko}</div><div class="l">Errores</div></div>
+    <div class="stat"><div class="v" style="color:var(--blank)">${bl}</div><div class="l">En blanco</div></div>
+    <div class="stat"><div class="v">${net.toFixed(2)}</div><div class="l">Netas</div></div>
+    <div class="stat"><div class="v">${fmt(secs)}</div><div class="l">Tiempo</div></div>`;
+  const pct = x => (scored? x/scored*100:0)+"%";
+  $("#bar").innerHTML = `<span style="width:${pct(ok)};background:var(--ok)"></span><span style="width:${pct(ko)};background:var(--ko)"></span><span style="width:${pct(bl)};background:var(--blank)"></span>`;
+  $("#grid").innerHTML = cells.join("");
+  $("#grid").querySelectorAll(".cell").forEach(c => c.addEventListener("click", ()=> $("#q"+c.dataset.n).scrollIntoView({behavior:"smooth",block:"center"})));
+  $("#errors").innerHTML = errs.length ? `<h3 style="font:600 17px 'Source Serif 4',Georgia,serif;margin:16px 0 6px">Repaso de tus errores</h3><ul>${errs.map(q=>`<li><a href="#q${q.n}">Pregunta ${q.n}</a>: marcaste ${L[answers[q.n]]}), la correcta es ${L[keyOf(q)]}). <span class="law">${q.law}</span></li>`).join("")}</ul>` : (ko===0 && bl===0 ? "<p><b>¡Sin errores!</b></p>" : "");
+  lastFailed = failed; store.set(DATA.id+":failed", failed);
+  const hist = store.get(DATA.id+":hist", []);
+  if (record) hist.unshift({d:new Date().toLocaleString("es-ES"), nota:nota.toFixed(2), ok, ko, bl, t:fmt(secs), n:qs.length});
+  store.set(DATA.id+":hist", hist.slice(0,15));
+  $("#hist").innerHTML = `<h3 style="font:600 17px 'Source Serif 4',Georgia,serif;margin:16px 0 0;color:var(--ink)">Tus intentos (en este navegador)</h3>
+   <table><tr><th>Fecha</th><th>Preg.</th><th>Nota</th><th>A</th><th>E</th><th>B</th><th>Tiempo</th></tr>${hist.slice(0,15).map(h=>`<tr><td>${h.d}</td><td>${h.n}</td><td><b>${h.nota}</b></td><td>${h.ok}</td><td>${h.ko}</td><td>${h.bl}</td><td>${h.t}</td></tr>`).join("")}</table>`;
+  $("#app").classList.add("done");
+  $("#btnCheck").classList.add("hidden"); $("#btnRetry").classList.remove("hidden");
+  $("#prog").textContent = `Nota ${nota.toFixed(2)} · ${ok} A · ${ko} E · ${bl} B`;
+  $("#result").scrollIntoView({behavior:"smooth"});
+}
+
+function reset(){
+  answers = {}; done = false; $("#app").classList.remove("done");
+  $("#btnCheck").classList.remove("hidden"); $("#btnRetry").classList.add("hidden");
+  render(); startTimer(); window.scrollTo({top:0,behavior:"smooth"});
+}
+
+$("#btnCheck").addEventListener("click", askCorrect);
+$("#btnRetry").addEventListener("click", reset);
+$("#mOk").addEventListener("click", ()=>correct());
+$("#mCancel").addEventListener("click", ()=> $("#modal").classList.add("hidden"));
+$("#onlyFailed").addEventListener("change", ()=>{ if (!lastFailed.length && $("#onlyFailed").checked){ $("#onlyFailed").checked=false; return; } reset(); });
+["#pen","#key"].forEach(s => $(s).addEventListener("change", ()=>{ if (done) { /* recalcular */ const a = {...answers}; const el = Math.floor((Date.now()-t0)/1000); done=false; $("#app").classList.remove("done"); render(); answers=a; document.querySelectorAll(".q").forEach(d=>{const n=+d.id.slice(1); if(n in answers){ d.querySelector(`input[value="${answers[n]}"]`).checked=true; markSel(d,n);} }); t0 = Date.now()-el*1000; correct(false); } }));
+if (!lastFailed.length) $("#onlyFailed").parentElement.title = "Disponible después de corregir un intento con fallos";
+render(); startTimer();
+</script>
+</body>
